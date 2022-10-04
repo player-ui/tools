@@ -1,0 +1,138 @@
+{
+    "name": "NavigationFlowViewState",
+    "type": "object",
+    "source": "src/index.ts",
+    "properties": {
+        "_comment": {
+            "required": false,
+            "node": {
+                "type": "string",
+                "title": "CommentBase._comment",
+                "description": "Add comments that will not be processing, but are useful for code explanation"
+            }
+        },
+        "state_type": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "const": "VIEW",
+                "title": "NavigationBaseState.state_type",
+                "description": "A property to determine the type of state this is"
+            }
+        },
+        "onStart": {
+            "required": false,
+            "node": {
+                "type": "or",
+                "or": [
+                    {
+                        "type": "ref",
+                        "ref": "Expression",
+                        "title": "NavigationBaseState.onStart"
+                    },
+                    {
+                        "name": "ExpressionObject",
+                        "type": "object",
+                        "source": "src/index.ts",
+                        "properties": {
+                            "exp": {
+                                "required": false,
+                                "node": {
+                                    "type": "ref",
+                                    "ref": "Expression",
+                                    "title": "ExpressionObject.exp",
+                                    "description": "The expression to run"
+                                }
+                            }
+                        },
+                        "additionalProperties": false,
+                        "title": "ExpressionObject",
+                        "description": "An object with an expression in it"
+                    }
+                ],
+                "title": "NavigationBaseState.onStart",
+                "description": "An optional expression to run when this view renders"
+            }
+        },
+        "onEnd": {
+            "required": false,
+            "node": {
+                "type": "or",
+                "or": [
+                    {
+                        "type": "ref",
+                        "ref": "Expression",
+                        "title": "NavigationBaseState.onEnd"
+                    },
+                    {
+                        "name": "ExpressionObject",
+                        "type": "object",
+                        "source": "src/index.ts",
+                        "properties": {
+                            "exp": {
+                                "required": false,
+                                "node": {
+                                    "type": "ref",
+                                    "ref": "Expression",
+                                    "title": "ExpressionObject.exp",
+                                    "description": "The expression to run"
+                                }
+                            }
+                        },
+                        "additionalProperties": false,
+                        "title": "ExpressionObject",
+                        "description": "An object with an expression in it"
+                    }
+                ],
+                "title": "NavigationBaseState.onEnd",
+                "description": "An optional expression to run before view transition"
+            }
+        },
+        "exp": {
+            "required": false,
+            "node": {
+                "title": "NavigationBaseState.exp",
+                "type": "never"
+            }
+        },
+        "transitions": {
+            "required": true,
+            "node": {
+                "name": "NavigationFlowTransition",
+                "source": "src/index.ts",
+                "type": "record",
+                "keyType": {
+                    "type": "string"
+                },
+                "valueType": {
+                    "type": "string"
+                },
+                "title": "NavigationFlowTransitionableState.transitions",
+                "description": "A mapping of transition-name to FlowState name"
+            }
+        },
+        "ref": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "title": "NavigationFlowViewState.ref",
+                "description": "An id corresponding to a view from the 'views' array"
+            }
+        },
+        "attributes": {
+            "required": false,
+            "node": {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": {
+                    "type": "any"
+                },
+                "title": "NavigationFlowViewState.attributes",
+                "description": "View meta-properties"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "title": "NavigationFlowViewState",
+    "description": "A state representing a view"
+}

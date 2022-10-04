@@ -1,0 +1,20 @@
+{
+  "author": "intuit-svc <opensource-svc@intuit.com>",
+  "baseBranch": "main",
+  "versionBranches": true,
+  "noVersionPrefix": true,
+  "owner": "player-ui",
+  "repo": "tools",
+  "plugins": [
+    "all-contributors",
+    [
+      "version-file",
+      {
+        "versionFile": "./VERSION",
+        "publishScript": "./scripts/release.sh"
+      }
+    ],
+    "./scripts/after-shipit-pod-push.js",
+    "./scripts/delete-old-prerelease.js"
+  ]
+}

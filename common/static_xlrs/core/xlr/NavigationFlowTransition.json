@@ -1,0 +1,12 @@
+{
+    "name": "NavigationFlowTransition",
+    "source": "src/index.ts",
+    "type": "record",
+    "keyType": {
+        "type": "string"
+    },
+    "valueType": {
+        "type": "string"
+    },
+    "title": "NavigationFlowTransition"
+}

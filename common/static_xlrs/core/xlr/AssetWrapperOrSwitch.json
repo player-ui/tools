@@ -1,0 +1,306 @@
+{
+    "name": "AssetWrapperOrSwitch",
+    "source": "src/index.ts",
+    "type": "or",
+    "or": [
+        {
+            "type": "and",
+            "and": [
+                {
+                    "type": "ref",
+                    "ref": "AssetWrapper<T>",
+                    "genericArguments": [
+                        {
+                            "type": "ref",
+                            "ref": "T"
+                        }
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "dynamicSwitch": {
+                            "required": false,
+                            "node": {
+                                "type": "never",
+                                "title": "dynamicSwitch",
+                                "description": "The dynamicSwitch property can't exist at the same time as 'asset'"
+                            }
+                        },
+                        "staticSwitch": {
+                            "required": false,
+                            "node": {
+                                "type": "never",
+                                "title": "staticSwitch",
+                                "description": "The staticSwitch property can't exist at the same time as 'asset'"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            ]
+        },
+        {
+            "type": "and",
+            "and": [
+                {
+                    "name": "StaticSwitch",
+                    "type": "object",
+                    "source": "src/index.ts",
+                    "properties": {
+                        "staticSwitch": {
+                            "required": true,
+                            "node": {
+                                "name": "Switch",
+                                "source": "src/index.ts",
+                                "type": "array",
+                                "elementType": {
+                                    "name": "SwitchCase",
+                                    "type": "object",
+                                    "source": "src/index.ts",
+                                    "properties": {
+                                        "asset": {
+                                            "required": true,
+                                            "node": {
+                                                "type": "ref",
+                                                "ref": "T",
+                                                "title": "SwitchCase.asset",
+                                                "description": "The Asset to use if this case is applicable"
+                                            }
+                                        },
+                                        "case": {
+                                            "required": true,
+                                            "node": {
+                                                "type": "or",
+                                                "or": [
+                                                    {
+                                                        "type": "ref",
+                                                        "ref": "Expression",
+                                                        "title": "SwitchCase.case"
+                                                    },
+                                                    {
+                                                        "type": "boolean",
+                                                        "const": true,
+                                                        "title": "SwitchCase.case"
+                                                    }
+                                                ],
+                                                "title": "SwitchCase.case",
+                                                "description": "An expression to execute to determine if this case applies"
+                                            }
+                                        }
+                                    },
+                                    "additionalProperties": false,
+                                    "title": "SwitchCase",
+                                    "description": "A single case statement to use in a switch",
+                                    "genericTokens": [
+                                        {
+                                            "symbol": "T",
+                                            "constraints": {
+                                                "type": "ref",
+                                                "ref": "Asset"
+                                            },
+                                            "default": {
+                                                "type": "ref",
+                                                "ref": "Asset"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "title": "StaticSwitch.staticSwitch",
+                                "description": "A static switch only evaluates the applicable base on first render of the view",
+                                "genericTokens": [
+                                    {
+                                        "symbol": "T",
+                                        "constraints": {
+                                            "type": "ref",
+                                            "ref": "Asset"
+                                        },
+                                        "default": {
+                                            "type": "ref",
+                                            "ref": "Asset"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "additionalProperties": false,
+                    "title": "StaticSwitch",
+                    "genericTokens": [
+                        {
+                            "symbol": "T",
+                            "constraints": {
+                                "type": "ref",
+                                "ref": "Asset"
+                            },
+                            "default": {
+                                "type": "ref",
+                                "ref": "Asset"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "asset": {
+                            "required": false,
+                            "node": {
+                                "type": "never",
+                                "title": "asset",
+                                "description": "The staticSwitch property can't exist at the same time as 'asset'"
+                            }
+                        },
+                        "dynamicSwitch": {
+                            "required": false,
+                            "node": {
+                                "type": "never",
+                                "title": "dynamicSwitch",
+                                "description": "The staticSwitch property can't exist at the same time as 'dynamicSwitch'"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            ]
+        },
+        {
+            "type": "and",
+            "and": [
+                {
+                    "name": "DynamicSwitch",
+                    "type": "object",
+                    "source": "src/index.ts",
+                    "properties": {
+                        "dynamicSwitch": {
+                            "required": true,
+                            "node": {
+                                "name": "Switch",
+                                "source": "src/index.ts",
+                                "type": "array",
+                                "elementType": {
+                                    "name": "SwitchCase",
+                                    "type": "object",
+                                    "source": "src/index.ts",
+                                    "properties": {
+                                        "asset": {
+                                            "required": true,
+                                            "node": {
+                                                "type": "ref",
+                                                "ref": "T",
+                                                "title": "SwitchCase.asset",
+                                                "description": "The Asset to use if this case is applicable"
+                                            }
+                                        },
+                                        "case": {
+                                            "required": true,
+                                            "node": {
+                                                "type": "or",
+                                                "or": [
+                                                    {
+                                                        "type": "ref",
+                                                        "ref": "Expression",
+                                                        "title": "SwitchCase.case"
+                                                    },
+                                                    {
+                                                        "type": "boolean",
+                                                        "const": true,
+                                                        "title": "SwitchCase.case"
+                                                    }
+                                                ],
+                                                "title": "SwitchCase.case",
+                                                "description": "An expression to execute to determine if this case applies"
+                                            }
+                                        }
+                                    },
+                                    "additionalProperties": false,
+                                    "title": "SwitchCase",
+                                    "description": "A single case statement to use in a switch",
+                                    "genericTokens": [
+                                        {
+                                            "symbol": "T",
+                                            "constraints": {
+                                                "type": "ref",
+                                                "ref": "Asset"
+                                            },
+                                            "default": {
+                                                "type": "ref",
+                                                "ref": "Asset"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "title": "DynamicSwitch.dynamicSwitch",
+                                "description": "A dynamic switch re-evaluates the applicable case as data changes",
+                                "genericTokens": [
+                                    {
+                                        "symbol": "T",
+                                        "constraints": {
+                                            "type": "ref",
+                                            "ref": "Asset"
+                                        },
+                                        "default": {
+                                            "type": "ref",
+                                            "ref": "Asset"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "additionalProperties": false,
+                    "title": "DynamicSwitch",
+                    "genericTokens": [
+                        {
+                            "symbol": "T",
+                            "constraints": {
+                                "type": "ref",
+                                "ref": "Asset"
+                            },
+                            "default": {
+                                "type": "ref",
+                                "ref": "Asset"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "asset": {
+                            "required": false,
+                            "node": {
+                                "type": "never",
+                                "title": "asset",
+                                "description": "The dynamicSwitch property can't exist at the same time as 'asset'"
+                            }
+                        },
+                        "staticSwitch": {
+                            "required": false,
+                            "node": {
+                                "type": "never",
+                                "title": "staticSwitch",
+                                "description": "The dynamicSwitch property can't exist at the same time as 'staticSwitch'"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            ]
+        }
+    ],
+    "title": "AssetWrapperOrSwitch",
+    "genericTokens": [
+        {
+            "symbol": "T",
+            "constraints": {
+                "type": "ref",
+                "ref": "Asset"
+            },
+            "default": {
+                "type": "ref",
+                "ref": "Asset"
+            }
+        }
+    ]
+}

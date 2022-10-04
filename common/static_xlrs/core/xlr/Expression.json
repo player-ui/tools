@@ -1,0 +1,21 @@
+{
+    "name": "Expression",
+    "source": "src/index.ts",
+    "type": "or",
+    "or": [
+        {
+            "type": "string",
+            "title": "Expression"
+        },
+        {
+            "type": "array",
+            "elementType": {
+                "type": "string",
+                "title": "Expression.[]"
+            },
+            "title": "Expression.[]"
+        }
+    ],
+    "title": "Expression",
+    "description": "Expressions are a specialized way of executing code.\nIf the expression is a composite, the last expression executed is the return value"
+}

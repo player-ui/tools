@@ -1,0 +1,72 @@
+{
+    "name": "Switch",
+    "source": "src/index.ts",
+    "type": "array",
+    "elementType": {
+        "name": "SwitchCase",
+        "type": "object",
+        "source": "src/index.ts",
+        "properties": {
+            "asset": {
+                "required": true,
+                "node": {
+                    "type": "ref",
+                    "ref": "T",
+                    "title": "SwitchCase.asset",
+                    "description": "The Asset to use if this case is applicable"
+                }
+            },
+            "case": {
+                "required": true,
+                "node": {
+                    "type": "or",
+                    "or": [
+                        {
+                            "type": "ref",
+                            "ref": "Expression",
+                            "title": "SwitchCase.case"
+                        },
+                        {
+                            "type": "boolean",
+                            "const": true,
+                            "title": "SwitchCase.case"
+                        }
+                    ],
+                    "title": "SwitchCase.case",
+                    "description": "An expression to execute to determine if this case applies"
+                }
+            }
+        },
+        "additionalProperties": false,
+        "title": "SwitchCase",
+        "description": "A single case statement to use in a switch",
+        "genericTokens": [
+            {
+                "symbol": "T",
+                "constraints": {
+                    "type": "ref",
+                    "ref": "Asset"
+                },
+                "default": {
+                    "type": "ref",
+                    "ref": "Asset"
+                }
+            }
+        ]
+    },
+    "title": "Switch",
+    "description": "A switch can replace an asset with the applicable case on first render",
+    "genericTokens": [
+        {
+            "symbol": "T",
+            "constraints": {
+                "type": "ref",
+                "ref": "Asset"
+            },
+            "default": {
+                "type": "ref",
+                "ref": "Asset"
+            }
+        }
+    ]
+}

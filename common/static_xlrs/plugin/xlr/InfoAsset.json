@@ -1,0 +1,67 @@
+{
+    "name": "InfoAsset",
+    "type": "object",
+    "source": "/Users/kreddy8/dev/player/reference-assets/info/dist/types.d.ts",
+    "properties": {
+        "id": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "title": "Asset.id",
+                "description": "Each asset requires a unique id per view"
+            }
+        },
+        "type": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "const": "info",
+                "title": "Asset.type",
+                "description": "The asset type determines the semantics of how a user interacts with a page"
+            }
+        },
+        "title": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "AssetWrapper",
+                "title": "InfoAsset.title",
+                "description": "The string value to show"
+            }
+        },
+        "subTitle": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "AssetWrapper",
+                "title": "InfoAsset.subTitle",
+                "description": "subtitle"
+            }
+        },
+        "primaryInfo": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "AssetWrapper",
+                "title": "InfoAsset.primaryInfo",
+                "description": "Primary place for info"
+            }
+        },
+        "actions": {
+            "required": false,
+            "node": {
+                "type": "array",
+                "elementType": {
+                    "type": "ref",
+                    "ref": "AssetWrapper"
+                },
+                "title": "InfoAsset.actions",
+                "description": "List of actions to show at the bottom of the page"
+            }
+        }
+    },
+    "additionalProperties": {
+        "type": "unknown"
+    },
+    "title": "InfoAsset"
+}

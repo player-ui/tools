@@ -1,0 +1,111 @@
+{
+    "name": "TransformedAction",
+    "type": "object",
+    "properties": {
+        "id": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "title": "Asset.id",
+                "description": "Each asset requires a unique id per view"
+            }
+        },
+        "type": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "const": "action"
+            }
+        },
+        "value": {
+            "required": false,
+            "node": {
+                "type": "string",
+                "title": "ActionAsset.value",
+                "description": "The transition value of the action in the state machine"
+            }
+        },
+        "label": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "AssetWrapper<AnyTextAsset>",
+                "title": "ActionAsset.label",
+                "description": "A text-like asset for the action's label"
+            }
+        },
+        "exp": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "Expression",
+                "title": "ActionAsset.exp",
+                "description": "An optional expression to execute before transitioning"
+            }
+        },
+        "accessibility": {
+            "required": false,
+            "node": {
+                "type": "string",
+                "title": "ActionAsset.accessibility",
+                "description": "An optional string that describes the action for screen-readers"
+            }
+        },
+        "metaData": {
+            "required": false,
+            "node": {
+                "type": "object",
+                "properties": {
+                    "beacon": {
+                        "required": false,
+                        "node": {
+                            "name": "BeaconDataType",
+                            "title": "ActionAsset.metaData.beacon",
+                            "type": "or",
+                            "or": [
+                                {
+                                    "type": "string",
+                                    "title": "BeaconDataType"
+                                },
+                                {
+                                    "type": "record",
+                                    "keyType": {
+                                        "type": "string"
+                                    },
+                                    "valueType": {
+                                        "type": "any"
+                                    },
+                                    "title": "BeaconDataType"
+                                }
+                            ],
+                            "description": "Additional data to beacon"
+                        }
+                    },
+                    "skipValidation": {
+                        "required": false,
+                        "node": {
+                            "type": "boolean",
+                            "title": "ActionAsset.metaData.skipValidation",
+                            "description": "Force transition to the next view without checking for validation"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "title": "ActionAsset.metaData",
+                "description": "Additional optional data to assist with the action interactions on the page"
+            }
+        },
+        "run": {
+            "required": true,
+            "node": {
+                "type": "function",
+                "parameters": [],
+                "title": "TransformedAction.run",
+                "description": "A method to execute the action"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "title": "TransformedAction",
+    "description": "A stateful instance of an action"
+}

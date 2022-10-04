@@ -1,0 +1,34 @@
+{
+    "name": "AssetWrapper",
+    "source": "src/index.ts",
+    "type": "object",
+    "properties": {
+        "asset": {
+            "required": true,
+            "node": {
+                "type": "ref",
+                "ref": "T",
+                "title": "AssetWrapper.asset",
+                "description": "An asset instance"
+            }
+        }
+    },
+    "additionalProperties": {
+        "type": "unknown"
+    },
+    "title": "AssetWrapper",
+    "description": "An object that contains an asset",
+    "genericTokens": [
+        {
+            "symbol": "T",
+            "constraints": {
+                "type": "ref",
+                "ref": "Asset"
+            },
+            "default": {
+                "type": "ref",
+                "ref": "Asset"
+            }
+        }
+    ]
+}

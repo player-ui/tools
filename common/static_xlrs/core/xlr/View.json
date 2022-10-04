@@ -1,0 +1,155 @@
+{
+    "name": "View",
+    "source": "src/index.ts",
+    "type": "and",
+    "and": [
+        {
+            "type": "ref",
+            "ref": "T"
+        },
+        {
+            "type": "object",
+            "properties": {
+                "validation": {
+                    "required": false,
+                    "node": {
+                        "type": "array",
+                        "elementType": {
+                            "name": "CrossfieldReference",
+                            "type": "object",
+                            "properties": {
+                                "type": {
+                                    "required": true,
+                                    "node": {
+                                        "type": "string",
+                                        "title": "Reference.type",
+                                        "description": "The name of the referenced validation type\nThis will be used to lookup the proper handler"
+                                    }
+                                },
+                                "message": {
+                                    "required": false,
+                                    "node": {
+                                        "type": "string",
+                                        "title": "Reference.message",
+                                        "description": "An optional means of overriding the default message if the validation is triggered"
+                                    }
+                                },
+                                "severity": {
+                                    "required": false,
+                                    "node": {
+                                        "name": "Severity",
+                                        "type": "or",
+                                        "or": [
+                                            {
+                                                "type": "string",
+                                                "const": "error",
+                                                "title": "Severity"
+                                            },
+                                            {
+                                                "type": "string",
+                                                "const": "warning",
+                                                "title": "Severity"
+                                            }
+                                        ],
+                                        "title": "Reference.severity",
+                                        "description": "An optional means of overriding the default severity of the validation if triggered"
+                                    }
+                                },
+                                "trigger": {
+                                    "required": false,
+                                    "node": {
+                                        "name": "Trigger",
+                                        "type": "or",
+                                        "or": [
+                                            {
+                                                "type": "string",
+                                                "const": "navigation",
+                                                "title": "Trigger"
+                                            },
+                                            {
+                                                "type": "string",
+                                                "const": "change",
+                                                "title": "Trigger"
+                                            },
+                                            {
+                                                "type": "string",
+                                                "const": "load",
+                                                "title": "Trigger"
+                                            }
+                                        ],
+                                        "title": "Reference.trigger",
+                                        "description": "When to run this particular validation"
+                                    }
+                                },
+                                "dataTarget": {
+                                    "required": false,
+                                    "node": {
+                                        "type": "never",
+                                        "title": "CrossfieldReference.dataTarget",
+                                        "description": "Cross-field references and validation must run against the default (deformatted) value"
+                                    }
+                                },
+                                "displayTarget": {
+                                    "required": false,
+                                    "node": {
+                                        "name": "DisplayTarget",
+                                        "type": "or",
+                                        "or": [
+                                            {
+                                                "type": "string",
+                                                "const": "page",
+                                                "title": "DisplayTarget"
+                                            },
+                                            {
+                                                "type": "string",
+                                                "const": "section",
+                                                "title": "DisplayTarget"
+                                            },
+                                            {
+                                                "type": "string",
+                                                "const": "field",
+                                                "title": "DisplayTarget"
+                                            }
+                                        ],
+                                        "title": "Reference.displayTarget",
+                                        "description": "Where the error should be displayed"
+                                    }
+                                },
+                                "ref": {
+                                    "required": false,
+                                    "node": {
+                                        "type": "ref",
+                                        "ref": "Binding",
+                                        "title": "CrossfieldReference.ref",
+                                        "description": "The binding to associate this validation with"
+                                    }
+                                }
+                            },
+                            "additionalProperties": {
+                                "type": "unknown"
+                            },
+                            "title": "CrossfieldReference"
+                        },
+                        "title": "validation",
+                        "description": "Each view can optionally supply a list of validations to run against a particular view"
+                    }
+                }
+            },
+            "additionalProperties": false
+        }
+    ],
+    "title": "View",
+    "genericTokens": [
+        {
+            "symbol": "T",
+            "constraints": {
+                "type": "ref",
+                "ref": "Asset"
+            },
+            "default": {
+                "type": "ref",
+                "ref": "Asset"
+            }
+        }
+    ]
+}

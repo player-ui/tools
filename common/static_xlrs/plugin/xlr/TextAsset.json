@@ -1,0 +1,134 @@
+{
+    "name": "TextAsset",
+    "type": "object",
+    "source": "/Users/kreddy8/dev/player/reference-assets/text/dist/types.d.ts",
+    "properties": {
+        "id": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "title": "Asset.id",
+                "description": "Each asset requires a unique id per view"
+            }
+        },
+        "type": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "const": "text",
+                "title": "Asset.type",
+                "description": "The asset type determines the semantics of how a user interacts with a page"
+            }
+        },
+        "value": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "title": "TextAsset.value",
+                "description": "The text to display"
+            }
+        },
+        "modifiers": {
+            "required": false,
+            "node": {
+                "type": "array",
+                "elementType": {
+                    "name": "TextModifier",
+                    "source": "/Users/kreddy8/dev/player/reference-assets/text/dist/types.d.ts",
+                    "type": "or",
+                    "or": [
+                        {
+                            "name": "BasicTextModifier",
+                            "type": "object",
+                            "source": "/Users/kreddy8/dev/player/reference-assets/text/dist/types.d.ts",
+                            "properties": {
+                                "type": {
+                                    "required": true,
+                                    "node": {
+                                        "type": "string",
+                                        "title": "BasicTextModifier.type",
+                                        "description": "The modifier type"
+                                    }
+                                },
+                                "name": {
+                                    "required": false,
+                                    "node": {
+                                        "type": "string",
+                                        "title": "BasicTextModifier.name",
+                                        "description": "Modifiers can be named when used in strings"
+                                    }
+                                }
+                            },
+                            "additionalProperties": {
+                                "type": "unknown"
+                            },
+                            "title": "BasicTextModifier"
+                        },
+                        {
+                            "name": "LinkModifier",
+                            "type": "object",
+                            "source": "/Users/kreddy8/dev/player/reference-assets/text/dist/types.d.ts",
+                            "properties": {
+                                "type": {
+                                    "required": true,
+                                    "node": {
+                                        "type": "string",
+                                        "const": "link",
+                                        "title": "LinkModifier.type",
+                                        "description": "The link type denotes this as a link"
+                                    }
+                                },
+                                "exp": {
+                                    "required": false,
+                                    "node": {
+                                        "type": "ref",
+                                        "ref": "Expression",
+                                        "title": "LinkModifier.exp",
+                                        "description": "An optional expression to run before the link is opened"
+                                    }
+                                },
+                                "metaData": {
+                                    "required": true,
+                                    "node": {
+                                        "type": "object",
+                                        "properties": {
+                                            "ref": {
+                                                "required": true,
+                                                "node": {
+                                                    "type": "string",
+                                                    "title": "LinkModifier.metaData.ref",
+                                                    "description": "The location of the link to load"
+                                                }
+                                            },
+                                            "'mime-type'": {
+                                                "required": false,
+                                                "node": {
+                                                    "type": "string",
+                                                    "title": "LinkModifier.metaData.'mime-type'",
+                                                    "description": "Used to indicate an application specific resolver to use"
+                                                }
+                                            }
+                                        },
+                                        "additionalProperties": false,
+                                        "title": "LinkModifier.metaData",
+                                        "description": "metaData about the link's target"
+                                    }
+                                }
+                            },
+                            "additionalProperties": false,
+                            "title": "LinkModifier",
+                            "description": "A modifier to turn the text into a link"
+                        }
+                    ],
+                    "title": "TextModifier"
+                },
+                "title": "TextAsset.modifiers",
+                "description": "Any modifiers on the text"
+            }
+        }
+    },
+    "additionalProperties": {
+        "type": "unknown"
+    },
+    "title": "TextAsset"
+}

@@ -1,0 +1,7 @@
+{
+    "name": "ExpressionRef",
+    "source": "src/index.ts",
+    "type": "template",
+    "format": "@[.*]@",
+    "title": "ExpressionRef"
+}

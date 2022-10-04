@@ -1,0 +1,4 @@
+test --test_output=errors
+coverage --combined_report=lcov
+build:release --stamp --workspace_status_command=./scripts/workspace-status.sh
+try-import %workspace%/.bazelrc.local

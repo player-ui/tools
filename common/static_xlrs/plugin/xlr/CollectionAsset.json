@@ -1,0 +1,40 @@
+{
+    "name": "CollectionAsset",
+    "type": "object",
+    "source": "/Users/kreddy8/dev/player/reference-assets/collection/dist/types.d.ts",
+    "properties": {
+        "id": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "title": "Asset.id",
+                "description": "Each asset requires a unique id per view"
+            }
+        },
+        "type": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "const": "collection",
+                "title": "Asset.type",
+                "description": "The asset type determines the semantics of how a user interacts with a page"
+            }
+        },
+        "values": {
+            "required": true,
+            "node": {
+                "type": "array",
+                "elementType": {
+                    "type": "ref",
+                    "ref": "AssetWrapper"
+                },
+                "title": "CollectionAsset.values",
+                "description": "The string value to show"
+            }
+        }
+    },
+    "additionalProperties": {
+        "type": "unknown"
+    },
+    "title": "CollectionAsset"
+}

@@ -1,0 +1,13 @@
+{
+    "name": "DataModel",
+    "source": "src/index.ts",
+    "type": "record",
+    "keyType": {
+        "type": "any"
+    },
+    "valueType": {
+        "type": "unknown"
+    },
+    "title": "DataModel",
+    "description": "The data-model is the location that all user data is stored"
+}

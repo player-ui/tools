@@ -1,0 +1,110 @@
+{
+    "name": "NavigationFlowEndState",
+    "type": "object",
+    "source": "src/index.ts",
+    "properties": {
+        "_comment": {
+            "required": false,
+            "node": {
+                "type": "string",
+                "title": "CommentBase._comment",
+                "description": "Add comments that will not be processing, but are useful for code explanation"
+            }
+        },
+        "state_type": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "const": "END",
+                "title": "NavigationBaseState.state_type",
+                "description": "A property to determine the type of state this is"
+            }
+        },
+        "onStart": {
+            "required": false,
+            "node": {
+                "type": "or",
+                "or": [
+                    {
+                        "type": "ref",
+                        "ref": "Expression",
+                        "title": "NavigationBaseState.onStart"
+                    },
+                    {
+                        "name": "ExpressionObject",
+                        "type": "object",
+                        "source": "src/index.ts",
+                        "properties": {
+                            "exp": {
+                                "required": false,
+                                "node": {
+                                    "type": "ref",
+                                    "ref": "Expression",
+                                    "title": "ExpressionObject.exp",
+                                    "description": "The expression to run"
+                                }
+                            }
+                        },
+                        "additionalProperties": false,
+                        "title": "ExpressionObject",
+                        "description": "An object with an expression in it"
+                    }
+                ],
+                "title": "NavigationBaseState.onStart",
+                "description": "An optional expression to run when this view renders"
+            }
+        },
+        "onEnd": {
+            "required": false,
+            "node": {
+                "type": "or",
+                "or": [
+                    {
+                        "type": "ref",
+                        "ref": "Expression",
+                        "title": "NavigationBaseState.onEnd"
+                    },
+                    {
+                        "name": "ExpressionObject",
+                        "type": "object",
+                        "source": "src/index.ts",
+                        "properties": {
+                            "exp": {
+                                "required": false,
+                                "node": {
+                                    "type": "ref",
+                                    "ref": "Expression",
+                                    "title": "ExpressionObject.exp",
+                                    "description": "The expression to run"
+                                }
+                            }
+                        },
+                        "additionalProperties": false,
+                        "title": "ExpressionObject",
+                        "description": "An object with an expression in it"
+                    }
+                ],
+                "title": "NavigationBaseState.onEnd",
+                "description": "An optional expression to run before view transition"
+            }
+        },
+        "exp": {
+            "required": false,
+            "node": {
+                "title": "NavigationBaseState.exp",
+                "type": "never"
+            }
+        },
+        "outcome": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "title": "NavigationFlowEndState.outcome",
+                "description": "A description of _how_ the flow ended.\nIf this is a flow started from another flow, the outcome determines the flow transition"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "title": "NavigationFlowEndState",
+    "description": "An END state of the flow."
+}

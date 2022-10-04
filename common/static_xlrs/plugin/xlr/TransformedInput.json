@@ -1,0 +1,322 @@
+{
+    "name": "TransformedInput",
+    "type": "object",
+    "properties": {
+        "id": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "title": "Asset.id",
+                "description": "Each asset requires a unique id per view"
+            }
+        },
+        "type": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "const": "input"
+            }
+        },
+        "label": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "AssetWrapper<AnyTextAsset>",
+                "title": "InputAsset.label",
+                "description": "Asset container for a field label."
+            }
+        },
+        "binding": {
+            "required": true,
+            "node": {
+                "type": "ref",
+                "ref": "Binding",
+                "title": "InputAsset.binding",
+                "description": "The location in the data-model to store the data"
+            }
+        },
+        "metaData": {
+            "required": false,
+            "node": {
+                "type": "object",
+                "properties": {
+                    "beacon": {
+                        "required": false,
+                        "node": {
+                            "name": "BeaconDataType",
+                            "title": "InputAsset.metaData.beacon",
+                            "type": "or",
+                            "or": [
+                                {
+                                    "type": "string",
+                                    "title": "BeaconDataType"
+                                },
+                                {
+                                    "type": "record",
+                                    "keyType": {
+                                        "type": "string"
+                                    },
+                                    "valueType": {
+                                        "type": "any"
+                                    },
+                                    "title": "BeaconDataType"
+                                }
+                            ],
+                            "description": "Additional data to beacon when this input changes"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "title": "InputAsset.metaData",
+                "description": "Optional additional data"
+            }
+        },
+        "set": {
+            "required": true,
+            "node": {
+                "type": "function",
+                "parameters": [
+                    {
+                        "name": "newValue",
+                        "type": {
+                            "name": "ValueType",
+                            "title": "ValueType",
+                            "type": "or",
+                            "or": [
+                                {
+                                    "type": "string",
+                                    "title": "ValueType"
+                                },
+                                {
+                                    "type": "undefined",
+                                    "title": "ValueType"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "title": "TransformedInput.set",
+                "description": "A function to commit the new value to the data-model"
+            }
+        },
+        "format": {
+            "required": true,
+            "node": {
+                "type": "function",
+                "parameters": [
+                    {
+                        "name": "newValue",
+                        "type": {
+                            "name": "ValueType",
+                            "title": "ValueType",
+                            "type": "or",
+                            "or": [
+                                {
+                                    "type": "string",
+                                    "title": "ValueType"
+                                },
+                                {
+                                    "type": "undefined",
+                                    "title": "ValueType"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "returnType": {
+                    "name": "ValueType",
+                    "title": "ValueType",
+                    "type": "or",
+                    "or": [
+                        {
+                            "type": "string",
+                            "title": "ValueType"
+                        },
+                        {
+                            "type": "undefined",
+                            "title": "ValueType"
+                        }
+                    ]
+                },
+                "title": "TransformedInput.format",
+                "description": "A function to format a value"
+            }
+        },
+        "value": {
+            "required": true,
+            "node": {
+                "name": "ValueType",
+                "title": "TransformedInput.value",
+                "type": "or",
+                "or": [
+                    {
+                        "type": "string",
+                        "title": "ValueType"
+                    },
+                    {
+                        "type": "undefined",
+                        "title": "ValueType"
+                    }
+                ],
+                "description": "The current value of the input from the data-model"
+            }
+        },
+        "validation": {
+            "required": false,
+            "node": {
+                "name": "ValidationResponse",
+                "title": "TransformedInput.validation",
+                "type": "or",
+                "or": [
+                    {
+                        "name": "BaseValidationResponse",
+                        "title": "ErrorValidationResponse",
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "message": {
+                                "required": true,
+                                "node": {
+                                    "type": "string",
+                                    "title": "BaseValidationResponse.message",
+                                    "description": "The validation message to show to the user"
+                                }
+                            },
+                            "parameters": {
+                                "required": false,
+                                "node": {
+                                    "type": "record",
+                                    "keyType": {
+                                        "type": "string"
+                                    },
+                                    "valueType": {
+                                        "type": "any"
+                                    },
+                                    "title": "BaseValidationResponse.parameters",
+                                    "description": "List of parameters associated with a validation. These can be replaced into a templatized message string."
+                                }
+                            },
+                            "severity": {
+                                "required": true,
+                                "node": {
+                                    "type": "string",
+                                    "const": "error"
+                                }
+                            },
+                            "displayTarget": {
+                                "required": false,
+                                "node": {
+                                    "name": "DisplayTarget",
+                                    "title": "BaseValidationResponse.displayTarget",
+                                    "description": "Where this validation should be displayed",
+                                    "type": "or",
+                                    "or": [
+                                        {
+                                            "type": "string",
+                                            "const": "page",
+                                            "title": "DisplayTarget"
+                                        },
+                                        {
+                                            "type": "string",
+                                            "const": "section",
+                                            "title": "DisplayTarget"
+                                        },
+                                        {
+                                            "type": "string",
+                                            "const": "field",
+                                            "title": "DisplayTarget"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "name": "WarningValidationResponse",
+                        "type": "object",
+                        "properties": {
+                            "message": {
+                                "required": true,
+                                "node": {
+                                    "type": "string",
+                                    "title": "BaseValidationResponse.message",
+                                    "description": "The validation message to show to the user"
+                                }
+                            },
+                            "parameters": {
+                                "required": false,
+                                "node": {
+                                    "type": "record",
+                                    "keyType": {
+                                        "type": "string"
+                                    },
+                                    "valueType": {
+                                        "type": "any"
+                                    },
+                                    "title": "BaseValidationResponse.parameters",
+                                    "description": "List of parameters associated with a validation. These can be replaced into a templatized message string."
+                                }
+                            },
+                            "severity": {
+                                "required": true,
+                                "node": {
+                                    "type": "string",
+                                    "const": "warning"
+                                }
+                            },
+                            "displayTarget": {
+                                "required": false,
+                                "node": {
+                                    "name": "DisplayTarget",
+                                    "title": "BaseValidationResponse.displayTarget",
+                                    "description": "Where this validation should be displayed",
+                                    "type": "or",
+                                    "or": [
+                                        {
+                                            "type": "string",
+                                            "const": "page",
+                                            "title": "DisplayTarget"
+                                        },
+                                        {
+                                            "type": "string",
+                                            "const": "section",
+                                            "title": "DisplayTarget"
+                                        },
+                                        {
+                                            "type": "string",
+                                            "const": "field",
+                                            "title": "DisplayTarget"
+                                        }
+                                    ]
+                                }
+                            },
+                            "dismiss": {
+                                "required": false,
+                                "node": {
+                                    "type": "function",
+                                    "parameters": [],
+                                    "title": "WarningValidationResponse.dismiss",
+                                    "description": "Warning validations can be dismissed without correcting the error"
+                                }
+                            }
+                        },
+                        "additionalProperties": false,
+                        "title": "WarningValidationResponse"
+                    }
+                ],
+                "description": "Any validation associated with the current input's value"
+            }
+        },
+        "dataType": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "Schema.DataType",
+                "title": "TransformedInput.dataType",
+                "description": "The dataType defined from the schema"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "title": "TransformedInput"
+}

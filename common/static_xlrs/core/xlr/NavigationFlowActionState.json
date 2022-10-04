@@ -1,0 +1,120 @@
+{
+    "name": "NavigationFlowActionState",
+    "type": "object",
+    "source": "src/index.ts",
+    "properties": {
+        "_comment": {
+            "required": false,
+            "node": {
+                "type": "string",
+                "title": "CommentBase._comment",
+                "description": "Add comments that will not be processing, but are useful for code explanation"
+            }
+        },
+        "state_type": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "const": "ACTION",
+                "title": "NavigationBaseState.state_type",
+                "description": "A property to determine the type of state this is"
+            }
+        },
+        "onStart": {
+            "required": false,
+            "node": {
+                "type": "or",
+                "or": [
+                    {
+                        "type": "ref",
+                        "ref": "Expression",
+                        "title": "NavigationBaseState.onStart"
+                    },
+                    {
+                        "name": "ExpressionObject",
+                        "type": "object",
+                        "source": "src/index.ts",
+                        "properties": {
+                            "exp": {
+                                "required": false,
+                                "node": {
+                                    "type": "ref",
+                                    "ref": "Expression",
+                                    "title": "ExpressionObject.exp",
+                                    "description": "The expression to run"
+                                }
+                            }
+                        },
+                        "additionalProperties": false,
+                        "title": "ExpressionObject",
+                        "description": "An object with an expression in it"
+                    }
+                ],
+                "title": "NavigationBaseState.onStart",
+                "description": "An optional expression to run when this view renders"
+            }
+        },
+        "onEnd": {
+            "required": false,
+            "node": {
+                "type": "or",
+                "or": [
+                    {
+                        "type": "ref",
+                        "ref": "Expression",
+                        "title": "NavigationBaseState.onEnd"
+                    },
+                    {
+                        "name": "ExpressionObject",
+                        "type": "object",
+                        "source": "src/index.ts",
+                        "properties": {
+                            "exp": {
+                                "required": false,
+                                "node": {
+                                    "type": "ref",
+                                    "ref": "Expression",
+                                    "title": "ExpressionObject.exp",
+                                    "description": "The expression to run"
+                                }
+                            }
+                        },
+                        "additionalProperties": false,
+                        "title": "ExpressionObject",
+                        "description": "An object with an expression in it"
+                    }
+                ],
+                "title": "NavigationBaseState.onEnd",
+                "description": "An optional expression to run before view transition"
+            }
+        },
+        "exp": {
+            "required": true,
+            "node": {
+                "type": "ref",
+                "ref": "Expression",
+                "title": "NavigationFlowActionState.exp",
+                "description": "An expression to execute.\nThe return value determines the transition to take"
+            }
+        },
+        "transitions": {
+            "required": true,
+            "node": {
+                "name": "NavigationFlowTransition",
+                "source": "src/index.ts",
+                "type": "record",
+                "keyType": {
+                    "type": "string"
+                },
+                "valueType": {
+                    "type": "string"
+                },
+                "title": "NavigationFlowTransitionableState.transitions",
+                "description": "A mapping of transition-name to FlowState name"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "title": "NavigationFlowActionState",
+    "description": "Action states execute an expression to determine the next state to transition to"
+}

@@ -1,0 +1,133 @@
+{
+    "name": "NavigationBaseState",
+    "type": "object",
+    "source": "src/index.ts",
+    "properties": {
+        "_comment": {
+            "required": false,
+            "node": {
+                "type": "string",
+                "title": "CommentBase._comment",
+                "description": "Add comments that will not be processing, but are useful for code explanation"
+            }
+        },
+        "state_type": {
+            "required": true,
+            "node": {
+                "type": "ref",
+                "ref": "T",
+                "title": "NavigationBaseState.state_type",
+                "description": "A property to determine the type of state this is"
+            }
+        },
+        "onStart": {
+            "required": false,
+            "node": {
+                "type": "or",
+                "or": [
+                    {
+                        "type": "ref",
+                        "ref": "Expression",
+                        "title": "NavigationBaseState.onStart"
+                    },
+                    {
+                        "name": "ExpressionObject",
+                        "type": "object",
+                        "source": "src/index.ts",
+                        "properties": {
+                            "exp": {
+                                "required": false,
+                                "node": {
+                                    "type": "ref",
+                                    "ref": "Expression",
+                                    "title": "ExpressionObject.exp",
+                                    "description": "The expression to run"
+                                }
+                            }
+                        },
+                        "additionalProperties": false,
+                        "title": "ExpressionObject",
+                        "description": "An object with an expression in it"
+                    }
+                ],
+                "title": "NavigationBaseState.onStart",
+                "description": "An optional expression to run when this view renders"
+            }
+        },
+        "onEnd": {
+            "required": false,
+            "node": {
+                "type": "or",
+                "or": [
+                    {
+                        "type": "ref",
+                        "ref": "Expression",
+                        "title": "NavigationBaseState.onEnd"
+                    },
+                    {
+                        "name": "ExpressionObject",
+                        "type": "object",
+                        "source": "src/index.ts",
+                        "properties": {
+                            "exp": {
+                                "required": false,
+                                "node": {
+                                    "type": "ref",
+                                    "ref": "Expression",
+                                    "title": "ExpressionObject.exp",
+                                    "description": "The expression to run"
+                                }
+                            }
+                        },
+                        "additionalProperties": false,
+                        "title": "ExpressionObject",
+                        "description": "An object with an expression in it"
+                    }
+                ],
+                "title": "NavigationBaseState.onEnd",
+                "description": "An optional expression to run before view transition"
+            }
+        },
+        "exp": {
+            "required": false,
+            "node": {
+                "type": "conditional",
+                "check": {
+                    "left": {
+                        "type": "ref",
+                        "ref": "T"
+                    },
+                    "right": {
+                        "type": "string",
+                        "const": "ACTION"
+                    }
+                },
+                "value": {
+                    "true": {
+                        "type": "ref",
+                        "ref": "Expression"
+                    },
+                    "false": {
+                        "type": "never"
+                    }
+                },
+                "title": "NavigationBaseState.exp",
+                "description": "TS gets really confused with both the ActionState and the onStart state both declaring the `exp` property\nSo this explicity says there should never be an exp prop on a state node that's not of type 'ACTION'"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "title": "NavigationBaseState",
+    "description": "The base representation of a state within a Flow",
+    "genericTokens": [
+        {
+            "symbol": "T",
+            "constraints": {
+                "type": "string"
+            },
+            "default": {
+                "type": "any"
+            }
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "pluginName": "BaseAssetsPlugin",
+    "capabilities": {
+        "Assets": [
+            "InputAsset",
+            "TextAsset",
+            "ActionAsset",
+            "InfoAsset",
+            "CollectionAsset",
+            "TransformedAction",
+            "TransformedInput"
+        ]
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "name": "ExpressionObject",
+    "type": "object",
+    "source": "src/index.ts",
+    "properties": {
+        "exp": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "Expression",
+                "title": "ExpressionObject.exp",
+                "description": "The expression to run"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "title": "ExpressionObject",
+    "description": "An object with an expression in it"
+}

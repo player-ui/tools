@@ -1,0 +1,7 @@
+{
+    "name": "BindingRef",
+    "source": "src/index.ts",
+    "type": "template",
+    "format": "{{.*}}",
+    "title": "BindingRef"
+}

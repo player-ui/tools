@@ -1,0 +1,65 @@
+{
+    "name": "Template",
+    "type": "object",
+    "source": "src/index.ts",
+    "properties": {
+        "dynamic": {
+            "required": false,
+            "node": {
+                "type": "boolean",
+                "title": "Template.dynamic",
+                "description": "should the template be recomputed when data changes"
+            }
+        },
+        "data": {
+            "required": true,
+            "node": {
+                "type": "ref",
+                "ref": "Binding",
+                "title": "Template.data",
+                "description": "A pointer to the data-model containing an array of elements to map over"
+            }
+        },
+        "value": {
+            "required": true,
+            "node": {
+                "type": "ref",
+                "ref": "ValueType",
+                "title": "Template.value",
+                "description": "The template to iterate over using each value in the supplied template data.\nAny reference to _index_ is replaced with the current iteration index."
+            }
+        },
+        "output": {
+            "required": true,
+            "node": {
+                "type": "ref",
+                "ref": "Key",
+                "title": "Template.output",
+                "description": "A property on the parent object to store the new map under.\nIf it already exists, values are appended to the end."
+            }
+        }
+    },
+    "additionalProperties": false,
+    "title": "Template",
+    "description": "A template describes a mapping from a data array -> array of objects",
+    "genericTokens": [
+        {
+            "symbol": "ValueType",
+            "constraints": {
+                "type": "any"
+            },
+            "default": {
+                "type": "unknown"
+            }
+        },
+        {
+            "symbol": "Key",
+            "constraints": {
+                "type": "string"
+            },
+            "default": {
+                "type": "string"
+            }
+        }
+    ]
+}
