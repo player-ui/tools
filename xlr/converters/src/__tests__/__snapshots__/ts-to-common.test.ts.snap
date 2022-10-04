@@ -1,0 +1,644 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Complex Types Omit 1`] = `
+Array [
+  Object {
+    "additionalProperties": false,
+    "genericTokens": undefined,
+    "name": "foo",
+    "properties": Object {
+      "bax": Object {
+        "node": Object {
+          "title": "foo.bax",
+          "type": "number",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "title": "Bar",
+    "type": "object",
+  },
+]
+`;
+
+exports[`Complex Types Omit with type intersection 1`] = `
+Array [
+  Object {
+    "and": Array [
+      Object {
+        "additionalProperties": false,
+        "genericTokens": undefined,
+        "name": "foo",
+        "properties": Object {
+          "fax": Object {
+            "node": Object {
+              "title": "foo.fax",
+              "type": "number",
+            },
+            "required": true,
+          },
+        },
+        "source": "filename.ts",
+        "title": "foo",
+        "type": "object",
+      },
+      Object {
+        "additionalProperties": false,
+        "genericTokens": undefined,
+        "name": "boo",
+        "properties": Object {
+          "bax": Object {
+            "node": Object {
+              "title": "boo.bax",
+              "type": "boolean",
+            },
+            "required": true,
+          },
+        },
+        "source": "filename.ts",
+        "title": "boo",
+        "type": "object",
+      },
+    ],
+    "genericTokens": undefined,
+    "name": "test",
+    "source": "filename.ts",
+    "title": "Bar",
+    "type": "and",
+  },
+]
+`;
+
+exports[`Complex Types Omit with type union 1`] = `
+Array [
+  Object {
+    "genericTokens": undefined,
+    "name": "test",
+    "or": Array [
+      Object {
+        "additionalProperties": false,
+        "genericTokens": undefined,
+        "name": "foo",
+        "properties": Object {
+          "far": Object {
+            "node": Object {
+              "title": "foo.far",
+              "type": "string",
+            },
+            "required": true,
+          },
+          "fax": Object {
+            "node": Object {
+              "title": "foo.fax",
+              "type": "number",
+            },
+            "required": true,
+          },
+        },
+        "source": "filename.ts",
+        "title": "foo",
+        "type": "object",
+      },
+      Object {
+        "additionalProperties": false,
+        "genericTokens": undefined,
+        "name": "boo",
+        "properties": Object {
+          "far": Object {
+            "node": Object {
+              "title": "boo.far",
+              "type": "string",
+            },
+            "required": true,
+          },
+        },
+        "source": "filename.ts",
+        "title": "boo",
+        "type": "object",
+      },
+    ],
+    "source": "filename.ts",
+    "title": "Bar",
+    "type": "or",
+  },
+]
+`;
+
+exports[`Complex Types Pick 1`] = `
+Array [
+  Object {
+    "additionalProperties": false,
+    "genericTokens": undefined,
+    "name": "foo",
+    "properties": Object {
+      "bar": Object {
+        "node": Object {
+          "title": "foo.bar",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "title": "Bar",
+    "type": "object",
+  },
+]
+`;
+
+exports[`Complex Types Pick with interface intersection 1`] = `
+Array [
+  Object {
+    "genericTokens": undefined,
+    "name": "test",
+    "or": Array [
+      Object {
+        "additionalProperties": false,
+        "genericTokens": undefined,
+        "name": "foo",
+        "properties": Object {
+          "far": Object {
+            "node": Object {
+              "title": "foo.far",
+              "type": "string",
+            },
+            "required": true,
+          },
+        },
+        "source": "filename.ts",
+        "title": "foo",
+        "type": "object",
+      },
+      Object {
+        "additionalProperties": false,
+        "genericTokens": undefined,
+        "name": "boo",
+        "properties": Object {
+          "far": Object {
+            "node": Object {
+              "title": "boo.far",
+              "type": "string",
+            },
+            "required": true,
+          },
+        },
+        "source": "filename.ts",
+        "title": "boo",
+        "type": "object",
+      },
+    ],
+    "source": "filename.ts",
+    "title": "Bar",
+    "type": "or",
+  },
+]
+`;
+
+exports[`Complex Types Pick with interface union 1`] = `
+Array [
+  Object {
+    "genericTokens": undefined,
+    "name": "test",
+    "or": Array [
+      Object {
+        "additionalProperties": false,
+        "genericTokens": undefined,
+        "name": "foo",
+        "properties": Object {
+          "far": Object {
+            "node": Object {
+              "title": "foo.far",
+              "type": "string",
+            },
+            "required": true,
+          },
+        },
+        "source": "filename.ts",
+        "title": "foo",
+        "type": "object",
+      },
+      Object {
+        "additionalProperties": false,
+        "genericTokens": undefined,
+        "name": "boo",
+        "properties": Object {
+          "far": Object {
+            "node": Object {
+              "title": "boo.far",
+              "type": "number",
+            },
+            "required": true,
+          },
+        },
+        "source": "filename.ts",
+        "title": "boo",
+        "type": "object",
+      },
+    ],
+    "source": "filename.ts",
+    "title": "Bar",
+    "type": "or",
+  },
+]
+`;
+
+exports[`Generic Declarations Basic Generic Type 1`] = `
+Array [
+  Object {
+    "genericTokens": Array [
+      Object {
+        "constraints": Object {
+          "type": "any",
+        },
+        "default": Object {
+          "type": "any",
+        },
+        "symbol": "T",
+      },
+    ],
+    "name": "Foo",
+    "or": Array [
+      Object {
+        "title": "Foo",
+        "type": "string",
+      },
+      Object {
+        "ref": "T",
+        "title": "Foo",
+        "type": "ref",
+      },
+    ],
+    "source": "filename.ts",
+    "title": "Foo",
+    "type": "or",
+  },
+]
+`;
+
+exports[`Generic Declarations Generic with Constraints 1`] = `
+Array [
+  Object {
+    "genericTokens": Array [
+      Object {
+        "constraints": Object {
+          "type": "string",
+        },
+        "default": Object {
+          "type": "string",
+        },
+        "symbol": "T",
+      },
+    ],
+    "name": "Foo",
+    "or": Array [
+      Object {
+        "title": "Foo",
+        "type": "number",
+      },
+      Object {
+        "ref": "T",
+        "title": "Foo",
+        "type": "ref",
+      },
+    ],
+    "source": "filename.ts",
+    "title": "Foo",
+    "type": "or",
+  },
+]
+`;
+
+exports[`Generic Declarations Implementing Generic Type 1`] = `
+Array [
+  Object {
+    "genericTokens": undefined,
+    "name": "Bar",
+    "or": Array [
+      Object {
+        "title": "Bar",
+        "type": "boolean",
+      },
+      Object {
+        "genericTokens": Array [
+          Object {
+            "constraints": Object {
+              "type": "any",
+            },
+            "default": Object {
+              "type": "any",
+            },
+            "symbol": "T",
+          },
+        ],
+        "name": "Foo",
+        "or": Array [
+          Object {
+            "title": "Foo",
+            "type": "string",
+          },
+          Object {
+            "title": "Foo",
+            "type": "number",
+          },
+        ],
+        "source": "filename.ts",
+        "title": "Foo",
+        "type": "or",
+      },
+    ],
+    "source": "filename.ts",
+    "title": "Bar",
+    "type": "or",
+  },
+]
+`;
+
+exports[`Generic Declarations Implementing Interface with Generics 1`] = `Array []`;
+
+exports[`Generic Declarations Interface with Generics 1`] = `
+Array [
+  Object {
+    "additionalProperties": false,
+    "genericTokens": Array [
+      Object {
+        "constraints": Object {
+          "type": "any",
+        },
+        "default": Object {
+          "type": "any",
+        },
+        "symbol": "T",
+      },
+    ],
+    "name": "Foo",
+    "properties": Object {
+      "bar": Object {
+        "node": Object {
+          "ref": "T",
+          "title": "Foo.bar",
+          "type": "ref",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "title": "Foo",
+    "type": "object",
+  },
+]
+`;
+
+exports[`Generic Declarations Interface with Generics and Constraints 1`] = `
+Array [
+  Object {
+    "additionalProperties": false,
+    "genericTokens": Array [
+      Object {
+        "constraints": Object {
+          "type": "string",
+        },
+        "default": Object {
+          "type": "string",
+        },
+        "symbol": "T",
+      },
+    ],
+    "name": "Foo",
+    "properties": Object {
+      "bar": Object {
+        "node": Object {
+          "ref": "T",
+          "title": "Foo.bar",
+          "type": "ref",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "title": "Foo",
+    "type": "object",
+  },
+]
+`;
+
+exports[`Index Types Basic 1`] = `
+Array [
+  Object {
+    "additionalProperties": false,
+    "genericTokens": undefined,
+    "name": "test",
+    "properties": Object {
+      "key": Object {
+        "node": Object {
+          "title": "test.key",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "title": "test",
+    "type": "object",
+  },
+]
+`;
+
+exports[`Index Types Complex Types 1`] = `
+Array [
+  Object {
+    "additionalProperties": false,
+    "genericTokens": undefined,
+    "name": "test",
+    "properties": Object {
+      "key": Object {
+        "node": Object {
+          "additionalProperties": false,
+          "genericTokens": undefined,
+          "name": "something",
+          "properties": Object {
+            "prop1": Object {
+              "node": Object {
+                "title": "something.prop1",
+                "type": "string",
+              },
+              "required": true,
+            },
+            "prop2": Object {
+              "node": Object {
+                "title": "something.prop2",
+                "type": "number",
+              },
+              "required": true,
+            },
+          },
+          "source": "filename.ts",
+          "title": "test.key",
+          "type": "object",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "title": "test",
+    "type": "object",
+  },
+]
+`;
+
+exports[`Interface Exports Basic Interface Type 1`] = `
+Array [
+  Object {
+    "additionalProperties": false,
+    "genericTokens": undefined,
+    "name": "Foo",
+    "properties": Object {
+      "bar": Object {
+        "node": Object {
+          "title": "Foo.bar",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "bax": Object {
+        "node": Object {
+          "title": "Foo.bax",
+          "type": "number",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "title": "Foo",
+    "type": "object",
+  },
+]
+`;
+
+exports[`Interface Exports Interface with Inheritance 1`] = `
+Array [
+  Object {
+    "additionalProperties": false,
+    "genericTokens": undefined,
+    "name": "Foo",
+    "properties": Object {
+      "bar": Object {
+        "node": Object {
+          "title": "Foo.bar",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "baw": Object {
+        "node": Object {
+          "title": "Base.baw",
+          "type": "any",
+        },
+        "required": true,
+      },
+      "bax": Object {
+        "node": Object {
+          "title": "Foo.bax",
+          "type": "number",
+        },
+        "required": false,
+      },
+    },
+    "source": "filename.ts",
+    "title": "Foo",
+    "type": "object",
+  },
+]
+`;
+
+exports[`Interface Exports Interface with Optional parameters 1`] = `
+Array [
+  Object {
+    "additionalProperties": false,
+    "genericTokens": undefined,
+    "name": "Foo",
+    "properties": Object {
+      "bar": Object {
+        "node": Object {
+          "title": "Foo.bar",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "bax": Object {
+        "node": Object {
+          "title": "Foo.bax",
+          "type": "number",
+        },
+        "required": false,
+      },
+    },
+    "source": "filename.ts",
+    "title": "Foo",
+    "type": "object",
+  },
+]
+`;
+
+exports[`String Templates Basic 1`] = `
+Array [
+  Object {
+    "format": "String is a .*, number is a [0-9]* and boolean is a true|false",
+    "genericTokens": undefined,
+    "name": "Bar",
+    "source": "filename.ts",
+    "title": "Bar",
+    "type": "template",
+  },
+]
+`;
+
+exports[`String Templates Type References 1`] = `
+Array [
+  Object {
+    "format": "String is a .*, number is a [0-9]* and boolean is a true|false",
+    "genericTokens": undefined,
+    "name": "Bar",
+    "source": "filename.ts",
+    "title": "Bar",
+    "type": "template",
+  },
+]
+`;
+
+exports[`Type Exports Basic Array Type 1`] = `
+Array [
+  Object {
+    "elementType": Object {
+      "type": "string",
+    },
+    "genericTokens": undefined,
+    "name": "Foo",
+    "source": "filename.ts",
+    "title": "Foo",
+    "type": "array",
+  },
+]
+`;
+
+exports[`Type Exports Basic Union Type 1`] = `
+Array [
+  Object {
+    "genericTokens": undefined,
+    "name": "Foo",
+    "or": Array [
+      Object {
+        "title": "Foo",
+        "type": "number",
+      },
+      Object {
+        "title": "Foo",
+        "type": "string",
+      },
+    ],
+    "source": "filename.ts",
+    "title": "Foo",
+    "type": "or",
+  },
+]
+`;

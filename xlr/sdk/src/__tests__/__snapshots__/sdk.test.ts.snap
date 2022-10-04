@@ -1,0 +1,779 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Basic Validation Working Test 1`] = `
+Array [
+  Object {
+    "message": "Expected type 'string' but got 'number'",
+    "node": Object {
+      "children": Array [
+        Object {
+          "length": 4,
+          "offset": 13,
+          "parent": [Circular],
+          "type": "string",
+          "value": "id",
+        },
+        Object {
+          "length": 1,
+          "offset": 19,
+          "parent": [Circular],
+          "type": "number",
+          "value": 1,
+        },
+      ],
+      "colonOffset": 17,
+      "length": 7,
+      "offset": 13,
+      "parent": Object {
+        "children": Array [
+          [Circular],
+          Object {
+            "children": Array [
+              Object {
+                "length": 6,
+                "offset": 28,
+                "parent": [Circular],
+                "type": "string",
+                "value": "type",
+              },
+              Object {
+                "length": 7,
+                "offset": 36,
+                "parent": [Circular],
+                "type": "string",
+                "value": "input",
+              },
+            ],
+            "colonOffset": 34,
+            "length": 15,
+            "offset": 28,
+            "parent": [Circular],
+            "type": "property",
+          },
+          Object {
+            "children": Array [
+              Object {
+                "length": 9,
+                "offset": 51,
+                "parent": [Circular],
+                "type": "string",
+                "value": "binding",
+              },
+              Object {
+                "length": 11,
+                "offset": 62,
+                "parent": [Circular],
+                "type": "string",
+                "value": "some.data",
+              },
+            ],
+            "colonOffset": 60,
+            "length": 22,
+            "offset": 51,
+            "parent": [Circular],
+            "type": "property",
+          },
+          Object {
+            "children": Array [
+              Object {
+                "length": 7,
+                "offset": 81,
+                "parent": [Circular],
+                "type": "string",
+                "value": "label",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "children": Array [
+                      Object {
+                        "length": 7,
+                        "offset": 100,
+                        "parent": [Circular],
+                        "type": "string",
+                        "value": "asset",
+                      },
+                      Object {
+                        "children": Array [
+                          Object {
+                            "children": Array [
+                              Object {
+                                "length": 7,
+                                "offset": 121,
+                                "parent": [Circular],
+                                "type": "string",
+                                "value": "value",
+                              },
+                              Object {
+                                "length": 17,
+                                "offset": 130,
+                                "parent": [Circular],
+                                "type": "string",
+                                "value": "{{input.label}}",
+                              },
+                            ],
+                            "colonOffset": 128,
+                            "length": 26,
+                            "offset": 121,
+                            "parent": [Circular],
+                            "type": "property",
+                          },
+                        ],
+                        "length": 48,
+                        "offset": 109,
+                        "parent": [Circular],
+                        "type": "object",
+                      },
+                    ],
+                    "colonOffset": 107,
+                    "length": 57,
+                    "offset": 100,
+                    "parent": [Circular],
+                    "type": "property",
+                  },
+                ],
+                "length": 75,
+                "offset": 90,
+                "parent": [Circular],
+                "type": "object",
+              },
+            ],
+            "colonOffset": 88,
+            "length": 84,
+            "offset": 81,
+            "parent": [Circular],
+            "type": "property",
+          },
+        ],
+        "length": 165,
+        "offset": 5,
+        "type": "object",
+      },
+      "type": "property",
+    },
+    "type": "type",
+  },
+  Object {
+    "message": "Property 'id' missing from type 'Asset'",
+    "node": Object {
+      "children": Array [
+        Object {
+          "children": Array [
+            Object {
+              "length": 7,
+              "offset": 121,
+              "parent": [Circular],
+              "type": "string",
+              "value": "value",
+            },
+            Object {
+              "length": 17,
+              "offset": 130,
+              "parent": [Circular],
+              "type": "string",
+              "value": "{{input.label}}",
+            },
+          ],
+          "colonOffset": 128,
+          "length": 26,
+          "offset": 121,
+          "parent": [Circular],
+          "type": "property",
+        },
+      ],
+      "length": 48,
+      "offset": 109,
+      "parent": Object {
+        "children": Array [
+          Object {
+            "length": 7,
+            "offset": 100,
+            "parent": [Circular],
+            "type": "string",
+            "value": "asset",
+          },
+          [Circular],
+        ],
+        "colonOffset": 107,
+        "length": 57,
+        "offset": 100,
+        "parent": Object {
+          "children": Array [
+            [Circular],
+          ],
+          "length": 75,
+          "offset": 90,
+          "parent": Object {
+            "children": Array [
+              Object {
+                "length": 7,
+                "offset": 81,
+                "parent": [Circular],
+                "type": "string",
+                "value": "label",
+              },
+              [Circular],
+            ],
+            "colonOffset": 88,
+            "length": 84,
+            "offset": 81,
+            "parent": Object {
+              "children": Array [
+                Object {
+                  "children": Array [
+                    Object {
+                      "length": 4,
+                      "offset": 13,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "id",
+                    },
+                    Object {
+                      "length": 1,
+                      "offset": 19,
+                      "parent": [Circular],
+                      "type": "number",
+                      "value": 1,
+                    },
+                  ],
+                  "colonOffset": 17,
+                  "length": 7,
+                  "offset": 13,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                Object {
+                  "children": Array [
+                    Object {
+                      "length": 6,
+                      "offset": 28,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "type",
+                    },
+                    Object {
+                      "length": 7,
+                      "offset": 36,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "input",
+                    },
+                  ],
+                  "colonOffset": 34,
+                  "length": 15,
+                  "offset": 28,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                Object {
+                  "children": Array [
+                    Object {
+                      "length": 9,
+                      "offset": 51,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "binding",
+                    },
+                    Object {
+                      "length": 11,
+                      "offset": 62,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "some.data",
+                    },
+                  ],
+                  "colonOffset": 60,
+                  "length": 22,
+                  "offset": 51,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                [Circular],
+              ],
+              "length": 165,
+              "offset": 5,
+              "type": "object",
+            },
+            "type": "property",
+          },
+          "type": "object",
+        },
+        "type": "property",
+      },
+      "type": "object",
+    },
+    "type": "missing",
+  },
+  Object {
+    "message": "Property 'type' missing from type 'Asset'",
+    "node": Object {
+      "children": Array [
+        Object {
+          "children": Array [
+            Object {
+              "length": 7,
+              "offset": 121,
+              "parent": [Circular],
+              "type": "string",
+              "value": "value",
+            },
+            Object {
+              "length": 17,
+              "offset": 130,
+              "parent": [Circular],
+              "type": "string",
+              "value": "{{input.label}}",
+            },
+          ],
+          "colonOffset": 128,
+          "length": 26,
+          "offset": 121,
+          "parent": [Circular],
+          "type": "property",
+        },
+      ],
+      "length": 48,
+      "offset": 109,
+      "parent": Object {
+        "children": Array [
+          Object {
+            "length": 7,
+            "offset": 100,
+            "parent": [Circular],
+            "type": "string",
+            "value": "asset",
+          },
+          [Circular],
+        ],
+        "colonOffset": 107,
+        "length": 57,
+        "offset": 100,
+        "parent": Object {
+          "children": Array [
+            [Circular],
+          ],
+          "length": 75,
+          "offset": 90,
+          "parent": Object {
+            "children": Array [
+              Object {
+                "length": 7,
+                "offset": 81,
+                "parent": [Circular],
+                "type": "string",
+                "value": "label",
+              },
+              [Circular],
+            ],
+            "colonOffset": 88,
+            "length": 84,
+            "offset": 81,
+            "parent": Object {
+              "children": Array [
+                Object {
+                  "children": Array [
+                    Object {
+                      "length": 4,
+                      "offset": 13,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "id",
+                    },
+                    Object {
+                      "length": 1,
+                      "offset": 19,
+                      "parent": [Circular],
+                      "type": "number",
+                      "value": 1,
+                    },
+                  ],
+                  "colonOffset": 17,
+                  "length": 7,
+                  "offset": 13,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                Object {
+                  "children": Array [
+                    Object {
+                      "length": 6,
+                      "offset": 28,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "type",
+                    },
+                    Object {
+                      "length": 7,
+                      "offset": 36,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "input",
+                    },
+                  ],
+                  "colonOffset": 34,
+                  "length": 15,
+                  "offset": 28,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                Object {
+                  "children": Array [
+                    Object {
+                      "length": 9,
+                      "offset": 51,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "binding",
+                    },
+                    Object {
+                      "length": 11,
+                      "offset": 62,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "some.data",
+                    },
+                  ],
+                  "colonOffset": 60,
+                  "length": 22,
+                  "offset": 51,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                [Circular],
+              ],
+              "length": 165,
+              "offset": 5,
+              "type": "object",
+            },
+            "type": "property",
+          },
+          "type": "object",
+        },
+        "type": "property",
+      },
+      "type": "object",
+    },
+    "type": "missing",
+  },
+]
+`;
+
+exports[`Export Test Exports Typescript Types With Filters 1`] = `
+"import { Expression, Asset, Binding, AssetWrapper } from \\"@player-ui/types\\";
+
+/**
+ * This is the most generic way of gathering data. The input is bound to a data model using the 'binding' property.
+ * Players can get field type information from the 'schema' definition, thus to decide the input controls for visual rendering.
+*/
+export interface InputAsset<AnyTextAsset extends Asset = Asset> {
+    /** Each asset requires a unique id per view */
+    id: string;
+    /** The asset type determines the semantics of how a user interacts with a page */
+    type: \\"input\\";
+    /** Asset container for a field label. */
+    label?: AssetWrapper<AnyTextAsset>;
+    /** The location in the data-model to store the data */
+    binding: Binding;
+    /** Optional additional data */
+    metaData?: {
+        /** Additional data to beacon when this input changes */
+        beacon?: string | Record<string, any>;
+    };
+    [key: string]: unknown;
+}
+export interface TextAsset {
+    /** Each asset requires a unique id per view */
+    id: string;
+    /** The asset type determines the semantics of how a user interacts with a page */
+    type: \\"text\\";
+    /** The text to display */
+    value: string;
+    /** Any modifiers on the text */
+    modifiers?: Array<{
+        /** The modifier type */
+        type: string;
+        /** Modifiers can be named when used in strings */
+        name?: string;
+        [key: string]: unknown;
+    } | {
+        /** The link type denotes this as a link */
+        type: \\"link\\";
+        /** An optional expression to run before the link is opened */
+        exp?: Expression;
+        /** metaData about the link's target */
+        metaData: {
+            /** The location of the link to load */
+            ref: string;
+            /** Used to indicate an application specific resolver to use */
+            'mime-type'?: string;
+        };
+    }>;
+    [key: string]: unknown;
+}
+/**
+ * User actions can be represented in several places.
+ * Each view typically has one or more actions that allow the user to navigate away from that view.
+ * In addition, several asset types can have actions that apply to that asset only.
+*/
+export interface ActionAsset<AnyTextAsset extends Asset = Asset> {
+    /** Each asset requires a unique id per view */
+    id: string;
+    /** The asset type determines the semantics of how a user interacts with a page */
+    type: \\"action\\";
+    /** The transition value of the action in the state machine */
+    value?: string;
+    /** A text-like asset for the action's label */
+    label?: AssetWrapper<AnyTextAsset>;
+    /** An optional expression to execute before transitioning */
+    exp?: Expression;
+    /** An optional string that describes the action for screen-readers */
+    accessibility?: string;
+    /** Additional optional data to assist with the action interactions on the page */
+    metaData?: {
+        /** Additional data to beacon */
+        beacon?: string | Record<string, any>;
+        /** Force transition to the next view without checking for validation */
+        skipValidation?: boolean;
+    };
+    [key: string]: unknown;
+}
+export interface InfoAsset {
+    /** Each asset requires a unique id per view */
+    id: string;
+    /** The asset type determines the semantics of how a user interacts with a page */
+    type: \\"info\\";
+    /** The string value to show */
+    title?: AssetWrapper;
+    /** subtitle */
+    subTitle?: AssetWrapper;
+    /** Primary place for info */
+    primaryInfo?: AssetWrapper;
+    /** List of actions to show at the bottom of the page */
+    actions?: Array<AssetWrapper>;
+    [key: string]: unknown;
+}
+export interface CollectionAsset {
+    /** Each asset requires a unique id per view */
+    id: string;
+    /** The asset type determines the semantics of how a user interacts with a page */
+    type: \\"collection\\";
+    /** The string value to show */
+    values: Array<AssetWrapper>;
+    [key: string]: unknown;
+}"
+`;
+
+exports[`Export Test Exports Typescript Types With Transforms 1`] = `
+"import { Expression, Asset, Binding, AssetWrapper } from \\"@player-ui/types\\";
+
+/**
+ * This is the most generic way of gathering data. The input is bound to a data model using the 'binding' property.
+ * Players can get field type information from the 'schema' definition, thus to decide the input controls for visual rendering.
+*/
+export interface InputAsset<AnyTextAsset extends Asset = Asset> {
+    /** Each asset requires a unique id per view */
+    id: string;
+    /** The asset type determines the semantics of how a user interacts with a page */
+    type: \\"input\\";
+    /** Asset container for a field label. */
+    label?: AssetWrapper<AnyTextAsset>;
+    /** The location in the data-model to store the data */
+    binding: Binding;
+    /** Optional additional data */
+    metaData?: {
+        /** Additional data to beacon when this input changes */
+        beacon?: string | Record<string, any>;
+    };
+    transformed?: true;
+    [key: string]: unknown;
+}
+export interface TextAsset {
+    /** Each asset requires a unique id per view */
+    id: string;
+    /** The asset type determines the semantics of how a user interacts with a page */
+    type: \\"text\\";
+    /** The text to display */
+    value: string;
+    /** Any modifiers on the text */
+    modifiers?: Array<{
+        /** The modifier type */
+        type: string;
+        /** Modifiers can be named when used in strings */
+        name?: string;
+        [key: string]: unknown;
+    } | {
+        /** The link type denotes this as a link */
+        type: \\"link\\";
+        /** An optional expression to run before the link is opened */
+        exp?: Expression;
+        /** metaData about the link's target */
+        metaData: {
+            /** The location of the link to load */
+            ref: string;
+            /** Used to indicate an application specific resolver to use */
+            'mime-type'?: string;
+        };
+    }>;
+    transformed?: true;
+    [key: string]: unknown;
+}
+/**
+ * User actions can be represented in several places.
+ * Each view typically has one or more actions that allow the user to navigate away from that view.
+ * In addition, several asset types can have actions that apply to that asset only.
+*/
+export interface ActionAsset<AnyTextAsset extends Asset = Asset> {
+    /** Each asset requires a unique id per view */
+    id: string;
+    /** The asset type determines the semantics of how a user interacts with a page */
+    type: \\"action\\";
+    /** The transition value of the action in the state machine */
+    value?: string;
+    /** A text-like asset for the action's label */
+    label?: AssetWrapper<AnyTextAsset>;
+    /** An optional expression to execute before transitioning */
+    exp?: Expression;
+    /** An optional string that describes the action for screen-readers */
+    accessibility?: string;
+    /** Additional optional data to assist with the action interactions on the page */
+    metaData?: {
+        /** Additional data to beacon */
+        beacon?: string | Record<string, any>;
+        /** Force transition to the next view without checking for validation */
+        skipValidation?: boolean;
+    };
+    transformed?: true;
+    [key: string]: unknown;
+}
+export interface InfoAsset {
+    /** Each asset requires a unique id per view */
+    id: string;
+    /** The asset type determines the semantics of how a user interacts with a page */
+    type: \\"info\\";
+    /** The string value to show */
+    title?: AssetWrapper;
+    /** subtitle */
+    subTitle?: AssetWrapper;
+    /** Primary place for info */
+    primaryInfo?: AssetWrapper;
+    /** List of actions to show at the bottom of the page */
+    actions?: Array<AssetWrapper>;
+    transformed?: true;
+    [key: string]: unknown;
+}
+export interface CollectionAsset {
+    /** Each asset requires a unique id per view */
+    id: string;
+    /** The asset type determines the semantics of how a user interacts with a page */
+    type: \\"collection\\";
+    /** The string value to show */
+    values: Array<AssetWrapper>;
+    transformed?: true;
+    [key: string]: unknown;
+}"
+`;
+
+exports[`Export Test Exports Typescript types 1`] = `
+"import { Expression, Asset, Binding, AssetWrapper } from \\"@player-ui/types\\";
+
+/**
+ * This is the most generic way of gathering data. The input is bound to a data model using the 'binding' property.
+ * Players can get field type information from the 'schema' definition, thus to decide the input controls for visual rendering.
+*/
+export interface InputAsset<AnyTextAsset extends Asset = Asset> {
+    /** Each asset requires a unique id per view */
+    id: string;
+    /** The asset type determines the semantics of how a user interacts with a page */
+    type: \\"input\\";
+    /** Asset container for a field label. */
+    label?: AssetWrapper<AnyTextAsset>;
+    /** The location in the data-model to store the data */
+    binding: Binding;
+    /** Optional additional data */
+    metaData?: {
+        /** Additional data to beacon when this input changes */
+        beacon?: string | Record<string, any>;
+    };
+    [key: string]: unknown;
+}
+export interface TextAsset {
+    /** Each asset requires a unique id per view */
+    id: string;
+    /** The asset type determines the semantics of how a user interacts with a page */
+    type: \\"text\\";
+    /** The text to display */
+    value: string;
+    /** Any modifiers on the text */
+    modifiers?: Array<{
+        /** The modifier type */
+        type: string;
+        /** Modifiers can be named when used in strings */
+        name?: string;
+        [key: string]: unknown;
+    } | {
+        /** The link type denotes this as a link */
+        type: \\"link\\";
+        /** An optional expression to run before the link is opened */
+        exp?: Expression;
+        /** metaData about the link's target */
+        metaData: {
+            /** The location of the link to load */
+            ref: string;
+            /** Used to indicate an application specific resolver to use */
+            'mime-type'?: string;
+        };
+    }>;
+    [key: string]: unknown;
+}
+/**
+ * User actions can be represented in several places.
+ * Each view typically has one or more actions that allow the user to navigate away from that view.
+ * In addition, several asset types can have actions that apply to that asset only.
+*/
+export interface ActionAsset<AnyTextAsset extends Asset = Asset> {
+    /** Each asset requires a unique id per view */
+    id: string;
+    /** The asset type determines the semantics of how a user interacts with a page */
+    type: \\"action\\";
+    /** The transition value of the action in the state machine */
+    value?: string;
+    /** A text-like asset for the action's label */
+    label?: AssetWrapper<AnyTextAsset>;
+    /** An optional expression to execute before transitioning */
+    exp?: Expression;
+    /** An optional string that describes the action for screen-readers */
+    accessibility?: string;
+    /** Additional optional data to assist with the action interactions on the page */
+    metaData?: {
+        /** Additional data to beacon */
+        beacon?: string | Record<string, any>;
+        /** Force transition to the next view without checking for validation */
+        skipValidation?: boolean;
+    };
+    [key: string]: unknown;
+}
+export interface InfoAsset {
+    /** Each asset requires a unique id per view */
+    id: string;
+    /** The asset type determines the semantics of how a user interacts with a page */
+    type: \\"info\\";
+    /** The string value to show */
+    title?: AssetWrapper;
+    /** subtitle */
+    subTitle?: AssetWrapper;
+    /** Primary place for info */
+    primaryInfo?: AssetWrapper;
+    /** List of actions to show at the bottom of the page */
+    actions?: Array<AssetWrapper>;
+    [key: string]: unknown;
+}
+export interface CollectionAsset {
+    /** Each asset requires a unique id per view */
+    id: string;
+    /** The asset type determines the semantics of how a user interacts with a page */
+    type: \\"collection\\";
+    /** The string value to show */
+    values: Array<AssetWrapper>;
+    [key: string]: unknown;
+}"
+`;

@@ -1,0 +1,204 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`player language service completion basic object completions 1`] = `
+Array [
+  Object {
+    "documentation": "The text to display",
+    "kind": 10,
+    "label": "value",
+  },
+  Object {
+    "documentation": "Any modifiers on the text",
+    "kind": 10,
+    "label": "modifiers",
+  },
+  Object {
+    "documentation": "Evaluate the given expression (or boolean) and if falsy, remove this node from the tree. This is re-computed for each change in the data-model",
+    "kind": 10,
+    "label": "applicability",
+  },
+  Object {
+    "documentation": "Adds a comment for the given node",
+    "kind": 10,
+    "label": "_comment",
+  },
+  Object {
+    "documentation": "A list of templates to process for this node",
+    "kind": 10,
+    "label": "template",
+  },
+]
+`;
+
+exports[`player language service completion basic object completions 2`] = `
+Array [
+  Object {
+    "documentation": "The name of the Flow to begin on",
+    "kind": 10,
+    "label": "BEGIN",
+  },
+  Object {
+    "documentation": "Adds a comment for the given node",
+    "kind": 10,
+    "label": "_comment",
+  },
+]
+`;
+
+exports[`player language service completion basic value completions 1`] = `
+Array [
+  Object {
+    "kind": 12,
+    "label": "VIEW",
+  },
+  Object {
+    "kind": 12,
+    "label": "END",
+  },
+  Object {
+    "kind": 12,
+    "label": "FLOW",
+  },
+  Object {
+    "kind": 12,
+    "label": "ACTION",
+  },
+  Object {
+    "kind": 12,
+    "label": "EXTERNAL",
+  },
+]
+`;
+
+exports[`player language service completion schema completions 1`] = `
+Array [
+  Object {
+    "kind": 12,
+    "label": "",
+  },
+  Object {
+    "kind": 12,
+    "label": ".bar",
+  },
+  Object {
+    "kind": 12,
+    "label": ".baz",
+  },
+]
+`;
+
+exports[`player language service hover basic hover docs 1`] = `
+Object {
+  "contents": Object {
+    "kind": "plaintext",
+    "value": "Each asset requires a unique id per view",
+  },
+}
+`;
+
+exports[`player language service hover basic hover docs 2`] = `
+Object {
+  "contents": Object {
+    "kind": "plaintext",
+    "value": "The asset type determines the semantics of how a user interacts with a page",
+  },
+}
+`;
+
+exports[`player language service hover basic hover docs 3`] = `
+Object {
+  "contents": Object {
+    "kind": "plaintext",
+    "value": "Any initial data that the flow can use",
+  },
+}
+`;
+
+exports[`player language service validation throws AssetWrapper errors 1`] = `
+Array [
+  Object {
+    "message": "Content Validation Error - type: Expected type 'string' but got 'null'",
+    "range": Object {
+      "end": Object {
+        "character": 28,
+        "line": 20,
+      },
+      "start": Object {
+        "character": 16,
+        "line": 20,
+      },
+    },
+    "severity": 1,
+  },
+  Object {
+    "message": "Content Validation Error - missing: Property 'BEGIN' missing from type 'Navigation'",
+    "range": Object {
+      "end": Object {
+        "character": 26,
+        "line": 16,
+      },
+      "start": Object {
+        "character": 24,
+        "line": 16,
+      },
+    },
+    "severity": 1,
+  },
+  Object {
+    "message": "Navigation Validation Error - missing: Property 'BEGIN' missing from type 'Navigation'",
+    "range": Object {
+      "end": Object {
+        "character": 26,
+        "line": 16,
+      },
+      "start": Object {
+        "character": 24,
+        "line": 16,
+      },
+    },
+    "severity": 1,
+  },
+  Object {
+    "message": "View is not reachable",
+    "range": Object {
+      "end": Object {
+        "character": 33,
+        "line": 5,
+      },
+      "start": Object {
+        "character": 20,
+        "line": 5,
+      },
+    },
+    "severity": 2,
+  },
+  Object {
+    "message": "View Validation Error - value: Does not match any of the expected types for type: 'AssetWrapperOrSwitch'",
+    "range": Object {
+      "end": Object {
+        "character": 16,
+        "line": 12,
+      },
+      "start": Object {
+        "character": 23,
+        "line": 8,
+      },
+    },
+    "severity": 1,
+  },
+  Object {
+    "message": "Implicit Array -> \\"collection\\" assets is not supported.",
+    "range": Object {
+      "end": Object {
+        "character": 21,
+        "line": 8,
+      },
+      "start": Object {
+        "character": 14,
+        "line": 8,
+      },
+    },
+    "severity": 1,
+  },
+]
+`;
