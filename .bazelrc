@@ -41,8 +41,8 @@ coverage --build_metadata=REPO_URL=https://github.com/player-ui/tools.git
 build:ci --build_metadata=ROLE=CI --workspace_status_command=./scripts/workspace-status.sh
 
 # Circle large has 2 CPU cores/4GB mem
-build:ci --local_cpu_resources=2
-build:ci --local_ram_resources=4000
+build:ci --local_cpu_resources=4
+build:ci --local_ram_resources=8000
 build:ci --config="release"
 
 build:release --stamp --workspace_status_command=./scripts/workspace-status.sh

@@ -24,7 +24,7 @@ executors:
     docker:
       - image: docker.io/playerui/bazel-docker
     working_directory: ~/tools
-    resource_class: medium
+    resource_class: large
     environment:
       TZ: "/usr/share/zoneinfo/America/Los_Angeles"
 
