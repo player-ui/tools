@@ -32,7 +32,7 @@ BUILD_DATA = [
     "@npm//vscode-languageserver-textdocument",
     "@npm//vscode-languageserver-types",
     "//language/dsl:@player-tools/dsl",
-    "//language/service:@player-tools/service",
+    "//language/service:@player-tools/language-service",
     "//xlr/sdk:@player-tools/xlr-sdk",
     "//xlr/utils:@player-tools/xlr-utils",
     "//xlr/converters:@player-tools/xlr-converters"

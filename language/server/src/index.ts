@@ -8,7 +8,7 @@ import {
   TextDocumentSyncKind,
 } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
-import { PlayerLanguageService } from '@player-tools/service';
+import { PlayerLanguageService } from '@player-tools/language-service';
 import fs from 'fs';
 import { runAndCatch } from './utils';
 
