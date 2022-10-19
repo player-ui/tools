@@ -33,6 +33,9 @@ module.exports = {
     'test-utils',
     '_backup',
   ],
+  "transformIgnorePatterns": [
+    "node_modules/(?!react-dnd|dnd-core|@react-dnd)"
+  ],
   collectCoverageFrom: [
     '**/src/**',
     '!**/*.json',
