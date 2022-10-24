@@ -369,10 +369,12 @@ export class XLRValidator {
     operand: ObjectType,
     errorOnOverlap = true
   ): ObjectType {
+    const baseObjectName = base.name ?? 'object literal';
+    const operandObjectName = operand.name ?? 'object literal';
     const newObject = {
       ...base,
-      name: `${base.name} & ${operand.name}`,
-      description: `Effective type combining ${base.name} and ${operand.name}`,
+      name: `${baseObjectName} & ${operandObjectName}`,
+      description: `Effective type combining ${baseObjectName} and ${operandObjectName}`,
     };
 
     // eslint-disable-next-line no-restricted-syntax, guard-for-in
@@ -384,11 +386,7 @@ export class XLRValidator {
         errorOnOverlap
       ) {
         throw new Error(
-          `Can't compute effective type for ${
-            base.name ?? 'object literal'
-          } and ${
-            operand.name ?? 'object literal'
-          } because of conflicting properties ${property}`
+          `Can't compute effective type for ${baseObjectName} and ${operandObjectName} because of conflicting properties ${property}`
         );
       }
 
