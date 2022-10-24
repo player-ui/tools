@@ -169,15 +169,23 @@ export class XLRValidator {
   private validateObject(xlrNode: ObjectType, node: Node) {
     const issues: Array<ValidationError> = [];
     const objectProps = makePropertyMap(node);
+
+    let effectiveXLRNode = xlrNode;
+
+    if (xlrNode.extends) {
+      const extendedNode = this.getRefType(xlrNode.extends) as ObjectType;
+      effectiveXLRNode = this.computeEffectiveObject(extendedNode, xlrNode);
+    }
+
     // eslint-disable-next-line guard-for-in, no-restricted-syntax
-    for (const prop in xlrNode.properties) {
-      const expectedType = xlrNode.properties[prop];
+    for (const prop in effectiveXLRNode.properties) {
+      const expectedType = effectiveXLRNode.properties[prop];
       const valueNode = objectProps.get(prop);
       if (expectedType.required && valueNode === undefined) {
         issues.push({
           type: 'missing',
           node,
-          message: `Property '${prop}' missing from type '${xlrNode.name}'`,
+          message: `Property '${prop}' missing from type '${effectiveXLRNode.name}'`,
         });
       }
 
@@ -190,22 +198,25 @@ export class XLRValidator {
 
     // Check if unknown keys are allowed and if they are - do the violate the constraint
     const extraKeys = Array.from(objectProps.keys()).filter(
-      (key) => xlrNode.properties[key] === undefined
+      (key) => effectiveXLRNode.properties[key] === undefined
     );
-    if (xlrNode.additionalProperties === false && extraKeys.length > 0) {
+    if (
+      effectiveXLRNode.additionalProperties === false &&
+      extraKeys.length > 0
+    ) {
       issues.push({
         type: 'value',
         node,
-        message: `Unexpected properties on '${xlrNode.name}': ${extraKeys.join(
-          ', '
-        )}`,
+        message: `Unexpected properties on '${
+          effectiveXLRNode.name
+        }': ${extraKeys.join(', ')}`,
       });
     } else {
       issues.push(
         ...extraKeys.flatMap((key) =>
           this.validateType(
             objectProps.get(key) as Node,
-            xlrNode.additionalProperties as NodeType
+            effectiveXLRNode.additionalProperties as NodeType
           )
         )
       );

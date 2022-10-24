@@ -11,6 +11,7 @@ import type {
   AnyType,
   ParamTypeNode,
   ConditionalType,
+  RefType,
 } from '@player-tools/xlr';
 import type { TopLevelDeclaration } from '@player-tools/xlr-utils';
 import {
@@ -481,6 +482,7 @@ export class TsConverter {
   ): ObjectType {
     let newProperties: { [x: string]: ObjectProperty } = {};
     let newAdditionalProperties: NodeType | false = false;
+    let extendsType: RefType | undefined;
 
     clauses.forEach((heritageClause) => {
       const parent = heritageClause.types[0];
@@ -499,25 +501,29 @@ export class TsConverter {
       }
 
       if (parentInterface && isTopLevelNode(parentInterface)) {
-        const parentInterfaceType = this.convertDeclaration(parentInterface);
-        if (parentInterface.typeParameters && parent.typeArguments) {
-          const filledInInterface = this.solveGenerics(
-            parentInterfaceType as NodeTypeWithGenerics,
-            parentInterface.typeParameters,
-            parent.typeArguments
-          ) as NamedType<ObjectType>;
-          newProperties = filledInInterface.properties;
-          newAdditionalProperties = filledInInterface.additionalProperties;
+        if (this.context.customPrimitives.includes(parentInterface.name.text)) {
+          extendsType = this.makeBasicRefNode(parent);
         } else {
-          if (isGenericNodeType(baseObject)) {
-            baseObject.genericTokens.push(
-              ...((parentInterfaceType as NodeTypeWithGenerics).genericTokens ??
-                [])
-            );
-          }
+          const parentInterfaceType = this.convertDeclaration(parentInterface);
+          if (parentInterface.typeParameters && parent.typeArguments) {
+            const filledInInterface = this.solveGenerics(
+              parentInterfaceType as NodeTypeWithGenerics,
+              parentInterface.typeParameters,
+              parent.typeArguments
+            ) as NamedType<ObjectType>;
+            newProperties = filledInInterface.properties;
+            newAdditionalProperties = filledInInterface.additionalProperties;
+          } else {
+            if (isGenericNodeType(baseObject)) {
+              baseObject.genericTokens.push(
+                ...((parentInterfaceType as NodeTypeWithGenerics)
+                  .genericTokens ?? [])
+              );
+            }
 
-          newProperties = parentInterfaceType.properties;
-          newAdditionalProperties = parentInterfaceType.additionalProperties;
+            newProperties = parentInterfaceType.properties;
+            newAdditionalProperties = parentInterfaceType.additionalProperties;
+          }
         }
       }
     });
@@ -527,6 +533,7 @@ export class TsConverter {
         : false;
     return {
       ...baseObject,
+      ...(extendsType ? { extends: extendsType } : {}),
       properties: { ...newProperties, ...baseObject.properties },
       additionalProperties: newAdditionalProperties,
     };
@@ -695,6 +702,10 @@ export class TsConverter {
       );
     }
 
+    return this.makeBasicRefNode(node);
+  }
+
+  private makeBasicRefNode(node: ts.NodeWithTypeArguments): RefType {
     const genericArgs: Array<NodeType | NamedType<ObjectType>> = [];
     if (node.typeArguments) {
       node.typeArguments.forEach((typeArg) => {
@@ -709,7 +720,7 @@ export class TsConverter {
           genericArgs.push(convertedNode);
         } else {
           this.context.throwError(
-            `Conversion Error: Couldn't convert type argument in type ${refName}`
+            `Conversion Error: Couldn't convert type argument in type ${node.getText()}`
           );
         }
       });
