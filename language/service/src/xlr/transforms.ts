@@ -9,7 +9,7 @@ import type {
   RefType,
   TransformFunction,
 } from '@player-tools/xlr';
-
+import { simpleTransformGenerator } from '@player-tools/xlr-sdk';
 import { isPrimitiveTypeNode } from '@player-tools/xlr-utils';
 
 /**
@@ -60,37 +60,11 @@ export const applyAssetWrapperOrSwitch: TransformFunction = (
   node: NamedType,
   capability: string
 ) => {
-  if (capability === 'Assets') {
-    if (node.type === 'object') {
-      for (const key in node.properties) {
-        const value = node.properties[key];
-        if (
-          value.node.type === 'ref' &&
-          value.node.ref.includes('AssetWrapper')
-        ) {
-          value.node.ref = value.node.ref.replace(
-            'AssetWrapper',
-            'AssetWrapperOrSwitch'
-          );
-        } else if (value.node.type === 'object') {
-          applyAssetWrapperOrSwitch(
-            value.node as NamedType<ObjectType>,
-            capability
-          );
-        }
-      }
-    } else if (node.type === 'array') {
-      if (
-        node.elementType.type === 'ref' &&
-        node.elementType.ref.includes('AssetWrapper')
-      ) {
-        node.elementType.ref = node.elementType.ref.replace(
-          'AssetWrapper',
-          'AssetWrapperOrSwitch'
-        );
-      }
+  simpleTransformGenerator('ref', 'Assets', (xlrNode) => {
+    if (xlrNode.ref.includes('AssetWrapper')) {
+      xlrNode.ref = xlrNode.ref.replace('AssetWrapper', 'AssetWrapperOrSwitch');
     }
-  }
+  })(node, capability);
 };
 
 /**
