@@ -17,8 +17,7 @@ export function simpleTransformGenerator<
 >(
   typeToTransform: T,
   capabilityToTransform: string,
-  functionToRun: (input: NodeTypeMap[T]) => void,
-  recursive = true
+  functionToRun: (input: NodeTypeMap[T]) => void
 ): TransformFunction {
   /** walker for an XLR tree to touch every node */
   const walker: TransformFunction = (
@@ -29,10 +28,6 @@ export function simpleTransformGenerator<
     if (capability === capabilityToTransform) {
       if (node.type === typeToTransform) {
         functionToRun(node as unknown as NodeTypeMap[T]);
-      }
-
-      if (!recursive) {
-        return;
       }
 
       if (node.type === 'object') {

@@ -4,7 +4,7 @@
 import type {
   ArrayType,
   NamedType,
-  ObjectType,
+  NodeType,
   OrType,
   RefType,
   TransformFunction,
@@ -15,44 +15,42 @@ import { isPrimitiveTypeNode } from '@player-tools/xlr-utils';
 /**
  * Adds applicability and _comment properties to Assets
  */
-export const applyCommonProps: TransformFunction = (node, capability) => {
-  simpleTransformGenerator(
-    'object',
-    'Assets',
-    (xlrNode) => {
-      if (!xlrNode.properties.applicability) {
-        xlrNode.properties.applicability = {
-          required: false,
-          node: {
-            type: 'or',
-            name: 'Applicability',
-            description:
-              'Evaluate the given expression (or boolean) and if falsy, remove this node from the tree. This is re-computed for each change in the data-model',
-            or: [
-              {
-                type: 'boolean',
-              },
-              {
-                type: 'ref',
-                ref: 'Expression',
-              },
-            ],
-          },
-        };
-      }
+export const applyCommonProps: TransformFunction = (
+  node: NamedType | NodeType,
+  capability: string
+) => {
+  if (capability === 'Assets') {
+    if (node.type === 'object' && !node.properties.applicability) {
+      node.properties.applicability = {
+        required: false,
+        node: {
+          type: 'or',
+          name: 'Applicability',
+          description:
+            'Evaluate the given expression (or boolean) and if falsy, remove this node from the tree. This is re-computed for each change in the data-model',
+          or: [
+            {
+              type: 'boolean',
+            },
+            {
+              type: 'ref',
+              ref: 'Expression',
+            },
+          ],
+        },
+      };
+    }
+  }
 
-      if (!xlrNode.properties._comment) {
-        xlrNode.properties._comment = {
-          required: false,
-          node: {
-            description: 'Adds a comment for the given node',
-            type: 'string',
-          },
-        };
-      }
-    },
-    false
-  )(node, capability);
+  if (node.type === 'object' && !node.properties._comment) {
+    node.properties._comment = {
+      required: false,
+      node: {
+        description: 'Adds a comment for the given node',
+        type: 'string',
+      },
+    };
+  }
 };
 
 /**
