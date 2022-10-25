@@ -5,6 +5,7 @@ import type {
   NodeTypeStrings,
   NodeTypeMap,
   TransformFunction,
+  NodeType,
 } from '@player-tools/xlr';
 
 /**
@@ -16,14 +17,22 @@ export function simpleTransformGenerator<
 >(
   typeToTransform: T,
   capabilityToTransform: string,
-  functionToRun: (input: NodeTypeMap[T]) => void
+  functionToRun: (input: NodeTypeMap[T]) => void,
+  recursive = true
 ): TransformFunction {
   /** walker for an XLR tree to touch every node */
-  const walker: TransformFunction = (node: NamedType, capability: string) => {
+  const walker: TransformFunction = (
+    node: NamedType | NodeType,
+    capability: string
+  ) => {
     // Run transform on base node before running on children
     if (capability === capabilityToTransform) {
       if (node.type === typeToTransform) {
         functionToRun(node as unknown as NodeTypeMap[T]);
+      }
+
+      if (!recursive) {
+        return;
       }
 
       if (node.type === 'object') {
@@ -33,48 +42,46 @@ export function simpleTransformGenerator<
 
         for (const key in node.properties) {
           const value = node.properties[key];
-          walker(value.node as NamedType, capability);
+          walker(value.node, capability);
         }
 
         if (node.additionalProperties) {
-          walker(node.additionalProperties as NamedType, capability);
+          walker(node.additionalProperties, capability);
         }
       } else if (node.type === 'array') {
-        walker(node.elementType as NamedType, capability);
+        walker(node.elementType, capability);
       } else if (node.type === 'and') {
-        node.and.forEach((element) => walker(element as NamedType, capability));
+        node.and.forEach((element) => walker(element, capability));
       } else if (node.type === 'or') {
-        node.or.forEach((element) => walker(element as NamedType, capability));
+        node.or.forEach((element) => walker(element, capability));
       } else if (node.type === 'ref') {
         node.genericArguments?.forEach((element) =>
-          walker(element as NamedType, capability)
+          walker(element, capability)
         );
       } else if (node.type === 'tuple') {
         if (node.additionalItems) {
-          walker(node.additionalItems as NamedType, capability);
+          walker(node.additionalItems, capability);
         }
 
-        node.elementTypes.forEach((element) =>
-          walker(element as NamedType, capability)
-        );
+        node.elementTypes.forEach((element) => walker(element, capability));
       } else if (node.type === 'function') {
         node.parameters.forEach((param) => {
-          walker(param.type as NamedType, capability);
+          walker(param.type, capability);
           if (param.default) {
-            walker(param.default as NamedType, capability);
+            walker(param.default, capability);
           }
         });
         if (node.returnType) {
-          walker(node.returnType as NamedType, capability);
+          walker(node.returnType, capability);
         }
       } else if (node.type === 'record') {
-        walker(node.keyType as NamedType, capability);
-        walker(node.valueType as NamedType, capability);
+        walker(node.keyType, capability);
+        walker(node.valueType, capability);
       } else if (node.type === 'conditional') {
-        walker(node.check.left as NamedType, capability);
-        walker(node.check.right as NamedType, capability);
-        walker(node.value.true as NamedType, capability);
-        walker(node.value.false as NamedType, capability);
+        walker(node.check.left, capability);
+        walker(node.check.right, capability);
+        walker(node.value.true, capability);
+        walker(node.value.false, capability);
       }
     }
   };
