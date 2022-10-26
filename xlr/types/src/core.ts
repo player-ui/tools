@@ -100,10 +100,12 @@ export interface ObjectProperty {
   node: NodeType;
 }
 export interface ObjectNode extends TypeNode<'object'> {
-  /** the properties associated with an object */
+  /** The properties associated with an object */
   properties: {
     [name: string]: ObjectProperty;
   };
+  /** A custom primitive that this object extends that is to be resolved when used */
+  extends?: RefType;
   /** What type, if any, of additional properties are allowed on the object */
   additionalProperties: false | NodeType;
 }

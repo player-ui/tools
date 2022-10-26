@@ -43,10 +43,13 @@ Array [
     "type": "object",
   },
   Object {
-    "additionalProperties": Object {
-      "type": "unknown",
-    },
+    "additionalProperties": false,
     "description": "An asset that contains a Binding.",
+    "extends": Object {
+      "genericArguments": undefined,
+      "ref": "Asset",
+      "type": "ref",
+    },
     "genericTokens": undefined,
     "name": "AssetBinding",
     "properties": Object {
@@ -56,23 +59,6 @@ Array [
           "genericArguments": undefined,
           "ref": "Binding",
           "title": "AssetBinding.binding",
-          "type": "ref",
-        },
-        "required": true,
-      },
-      "id": Object {
-        "node": Object {
-          "description": "Each asset requires a unique id per view",
-          "title": "Asset.id",
-          "type": "string",
-        },
-        "required": true,
-      },
-      "type": Object {
-        "node": Object {
-          "description": "The asset type determines the semantics of how a user interacts with a page",
-          "ref": "T",
-          "title": "Asset.type",
           "type": "ref",
         },
         "required": true,
