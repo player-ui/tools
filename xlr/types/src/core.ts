@@ -226,6 +226,13 @@ export type NodeType =
   | FunctionType
   | ConditionalType;
 
+export type NodeTypeStrings = Pick<NodeType, 'type'>['type'];
+
+export type NodeTypeMap = {
+  // eslint-disable-next-line jsdoc/require-jsdoc, prettier/prettier
+  [K in NodeTypeStrings]: Extract<NodeType,{type: K}>;
+};
+
 export type NamedType<T extends NodeType = NodeType> = T & {
   /** Name of the exported interface/type */
   name: string;

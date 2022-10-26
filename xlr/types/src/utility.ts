@@ -1,7 +1,7 @@
 import type { NamedType, NodeType } from '.';
 
 export type TransformFunction = (
-  input: NamedType<NodeType>,
+  input: NamedType<NodeType> | NodeType,
   capabilityType: string
 ) => void;
 

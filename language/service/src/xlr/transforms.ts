@@ -4,19 +4,19 @@
 import type {
   ArrayType,
   NamedType,
-  ObjectType,
+  NodeType,
   OrType,
   RefType,
   TransformFunction,
 } from '@player-tools/xlr';
-
+import { simpleTransformGenerator } from '@player-tools/xlr-sdk';
 import { isPrimitiveTypeNode } from '@player-tools/xlr-utils';
 
 /**
- *
+ * Adds applicability and _comment properties to Assets
  */
 export const applyCommonProps: TransformFunction = (
-  node: NamedType,
+  node: NamedType | NodeType,
   capability: string
 ) => {
   if (capability === 'Assets') {
@@ -54,59 +54,30 @@ export const applyCommonProps: TransformFunction = (
 };
 
 /**
- *
+ * Replaces AssetWrapper References with AssetWrapperOrSwitch
  */
 export const applyAssetWrapperOrSwitch: TransformFunction = (
-  node: NamedType,
-  capability: string
+  node,
+  capability
 ) => {
-  if (capability === 'Assets') {
-    if (node.type === 'object') {
-      for (const key in node.properties) {
-        const value = node.properties[key];
-        if (
-          value.node.type === 'ref' &&
-          value.node.ref.includes('AssetWrapper')
-        ) {
-          value.node.ref = value.node.ref.replace(
-            'AssetWrapper',
-            'AssetWrapperOrSwitch'
-          );
-        } else if (value.node.type === 'object') {
-          applyAssetWrapperOrSwitch(
-            value.node as NamedType<ObjectType>,
-            capability
-          );
-        }
-      }
-    } else if (node.type === 'array') {
-      if (
-        node.elementType.type === 'ref' &&
-        node.elementType.ref.includes('AssetWrapper')
-      ) {
-        node.elementType.ref = node.elementType.ref.replace(
-          'AssetWrapper',
-          'AssetWrapperOrSwitch'
-        );
-      }
+  simpleTransformGenerator('ref', 'Assets', (xlrNode) => {
+    if (xlrNode.ref.includes('AssetWrapper')) {
+      xlrNode.ref = xlrNode.ref.replace('AssetWrapper', 'AssetWrapperOrSwitch');
     }
-  }
+  })(node, capability);
 };
 
 /**
- *
+ * Modifies any primitive type property node (except id/type) to be Bindings or Expressions
  */
-export const applyValueRefs: TransformFunction = (
-  node: NamedType,
-  capability: string
-) => {
-  if (capability === 'Assets' && node.type === 'object') {
-    for (const key in node.properties) {
+export const applyValueRefs: TransformFunction = (node, capability) => {
+  simpleTransformGenerator('object', 'Assets', (xlrNode) => {
+    for (const key in xlrNode.properties) {
       if (key === 'id' || key === 'type') {
         continue;
       }
 
-      const value = node.properties[key];
+      const value = xlrNode.properties[key];
       if (value.node.type === 'or') {
         value.node.or.push({
           type: 'ref',
@@ -133,49 +104,31 @@ export const applyValueRefs: TransformFunction = (
           ],
         };
         value.node = newUnionType;
-      } else if (value.node.type === 'object') {
-        applyValueRefs(value.node as NamedType<ObjectType>, capability);
       }
     }
-  }
+  })(node, capability);
 };
 
 /**
- *
+ * Computes possible template keys and adds them to an Asset
  */
-export const applyTemplateProperty: TransformFunction = (
-  node: NamedType,
-  capability: string
-) => {
-  if (capability === 'Assets' && node.type === 'object') {
-    const templateTypes: Array<RefType> = [];
-
-    /** walks the asset to find arrays that could be possible templates */
-    const assetWalker = (
-      rootNode: NamedType<ObjectType>,
-      collector: Array<RefType>
-    ) => {
-      for (const key in rootNode.properties) {
-        const value = rootNode.properties[key];
-        if (value.node.type === 'array') {
-          value.required = false;
-          collector.push({
-            type: 'ref',
-            ref: `Template<${
-              value.node.elementType.type === 'ref'
-                ? value.node.elementType.ref
-                : value.node.elementType.name
-            }, "${key}">`,
-          });
-        }
-
-        if (value.node.type === 'object') {
-          assetWalker(value.node as NamedType<ObjectType>, collector);
-        }
+export const applyTemplateProperty: TransformFunction = (node, capability) => {
+  const templateTypes: Array<RefType> = [];
+  simpleTransformGenerator('object', 'Assets', (xlrNode) => {
+    for (const key in xlrNode.properties) {
+      const value = xlrNode.properties[key];
+      if (value.node.type === 'array') {
+        value.required = false;
+        templateTypes.push({
+          type: 'ref',
+          ref: `Template<${
+            value.node.elementType.type === 'ref'
+              ? value.node.elementType.ref
+              : value.node.elementType.name
+          }, "${key}">`,
+        });
       }
-    };
-
-    assetWalker(node, templateTypes);
+    }
 
     if (templateTypes.length > 0) {
       const templateType: ArrayType = {
@@ -186,10 +139,10 @@ export const applyTemplateProperty: TransformFunction = (
             : templateTypes[0],
         description: 'A list of templates to process for this node',
       };
-      node.properties.template = {
+      xlrNode.properties.template = {
         required: false,
         node: templateType,
       };
     }
-  }
+  })(node, capability);
 };
