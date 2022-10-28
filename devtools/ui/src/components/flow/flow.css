@@ -1,0 +1,4 @@
+.flow-panel-wrapper {
+  height: calc(100vh - var(--top-nav-height));
+  overflow: auto;
+}
