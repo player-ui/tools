@@ -1,9 +1,9 @@
 version: 2.1
 
 parameters:
-  GHA_Action:
-    type: string
-    default: ""
+  should_release:
+    type: boolean
+    default: false
 
 orbs:
   macos: circleci/macos@2
@@ -18,6 +18,25 @@ executors:
     resource_class: large
     environment:
       TZ: "/usr/share/zoneinfo/America/Los_Angeles"
+
+commands:
+  auto_shipit:
+    description: Perform Auto shipit
+    steps:
+      - attach_workspace:
+          at: ~/tools
+
+      - restore_cache:
+          keys: 
+            - v1-bazel-cache-core-{{ .Branch }}-{{ .Revision }} 
+            - v1-bazel-cache-core-{{ .Branch }} 
+            - v1-bazel-cache-core-main 
+
+      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+      - run: echo -e $GPG_KEY | gpg --import --batch
+      - run: |
+            source ~/.bashrc
+            npx auto shipit --only-graduate-with-release-label -vv
 
 jobs:
   setup:
@@ -92,23 +111,19 @@ jobs:
       - codecov/upload:
           file: ./bazel-out/_coverage/_coverage_report.dat
 
+  maybe_release:
+    executor: base
+    steps:
+      - run: echo "Should I release? (<< pipeline.parameters.should_release >>)"
+      - when:
+          condition: << pipeline.parameters.should_release >>
+          steps:
+            - auto_shipit
+
   release:
     executor: base
     steps:
-      - attach_workspace:
-          at: ~/tools
-
-      - restore_cache:
-          keys: 
-            - v1-bazel-cache-core-{{ .Branch }}-{{ .Revision }} 
-            - v1-bazel-cache-core-{{ .Branch }} 
-            - v1-bazel-cache-core-main 
-
-      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-      - run: echo -e $GPG_KEY | gpg --import --batch
-      - run: |
-            source ~/.bashrc
-            npx auto shipit --only-graduate-with-release-label -vv
+      - auto_shipit
 
 workflows:
   build_and_test_pr:
@@ -127,6 +142,12 @@ workflows:
       - build:
           requires:
             - setup
+
+      - maybe_release:
+          context:
+            - Publish
+          requires:
+            - build
 
       - test:
           requires:
@@ -190,19 +211,3 @@ workflows:
           requires:
             - test
             - coverage
-            
-  canary:
-    when:
-      equal: [ canary, << pipeline.parameters.GHA_Action >> ]
-    jobs:
-      - setup
-
-      - build:
-          requires:
-            - setup
-
-      - release:
-          context:
-            - Publish
-          requires:
-            - build
