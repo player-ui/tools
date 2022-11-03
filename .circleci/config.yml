@@ -193,7 +193,7 @@ workflows:
             
   canary:
     when:
-      equal: [ canary, << pipeline.parameters.GHA_Action >>]
+      equal: [ canary, << pipeline.parameters.GHA_Action >> ]
     jobs:
       - setup
 
@@ -201,7 +201,7 @@ workflows:
           requires:
             - setup
 
-      - ship_it:
+      - release:
           context:
             - Publish
           requires:
