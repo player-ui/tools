@@ -145,6 +145,7 @@ def flipper_pkg(
     # TODO: Potentially call flipper-pkg pack
     pkg_npm(
         name = scope_name(name, "pkg"),
+        package_name = package_name,
         substitutions = {
             "__VERSION__": "{STABLE_VERSION}",
             "0.0.0-PLACEHOLDER": "{STABLE_VERSION}",
