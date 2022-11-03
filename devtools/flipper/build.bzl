@@ -54,6 +54,7 @@ def flipper_pkg(
         *,
         name,
         plugin_name,
+        scope = None,
         plugin_icon = None,
         plugin_title = None,
         plugin_description = None,
@@ -70,7 +71,7 @@ def flipper_pkg(
     package_json = scope_name(name, "package-json")
 
     # TODO: This seems to be the standard for flipper plugin packages, but might be able to change to be consistent with the other packages in this repo
-    package_name = "flipper-plugin-{}".format(plugin_name)
+    package_name = "{}flipper-plugin-{}".format(("@" + scope + "/") if scope else "", plugin_name)
     create_package_json(
         name = package_json,
         package_name = package_name,

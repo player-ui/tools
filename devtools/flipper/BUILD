@@ -12,4 +12,5 @@ flipper_pkg(
     plugin_icon = "play",
     plugin_name = "player-ui-devtools",
     plugin_title = "Player UI Devtools",
+    scope = "player-tools"
 )
