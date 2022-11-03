@@ -1,6 +1,9 @@
 version: 2.1
 
 parameters:
+  GHA_Action:
+    type: string
+    default: ""
   should_release:
     type: boolean
     default: false
@@ -127,8 +130,6 @@ jobs:
 
 workflows:
   build_and_test_pr:
-    when:
-      equal: [ "", << pipeline.parameters.GHA_Action >> ]
     jobs:
       - setup:
           filters:
