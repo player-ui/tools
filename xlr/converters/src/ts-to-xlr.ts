@@ -481,61 +481,88 @@ export class TsConverter {
     typeChecker: ts.TypeChecker
   ): ObjectType {
     let newProperties: { [x: string]: ObjectProperty } = {};
-    let newAdditionalProperties: NodeType | false = false;
+    const additionalPropertiesCollector: Array<NodeType> = [];
     let extendsType: RefType | undefined;
 
     clauses.forEach((heritageClause) => {
-      const parent = heritageClause.types[0];
-      const parentType = typeChecker.getTypeAtLocation(parent);
-      const parentSymbol = parentType.symbol;
-      const parentDeclarations = parentSymbol?.declarations;
-      let parentInterface = parentDeclarations?.[0];
+      heritageClause.types.forEach((parent) => {
+        const parentType = typeChecker.getTypeAtLocation(parent);
+        const parentSymbol = parentType.symbol;
+        const parentDeclarations = parentSymbol?.declarations;
+        let parentInterface = parentDeclarations?.[0];
 
-      if (
-        parentInterface &&
-        ts.isTypeLiteralNode(parentInterface) &&
-        ts.isTypeAliasDeclaration(parentInterface.parent)
-      ) {
-        // check for if the node is a type to get the actual type declaration
-        parentInterface = parentInterface.parent;
-      }
+        if (
+          parentInterface &&
+          ts.isTypeLiteralNode(parentInterface) &&
+          ts.isTypeAliasDeclaration(parentInterface.parent)
+        ) {
+          // check for if the node is a type to get the actual type declaration
+          parentInterface = parentInterface.parent;
+        }
 
-      if (parentInterface && isTopLevelNode(parentInterface)) {
-        if (this.context.customPrimitives.includes(parentInterface.name.text)) {
-          extendsType = this.makeBasicRefNode(parent);
-        } else {
-          const parentInterfaceType = this.convertDeclaration(parentInterface);
-          if (parentInterface.typeParameters && parent.typeArguments) {
-            const filledInInterface = this.solveGenerics(
-              parentInterfaceType as NodeTypeWithGenerics,
-              parentInterface.typeParameters,
-              parent.typeArguments
-            ) as NamedType<ObjectType>;
-            newProperties = filledInInterface.properties;
-            newAdditionalProperties = filledInInterface.additionalProperties;
+        if (parentInterface && isTopLevelNode(parentInterface)) {
+          if (
+            this.context.customPrimitives.includes(parentInterface.name.text)
+          ) {
+            extendsType = this.makeBasicRefNode(parent);
           } else {
-            if (isGenericNodeType(baseObject)) {
-              baseObject.genericTokens.push(
-                ...((parentInterfaceType as NodeTypeWithGenerics)
-                  .genericTokens ?? [])
-              );
-            }
+            const parentInterfaceType =
+              this.convertDeclaration(parentInterface);
+            if (parentInterface.typeParameters && parent.typeArguments) {
+              const filledInInterface = this.solveGenerics(
+                parentInterfaceType as NodeTypeWithGenerics,
+                parentInterface.typeParameters,
+                parent.typeArguments
+              ) as NamedType<ObjectType>;
+              newProperties = {
+                ...newProperties,
+                ...filledInInterface.properties,
+              };
+              if (filledInInterface.additionalProperties) {
+                additionalPropertiesCollector.push(
+                  filledInInterface.additionalProperties
+                );
+              }
+            } else {
+              if (isGenericNodeType(baseObject)) {
+                baseObject.genericTokens.push(
+                  ...((parentInterfaceType as NodeTypeWithGenerics)
+                    .genericTokens ?? [])
+                );
+              }
 
-            newProperties = parentInterfaceType.properties;
-            newAdditionalProperties = parentInterfaceType.additionalProperties;
+              newProperties = {
+                ...newProperties,
+                ...parentInterfaceType.properties,
+              };
+              if (parentInterfaceType.additionalProperties) {
+                additionalPropertiesCollector.push(
+                  parentInterfaceType.additionalProperties
+                );
+              }
+            }
           }
         }
-      }
+      });
     });
-    newAdditionalProperties =
-      baseObject.additionalProperties === false
-        ? newAdditionalProperties
-        : false;
+
+    let additionalProperties: NodeType | false = false;
+    if (baseObject.additionalProperties === false) {
+      if (additionalPropertiesCollector.length === 1) {
+        additionalProperties = additionalPropertiesCollector[0];
+      } else if (additionalPropertiesCollector.length >= 1) {
+        additionalProperties = {
+          type: 'or',
+          or: additionalPropertiesCollector,
+        };
+      }
+    }
+
     return {
       ...baseObject,
       ...(extendsType ? { extends: extendsType } : {}),
       properties: { ...newProperties, ...baseObject.properties },
-      additionalProperties: newAdditionalProperties,
+      additionalProperties,
     };
   }
 

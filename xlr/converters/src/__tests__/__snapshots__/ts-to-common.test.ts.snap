@@ -356,6 +356,42 @@ Array [
 
 exports[`Generic Declarations Implementing Interface with Generics 1`] = `Array []`;
 
+exports[`Generic Declarations Implementing two Interfaces 1`] = `
+Array [
+  Object {
+    "additionalProperties": false,
+    "genericTokens": undefined,
+    "name": "Test",
+    "properties": Object {
+      "bar": Object {
+        "node": Object {
+          "title": "Bar.bar",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "foo": Object {
+        "node": Object {
+          "title": "Foo.foo",
+          "type": "number",
+        },
+        "required": true,
+      },
+      "test": Object {
+        "node": Object {
+          "title": "Test.test",
+          "type": "any",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "title": "Test",
+    "type": "object",
+  },
+]
+`;
+
 exports[`Generic Declarations Interface with Generics 1`] = `
 Array [
   Object {
