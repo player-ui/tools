@@ -168,6 +168,30 @@ describe('Generic Declarations', () => {
 
     expect(XLR).toMatchSnapshot();
   });
+
+  it('Implementing two Interfaces', () => {
+    const sc = `
+
+    interface Foo{
+      foo: number
+    }
+
+    interface Bar{
+      bar: string
+    }
+
+    export interface Test extends Foo, Bar {
+      test: any
+    }
+
+    `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
 });
 
 describe('Complex Types', () => {
