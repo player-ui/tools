@@ -58,7 +58,8 @@ def flipper_pkg(
         plugin_icon = None,
         plugin_title = None,
         plugin_description = None,
-        base_package_json = None,
+        registry = "https://registry.npmjs.org",
+        base_package_json = "//common:pkg_json_base",
         root_package_json = "//:package.json",
         dependencies = [],
         peer_dependencies = [],
@@ -77,6 +78,7 @@ def flipper_pkg(
         package_name = package_name,
         base_package_json = base_package_json,
         dependencies = dependencies,
+        registry = registry,
         out_dir = out_dir,
         peer_dependencies = remove_duplicates(peer_dependencies + [
             "@npm//flipper-plugin",
