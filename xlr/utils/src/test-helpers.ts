@@ -1,4 +1,5 @@
-import * as ts from 'typescript';
+import ts from 'typescript';
+import tsvfs from '@typescript/vfs';
 
 export interface SetupReturnType {
   /**
@@ -14,59 +15,27 @@ export interface SetupReturnType {
 /**
  * Setups a virtual TS environment for tests
  */
-export function setupTestEnv(sourceCode: string, mockFileName = 'filename.ts') {
-  const sourceFile = ts.createSourceFile(
-    mockFileName,
-    sourceCode,
-    ts.ScriptTarget.Latest,
-    /* setParentNodes */ true
-  );
+export async function setupTestEnv(
+  sourceCode: string,
+  mockFileName = 'filename.ts'
+) {
+  const fsMap = await tsvfs.createDefaultMapFromNodeModules({}, ts);
+  fsMap.set(mockFileName, sourceCode);
 
-  const outputs = [];
+  const system = tsvfs.createSystem(fsMap);
+  const host = tsvfs.createVirtualCompilerHost(system, {}, ts);
 
-  const compilerHost = {
-    getSourceFile(filename: any) {
-      if (filename === mockFileName) {
-        return sourceFile;
-      }
+  const program = ts.createProgram({
+    rootNames: [...fsMap.keys()],
+    options: {},
+    host: host.compilerHost,
+  });
 
-      return undefined;
-    },
-    writeFile(name: any, text: any, writeByteOrderMark: any) {
-      outputs.push({ name, text, writeByteOrderMark });
-    },
-    getDefaultLibFileName() {
-      return 'lib.d.ts';
-    },
-    useCaseSensitiveFileNames() {
-      return false;
-    },
-    getCanonicalFileName(filename: any) {
-      return filename;
-    },
-    getCurrentDirectory() {
-      return '';
-    },
-    getNewLine() {
-      return '\n';
-    },
-    fileExists(fileName: string) {
-      if (fileName === mockFileName) {
-        return true;
-      }
-
-      return false;
-    },
-    readFile(fileName: string) {
-      if (fileName === mockFileName) {
-        return sourceCode;
-      }
-
-      return undefined;
-    },
+  return {
+    sf: host.compilerHost.getSourceFile(
+      mockFileName,
+      ts.ScriptTarget.ES5
+    ) as ts.SourceFile,
+    tc: program.getTypeChecker(),
   };
-
-  const program = ts.createProgram([mockFileName], {}, compilerHost);
-
-  return { sf: sourceFile, tc: program.getTypeChecker() };
 }

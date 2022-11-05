@@ -465,10 +465,11 @@ export class TSWriter {
   }
 
   private createTypeParameters(
-    genericxlrNode: NodeTypeWithGenerics
+    genericXLRNode: NodeTypeWithGenerics
   ): Array<ts.TypeParameterDeclaration> {
-    return genericxlrNode.genericTokens.map((generic) => {
+    return genericXLRNode.genericTokens.map((generic) => {
       return this.context.factory.createTypeParameterDeclaration(
+        undefined,
         generic.symbol,
         this.createGenericArgumentNode(generic.constraints),
         this.createGenericArgumentNode(generic.default)
@@ -482,7 +483,6 @@ export class TSWriter {
     generics: Array<ts.TypeParameterDeclaration> | undefined
   ) {
     return this.context.factory.createInterfaceDeclaration(
-      undefined,
       this.context.factory.createModifiersFromModifierFlags(
         ts.ModifierFlags.Export
       ),
@@ -499,7 +499,6 @@ export class TSWriter {
     generics: Array<ts.TypeParameterDeclaration> | undefined
   ) {
     return this.context.factory.createTypeAliasDeclaration(
-      undefined, // decorators
       this.context.factory.createModifiersFromModifierFlags(
         ts.ModifierFlags.Export
       ),

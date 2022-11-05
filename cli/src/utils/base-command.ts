@@ -125,7 +125,7 @@ export abstract class BaseCommand extends Command {
   }
 
   private async readConfig(): Promise<PlayerConfigResolvedShape> {
-    const { flags } = await this.parse();
+    const { flags } = await this.parse(BaseCommand);
     const configFile = await this.loadConfig(flags.config);
     return this.resolveConfig(configFile?.config);
   }

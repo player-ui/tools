@@ -35,6 +35,15 @@ import {
 } from '@player-tools/xlr-utils';
 import { ConversionError } from './types';
 
+/**
+ * Returns if the string is one of TypeScript's MappedTypes
+ */
+export function isMappedTypeNode(
+  x: string
+): x is 'Pick' | 'Omit' | 'Required' | 'Partial' {
+  return ['Pick', 'Omit', 'Required', 'Partial'].includes(x);
+}
+
 export interface TSConverterContext {
   /** */
   customPrimitives: Array<string>;
@@ -486,66 +495,66 @@ export class TsConverter {
 
     clauses.forEach((heritageClause) => {
       heritageClause.types.forEach((parent) => {
-        const parentType = typeChecker.getTypeAtLocation(parent);
-        const parentSymbol = parentType.symbol;
-        const parentDeclarations = parentSymbol?.declarations;
-        let parentInterface = parentDeclarations?.[0];
+        let typeToApply: ObjectType;
 
-        if (
-          parentInterface &&
-          ts.isTypeLiteralNode(parentInterface) &&
-          ts.isTypeAliasDeclaration(parentInterface.parent)
-        ) {
-          // check for if the node is a type to get the actual type declaration
-          parentInterface = parentInterface.parent;
-        }
+        // Check if its a Mapped Type
+        const typeName = parent.expression.getText();
+        if (isMappedTypeNode(typeName)) {
+          typeToApply = this.makeMappedType(typeName, parent) as ObjectType;
+        } else {
+          const parentType = typeChecker.getTypeAtLocation(parent);
+          const parentSymbol = parentType.symbol;
+          const parentDeclarations = parentSymbol?.declarations;
 
-        if (parentInterface && isTopLevelNode(parentInterface)) {
+          if (!parentDeclarations?.[0]) {
+            this.context.throwError(
+              `Error: Unable to get underlying interface for extending class ${parent.getFullText()}`
+            );
+          }
+
+          let parentInterface: TopLevelDeclaration;
+
+          if (
+            ts.isTypeLiteralNode(parentDeclarations?.[0]) &&
+            ts.isTypeAliasDeclaration(parentDeclarations?.[0].parent)
+          ) {
+            // check for if the node is a type to get the actual type declaration
+            parentInterface = parentDeclarations?.[0].parent;
+          } else {
+            parentInterface = parentDeclarations?.[0] as TopLevelDeclaration;
+          }
+
           if (
             this.context.customPrimitives.includes(parentInterface.name.text)
           ) {
             extendsType = this.makeBasicRefNode(parent);
-          } else {
-            const parentInterfaceType =
-              this.convertDeclaration(parentInterface);
-            if (parentInterface.typeParameters && parent.typeArguments) {
-              const filledInInterface = this.solveGenerics(
-                parentInterfaceType as NodeTypeWithGenerics,
-                parentInterface.typeParameters,
-                parent.typeArguments
-              ) as NamedType<ObjectType>;
-              newProperties = {
-                ...newProperties,
-                ...filledInInterface.properties,
-              };
-              if (filledInInterface.additionalProperties) {
-                additionalPropertiesCollector.push(
-                  filledInInterface.additionalProperties
-                );
-              }
-            } else {
-              if (isGenericNodeType(baseObject)) {
-                baseObject.genericTokens.push(
-                  ...((parentInterfaceType as NodeTypeWithGenerics)
-                    .genericTokens ?? [])
-                );
-              }
-
-              newProperties = {
-                ...newProperties,
-                ...parentInterfaceType.properties,
-              };
-              if (parentInterfaceType.additionalProperties) {
-                additionalPropertiesCollector.push(
-                  parentInterfaceType.additionalProperties
-                );
-              }
-            }
+            return;
           }
+
+          typeToApply = this.convertDeclaration(parentInterface);
+          if (parentInterface.typeParameters && parent.typeArguments) {
+            typeToApply = this.solveGenerics(
+              typeToApply as NodeTypeWithGenerics,
+              parentInterface.typeParameters,
+              parent.typeArguments
+            ) as NamedType<ObjectType>;
+          } else if (isGenericNodeType(baseObject)) {
+            baseObject.genericTokens.push(
+              ...((typeToApply as NodeTypeWithGenerics).genericTokens ?? [])
+            );
+          }
+        }
+
+        newProperties = {
+          ...newProperties,
+          ...typeToApply.properties,
+        };
+        if (typeToApply.additionalProperties) {
+          additionalPropertiesCollector.push(typeToApply.additionalProperties);
         }
       });
     });
-
+    // Resolve Additional Properties
     let additionalProperties: NodeType | false = false;
     if (baseObject.additionalProperties === false) {
       if (additionalPropertiesCollector.length === 1) {
@@ -682,26 +691,8 @@ export class TsConverter {
       };
     }
 
-    if (refName === 'Pick' || refName === 'Omit') {
-      const baseType = node.typeArguments?.[0] as ts.TypeNode;
-      const modifiers = node.typeArguments?.[1] as ts.TypeNode;
-
-      const baseObj = this.convertTsTypeNode(baseType) as NamedType<ObjectType>;
-      const modifierNames = getStringLiteralsFromUnion(modifiers);
-
-      return (
-        applyPickOrOmitToNodeType(baseObj, refName, modifierNames) ?? {
-          type: 'never',
-        }
-      );
-    }
-
-    if (refName === 'Partial' || refName === 'Required') {
-      const baseType = node.typeArguments?.[0] as ts.TypeNode;
-      const baseObj = this.convertTsTypeNode(baseType) as NodeType;
-      const modifier = refName !== 'Partial';
-
-      return applyPartialOrRequiredToNodeType(baseObj, modifier);
+    if (isMappedTypeNode(refName)) {
+      return this.makeMappedType(refName, node);
     }
 
     // catch all for all other type references
@@ -730,6 +721,35 @@ export class TsConverter {
     }
 
     return this.makeBasicRefNode(node);
+  }
+
+  private makeMappedType(
+    refName: 'Pick' | 'Omit' | 'Partial' | 'Required',
+    node: ts.NodeWithTypeArguments
+  ): ObjectType {
+    if (refName === 'Pick' || refName === 'Omit') {
+      const baseType = node.typeArguments?.[0] as ts.TypeNode;
+      const modifiers = node.typeArguments?.[1] as ts.TypeNode;
+
+      const baseObj = this.convertTsTypeNode(baseType) as NamedType<ObjectType>;
+      const modifierNames = getStringLiteralsFromUnion(modifiers);
+
+      return applyPickOrOmitToNodeType(
+        baseObj,
+        refName,
+        modifierNames
+      ) as ObjectType;
+    }
+
+    if (refName === 'Partial' || refName === 'Required') {
+      const baseType = node.typeArguments?.[0] as ts.TypeNode;
+      const baseObj = this.convertTsTypeNode(baseType) as NodeType;
+      const modifier = refName !== 'Partial';
+
+      return applyPartialOrRequiredToNodeType(baseObj, modifier) as ObjectType;
+    }
+
+    this.context.throwError(`Can't convert non-MappedType ${refName}`);
   }
 
   private makeBasicRefNode(node: ts.NodeWithTypeArguments): RefType {

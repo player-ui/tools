@@ -210,6 +210,7 @@ export class XLRSDK {
             ts.factory.createNamedImports(
               applicableImports.map((i) =>
                 ts.factory.createImportSpecifier(
+                  false,
                   undefined,
                   ts.factory.createIdentifier(i)
                 )

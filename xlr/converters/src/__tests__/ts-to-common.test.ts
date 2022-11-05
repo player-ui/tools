@@ -3,24 +3,24 @@ import { setupTestEnv } from '@player-tools/xlr-utils';
 import { TsConverter } from '..';
 
 describe('Type Exports', () => {
-  it('Basic Array Type', () => {
+  it('Basic Array Type', async () => {
     const sc = `
     export type Foo = Array<string>
     `;
 
-    const { sf, tc } = setupTestEnv(sc);
+    const { sf, tc } = await setupTestEnv(sc);
     const converter = new TsConverter(tc);
     const XLR = converter.convertSourceFile(sf).data.types;
 
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Basic Union Type', () => {
+  it('Basic Union Type', async () => {
     const sc = `
     export type Foo = number | string
     `;
 
-    const { sf, tc } = setupTestEnv(sc);
+    const { sf, tc } = await setupTestEnv(sc);
     const converter = new TsConverter(tc);
     const XLR = converter.convertSourceFile(sf).data.types;
 
@@ -29,7 +29,7 @@ describe('Type Exports', () => {
 });
 
 describe('Interface Exports', () => {
-  it('Basic Interface Type', () => {
+  it('Basic Interface Type', async () => {
     const sc = `
     export interface Foo {
       bar: string
@@ -37,14 +37,14 @@ describe('Interface Exports', () => {
     }
     `;
 
-    const { sf, tc } = setupTestEnv(sc);
+    const { sf, tc } = await setupTestEnv(sc);
     const converter = new TsConverter(tc);
     const XLR = converter.convertSourceFile(sf).data.types;
 
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Interface with Optional parameters', () => {
+  it('Interface with Optional parameters', async () => {
     const sc = `
     export interface Foo {
       bar: string
@@ -52,14 +52,14 @@ describe('Interface Exports', () => {
     }
     `;
 
-    const { sf, tc } = setupTestEnv(sc);
+    const { sf, tc } = await setupTestEnv(sc);
     const converter = new TsConverter(tc);
     const XLR = converter.convertSourceFile(sf).data.types;
 
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Interface with Inheritance', () => {
+  it('Interface with Inheritance', async () => {
     const sc = `
 
     interface Base {
@@ -72,104 +72,14 @@ describe('Interface Exports', () => {
     }
     `;
 
-    const { sf, tc } = setupTestEnv(sc);
-    const converter = new TsConverter(tc);
-    const XLR = converter.convertSourceFile(sf).data.types;
-
-    expect(XLR).toMatchSnapshot();
-  });
-});
-
-describe('Generic Declarations', () => {
-  it('Basic Generic Type', () => {
-    const sc = `
-    export type Foo<T> = string | T
-    `;
-
-    const { sf, tc } = setupTestEnv(sc);
+    const { sf, tc } = await setupTestEnv(sc);
     const converter = new TsConverter(tc);
     const XLR = converter.convertSourceFile(sf).data.types;
 
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Generic with Constraints', () => {
-    const sc = `
-    export type Foo<T extends string = string > = number | T
-    `;
-
-    const { sf, tc } = setupTestEnv(sc);
-    const converter = new TsConverter(tc);
-    const XLR = converter.convertSourceFile(sf).data.types;
-
-    expect(XLR).toMatchSnapshot();
-  });
-
-  it('Implementing Generic Type', () => {
-    const sc = `
-    type Foo<T> = string | T
-
-    export type Bar = boolean | Foo<number>
-    `;
-
-    const { sf, tc } = setupTestEnv(sc);
-    const converter = new TsConverter(tc);
-    const XLR = converter.convertSourceFile(sf).data.types;
-
-    expect(XLR).toMatchSnapshot();
-  });
-
-  it('Interface with Generics', () => {
-    const sc = `
-
-    export interface Foo<T>{
-      bar: T
-    }
-    `;
-
-    const { sf, tc } = setupTestEnv(sc);
-    const converter = new TsConverter(tc);
-    const XLR = converter.convertSourceFile(sf).data.types;
-
-    expect(XLR).toMatchSnapshot();
-  });
-
-  it('Interface with Generics and Constraints', () => {
-    const sc = `
-
-    export interface Foo<T extends string = string>{
-      bar: T
-    }
-    `;
-
-    const { sf, tc } = setupTestEnv(sc);
-    const converter = new TsConverter(tc);
-    const XLR = converter.convertSourceFile(sf).data.types;
-
-    expect(XLR).toMatchSnapshot();
-  });
-
-  it('Implementing Interface with Generics', () => {
-    const sc = `
-
-    interface Base<T extends string = string>{
-      bar: T
-    }
-
-    interface Foo extends Bar<'test'> {
-      bam: number
-    }
-
-    `;
-
-    const { sf, tc } = setupTestEnv(sc);
-    const converter = new TsConverter(tc);
-    const XLR = converter.convertSourceFile(sf).data.types;
-
-    expect(XLR).toMatchSnapshot();
-  });
-
-  it('Implementing two Interfaces', () => {
+  it('Implementing more than one Interfaces', async () => {
     const sc = `
 
     interface Foo{
@@ -186,7 +96,118 @@ describe('Generic Declarations', () => {
 
     `;
 
-    const { sf, tc } = setupTestEnv(sc);
+    const { sf, tc } = await setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+});
+
+describe('Generic Declarations', () => {
+  it('Basic Generic Type', async () => {
+    const sc = `
+    export type Foo<T> = string | T
+    `;
+
+    const { sf, tc } = await setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+
+  it('Generic with Constraints', async () => {
+    const sc = `
+    export type Foo<T extends string = string > = number | T
+    `;
+
+    const { sf, tc } = await setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+
+  it('Implementing Generic Type', async () => {
+    const sc = `
+    type Foo<T> = string | T
+
+    export type Bar = boolean | Foo<number>
+    `;
+
+    const { sf, tc } = await setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+
+  it('Interface with Generics', async () => {
+    const sc = `
+
+    export interface Foo<T>{
+      bar: T
+    }
+    `;
+
+    const { sf, tc } = await setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+
+  it('Interface with Generics and Constraints', async () => {
+    const sc = `
+
+    export interface Foo<T extends string = string>{
+      bar: T
+    }
+    `;
+
+    const { sf, tc } = await setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+
+  it('Implementing Interface with Generics', async () => {
+    const sc = `
+
+    interface Base<T extends string = string>{
+      bar: T
+    }
+
+    interface Foo extends Bar<'test'> {
+      bam: number
+    }
+
+    `;
+
+    const { sf, tc } = await setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+
+  it('Implementing an generic wrapped interface', async () => {
+    const sc = `
+
+    interface base {
+      foo: number
+      bar: string
+    }
+
+    export interface Test extends Pick<base,'bar'> {
+      test: any
+    }
+
+    `;
+
+    const { sf, tc } = await setupTestEnv(sc);
     const converter = new TsConverter(tc);
     const XLR = converter.convertSourceFile(sf).data.types;
 
@@ -195,7 +216,7 @@ describe('Generic Declarations', () => {
 });
 
 describe('Complex Types', () => {
-  it('Pick', () => {
+  it('Pick', async () => {
     const sc = `
     interface foo {
       bar: string
@@ -204,14 +225,14 @@ describe('Complex Types', () => {
     export type Bar = Pick<foo,"bar">
     `;
 
-    const { sf, tc } = setupTestEnv(sc);
+    const { sf, tc } = await setupTestEnv(sc);
     const converter = new TsConverter(tc);
     const XLR = converter.convertSourceFile(sf).data.types;
 
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Pick with interface union', () => {
+  it('Pick with interface union', async () => {
     const sc = `
     interface foo {
       far: string
@@ -228,14 +249,14 @@ describe('Complex Types', () => {
     export type Bar = Pick<test,"far">
     `;
 
-    const { sf, tc } = setupTestEnv(sc);
+    const { sf, tc } = await setupTestEnv(sc);
     const converter = new TsConverter(tc);
     const XLR = converter.convertSourceFile(sf).data.types;
 
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Pick with interface intersection', () => {
+  it('Pick with interface intersection', async () => {
     const sc = `
     interface foo {
       far: string
@@ -252,14 +273,14 @@ describe('Complex Types', () => {
     export type Bar = Pick<test,"far">
     `;
 
-    const { sf, tc } = setupTestEnv(sc);
+    const { sf, tc } = await setupTestEnv(sc);
     const converter = new TsConverter(tc);
     const XLR = converter.convertSourceFile(sf).data.types;
 
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Omit', () => {
+  it('Omit', async () => {
     const sc = `
     interface foo {
       bar: string
@@ -268,14 +289,14 @@ describe('Complex Types', () => {
     export type Bar = Omit<foo,"bar">
     `;
 
-    const { sf, tc } = setupTestEnv(sc);
+    const { sf, tc } = await setupTestEnv(sc);
     const converter = new TsConverter(tc);
     const XLR = converter.convertSourceFile(sf).data.types;
 
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Omit with type union', () => {
+  it('Omit with type union', async () => {
     const sc = `
     interface foo {
       far: string
@@ -292,14 +313,14 @@ describe('Complex Types', () => {
     export type Bar = Omit<test,"bax">
     `;
 
-    const { sf, tc } = setupTestEnv(sc);
+    const { sf, tc } = await setupTestEnv(sc);
     const converter = new TsConverter(tc);
     const XLR = converter.convertSourceFile(sf).data.types;
 
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Omit with type intersection', () => {
+  it('Omit with type intersection', async () => {
     const sc = `
     interface foo {
       far: string
@@ -316,7 +337,7 @@ describe('Complex Types', () => {
     export type Bar = Omit<test,"far">
     `;
 
-    const { sf, tc } = setupTestEnv(sc);
+    const { sf, tc } = await setupTestEnv(sc);
     const converter = new TsConverter(tc);
     const XLR = converter.convertSourceFile(sf).data.types;
 
@@ -325,22 +346,22 @@ describe('Complex Types', () => {
 });
 
 describe('String Templates', () => {
-  it('Basic', () => {
+  it('Basic', async () => {
     const sc =
       'export type Bar = `String is a ${string}, number is a ${number} and boolean is a ${boolean}`';
 
-    const { sf, tc } = setupTestEnv(sc);
+    const { sf, tc } = await setupTestEnv(sc);
     const converter = new TsConverter(tc);
     const XLR = converter.convertSourceFile(sf).data.types;
 
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Type References', () => {
+  it('Type References', async () => {
     const sc =
       'type Foo = string; export type Bar = `String is a ${Foo}, number is a ${number} and boolean is a ${boolean}`';
 
-    const { sf, tc } = setupTestEnv(sc);
+    const { sf, tc } = await setupTestEnv(sc);
     const converter = new TsConverter(tc);
     const XLR = converter.convertSourceFile(sf).data.types;
 
@@ -349,7 +370,7 @@ describe('String Templates', () => {
 });
 
 describe('Index Types', () => {
-  it('Basic', () => {
+  it('Basic', async () => {
     const sc = `
     interface base {
       foo: string;
@@ -362,14 +383,14 @@ describe('Index Types', () => {
 
     `;
 
-    const { sf, tc } = setupTestEnv(sc);
+    const { sf, tc } = await setupTestEnv(sc);
     const converter = new TsConverter(tc);
     const XLR = converter.convertSourceFile(sf).data.types;
 
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Complex Types', () => {
+  it('Complex Types', async () => {
     const sc = `
 
     interface something {
@@ -388,7 +409,7 @@ describe('Index Types', () => {
 
     `;
 
-    const { sf, tc } = setupTestEnv(sc);
+    const { sf, tc } = await setupTestEnv(sc);
     const converter = new TsConverter(tc);
     const XLR = converter.convertSourceFile(sf).data.types;
 
