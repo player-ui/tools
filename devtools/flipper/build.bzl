@@ -112,7 +112,7 @@ def flipper_pkg(
         name = flipper_plugin,
         outs = [
             paths.join(out_dir, "bundle.js"),
-            paths.join(out_dir, "bundle.map"),
+            # paths.join(out_dir, "bundle.map"),
         ],
         args = [
             "bundle",

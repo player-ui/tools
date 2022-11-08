@@ -15,7 +15,7 @@ import {
   RuntimeRPCRequestHandlers,
 } from '@player-tools/devtools-client';
 // TODO: Fix import lol -- maybe try to bundle this package _before_ it hits flipper-pkg? i'm so tired of monkeying with this
-import { App } from '@player-tools/devtools-ui/dist/devtools-ui.dev';
+import { App } from '@player-tools/devtools-ui/dist/devtools-ui.prod';
 
 type Events = {
   [key in Runtime.RuntimeEventTypes]: Extract<

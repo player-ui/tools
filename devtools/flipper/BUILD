@@ -1,7 +1,7 @@
 load(":build.bzl", "flipper_pkg")
 
 flipper_pkg(
-    name = "flipper-plugin",
+    name = "flipper",
     dependencies = [
         "//devtools/common",
         "//devtools/ui",
