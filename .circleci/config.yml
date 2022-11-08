@@ -62,6 +62,8 @@ jobs:
       - attach_workspace:
           at: ~/tools
 
+      - run: yarn
+
       - run: bazel build --remote_header=x-buildbuddy-api-key=${BUILDBUDDY_API_KEY} --config=ci -- //...
 
       - save_cache:
