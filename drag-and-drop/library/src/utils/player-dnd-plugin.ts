@@ -103,6 +103,7 @@ export class PlayerDndPlugin implements WebPlayerPlugin {
 
     player.hooks.viewController.tap(this.name, (vc: ViewController) => {
       vc.hooks.resolveView.tap(this.name, () => {
+        console.log(`Current View`, this.options.state.view);
         return this.options.state.view;
       });
     });

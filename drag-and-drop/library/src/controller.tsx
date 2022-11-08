@@ -8,6 +8,7 @@ import { PlayerDndPlugin } from './utils';
 import type {
   DropTargetAssetType,
   ExtensionProvider,
+  ExtensionProviderAssetIdentifier,
   TransformedDropTargetAssetType,
 } from './types';
 import { isDropTargetAsset } from './types';
@@ -29,6 +30,17 @@ export class DragAndDropController {
 
   public get Canvas() {
     return this.webPlayer.Component;
+  }
+
+  public getAvailableAssets(): Array<ExtensionProviderAssetIdentifier> {
+    return (this.options.extensions ?? []).flatMap((extension) => {
+      return (extension.manifest.capabilities?.Assets ?? []).map((asset) => {
+        return {
+          pluginName: extension.manifest.pluginName,
+          name: asset.name,
+        };
+      });
+    });
   }
 
   public Context: React.ComponentType<React.PropsWithChildren<unknown>>;
@@ -63,7 +75,11 @@ export class DragAndDropController {
     });
 
     this.webPlayer = new WebPlayer({
-      plugins: [this.dndWebPlayerPlugin],
+      plugins: [
+        this.dndWebPlayerPlugin,
+        // eslint-disable-next-line new-cap
+        ...(options?.extensions ?? []).map((e) => new e.plugin()),
+      ],
     });
 
     this.webPlayer.player.logger.addHandler(new ConsoleLogger('debug'));
@@ -73,6 +89,11 @@ export class DragAndDropController {
     };
 
     this.webPlayer.start(this.runtimeState.flow);
+  }
+
+  setProperties(id: string, properties: Record<string, any>) {
+    this.runtimeState.setProperties(id, properties);
+    this.dndWebPlayerPlugin.refresh(this.webPlayer.player);
   }
 
   exportView(): View {

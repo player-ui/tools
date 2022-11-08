@@ -1,31 +1,28 @@
 import React from 'react';
-import { useDrop } from 'react-dnd';
 import { Asset } from '@player-ui/react-asset';
-import { DroppedItemTypes } from '../types';
-import type {
-  TransformedDropTargetAssetType,
-  ExtensionProviderAssetIdentifier,
-} from '../types';
+import type { TransformedDropTargetAssetType } from '../types';
+import { useDroppableAsset } from '../hooks';
 
 export const DropComponent = (props: TransformedDropTargetAssetType) => {
-  const [{ isOver }, drop] = useDrop({
-    accept: DroppedItemTypes.ASSET,
-    drop: (item: ExtensionProviderAssetIdentifier) => {
-      props.replaceAsset(item);
-    },
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-    }),
-  });
+  const [{ isOver }, drop] = useDroppableAsset(props);
 
-  if (props.value) {
+  if (!props.value && !props.context) {
     return (
-      <div ref={drop} style={{ border: '1px solid red' }}>
-        <Asset {...props.value.asset} />
+      <div ref={drop}>
+        <span>Please Select an Asset</span>
       </div>
     );
   }
 
-  return <div ref={drop}>Test</div>;
+  return (
+    <div ref={drop} style={{ border: isOver ? '1px solid red' : undefined }}>
+      {props.value ? (
+        <Asset {...props.value.asset} />
+      ) : (
+        <span>
+          {props.context?.parent.name} - {props.context?.propertyName}
+        </span>
+      )}
+    </div>
+  );
 };
