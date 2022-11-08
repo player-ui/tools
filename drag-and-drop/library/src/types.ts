@@ -1,17 +1,11 @@
 import type { ObjectType, TSManifest } from '@player-tools/xlr';
-import type {
-  Asset,
-  WebPlayerPlugin,
-  Flow,
-  View,
-  AssetWrapper,
-} from '@player-ui/react';
+import type { Asset, WebPlayerPlugin, Flow, View } from '@player-ui/react';
 
 export const DroppedItemTypes = {
   ASSET: 'ASSET',
 };
 
-export const DragAndDropAssetType = Symbol('DragAndDropAssetType');
+export const DragAndDropAssetType = 'test';
 
 export type FlowWithOneView<T extends Asset = Asset> = Flow<T> & {
   views: [View<T>];

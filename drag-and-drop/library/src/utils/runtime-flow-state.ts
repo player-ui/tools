@@ -37,6 +37,22 @@ export class RuntimeFlowState {
     };
   }
 
+  setProperties(id: string, properties: Record<string, any>) {
+    const asset = this.assetMappings[id];
+    if (!asset) {
+      throw new Error(`Cannot set asset value for unknown id: ${id}`);
+    }
+
+    if (!asset.value) {
+      throw new Error(`Cannot set properties on asset without a value`);
+    }
+
+    asset.value.asset = {
+      ...asset.value.asset,
+      ...properties,
+    };
+  }
+
   private createNewAsset(idPrefix: string, type: ObjectType): Asset {
     const typeProp =
       type.properties.type.node.type === 'string'
@@ -47,28 +63,37 @@ export class RuntimeFlowState {
       throw new Error('type property must be a constant');
     }
 
-    const titleGenAsset: DropTargetAssetType = {
-      id: `${idPrefix}-test-title`,
-      __type: DragAndDropAssetType,
-      type: 'drop-target',
-      context: {
-        propertyName: 'title',
-        parent: {
-          pluginName: 'test',
-          name: typeProp,
-        },
-      },
-    };
-
-    this.assetMappings[titleGenAsset.id] = titleGenAsset;
-
     const asset: Asset = {
       id: `${idPrefix}-test-1`,
       type: typeProp,
-      title: {
-        asset: titleGenAsset,
-      },
     };
+
+    Object.entries(type.properties).forEach(([key, prop]) => {
+      if (prop.node.type === 'string' && prop.node.const !== undefined) {
+        asset[key] = prop.node.const;
+      }
+
+      if (
+        prop.node.type === 'ref' &&
+        prop.node.ref.startsWith('AssetWrapper')
+      ) {
+        const generatedAsset: DropTargetAssetType = {
+          __type: DragAndDropAssetType,
+          id: `${idPrefix}-${key}`,
+          type: 'drop-target',
+          context: {
+            propertyName: key,
+            parent: {
+              pluginName: 'test',
+              name: typeProp,
+            },
+          },
+        };
+
+        this.assetMappings[generatedAsset.id] = generatedAsset;
+        asset[key] = { asset: generatedAsset };
+      }
+    });
 
     return asset;
   }
