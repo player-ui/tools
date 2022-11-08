@@ -1,5 +1,12 @@
 # Player UI Devtools Flipper Plugin
 
+### Usage
+
+1. Install `Flipper`: https://fbflipper.com/docs/getting-started/#installation
+2. Install `flipper-plugin-player-ui-devtools` plugin:
+3. Enable plugin
+4. Connect to app, open plugin, and start debugging!
+
 ### Local Development
 
 1. Install `Flipper` (Pick one)
