@@ -4,6 +4,9 @@
 
 1. Install `Flipper`: https://fbflipper.com/docs/getting-started/#installation
 2. Install `flipper-plugin-player-ui-devtools` plugin:
+
+![flipper-plugin-player-ui-devtools](https://user-images.githubusercontent.com/9255651/200911914-376134d1-247b-4a9d-bada-593a3ebfb0f5.png)
+
 3. Enable plugin
 4. Connect to app, open plugin, and start debugging!
 
