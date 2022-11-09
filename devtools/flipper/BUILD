@@ -1,5 +1,6 @@
 load(":build.bzl", "flipper_pkg")
 
+# TODO: probably try to bundle w/ CSS first and then feed into flipper_pkg
 flipper_pkg(
     name = "flipper",
     dependencies = [

@@ -15,7 +15,7 @@ import {
   RuntimeRPCRequestHandlers,
 } from '@player-tools/devtools-client';
 // TODO: Fix import lol -- maybe try to bundle this package _before_ it hits flipper-pkg? i'm so tired of monkeying with this
-import { App } from '@player-tools/devtools-ui/dist/devtools-ui.prod';
+import { App } from '@player-tools/devtools-ui';
 
 type Events = {
   [key in Runtime.RuntimeEventTypes]: Extract<
@@ -29,14 +29,16 @@ type Events = {
 type Methods = {
   [key in Runtime.RuntimeRPCTypes]: (
     payload: RPCRequestMessageEvent<Runtime.RuntimeRPC>
-  ) => Promise<void>;
+  ) => Promise<RPCResponseMessageEvent<Runtime.RuntimeRPC>>;
 };
 
 export function plugin(client: PluginClient<Events, Methods>) {
   const rpcHandlers: RuntimeRPCRequestHandlers = buildRPCRequests(
-    (message: RPCRequestMessageEvent<Runtime.RuntimeRPC>) => {
+    async (message: RPCRequestMessageEvent<Runtime.RuntimeRPC>) => {
       // TODO: Do `send('rpc-request', message)`
-      client.send(message.rpcType, message);
+      const response = await client.send(message.rpcType, message);
+      // TODO: This doesn't currently work
+      rpcHandlers[message.rpcType].onMessage(response);
     }
   );
   const actions = buildRPCActions(rpcHandlers);
@@ -49,10 +51,6 @@ export function plugin(client: PluginClient<Events, Methods>) {
     client.onMessage(event, (message) => {
       handleMessage(store, message);
     });
-  });
-
-  client.onMessage('rpc-response', (params) => {
-    rpcHandlers[params.rpcType].onMessage(params);
   });
 
   return { store };

@@ -10,6 +10,7 @@ export type RuntimeRPCRequestHandlers = {
   [key in Runtime.RuntimeRPCTypes]: RPCRequestHandler<any>;
 };
 
+/** Builder for consistently handling RPC requests and responses */
 export const buildRPCRequests = (
   onRequestMessage: (
     message: RPCRequestMessageEvent<Runtime.RuntimeRPC>
