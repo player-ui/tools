@@ -1,5 +1,6 @@
 load("@bazel_skylib//lib:paths.bzl", "paths")
 load("@rules_player//:index.bzl", "js_library_pipeline")
+load("@rules_player//player/bundle:bundle.bzl", "bundle")
 
 lint_exts = [".ts", ".js", ".jsx", ".tsx", ".json", ".snap"]
 
@@ -34,7 +35,7 @@ LINT_DATA = [
     "//:package.json",
     "//:.prettierrc",
     "@npm//eslint-config-airbnb",
-    "@npm//eslint-config-xo", 
+    "@npm//eslint-config-xo",
     "@npm//eslint-config-xo-react",
     "@npm//eslint-plugin-jest",
     "@npm//eslint-config-prettier",
@@ -47,6 +48,19 @@ LINT_DATA = [
     "@npm//@kendallgassner/eslint-plugin-package-json",
     "@npm//eslint-plugin-react",
     "@npm//eslint-plugin-react-hooks",
+]
+BUNDLE_DATA = [
+    "@npm//webpack",
+    "@npm//webpack-cli",
+    "@npm//util",
+    "@npm//case-sensitive-paths-webpack-plugin",
+    "@npm//duplicate-package-checker-webpack-plugin",
+    "@npm//terser-webpack-plugin",
+    "@npm//style-loader",
+    "@npm//css-loader",
+    "@npm//babel-loader",
+    "@npm//@babel/preset-env",
+    "@npm//@babel/plugin-proposal-nullish-coalescing-operator",
 ]
 
 def expand_ts_outputs(srcs):
@@ -65,7 +79,7 @@ def include_if_unique(source, searchArr):
             filtered.append(s)
     return filtered
 
-def _find_entry(dir, srcs):
+def find_entry(dir, srcs):
     for s in srcs:
         if s in [dir + "/index.ts", dir + "/index.tsx"]:
             return s
@@ -83,19 +97,19 @@ def javascript_pipeline(
         test_data = [],
         lint_data = [],
         other_srcs = [],
-        **kwargs
-        ):
+        create_package_json_opts = {},
+        **kwargs):
     #Derive target specific sources
     srcs = native.glob([paths.join(root_dir, "**/*"), "README.md"]) + other_srcs
 
-    resolved_entry = entry if entry else _find_entry(root_dir, srcs)
+    resolved_entry = entry if entry else find_entry(root_dir, srcs)
 
     js_library_pipeline(
         name = name,
         srcs = srcs,
         entry = resolved_entry,
         dependencies = dependencies + [
-            "@npm//@babel/runtime"
+            "@npm//@babel/runtime",
         ],
         peer_dependencies = peer_dependencies,
         data = DATA + data,
@@ -103,8 +117,25 @@ def javascript_pipeline(
         build_data = include_if_unique(BUILD_DATA + build_data, DATA + data),
         lint_data = include_if_unique(LINT_DATA + lint_data, DATA + data + TEST_DATA + test_data),
         out_dir = out_dir,
-        create_package_json_opts = {
+        create_package_json_opts = dict({
             "base_package_json": "//common:pkg_json_template",
-        },
+        }, **create_package_json_opts),
+        typings = ["//:typings"],
         **kwargs
     )
+
+    if (library_name):
+        bundle(
+            name = library_name,
+            dist = [":%s-package_json" % name],
+            deps = dependencies + peer_dependencies + build_data + BUNDLE_DATA + [
+                ":%s-js_build" % name,
+                "//:webpack.config.js",
+            ],
+            env = {
+                "ROOT_FILE_NAME": resolved_entry,
+                "LIBRARY_NAME": library_name,
+            },
+            visibility = ["//visibility:public"],
+            bundle_name = name.split("/")[1],
+        )

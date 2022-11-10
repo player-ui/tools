@@ -9,5 +9,11 @@ exports_files([
     ".eslintrc.js",
     ".prettierrc",
     "README.md",
-    ".all-contributorsrc"
+    ".all-contributorsrc",
+    "webpack.config.js",
 ])
+
+filegroup(
+    name = "typings",
+    srcs = glob(["typings/*"]),
+)
