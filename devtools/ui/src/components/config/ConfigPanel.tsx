@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import {
-  Runtime,
+  type Runtime,
+  type StoreState,
   selectConfig,
   selectSelectedPlayerId,
-  StoreState,
   GET_CONFIG_DETAILS,
 } from '@player-tools/devtools-client';
 import { useDispatch, useSelector } from 'react-redux';

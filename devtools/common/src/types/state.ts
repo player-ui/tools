@@ -1,5 +1,5 @@
-import { Flow, View } from '@player-ui/types';
-import { Runtime } from '.';
+import type { Flow, View } from '@player-ui/types';
+import type { Runtime } from '.';
 
 export type ActivePlayerState = {
   /**

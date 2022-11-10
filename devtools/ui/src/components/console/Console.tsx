@@ -1,12 +1,12 @@
 import React from 'react';
 import {
+  type ConsoleExpression,
   Console as ConsoleComp,
-  ConsoleExpression,
   ConsoleResultInspector,
 } from '@devtools-ds/console';
 import { Navigation } from '@devtools-ds/navigation';
 import { DeleteIcon } from '@devtools-ds/icon';
-import { ConsoleState } from '@player-tools/devtools-client';
+import type { ConsoleState } from '@player-tools/devtools-client';
 import styles from './console.css';
 
 const mapHistory = (history: ConsoleState['history']): ConsoleExpression[] => {
@@ -29,6 +29,7 @@ export const ConsoleHeader = () => {
         <a
           href="https://player-ui.github.io/latest/content/data-expressions"
           target="_blank"
+          rel="noreferrer"
         >
           docs
         </a>{' '}

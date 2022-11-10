@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Runtime,
+  type Runtime,
   selectAllBindings,
   selectSelectedBinding,
   selectSelectedPlayerId,
   clearSelectedDataDetails,
   GET_DATA_BINDING_DETAILS,
 } from '@player-tools/devtools-client';
+import type { ASTNode, ResolvedASTNode } from '@devtools-ds/object-parser';
 import { Data } from './Data';
-import { ASTNode, ResolvedASTNode } from '@devtools-ds/object-parser';
 
 const getBindingFromSelectedNode = (
   node: ASTNode | ResolvedASTNode

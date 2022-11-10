@@ -1,4 +1,4 @@
-import { Runtime } from './index';
+import type { Runtime } from './index';
 
 interface Action {
   /**

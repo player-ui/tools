@@ -1,12 +1,12 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Flow } from '@player-ui/types';
+import type { Flow } from '@player-ui/types';
 import {
+  type Runtime,
+  type StoreState,
   selectCurrentFlow,
   selectFlowInfo,
   selectSelectedPlayerId,
-  Runtime,
-  StoreState,
   GET_INFO_DETAILS,
 } from '@player-tools/devtools-client';
 import { Info } from './Info';

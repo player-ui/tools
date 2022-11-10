@@ -1,8 +1,8 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { View } from '@player-ui/types';
+import type { View } from '@player-ui/types';
 import {
-  StoreState,
+  type StoreState,
   selectSelectedPlayerId,
   selectView,
   GET_VIEW_DETAILS,

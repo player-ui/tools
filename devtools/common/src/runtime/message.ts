@@ -1,5 +1,5 @@
-import { RPCFunctionCallback } from '../rpc';
-import { Runtime } from '../types';
+import type { RPCFunctionCallback } from '../rpc';
+import type { Runtime } from '../types';
 
 export type RuntimeEventWithoutSource =
   | Omit<Runtime.PlayerDataChangeEvent, 'source'>
@@ -14,8 +14,7 @@ export type RuntimeEventPublisher = (
   message: RuntimeEventWithoutSource
 ) => void;
 
-export type ConfigRequestHandler = 
-  RPCFunctionCallback<Runtime.PlayerConfigRPC>;
+export type ConfigRequestHandler = RPCFunctionCallback<Runtime.PlayerConfigRPC>;
 export type DataBindingRequestHandler =
   RPCFunctionCallback<Runtime.PlayerDataBindingRPC>;
 export type RuntimeInfoRequestHandler =

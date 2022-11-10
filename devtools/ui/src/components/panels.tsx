@@ -8,24 +8,24 @@ import { ConsolePanel } from './console';
 import { ProfilerPanel } from './profiler';
 
 export const PANEL_IDS = [
-  'config',
+  // 'config',
   'events',
   'data',
   'flow',
   'view',
   'console',
-  'profiler',
+  // 'profiler',
 ] as const;
 export type PanelID = typeof PANEL_IDS[number];
 
 const ContentPage: Record<PanelID, React.ComponentType> = {
-  config: ConfigPanel,
+  // config: ConfigPanel,
   events: EventsPanel,
   data: DataPanel,
   flow: FlowPanel,
   view: ViewPanel,
   console: ConsolePanel,
-  profiler: ProfilerPanel,
+  // profiler: ProfilerPanel,
 };
 
 interface ContentProps {

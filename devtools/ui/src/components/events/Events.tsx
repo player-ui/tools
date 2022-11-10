@@ -1,7 +1,7 @@
 import React from 'react';
 import { ObjectInspector } from '@devtools-ds/object-inspector';
 import { Table } from '@devtools-ds/table';
-import { Runtime } from '@player-tools/devtools-common';
+import type { Runtime } from '@player-tools/devtools-common';
 import styles from './events.css';
 
 const EVENT_NAME_MAP: Record<
@@ -20,9 +20,12 @@ function createEmptyCells(
   expectedSize: number,
   Element: React.ComponentType
 ) {
-  return new Array(expectedSize - currentSize)
-    .fill(undefined)
-    .map((_x, index) => <Element key={`empty-placeholder-${index}`} />);
+  return (
+    new Array(expectedSize - currentSize)
+      .fill(undefined)
+      // eslint-disable-next-line react/no-array-index-key
+      .map((_x, index) => <Element key={`empty-placeholder-${index}`} />)
+  );
 }
 
 interface EventsProps {

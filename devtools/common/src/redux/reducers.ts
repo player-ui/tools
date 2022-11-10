@@ -1,27 +1,27 @@
-import {
-  AnyAction,
-  configureStore,
-  createReducer,
-  Dispatch,
-  Middleware,
-  MiddlewareArray,
-  ActionReducerMapBuilder,
-  EnhancedStore,
-} from '@reduxjs/toolkit';
-import { logsClearAction } from './actions';
 /* eslint-disable no-param-reassign */
 import {
-  playerFlowStartAction,
-  playerTimelineAction,
-  playerViewUpdateAction,
+  type AnyAction,
+  type Dispatch,
+  type Middleware,
+  type MiddlewareArray,
+  type ActionReducerMapBuilder,
+  type EnhancedStore,
+  configureStore,
+  createReducer,
+} from '@reduxjs/toolkit';
+import {
   clearSelectedDataDetails,
+  clearStore,
+  consoleClearAction,
+  logsClearAction,
+  playerFlowStartAction,
   playerInitAction,
   playerRemoveAction,
+  playerTimelineAction,
+  playerViewUpdateAction,
   selectedPlayerAction,
-  consoleClearAction,
-  clearStore,
 } from './actions';
-import { PlayersState, StoreState } from '../types/state';
+import type { PlayersState, StoreState } from '../types/state';
 
 const initialState = {
   selectedPlayerId: null,

@@ -1,7 +1,6 @@
-/* eslint-disable no-param-reassign */
-import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
-import { PlayersState } from '@player-tools/devtools-common';
-import { AsyncRPCActions } from './actions';
+import type { ActionReducerMapBuilder } from '@reduxjs/toolkit';
+import type { PlayersState } from '@player-tools/devtools-common';
+import type { AsyncRPCActions } from './actions';
 
 /**
  * Callback function that adds cases for async actions for the player.

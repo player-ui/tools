@@ -1,8 +1,8 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  ConsoleState,
-  StoreState,
+  type ConsoleState,
+  type StoreState,
   selectConsole,
   selectSelectedPlayerId,
   consoleClearAction,

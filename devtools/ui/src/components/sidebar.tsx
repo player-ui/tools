@@ -1,19 +1,29 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectedPlayerAction, selectPlayerIds, selectSelectedPlayerId, StoreState, selectPlayerVersion } from '@player-tools/devtools-common';
+import {
+  type StoreState,
+  selectedPlayerAction,
+  selectPlayerIds,
+  selectSelectedPlayerId,
+  selectPlayerVersion,
+} from '@player-tools/devtools-common';
 import logo from '../media/player-logo.png';
 import { InfoPanel } from './info';
 import styles from './sidebar.css';
 
 /**
  * Sidebar component for showing running player instances and flow information.
- * @returns 
+ * @returns
  */
 export const Sidebar = () => {
   const dispatch = useDispatch();
   const playerIDs = useSelector<StoreState, Array<string>>(selectPlayerIds);
-  const selectedPlayerID = useSelector<StoreState, string | null>(selectSelectedPlayerId);
-  const playerVersion = useSelector<StoreState, string | undefined>(selectPlayerVersion)
+  const selectedPlayerID = useSelector<StoreState, string | null>(
+    selectSelectedPlayerId
+  );
+  const playerVersion = useSelector<StoreState, string | undefined>(
+    selectPlayerVersion
+  );
 
   const details = selectedPlayerID ? (
     <section>
@@ -47,7 +57,14 @@ export const Sidebar = () => {
         <img className={styles.logo} src={logo} alt="Player Logo" />
         <h2 className={styles.title}>Player Devtools</h2>
       </section>
-      {playerVersion ? <section><p><span className={styles.infoTitle}>Player Version:</span><span>{playerVersion}</span></p></section>:null}
+      {playerVersion ? (
+        <section>
+          <p>
+            <span className={styles.infoTitle}>Player Version:</span>
+            <span>{playerVersion}</span>
+          </p>
+        </section>
+      ) : null}
       {details}
     </div>
   );

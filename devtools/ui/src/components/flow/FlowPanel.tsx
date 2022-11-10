@@ -1,7 +1,10 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Flow as FlowType } from '@player-ui/types';
-import { StoreState, selectCurrentFlow } from '@player-tools/devtools-common';
+import type { Flow as FlowType } from '@player-ui/types';
+import {
+  type StoreState,
+  selectCurrentFlow,
+} from '@player-tools/devtools-common';
 import styles from '../app.css';
 import { Flow } from './Flow';
 

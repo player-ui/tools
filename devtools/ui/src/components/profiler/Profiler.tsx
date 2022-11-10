@@ -1,8 +1,8 @@
 import React from 'react';
 import { FlameGraph } from 'react-flame-graph';
 import { ObjectInspector } from '@devtools-ds/object-inspector';
+import type { ProfilerNode } from '@player-tools/devtools-common';
 import styles from '../app.css';
-import { ProfilerNode } from '@player-tools/devtools-common';
 
 interface ProfilerProps {
   profiler?: ProfilerNode;

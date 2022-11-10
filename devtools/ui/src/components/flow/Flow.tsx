@@ -1,7 +1,6 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { ObjectInspector } from '@devtools-ds/object-inspector';
-import { Flow as FlowType } from '@player-ui/types';
+import type { Flow as FlowType } from '@player-ui/types';
 import styles from './flow.css';
 
 interface FlowProps {

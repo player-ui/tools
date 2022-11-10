@@ -1,6 +1,6 @@
 import {
+  type Message,
   clearStore,
-  Message,
   playerFlowStartAction,
   playerInitAction,
   playerRemoveAction,
@@ -8,7 +8,7 @@ import {
   playerViewUpdateAction,
   selectedPlayerAction,
 } from '@player-tools/devtools-common';
-import { Store } from 'redux';
+import type { Store } from 'redux';
 import { GET_DATA_BINDING_DETAILS } from './aliases';
 
 export * from './actions';
@@ -64,7 +64,7 @@ export function handleMessage(store: Store, message: Message) {
     }
 
     default:
-      console.warn('Unhandled event: ' + JSON.stringify(message));
+      console.warn(`Unhandled event: ${JSON.stringify(message)}`);
       break;
   }
 }

@@ -1,4 +1,4 @@
-import {
+import type {
   AliasAction,
   ConfigAction,
   DataBindingAction,
@@ -6,7 +6,7 @@ import {
   StartProfilerAction,
   StopProfilerAction,
 } from '@player-tools/devtools-common';
-import { AsyncRPCActions } from './actions';
+import type { AsyncRPCActions } from './actions';
 
 export const GET_INFO_DETAILS = 'GET_INFO_DETAILS';
 export const GET_CONFIG_DETAILS = 'GET_CONFIG_DETAILS';
@@ -16,7 +16,7 @@ export const GET_CONSOLE_EVAL = 'GET_CONSOLE_EVAL';
 export const START_PROFILER = 'START_PROFILER';
 export const STOP_PROFILER = 'STOP_PROFILER';
 
-const alias = (aliases: any) => () => (next: any) => (action: any) => {
+const _alias = (aliases: any) => () => (next: any) => (action: any) => {
   const alias = aliases[action.type];
 
   if (alias) {
@@ -27,7 +27,7 @@ const alias = (aliases: any) => () => (next: any) => (action: any) => {
 };
 
 export const buildAliases = (actions: AsyncRPCActions) =>
-  alias({
+  _alias({
     GET_INFO_DETAILS: (action: AliasAction) =>
       actions['player-runtime-info-request'](action.payload),
     GET_CONFIG_DETAILS: (action: ConfigAction) =>

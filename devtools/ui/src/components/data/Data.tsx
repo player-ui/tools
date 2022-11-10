@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ObjectInspector } from '@devtools-ds/object-inspector';
 import Split from 'react-split';
-import { ResolvedASTNode, ASTNode } from '@devtools-ds/object-parser';
-import { Runtime } from '@player-tools/devtools-common';
+import type { ResolvedASTNode, ASTNode } from '@devtools-ds/object-parser';
+import type { Runtime } from '@player-tools/devtools-common';
 import styles from './data.css';
 import commonStyles from '../app.css';
 

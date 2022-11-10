@@ -1,9 +1,9 @@
 import React from 'react';
 import {
-  ProfilerNode,
+  type ProfilerNode,
+  type StoreState,
   selectProfiler,
   selectSelectedPlayerId,
-  StoreState,
   START_PROFILER,
   STOP_PROFILER,
 } from '@player-tools/devtools-client';
@@ -19,7 +19,7 @@ export const ProfilerPanel = () => {
   const currentPlayerID = useSelector<StoreState, string | null>(
     selectSelectedPlayerId
   );
-  const profiler = useSelector<StoreState, ProfilerNode | undefined | null>(
+  const profiler = useSelector<StoreState, ProfilerNode | undefined>(
     selectProfiler
   );
   const dispatch = useDispatch();

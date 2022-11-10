@@ -1,5 +1,5 @@
 import React from 'react';
-import { Runtime } from '@player-tools/devtools-client';
+import type { Runtime } from '@player-tools/devtools-client';
 import { ObjectInspector } from '@devtools-ds/object-inspector';
 import { Controls, Navigation, Tab, TabList } from '@devtools-ds/navigation';
 import { headerCase } from 'change-case';

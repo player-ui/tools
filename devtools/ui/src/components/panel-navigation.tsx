@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigation, Controls, TabList, Tab } from '@devtools-ds/navigation';
 import { headerCase } from 'change-case';
-import { PANEL_IDS, PanelID, Content } from './panels';
+import { PANEL_IDS, type PanelID, Content } from './panels';
 
 interface PanelNavigationProps {
   onSelectTab?: (tabID: PanelID) => void;
@@ -26,9 +26,7 @@ export const PanelNavigation = (props: PanelNavigationProps) => {
         </Controls>
         <Navigation.Panels>
           {PANEL_IDS.map((panelID) => (
-            <Navigation.Panel
-              key={panelID}
-            >
+            <Navigation.Panel key={panelID}>
               <Content panelId={panelID} />
             </Navigation.Panel>
           ))}

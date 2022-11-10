@@ -1,10 +1,11 @@
-import { Severity } from '@player-ui/logger';
-import { Binding, Flow, Schema, View } from '@player-ui/types';
-import { RUNTIME_SOURCE } from '../constants';
-import { RPCRequestHandler } from '../rpc';
-import { ProfilerNode } from './state';
+import type { Severity } from '@player-ui/logger';
+import type { Binding, Flow, Schema, View } from '@player-ui/types';
+import type { RUNTIME_SOURCE } from '../constants';
+import type { ProfilerNode } from './state';
 
-export interface BaseEventMessage<T extends Runtime.RuntimeEventTypes | 'rpc-request' | 'rpc-response'> {
+export interface BaseEventMessage<
+  T extends Runtime.RuntimeEventTypes | 'rpc-request' | 'rpc-response'
+> {
   /**
    * Source of the Message
    */

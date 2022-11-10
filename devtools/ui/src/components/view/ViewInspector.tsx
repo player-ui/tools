@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from '@player-ui/types';
+import type { View } from '@player-ui/types';
 import { ObjectInspector } from '@devtools-ds/object-inspector';
 
 interface ViewInspectorProps {

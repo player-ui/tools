@@ -1,10 +1,9 @@
 import {
+  type RPCRequestMessageEvent,
+  type RPCRequestHandler,
   createRPCRequest,
-  PANEL_SOURCE,
-  Runtime as PlayerRuntime,
-  RPCRequestMessageEvent,
-  RPCRequestHandler,
   Runtime,
+  PANEL_SOURCE,
 } from '@player-tools/devtools-common';
 
 export type RuntimeRPCRequestHandlers = {
@@ -13,17 +12,10 @@ export type RuntimeRPCRequestHandlers = {
 
 export const buildRPCRequests = (
   onRequestMessage: (
-    message: RPCRequestMessageEvent<PlayerRuntime.RuntimeRPC>
+    message: RPCRequestMessageEvent<Runtime.RuntimeRPC>
   ) => void
 ): RuntimeRPCRequestHandlers =>
-  Runtime.RuntimeRPCTypes.reduce(
-    (acc, rpcType) => (
-      (acc[rpcType] = createRPCRequest(
-        rpcType,
-        PANEL_SOURCE,
-        onRequestMessage
-      )),
-      acc
-    ),
-    {} as RuntimeRPCRequestHandlers
-  );
+  Runtime.RuntimeRPCTypes.reduce((acc, rpcType) => {
+    acc[rpcType] = createRPCRequest(rpcType, PANEL_SOURCE, onRequestMessage);
+    return acc;
+  }, {} as RuntimeRPCRequestHandlers);
