@@ -4,6 +4,7 @@ javascript_pipeline(
     name = "@player-tools/dnd-lib",
     dependencies = [
       "//xlr/types:@player-tools/xlr",
+      "//language/service:@player-tools/language-service",
       "@npm//@player-ui/react",
       "@npm//react-dnd",
       "@npm//react-dnd-html5-backend",

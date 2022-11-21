@@ -8,5 +8,11 @@ export default {
   },
   basePath: BASE_PREFIX,
   assetPrefix: BASE_PREFIX,
-  pageExtensions: ['jsx', 'js', 'ts', 'tsx']
+  pageExtensions: ['jsx', 'js', 'ts', 'tsx'],
+  webpack: (config) => {
+    // eslint-disable-next-line no-param-reassign
+    config.resolve.fallback = { fs: false };
+
+    return config;
+  },
 };

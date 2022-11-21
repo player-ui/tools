@@ -3,7 +3,9 @@ import type { AssetWrapper, View } from '@player-ui/react';
 import { ConsoleLogger, WebPlayer } from '@player-ui/react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import type { ObjectNode } from '@player-tools/xlr';
+import type { NamedType, ObjectNode, TSManifest } from '@player-tools/xlr';
+import { XLRService } from '@player-tools/language-service';
+import type { TypeMetadata } from '@player-tools/xlr-sdk';
 import { PlayerDndPlugin } from './utils';
 import type {
   DropTargetAssetType,
@@ -16,39 +18,74 @@ import { RuntimeFlowState } from './utils/runtime-flow-state';
 import { DropComponent } from './utils/drop-component';
 
 export interface DragAndDropControllerOptions {
+  /**
+   *
+   */
   extensions?: Array<ExtensionProvider>;
 
+  /**
+   *
+   */
+  types: TSManifest;
+
+  /**
+   *
+   */
   Component?: React.ComponentType<TransformedDropTargetAssetType>;
 }
 
+/**
+ *
+ */
 export class DragAndDropController {
   private readonly options: DragAndDropControllerOptions;
   public readonly webPlayer: WebPlayer;
 
   private readonly dndWebPlayerPlugin: PlayerDndPlugin;
   private readonly runtimeState: RuntimeFlowState;
+  private readonly PlayerXLRService: XLRService;
 
   public get Canvas() {
     return this.webPlayer.Component;
   }
 
   public getAvailableAssets(): Array<ExtensionProviderAssetIdentifier> {
-    return (this.options.extensions ?? []).flatMap((extension) => {
-      return (extension.manifest.capabilities?.Assets ?? []).map((asset) => {
-        return {
-          pluginName: extension.manifest.pluginName,
-          name: asset.name,
-        };
-      });
+    const assets = this.PlayerXLRService.XLRSDK.listTypes({
+      capabilityFilter: 'Types',
+      typeFilter: 'Transformed',
     });
+    return assets.map((asset) => {
+      const assetName = asset.name;
+      const typeInfo = this.PlayerXLRService.XLRSDK.getTypeInfo(
+        assetName
+      ) as TypeMetadata;
+      return {
+        pluginName: typeInfo.plugin,
+        name: assetName,
+      };
+    });
+  }
+
+  public getAssetDetails(assetName: string): NamedType<ObjectNode> {
+    return this.PlayerXLRService.XLRSDK.getType(
+      assetName
+    ) as NamedType<ObjectNode>;
   }
 
   public Context: React.ComponentType<React.PropsWithChildren<unknown>>;
 
-  constructor(options?: DragAndDropControllerOptions) {
+  constructor(options: DragAndDropControllerOptions) {
     this.options = options ?? {};
 
     this.runtimeState = new RuntimeFlowState();
+
+    this.PlayerXLRService = new XLRService();
+    this.PlayerXLRService.XLRSDK.loadDefinitionsFromModule(options.types);
+    options?.extensions?.forEach((extension) => {
+      this.PlayerXLRService.XLRSDK.loadDefinitionsFromModule(
+        extension.manifest
+      );
+    });
 
     this.dndWebPlayerPlugin = new PlayerDndPlugin({
       state: this.runtimeState,
@@ -56,21 +93,9 @@ export class DragAndDropController {
         Component: this.options.Component ?? DropComponent,
       },
       getXLRTypeForAsset: (identifier): ObjectNode => {
-        const plugin = options?.extensions?.find(
-          (id) => identifier.pluginName === id.manifest.pluginName
-        );
-
-        const asset = plugin?.manifest.capabilities?.Assets.find(
-          (a) => a.name === identifier.name
-        );
-
-        if (asset?.type === 'object') {
-          return asset as ObjectNode;
-        }
-
-        throw new Error(
-          `Unable to find type information for asset identifier: ${identifier.name} in plugin ${identifier.pluginName}`
-        );
+        return this.PlayerXLRService.XLRSDK.getType(
+          identifier.name
+        ) as NamedType<ObjectNode>;
       },
     });
 
@@ -99,6 +124,9 @@ export class DragAndDropController {
   exportView(): View {
     const baseView = this.runtimeState.view;
 
+    /**
+     *
+     */
     const removeDndStateFromView = (obj: unknown): any => {
       if (obj === baseView && isDropTargetAsset(obj)) {
         if (obj.value?.asset) {

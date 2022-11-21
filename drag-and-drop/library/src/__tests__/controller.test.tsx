@@ -1,6 +1,7 @@
 import { waitFor } from '@testing-library/react';
 import type { InProgressState } from '@player-ui/react';
-import manifest from '@player-tools/static-xlrs/static_xlrs/plugin/xlr/manifest';
+import pluginManifest from '@player-tools/static-xlrs/static_xlrs/plugin/xlr/manifest';
+import typesManifest from '@player-tools/static-xlrs/static_xlrs/core/xlr/manifest';
 import { DragAndDropController } from '../controller';
 import type { ExtensionProvider } from '../types';
 
@@ -8,12 +9,13 @@ const referenceAssetExtension: ExtensionProvider = {
   plugin: class test {
     name = 'test';
   },
-  manifest: manifest as any,
+  manifest: pluginManifest as any,
 };
 
 describe('drag-and-drop', () => {
   it('Fills in placeholder assets when dropped', async () => {
     const dndController = new DragAndDropController({
+      types: typesManifest,
       extensions: [referenceAssetExtension],
     });
 
@@ -47,7 +49,7 @@ describe('drag-and-drop', () => {
       type: 'info',
       title: {
         asset: {
-          id: 'drag-and-drop-view-test-title-test-1',
+          id: 'drag-and-drop-view-title-test-1',
           type: 'text',
         },
       },

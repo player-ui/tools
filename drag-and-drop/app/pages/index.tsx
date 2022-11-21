@@ -19,7 +19,9 @@ import {
   useDraggableAsset,
 } from '@player-tools/dnd-lib';
 import { ReferenceAssetsPlugin } from '@player-ui/reference-assets-plugin-react';
-import manifest from '@player-tools/static-xlrs/static_xlrs/plugin/xlr/manifest';
+import type { TSManifest } from '@player-tools/xlr';
+import pluginManifest from '@player-tools/static-xlrs/static_xlrs/plugin/xlr/manifest';
+import typesManifest from '@player-tools/static-xlrs/static_xlrs/core/xlr/manifest';
 
 const PropertiesContext = React.createContext<{
   displayedAssetID?: string;
@@ -69,10 +71,11 @@ const AssetDropTarget = (props: TransformedDropTargetAssetType) => {
 
 const config: DragAndDropControllerOptions = {
   Component: AssetDropTarget,
+  types: typesManifest as TSManifest,
   extensions: [
     {
       plugin: ReferenceAssetsPlugin,
-      manifest: manifest as any,
+      manifest: pluginManifest as TSManifest,
     },
   ],
 };
