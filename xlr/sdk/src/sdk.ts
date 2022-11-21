@@ -2,10 +2,15 @@ import type {
   Manifest,
   NamedType,
   NodeType,
+  ObjectType,
   TransformFunction,
   TSManifest,
 } from '@player-tools/xlr';
 import type { TopLevelDeclaration } from '@player-tools/xlr-utils';
+import {
+  computeEffectiveObject,
+  resolveReferenceNode,
+} from '@player-tools/xlr-utils';
 import { fillInGenerics } from '@player-tools/xlr-utils';
 import type { Node } from 'jsonc-parser';
 import { TSWriter } from '@player-tools/xlr-converters';
@@ -17,6 +22,12 @@ import type { XLRRegistry, Filters } from './registry';
 import { BasicXLRRegistry } from './registry';
 import type { ExportTypes } from './types';
 import { XLRValidator } from './validator';
+import { simpleTransformGenerator } from './utils';
+
+export interface GetTypeOptions {
+  /** Resolves `extends` fields in objects */
+  getRawType?: boolean;
+}
 
 /**
  * Abstraction for interfacing with XLRs making it more approachable to use without understanding the inner workings of the types and how they are packaged
@@ -28,7 +39,7 @@ export class XLRSDK {
 
   constructor(customRegistry?: XLRRegistry) {
     this.registry = customRegistry ?? new BasicXLRRegistry();
-    this.validator = new XLRValidator(this.registry);
+    this.validator = new XLRValidator(this.getType.bind(this));
     this.tsWriter = new TSWriter();
   }
 
@@ -66,24 +77,25 @@ export class XLRSDK {
               )
               .toString()
           );
-          transforms?.forEach((transform) => transform(cType, capabilityName));
-          const resolvedType = fillInGenerics(cType) as NamedType<NodeType>;
-          this.registry.add(resolvedType, manifest.pluginName, capabilityName);
+          let effectiveType = cType;
+
+          transforms?.forEach((transformFunction) => {
+            effectiveType = transformFunction(
+              effectiveType,
+              capabilityName
+            ) as NamedType;
+          });
+          this.registry.add(effectiveType, manifest.pluginName, capabilityName);
         }
       });
     });
   }
 
   public async loadDefinitionsFromModule(
-    inputPath: string,
+    manifest: TSManifest,
     filters?: Omit<Filters, 'pluginFilter'>,
     transforms?: Array<TransformFunction>
   ) {
-    const importManifest = await import(
-      path.join(inputPath, 'xlr', 'manifest.js')
-    );
-    const manifest = importManifest.default as TSManifest;
-
     Object.keys(manifest.capabilities)?.forEach((capabilityName) => {
       if (
         filters?.capabilityFilter &&
@@ -96,18 +108,58 @@ export class XLRSDK {
           !filters?.typeFilter ||
           !extension.name.match(filters?.typeFilter)
         ) {
-          transforms?.forEach((transform) =>
-            transform(extension, extension.name)
-          );
-          const resolvedType = fillInGenerics(extension) as NamedType<NodeType>;
-          this.registry.add(resolvedType, manifest.pluginName, extension.name);
+          let effectiveType = extension;
+          transforms?.forEach((transformFunction) => {
+            effectiveType = transformFunction(
+              effectiveType,
+              capabilityName
+            ) as NamedType;
+          });
+
+          this.registry.add(effectiveType, manifest.pluginName, capabilityName);
         }
       });
     });
   }
 
-  public getType(id: string) {
-    return this.registry.get(id);
+  public getType(
+    id: string,
+    options?: GetTypeOptions
+  ): NamedType<NodeType> | undefined {
+    let type = this.registry.get(id);
+    if (options?.getRawType === true || !type) {
+      return type;
+    }
+
+    // Expand `extends` field in all assets
+    type = simpleTransformGenerator('object', 'any', (objectNode) => {
+      if (objectNode.type === 'object' && objectNode.extends) {
+        const refName = objectNode.extends.ref.split('<')[0];
+        let extendedType = this.getType(refName, { getRawType: true });
+        if (!extendedType) {
+          throw new Error(
+            `Error resolving ${objectNode.name}: can't find extended type ${refName}`
+          );
+        }
+
+        extendedType = resolveReferenceNode(
+          objectNode.extends,
+          extendedType as NamedType<ObjectType>
+        ) as NamedType;
+        return {
+          ...computeEffectiveObject(
+            extendedType as ObjectType,
+            type as ObjectType,
+            false
+          ),
+          name: objectNode.name,
+        };
+      }
+
+      return objectNode;
+    })(type, 'any') as NamedType;
+
+    return fillInGenerics(type) as NamedType;
   }
 
   public hasType(id: string) {
@@ -118,8 +170,12 @@ export class XLRSDK {
     return this.registry.list(filters);
   }
 
-  public validate(typeName: string, rootNode: Node) {
-    const xlr = this.registry.get(typeName);
+  public getTypeInfo(id: string) {
+    return this.registry.info(id);
+  }
+
+  public validateByName(typeName: string, rootNode: Node) {
+    const xlr = this.getType(typeName);
     if (!xlr) {
       throw new Error(
         `Type ${typeName} does not exist in registry, can't validate`
@@ -127,6 +183,10 @@ export class XLRSDK {
     }
 
     return this.validator.validateType(rootNode, xlr);
+  }
+
+  public validateByType(type: NodeType, rootNode: Node) {
+    return this.validator.validateType(rootNode, type);
   }
 
   /**
@@ -145,13 +205,14 @@ export class XLRSDK {
     transforms?: Array<TransformFunction>
   ): [string, string][] {
     const typesToExport = this.registry.list(filters).map((type) => {
-      transforms?.forEach((transformFunction) =>
-        transformFunction(
-          type,
+      let effectiveType = type;
+      transforms?.forEach((transformFunction) => {
+        effectiveType = transformFunction(
+          effectiveType,
           this.registry.info(type.name)?.capability as string
-        )
-      );
-      return type;
+        ) as NamedType;
+      });
+      return effectiveType;
     });
 
     if (exportType === 'TypeScript') {

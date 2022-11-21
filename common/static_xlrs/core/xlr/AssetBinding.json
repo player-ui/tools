@@ -3,23 +3,6 @@
     "type": "object",
     "source": "src/index.ts",
     "properties": {
-        "id": {
-            "required": true,
-            "node": {
-                "type": "string",
-                "title": "Asset.id",
-                "description": "Each asset requires a unique id per view"
-            }
-        },
-        "type": {
-            "required": true,
-            "node": {
-                "type": "ref",
-                "ref": "T",
-                "title": "Asset.type",
-                "description": "The asset type determines the semantics of how a user interacts with a page"
-            }
-        },
         "binding": {
             "required": true,
             "node": {
@@ -30,9 +13,11 @@
             }
         }
     },
-    "additionalProperties": {
-        "type": "unknown"
-    },
+    "additionalProperties": false,
     "title": "AssetBinding",
-    "description": "An asset that contains a Binding."
+    "description": "An asset that contains a Binding.",
+    "extends": {
+        "type": "ref",
+        "ref": "Asset"
+    }
 }

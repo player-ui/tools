@@ -6,26 +6,9 @@ describe('Type Exports', () => {
   it('Basic Type Conversion', () => {
     const xlr = {
       name: 'ActionAsset',
-      source: 'ActionAsset.ts',
       type: 'object',
+      source: 'common-to-ts.test.ts',
       properties: {
-        id: {
-          required: true,
-          node: {
-            type: 'string',
-            title: 'Asset.id',
-            description: 'Each asset requires a unique id per view',
-          },
-        },
-        type: {
-          required: true,
-          node: {
-            type: 'string',
-            const: 'action',
-            title:
-              'The asset type determines the semantics of how a user interacts with a page',
-          },
-        },
         value: {
           required: false,
           node: {
@@ -40,6 +23,12 @@ describe('Type Exports', () => {
           node: {
             type: 'ref',
             ref: 'AssetWrapper<AnyTextAsset>',
+            genericArguments: [
+              {
+                type: 'ref',
+                ref: 'AnyTextAsset',
+              },
+            ],
             title: 'ActionAsset.label',
             description: "A text-like asset for the action's label",
           },
@@ -72,6 +61,8 @@ describe('Type Exports', () => {
                 required: false,
                 node: {
                   name: 'BeaconDataType',
+                  source:
+                    '/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/node_modules/@player-ui/beacon-plugin/dist/index.d.ts',
                   type: 'or',
                   or: [
                     {
@@ -127,6 +118,16 @@ describe('Type Exports', () => {
           },
         },
       ],
+      extends: {
+        type: 'ref',
+        ref: "Asset<'action'>",
+        genericArguments: [
+          {
+            type: 'string',
+            const: 'action',
+          },
+        ],
+      },
     } as NamedType;
 
     const converter = new TSWriter(ts.factory);

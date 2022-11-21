@@ -1,25 +1,8 @@
 {
     "name": "TextAsset",
     "type": "object",
-    "source": "/Users/kreddy8/dev/player/reference-assets/text/dist/types.d.ts",
+    "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/plugins/reference-assets/core/src/assets/text/types.ts",
     "properties": {
-        "id": {
-            "required": true,
-            "node": {
-                "type": "string",
-                "title": "Asset.id",
-                "description": "Each asset requires a unique id per view"
-            }
-        },
-        "type": {
-            "required": true,
-            "node": {
-                "type": "string",
-                "const": "text",
-                "title": "Asset.type",
-                "description": "The asset type determines the semantics of how a user interacts with a page"
-            }
-        },
         "value": {
             "required": true,
             "node": {
@@ -34,13 +17,13 @@
                 "type": "array",
                 "elementType": {
                     "name": "TextModifier",
-                    "source": "/Users/kreddy8/dev/player/reference-assets/text/dist/types.d.ts",
+                    "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/plugins/reference-assets/core/src/assets/text/types.ts",
                     "type": "or",
                     "or": [
                         {
                             "name": "BasicTextModifier",
                             "type": "object",
-                            "source": "/Users/kreddy8/dev/player/reference-assets/text/dist/types.d.ts",
+                            "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/plugins/reference-assets/core/src/assets/text/types.ts",
                             "properties": {
                                 "type": {
                                     "required": true,
@@ -67,7 +50,7 @@
                         {
                             "name": "LinkModifier",
                             "type": "object",
-                            "source": "/Users/kreddy8/dev/player/reference-assets/text/dist/types.d.ts",
+                            "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/plugins/reference-assets/core/src/assets/text/types.ts",
                             "properties": {
                                 "type": {
                                     "required": true,
@@ -127,8 +110,16 @@
             }
         }
     },
-    "additionalProperties": {
-        "type": "unknown"
-    },
-    "title": "TextAsset"
+    "additionalProperties": false,
+    "title": "TextAsset",
+    "extends": {
+        "type": "ref",
+        "ref": "Asset<'text'>",
+        "genericArguments": [
+            {
+                "type": "string",
+                "const": "text"
+            }
+        ]
+    }
 }

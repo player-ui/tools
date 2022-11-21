@@ -1,5 +1,7 @@
 import type { TransformFunction } from '@player-tools/xlr';
 import { parseTree } from 'jsonc-parser';
+import typesManifest from '@player-tools/static-xlrs/static_xlrs/core/xlr/manifest';
+import pluginManifest from '@player-tools/static-xlrs/static_xlrs/plugin/xlr/manifest';
 import type { Filters } from '../registry';
 import { XLRSDK } from '../sdk';
 
@@ -24,11 +26,8 @@ describe('Loading XLRs', () => {
 
   it('Loading from Module', async () => {
     const sdk = new XLRSDK();
-    await sdk.loadDefinitionsFromModule(
-      '../../../common/static_xlrs/plugin',
-      EXCLUDE
-    );
-    await sdk.loadDefinitionsFromModule('../../../common/static_xlrs/core');
+    await sdk.loadDefinitionsFromModule(pluginManifest, EXCLUDE);
+    await sdk.loadDefinitionsFromModule(typesManifest);
 
     expect(sdk.hasType('Asset')).toStrictEqual(true);
     expect(sdk.hasType('AssetWrapper')).toStrictEqual(true);
@@ -39,6 +38,16 @@ describe('Loading XLRs', () => {
     expect(sdk.hasType('InputAsset')).toStrictEqual(true);
     expect(sdk.hasType('TransformedAction')).toStrictEqual(false);
     expect(sdk.hasType('TransformedInput')).toStrictEqual(false);
+  });
+});
+
+describe('Object Recall', () => {
+  it('Working Test', () => {
+    const sdk = new XLRSDK();
+    sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
+    sdk.loadDefinitionsFromDisk('./common/static_xlrs/core');
+
+    expect(sdk.getType('InputAsset')).toMatchSnapshot();
   });
 });
 
@@ -60,7 +69,7 @@ describe('Basic Validation', () => {
     sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
     sdk.loadDefinitionsFromDisk('./common/static_xlrs/core');
 
-    expect(sdk.validate('InputAsset', mockAsset)).toMatchSnapshot();
+    expect(sdk.validateByName('InputAsset', mockAsset)).toMatchSnapshot();
   });
 });
 
@@ -89,7 +98,7 @@ describe('Export Test', () => {
     ]);
 
     const sdk = new XLRSDK();
-    sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
+    sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin');
     const results = sdk.exportRegistry('TypeScript', importMap, {
       typeFilter: 'Transformed',
     });
@@ -109,13 +118,15 @@ describe('Export Test', () => {
      *
      */
     const transformFunction: TransformFunction = (input) => {
-      if (input.type === 'object') {
-        // eslint-disable-next-line no-param-reassign
-        input.properties.transformed = {
+      const ret = { ...input };
+      if (ret.type === 'object') {
+        ret.properties.transformed = {
           required: false,
           node: { type: 'boolean', const: true },
         };
       }
+
+      return ret;
     };
 
     const sdk = new XLRSDK();

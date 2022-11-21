@@ -90,22 +90,18 @@ describe('Transform Tests', () => {
   });
 
   it('CommonProps Transform', () => {
-    applyCommonProps(MockAsset, 'Assets');
-    expect(MockAsset).toMatchSnapshot();
+    expect(applyCommonProps(MockAsset, 'Assets')).toMatchSnapshot();
   });
 
   it('AssetWrapperOrSwitch Transform', () => {
-    applyAssetWrapperOrSwitch(MockAsset, 'Assets');
-    expect(MockAsset).toMatchSnapshot();
+    expect(applyAssetWrapperOrSwitch(MockAsset, 'Assets')).toMatchSnapshot();
   });
 
   it('applyValueRefs Transform', () => {
-    applyValueRefs(MockAsset, 'Assets');
-    expect(MockAsset).toMatchSnapshot();
+    expect(applyValueRefs(MockAsset, 'Assets')).toMatchSnapshot();
   });
 
   it('applyTemplateProperty Transform', () => {
-    applyTemplateProperty(MockAsset, 'Assets');
-    expect(MockAsset).toMatchSnapshot();
+    expect(applyTemplateProperty(MockAsset, 'Assets')).toMatchSnapshot();
   });
 });

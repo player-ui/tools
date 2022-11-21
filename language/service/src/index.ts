@@ -47,6 +47,7 @@ export * from './utils';
 export * from './constants';
 export * from './types';
 export * from './parser';
+export * from './xlr/index';
 
 export interface PlayerLanguageServicePlugin {
   /** The name of the plugin */
@@ -184,7 +185,7 @@ export class PlayerLanguageService {
 
     const { node } = await this.getJSONPositionInfo(ctx, position);
 
-    const XLRInfo = await this.XLRService.getTypeInfoAtPosition(node);
+    const XLRInfo = this.XLRService.getTypeInfoAtPosition(node);
     if (!node || !XLRInfo) {
       return undefined;
     }

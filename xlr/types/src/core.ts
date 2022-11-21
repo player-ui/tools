@@ -90,6 +90,8 @@ export interface RefNode extends TypeNode<'ref'> {
   ref: string;
   /** Parameters to potentially fill in a generic when it is resolved. Position is preserved */
   genericArguments?: Array<NodeType>;
+  /** Optional property to access when the reference is resolved */
+  property?: string;
 }
 export type RefType = RefNode & Annotations;
 

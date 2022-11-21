@@ -465,13 +465,11 @@ exports[`Export Test Exports Typescript Types With Filters 1`] = `
  * This is the most generic way of gathering data. The input is bound to a data model using the 'binding' property.
  * Players can get field type information from the 'schema' definition, thus to decide the input controls for visual rendering.
 */
-export interface InputAsset<AnyTextAsset extends Asset = Asset> {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"input\\";
+export interface InputAsset<AnyTextAsset extends Asset = Asset> extends Asset<'input'> {
     /** Asset container for a field label. */
     label?: AssetWrapper<AnyTextAsset>;
+    /** Asset container for a note. */
+    note?: AssetWrapper<AnyTextAsset>;
     /** The location in the data-model to store the data */
     binding: Binding;
     /** Optional additional data */
@@ -479,13 +477,8 @@ export interface InputAsset<AnyTextAsset extends Asset = Asset> {
         /** Additional data to beacon when this input changes */
         beacon?: string | Record<string, any>;
     };
-    [key: string]: unknown;
 }
-export interface TextAsset {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"text\\";
+export interface TextAsset extends Asset<'text'> {
     /** The text to display */
     value: string;
     /** Any modifiers on the text */
@@ -497,7 +490,7 @@ export interface TextAsset {
         [key: string]: unknown;
     } | {
         /** The link type denotes this as a link */
-        type: \\"link\\";
+        type: 'link';
         /** An optional expression to run before the link is opened */
         exp?: Expression;
         /** metaData about the link's target */
@@ -508,18 +501,13 @@ export interface TextAsset {
             'mime-type'?: string;
         };
     }>;
-    [key: string]: unknown;
 }
 /**
  * User actions can be represented in several places.
  * Each view typically has one or more actions that allow the user to navigate away from that view.
  * In addition, several asset types can have actions that apply to that asset only.
 */
-export interface ActionAsset<AnyTextAsset extends Asset = Asset> {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"action\\";
+export interface ActionAsset<AnyTextAsset extends Asset = Asset> extends Asset<'action'> {
     /** The transition value of the action in the state machine */
     value?: string;
     /** A text-like asset for the action's label */
@@ -535,13 +523,8 @@ export interface ActionAsset<AnyTextAsset extends Asset = Asset> {
         /** Force transition to the next view without checking for validation */
         skipValidation?: boolean;
     };
-    [key: string]: unknown;
 }
-export interface InfoAsset {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"info\\";
+export interface InfoAsset extends Asset<'info'> {
     /** The string value to show */
     title?: AssetWrapper;
     /** subtitle */
@@ -550,16 +533,12 @@ export interface InfoAsset {
     primaryInfo?: AssetWrapper;
     /** List of actions to show at the bottom of the page */
     actions?: Array<AssetWrapper>;
-    [key: string]: unknown;
 }
-export interface CollectionAsset {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"collection\\";
+export interface CollectionAsset extends Asset<'collection'> {
+    /** An optional label to title the collection */
+    label?: AssetWrapper;
     /** The string value to show */
-    values: Array<AssetWrapper>;
-    [key: string]: unknown;
+    values?: Array<AssetWrapper>;
 }"
 `;
 
@@ -570,13 +549,11 @@ exports[`Export Test Exports Typescript Types With Transforms 1`] = `
  * This is the most generic way of gathering data. The input is bound to a data model using the 'binding' property.
  * Players can get field type information from the 'schema' definition, thus to decide the input controls for visual rendering.
 */
-export interface InputAsset<AnyTextAsset extends Asset = Asset> {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"input\\";
+export interface InputAsset<AnyTextAsset extends Asset = Asset> extends Asset<'input'> {
     /** Asset container for a field label. */
     label?: AssetWrapper<AnyTextAsset>;
+    /** Asset container for a note. */
+    note?: AssetWrapper<AnyTextAsset>;
     /** The location in the data-model to store the data */
     binding: Binding;
     /** Optional additional data */
@@ -585,13 +562,8 @@ export interface InputAsset<AnyTextAsset extends Asset = Asset> {
         beacon?: string | Record<string, any>;
     };
     transformed?: true;
-    [key: string]: unknown;
 }
-export interface TextAsset {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"text\\";
+export interface TextAsset extends Asset<'text'> {
     /** The text to display */
     value: string;
     /** Any modifiers on the text */
@@ -603,7 +575,7 @@ export interface TextAsset {
         [key: string]: unknown;
     } | {
         /** The link type denotes this as a link */
-        type: \\"link\\";
+        type: 'link';
         /** An optional expression to run before the link is opened */
         exp?: Expression;
         /** metaData about the link's target */
@@ -615,18 +587,13 @@ export interface TextAsset {
         };
     }>;
     transformed?: true;
-    [key: string]: unknown;
 }
 /**
  * User actions can be represented in several places.
  * Each view typically has one or more actions that allow the user to navigate away from that view.
  * In addition, several asset types can have actions that apply to that asset only.
 */
-export interface ActionAsset<AnyTextAsset extends Asset = Asset> {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"action\\";
+export interface ActionAsset<AnyTextAsset extends Asset = Asset> extends Asset<'action'> {
     /** The transition value of the action in the state machine */
     value?: string;
     /** A text-like asset for the action's label */
@@ -643,13 +610,8 @@ export interface ActionAsset<AnyTextAsset extends Asset = Asset> {
         skipValidation?: boolean;
     };
     transformed?: true;
-    [key: string]: unknown;
 }
-export interface InfoAsset {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"info\\";
+export interface InfoAsset extends Asset<'info'> {
     /** The string value to show */
     title?: AssetWrapper;
     /** subtitle */
@@ -659,17 +621,13 @@ export interface InfoAsset {
     /** List of actions to show at the bottom of the page */
     actions?: Array<AssetWrapper>;
     transformed?: true;
-    [key: string]: unknown;
 }
-export interface CollectionAsset {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"collection\\";
+export interface CollectionAsset extends Asset<'collection'> {
+    /** An optional label to title the collection */
+    label?: AssetWrapper;
     /** The string value to show */
-    values: Array<AssetWrapper>;
+    values?: Array<AssetWrapper>;
     transformed?: true;
-    [key: string]: unknown;
 }"
 `;
 
@@ -680,13 +638,11 @@ exports[`Export Test Exports Typescript types 1`] = `
  * This is the most generic way of gathering data. The input is bound to a data model using the 'binding' property.
  * Players can get field type information from the 'schema' definition, thus to decide the input controls for visual rendering.
 */
-export interface InputAsset<AnyTextAsset extends Asset = Asset> {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"input\\";
+export interface InputAsset<AnyTextAsset extends Asset = Asset> extends Asset<'input'> {
     /** Asset container for a field label. */
     label?: AssetWrapper<AnyTextAsset>;
+    /** Asset container for a note. */
+    note?: AssetWrapper<AnyTextAsset>;
     /** The location in the data-model to store the data */
     binding: Binding;
     /** Optional additional data */
@@ -694,13 +650,8 @@ export interface InputAsset<AnyTextAsset extends Asset = Asset> {
         /** Additional data to beacon when this input changes */
         beacon?: string | Record<string, any>;
     };
-    [key: string]: unknown;
 }
-export interface TextAsset {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"text\\";
+export interface TextAsset extends Asset<'text'> {
     /** The text to display */
     value: string;
     /** Any modifiers on the text */
@@ -712,7 +663,7 @@ export interface TextAsset {
         [key: string]: unknown;
     } | {
         /** The link type denotes this as a link */
-        type: \\"link\\";
+        type: 'link';
         /** An optional expression to run before the link is opened */
         exp?: Expression;
         /** metaData about the link's target */
@@ -723,18 +674,13 @@ export interface TextAsset {
             'mime-type'?: string;
         };
     }>;
-    [key: string]: unknown;
 }
 /**
  * User actions can be represented in several places.
  * Each view typically has one or more actions that allow the user to navigate away from that view.
  * In addition, several asset types can have actions that apply to that asset only.
 */
-export interface ActionAsset<AnyTextAsset extends Asset = Asset> {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"action\\";
+export interface ActionAsset<AnyTextAsset extends Asset = Asset> extends Asset<'action'> {
     /** The transition value of the action in the state machine */
     value?: string;
     /** A text-like asset for the action's label */
@@ -750,13 +696,8 @@ export interface ActionAsset<AnyTextAsset extends Asset = Asset> {
         /** Force transition to the next view without checking for validation */
         skipValidation?: boolean;
     };
-    [key: string]: unknown;
 }
-export interface InfoAsset {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"info\\";
+export interface InfoAsset extends Asset<'info'> {
     /** The string value to show */
     title?: AssetWrapper;
     /** subtitle */
@@ -765,15 +706,130 @@ export interface InfoAsset {
     primaryInfo?: AssetWrapper;
     /** List of actions to show at the bottom of the page */
     actions?: Array<AssetWrapper>;
-    [key: string]: unknown;
 }
-export interface CollectionAsset {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"collection\\";
+export interface CollectionAsset extends Asset<'collection'> {
+    /** An optional label to title the collection */
+    label?: AssetWrapper;
     /** The string value to show */
-    values: Array<AssetWrapper>;
-    [key: string]: unknown;
+    values?: Array<AssetWrapper>;
 }"
+`;
+
+exports[`Object Recall Working Test 1`] = `
+Object {
+  "additionalProperties": Object {
+    "type": "unknown",
+  },
+  "description": "Effective type combining Asset and InputAsset",
+  "genericTokens": Array [
+    Object {
+      "constraints": Object {
+        "type": "string",
+      },
+      "default": Object {
+        "type": "string",
+      },
+      "symbol": "T",
+    },
+  ],
+  "name": "InputAsset",
+  "properties": Object {
+    "binding": Object {
+      "node": Object {
+        "description": "The location in the data-model to store the data",
+        "ref": "Binding",
+        "title": "InputAsset.binding",
+        "type": "ref",
+      },
+      "required": true,
+    },
+    "id": Object {
+      "node": Object {
+        "description": "Each asset requires a unique id per view",
+        "title": "Asset.id",
+        "type": "string",
+      },
+      "required": true,
+    },
+    "label": Object {
+      "node": Object {
+        "description": "Asset container for a field label.",
+        "genericArguments": Array [
+          Object {
+            "ref": "AnyTextAsset",
+            "type": "ref",
+          },
+        ],
+        "ref": "AssetWrapper<AnyTextAsset>",
+        "title": "InputAsset.label",
+        "type": "ref",
+      },
+      "required": false,
+    },
+    "metaData": Object {
+      "node": Object {
+        "additionalProperties": false,
+        "description": "Optional additional data",
+        "properties": Object {
+          "beacon": Object {
+            "node": Object {
+              "description": "Additional data to beacon when this input changes",
+              "name": "BeaconDataType",
+              "or": Array [
+                Object {
+                  "title": "BeaconDataType",
+                  "type": "string",
+                },
+                Object {
+                  "keyType": Object {
+                    "type": "string",
+                  },
+                  "title": "BeaconDataType",
+                  "type": "record",
+                  "valueType": Object {
+                    "type": "any",
+                  },
+                },
+              ],
+              "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/node_modules/@player-ui/beacon-plugin/dist/index.d.ts",
+              "title": "InputAsset.metaData.beacon",
+              "type": "or",
+            },
+            "required": false,
+          },
+        },
+        "title": "InputAsset.metaData",
+        "type": "object",
+      },
+      "required": false,
+    },
+    "note": Object {
+      "node": Object {
+        "description": "Asset container for a note.",
+        "genericArguments": Array [
+          Object {
+            "ref": "AnyTextAsset",
+            "type": "ref",
+          },
+        ],
+        "ref": "AssetWrapper<AnyTextAsset>",
+        "title": "InputAsset.note",
+        "type": "ref",
+      },
+      "required": false,
+    },
+    "type": Object {
+      "node": Object {
+        "const": "input",
+        "description": "The asset type determines the semantics of how a user interacts with a page",
+        "title": "Asset.type",
+        "type": "string",
+      },
+      "required": true,
+    },
+  },
+  "source": "core/types/src/index.ts",
+  "title": "Asset",
+  "type": "object",
+}
 `;

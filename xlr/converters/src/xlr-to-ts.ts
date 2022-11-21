@@ -85,12 +85,33 @@ export class TSWriter {
       generics = this.createTypeParameters(type);
     }
 
+    let customPrimitiveHeritageClass;
+    if (type.type === 'object' && type.extends) {
+      const refName = type.extends.ref.split('<')[0];
+      customPrimitiveHeritageClass = [
+        this.context.factory.createHeritageClause(
+          ts.SyntaxKind.ExtendsKeyword,
+          [
+            this.context.factory.createExpressionWithTypeArguments(
+              this.context.factory.createIdentifier(refName),
+              type.extends.genericArguments
+                ? (type.extends.genericArguments.map((node) =>
+                    this.createLiteralTypeNode(node)
+                  ) as any)
+                : undefined
+            ),
+          ]
+        ),
+      ];
+    }
+
     let finalNode;
     if (ts.isTypeLiteralNode(tsNode)) {
       finalNode = this.makeInterfaceDeclaration(
         typeName,
         tsNode.members,
-        generics
+        generics,
+        customPrimitiveHeritageClass
       );
     } else {
       finalNode = this.makeTypeDeclaration(typeName, tsNode, generics);
@@ -263,7 +284,7 @@ export class TSWriter {
 
     if (xlrNode.type === 'string') {
       return xlrNode.const
-        ? this.context.factory.createStringLiteral(xlrNode.const)
+        ? this.context.factory.createStringLiteral(xlrNode.const, true)
         : this.context.throwError(
             "Can't make literal type out of non constant string"
           );
@@ -480,7 +501,8 @@ export class TSWriter {
   private makeInterfaceDeclaration(
     name: string,
     node: ts.NodeArray<ts.TypeElement>,
-    generics: Array<ts.TypeParameterDeclaration> | undefined
+    generics: Array<ts.TypeParameterDeclaration> | undefined,
+    heritageClass: ts.HeritageClause[] | undefined
   ) {
     return this.context.factory.createInterfaceDeclaration(
       this.context.factory.createModifiersFromModifierFlags(
@@ -488,7 +510,7 @@ export class TSWriter {
       ),
       this.context.factory.createIdentifier(name),
       generics, // type parameters
-      undefined, // heritage
+      heritageClass, // heritage
       node
     );
   }

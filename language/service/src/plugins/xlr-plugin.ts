@@ -1,4 +1,4 @@
-import type { NodeType } from '@player-tools/xlr';
+import type { NodeType, ObjectType } from '@player-tools/xlr';
 import type { XLRSDK } from '@player-tools/xlr-sdk';
 import type { CompletionItem } from 'vscode-languageserver-types';
 import {
@@ -14,7 +14,7 @@ import type {
   ValidationContext,
 } from '..';
 import { mapFlowStateToType } from '../utils';
-import type { ASTNode, ObjectASTNode } from '../parser';
+import type { ASTNode, ObjectASTNode, ViewASTNode } from '../parser';
 import type { EnhancedDocumentContextWithPosition } from '../types';
 
 /** BFS search to find a JSONC node in children of some AST Node */
@@ -60,7 +60,10 @@ function createValidationVisitor(
         expectedType = 'Asset';
       }
 
-      const validationIssues = sdk.validate(expectedType, assetNode.jsonNode);
+      const validationIssues = sdk.validateByName(
+        expectedType,
+        assetNode.jsonNode
+      );
       validationIssues.forEach((issue) => {
         if (!nodesWithErrors.has(issue.node) || issue.type === 'missing') {
           nodesWithErrors.add(issue.node);
@@ -84,7 +87,10 @@ function createValidationVisitor(
         expectedType = 'View';
       }
 
-      const validationIssues = sdk.validate(expectedType, viewNode.jsonNode);
+      const validationIssues = sdk.validateByName(
+        expectedType,
+        viewNode.jsonNode
+      );
       validationIssues.forEach((issue) => {
         if (!nodesWithErrors.has(issue.node) || issue.type === 'missing') {
           nodesWithErrors.add(issue.node);
@@ -97,8 +103,39 @@ function createValidationVisitor(
       });
     },
     ContentNode: (contentNode) => {
-      const expectedType = 'Flow';
-      const validationIssues = sdk.validate(expectedType, contentNode.jsonNode);
+      const flowType = sdk.getType('Flow');
+
+      if (!flowType) {
+        throw new Error(
+          "Flow is not a registered type, can't validate content. Did you load a version of the base Player types?"
+        );
+      }
+
+      /**
+       * Since the `views.validation` property contains a runtime conditional that is validated anyways when we get to
+       * the ViewNode, replace the reference to `View` with a basic `Asset` instead of trying to solve the generic
+       * for every view present
+       */
+
+      const assetType = sdk.getType('Asset');
+      if (!assetType) {
+        throw new Error(
+          "Asset is not a registered type, can't validate content. Did you load a version of the base Player types?"
+        );
+      }
+
+      if (
+        flowType.type === 'object' &&
+        flowType.properties.views?.node.type === 'array'
+      ) {
+        flowType.properties.views.node.elementType = assetType;
+      }
+
+      const validationIssues = sdk.validateByType(
+        flowType,
+        contentNode.jsonNode
+      );
+
       validationIssues.forEach((issue) => {
         if (!nodesWithErrors.has(issue.node) || issue.type === 'missing') {
           nodesWithErrors.add(issue.node);
@@ -112,7 +149,7 @@ function createValidationVisitor(
     },
     NavigationNode: (navigationNode) => {
       const expectedType = 'Navigation';
-      const validationIssues = sdk.validate(
+      const validationIssues = sdk.validateByName(
         expectedType,
         navigationNode.jsonNode
       );
@@ -129,7 +166,10 @@ function createValidationVisitor(
     },
     FlowNode: (flowNode) => {
       const expectedType = 'NavigationFlow';
-      const validationIssues = sdk.validate(expectedType, flowNode.jsonNode);
+      const validationIssues = sdk.validateByName(
+        expectedType,
+        flowNode.jsonNode
+      );
       validationIssues.forEach((issue) => {
         if (!nodesWithErrors.has(issue.node) || issue.type === 'missing') {
           nodesWithErrors.add(issue.node);
@@ -147,7 +187,10 @@ function createValidationVisitor(
       );
 
       if (flowxlr) {
-        const validationIssues = sdk.validate(flowxlr, flowStateNode.jsonNode);
+        const validationIssues = sdk.validateByName(
+          flowxlr,
+          flowStateNode.jsonNode
+        );
         validationIssues.forEach((issue) => {
           if (!nodesWithErrors.has(issue.node) || issue.type === 'missing') {
             nodesWithErrors.add(issue.node);
@@ -197,6 +240,10 @@ function getObjectCompletions(
           });
         }
       });
+    } else if (node.type === 'and') {
+      completions.push(...getObjectCompletions(authoredNode, node.and));
+    } else if (node.type === 'or') {
+      completions.push(...getObjectCompletions(authoredNode, node.or));
     }
   });
 

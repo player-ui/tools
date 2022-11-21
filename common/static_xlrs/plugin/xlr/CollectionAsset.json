@@ -1,27 +1,19 @@
 {
     "name": "CollectionAsset",
     "type": "object",
-    "source": "/Users/kreddy8/dev/player/reference-assets/collection/dist/types.d.ts",
+    "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/plugins/reference-assets/core/src/assets/collection/types.ts",
     "properties": {
-        "id": {
-            "required": true,
+        "label": {
+            "required": false,
             "node": {
-                "type": "string",
-                "title": "Asset.id",
-                "description": "Each asset requires a unique id per view"
-            }
-        },
-        "type": {
-            "required": true,
-            "node": {
-                "type": "string",
-                "const": "collection",
-                "title": "Asset.type",
-                "description": "The asset type determines the semantics of how a user interacts with a page"
+                "type": "ref",
+                "ref": "AssetWrapper",
+                "title": "CollectionAsset.label",
+                "description": "An optional label to title the collection"
             }
         },
         "values": {
-            "required": true,
+            "required": false,
             "node": {
                 "type": "array",
                 "elementType": {
@@ -33,8 +25,16 @@
             }
         }
     },
-    "additionalProperties": {
-        "type": "unknown"
-    },
-    "title": "CollectionAsset"
+    "additionalProperties": false,
+    "title": "CollectionAsset",
+    "extends": {
+        "type": "ref",
+        "ref": "Asset<'collection'>",
+        "genericArguments": [
+            {
+                "type": "string",
+                "const": "collection"
+            }
+        ]
+    }
 }

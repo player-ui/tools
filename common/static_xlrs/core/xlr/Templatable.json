@@ -12,14 +12,6 @@
                     "type": "object",
                     "source": "src/index.ts",
                     "properties": {
-                        "dynamic": {
-                            "required": false,
-                            "node": {
-                                "type": "boolean",
-                                "title": "Template.dynamic",
-                                "description": "should the template be recomputed when data changes"
-                            }
-                        },
                         "data": {
                             "required": true,
                             "node": {
@@ -36,6 +28,14 @@
                                 "ref": "ValueType",
                                 "title": "Template.value",
                                 "description": "The template to iterate over using each value in the supplied template data.\nAny reference to _index_ is replaced with the current iteration index."
+                            }
+                        },
+                        "dynamic": {
+                            "required": false,
+                            "node": {
+                                "type": "boolean",
+                                "title": "Template.dynamic",
+                                "description": "should the template be recomputed when data changes"
                             }
                         },
                         "output": {

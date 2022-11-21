@@ -6,6 +6,7 @@ Object {
     "type": "unknown",
   },
   "description": "Mock Asset for test",
+  "extends": undefined,
   "genericTokens": Array [
     Object {
       "constraints": Object {

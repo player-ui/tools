@@ -122,5 +122,5 @@
     },
     "additionalProperties": false,
     "title": "NavigationFlowExternalState",
-    "description": "External Flow states represent states in the FSM that can't be resolved internally in the player.\nThe flow will wait for the embedded application to manage moving to the next state via a transition"
+    "description": "External Flow states represent states in the FSM that can't be resolved internally in Player.\nThe flow will wait for the embedded application to manage moving to the next state via a transition"
 }

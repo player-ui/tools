@@ -1,25 +1,8 @@
 {
     "name": "InfoAsset",
     "type": "object",
-    "source": "/Users/kreddy8/dev/player/reference-assets/info/dist/types.d.ts",
+    "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/plugins/reference-assets/core/src/assets/info/types.ts",
     "properties": {
-        "id": {
-            "required": true,
-            "node": {
-                "type": "string",
-                "title": "Asset.id",
-                "description": "Each asset requires a unique id per view"
-            }
-        },
-        "type": {
-            "required": true,
-            "node": {
-                "type": "string",
-                "const": "info",
-                "title": "Asset.type",
-                "description": "The asset type determines the semantics of how a user interacts with a page"
-            }
-        },
         "title": {
             "required": false,
             "node": {
@@ -60,8 +43,16 @@
             }
         }
     },
-    "additionalProperties": {
-        "type": "unknown"
-    },
-    "title": "InfoAsset"
+    "additionalProperties": false,
+    "title": "InfoAsset",
+    "extends": {
+        "type": "ref",
+        "ref": "Asset<'info'>",
+        "genericArguments": [
+            {
+                "type": "string",
+                "const": "info"
+            }
+        ]
+    }
 }

@@ -13,21 +13,20 @@ import {
   makePropertyMap,
   resolveConditional,
   isPrimitiveTypeNode,
-  fillInGenerics,
-  isGenericNodeType,
+  resolveReferenceNode,
+  computeEffectiveObject,
 } from '@player-tools/xlr-utils';
 import type { ValidationError } from './types';
-import type { XLRRegistry } from './registry';
 
 /**
  * Validator for XLRs on JSON Nodes
  */
 export class XLRValidator {
-  private typeMap: XLRRegistry;
+  private resolveType: (id: string) => NamedType<NodeType> | undefined;
   private regexCache: Map<string, RegExp>;
 
-  constructor(typeMap: XLRRegistry) {
-    this.typeMap = typeMap;
+  constructor(resolveType: (id: string) => NamedType<NodeType> | undefined) {
+    this.resolveType = resolveType;
     this.regexCache = new Map();
   }
 
@@ -74,7 +73,10 @@ export class XLRValidator {
         message: `Does not match any of the expected types for type: '${xlrNode.name}'`,
       });
     } else if (xlrNode.type === 'and') {
-      const effectiveType = this.computeIntersectionType(xlrNode.and);
+      const effectiveType = {
+        ...this.computeIntersectionType(xlrNode.and),
+        ...(xlrNode.name ? { name: xlrNode.name } : {}),
+      };
       validationIssues.push(...this.validateType(rootNode, effectiveType));
     } else if (xlrNode.type === 'record') {
       rootNode.children?.forEach((child) => {
@@ -174,7 +176,7 @@ export class XLRValidator {
 
     if (xlrNode.extends) {
       const extendedNode = this.getRefType(xlrNode.extends) as ObjectType;
-      effectiveXLRNode = this.computeEffectiveObject(extendedNode, xlrNode);
+      effectiveXLRNode = computeEffectiveObject(extendedNode, xlrNode);
     }
 
     // eslint-disable-next-line guard-for-in, no-restricted-syntax
@@ -267,27 +269,16 @@ export class XLRValidator {
 
   private getRefType(ref: RefType): NodeType {
     let refName = ref.ref;
-    const { genericArguments } = ref;
-
     if (refName.indexOf('<') > 0) {
       [refName] = refName.split('<');
     }
 
-    const actualType = this.typeMap.get(refName) as NodeType;
-    const genericMap: Map<string, NodeType> = new Map();
-
-    // Compose first level generics here since `fillInGenerics` won't process them if a map is passed in
-    if (genericArguments && isGenericNodeType(actualType)) {
-      actualType.genericTokens.forEach((token, index) => {
-        genericMap.set(
-          token.symbol,
-          genericArguments[index] ?? token.default ?? token.constraints
-        );
-      });
+    const actualType = this.resolveType(refName);
+    if (!actualType) {
+      throw new Error(`Error: can't resolve type reference ${refName}`);
     }
 
-    // Fill in generics
-    return fillInGenerics(actualType, genericMap);
+    return resolveReferenceNode(ref, actualType);
   }
 
   private getRegex(expString: string): RegExp {
@@ -310,6 +301,12 @@ export class XLRValidator {
 
     if (firstElement.type === 'and') {
       effectiveType = this.computeIntersectionType(firstElement.and);
+    } else if (firstElement.type === 'record') {
+      effectiveType = {
+        type: 'object',
+        properties: {},
+        additionalProperties: firstElement.valueType,
+      };
     } else if (firstElement.type !== 'or' && firstElement.type !== 'object') {
       throw new Error(
         `Can't compute a union with a non-object type ${firstElement.type} (${firstElement.name})`
@@ -321,6 +318,14 @@ export class XLRValidator {
     types.slice(1).forEach((type) => {
       let typeToApply = type;
 
+      if (typeToApply.type === 'record') {
+        typeToApply = {
+          type: 'object',
+          properties: {},
+          additionalProperties: typeToApply.valueType,
+        };
+      }
+
       if (type.type === 'ref') {
         typeToApply = this.getRefType(type);
       }
@@ -331,10 +336,7 @@ export class XLRValidator {
 
       if (typeToApply.type === 'object') {
         if (effectiveType.type === 'object') {
-          effectiveType = this.computeEffectiveObject(
-            effectiveType,
-            typeToApply
-          );
+          effectiveType = computeEffectiveObject(effectiveType, typeToApply);
         } else {
           effectiveType = {
             ...effectiveType,
@@ -362,46 +364,5 @@ export class XLRValidator {
     });
 
     return effectiveType;
-  }
-
-  private computeEffectiveObject(
-    base: ObjectType,
-    operand: ObjectType,
-    errorOnOverlap = true
-  ): ObjectType {
-    const baseObjectName = base.name ?? 'object literal';
-    const operandObjectName = operand.name ?? 'object literal';
-    const newObject = {
-      ...base,
-      name: `${baseObjectName} & ${operandObjectName}`,
-      description: `Effective type combining ${baseObjectName} and ${operandObjectName}`,
-    };
-
-    // eslint-disable-next-line no-restricted-syntax, guard-for-in
-    for (const property in operand.properties) {
-      if (
-        newObject.properties[property] !== undefined &&
-        newObject.properties[property].node.type !==
-          operand.properties[property].node.type &&
-        errorOnOverlap
-      ) {
-        throw new Error(
-          `Can't compute effective type for ${baseObjectName} and ${operandObjectName} because of conflicting properties ${property}`
-        );
-      }
-
-      newObject.properties[property] = operand.properties[property];
-    }
-
-    if (newObject.additionalProperties && operand.additionalProperties) {
-      newObject.additionalProperties = {
-        type: 'and',
-        and: [newObject.additionalProperties, operand.additionalProperties],
-      };
-    } else if (operand.additionalProperties) {
-      newObject.additionalProperties = operand.additionalProperties;
-    }
-
-    return newObject;
   }
 }

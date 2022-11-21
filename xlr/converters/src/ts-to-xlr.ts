@@ -391,16 +391,26 @@ export class TsConverter {
         ts.isTypeReferenceNode(node.objectType) &&
         ts.isLiteralTypeNode(node.indexType)
       ) {
-        const baseObject = this.convertTsTypeNode(
-          node.objectType
-        ) as ObjectType;
+        const baseObject = this.convertTsTypeNode(node.objectType);
         const accessor = node.indexType.literal.getText().replace(/["']/g, '');
-        if (Object.keys(baseObject.properties ?? {}).includes(accessor)) {
-          return baseObject.properties[accessor].node;
-        }
+        if (!baseObject) {
+          this.context.throwError(
+            `Error: Couldn't resolve index access on property ${accessor} on type ${node.objectType.typeName.getText()}`
+          );
+        } else if (baseObject.type === 'object') {
+          if (Object.keys(baseObject.properties ?? {}).includes(accessor)) {
+            return baseObject.properties[accessor].node;
+          }
 
-        if (baseObject.additionalProperties) {
-          return baseObject.additionalProperties;
+          if (baseObject.additionalProperties) {
+            return baseObject.additionalProperties;
+          }
+        } else if (baseObject.type === 'ref') {
+          return { ...baseObject, property: accessor };
+        } else {
+          this.context.throwError(
+            `Error: Index access on non object/ref type ${baseObject.type}`
+          );
         }
       }
 
@@ -532,6 +542,11 @@ export class TsConverter {
           }
 
           typeToApply = this.convertDeclaration(parentInterface);
+
+          if (typeToApply.extends) {
+            extendsType = typeToApply.extends;
+          }
+
           if (parentInterface.typeParameters && parent.typeArguments) {
             typeToApply = this.solveGenerics(
               typeToApply as NodeTypeWithGenerics,

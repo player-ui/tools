@@ -4675,6 +4675,17 @@ Any reference to _index_ is replaced with the current iteration index.",
     "type": "object",
   },
   Object {
+    "check": Object {
+      "left": Object {
+        "type": "unknown",
+      },
+      "right": Object {
+        "genericArguments": undefined,
+        "property": "validation",
+        "ref": "Asset",
+        "type": "ref",
+      },
+    },
     "genericTokens": Array [
       Object {
         "constraints": Object {
@@ -4691,10 +4702,164 @@ Any reference to _index_ is replaced with the current iteration index.",
       },
     ],
     "name": "View",
-    "ref": "T",
     "source": "filename.ts",
     "title": "View",
-    "type": "ref",
+    "type": "conditional",
+    "value": Object {
+      "false": Object {
+        "ref": "T",
+        "type": "ref",
+      },
+      "true": Object {
+        "and": Array [
+          Object {
+            "ref": "T",
+            "type": "ref",
+          },
+          Object {
+            "additionalProperties": false,
+            "properties": Object {
+              "validation": Object {
+                "node": Object {
+                  "description": "Each view can optionally supply a list of validations to run against a particular view",
+                  "elementType": Object {
+                    "additionalProperties": Object {
+                      "type": "unknown",
+                    },
+                    "genericTokens": undefined,
+                    "name": "CrossfieldReference",
+                    "properties": Object {
+                      "dataTarget": Object {
+                        "node": Object {
+                          "description": "Cross-field references and validation must run against the default (deformatted) value",
+                          "title": "CrossfieldReference.dataTarget",
+                          "type": "never",
+                        },
+                        "required": false,
+                      },
+                      "displayTarget": Object {
+                        "node": Object {
+                          "description": "Where the error should be displayed",
+                          "genericTokens": undefined,
+                          "name": "DisplayTarget",
+                          "or": Array [
+                            Object {
+                              "const": "page",
+                              "title": "DisplayTarget",
+                              "type": "string",
+                            },
+                            Object {
+                              "const": "section",
+                              "title": "DisplayTarget",
+                              "type": "string",
+                            },
+                            Object {
+                              "const": "field",
+                              "title": "DisplayTarget",
+                              "type": "string",
+                            },
+                          ],
+                          "source": undefined,
+                          "title": "Reference.displayTarget",
+                          "type": "or",
+                        },
+                        "required": false,
+                      },
+                      "message": Object {
+                        "node": Object {
+                          "description": "An optional means of overriding the default message if the validation is triggered",
+                          "title": "Reference.message",
+                          "type": "string",
+                        },
+                        "required": false,
+                      },
+                      "ref": Object {
+                        "node": Object {
+                          "description": "The binding to associate this validation with",
+                          "genericArguments": undefined,
+                          "ref": "Binding",
+                          "title": "CrossfieldReference.ref",
+                          "type": "ref",
+                        },
+                        "required": false,
+                      },
+                      "severity": Object {
+                        "node": Object {
+                          "description": "An optional means of overriding the default severity of the validation if triggered",
+                          "genericTokens": undefined,
+                          "name": "Severity",
+                          "or": Array [
+                            Object {
+                              "const": "error",
+                              "title": "Severity",
+                              "type": "string",
+                            },
+                            Object {
+                              "const": "warning",
+                              "title": "Severity",
+                              "type": "string",
+                            },
+                          ],
+                          "source": undefined,
+                          "title": "Reference.severity",
+                          "type": "or",
+                        },
+                        "required": false,
+                      },
+                      "trigger": Object {
+                        "node": Object {
+                          "description": "When to run this particular validation",
+                          "genericTokens": undefined,
+                          "name": "Trigger",
+                          "or": Array [
+                            Object {
+                              "const": "navigation",
+                              "title": "Trigger",
+                              "type": "string",
+                            },
+                            Object {
+                              "const": "change",
+                              "title": "Trigger",
+                              "type": "string",
+                            },
+                            Object {
+                              "const": "load",
+                              "title": "Trigger",
+                              "type": "string",
+                            },
+                          ],
+                          "source": undefined,
+                          "title": "Reference.trigger",
+                          "type": "or",
+                        },
+                        "required": false,
+                      },
+                      "type": Object {
+                        "node": Object {
+                          "description": "The name of the referenced validation type
+This will be used to lookup the proper handler",
+                          "title": "Reference.type",
+                          "type": "string",
+                        },
+                        "required": true,
+                      },
+                    },
+                    "source": undefined,
+                    "title": "CrossfieldReference",
+                    "type": "object",
+                  },
+                  "title": "validation",
+                  "type": "array",
+                },
+                "required": false,
+              },
+            },
+            "type": "object",
+          },
+        ],
+        "type": "and",
+      },
+    },
   },
   Object {
     "additionalProperties": Object {
@@ -6055,10 +6220,191 @@ This will be used to lookup the proper handler",
         "node": Object {
           "description": "A list of views (each with an ID) that can be shown to a user",
           "elementType": Object {
+            "check": Object {
+              "left": Object {
+                "type": "unknown",
+              },
+              "right": Object {
+                "genericArguments": undefined,
+                "property": "validation",
+                "ref": "Asset",
+                "type": "ref",
+              },
+            },
+            "genericTokens": Array [
+              Object {
+                "constraints": Object {
+                  "genericArguments": undefined,
+                  "ref": "Asset",
+                  "type": "ref",
+                },
+                "default": Object {
+                  "genericArguments": undefined,
+                  "ref": "Asset",
+                  "type": "ref",
+                },
+                "symbol": "T",
+              },
+            ],
             "name": "View",
-            "ref": "T",
+            "source": "filename.ts",
             "title": "View",
-            "type": "ref",
+            "type": "conditional",
+            "value": Object {
+              "false": Object {
+                "ref": "T",
+                "type": "ref",
+              },
+              "true": Object {
+                "and": Array [
+                  Object {
+                    "ref": "T",
+                    "type": "ref",
+                  },
+                  Object {
+                    "additionalProperties": false,
+                    "properties": Object {
+                      "validation": Object {
+                        "node": Object {
+                          "description": "Each view can optionally supply a list of validations to run against a particular view",
+                          "elementType": Object {
+                            "additionalProperties": Object {
+                              "type": "unknown",
+                            },
+                            "genericTokens": undefined,
+                            "name": "CrossfieldReference",
+                            "properties": Object {
+                              "dataTarget": Object {
+                                "node": Object {
+                                  "description": "Cross-field references and validation must run against the default (deformatted) value",
+                                  "title": "CrossfieldReference.dataTarget",
+                                  "type": "never",
+                                },
+                                "required": false,
+                              },
+                              "displayTarget": Object {
+                                "node": Object {
+                                  "description": "Where the error should be displayed",
+                                  "genericTokens": undefined,
+                                  "name": "DisplayTarget",
+                                  "or": Array [
+                                    Object {
+                                      "const": "page",
+                                      "title": "DisplayTarget",
+                                      "type": "string",
+                                    },
+                                    Object {
+                                      "const": "section",
+                                      "title": "DisplayTarget",
+                                      "type": "string",
+                                    },
+                                    Object {
+                                      "const": "field",
+                                      "title": "DisplayTarget",
+                                      "type": "string",
+                                    },
+                                  ],
+                                  "source": undefined,
+                                  "title": "Reference.displayTarget",
+                                  "type": "or",
+                                },
+                                "required": false,
+                              },
+                              "message": Object {
+                                "node": Object {
+                                  "description": "An optional means of overriding the default message if the validation is triggered",
+                                  "title": "Reference.message",
+                                  "type": "string",
+                                },
+                                "required": false,
+                              },
+                              "ref": Object {
+                                "node": Object {
+                                  "description": "The binding to associate this validation with",
+                                  "genericArguments": undefined,
+                                  "ref": "Binding",
+                                  "title": "CrossfieldReference.ref",
+                                  "type": "ref",
+                                },
+                                "required": false,
+                              },
+                              "severity": Object {
+                                "node": Object {
+                                  "description": "An optional means of overriding the default severity of the validation if triggered",
+                                  "genericTokens": undefined,
+                                  "name": "Severity",
+                                  "or": Array [
+                                    Object {
+                                      "const": "error",
+                                      "title": "Severity",
+                                      "type": "string",
+                                    },
+                                    Object {
+                                      "const": "warning",
+                                      "title": "Severity",
+                                      "type": "string",
+                                    },
+                                  ],
+                                  "source": undefined,
+                                  "title": "Reference.severity",
+                                  "type": "or",
+                                },
+                                "required": false,
+                              },
+                              "trigger": Object {
+                                "node": Object {
+                                  "description": "When to run this particular validation",
+                                  "genericTokens": undefined,
+                                  "name": "Trigger",
+                                  "or": Array [
+                                    Object {
+                                      "const": "navigation",
+                                      "title": "Trigger",
+                                      "type": "string",
+                                    },
+                                    Object {
+                                      "const": "change",
+                                      "title": "Trigger",
+                                      "type": "string",
+                                    },
+                                    Object {
+                                      "const": "load",
+                                      "title": "Trigger",
+                                      "type": "string",
+                                    },
+                                  ],
+                                  "source": undefined,
+                                  "title": "Reference.trigger",
+                                  "type": "or",
+                                },
+                                "required": false,
+                              },
+                              "type": Object {
+                                "node": Object {
+                                  "description": "The name of the referenced validation type
+This will be used to lookup the proper handler",
+                                  "title": "Reference.type",
+                                  "type": "string",
+                                },
+                                "required": true,
+                              },
+                            },
+                            "source": undefined,
+                            "title": "CrossfieldReference",
+                            "type": "object",
+                          },
+                          "title": "validation",
+                          "type": "array",
+                        },
+                        "required": false,
+                      },
+                    },
+                    "type": "object",
+                  },
+                ],
+                "type": "and",
+              },
+            },
           },
           "title": "Flow.views",
           "type": "array",
