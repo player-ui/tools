@@ -1,12 +1,12 @@
-import InputAsset from './InputAsset.json'
-import TextAsset from './TextAsset.json'
-import ActionAsset from './ActionAsset.json'
-import InfoAsset from './InfoAsset.json'
-import CollectionAsset from './CollectionAsset.json'
-import TransformedAction from './TransformedAction.json'
-import TransformedInput from './TransformedInput.json'
+const InputAsset = require( './InputAsset.json')
+const TextAsset = require( './TextAsset.json')
+const ActionAsset = require( './ActionAsset.json')
+const InfoAsset = require( './InfoAsset.json')
+const CollectionAsset = require( './CollectionAsset.json')
+const TransformedAction = require( './TransformedAction.json')
+const TransformedInput = require( './TransformedInput.json')
 
-export default {
+module.exports = {
   "pluginName": "BaseAssetsPlugin",
   "capabilities": {
     "Assets":[InputAsset,TextAsset,ActionAsset,InfoAsset,CollectionAsset, TransformedAction, TransformedInput],

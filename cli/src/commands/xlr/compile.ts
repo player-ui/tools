@@ -251,11 +251,11 @@ export default class XLRCompile extends BaseCommand {
     const tsManifestFile = `${[...(capabilities.capabilities?.values() ?? [])]
       .flat(2)
       .map((capability) => {
-        return `import ${capability} from './${capability}.json'`;
+        return `const ${capability} = require('./${capability}.json')`;
       })
       .join('\n')}
 
-export default {
+module.exports = {
   "pluginName": "${capabilities.pluginName}",
   "capabilities": {
     ${[...(capabilities.capabilities?.entries() ?? [])]

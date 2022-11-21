@@ -828,7 +828,7 @@ Object {
       "required": true,
     },
   },
-  "source": "core/types/src/index.ts",
+  "source": "src/index.ts",
   "title": "Asset",
   "type": "object",
 }
