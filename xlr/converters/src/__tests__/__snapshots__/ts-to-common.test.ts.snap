@@ -707,3 +707,29 @@ Array [
   },
 ]
 `;
+
+exports[`Type with typeof Indexing 1`] = `
+Array [
+  Object {
+    "genericTokens": undefined,
+    "name": "options",
+    "or": Array [
+      Object {
+        "const": "one",
+        "type": "string",
+      },
+      Object {
+        "const": "two",
+        "type": "string",
+      },
+      Object {
+        "const": "three",
+        "type": "string",
+      },
+    ],
+    "source": "filename.ts",
+    "title": "options",
+    "type": "or",
+  },
+]
+`;

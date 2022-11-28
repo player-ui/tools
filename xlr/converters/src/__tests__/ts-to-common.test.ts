@@ -416,3 +416,24 @@ describe('Index Types', () => {
     expect(XLR).toMatchSnapshot();
   });
 });
+
+describe('Type with typeof', () => {
+  it('Indexing', async () => {
+    const sc = `
+    const options = [ 
+      "one",
+      "two",
+      "three"
+    ] as const
+    
+    export type options = typeof options[number];
+
+    `;
+
+    const { sf, tc } = await setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+});

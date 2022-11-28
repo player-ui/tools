@@ -1,3 +1,8 @@
+import type {
+  NumberLiteralType,
+  StringLiteralType,
+  UnionType,
+} from 'typescript';
 import ts from 'typescript';
 import type {
   NodeType,
@@ -12,6 +17,7 @@ import type {
   ParamTypeNode,
   ConditionalType,
   RefType,
+  OrType,
 } from '@player-tools/xlr';
 import type { TopLevelDeclaration } from '@player-tools/xlr-utils';
 import {
@@ -414,7 +420,40 @@ export class TsConverter {
         }
       }
 
-      return { type: 'null' };
+      if (ts.isTypeQueryNode(node.objectType)) {
+        const effectiveType = this.context.typeChecker.getTypeAtLocation(node);
+        // eslint-disable-next-line no-bitwise
+        if (ts.TypeFlags.Union & effectiveType.flags) {
+          return {
+            type: 'or',
+            or: (effectiveType as UnionType).types.map((type) => {
+              // eslint-disable-next-line no-bitwise
+              if (ts.TypeFlags.StringLiteral & type.flags) {
+                return {
+                  type: 'string',
+                  const: (type as StringLiteralType).value,
+                };
+              }
+
+              // eslint-disable-next-line no-bitwise
+              if (ts.TypeFlags.NumberLiteral & type.flags) {
+                return {
+                  type: 'number',
+                  const: (type as NumberLiteralType).value,
+                };
+              }
+
+              return {
+                type: 'unknown',
+              };
+            }),
+          } as OrType;
+        }
+      }
+
+      this.context.throwError(
+        `Error: could not solve IndexedAccessType ${node.getFullText()}`
+      );
     } else {
       this.context.throwError(`Unimplemented type ${ts.SyntaxKind[node.kind]}`);
     }
