@@ -96,7 +96,7 @@ export class TSWriter {
               this.context.factory.createIdentifier(refName),
               type.extends.genericArguments
                 ? (type.extends.genericArguments.map((node) =>
-                    this.createLiteralTypeNode(node)
+                    this.convertTypeNode(node)
                   ) as any)
                 : undefined
             ),
