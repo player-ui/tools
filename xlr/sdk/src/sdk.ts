@@ -175,7 +175,7 @@ export class XLRSDK {
   }
 
   public validateByName(typeName: string, rootNode: Node) {
-    const xlr = this.getType(typeName);
+    const xlr = this.getType(typeName, { getRawType: true });
     if (!xlr) {
       throw new Error(
         `Type ${typeName} does not exist in registry, can't validate`
