@@ -1,4 +1,4 @@
-import type { TransformFunction } from '@player-tools/xlr';
+import type { NamedType, TransformFunction } from '@player-tools/xlr';
 import { parseTree } from 'jsonc-parser';
 import typesManifest from '@player-tools/static-xlrs/static_xlrs/core/xlr/manifest';
 import pluginManifest from '@player-tools/static-xlrs/static_xlrs/plugin/xlr/manifest';
@@ -47,7 +47,7 @@ describe('Object Recall', () => {
     sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
     sdk.loadDefinitionsFromDisk('./common/static_xlrs/core');
 
-    expect(sdk.getType('InputAsset', { getRawType: true })).toMatchSnapshot();
+    expect(sdk.getType('InputAsset')).toMatchSnapshot();
   });
 
   it('Raw', () => {
@@ -60,7 +60,7 @@ describe('Object Recall', () => {
 });
 
 describe('Basic Validation', () => {
-  it('Working Test', () => {
+  it('Basic Validation By Name', () => {
     const mockAsset = parseTree(`
     {
       "id": 1,
@@ -78,6 +78,29 @@ describe('Basic Validation', () => {
     sdk.loadDefinitionsFromDisk('./common/static_xlrs/core');
 
     expect(sdk.validateByName('InputAsset', mockAsset)).toMatchSnapshot();
+  });
+
+  it('Basic Validation By Type', () => {
+    const mockAsset = parseTree(`
+    {
+      "id": 1,
+      "type": "input",
+      "binding": "some.data",
+      "label": {
+        "asset": {
+          "value": "{{input.label}}"
+        }
+      }
+    `);
+
+    const sdk = new XLRSDK();
+    sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
+    sdk.loadDefinitionsFromDisk('./common/static_xlrs/core');
+    const inputAsset = sdk.getType('InputAsset');
+    expect(inputAsset).toBeDefined();
+    expect(
+      sdk.validateByType(inputAsset as NamedType, mockAsset)
+    ).toMatchSnapshot();
   });
 });
 
