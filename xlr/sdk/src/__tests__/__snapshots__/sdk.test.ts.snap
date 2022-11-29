@@ -715,21 +715,32 @@ export interface CollectionAsset extends Asset<'collection'> {
 }"
 `;
 
-exports[`Object Recall Working Test 1`] = `
+exports[`Object Recall Processed 1`] = `
 Object {
-  "additionalProperties": Object {
-    "type": "unknown",
+  "additionalProperties": false,
+  "description": "This is the most generic way of gathering data. The input is bound to a data model using the 'binding' property.
+Players can get field type information from the 'schema' definition, thus to decide the input controls for visual rendering.",
+  "extends": Object {
+    "genericArguments": Array [
+      Object {
+        "const": "input",
+        "type": "string",
+      },
+    ],
+    "ref": "Asset<'input'>",
+    "type": "ref",
   },
-  "description": "Effective type combining Asset and InputAsset",
   "genericTokens": Array [
     Object {
       "constraints": Object {
-        "type": "string",
+        "ref": "Asset",
+        "type": "ref",
       },
       "default": Object {
-        "type": "string",
+        "ref": "Asset",
+        "type": "ref",
       },
-      "symbol": "T",
+      "symbol": "AnyTextAsset",
     },
   ],
   "name": "InputAsset",
@@ -740,14 +751,6 @@ Object {
         "ref": "Binding",
         "title": "InputAsset.binding",
         "type": "ref",
-      },
-      "required": true,
-    },
-    "id": Object {
-      "node": Object {
-        "description": "Each asset requires a unique id per view",
-        "title": "Asset.id",
-        "type": "string",
       },
       "required": true,
     },
@@ -818,18 +821,122 @@ Object {
       },
       "required": false,
     },
-    "type": Object {
-      "node": Object {
+  },
+  "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/plugins/reference-assets/core/src/assets/input/types.ts",
+  "title": "InputAsset",
+  "type": "object",
+}
+`;
+
+exports[`Object Recall Raw 1`] = `
+Object {
+  "additionalProperties": false,
+  "description": "This is the most generic way of gathering data. The input is bound to a data model using the 'binding' property.
+Players can get field type information from the 'schema' definition, thus to decide the input controls for visual rendering.",
+  "extends": Object {
+    "genericArguments": Array [
+      Object {
         "const": "input",
-        "description": "The asset type determines the semantics of how a user interacts with a page",
-        "title": "Asset.type",
         "type": "string",
+      },
+    ],
+    "ref": "Asset<'input'>",
+    "type": "ref",
+  },
+  "genericTokens": Array [
+    Object {
+      "constraints": Object {
+        "ref": "Asset",
+        "type": "ref",
+      },
+      "default": Object {
+        "ref": "Asset",
+        "type": "ref",
+      },
+      "symbol": "AnyTextAsset",
+    },
+  ],
+  "name": "InputAsset",
+  "properties": Object {
+    "binding": Object {
+      "node": Object {
+        "description": "The location in the data-model to store the data",
+        "ref": "Binding",
+        "title": "InputAsset.binding",
+        "type": "ref",
       },
       "required": true,
     },
+    "label": Object {
+      "node": Object {
+        "description": "Asset container for a field label.",
+        "genericArguments": Array [
+          Object {
+            "ref": "AnyTextAsset",
+            "type": "ref",
+          },
+        ],
+        "ref": "AssetWrapper<AnyTextAsset>",
+        "title": "InputAsset.label",
+        "type": "ref",
+      },
+      "required": false,
+    },
+    "metaData": Object {
+      "node": Object {
+        "additionalProperties": false,
+        "description": "Optional additional data",
+        "properties": Object {
+          "beacon": Object {
+            "node": Object {
+              "description": "Additional data to beacon when this input changes",
+              "name": "BeaconDataType",
+              "or": Array [
+                Object {
+                  "title": "BeaconDataType",
+                  "type": "string",
+                },
+                Object {
+                  "keyType": Object {
+                    "type": "string",
+                  },
+                  "title": "BeaconDataType",
+                  "type": "record",
+                  "valueType": Object {
+                    "type": "any",
+                  },
+                },
+              ],
+              "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/node_modules/@player-ui/beacon-plugin/dist/index.d.ts",
+              "title": "InputAsset.metaData.beacon",
+              "type": "or",
+            },
+            "required": false,
+          },
+        },
+        "title": "InputAsset.metaData",
+        "type": "object",
+      },
+      "required": false,
+    },
+    "note": Object {
+      "node": Object {
+        "description": "Asset container for a note.",
+        "genericArguments": Array [
+          Object {
+            "ref": "AnyTextAsset",
+            "type": "ref",
+          },
+        ],
+        "ref": "AssetWrapper<AnyTextAsset>",
+        "title": "InputAsset.note",
+        "type": "ref",
+      },
+      "required": false,
+    },
   },
-  "source": "src/index.ts",
-  "title": "Asset",
+  "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/plugins/reference-assets/core/src/assets/input/types.ts",
+  "title": "InputAsset",
   "type": "object",
 }
 `;

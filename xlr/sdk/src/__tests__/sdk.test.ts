@@ -42,12 +42,20 @@ describe('Loading XLRs', () => {
 });
 
 describe('Object Recall', () => {
-  it('Working Test', () => {
+  it('Processed', () => {
     const sdk = new XLRSDK();
     sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
     sdk.loadDefinitionsFromDisk('./common/static_xlrs/core');
 
-    expect(sdk.getType('InputAsset')).toMatchSnapshot();
+    expect(sdk.getType('InputAsset', { getRawType: true })).toMatchSnapshot();
+  });
+
+  it('Raw', () => {
+    const sdk = new XLRSDK();
+    sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
+    sdk.loadDefinitionsFromDisk('./common/static_xlrs/core');
+
+    expect(sdk.getType('InputAsset', { getRawType: true })).toMatchSnapshot();
   });
 });
 
