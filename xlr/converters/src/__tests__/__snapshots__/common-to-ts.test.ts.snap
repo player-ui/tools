@@ -24,3 +24,5 @@ export interface ActionAsset<AnyTextAsset extends Asset = Asset> extends Asset<'
     };
 }"
 `;
+
+exports[`Type Exports Template Type Conversion 1`] = `"export type BindingRef = \`{{\${string}}}\`;"`;

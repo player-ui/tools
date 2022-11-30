@@ -20,7 +20,8 @@ import {
 import ts from 'typescript';
 import { ConversionError } from './types';
 
-const templateSplit = /(?=true\|false|\.\*|\[0-9]\*)/gm;
+const templateTokenize = /(?=true\|false|\.\*|\[0-9]\*)/gm;
+const tokenSplit = /(?<=true\|false|\.\*|\[0-9]\*)/gm;
 
 export interface ConvertedType {
   /** Converted input type represented as in TS Nodes */
@@ -310,7 +311,6 @@ export class TSWriter {
         return this.context.factory.createParameterDeclaration(
           undefined,
           undefined,
-          undefined,
           e.name,
           e.optional
             ? this.context.factory.createToken(ts.SyntaxKind.QuestionToken)
@@ -372,7 +372,6 @@ export class TSWriter {
     if (additionalProperties) {
       propertyNodes.push(
         this.context.factory.createIndexSignature(
-          undefined, // decorators
           undefined, // modifiers
           [
             this.context.factory.createParameterDeclaration(
@@ -395,10 +394,10 @@ export class TSWriter {
   }
 
   private createTemplateLiteral(xlrNode: TemplateLiteralType) {
-    const templateSegments = xlrNode.format.split(templateSplit);
+    const templateSegments = xlrNode.format.split(templateTokenize);
     let templateHead;
 
-    if (templateSegments.length % 2) {
+    if (templateSegments.length % 2 === 0) {
       templateHead = this.context.factory.createTemplateHead(
         templateSegments[0]
       );
@@ -410,7 +409,7 @@ export class TSWriter {
     return this.context.factory.createTemplateLiteralType(
       templateHead,
       templateSegments.map((segments, i) => {
-        const [regexSegment, stringSegment] = segments.split(' ', 1);
+        const [regexSegment, stringSegment = ''] = segments.split(tokenSplit);
 
         let regexTemplateType: ts.KeywordSyntaxKind;
         if (regexSegment === '.*') {

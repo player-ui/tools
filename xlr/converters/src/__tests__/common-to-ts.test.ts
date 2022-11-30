@@ -159,4 +159,36 @@ describe('Type Exports', () => {
       }
     `);
   });
+
+  it('Template Type Conversion', () => {
+    const xlr = {
+      name: 'BindingRef',
+      title: 'BindingRef',
+      type: 'template',
+      format: '{{.*}}',
+    } as NamedType;
+
+    const converter = new TSWriter(ts.factory);
+
+    const { type: tsNode, referencedTypes: referencedImports } =
+      converter.convertNamedType(xlr);
+
+    const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
+    const resultFile = ts.createSourceFile(
+      'output.d.ts',
+      '',
+      ts.ScriptTarget.ES2017,
+      false, // setParentNodes
+      ts.ScriptKind.TS
+    );
+
+    const nodeText = printer.printNode(
+      ts.EmitHint.Unspecified,
+      tsNode,
+      resultFile
+    );
+
+    expect(nodeText).toMatchSnapshot();
+    expect(referencedImports).toBeUndefined();
+  });
 });
