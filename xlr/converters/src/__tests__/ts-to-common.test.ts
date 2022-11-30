@@ -437,3 +437,32 @@ describe('Type with typeof', () => {
     expect(XLR).toMatchSnapshot();
   });
 });
+
+describe('Edge Cases', () => {
+  it('Modifying Cache References', async () => {
+    const sc = `
+    interface foo {
+      foo: string;
+    }
+    
+    interface bar {
+      bar: number;
+    }
+    
+    type types = foo | bar;
+    
+    type requiredTypes = types & {
+      baz: number;
+    };
+    
+    export type test = requiredTypes & Partial<Pick<requiredTypes, 'baz'>>;    
+
+    `;
+
+    const { sf, tc } = await setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+});

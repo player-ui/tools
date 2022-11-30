@@ -243,6 +243,98 @@ Array [
 ]
 `;
 
+exports[`Edge Cases Modifying Cache References 1`] = `
+Array [
+  Object {
+    "and": Array [
+      Object {
+        "and": Array [
+          Object {
+            "genericTokens": undefined,
+            "name": "types",
+            "or": Array [
+              Object {
+                "additionalProperties": false,
+                "genericTokens": undefined,
+                "name": "foo",
+                "properties": Object {
+                  "foo": Object {
+                    "node": Object {
+                      "title": "foo.foo",
+                      "type": "string",
+                    },
+                    "required": true,
+                  },
+                },
+                "source": "filename.ts",
+                "title": "foo",
+                "type": "object",
+              },
+              Object {
+                "additionalProperties": false,
+                "genericTokens": undefined,
+                "name": "bar",
+                "properties": Object {
+                  "bar": Object {
+                    "node": Object {
+                      "title": "bar.bar",
+                      "type": "number",
+                    },
+                    "required": true,
+                  },
+                },
+                "source": "filename.ts",
+                "title": "bar",
+                "type": "object",
+              },
+            ],
+            "source": "filename.ts",
+            "title": "types",
+            "type": "or",
+          },
+          Object {
+            "additionalProperties": false,
+            "properties": Object {
+              "baz": Object {
+                "node": Object {
+                  "title": "baz",
+                  "type": "number",
+                },
+                "required": true,
+              },
+            },
+            "type": "object",
+          },
+        ],
+        "genericTokens": undefined,
+        "name": "requiredTypes",
+        "source": "filename.ts",
+        "title": "requiredTypes",
+        "type": "and",
+      },
+      Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "baz": Object {
+            "node": Object {
+              "title": "baz",
+              "type": "number",
+            },
+            "required": false,
+          },
+        },
+        "type": "object",
+      },
+    ],
+    "genericTokens": undefined,
+    "name": "test",
+    "source": "filename.ts",
+    "title": "test",
+    "type": "and",
+  },
+]
+`;
+
 exports[`Generic Declarations Basic Generic Type 1`] = `
 Array [
   Object {

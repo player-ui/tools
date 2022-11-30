@@ -166,7 +166,11 @@ export class TsConverter {
   /** Converts an arbitrary ts.TypeNode to XLRs */
   public convertTsTypeNode(node: ts.TypeNode): NodeType | undefined {
     if (this.context.cache.convertedNodes.has(node)) {
-      return this.context.cache.convertedNodes.get(node);
+      const cachedType = this.context.cache.convertedNodes.get(
+        node
+      ) as NodeType;
+      // return deep copy of node so modifications don't effect referenced to the original
+      return JSON.parse(JSON.stringify(cachedType));
     }
 
     const convertedNode = this.tsNodeToType(node);
