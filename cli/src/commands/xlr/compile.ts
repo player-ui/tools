@@ -131,8 +131,6 @@ export default class XLRCompile extends BaseCommand {
         if (symbol) {
           // look at what they implement
           node.heritageClauses?.forEach((heritage) => {
-            capabilities.pluginName =
-              node.name?.text || capabilities.pluginName;
             heritage.types.forEach((hInterface) => {
               // check if heritage is right one
               if (
@@ -140,6 +138,18 @@ export default class XLRCompile extends BaseCommand {
               ) {
                 return;
               }
+
+              // Get registration name of plugin
+              node.members.forEach((member) => {
+                if (
+                  ts.isPropertyDeclaration(member) &&
+                  member.name.getText() === 'name'
+                ) {
+                  capabilities.pluginName =
+                    member.initializer?.getText().replace(/['"]+/g, '') ??
+                    'Unknown Plugin';
+                }
+              });
 
               const provides: Map<string, Array<string>> = new Map();
               const typeArgs = hInterface.typeArguments;
