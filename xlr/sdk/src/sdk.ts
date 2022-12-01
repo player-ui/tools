@@ -131,33 +131,7 @@ export class XLRSDK {
       return type;
     }
 
-    // Expand `extends` field in all assets
-    type = simpleTransformGenerator('object', 'any', (objectNode) => {
-      if (objectNode.type === 'object' && objectNode.extends) {
-        const refName = objectNode.extends.ref.split('<')[0];
-        let extendedType = this.getType(refName, { getRawType: true });
-        if (!extendedType) {
-          throw new Error(
-            `Error resolving ${objectNode.name}: can't find extended type ${refName}`
-          );
-        }
-
-        extendedType = resolveReferenceNode(
-          objectNode.extends,
-          extendedType as NamedType<ObjectType>
-        ) as NamedType;
-        return {
-          ...computeEffectiveObject(
-            extendedType as ObjectType,
-            type as ObjectType,
-            false
-          ),
-          name: objectNode.name,
-        };
-      }
-
-      return objectNode;
-    })(type, 'any') as NamedType;
+    type = this.resolveType(type);
 
     return fillInGenerics(type) as NamedType;
   }
@@ -206,6 +180,7 @@ export class XLRSDK {
   ): [string, string][] {
     const typesToExport = this.registry.list(filters).map((type) => {
       let effectiveType = type;
+      effectiveType = this.resolveType(type);
       transforms?.forEach((transformFunction) => {
         effectiveType = transformFunction(
           effectiveType,
@@ -221,6 +196,36 @@ export class XLRSDK {
     }
 
     throw new Error(`Unknown export format ${exportType}`);
+  }
+
+  private resolveType(type: NodeType) {
+    return simpleTransformGenerator('object', 'any', (objectNode) => {
+      if (objectNode.type === 'object' && objectNode.extends) {
+        const refName = objectNode.extends.ref.split('<')[0];
+        let extendedType = this.getType(refName, { getRawType: true });
+        if (!extendedType) {
+          throw new Error(
+            `Error resolving ${objectNode.name}: can't find extended type ${refName}`
+          );
+        }
+
+        extendedType = resolveReferenceNode(
+          objectNode.extends,
+          extendedType as NamedType<ObjectType>
+        ) as NamedType;
+        return {
+          ...computeEffectiveObject(
+            extendedType as ObjectType,
+            objectNode as ObjectType,
+            false
+          ),
+          name: objectNode.name,
+          description: objectNode.description,
+        };
+      }
+
+      return objectNode;
+    })(type, 'any') as NamedType;
   }
 
   private exportToTypeScript(
@@ -263,7 +268,6 @@ export class XLRSDK {
       const applicableImports = imports.filter((i) => referencedImports.has(i));
       resultFile = ts.factory.updateSourceFile(resultFile, [
         ts.factory.createImportDeclaration(
-          /* decorators */ undefined,
           /* modifiers */ undefined,
           ts.factory.createImportClause(
             false,

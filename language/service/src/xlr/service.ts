@@ -1,12 +1,6 @@
 /* eslint-disable no-restricted-syntax */
-import { simpleTransformGenerator, XLRSDK } from '@player-tools/xlr-sdk';
-import type {
-  ArrayType,
-  NamedType,
-  NodeType,
-  ObjectType,
-} from '@player-tools/xlr';
-import { computeEffectiveObject } from '@player-tools/xlr-utils';
+import { XLRSDK } from '@player-tools/xlr-sdk';
+import type { ArrayType, NodeType, ObjectType } from '@player-tools/xlr';
 import type { ASTNode } from '../parser';
 import { mapFlowStateToType } from '../utils';
 import { PlayerXLRRegistry } from './registry';

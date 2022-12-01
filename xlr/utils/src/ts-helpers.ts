@@ -129,6 +129,7 @@ export function buildTemplateRegex(
 
 /**
  * Walks generics to fill in values from a combination of the default, constraint, and passed in map values
+ * TODO convert this to use simpleTransformGenerator
  */
 export function fillInGenerics(
   xlrNode: NodeType,

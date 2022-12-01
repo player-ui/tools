@@ -28,9 +28,9 @@ export function simpleTransformGenerator<
   ) => {
     // Run transform on base node before running on children
     if (capability === capabilityToTransform) {
-      const node = { ...n };
+      let node = { ...n };
       if (node.type === typeToTransform) {
-        return functionToRun(node as unknown as NodeTypeMap[T]);
+        node = functionToRun(node as unknown as NodeTypeMap[T]);
       }
 
       if (node.type === 'object') {

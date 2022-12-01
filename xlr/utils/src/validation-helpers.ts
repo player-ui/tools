@@ -3,6 +3,7 @@ import type {
   ConditionalType,
   NodeType,
   ObjectType,
+  ParamTypeNode,
   RefNode,
 } from '@player-tools/xlr';
 import { isGenericNodeType, isPrimitiveTypeNode } from './type-checks';
@@ -115,6 +116,19 @@ export function resolveReferenceNode(
 
   // Fill in generics
   const filledInNode = fillInGenerics(typeToFill, genericMap);
+
+  // Remove generic tokens that were resolve
+  if (isGenericNodeType(filledInNode) && genericArgs?.length) {
+    if (genericArgs.length < filledInNode.genericTokens.length) {
+      filledInNode.genericTokens = filledInNode.genericTokens.slice(
+        genericArgs?.length
+      );
+    } else if (genericArgs.length === filledInNode.genericTokens.length) {
+      filledInNode.genericTokens = [];
+    }
+  }
+
+  // Resolve index access
   if (genericReference.property && filledInNode.type === 'object') {
     return (
       filledInNode.properties[genericReference.property].node ??
@@ -143,6 +157,10 @@ export function computeEffectiveObject(
     ...base,
     name: `${baseObjectName} & ${operandObjectName}`,
     description: `Effective type combining ${baseObjectName} and ${operandObjectName}`,
+    genericTokens: [
+      ...(isGenericNodeType(base) ? base.genericTokens : []),
+      ...(isGenericNodeType(operand) ? operand.genericTokens : []),
+    ],
   };
 
   // eslint-disable-next-line no-restricted-syntax, guard-for-in

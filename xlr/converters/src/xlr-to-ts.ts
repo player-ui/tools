@@ -375,7 +375,6 @@ export class TSWriter {
           undefined, // modifiers
           [
             this.context.factory.createParameterDeclaration(
-              undefined, // decorators
               undefined, // modifiers
               undefined, // dotdotdot token
               'key',

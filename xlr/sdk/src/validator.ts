@@ -235,27 +235,22 @@ export class XLRValidator {
         }
 
         return typeof literalType.value === 'boolean';
-        break;
       case 'number':
         if (expectedType.const) {
           return expectedType.const === literalType.value;
         }
 
         return typeof literalType.value === 'number';
-        break;
       case 'string':
         if (expectedType.const) {
           return expectedType.const === literalType.value;
         }
 
         return typeof literalType.value === 'string';
-        break;
       case 'null':
         return literalType.value === 'null';
-        break;
       case 'never':
         return literalType === undefined;
-        break;
       case 'any':
         return literalType !== undefined;
       case 'unknown':
