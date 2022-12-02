@@ -131,12 +131,10 @@ Array [
       "genericTokens": Array [
         Object {
           "constraints": Object {
-            "genericArguments": undefined,
             "ref": "Asset",
             "type": "ref",
           },
           "default": Object {
-            "genericArguments": undefined,
             "ref": "Asset",
             "type": "ref",
           },
@@ -159,7 +157,6 @@ Array [
             "description": "An expression to execute to determine if this case applies",
             "or": Array [
               Object {
-                "genericArguments": undefined,
                 "ref": "Expression",
                 "title": "SwitchCase.case",
                 "type": "ref",
@@ -321,12 +318,10 @@ Array [
                     "genericTokens": Array [
                       Object {
                         "constraints": Object {
-                          "genericArguments": undefined,
                           "ref": "Asset",
                           "type": "ref",
                         },
                         "default": Object {
-                          "genericArguments": undefined,
                           "ref": "Asset",
                           "type": "ref",
                         },
@@ -349,7 +344,6 @@ Array [
                           "description": "An expression to execute to determine if this case applies",
                           "or": Array [
                             Object {
-                              "genericArguments": undefined,
                               "ref": "Expression",
                               "title": "SwitchCase.case",
                               "type": "ref",
@@ -373,12 +367,10 @@ Array [
                   "genericTokens": Array [
                     Object {
                       "constraints": Object {
-                        "genericArguments": undefined,
                         "ref": "Asset",
                         "type": "ref",
                       },
                       "default": Object {
-                        "genericArguments": undefined,
                         "ref": "Asset",
                         "type": "ref",
                       },
@@ -452,12 +444,10 @@ Array [
                     "genericTokens": Array [
                       Object {
                         "constraints": Object {
-                          "genericArguments": undefined,
                           "ref": "Asset",
                           "type": "ref",
                         },
                         "default": Object {
-                          "genericArguments": undefined,
                           "ref": "Asset",
                           "type": "ref",
                         },
@@ -480,7 +470,6 @@ Array [
                           "description": "An expression to execute to determine if this case applies",
                           "or": Array [
                             Object {
-                              "genericArguments": undefined,
                               "ref": "Expression",
                               "title": "SwitchCase.case",
                               "type": "ref",
@@ -504,12 +493,10 @@ Array [
                   "genericTokens": Array [
                     Object {
                       "constraints": Object {
-                        "genericArguments": undefined,
                         "ref": "Asset",
                         "type": "ref",
                       },
                       "default": Object {
-                        "genericArguments": undefined,
                         "ref": "Asset",
                         "type": "ref",
                       },
@@ -581,12 +568,10 @@ Array [
         "genericTokens": Array [
           Object {
             "constraints": Object {
-              "genericArguments": undefined,
               "ref": "Asset",
               "type": "ref",
             },
             "default": Object {
-              "genericArguments": undefined,
               "ref": "Asset",
               "type": "ref",
             },
@@ -604,12 +589,10 @@ Array [
                 "genericTokens": Array [
                   Object {
                     "constraints": Object {
-                      "genericArguments": undefined,
                       "ref": "Asset",
                       "type": "ref",
                     },
                     "default": Object {
-                      "genericArguments": undefined,
                       "ref": "Asset",
                       "type": "ref",
                     },
@@ -632,7 +615,6 @@ Array [
                       "description": "An expression to execute to determine if this case applies",
                       "or": Array [
                         Object {
-                          "genericArguments": undefined,
                           "ref": "Expression",
                           "title": "SwitchCase.case",
                           "type": "ref",
@@ -656,12 +638,10 @@ Array [
               "genericTokens": Array [
                 Object {
                   "constraints": Object {
-                    "genericArguments": undefined,
                     "ref": "Asset",
                     "type": "ref",
                   },
                   "default": Object {
-                    "genericArguments": undefined,
                     "ref": "Asset",
                     "type": "ref",
                   },
@@ -685,12 +665,10 @@ Array [
         "genericTokens": Array [
           Object {
             "constraints": Object {
-              "genericArguments": undefined,
               "ref": "Asset",
               "type": "ref",
             },
             "default": Object {
-              "genericArguments": undefined,
               "ref": "Asset",
               "type": "ref",
             },
@@ -708,12 +686,10 @@ Array [
                 "genericTokens": Array [
                   Object {
                     "constraints": Object {
-                      "genericArguments": undefined,
                       "ref": "Asset",
                       "type": "ref",
                     },
                     "default": Object {
-                      "genericArguments": undefined,
                       "ref": "Asset",
                       "type": "ref",
                     },
@@ -736,7 +712,6 @@ Array [
                       "description": "An expression to execute to determine if this case applies",
                       "or": Array [
                         Object {
-                          "genericArguments": undefined,
                           "ref": "Expression",
                           "title": "SwitchCase.case",
                           "type": "ref",
@@ -760,12 +735,10 @@ Array [
               "genericTokens": Array [
                 Object {
                   "constraints": Object {
-                    "genericArguments": undefined,
                     "ref": "Asset",
                     "type": "ref",
                   },
                   "default": Object {
-                    "genericArguments": undefined,
                     "ref": "Asset",
                     "type": "ref",
                   },
@@ -794,12 +767,10 @@ Array [
     "genericTokens": Array [
       Object {
         "constraints": Object {
-          "genericArguments": undefined,
           "ref": "Asset",
           "type": "ref",
         },
         "default": Object {
-          "genericArguments": undefined,
           "ref": "Asset",
           "type": "ref",
         },
@@ -817,12 +788,10 @@ Array [
             "genericTokens": Array [
               Object {
                 "constraints": Object {
-                  "genericArguments": undefined,
                   "ref": "Asset",
                   "type": "ref",
                 },
                 "default": Object {
-                  "genericArguments": undefined,
                   "ref": "Asset",
                   "type": "ref",
                 },
@@ -845,7 +814,6 @@ Array [
                   "description": "An expression to execute to determine if this case applies",
                   "or": Array [
                     Object {
-                      "genericArguments": undefined,
                       "ref": "Expression",
                       "title": "SwitchCase.case",
                       "type": "ref",
@@ -869,12 +837,10 @@ Array [
           "genericTokens": Array [
             Object {
               "constraints": Object {
-                "genericArguments": undefined,
                 "ref": "Asset",
                 "type": "ref",
               },
               "default": Object {
-                "genericArguments": undefined,
                 "ref": "Asset",
                 "type": "ref",
               },
@@ -898,12 +864,10 @@ Array [
     "genericTokens": Array [
       Object {
         "constraints": Object {
-          "genericArguments": undefined,
           "ref": "Asset",
           "type": "ref",
         },
         "default": Object {
-          "genericArguments": undefined,
           "ref": "Asset",
           "type": "ref",
         },
@@ -921,12 +885,10 @@ Array [
             "genericTokens": Array [
               Object {
                 "constraints": Object {
-                  "genericArguments": undefined,
                   "ref": "Asset",
                   "type": "ref",
                 },
                 "default": Object {
-                  "genericArguments": undefined,
                   "ref": "Asset",
                   "type": "ref",
                 },
@@ -949,7 +911,6 @@ Array [
                   "description": "An expression to execute to determine if this case applies",
                   "or": Array [
                     Object {
-                      "genericArguments": undefined,
                       "ref": "Expression",
                       "title": "SwitchCase.case",
                       "type": "ref",
@@ -973,12 +934,10 @@ Array [
           "genericTokens": Array [
             Object {
               "constraints": Object {
-                "genericArguments": undefined,
                 "ref": "Asset",
                 "type": "ref",
               },
               "default": Object {
-                "genericArguments": undefined,
                 "ref": "Asset",
                 "type": "ref",
               },
@@ -1107,7 +1066,6 @@ If the expression is a composite, the last expression executed is the return val
                       "exp": Object {
                         "node": Object {
                           "description": "The expression to run",
-                          "genericArguments": undefined,
                           "ref": "Expression",
                           "title": "ExpressionObject.exp",
                           "type": "ref",
@@ -1176,7 +1134,6 @@ If the expression is a composite, the last expression executed is the return val
                                     "exp": Object {
                                       "node": Object {
                                         "description": "The expression to run",
-                                        "genericArguments": undefined,
                                         "ref": "Expression",
                                         "title": "ExpressionObject.exp",
                                         "type": "ref",
@@ -1213,7 +1170,6 @@ If the expression is a composite, the last expression executed is the return val
                                     "exp": Object {
                                       "node": Object {
                                         "description": "The expression to run",
-                                        "genericArguments": undefined,
                                         "ref": "Expression",
                                         "title": "ExpressionObject.exp",
                                         "type": "ref",
@@ -1297,7 +1253,6 @@ If the expression is a composite, the last expression executed is the return val
                               "description": "An optional expression to run before view transition",
                               "or": Array [
                                 Object {
-                                  "genericArguments": undefined,
                                   "ref": "Expression",
                                   "title": "NavigationBaseState.onEnd",
                                   "type": "ref",
@@ -1305,13 +1260,11 @@ If the expression is a composite, the last expression executed is the return val
                                 Object {
                                   "additionalProperties": false,
                                   "description": "An object with an expression in it",
-                                  "genericTokens": undefined,
                                   "name": "ExpressionObject",
                                   "properties": Object {
                                     "exp": Object {
                                       "node": Object {
                                         "description": "The expression to run",
-                                        "genericArguments": undefined,
                                         "ref": "Expression",
                                         "title": "ExpressionObject.exp",
                                         "type": "ref",
@@ -1334,7 +1287,6 @@ If the expression is a composite, the last expression executed is the return val
                               "description": "An optional expression to run when this view renders",
                               "or": Array [
                                 Object {
-                                  "genericArguments": undefined,
                                   "ref": "Expression",
                                   "title": "NavigationBaseState.onStart",
                                   "type": "ref",
@@ -1342,13 +1294,11 @@ If the expression is a composite, the last expression executed is the return val
                                 Object {
                                   "additionalProperties": false,
                                   "description": "An object with an expression in it",
-                                  "genericTokens": undefined,
                                   "name": "ExpressionObject",
                                   "properties": Object {
                                     "exp": Object {
                                       "node": Object {
                                         "description": "The expression to run",
-                                        "genericArguments": undefined,
                                         "ref": "Expression",
                                         "title": "ExpressionObject.exp",
                                         "type": "ref",
@@ -1415,7 +1365,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
                               "description": "An optional expression to run before view transition",
                               "or": Array [
                                 Object {
-                                  "genericArguments": undefined,
                                   "ref": "Expression",
                                   "title": "NavigationBaseState.onEnd",
                                   "type": "ref",
@@ -1423,13 +1372,11 @@ If this is a flow started from another flow, the outcome determines the flow tra
                                 Object {
                                   "additionalProperties": false,
                                   "description": "An object with an expression in it",
-                                  "genericTokens": undefined,
                                   "name": "ExpressionObject",
                                   "properties": Object {
                                     "exp": Object {
                                       "node": Object {
                                         "description": "The expression to run",
-                                        "genericArguments": undefined,
                                         "ref": "Expression",
                                         "title": "ExpressionObject.exp",
                                         "type": "ref",
@@ -1452,7 +1399,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
                               "description": "An optional expression to run when this view renders",
                               "or": Array [
                                 Object {
-                                  "genericArguments": undefined,
                                   "ref": "Expression",
                                   "title": "NavigationBaseState.onStart",
                                   "type": "ref",
@@ -1460,13 +1406,11 @@ If this is a flow started from another flow, the outcome determines the flow tra
                                 Object {
                                   "additionalProperties": false,
                                   "description": "An object with an expression in it",
-                                  "genericTokens": undefined,
                                   "name": "ExpressionObject",
                                   "properties": Object {
                                     "exp": Object {
                                       "node": Object {
                                         "description": "The expression to run",
-                                        "genericArguments": undefined,
                                         "ref": "Expression",
                                         "title": "ExpressionObject.exp",
                                         "type": "ref",
@@ -1504,7 +1448,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
                           "transitions": Object {
                             "node": Object {
                               "description": "A mapping of transition-name to FlowState name",
-                              "genericTokens": undefined,
                               "keyType": Object {
                                 "type": "string",
                               },
@@ -1553,7 +1496,6 @@ The return value determines the transition to take",
                               "description": "An optional expression to run before view transition",
                               "or": Array [
                                 Object {
-                                  "genericArguments": undefined,
                                   "ref": "Expression",
                                   "title": "NavigationBaseState.onEnd",
                                   "type": "ref",
@@ -1561,13 +1503,11 @@ The return value determines the transition to take",
                                 Object {
                                   "additionalProperties": false,
                                   "description": "An object with an expression in it",
-                                  "genericTokens": undefined,
                                   "name": "ExpressionObject",
                                   "properties": Object {
                                     "exp": Object {
                                       "node": Object {
                                         "description": "The expression to run",
-                                        "genericArguments": undefined,
                                         "ref": "Expression",
                                         "title": "ExpressionObject.exp",
                                         "type": "ref",
@@ -1590,7 +1530,6 @@ The return value determines the transition to take",
                               "description": "An optional expression to run when this view renders",
                               "or": Array [
                                 Object {
-                                  "genericArguments": undefined,
                                   "ref": "Expression",
                                   "title": "NavigationBaseState.onStart",
                                   "type": "ref",
@@ -1598,13 +1537,11 @@ The return value determines the transition to take",
                                 Object {
                                   "additionalProperties": false,
                                   "description": "An object with an expression in it",
-                                  "genericTokens": undefined,
                                   "name": "ExpressionObject",
                                   "properties": Object {
                                     "exp": Object {
                                       "node": Object {
                                         "description": "The expression to run",
-                                        "genericArguments": undefined,
                                         "ref": "Expression",
                                         "title": "ExpressionObject.exp",
                                         "type": "ref",
@@ -1634,7 +1571,6 @@ The return value determines the transition to take",
                           "transitions": Object {
                             "node": Object {
                               "description": "A mapping of transition-name to FlowState name",
-                              "genericTokens": undefined,
                               "keyType": Object {
                                 "type": "string",
                               },
@@ -1681,7 +1617,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                               "description": "An optional expression to run before view transition",
                               "or": Array [
                                 Object {
-                                  "genericArguments": undefined,
                                   "ref": "Expression",
                                   "title": "NavigationBaseState.onEnd",
                                   "type": "ref",
@@ -1689,13 +1624,11 @@ The flow will wait for the embedded application to manage moving to the next sta
                                 Object {
                                   "additionalProperties": false,
                                   "description": "An object with an expression in it",
-                                  "genericTokens": undefined,
                                   "name": "ExpressionObject",
                                   "properties": Object {
                                     "exp": Object {
                                       "node": Object {
                                         "description": "The expression to run",
-                                        "genericArguments": undefined,
                                         "ref": "Expression",
                                         "title": "ExpressionObject.exp",
                                         "type": "ref",
@@ -1718,7 +1651,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                               "description": "An optional expression to run when this view renders",
                               "or": Array [
                                 Object {
-                                  "genericArguments": undefined,
                                   "ref": "Expression",
                                   "title": "NavigationBaseState.onStart",
                                   "type": "ref",
@@ -1726,13 +1658,11 @@ The flow will wait for the embedded application to manage moving to the next sta
                                 Object {
                                   "additionalProperties": false,
                                   "description": "An object with an expression in it",
-                                  "genericTokens": undefined,
                                   "name": "ExpressionObject",
                                   "properties": Object {
                                     "exp": Object {
                                       "node": Object {
                                         "description": "The expression to run",
-                                        "genericArguments": undefined,
                                         "ref": "Expression",
                                         "title": "ExpressionObject.exp",
                                         "type": "ref",
@@ -1770,7 +1700,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                           "transitions": Object {
                             "node": Object {
                               "description": "A mapping of transition-name to FlowState name",
-                              "genericTokens": undefined,
                               "keyType": Object {
                                 "type": "string",
                               },
@@ -1820,7 +1749,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                           "exp": Object {
                             "node": Object {
                               "description": "The expression to run",
-                              "genericArguments": undefined,
                               "ref": "Expression",
                               "title": "ExpressionObject.exp",
                               "type": "ref",
@@ -1909,7 +1837,6 @@ The flow will wait for the embedded application to manage moving to the next sta
       "exp": Object {
         "node": Object {
           "description": "The expression to run",
-          "genericArguments": undefined,
           "ref": "Expression",
           "title": "ExpressionObject.exp",
           "type": "ref",
@@ -1931,20 +1858,17 @@ The flow will wait for the embedded application to manage moving to the next sta
           "type": "string",
         },
         Object {
-          "genericArguments": undefined,
           "ref": "Expression",
           "type": "ref",
         },
         Object {
           "additionalProperties": false,
           "description": "An object with an expression in it",
-          "genericTokens": undefined,
           "name": "ExpressionObject",
           "properties": Object {
             "exp": Object {
               "node": Object {
                 "description": "The expression to run",
-                "genericArguments": undefined,
                 "ref": "Expression",
                 "title": "ExpressionObject.exp",
                 "type": "ref",
@@ -1957,13 +1881,11 @@ The flow will wait for the embedded application to manage moving to the next sta
           "type": "object",
         },
         Object {
-          "genericTokens": undefined,
           "name": "NavigationFlowState",
           "or": Array [
             Object {
               "additionalProperties": false,
               "description": "A state representing a view",
-              "genericTokens": undefined,
               "name": "NavigationFlowViewState",
               "properties": Object {
                 "_comment": Object {
@@ -1988,7 +1910,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                 },
                 "exp": Object {
                   "node": Object {
-                    "name": undefined,
                     "title": "NavigationBaseState.exp",
                     "type": "never",
                   },
@@ -1999,7 +1920,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                     "description": "An optional expression to run before view transition",
                     "or": Array [
                       Object {
-                        "genericArguments": undefined,
                         "ref": "Expression",
                         "title": "NavigationBaseState.onEnd",
                         "type": "ref",
@@ -2007,13 +1927,11 @@ The flow will wait for the embedded application to manage moving to the next sta
                       Object {
                         "additionalProperties": false,
                         "description": "An object with an expression in it",
-                        "genericTokens": undefined,
                         "name": "ExpressionObject",
                         "properties": Object {
                           "exp": Object {
                             "node": Object {
                               "description": "The expression to run",
-                              "genericArguments": undefined,
                               "ref": "Expression",
                               "title": "ExpressionObject.exp",
                               "type": "ref",
@@ -2036,7 +1954,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                     "description": "An optional expression to run when this view renders",
                     "or": Array [
                       Object {
-                        "genericArguments": undefined,
                         "ref": "Expression",
                         "title": "NavigationBaseState.onStart",
                         "type": "ref",
@@ -2044,13 +1961,11 @@ The flow will wait for the embedded application to manage moving to the next sta
                       Object {
                         "additionalProperties": false,
                         "description": "An object with an expression in it",
-                        "genericTokens": undefined,
                         "name": "ExpressionObject",
                         "properties": Object {
                           "exp": Object {
                             "node": Object {
                               "description": "The expression to run",
-                              "genericArguments": undefined,
                               "ref": "Expression",
                               "title": "ExpressionObject.exp",
                               "type": "ref",
@@ -2088,7 +2003,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                 "transitions": Object {
                   "node": Object {
                     "description": "A mapping of transition-name to FlowState name",
-                    "genericTokens": undefined,
                     "keyType": Object {
                       "type": "string",
                     },
@@ -2110,7 +2024,6 @@ The flow will wait for the embedded application to manage moving to the next sta
             Object {
               "additionalProperties": false,
               "description": "An END state of the flow.",
-              "genericTokens": undefined,
               "name": "NavigationFlowEndState",
               "properties": Object {
                 "_comment": Object {
@@ -2123,7 +2036,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                 },
                 "exp": Object {
                   "node": Object {
-                    "name": undefined,
                     "title": "NavigationBaseState.exp",
                     "type": "never",
                   },
@@ -2134,7 +2046,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                     "description": "An optional expression to run before view transition",
                     "or": Array [
                       Object {
-                        "genericArguments": undefined,
                         "ref": "Expression",
                         "title": "NavigationBaseState.onEnd",
                         "type": "ref",
@@ -2142,13 +2053,11 @@ The flow will wait for the embedded application to manage moving to the next sta
                       Object {
                         "additionalProperties": false,
                         "description": "An object with an expression in it",
-                        "genericTokens": undefined,
                         "name": "ExpressionObject",
                         "properties": Object {
                           "exp": Object {
                             "node": Object {
                               "description": "The expression to run",
-                              "genericArguments": undefined,
                               "ref": "Expression",
                               "title": "ExpressionObject.exp",
                               "type": "ref",
@@ -2171,7 +2080,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                     "description": "An optional expression to run when this view renders",
                     "or": Array [
                       Object {
-                        "genericArguments": undefined,
                         "ref": "Expression",
                         "title": "NavigationBaseState.onStart",
                         "type": "ref",
@@ -2179,13 +2087,11 @@ The flow will wait for the embedded application to manage moving to the next sta
                       Object {
                         "additionalProperties": false,
                         "description": "An object with an expression in it",
-                        "genericTokens": undefined,
                         "name": "ExpressionObject",
                         "properties": Object {
                           "exp": Object {
                             "node": Object {
                               "description": "The expression to run",
-                              "genericArguments": undefined,
                               "ref": "Expression",
                               "title": "ExpressionObject.exp",
                               "type": "ref",
@@ -2228,7 +2134,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
             },
             Object {
               "additionalProperties": false,
-              "genericTokens": undefined,
               "name": "NavigationFlowFlowState",
               "properties": Object {
                 "_comment": Object {
@@ -2241,7 +2146,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
                 },
                 "exp": Object {
                   "node": Object {
-                    "name": undefined,
                     "title": "NavigationBaseState.exp",
                     "type": "never",
                   },
@@ -2252,7 +2156,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
                     "description": "An optional expression to run before view transition",
                     "or": Array [
                       Object {
-                        "genericArguments": undefined,
                         "ref": "Expression",
                         "title": "NavigationBaseState.onEnd",
                         "type": "ref",
@@ -2260,13 +2163,11 @@ If this is a flow started from another flow, the outcome determines the flow tra
                       Object {
                         "additionalProperties": false,
                         "description": "An object with an expression in it",
-                        "genericTokens": undefined,
                         "name": "ExpressionObject",
                         "properties": Object {
                           "exp": Object {
                             "node": Object {
                               "description": "The expression to run",
-                              "genericArguments": undefined,
                               "ref": "Expression",
                               "title": "ExpressionObject.exp",
                               "type": "ref",
@@ -2289,7 +2190,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
                     "description": "An optional expression to run when this view renders",
                     "or": Array [
                       Object {
-                        "genericArguments": undefined,
                         "ref": "Expression",
                         "title": "NavigationBaseState.onStart",
                         "type": "ref",
@@ -2297,13 +2197,11 @@ If this is a flow started from another flow, the outcome determines the flow tra
                       Object {
                         "additionalProperties": false,
                         "description": "An object with an expression in it",
-                        "genericTokens": undefined,
                         "name": "ExpressionObject",
                         "properties": Object {
                           "exp": Object {
                             "node": Object {
                               "description": "The expression to run",
-                              "genericArguments": undefined,
                               "ref": "Expression",
                               "title": "ExpressionObject.exp",
                               "type": "ref",
@@ -2341,7 +2239,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
                 "transitions": Object {
                   "node": Object {
                     "description": "A mapping of transition-name to FlowState name",
-                    "genericTokens": undefined,
                     "keyType": Object {
                       "type": "string",
                     },
@@ -2363,7 +2260,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
             Object {
               "additionalProperties": false,
               "description": "Action states execute an expression to determine the next state to transition to",
-              "genericTokens": undefined,
               "name": "NavigationFlowActionState",
               "properties": Object {
                 "_comment": Object {
@@ -2378,7 +2274,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
                   "node": Object {
                     "description": "An expression to execute.
 The return value determines the transition to take",
-                    "genericArguments": undefined,
                     "ref": "Expression",
                     "title": "NavigationFlowActionState.exp",
                     "type": "ref",
@@ -2390,7 +2285,6 @@ The return value determines the transition to take",
                     "description": "An optional expression to run before view transition",
                     "or": Array [
                       Object {
-                        "genericArguments": undefined,
                         "ref": "Expression",
                         "title": "NavigationBaseState.onEnd",
                         "type": "ref",
@@ -2398,13 +2292,11 @@ The return value determines the transition to take",
                       Object {
                         "additionalProperties": false,
                         "description": "An object with an expression in it",
-                        "genericTokens": undefined,
                         "name": "ExpressionObject",
                         "properties": Object {
                           "exp": Object {
                             "node": Object {
                               "description": "The expression to run",
-                              "genericArguments": undefined,
                               "ref": "Expression",
                               "title": "ExpressionObject.exp",
                               "type": "ref",
@@ -2427,7 +2319,6 @@ The return value determines the transition to take",
                     "description": "An optional expression to run when this view renders",
                     "or": Array [
                       Object {
-                        "genericArguments": undefined,
                         "ref": "Expression",
                         "title": "NavigationBaseState.onStart",
                         "type": "ref",
@@ -2435,13 +2326,11 @@ The return value determines the transition to take",
                       Object {
                         "additionalProperties": false,
                         "description": "An object with an expression in it",
-                        "genericTokens": undefined,
                         "name": "ExpressionObject",
                         "properties": Object {
                           "exp": Object {
                             "node": Object {
                               "description": "The expression to run",
-                              "genericArguments": undefined,
                               "ref": "Expression",
                               "title": "ExpressionObject.exp",
                               "type": "ref",
@@ -2471,7 +2360,6 @@ The return value determines the transition to take",
                 "transitions": Object {
                   "node": Object {
                     "description": "A mapping of transition-name to FlowState name",
-                    "genericTokens": undefined,
                     "keyType": Object {
                       "type": "string",
                     },
@@ -2494,7 +2382,6 @@ The return value determines the transition to take",
               "additionalProperties": false,
               "description": "External Flow states represent states in the FSM that can't be resolved internally in Player.
 The flow will wait for the embedded application to manage moving to the next state via a transition",
-              "genericTokens": undefined,
               "name": "NavigationFlowExternalState",
               "properties": Object {
                 "_comment": Object {
@@ -2507,7 +2394,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                 },
                 "exp": Object {
                   "node": Object {
-                    "name": undefined,
                     "title": "NavigationBaseState.exp",
                     "type": "never",
                   },
@@ -2518,7 +2404,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                     "description": "An optional expression to run before view transition",
                     "or": Array [
                       Object {
-                        "genericArguments": undefined,
                         "ref": "Expression",
                         "title": "NavigationBaseState.onEnd",
                         "type": "ref",
@@ -2526,13 +2411,11 @@ The flow will wait for the embedded application to manage moving to the next sta
                       Object {
                         "additionalProperties": false,
                         "description": "An object with an expression in it",
-                        "genericTokens": undefined,
                         "name": "ExpressionObject",
                         "properties": Object {
                           "exp": Object {
                             "node": Object {
                               "description": "The expression to run",
-                              "genericArguments": undefined,
                               "ref": "Expression",
                               "title": "ExpressionObject.exp",
                               "type": "ref",
@@ -2555,7 +2438,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                     "description": "An optional expression to run when this view renders",
                     "or": Array [
                       Object {
-                        "genericArguments": undefined,
                         "ref": "Expression",
                         "title": "NavigationBaseState.onStart",
                         "type": "ref",
@@ -2563,13 +2445,11 @@ The flow will wait for the embedded application to manage moving to the next sta
                       Object {
                         "additionalProperties": false,
                         "description": "An object with an expression in it",
-                        "genericTokens": undefined,
                         "name": "ExpressionObject",
                         "properties": Object {
                           "exp": Object {
                             "node": Object {
                               "description": "The expression to run",
-                              "genericArguments": undefined,
                               "ref": "Expression",
                               "title": "ExpressionObject.exp",
                               "type": "ref",
@@ -2607,7 +2487,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                 "transitions": Object {
                   "node": Object {
                     "description": "A mapping of transition-name to FlowState name",
-                    "genericTokens": undefined,
                     "keyType": Object {
                       "type": "string",
                     },
@@ -2643,7 +2522,6 @@ The flow will wait for the embedded application to manage moving to the next sta
           "description": "An optional expression to run when this Flow ends",
           "or": Array [
             Object {
-              "genericArguments": undefined,
               "ref": "Expression",
               "title": "NavigationFlow.onEnd",
               "type": "ref",
@@ -2651,13 +2529,11 @@ The flow will wait for the embedded application to manage moving to the next sta
             Object {
               "additionalProperties": false,
               "description": "An object with an expression in it",
-              "genericTokens": undefined,
               "name": "ExpressionObject",
               "properties": Object {
                 "exp": Object {
                   "node": Object {
                     "description": "The expression to run",
-                    "genericArguments": undefined,
                     "ref": "Expression",
                     "title": "ExpressionObject.exp",
                     "type": "ref",
@@ -2680,7 +2556,6 @@ The flow will wait for the embedded application to manage moving to the next sta
           "description": "An optional expression to run when this Flow starts",
           "or": Array [
             Object {
-              "genericArguments": undefined,
               "ref": "Expression",
               "title": "NavigationFlow.onStart",
               "type": "ref",
@@ -2688,13 +2563,11 @@ The flow will wait for the embedded application to manage moving to the next sta
             Object {
               "additionalProperties": false,
               "description": "An object with an expression in it",
-              "genericTokens": undefined,
               "name": "ExpressionObject",
               "properties": Object {
                 "exp": Object {
                   "node": Object {
                     "description": "The expression to run",
-                    "genericArguments": undefined,
                     "ref": "Expression",
                     "title": "ExpressionObject.exp",
                     "type": "ref",
@@ -2783,7 +2656,6 @@ So this explicity says there should never be an exp prop on a state node that's 
               "type": "never",
             },
             "true": Object {
-              "genericArguments": undefined,
               "ref": "Expression",
               "type": "ref",
             },
@@ -2796,7 +2668,6 @@ So this explicity says there should never be an exp prop on a state node that's 
           "description": "An optional expression to run before view transition",
           "or": Array [
             Object {
-              "genericArguments": undefined,
               "ref": "Expression",
               "title": "NavigationBaseState.onEnd",
               "type": "ref",
@@ -2804,13 +2675,11 @@ So this explicity says there should never be an exp prop on a state node that's 
             Object {
               "additionalProperties": false,
               "description": "An object with an expression in it",
-              "genericTokens": undefined,
               "name": "ExpressionObject",
               "properties": Object {
                 "exp": Object {
                   "node": Object {
                     "description": "The expression to run",
-                    "genericArguments": undefined,
                     "ref": "Expression",
                     "title": "ExpressionObject.exp",
                     "type": "ref",
@@ -2833,7 +2702,6 @@ So this explicity says there should never be an exp prop on a state node that's 
           "description": "An optional expression to run when this view renders",
           "or": Array [
             Object {
-              "genericArguments": undefined,
               "ref": "Expression",
               "title": "NavigationBaseState.onStart",
               "type": "ref",
@@ -2841,13 +2709,11 @@ So this explicity says there should never be an exp prop on a state node that's 
             Object {
               "additionalProperties": false,
               "description": "An object with an expression in it",
-              "genericTokens": undefined,
               "name": "ExpressionObject",
               "properties": Object {
                 "exp": Object {
                   "node": Object {
                     "description": "The expression to run",
-                    "genericArguments": undefined,
                     "ref": "Expression",
                     "title": "ExpressionObject.exp",
                     "type": "ref",
@@ -2924,7 +2790,6 @@ So this explicity says there should never be an exp prop on a state node that's 
               "type": "never",
             },
             "true": Object {
-              "genericArguments": undefined,
               "ref": "Expression",
               "type": "ref",
             },
@@ -2937,7 +2802,6 @@ So this explicity says there should never be an exp prop on a state node that's 
           "description": "An optional expression to run before view transition",
           "or": Array [
             Object {
-              "genericArguments": undefined,
               "ref": "Expression",
               "title": "NavigationBaseState.onEnd",
               "type": "ref",
@@ -2945,13 +2809,11 @@ So this explicity says there should never be an exp prop on a state node that's 
             Object {
               "additionalProperties": false,
               "description": "An object with an expression in it",
-              "genericTokens": undefined,
               "name": "ExpressionObject",
               "properties": Object {
                 "exp": Object {
                   "node": Object {
                     "description": "The expression to run",
-                    "genericArguments": undefined,
                     "ref": "Expression",
                     "title": "ExpressionObject.exp",
                     "type": "ref",
@@ -2974,7 +2836,6 @@ So this explicity says there should never be an exp prop on a state node that's 
           "description": "An optional expression to run when this view renders",
           "or": Array [
             Object {
-              "genericArguments": undefined,
               "ref": "Expression",
               "title": "NavigationBaseState.onStart",
               "type": "ref",
@@ -2982,13 +2843,11 @@ So this explicity says there should never be an exp prop on a state node that's 
             Object {
               "additionalProperties": false,
               "description": "An object with an expression in it",
-              "genericTokens": undefined,
               "name": "ExpressionObject",
               "properties": Object {
                 "exp": Object {
                   "node": Object {
                     "description": "The expression to run",
-                    "genericArguments": undefined,
                     "ref": "Expression",
                     "title": "ExpressionObject.exp",
                     "type": "ref",
@@ -3018,7 +2877,6 @@ So this explicity says there should never be an exp prop on a state node that's 
       "transitions": Object {
         "node": Object {
           "description": "A mapping of transition-name to FlowState name",
-          "genericTokens": undefined,
           "keyType": Object {
             "type": "string",
           },
@@ -3076,7 +2934,6 @@ So this explicity says there should never be an exp prop on a state node that's 
           "description": "An optional expression to run before view transition",
           "or": Array [
             Object {
-              "genericArguments": undefined,
               "ref": "Expression",
               "title": "NavigationBaseState.onEnd",
               "type": "ref",
@@ -3084,13 +2941,11 @@ So this explicity says there should never be an exp prop on a state node that's 
             Object {
               "additionalProperties": false,
               "description": "An object with an expression in it",
-              "genericTokens": undefined,
               "name": "ExpressionObject",
               "properties": Object {
                 "exp": Object {
                   "node": Object {
                     "description": "The expression to run",
-                    "genericArguments": undefined,
                     "ref": "Expression",
                     "title": "ExpressionObject.exp",
                     "type": "ref",
@@ -3113,7 +2968,6 @@ So this explicity says there should never be an exp prop on a state node that's 
           "description": "An optional expression to run when this view renders",
           "or": Array [
             Object {
-              "genericArguments": undefined,
               "ref": "Expression",
               "title": "NavigationBaseState.onStart",
               "type": "ref",
@@ -3121,13 +2975,11 @@ So this explicity says there should never be an exp prop on a state node that's 
             Object {
               "additionalProperties": false,
               "description": "An object with an expression in it",
-              "genericTokens": undefined,
               "name": "ExpressionObject",
               "properties": Object {
                 "exp": Object {
                   "node": Object {
                     "description": "The expression to run",
-                    "genericArguments": undefined,
                     "ref": "Expression",
                     "title": "ExpressionObject.exp",
                     "type": "ref",
@@ -3165,7 +3017,6 @@ So this explicity says there should never be an exp prop on a state node that's 
       "transitions": Object {
         "node": Object {
           "description": "A mapping of transition-name to FlowState name",
-          "genericTokens": undefined,
           "keyType": Object {
             "type": "string",
           },
@@ -3211,7 +3062,6 @@ So this explicity says there should never be an exp prop on a state node that's 
           "description": "An optional expression to run before view transition",
           "or": Array [
             Object {
-              "genericArguments": undefined,
               "ref": "Expression",
               "title": "NavigationBaseState.onEnd",
               "type": "ref",
@@ -3219,13 +3069,11 @@ So this explicity says there should never be an exp prop on a state node that's 
             Object {
               "additionalProperties": false,
               "description": "An object with an expression in it",
-              "genericTokens": undefined,
               "name": "ExpressionObject",
               "properties": Object {
                 "exp": Object {
                   "node": Object {
                     "description": "The expression to run",
-                    "genericArguments": undefined,
                     "ref": "Expression",
                     "title": "ExpressionObject.exp",
                     "type": "ref",
@@ -3248,7 +3096,6 @@ So this explicity says there should never be an exp prop on a state node that's 
           "description": "An optional expression to run when this view renders",
           "or": Array [
             Object {
-              "genericArguments": undefined,
               "ref": "Expression",
               "title": "NavigationBaseState.onStart",
               "type": "ref",
@@ -3256,13 +3103,11 @@ So this explicity says there should never be an exp prop on a state node that's 
             Object {
               "additionalProperties": false,
               "description": "An object with an expression in it",
-              "genericTokens": undefined,
               "name": "ExpressionObject",
               "properties": Object {
                 "exp": Object {
                   "node": Object {
                     "description": "The expression to run",
-                    "genericArguments": undefined,
                     "ref": "Expression",
                     "title": "ExpressionObject.exp",
                     "type": "ref",
@@ -3321,7 +3166,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
         "node": Object {
           "description": "An expression to execute.
 The return value determines the transition to take",
-          "genericArguments": undefined,
           "ref": "Expression",
           "title": "NavigationFlowActionState.exp",
           "type": "ref",
@@ -3333,7 +3177,6 @@ The return value determines the transition to take",
           "description": "An optional expression to run before view transition",
           "or": Array [
             Object {
-              "genericArguments": undefined,
               "ref": "Expression",
               "title": "NavigationBaseState.onEnd",
               "type": "ref",
@@ -3341,13 +3184,11 @@ The return value determines the transition to take",
             Object {
               "additionalProperties": false,
               "description": "An object with an expression in it",
-              "genericTokens": undefined,
               "name": "ExpressionObject",
               "properties": Object {
                 "exp": Object {
                   "node": Object {
                     "description": "The expression to run",
-                    "genericArguments": undefined,
                     "ref": "Expression",
                     "title": "ExpressionObject.exp",
                     "type": "ref",
@@ -3370,7 +3211,6 @@ The return value determines the transition to take",
           "description": "An optional expression to run when this view renders",
           "or": Array [
             Object {
-              "genericArguments": undefined,
               "ref": "Expression",
               "title": "NavigationBaseState.onStart",
               "type": "ref",
@@ -3378,13 +3218,11 @@ The return value determines the transition to take",
             Object {
               "additionalProperties": false,
               "description": "An object with an expression in it",
-              "genericTokens": undefined,
               "name": "ExpressionObject",
               "properties": Object {
                 "exp": Object {
                   "node": Object {
                     "description": "The expression to run",
-                    "genericArguments": undefined,
                     "ref": "Expression",
                     "title": "ExpressionObject.exp",
                     "type": "ref",
@@ -3414,7 +3252,6 @@ The return value determines the transition to take",
       "transitions": Object {
         "node": Object {
           "description": "A mapping of transition-name to FlowState name",
-          "genericTokens": undefined,
           "keyType": Object {
             "type": "string",
           },
@@ -3461,7 +3298,6 @@ The flow will wait for the embedded application to manage moving to the next sta
           "description": "An optional expression to run before view transition",
           "or": Array [
             Object {
-              "genericArguments": undefined,
               "ref": "Expression",
               "title": "NavigationBaseState.onEnd",
               "type": "ref",
@@ -3469,13 +3305,11 @@ The flow will wait for the embedded application to manage moving to the next sta
             Object {
               "additionalProperties": false,
               "description": "An object with an expression in it",
-              "genericTokens": undefined,
               "name": "ExpressionObject",
               "properties": Object {
                 "exp": Object {
                   "node": Object {
                     "description": "The expression to run",
-                    "genericArguments": undefined,
                     "ref": "Expression",
                     "title": "ExpressionObject.exp",
                     "type": "ref",
@@ -3498,7 +3332,6 @@ The flow will wait for the embedded application to manage moving to the next sta
           "description": "An optional expression to run when this view renders",
           "or": Array [
             Object {
-              "genericArguments": undefined,
               "ref": "Expression",
               "title": "NavigationBaseState.onStart",
               "type": "ref",
@@ -3506,13 +3339,11 @@ The flow will wait for the embedded application to manage moving to the next sta
             Object {
               "additionalProperties": false,
               "description": "An object with an expression in it",
-              "genericTokens": undefined,
               "name": "ExpressionObject",
               "properties": Object {
                 "exp": Object {
                   "node": Object {
                     "description": "The expression to run",
-                    "genericArguments": undefined,
                     "ref": "Expression",
                     "title": "ExpressionObject.exp",
                     "type": "ref",
@@ -3550,7 +3381,6 @@ The flow will wait for the embedded application to manage moving to the next sta
       "transitions": Object {
         "node": Object {
           "description": "A mapping of transition-name to FlowState name",
-          "genericTokens": undefined,
           "keyType": Object {
             "type": "string",
           },
@@ -3595,7 +3425,6 @@ The flow will wait for the embedded application to manage moving to the next sta
           "description": "An optional expression to run before view transition",
           "or": Array [
             Object {
-              "genericArguments": undefined,
               "ref": "Expression",
               "title": "NavigationBaseState.onEnd",
               "type": "ref",
@@ -3603,13 +3432,11 @@ The flow will wait for the embedded application to manage moving to the next sta
             Object {
               "additionalProperties": false,
               "description": "An object with an expression in it",
-              "genericTokens": undefined,
               "name": "ExpressionObject",
               "properties": Object {
                 "exp": Object {
                   "node": Object {
                     "description": "The expression to run",
-                    "genericArguments": undefined,
                     "ref": "Expression",
                     "title": "ExpressionObject.exp",
                     "type": "ref",
@@ -3632,7 +3459,6 @@ The flow will wait for the embedded application to manage moving to the next sta
           "description": "An optional expression to run when this view renders",
           "or": Array [
             Object {
-              "genericArguments": undefined,
               "ref": "Expression",
               "title": "NavigationBaseState.onStart",
               "type": "ref",
@@ -3640,13 +3466,11 @@ The flow will wait for the embedded application to manage moving to the next sta
             Object {
               "additionalProperties": false,
               "description": "An object with an expression in it",
-              "genericTokens": undefined,
               "name": "ExpressionObject",
               "properties": Object {
                 "exp": Object {
                   "node": Object {
                     "description": "The expression to run",
-                    "genericArguments": undefined,
                     "ref": "Expression",
                     "title": "ExpressionObject.exp",
                     "type": "ref",
@@ -3684,7 +3508,6 @@ The flow will wait for the embedded application to manage moving to the next sta
       "transitions": Object {
         "node": Object {
           "description": "A mapping of transition-name to FlowState name",
-          "genericTokens": undefined,
           "keyType": Object {
             "type": "string",
           },
@@ -3710,7 +3533,6 @@ The flow will wait for the embedded application to manage moving to the next sta
       Object {
         "additionalProperties": false,
         "description": "A state representing a view",
-        "genericTokens": undefined,
         "name": "NavigationFlowViewState",
         "properties": Object {
           "_comment": Object {
@@ -3735,7 +3557,6 @@ The flow will wait for the embedded application to manage moving to the next sta
           },
           "exp": Object {
             "node": Object {
-              "name": undefined,
               "title": "NavigationBaseState.exp",
               "type": "never",
             },
@@ -3746,7 +3567,6 @@ The flow will wait for the embedded application to manage moving to the next sta
               "description": "An optional expression to run before view transition",
               "or": Array [
                 Object {
-                  "genericArguments": undefined,
                   "ref": "Expression",
                   "title": "NavigationBaseState.onEnd",
                   "type": "ref",
@@ -3754,13 +3574,11 @@ The flow will wait for the embedded application to manage moving to the next sta
                 Object {
                   "additionalProperties": false,
                   "description": "An object with an expression in it",
-                  "genericTokens": undefined,
                   "name": "ExpressionObject",
                   "properties": Object {
                     "exp": Object {
                       "node": Object {
                         "description": "The expression to run",
-                        "genericArguments": undefined,
                         "ref": "Expression",
                         "title": "ExpressionObject.exp",
                         "type": "ref",
@@ -3783,7 +3601,6 @@ The flow will wait for the embedded application to manage moving to the next sta
               "description": "An optional expression to run when this view renders",
               "or": Array [
                 Object {
-                  "genericArguments": undefined,
                   "ref": "Expression",
                   "title": "NavigationBaseState.onStart",
                   "type": "ref",
@@ -3791,13 +3608,11 @@ The flow will wait for the embedded application to manage moving to the next sta
                 Object {
                   "additionalProperties": false,
                   "description": "An object with an expression in it",
-                  "genericTokens": undefined,
                   "name": "ExpressionObject",
                   "properties": Object {
                     "exp": Object {
                       "node": Object {
                         "description": "The expression to run",
-                        "genericArguments": undefined,
                         "ref": "Expression",
                         "title": "ExpressionObject.exp",
                         "type": "ref",
@@ -3835,7 +3650,6 @@ The flow will wait for the embedded application to manage moving to the next sta
           "transitions": Object {
             "node": Object {
               "description": "A mapping of transition-name to FlowState name",
-              "genericTokens": undefined,
               "keyType": Object {
                 "type": "string",
               },
@@ -3857,7 +3671,6 @@ The flow will wait for the embedded application to manage moving to the next sta
       Object {
         "additionalProperties": false,
         "description": "An END state of the flow.",
-        "genericTokens": undefined,
         "name": "NavigationFlowEndState",
         "properties": Object {
           "_comment": Object {
@@ -3870,7 +3683,6 @@ The flow will wait for the embedded application to manage moving to the next sta
           },
           "exp": Object {
             "node": Object {
-              "name": undefined,
               "title": "NavigationBaseState.exp",
               "type": "never",
             },
@@ -3881,7 +3693,6 @@ The flow will wait for the embedded application to manage moving to the next sta
               "description": "An optional expression to run before view transition",
               "or": Array [
                 Object {
-                  "genericArguments": undefined,
                   "ref": "Expression",
                   "title": "NavigationBaseState.onEnd",
                   "type": "ref",
@@ -3889,13 +3700,11 @@ The flow will wait for the embedded application to manage moving to the next sta
                 Object {
                   "additionalProperties": false,
                   "description": "An object with an expression in it",
-                  "genericTokens": undefined,
                   "name": "ExpressionObject",
                   "properties": Object {
                     "exp": Object {
                       "node": Object {
                         "description": "The expression to run",
-                        "genericArguments": undefined,
                         "ref": "Expression",
                         "title": "ExpressionObject.exp",
                         "type": "ref",
@@ -3918,7 +3727,6 @@ The flow will wait for the embedded application to manage moving to the next sta
               "description": "An optional expression to run when this view renders",
               "or": Array [
                 Object {
-                  "genericArguments": undefined,
                   "ref": "Expression",
                   "title": "NavigationBaseState.onStart",
                   "type": "ref",
@@ -3926,13 +3734,11 @@ The flow will wait for the embedded application to manage moving to the next sta
                 Object {
                   "additionalProperties": false,
                   "description": "An object with an expression in it",
-                  "genericTokens": undefined,
                   "name": "ExpressionObject",
                   "properties": Object {
                     "exp": Object {
                       "node": Object {
                         "description": "The expression to run",
-                        "genericArguments": undefined,
                         "ref": "Expression",
                         "title": "ExpressionObject.exp",
                         "type": "ref",
@@ -3975,7 +3781,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
       },
       Object {
         "additionalProperties": false,
-        "genericTokens": undefined,
         "name": "NavigationFlowFlowState",
         "properties": Object {
           "_comment": Object {
@@ -3988,7 +3793,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
           },
           "exp": Object {
             "node": Object {
-              "name": undefined,
               "title": "NavigationBaseState.exp",
               "type": "never",
             },
@@ -3999,7 +3803,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
               "description": "An optional expression to run before view transition",
               "or": Array [
                 Object {
-                  "genericArguments": undefined,
                   "ref": "Expression",
                   "title": "NavigationBaseState.onEnd",
                   "type": "ref",
@@ -4007,13 +3810,11 @@ If this is a flow started from another flow, the outcome determines the flow tra
                 Object {
                   "additionalProperties": false,
                   "description": "An object with an expression in it",
-                  "genericTokens": undefined,
                   "name": "ExpressionObject",
                   "properties": Object {
                     "exp": Object {
                       "node": Object {
                         "description": "The expression to run",
-                        "genericArguments": undefined,
                         "ref": "Expression",
                         "title": "ExpressionObject.exp",
                         "type": "ref",
@@ -4036,7 +3837,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
               "description": "An optional expression to run when this view renders",
               "or": Array [
                 Object {
-                  "genericArguments": undefined,
                   "ref": "Expression",
                   "title": "NavigationBaseState.onStart",
                   "type": "ref",
@@ -4044,13 +3844,11 @@ If this is a flow started from another flow, the outcome determines the flow tra
                 Object {
                   "additionalProperties": false,
                   "description": "An object with an expression in it",
-                  "genericTokens": undefined,
                   "name": "ExpressionObject",
                   "properties": Object {
                     "exp": Object {
                       "node": Object {
                         "description": "The expression to run",
-                        "genericArguments": undefined,
                         "ref": "Expression",
                         "title": "ExpressionObject.exp",
                         "type": "ref",
@@ -4088,7 +3886,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
           "transitions": Object {
             "node": Object {
               "description": "A mapping of transition-name to FlowState name",
-              "genericTokens": undefined,
               "keyType": Object {
                 "type": "string",
               },
@@ -4110,7 +3907,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
       Object {
         "additionalProperties": false,
         "description": "Action states execute an expression to determine the next state to transition to",
-        "genericTokens": undefined,
         "name": "NavigationFlowActionState",
         "properties": Object {
           "_comment": Object {
@@ -4125,7 +3921,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
             "node": Object {
               "description": "An expression to execute.
 The return value determines the transition to take",
-              "genericArguments": undefined,
               "ref": "Expression",
               "title": "NavigationFlowActionState.exp",
               "type": "ref",
@@ -4137,7 +3932,6 @@ The return value determines the transition to take",
               "description": "An optional expression to run before view transition",
               "or": Array [
                 Object {
-                  "genericArguments": undefined,
                   "ref": "Expression",
                   "title": "NavigationBaseState.onEnd",
                   "type": "ref",
@@ -4145,13 +3939,11 @@ The return value determines the transition to take",
                 Object {
                   "additionalProperties": false,
                   "description": "An object with an expression in it",
-                  "genericTokens": undefined,
                   "name": "ExpressionObject",
                   "properties": Object {
                     "exp": Object {
                       "node": Object {
                         "description": "The expression to run",
-                        "genericArguments": undefined,
                         "ref": "Expression",
                         "title": "ExpressionObject.exp",
                         "type": "ref",
@@ -4174,7 +3966,6 @@ The return value determines the transition to take",
               "description": "An optional expression to run when this view renders",
               "or": Array [
                 Object {
-                  "genericArguments": undefined,
                   "ref": "Expression",
                   "title": "NavigationBaseState.onStart",
                   "type": "ref",
@@ -4182,13 +3973,11 @@ The return value determines the transition to take",
                 Object {
                   "additionalProperties": false,
                   "description": "An object with an expression in it",
-                  "genericTokens": undefined,
                   "name": "ExpressionObject",
                   "properties": Object {
                     "exp": Object {
                       "node": Object {
                         "description": "The expression to run",
-                        "genericArguments": undefined,
                         "ref": "Expression",
                         "title": "ExpressionObject.exp",
                         "type": "ref",
@@ -4218,7 +4007,6 @@ The return value determines the transition to take",
           "transitions": Object {
             "node": Object {
               "description": "A mapping of transition-name to FlowState name",
-              "genericTokens": undefined,
               "keyType": Object {
                 "type": "string",
               },
@@ -4241,7 +4029,6 @@ The return value determines the transition to take",
         "additionalProperties": false,
         "description": "External Flow states represent states in the FSM that can't be resolved internally in Player.
 The flow will wait for the embedded application to manage moving to the next state via a transition",
-        "genericTokens": undefined,
         "name": "NavigationFlowExternalState",
         "properties": Object {
           "_comment": Object {
@@ -4254,7 +4041,6 @@ The flow will wait for the embedded application to manage moving to the next sta
           },
           "exp": Object {
             "node": Object {
-              "name": undefined,
               "title": "NavigationBaseState.exp",
               "type": "never",
             },
@@ -4265,7 +4051,6 @@ The flow will wait for the embedded application to manage moving to the next sta
               "description": "An optional expression to run before view transition",
               "or": Array [
                 Object {
-                  "genericArguments": undefined,
                   "ref": "Expression",
                   "title": "NavigationBaseState.onEnd",
                   "type": "ref",
@@ -4273,13 +4058,11 @@ The flow will wait for the embedded application to manage moving to the next sta
                 Object {
                   "additionalProperties": false,
                   "description": "An object with an expression in it",
-                  "genericTokens": undefined,
                   "name": "ExpressionObject",
                   "properties": Object {
                     "exp": Object {
                       "node": Object {
                         "description": "The expression to run",
-                        "genericArguments": undefined,
                         "ref": "Expression",
                         "title": "ExpressionObject.exp",
                         "type": "ref",
@@ -4302,7 +4085,6 @@ The flow will wait for the embedded application to manage moving to the next sta
               "description": "An optional expression to run when this view renders",
               "or": Array [
                 Object {
-                  "genericArguments": undefined,
                   "ref": "Expression",
                   "title": "NavigationBaseState.onStart",
                   "type": "ref",
@@ -4310,13 +4092,11 @@ The flow will wait for the embedded application to manage moving to the next sta
                 Object {
                   "additionalProperties": false,
                   "description": "An object with an expression in it",
-                  "genericTokens": undefined,
                   "name": "ExpressionObject",
                   "properties": Object {
                     "exp": Object {
                       "node": Object {
                         "description": "The expression to run",
-                        "genericArguments": undefined,
                         "ref": "Expression",
                         "title": "ExpressionObject.exp",
                         "type": "ref",
@@ -4354,7 +4134,6 @@ The flow will wait for the embedded application to manage moving to the next sta
           "transitions": Object {
             "node": Object {
               "description": "A mapping of transition-name to FlowState name",
-              "genericTokens": undefined,
               "keyType": Object {
                 "type": "string",
               },
@@ -4420,7 +4199,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                 "description": "An optional expression to run before view transition",
                 "or": Array [
                   Object {
-                    "genericArguments": undefined,
                     "ref": "Expression",
                     "title": "NavigationBaseState.onEnd",
                     "type": "ref",
@@ -4428,13 +4206,11 @@ The flow will wait for the embedded application to manage moving to the next sta
                   Object {
                     "additionalProperties": false,
                     "description": "An object with an expression in it",
-                    "genericTokens": undefined,
                     "name": "ExpressionObject",
                     "properties": Object {
                       "exp": Object {
                         "node": Object {
                           "description": "The expression to run",
-                          "genericArguments": undefined,
                           "ref": "Expression",
                           "title": "ExpressionObject.exp",
                           "type": "ref",
@@ -4457,7 +4233,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                 "description": "An optional expression to run when this view renders",
                 "or": Array [
                   Object {
-                    "genericArguments": undefined,
                     "ref": "Expression",
                     "title": "NavigationBaseState.onStart",
                     "type": "ref",
@@ -4465,13 +4240,11 @@ The flow will wait for the embedded application to manage moving to the next sta
                   Object {
                     "additionalProperties": false,
                     "description": "An object with an expression in it",
-                    "genericTokens": undefined,
                     "name": "ExpressionObject",
                     "properties": Object {
                       "exp": Object {
                         "node": Object {
                           "description": "The expression to run",
-                          "genericArguments": undefined,
                           "ref": "Expression",
                           "title": "ExpressionObject.exp",
                           "type": "ref",
@@ -4634,7 +4407,6 @@ Any reference to _index_ is replaced with the current iteration index.",
       "data": Object {
         "node": Object {
           "description": "A pointer to the data-model containing an array of elements to map over",
-          "genericArguments": undefined,
           "ref": "Binding",
           "title": "Template.data",
           "type": "ref",
@@ -4680,7 +4452,6 @@ Any reference to _index_ is replaced with the current iteration index.",
         "type": "unknown",
       },
       "right": Object {
-        "genericArguments": undefined,
         "property": "validation",
         "ref": "Asset",
         "type": "ref",
@@ -4945,20 +4716,17 @@ This will be used to lookup the proper handler",
                           "type": "string",
                         },
                         Object {
-                          "genericArguments": undefined,
                           "ref": "Expression",
                           "type": "ref",
                         },
                         Object {
                           "additionalProperties": false,
                           "description": "An object with an expression in it",
-                          "genericTokens": undefined,
                           "name": "ExpressionObject",
                           "properties": Object {
                             "exp": Object {
                               "node": Object {
                                 "description": "The expression to run",
-                                "genericArguments": undefined,
                                 "ref": "Expression",
                                 "title": "ExpressionObject.exp",
                                 "type": "ref",
@@ -4971,13 +4739,11 @@ This will be used to lookup the proper handler",
                           "type": "object",
                         },
                         Object {
-                          "genericTokens": undefined,
                           "name": "NavigationFlowState",
                           "or": Array [
                             Object {
                               "additionalProperties": false,
                               "description": "A state representing a view",
-                              "genericTokens": undefined,
                               "name": "NavigationFlowViewState",
                               "properties": Object {
                                 "_comment": Object {
@@ -5002,7 +4768,6 @@ This will be used to lookup the proper handler",
                                 },
                                 "exp": Object {
                                   "node": Object {
-                                    "name": undefined,
                                     "title": "NavigationBaseState.exp",
                                     "type": "never",
                                   },
@@ -5013,7 +4778,6 @@ This will be used to lookup the proper handler",
                                     "description": "An optional expression to run before view transition",
                                     "or": Array [
                                       Object {
-                                        "genericArguments": undefined,
                                         "ref": "Expression",
                                         "title": "NavigationBaseState.onEnd",
                                         "type": "ref",
@@ -5021,13 +4785,11 @@ This will be used to lookup the proper handler",
                                       Object {
                                         "additionalProperties": false,
                                         "description": "An object with an expression in it",
-                                        "genericTokens": undefined,
                                         "name": "ExpressionObject",
                                         "properties": Object {
                                           "exp": Object {
                                             "node": Object {
                                               "description": "The expression to run",
-                                              "genericArguments": undefined,
                                               "ref": "Expression",
                                               "title": "ExpressionObject.exp",
                                               "type": "ref",
@@ -5050,7 +4812,6 @@ This will be used to lookup the proper handler",
                                     "description": "An optional expression to run when this view renders",
                                     "or": Array [
                                       Object {
-                                        "genericArguments": undefined,
                                         "ref": "Expression",
                                         "title": "NavigationBaseState.onStart",
                                         "type": "ref",
@@ -5058,13 +4819,11 @@ This will be used to lookup the proper handler",
                                       Object {
                                         "additionalProperties": false,
                                         "description": "An object with an expression in it",
-                                        "genericTokens": undefined,
                                         "name": "ExpressionObject",
                                         "properties": Object {
                                           "exp": Object {
                                             "node": Object {
                                               "description": "The expression to run",
-                                              "genericArguments": undefined,
                                               "ref": "Expression",
                                               "title": "ExpressionObject.exp",
                                               "type": "ref",
@@ -5102,7 +4861,6 @@ This will be used to lookup the proper handler",
                                 "transitions": Object {
                                   "node": Object {
                                     "description": "A mapping of transition-name to FlowState name",
-                                    "genericTokens": undefined,
                                     "keyType": Object {
                                       "type": "string",
                                     },
@@ -5124,7 +4882,6 @@ This will be used to lookup the proper handler",
                             Object {
                               "additionalProperties": false,
                               "description": "An END state of the flow.",
-                              "genericTokens": undefined,
                               "name": "NavigationFlowEndState",
                               "properties": Object {
                                 "_comment": Object {
@@ -5137,7 +4894,6 @@ This will be used to lookup the proper handler",
                                 },
                                 "exp": Object {
                                   "node": Object {
-                                    "name": undefined,
                                     "title": "NavigationBaseState.exp",
                                     "type": "never",
                                   },
@@ -5148,7 +4904,6 @@ This will be used to lookup the proper handler",
                                     "description": "An optional expression to run before view transition",
                                     "or": Array [
                                       Object {
-                                        "genericArguments": undefined,
                                         "ref": "Expression",
                                         "title": "NavigationBaseState.onEnd",
                                         "type": "ref",
@@ -5156,13 +4911,11 @@ This will be used to lookup the proper handler",
                                       Object {
                                         "additionalProperties": false,
                                         "description": "An object with an expression in it",
-                                        "genericTokens": undefined,
                                         "name": "ExpressionObject",
                                         "properties": Object {
                                           "exp": Object {
                                             "node": Object {
                                               "description": "The expression to run",
-                                              "genericArguments": undefined,
                                               "ref": "Expression",
                                               "title": "ExpressionObject.exp",
                                               "type": "ref",
@@ -5185,7 +4938,6 @@ This will be used to lookup the proper handler",
                                     "description": "An optional expression to run when this view renders",
                                     "or": Array [
                                       Object {
-                                        "genericArguments": undefined,
                                         "ref": "Expression",
                                         "title": "NavigationBaseState.onStart",
                                         "type": "ref",
@@ -5193,13 +4945,11 @@ This will be used to lookup the proper handler",
                                       Object {
                                         "additionalProperties": false,
                                         "description": "An object with an expression in it",
-                                        "genericTokens": undefined,
                                         "name": "ExpressionObject",
                                         "properties": Object {
                                           "exp": Object {
                                             "node": Object {
                                               "description": "The expression to run",
-                                              "genericArguments": undefined,
                                               "ref": "Expression",
                                               "title": "ExpressionObject.exp",
                                               "type": "ref",
@@ -5242,7 +4992,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
                             },
                             Object {
                               "additionalProperties": false,
-                              "genericTokens": undefined,
                               "name": "NavigationFlowFlowState",
                               "properties": Object {
                                 "_comment": Object {
@@ -5255,7 +5004,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
                                 },
                                 "exp": Object {
                                   "node": Object {
-                                    "name": undefined,
                                     "title": "NavigationBaseState.exp",
                                     "type": "never",
                                   },
@@ -5266,7 +5014,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
                                     "description": "An optional expression to run before view transition",
                                     "or": Array [
                                       Object {
-                                        "genericArguments": undefined,
                                         "ref": "Expression",
                                         "title": "NavigationBaseState.onEnd",
                                         "type": "ref",
@@ -5274,13 +5021,11 @@ If this is a flow started from another flow, the outcome determines the flow tra
                                       Object {
                                         "additionalProperties": false,
                                         "description": "An object with an expression in it",
-                                        "genericTokens": undefined,
                                         "name": "ExpressionObject",
                                         "properties": Object {
                                           "exp": Object {
                                             "node": Object {
                                               "description": "The expression to run",
-                                              "genericArguments": undefined,
                                               "ref": "Expression",
                                               "title": "ExpressionObject.exp",
                                               "type": "ref",
@@ -5303,7 +5048,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
                                     "description": "An optional expression to run when this view renders",
                                     "or": Array [
                                       Object {
-                                        "genericArguments": undefined,
                                         "ref": "Expression",
                                         "title": "NavigationBaseState.onStart",
                                         "type": "ref",
@@ -5311,13 +5055,11 @@ If this is a flow started from another flow, the outcome determines the flow tra
                                       Object {
                                         "additionalProperties": false,
                                         "description": "An object with an expression in it",
-                                        "genericTokens": undefined,
                                         "name": "ExpressionObject",
                                         "properties": Object {
                                           "exp": Object {
                                             "node": Object {
                                               "description": "The expression to run",
-                                              "genericArguments": undefined,
                                               "ref": "Expression",
                                               "title": "ExpressionObject.exp",
                                               "type": "ref",
@@ -5355,7 +5097,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
                                 "transitions": Object {
                                   "node": Object {
                                     "description": "A mapping of transition-name to FlowState name",
-                                    "genericTokens": undefined,
                                     "keyType": Object {
                                       "type": "string",
                                     },
@@ -5377,7 +5118,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
                             Object {
                               "additionalProperties": false,
                               "description": "Action states execute an expression to determine the next state to transition to",
-                              "genericTokens": undefined,
                               "name": "NavigationFlowActionState",
                               "properties": Object {
                                 "_comment": Object {
@@ -5392,7 +5132,6 @@ If this is a flow started from another flow, the outcome determines the flow tra
                                   "node": Object {
                                     "description": "An expression to execute.
 The return value determines the transition to take",
-                                    "genericArguments": undefined,
                                     "ref": "Expression",
                                     "title": "NavigationFlowActionState.exp",
                                     "type": "ref",
@@ -5404,7 +5143,6 @@ The return value determines the transition to take",
                                     "description": "An optional expression to run before view transition",
                                     "or": Array [
                                       Object {
-                                        "genericArguments": undefined,
                                         "ref": "Expression",
                                         "title": "NavigationBaseState.onEnd",
                                         "type": "ref",
@@ -5412,13 +5150,11 @@ The return value determines the transition to take",
                                       Object {
                                         "additionalProperties": false,
                                         "description": "An object with an expression in it",
-                                        "genericTokens": undefined,
                                         "name": "ExpressionObject",
                                         "properties": Object {
                                           "exp": Object {
                                             "node": Object {
                                               "description": "The expression to run",
-                                              "genericArguments": undefined,
                                               "ref": "Expression",
                                               "title": "ExpressionObject.exp",
                                               "type": "ref",
@@ -5441,7 +5177,6 @@ The return value determines the transition to take",
                                     "description": "An optional expression to run when this view renders",
                                     "or": Array [
                                       Object {
-                                        "genericArguments": undefined,
                                         "ref": "Expression",
                                         "title": "NavigationBaseState.onStart",
                                         "type": "ref",
@@ -5449,13 +5184,11 @@ The return value determines the transition to take",
                                       Object {
                                         "additionalProperties": false,
                                         "description": "An object with an expression in it",
-                                        "genericTokens": undefined,
                                         "name": "ExpressionObject",
                                         "properties": Object {
                                           "exp": Object {
                                             "node": Object {
                                               "description": "The expression to run",
-                                              "genericArguments": undefined,
                                               "ref": "Expression",
                                               "title": "ExpressionObject.exp",
                                               "type": "ref",
@@ -5485,7 +5218,6 @@ The return value determines the transition to take",
                                 "transitions": Object {
                                   "node": Object {
                                     "description": "A mapping of transition-name to FlowState name",
-                                    "genericTokens": undefined,
                                     "keyType": Object {
                                       "type": "string",
                                     },
@@ -5508,7 +5240,6 @@ The return value determines the transition to take",
                               "additionalProperties": false,
                               "description": "External Flow states represent states in the FSM that can't be resolved internally in Player.
 The flow will wait for the embedded application to manage moving to the next state via a transition",
-                              "genericTokens": undefined,
                               "name": "NavigationFlowExternalState",
                               "properties": Object {
                                 "_comment": Object {
@@ -5521,7 +5252,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                                 },
                                 "exp": Object {
                                   "node": Object {
-                                    "name": undefined,
                                     "title": "NavigationBaseState.exp",
                                     "type": "never",
                                   },
@@ -5532,7 +5262,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                                     "description": "An optional expression to run before view transition",
                                     "or": Array [
                                       Object {
-                                        "genericArguments": undefined,
                                         "ref": "Expression",
                                         "title": "NavigationBaseState.onEnd",
                                         "type": "ref",
@@ -5540,13 +5269,11 @@ The flow will wait for the embedded application to manage moving to the next sta
                                       Object {
                                         "additionalProperties": false,
                                         "description": "An object with an expression in it",
-                                        "genericTokens": undefined,
                                         "name": "ExpressionObject",
                                         "properties": Object {
                                           "exp": Object {
                                             "node": Object {
                                               "description": "The expression to run",
-                                              "genericArguments": undefined,
                                               "ref": "Expression",
                                               "title": "ExpressionObject.exp",
                                               "type": "ref",
@@ -5569,7 +5296,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                                     "description": "An optional expression to run when this view renders",
                                     "or": Array [
                                       Object {
-                                        "genericArguments": undefined,
                                         "ref": "Expression",
                                         "title": "NavigationBaseState.onStart",
                                         "type": "ref",
@@ -5577,13 +5303,11 @@ The flow will wait for the embedded application to manage moving to the next sta
                                       Object {
                                         "additionalProperties": false,
                                         "description": "An object with an expression in it",
-                                        "genericTokens": undefined,
                                         "name": "ExpressionObject",
                                         "properties": Object {
                                           "exp": Object {
                                             "node": Object {
                                               "description": "The expression to run",
-                                              "genericArguments": undefined,
                                               "ref": "Expression",
                                               "title": "ExpressionObject.exp",
                                               "type": "ref",
@@ -5621,7 +5345,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                                 "transitions": Object {
                                   "node": Object {
                                     "description": "A mapping of transition-name to FlowState name",
-                                    "genericTokens": undefined,
                                     "keyType": Object {
                                       "type": "string",
                                     },
@@ -5649,7 +5372,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                       "type": "or",
                     },
                     "description": "A state machine in the navigation",
-                    "genericTokens": undefined,
                     "name": "NavigationFlow",
                     "properties": Object {
                       "onEnd": Object {
@@ -5657,7 +5379,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                           "description": "An optional expression to run when this Flow ends",
                           "or": Array [
                             Object {
-                              "genericArguments": undefined,
                               "ref": "Expression",
                               "title": "NavigationFlow.onEnd",
                               "type": "ref",
@@ -5665,13 +5386,11 @@ The flow will wait for the embedded application to manage moving to the next sta
                             Object {
                               "additionalProperties": false,
                               "description": "An object with an expression in it",
-                              "genericTokens": undefined,
                               "name": "ExpressionObject",
                               "properties": Object {
                                 "exp": Object {
                                   "node": Object {
                                     "description": "The expression to run",
-                                    "genericArguments": undefined,
                                     "ref": "Expression",
                                     "title": "ExpressionObject.exp",
                                     "type": "ref",
@@ -5694,7 +5413,6 @@ The flow will wait for the embedded application to manage moving to the next sta
                           "description": "An optional expression to run when this Flow starts",
                           "or": Array [
                             Object {
-                              "genericArguments": undefined,
                               "ref": "Expression",
                               "title": "NavigationFlow.onStart",
                               "type": "ref",
@@ -5702,13 +5420,11 @@ The flow will wait for the embedded application to manage moving to the next sta
                             Object {
                               "additionalProperties": false,
                               "description": "An object with an expression in it",
-                              "genericTokens": undefined,
                               "name": "ExpressionObject",
                               "properties": Object {
                                 "exp": Object {
                                   "node": Object {
                                     "description": "The expression to run",
-                                    "genericArguments": undefined,
                                     "ref": "Expression",
                                     "title": "ExpressionObject.exp",
                                     "type": "ref",
@@ -5791,7 +5507,6 @@ Any reads for this property will result in this default value being written to t
                     },
                     "description": "A reference to a specific data format to use.
 If none is specified, will fallback to that of the base type",
-                    "genericTokens": undefined,
                     "name": "Reference",
                     "properties": Object {
                       "type": Object {
@@ -5803,7 +5518,6 @@ If none is specified, will fallback to that of the base type",
                         "required": true,
                       },
                     },
-                    "source": undefined,
                     "title": "DataType.format",
                     "type": "object",
                   },
@@ -5834,7 +5548,6 @@ These will add to any base validations associated with the \\"type\\"",
                         "type": "unknown",
                       },
                       "description": "A reference to a validation object",
-                      "genericTokens": undefined,
                       "name": "Reference",
                       "properties": Object {
                         "dataTarget": Object {
@@ -5862,7 +5575,6 @@ In the off chance you'd like this validator to run against the formatted value (
                         "displayTarget": Object {
                           "node": Object {
                             "description": "Where the error should be displayed",
-                            "genericTokens": undefined,
                             "name": "DisplayTarget",
                             "or": Array [
                               Object {
@@ -5881,7 +5593,6 @@ In the off chance you'd like this validator to run against the formatted value (
                                 "type": "string",
                               },
                             ],
-                            "source": undefined,
                             "title": "Reference.displayTarget",
                             "type": "or",
                           },
@@ -5898,7 +5609,6 @@ In the off chance you'd like this validator to run against the formatted value (
                         "severity": Object {
                           "node": Object {
                             "description": "An optional means of overriding the default severity of the validation if triggered",
-                            "genericTokens": undefined,
                             "name": "Severity",
                             "or": Array [
                               Object {
@@ -5912,7 +5622,6 @@ In the off chance you'd like this validator to run against the formatted value (
                                 "type": "string",
                               },
                             ],
-                            "source": undefined,
                             "title": "Reference.severity",
                             "type": "or",
                           },
@@ -5921,7 +5630,6 @@ In the off chance you'd like this validator to run against the formatted value (
                         "trigger": Object {
                           "node": Object {
                             "description": "When to run this particular validation",
-                            "genericTokens": undefined,
                             "name": "Trigger",
                             "or": Array [
                               Object {
@@ -5940,7 +5648,6 @@ In the off chance you'd like this validator to run against the formatted value (
                                 "type": "string",
                               },
                             ],
-                            "source": undefined,
                             "title": "Reference.trigger",
                             "type": "or",
                           },
@@ -5956,7 +5663,6 @@ This will be used to lookup the proper handler",
                           "required": true,
                         },
                       },
-                      "source": undefined,
                       "title": "Reference",
                       "type": "object",
                     },
@@ -5966,7 +5672,6 @@ This will be used to lookup the proper handler",
                   "required": false,
                 },
               },
-              "source": undefined,
               "title": "DataType",
               "type": "object",
             },
@@ -6091,7 +5796,6 @@ In the off chance you'd like this validator to run against the formatted value (
                             "displayTarget": Object {
                               "node": Object {
                                 "description": "Where the error should be displayed",
-                                "genericTokens": undefined,
                                 "name": "DisplayTarget",
                                 "or": Array [
                                   Object {
@@ -6110,7 +5814,6 @@ In the off chance you'd like this validator to run against the formatted value (
                                     "type": "string",
                                   },
                                 ],
-                                "source": undefined,
                                 "title": "Reference.displayTarget",
                                 "type": "or",
                               },
@@ -6127,7 +5830,6 @@ In the off chance you'd like this validator to run against the formatted value (
                             "severity": Object {
                               "node": Object {
                                 "description": "An optional means of overriding the default severity of the validation if triggered",
-                                "genericTokens": undefined,
                                 "name": "Severity",
                                 "or": Array [
                                   Object {
@@ -6141,7 +5843,6 @@ In the off chance you'd like this validator to run against the formatted value (
                                     "type": "string",
                                   },
                                 ],
-                                "source": undefined,
                                 "title": "Reference.severity",
                                 "type": "or",
                               },
@@ -6150,7 +5851,6 @@ In the off chance you'd like this validator to run against the formatted value (
                             "trigger": Object {
                               "node": Object {
                                 "description": "When to run this particular validation",
-                                "genericTokens": undefined,
                                 "name": "Trigger",
                                 "or": Array [
                                   Object {
@@ -6169,7 +5869,6 @@ In the off chance you'd like this validator to run against the formatted value (
                                     "type": "string",
                                   },
                                 ],
-                                "source": undefined,
                                 "title": "Reference.trigger",
                                 "type": "or",
                               },
@@ -6225,7 +5924,6 @@ This will be used to lookup the proper handler",
                 "type": "unknown",
               },
               "right": Object {
-                "genericArguments": undefined,
                 "property": "validation",
                 "ref": "Asset",
                 "type": "ref",
@@ -6234,12 +5932,10 @@ This will be used to lookup the proper handler",
             "genericTokens": Array [
               Object {
                 "constraints": Object {
-                  "genericArguments": undefined,
                   "ref": "Asset",
                   "type": "ref",
                 },
                 "default": Object {
-                  "genericArguments": undefined,
                   "ref": "Asset",
                   "type": "ref",
                 },
@@ -6271,7 +5967,6 @@ This will be used to lookup the proper handler",
                             "additionalProperties": Object {
                               "type": "unknown",
                             },
-                            "genericTokens": undefined,
                             "name": "CrossfieldReference",
                             "properties": Object {
                               "dataTarget": Object {
@@ -6285,7 +5980,6 @@ This will be used to lookup the proper handler",
                               "displayTarget": Object {
                                 "node": Object {
                                   "description": "Where the error should be displayed",
-                                  "genericTokens": undefined,
                                   "name": "DisplayTarget",
                                   "or": Array [
                                     Object {
@@ -6304,7 +5998,6 @@ This will be used to lookup the proper handler",
                                       "type": "string",
                                     },
                                   ],
-                                  "source": undefined,
                                   "title": "Reference.displayTarget",
                                   "type": "or",
                                 },
@@ -6321,7 +6014,6 @@ This will be used to lookup the proper handler",
                               "ref": Object {
                                 "node": Object {
                                   "description": "The binding to associate this validation with",
-                                  "genericArguments": undefined,
                                   "ref": "Binding",
                                   "title": "CrossfieldReference.ref",
                                   "type": "ref",
@@ -6331,7 +6023,6 @@ This will be used to lookup the proper handler",
                               "severity": Object {
                                 "node": Object {
                                   "description": "An optional means of overriding the default severity of the validation if triggered",
-                                  "genericTokens": undefined,
                                   "name": "Severity",
                                   "or": Array [
                                     Object {
@@ -6345,7 +6036,6 @@ This will be used to lookup the proper handler",
                                       "type": "string",
                                     },
                                   ],
-                                  "source": undefined,
                                   "title": "Reference.severity",
                                   "type": "or",
                                 },
@@ -6354,7 +6044,6 @@ This will be used to lookup the proper handler",
                               "trigger": Object {
                                 "node": Object {
                                   "description": "When to run this particular validation",
-                                  "genericTokens": undefined,
                                   "name": "Trigger",
                                   "or": Array [
                                     Object {
@@ -6373,7 +6062,6 @@ This will be used to lookup the proper handler",
                                       "type": "string",
                                     },
                                   ],
-                                  "source": undefined,
                                   "title": "Reference.trigger",
                                   "type": "or",
                                 },
@@ -6389,7 +6077,6 @@ This will be used to lookup the proper handler",
                                 "required": true,
                               },
                             },
-                            "source": undefined,
                             "title": "CrossfieldReference",
                             "type": "object",
                           },

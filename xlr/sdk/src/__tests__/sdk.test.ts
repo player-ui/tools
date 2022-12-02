@@ -115,6 +115,7 @@ describe('Export Test', () => {
 
     const sdk = new XLRSDK();
     sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
+    sdk.loadDefinitionsFromDisk('./common/static_xlrs/core', EXCLUDE);
     const results = sdk.exportRegistry('TypeScript', importMap);
     expect(results[0][0]).toBe('out.d.ts');
     expect(results[0][1]).toMatchSnapshot();
@@ -130,8 +131,10 @@ describe('Export Test', () => {
 
     const sdk = new XLRSDK();
     sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin');
+    sdk.loadDefinitionsFromDisk('./common/static_xlrs/core', EXCLUDE);
     const results = sdk.exportRegistry('TypeScript', importMap, {
       typeFilter: 'Transformed',
+      pluginFilter: 'Types',
     });
     expect(results[0][0]).toBe('out.d.ts');
     expect(results[0][1]).toMatchSnapshot();
@@ -148,23 +151,33 @@ describe('Export Test', () => {
     /**
      *
      */
-    const transformFunction: TransformFunction = (input) => {
-      const ret = { ...input };
-      if (ret.type === 'object') {
-        ret.properties.transformed = {
-          required: false,
-          node: { type: 'boolean', const: true },
-        };
+    const transformFunction: TransformFunction = (input, capability) => {
+      if (capability === 'Assets') {
+        const ret = { ...input };
+        if (ret.type === 'object') {
+          ret.properties.transformed = {
+            required: false,
+            node: { type: 'boolean', const: true },
+          };
+        }
+
+        return ret;
       }
 
-      return ret;
+      return input;
     };
 
     const sdk = new XLRSDK();
     sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
-    const results = sdk.exportRegistry('TypeScript', importMap, {}, [
-      transformFunction,
-    ]);
+    sdk.loadDefinitionsFromDisk('./common/static_xlrs/core', EXCLUDE);
+    const results = sdk.exportRegistry(
+      'TypeScript',
+      importMap,
+      {
+        pluginFilter: 'Types',
+      },
+      [transformFunction]
+    );
     expect(results[0][0]).toBe('out.d.ts');
     expect(results[0][1]).toMatchSnapshot();
   });

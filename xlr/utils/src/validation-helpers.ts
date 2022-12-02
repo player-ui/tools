@@ -3,7 +3,6 @@ import type {
   ConditionalType,
   NodeType,
   ObjectType,
-  ParamTypeNode,
   RefNode,
 } from '@player-tools/xlr';
 import { isGenericNodeType, isPrimitiveTypeNode } from './type-checks';
@@ -61,33 +60,44 @@ export function isNode(obj: Node | string | number | boolean): obj is Node {
 export function resolveConditional(conditional: ConditionalType): NodeType {
   const { left, right } = conditional.check;
   if (isPrimitiveTypeNode(left) && isPrimitiveTypeNode(right)) {
-    if (left.const && right.const) {
-      return left.const === right.const
-        ? conditional.value.true
-        : conditional.value.false;
-    }
+    let conditionalResult = conditional.value.false;
 
-    // special case for any/unknown being functionally the same
     if (
       (left.type === 'any' || left.type === 'unknown') &&
       (right.type === 'any' || right.type === 'unknown')
     ) {
-      return conditional.value.true;
-    }
-
-    // special case for null/undefined being functionally the same
-    if (
+      // special case for any/unknown being functionally the same
+      conditionalResult = conditional.value.true;
+    } else if (
       (left.type === 'null' || left.type === 'undefined') &&
       (right.type === 'null' || right.type === 'undefined')
     ) {
-      return conditional.value.true;
+      // special case for null/undefined being functionally the same
+      conditionalResult = conditional.value.true;
+    } else if (left.type === right.type) {
+      if (left.const && right.const) {
+        if (left.const === right.const) {
+          conditionalResult = conditional.value.true;
+        }
+      } else {
+        conditionalResult = conditional.value.true;
+      }
     }
 
-    if (left.type === right.type) {
-      return conditional.value.true;
+    // Compose first level generics here since `conditionalResult` won't have them
+    if (isGenericNodeType(conditional)) {
+      const genericMap: Map<string, NodeType> = new Map();
+      conditional.genericTokens.forEach((token) => {
+        genericMap.set(
+          token.symbol,
+          token.default ?? token.constraints ?? { type: 'any' }
+        );
+      });
+
+      return fillInGenerics(conditionalResult, genericMap);
     }
 
-    return conditional.value.false;
+    return conditionalResult;
   }
 
   // unable to process return original
@@ -104,7 +114,7 @@ export function resolveReferenceNode(
   const genericArgs = genericReference.genericArguments;
   const genericMap: Map<string, NodeType> = new Map();
 
-  // Compose first level generics here since `fillInGenerics` won't process them if a map is passed in
+  // Compose first level generics here from `genericReference`
   if (genericArgs && isGenericNodeType(typeToFill)) {
     typeToFill.genericTokens.forEach((token, index) => {
       genericMap.set(
@@ -131,7 +141,7 @@ export function resolveReferenceNode(
   // Resolve index access
   if (genericReference.property && filledInNode.type === 'object') {
     return (
-      filledInNode.properties[genericReference.property].node ??
+      filledInNode.properties[genericReference.property]?.node ??
       filledInNode.additionalProperties ?? { type: 'undefined' }
     );
   }

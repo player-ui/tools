@@ -1,7 +1,7 @@
 import { setupTestEnv } from '@player-tools/xlr-utils';
 import { TsConverter } from '..';
 
-it('Player Types Export', async () => {
+it('Player Types Export', () => {
   const customPrimitives = [
     'Expression',
     'Asset',
@@ -444,7 +444,7 @@ export interface Flow<T extends Asset = Asset> {
 
 `;
 
-  const { sf, tc } = await setupTestEnv(sc);
+  const { sf, tc } = setupTestEnv(sc);
   const converter = new TsConverter(tc, customPrimitives);
   const XLR = converter.convertSourceFile(sf).data.types;
 

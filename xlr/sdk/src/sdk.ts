@@ -200,7 +200,7 @@ export class XLRSDK {
 
   private resolveType(type: NodeType) {
     return simpleTransformGenerator('object', 'any', (objectNode) => {
-      if (objectNode.type === 'object' && objectNode.extends) {
+      if (objectNode.extends) {
         const refName = objectNode.extends.ref.split('<')[0];
         let extendedType = this.getType(refName, { getRawType: true });
         if (!extendedType) {

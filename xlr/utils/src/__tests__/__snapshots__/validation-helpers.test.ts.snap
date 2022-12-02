@@ -6,6 +6,7 @@ Object {
     "type": "unknown",
   },
   "description": "Effective type combining object literal and object literal",
+  "genericTokens": Array [],
   "name": "object literal & object literal",
   "properties": Object {
     "bar": Object {

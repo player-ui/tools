@@ -122,14 +122,35 @@ export class XLRValidator {
         }
       }
     } else if (xlrNode.type === 'conditional') {
-      const resolvedType = resolveConditional(xlrNode);
-      if (resolvedType === xlrNode) {
+      // Resolve RefNodes in check conditions if needed
+      let { right, left } = xlrNode.check;
+
+      if (right.type === 'ref') {
+        right = this.getRefType(right);
+      }
+
+      if (left.type === 'ref') {
+        left = this.getRefType(left);
+      }
+
+      const resolvedXLRNode = {
+        ...xlrNode,
+        check: {
+          left,
+          right,
+        },
+      };
+
+      const resolvedConditional = resolveConditional(resolvedXLRNode);
+      if (resolvedConditional === resolvedXLRNode) {
         throw Error(
           `Unable to resolve conditional type at runtime: ${xlrNode.name}`
         );
       }
 
-      validationIssues.push(...this.validateType(rootNode, resolvedType));
+      validationIssues.push(
+        ...this.validateType(rootNode, resolvedConditional)
+      );
     } else {
       throw Error(`Unknown type ${xlrNode.type}`);
     }
