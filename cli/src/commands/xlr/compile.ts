@@ -140,16 +140,16 @@ export default class XLRCompile extends BaseCommand {
               }
 
               // Get registration name of plugin
-              node.members.forEach((member) => {
-                if (
+              const nameProperty = node.members.find(
+                (member) =>
                   ts.isPropertyDeclaration(member) &&
-                  member.name.getText() === 'name'
-                ) {
-                  capabilities.pluginName =
-                    member.initializer?.getText().replace(/['"]+/g, '') ??
-                    'Unknown Plugin';
-                }
-              });
+                  member.name?.getText() === 'name'
+              ) as ts.PropertyDeclaration | undefined;
+              if (nameProperty && nameProperty.initializer) {
+                capabilities.pluginName = nameProperty.initializer
+                  ?.getText()
+                  .replace(/['"]+/g, '');
+              }
 
               const provides: Map<string, Array<string>> = new Map();
               const typeArgs = hInterface.typeArguments;

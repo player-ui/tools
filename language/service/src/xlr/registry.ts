@@ -40,11 +40,11 @@ export class PlayerXLRRegistry extends BasicXLRRegistry {
     if (
       (capability === 'Assets' || capability === 'Views') &&
       type.type === 'object' &&
-      type.extends?.genericArguments?.[0].type === 'string' &&
-      type.extends?.genericArguments?.[0].const
+      type.extends?.genericArguments?.[0]?.type === 'string' &&
+      type.extends?.genericArguments?.[0]?.const
     ) {
       this.registrationMap.set(registeredName, type.name);
-      registeredName = type.extends?.genericArguments?.[0].const;
+      registeredName = type.extends.genericArguments[0].const;
     }
 
     if (this.registrationMap.has(registeredName)) {
