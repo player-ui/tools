@@ -5,7 +5,7 @@ import type { NamedType, NodeType } from '@player-tools/xlr';
 /**
  * Player specific implementation of a XLRs Registry
  */
-export class PlayerxlrRegistry extends BasicXLRRegistry {
+export class PlayerXLRRegistry extends BasicXLRRegistry {
   /** Keeps the mapping of how a type is referenced by Player to the underlying XLR */
   private registrationMap: Map<string, string | Array<string>>;
 
@@ -36,15 +36,15 @@ export class PlayerxlrRegistry extends BasicXLRRegistry {
 
   add(type: NamedType<NodeType>, plugin: string, capability: string): void {
     let registeredName = type.name;
-
-    // Figure out how the Asset/View will be referenced
+    // Figure out how the Asset/View will be referenced from the type argument that will fill in Asset
     if (
       (capability === 'Assets' || capability === 'Views') &&
       type.type === 'object' &&
-      type.properties?.type?.node?.type === 'string' &&
-      type.properties.type.node.const
+      type.extends?.genericArguments?.[0]?.type === 'string' &&
+      type.extends?.genericArguments?.[0]?.const
     ) {
-      registeredName = type.properties.type.node.const;
+      this.registrationMap.set(registeredName, type.name);
+      registeredName = type.extends.genericArguments[0].const;
     }
 
     if (this.registrationMap.has(registeredName)) {

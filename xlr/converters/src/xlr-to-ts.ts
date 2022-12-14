@@ -20,7 +20,8 @@ import {
 import ts from 'typescript';
 import { ConversionError } from './types';
 
-const templateSplit = /(?=true\|false|\.\*|\[0-9]\*)/gm;
+const templateTokenize = /(?=true\|false|\.\*|\[0-9]\*)/gm;
+const tokenSplit = /(?<=true\|false|\.\*|\[0-9]\*)/gm;
 
 export interface ConvertedType {
   /** Converted input type represented as in TS Nodes */
@@ -85,12 +86,33 @@ export class TSWriter {
       generics = this.createTypeParameters(type);
     }
 
+    let customPrimitiveHeritageClass;
+    if (type.type === 'object' && type.extends) {
+      const refName = type.extends.ref.split('<')[0];
+      customPrimitiveHeritageClass = [
+        this.context.factory.createHeritageClause(
+          ts.SyntaxKind.ExtendsKeyword,
+          [
+            this.context.factory.createExpressionWithTypeArguments(
+              this.context.factory.createIdentifier(refName),
+              type.extends.genericArguments
+                ? (type.extends.genericArguments.map((node) =>
+                    this.convertTypeNode(node)
+                  ) as any)
+                : undefined
+            ),
+          ]
+        ),
+      ];
+    }
+
     let finalNode;
     if (ts.isTypeLiteralNode(tsNode)) {
       finalNode = this.makeInterfaceDeclaration(
         typeName,
         tsNode.members,
-        generics
+        generics,
+        customPrimitiveHeritageClass
       );
     } else {
       finalNode = this.makeTypeDeclaration(typeName, tsNode, generics);
@@ -263,7 +285,7 @@ export class TSWriter {
 
     if (xlrNode.type === 'string') {
       return xlrNode.const
-        ? this.context.factory.createStringLiteral(xlrNode.const)
+        ? this.context.factory.createStringLiteral(xlrNode.const, true)
         : this.context.throwError(
             "Can't make literal type out of non constant string"
           );
@@ -287,7 +309,6 @@ export class TSWriter {
       undefined,
       xlrNode.parameters.map((e) => {
         return this.context.factory.createParameterDeclaration(
-          undefined,
           undefined,
           undefined,
           e.name,
@@ -351,11 +372,9 @@ export class TSWriter {
     if (additionalProperties) {
       propertyNodes.push(
         this.context.factory.createIndexSignature(
-          undefined, // decorators
           undefined, // modifiers
           [
             this.context.factory.createParameterDeclaration(
-              undefined, // decorators
               undefined, // modifiers
               undefined, // dotdotdot token
               'key',
@@ -374,10 +393,10 @@ export class TSWriter {
   }
 
   private createTemplateLiteral(xlrNode: TemplateLiteralType) {
-    const templateSegments = xlrNode.format.split(templateSplit);
+    const templateSegments = xlrNode.format.split(templateTokenize);
     let templateHead;
 
-    if (templateSegments.length % 2) {
+    if (templateSegments.length % 2 === 0) {
       templateHead = this.context.factory.createTemplateHead(
         templateSegments[0]
       );
@@ -389,7 +408,7 @@ export class TSWriter {
     return this.context.factory.createTemplateLiteralType(
       templateHead,
       templateSegments.map((segments, i) => {
-        const [regexSegment, stringSegment] = segments.split(' ', 1);
+        const [regexSegment, stringSegment = ''] = segments.split(tokenSplit);
 
         let regexTemplateType: ts.KeywordSyntaxKind;
         if (regexSegment === '.*') {
@@ -480,7 +499,8 @@ export class TSWriter {
   private makeInterfaceDeclaration(
     name: string,
     node: ts.NodeArray<ts.TypeElement>,
-    generics: Array<ts.TypeParameterDeclaration> | undefined
+    generics: Array<ts.TypeParameterDeclaration> | undefined,
+    heritageClass: ts.HeritageClause[] | undefined
   ) {
     return this.context.factory.createInterfaceDeclaration(
       this.context.factory.createModifiersFromModifierFlags(
@@ -488,7 +508,7 @@ export class TSWriter {
       ),
       this.context.factory.createIdentifier(name),
       generics, // type parameters
-      undefined, // heritage
+      heritageClass, // heritage
       node
     );
   }

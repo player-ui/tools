@@ -25,6 +25,8 @@ export abstract class BaseCommand extends Command {
     }),
   };
 
+  static strict = false;
+
   private resolvedConfig: PlayerConfigResolvedShape | undefined;
 
   private async loadConfig(configFilePath?: string) {

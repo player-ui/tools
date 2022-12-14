@@ -16,41 +16,50 @@ import { isPrimitiveTypeNode } from '@player-tools/xlr-utils';
  * Adds applicability and _comment properties to Assets
  */
 export const applyCommonProps: TransformFunction = (
-  node: NamedType | NodeType,
+  inputNode: NamedType | NodeType,
   capability: string
 ) => {
+  const outputNode = { ...inputNode };
   if (capability === 'Assets') {
-    if (node.type === 'object' && !node.properties.applicability) {
-      node.properties.applicability = {
-        required: false,
-        node: {
-          type: 'or',
-          name: 'Applicability',
-          description:
-            'Evaluate the given expression (or boolean) and if falsy, remove this node from the tree. This is re-computed for each change in the data-model',
-          or: [
-            {
-              type: 'boolean',
-            },
-            {
-              type: 'ref',
-              ref: 'Expression',
-            },
-          ],
-        },
-      };
+    if (outputNode.type === 'object') {
+      if (!outputNode.properties.applicability) {
+        outputNode.properties.applicability = {
+          required: false,
+          node: {
+            type: 'or',
+            name: 'Applicability',
+            description:
+              'Evaluate the given expression (or boolean) and if falsy, remove this node from the tree. This is re-computed for each change in the data-model',
+            or: [
+              {
+                type: 'boolean',
+              },
+              {
+                type: 'ref',
+                ref: 'Expression',
+              },
+            ],
+          },
+        };
+      }
     }
   }
 
-  if (node.type === 'object' && !node.properties._comment) {
-    node.properties._comment = {
+  if (outputNode.type === 'object' && !outputNode.properties._comment) {
+    outputNode.properties._comment = {
       required: false,
       node: {
         description: 'Adds a comment for the given node',
         type: 'string',
       },
     };
+  } else if (outputNode.type === 'and') {
+    outputNode.and.map((n) => applyCommonProps(n, capability));
+  } else if (outputNode.type === 'or') {
+    outputNode.or.map((n) => applyCommonProps(n, capability));
   }
+
+  return outputNode;
 };
 
 /**
@@ -60,10 +69,15 @@ export const applyAssetWrapperOrSwitch: TransformFunction = (
   node,
   capability
 ) => {
-  simpleTransformGenerator('ref', 'Assets', (xlrNode) => {
+  return simpleTransformGenerator('ref', 'Assets', (xlrNode) => {
     if (xlrNode.ref.includes('AssetWrapper')) {
-      xlrNode.ref = xlrNode.ref.replace('AssetWrapper', 'AssetWrapperOrSwitch');
+      return {
+        ...xlrNode,
+        ref: xlrNode.ref.replace('AssetWrapper', 'AssetWrapperOrSwitch'),
+      };
     }
+
+    return xlrNode;
   })(node, capability);
 };
 
@@ -71,7 +85,8 @@ export const applyAssetWrapperOrSwitch: TransformFunction = (
  * Modifies any primitive type property node (except id/type) to be Bindings or Expressions
  */
 export const applyValueRefs: TransformFunction = (node, capability) => {
-  simpleTransformGenerator('object', 'Assets', (xlrNode) => {
+  return simpleTransformGenerator('object', 'Assets', (inputNode) => {
+    const xlrNode = { ...inputNode };
     for (const key in xlrNode.properties) {
       if (key === 'id' || key === 'type') {
         continue;
@@ -106,6 +121,8 @@ export const applyValueRefs: TransformFunction = (node, capability) => {
         value.node = newUnionType;
       }
     }
+
+    return xlrNode;
   })(node, capability);
 };
 
@@ -114,7 +131,8 @@ export const applyValueRefs: TransformFunction = (node, capability) => {
  */
 export const applyTemplateProperty: TransformFunction = (node, capability) => {
   const templateTypes: Array<RefType> = [];
-  simpleTransformGenerator('object', 'Assets', (xlrNode) => {
+  return simpleTransformGenerator('object', 'Assets', (inputNode) => {
+    const xlrNode = { ...inputNode };
     for (const key in xlrNode.properties) {
       const value = xlrNode.properties[key];
       if (value.node.type === 'array') {
@@ -144,5 +162,7 @@ export const applyTemplateProperty: TransformFunction = (node, capability) => {
         node: templateType,
       };
     }
+
+    return xlrNode;
   })(node, capability);
 };

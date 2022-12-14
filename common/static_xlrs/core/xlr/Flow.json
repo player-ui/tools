@@ -17,145 +17,164 @@
                 "type": "array",
                 "elementType": {
                     "name": "View",
-                    "title": "View",
                     "source": "src/index.ts",
-                    "type": "and",
-                    "and": [
-                        {
+                    "type": "conditional",
+                    "check": {
+                        "left": {
+                            "type": "unknown"
+                        },
+                        "right": {
+                            "type": "ref",
+                            "ref": "Asset",
+                            "property": "validation"
+                        }
+                    },
+                    "value": {
+                        "true": {
+                            "type": "and",
+                            "and": [
+                                {
+                                    "type": "ref",
+                                    "ref": "T"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "validation": {
+                                            "required": false,
+                                            "node": {
+                                                "type": "array",
+                                                "elementType": {
+                                                    "name": "CrossfieldReference",
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "type": {
+                                                            "required": true,
+                                                            "node": {
+                                                                "type": "string",
+                                                                "title": "Reference.type",
+                                                                "description": "The name of the referenced validation type\nThis will be used to lookup the proper handler"
+                                                            }
+                                                        },
+                                                        "message": {
+                                                            "required": false,
+                                                            "node": {
+                                                                "type": "string",
+                                                                "title": "Reference.message",
+                                                                "description": "An optional means of overriding the default message if the validation is triggered"
+                                                            }
+                                                        },
+                                                        "severity": {
+                                                            "required": false,
+                                                            "node": {
+                                                                "name": "Severity",
+                                                                "type": "or",
+                                                                "or": [
+                                                                    {
+                                                                        "type": "string",
+                                                                        "const": "error",
+                                                                        "title": "Severity"
+                                                                    },
+                                                                    {
+                                                                        "type": "string",
+                                                                        "const": "warning",
+                                                                        "title": "Severity"
+                                                                    }
+                                                                ],
+                                                                "title": "Reference.severity",
+                                                                "description": "An optional means of overriding the default severity of the validation if triggered"
+                                                            }
+                                                        },
+                                                        "trigger": {
+                                                            "required": false,
+                                                            "node": {
+                                                                "name": "Trigger",
+                                                                "type": "or",
+                                                                "or": [
+                                                                    {
+                                                                        "type": "string",
+                                                                        "const": "navigation",
+                                                                        "title": "Trigger"
+                                                                    },
+                                                                    {
+                                                                        "type": "string",
+                                                                        "const": "change",
+                                                                        "title": "Trigger"
+                                                                    },
+                                                                    {
+                                                                        "type": "string",
+                                                                        "const": "load",
+                                                                        "title": "Trigger"
+                                                                    }
+                                                                ],
+                                                                "title": "Reference.trigger",
+                                                                "description": "When to run this particular validation"
+                                                            }
+                                                        },
+                                                        "dataTarget": {
+                                                            "required": false,
+                                                            "node": {
+                                                                "type": "never",
+                                                                "title": "CrossfieldReference.dataTarget",
+                                                                "description": "Cross-field references and validation must run against the default (deformatted) value"
+                                                            }
+                                                        },
+                                                        "displayTarget": {
+                                                            "required": false,
+                                                            "node": {
+                                                                "name": "DisplayTarget",
+                                                                "type": "or",
+                                                                "or": [
+                                                                    {
+                                                                        "type": "string",
+                                                                        "const": "page",
+                                                                        "title": "DisplayTarget"
+                                                                    },
+                                                                    {
+                                                                        "type": "string",
+                                                                        "const": "section",
+                                                                        "title": "DisplayTarget"
+                                                                    },
+                                                                    {
+                                                                        "type": "string",
+                                                                        "const": "field",
+                                                                        "title": "DisplayTarget"
+                                                                    }
+                                                                ],
+                                                                "title": "Reference.displayTarget",
+                                                                "description": "Where the error should be displayed"
+                                                            }
+                                                        },
+                                                        "ref": {
+                                                            "required": false,
+                                                            "node": {
+                                                                "type": "ref",
+                                                                "ref": "Binding",
+                                                                "title": "CrossfieldReference.ref",
+                                                                "description": "The binding to associate this validation with"
+                                                            }
+                                                        }
+                                                    },
+                                                    "additionalProperties": {
+                                                        "type": "unknown"
+                                                    },
+                                                    "title": "CrossfieldReference"
+                                                },
+                                                "title": "validation",
+                                                "description": "Each view can optionally supply a list of validations to run against a particular view"
+                                            }
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                }
+                            ]
+                        },
+                        "false": {
                             "type": "ref",
                             "ref": "T"
-                        },
-                        {
-                            "type": "object",
-                            "properties": {
-                                "validation": {
-                                    "required": false,
-                                    "node": {
-                                        "type": "array",
-                                        "elementType": {
-                                            "name": "CrossfieldReference",
-                                            "type": "object",
-                                            "properties": {
-                                                "type": {
-                                                    "required": true,
-                                                    "node": {
-                                                        "type": "string",
-                                                        "title": "Reference.type",
-                                                        "description": "The name of the referenced validation type\nThis will be used to lookup the proper handler"
-                                                    }
-                                                },
-                                                "message": {
-                                                    "required": false,
-                                                    "node": {
-                                                        "type": "string",
-                                                        "title": "Reference.message",
-                                                        "description": "An optional means of overriding the default message if the validation is triggered"
-                                                    }
-                                                },
-                                                "severity": {
-                                                    "required": false,
-                                                    "node": {
-                                                        "name": "Severity",
-                                                        "type": "or",
-                                                        "or": [
-                                                            {
-                                                                "type": "string",
-                                                                "const": "error",
-                                                                "title": "Severity"
-                                                            },
-                                                            {
-                                                                "type": "string",
-                                                                "const": "warning",
-                                                                "title": "Severity"
-                                                            }
-                                                        ],
-                                                        "title": "Reference.severity",
-                                                        "description": "An optional means of overriding the default severity of the validation if triggered"
-                                                    }
-                                                },
-                                                "trigger": {
-                                                    "required": false,
-                                                    "node": {
-                                                        "name": "Trigger",
-                                                        "type": "or",
-                                                        "or": [
-                                                            {
-                                                                "type": "string",
-                                                                "const": "navigation",
-                                                                "title": "Trigger"
-                                                            },
-                                                            {
-                                                                "type": "string",
-                                                                "const": "change",
-                                                                "title": "Trigger"
-                                                            },
-                                                            {
-                                                                "type": "string",
-                                                                "const": "load",
-                                                                "title": "Trigger"
-                                                            }
-                                                        ],
-                                                        "title": "Reference.trigger",
-                                                        "description": "When to run this particular validation"
-                                                    }
-                                                },
-                                                "dataTarget": {
-                                                    "required": false,
-                                                    "node": {
-                                                        "type": "never",
-                                                        "title": "CrossfieldReference.dataTarget",
-                                                        "description": "Cross-field references and validation must run against the default (deformatted) value"
-                                                    }
-                                                },
-                                                "displayTarget": {
-                                                    "required": false,
-                                                    "node": {
-                                                        "name": "DisplayTarget",
-                                                        "type": "or",
-                                                        "or": [
-                                                            {
-                                                                "type": "string",
-                                                                "const": "page",
-                                                                "title": "DisplayTarget"
-                                                            },
-                                                            {
-                                                                "type": "string",
-                                                                "const": "section",
-                                                                "title": "DisplayTarget"
-                                                            },
-                                                            {
-                                                                "type": "string",
-                                                                "const": "field",
-                                                                "title": "DisplayTarget"
-                                                            }
-                                                        ],
-                                                        "title": "Reference.displayTarget",
-                                                        "description": "Where the error should be displayed"
-                                                    }
-                                                },
-                                                "ref": {
-                                                    "required": false,
-                                                    "node": {
-                                                        "type": "ref",
-                                                        "ref": "Binding",
-                                                        "title": "CrossfieldReference.ref",
-                                                        "description": "The binding to associate this validation with"
-                                                    }
-                                                }
-                                            },
-                                            "additionalProperties": {
-                                                "type": "unknown"
-                                            },
-                                            "title": "CrossfieldReference"
-                                        },
-                                        "title": "validation",
-                                        "description": "Each view can optionally supply a list of validations to run against a particular view"
-                                    }
-                                }
-                            },
-                            "additionalProperties": false
                         }
-                    ],
+                    },
+                    "title": "View",
                     "genericTokens": [
                         {
                             "symbol": "T",
@@ -617,771 +636,783 @@
             "node": {
                 "name": "Navigation",
                 "source": "src/index.ts",
-                "type": "object",
-                "properties": {
-                    "BEGIN": {
-                        "required": true,
-                        "node": {
-                            "type": "string",
-                            "title": "Navigation.BEGIN",
-                            "description": "The name of the Flow to begin on"
-                        }
-                    }
-                },
-                "additionalProperties": {
-                    "type": "or",
-                    "or": [
-                        {
+                "type": "and",
+                "and": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "BEGIN": {
+                                "required": true,
+                                "node": {
+                                    "type": "string",
+                                    "title": "BEGIN",
+                                    "description": "The name of the Flow to begin on"
+                                }
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    {
+                        "type": "record",
+                        "keyType": {
                             "type": "string"
                         },
-                        {
-                            "name": "NavigationFlow",
-                            "type": "object",
-                            "source": "src/index.ts",
-                            "properties": {
-                                "startState": {
-                                    "required": true,
-                                    "node": {
-                                        "type": "string",
-                                        "title": "NavigationFlow.startState",
-                                        "description": "The first state to kick off the state machine"
-                                    }
+                        "valueType": {
+                            "type": "or",
+                            "or": [
+                                {
+                                    "type": "string"
                                 },
-                                "onStart": {
-                                    "required": false,
-                                    "node": {
-                                        "type": "or",
-                                        "or": [
-                                            {
-                                                "type": "ref",
-                                                "ref": "Expression",
-                                                "title": "NavigationFlow.onStart"
-                                            },
-                                            {
-                                                "name": "ExpressionObject",
-                                                "type": "object",
-                                                "source": "src/index.ts",
-                                                "properties": {
-                                                    "exp": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "type": "ref",
-                                                            "ref": "Expression",
-                                                            "title": "ExpressionObject.exp",
-                                                            "description": "The expression to run"
-                                                        }
-                                                    }
-                                                },
-                                                "additionalProperties": false,
-                                                "title": "ExpressionObject",
-                                                "description": "An object with an expression in it"
-                                            }
-                                        ],
-                                        "title": "NavigationFlow.onStart",
-                                        "description": "An optional expression to run when this Flow starts"
-                                    }
-                                },
-                                "onEnd": {
-                                    "required": false,
-                                    "node": {
-                                        "type": "or",
-                                        "or": [
-                                            {
-                                                "type": "ref",
-                                                "ref": "Expression",
-                                                "title": "NavigationFlow.onEnd"
-                                            },
-                                            {
-                                                "name": "ExpressionObject",
-                                                "type": "object",
-                                                "source": "src/index.ts",
-                                                "properties": {
-                                                    "exp": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "type": "ref",
-                                                            "ref": "Expression",
-                                                            "title": "ExpressionObject.exp",
-                                                            "description": "The expression to run"
-                                                        }
-                                                    }
-                                                },
-                                                "additionalProperties": false,
-                                                "title": "ExpressionObject",
-                                                "description": "An object with an expression in it"
-                                            }
-                                        ],
-                                        "title": "NavigationFlow.onEnd",
-                                        "description": "An optional expression to run when this Flow ends"
-                                    }
-                                }
-                            },
-                            "additionalProperties": {
-                                "type": "or",
-                                "or": [
-                                    {
-                                        "type": "undefined"
-                                    },
-                                    {
-                                        "type": "string"
-                                    },
-                                    {
-                                        "type": "ref",
-                                        "ref": "Expression"
-                                    },
-                                    {
-                                        "name": "ExpressionObject",
-                                        "type": "object",
-                                        "source": "src/index.ts",
-                                        "properties": {
-                                            "exp": {
-                                                "required": false,
-                                                "node": {
-                                                    "type": "ref",
-                                                    "ref": "Expression",
-                                                    "title": "ExpressionObject.exp",
-                                                    "description": "The expression to run"
-                                                }
+                                {
+                                    "name": "NavigationFlow",
+                                    "type": "object",
+                                    "source": "src/index.ts",
+                                    "properties": {
+                                        "startState": {
+                                            "required": true,
+                                            "node": {
+                                                "type": "string",
+                                                "title": "NavigationFlow.startState",
+                                                "description": "The first state to kick off the state machine"
                                             }
                                         },
-                                        "additionalProperties": false,
-                                        "title": "ExpressionObject",
-                                        "description": "An object with an expression in it"
+                                        "onStart": {
+                                            "required": false,
+                                            "node": {
+                                                "type": "or",
+                                                "or": [
+                                                    {
+                                                        "type": "ref",
+                                                        "ref": "Expression",
+                                                        "title": "NavigationFlow.onStart"
+                                                    },
+                                                    {
+                                                        "name": "ExpressionObject",
+                                                        "type": "object",
+                                                        "source": "src/index.ts",
+                                                        "properties": {
+                                                            "exp": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "ref",
+                                                                    "ref": "Expression",
+                                                                    "title": "ExpressionObject.exp",
+                                                                    "description": "The expression to run"
+                                                                }
+                                                            }
+                                                        },
+                                                        "additionalProperties": false,
+                                                        "title": "ExpressionObject",
+                                                        "description": "An object with an expression in it"
+                                                    }
+                                                ],
+                                                "title": "NavigationFlow.onStart",
+                                                "description": "An optional expression to run when this Flow starts"
+                                            }
+                                        },
+                                        "onEnd": {
+                                            "required": false,
+                                            "node": {
+                                                "type": "or",
+                                                "or": [
+                                                    {
+                                                        "type": "ref",
+                                                        "ref": "Expression",
+                                                        "title": "NavigationFlow.onEnd"
+                                                    },
+                                                    {
+                                                        "name": "ExpressionObject",
+                                                        "type": "object",
+                                                        "source": "src/index.ts",
+                                                        "properties": {
+                                                            "exp": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "ref",
+                                                                    "ref": "Expression",
+                                                                    "title": "ExpressionObject.exp",
+                                                                    "description": "The expression to run"
+                                                                }
+                                                            }
+                                                        },
+                                                        "additionalProperties": false,
+                                                        "title": "ExpressionObject",
+                                                        "description": "An object with an expression in it"
+                                                    }
+                                                ],
+                                                "title": "NavigationFlow.onEnd",
+                                                "description": "An optional expression to run when this Flow ends"
+                                            }
+                                        }
                                     },
-                                    {
-                                        "name": "NavigationFlowState",
-                                        "source": "src/index.ts",
+                                    "additionalProperties": {
                                         "type": "or",
                                         "or": [
                                             {
-                                                "name": "NavigationFlowViewState",
-                                                "type": "object",
-                                                "source": "src/index.ts",
-                                                "properties": {
-                                                    "_comment": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "type": "string",
-                                                            "title": "CommentBase._comment",
-                                                            "description": "Add comments that will not be processing, but are useful for code explanation"
-                                                        }
-                                                    },
-                                                    "state_type": {
-                                                        "required": true,
-                                                        "node": {
-                                                            "type": "string",
-                                                            "const": "VIEW",
-                                                            "title": "NavigationBaseState.state_type",
-                                                            "description": "A property to determine the type of state this is"
-                                                        }
-                                                    },
-                                                    "onStart": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "type": "or",
-                                                            "or": [
-                                                                {
-                                                                    "type": "ref",
-                                                                    "ref": "Expression",
-                                                                    "title": "NavigationBaseState.onStart"
-                                                                },
-                                                                {
-                                                                    "name": "ExpressionObject",
-                                                                    "type": "object",
-                                                                    "source": "src/index.ts",
-                                                                    "properties": {
-                                                                        "exp": {
-                                                                            "required": false,
-                                                                            "node": {
-                                                                                "type": "ref",
-                                                                                "ref": "Expression",
-                                                                                "title": "ExpressionObject.exp",
-                                                                                "description": "The expression to run"
-                                                                            }
-                                                                        }
-                                                                    },
-                                                                    "additionalProperties": false,
-                                                                    "title": "ExpressionObject",
-                                                                    "description": "An object with an expression in it"
-                                                                }
-                                                            ],
-                                                            "title": "NavigationBaseState.onStart",
-                                                            "description": "An optional expression to run when this view renders"
-                                                        }
-                                                    },
-                                                    "onEnd": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "type": "or",
-                                                            "or": [
-                                                                {
-                                                                    "type": "ref",
-                                                                    "ref": "Expression",
-                                                                    "title": "NavigationBaseState.onEnd"
-                                                                },
-                                                                {
-                                                                    "name": "ExpressionObject",
-                                                                    "type": "object",
-                                                                    "source": "src/index.ts",
-                                                                    "properties": {
-                                                                        "exp": {
-                                                                            "required": false,
-                                                                            "node": {
-                                                                                "type": "ref",
-                                                                                "ref": "Expression",
-                                                                                "title": "ExpressionObject.exp",
-                                                                                "description": "The expression to run"
-                                                                            }
-                                                                        }
-                                                                    },
-                                                                    "additionalProperties": false,
-                                                                    "title": "ExpressionObject",
-                                                                    "description": "An object with an expression in it"
-                                                                }
-                                                            ],
-                                                            "title": "NavigationBaseState.onEnd",
-                                                            "description": "An optional expression to run before view transition"
-                                                        }
-                                                    },
-                                                    "exp": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "title": "NavigationBaseState.exp",
-                                                            "type": "never"
-                                                        }
-                                                    },
-                                                    "transitions": {
-                                                        "required": true,
-                                                        "node": {
-                                                            "name": "NavigationFlowTransition",
-                                                            "source": "src/index.ts",
-                                                            "type": "record",
-                                                            "keyType": {
-                                                                "type": "string"
-                                                            },
-                                                            "valueType": {
-                                                                "type": "string"
-                                                            },
-                                                            "title": "NavigationFlowTransitionableState.transitions",
-                                                            "description": "A mapping of transition-name to FlowState name"
-                                                        }
-                                                    },
-                                                    "ref": {
-                                                        "required": true,
-                                                        "node": {
-                                                            "type": "string",
-                                                            "title": "NavigationFlowViewState.ref",
-                                                            "description": "An id corresponding to a view from the 'views' array"
-                                                        }
-                                                    },
-                                                    "attributes": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "type": "object",
-                                                            "properties": {},
-                                                            "additionalProperties": {
-                                                                "type": "any"
-                                                            },
-                                                            "title": "NavigationFlowViewState.attributes",
-                                                            "description": "View meta-properties"
-                                                        }
-                                                    }
-                                                },
-                                                "additionalProperties": false,
-                                                "title": "NavigationFlowViewState",
-                                                "description": "A state representing a view"
+                                                "type": "undefined"
                                             },
                                             {
-                                                "name": "NavigationFlowEndState",
-                                                "type": "object",
-                                                "source": "src/index.ts",
-                                                "properties": {
-                                                    "_comment": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "type": "string",
-                                                            "title": "CommentBase._comment",
-                                                            "description": "Add comments that will not be processing, but are useful for code explanation"
-                                                        }
-                                                    },
-                                                    "state_type": {
-                                                        "required": true,
-                                                        "node": {
-                                                            "type": "string",
-                                                            "const": "END",
-                                                            "title": "NavigationBaseState.state_type",
-                                                            "description": "A property to determine the type of state this is"
-                                                        }
-                                                    },
-                                                    "onStart": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "type": "or",
-                                                            "or": [
-                                                                {
-                                                                    "type": "ref",
-                                                                    "ref": "Expression",
-                                                                    "title": "NavigationBaseState.onStart"
-                                                                },
-                                                                {
-                                                                    "name": "ExpressionObject",
-                                                                    "type": "object",
-                                                                    "source": "src/index.ts",
-                                                                    "properties": {
-                                                                        "exp": {
-                                                                            "required": false,
-                                                                            "node": {
-                                                                                "type": "ref",
-                                                                                "ref": "Expression",
-                                                                                "title": "ExpressionObject.exp",
-                                                                                "description": "The expression to run"
-                                                                            }
-                                                                        }
-                                                                    },
-                                                                    "additionalProperties": false,
-                                                                    "title": "ExpressionObject",
-                                                                    "description": "An object with an expression in it"
-                                                                }
-                                                            ],
-                                                            "title": "NavigationBaseState.onStart",
-                                                            "description": "An optional expression to run when this view renders"
-                                                        }
-                                                    },
-                                                    "onEnd": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "type": "or",
-                                                            "or": [
-                                                                {
-                                                                    "type": "ref",
-                                                                    "ref": "Expression",
-                                                                    "title": "NavigationBaseState.onEnd"
-                                                                },
-                                                                {
-                                                                    "name": "ExpressionObject",
-                                                                    "type": "object",
-                                                                    "source": "src/index.ts",
-                                                                    "properties": {
-                                                                        "exp": {
-                                                                            "required": false,
-                                                                            "node": {
-                                                                                "type": "ref",
-                                                                                "ref": "Expression",
-                                                                                "title": "ExpressionObject.exp",
-                                                                                "description": "The expression to run"
-                                                                            }
-                                                                        }
-                                                                    },
-                                                                    "additionalProperties": false,
-                                                                    "title": "ExpressionObject",
-                                                                    "description": "An object with an expression in it"
-                                                                }
-                                                            ],
-                                                            "title": "NavigationBaseState.onEnd",
-                                                            "description": "An optional expression to run before view transition"
-                                                        }
-                                                    },
-                                                    "exp": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "title": "NavigationBaseState.exp",
-                                                            "type": "never"
-                                                        }
-                                                    },
-                                                    "outcome": {
-                                                        "required": true,
-                                                        "node": {
-                                                            "type": "string",
-                                                            "title": "NavigationFlowEndState.outcome",
-                                                            "description": "A description of _how_ the flow ended.\nIf this is a flow started from another flow, the outcome determines the flow transition"
-                                                        }
-                                                    }
-                                                },
-                                                "additionalProperties": false,
-                                                "title": "NavigationFlowEndState",
-                                                "description": "An END state of the flow."
+                                                "type": "string"
                                             },
                                             {
-                                                "name": "NavigationFlowFlowState",
-                                                "type": "object",
-                                                "source": "src/index.ts",
-                                                "properties": {
-                                                    "_comment": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "type": "string",
-                                                            "title": "CommentBase._comment",
-                                                            "description": "Add comments that will not be processing, but are useful for code explanation"
-                                                        }
-                                                    },
-                                                    "state_type": {
-                                                        "required": true,
-                                                        "node": {
-                                                            "type": "string",
-                                                            "const": "FLOW",
-                                                            "title": "NavigationBaseState.state_type",
-                                                            "description": "A property to determine the type of state this is"
-                                                        }
-                                                    },
-                                                    "onStart": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "type": "or",
-                                                            "or": [
-                                                                {
-                                                                    "type": "ref",
-                                                                    "ref": "Expression",
-                                                                    "title": "NavigationBaseState.onStart"
-                                                                },
-                                                                {
-                                                                    "name": "ExpressionObject",
-                                                                    "type": "object",
-                                                                    "source": "src/index.ts",
-                                                                    "properties": {
-                                                                        "exp": {
-                                                                            "required": false,
-                                                                            "node": {
-                                                                                "type": "ref",
-                                                                                "ref": "Expression",
-                                                                                "title": "ExpressionObject.exp",
-                                                                                "description": "The expression to run"
-                                                                            }
-                                                                        }
-                                                                    },
-                                                                    "additionalProperties": false,
-                                                                    "title": "ExpressionObject",
-                                                                    "description": "An object with an expression in it"
-                                                                }
-                                                            ],
-                                                            "title": "NavigationBaseState.onStart",
-                                                            "description": "An optional expression to run when this view renders"
-                                                        }
-                                                    },
-                                                    "onEnd": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "type": "or",
-                                                            "or": [
-                                                                {
-                                                                    "type": "ref",
-                                                                    "ref": "Expression",
-                                                                    "title": "NavigationBaseState.onEnd"
-                                                                },
-                                                                {
-                                                                    "name": "ExpressionObject",
-                                                                    "type": "object",
-                                                                    "source": "src/index.ts",
-                                                                    "properties": {
-                                                                        "exp": {
-                                                                            "required": false,
-                                                                            "node": {
-                                                                                "type": "ref",
-                                                                                "ref": "Expression",
-                                                                                "title": "ExpressionObject.exp",
-                                                                                "description": "The expression to run"
-                                                                            }
-                                                                        }
-                                                                    },
-                                                                    "additionalProperties": false,
-                                                                    "title": "ExpressionObject",
-                                                                    "description": "An object with an expression in it"
-                                                                }
-                                                            ],
-                                                            "title": "NavigationBaseState.onEnd",
-                                                            "description": "An optional expression to run before view transition"
-                                                        }
-                                                    },
-                                                    "exp": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "title": "NavigationBaseState.exp",
-                                                            "type": "never"
-                                                        }
-                                                    },
-                                                    "transitions": {
-                                                        "required": true,
-                                                        "node": {
-                                                            "name": "NavigationFlowTransition",
-                                                            "source": "src/index.ts",
-                                                            "type": "record",
-                                                            "keyType": {
-                                                                "type": "string"
-                                                            },
-                                                            "valueType": {
-                                                                "type": "string"
-                                                            },
-                                                            "title": "NavigationFlowTransitionableState.transitions",
-                                                            "description": "A mapping of transition-name to FlowState name"
-                                                        }
-                                                    },
-                                                    "ref": {
-                                                        "required": true,
-                                                        "node": {
-                                                            "type": "string",
-                                                            "title": "NavigationFlowFlowState.ref",
-                                                            "description": "A reference to a FLOW id state to run"
-                                                        }
-                                                    }
-                                                },
-                                                "additionalProperties": false,
-                                                "title": "NavigationFlowFlowState"
+                                                "type": "ref",
+                                                "ref": "Expression"
                                             },
                                             {
-                                                "name": "NavigationFlowActionState",
+                                                "name": "ExpressionObject",
                                                 "type": "object",
                                                 "source": "src/index.ts",
                                                 "properties": {
-                                                    "_comment": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "type": "string",
-                                                            "title": "CommentBase._comment",
-                                                            "description": "Add comments that will not be processing, but are useful for code explanation"
-                                                        }
-                                                    },
-                                                    "state_type": {
-                                                        "required": true,
-                                                        "node": {
-                                                            "type": "string",
-                                                            "const": "ACTION",
-                                                            "title": "NavigationBaseState.state_type",
-                                                            "description": "A property to determine the type of state this is"
-                                                        }
-                                                    },
-                                                    "onStart": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "type": "or",
-                                                            "or": [
-                                                                {
-                                                                    "type": "ref",
-                                                                    "ref": "Expression",
-                                                                    "title": "NavigationBaseState.onStart"
-                                                                },
-                                                                {
-                                                                    "name": "ExpressionObject",
-                                                                    "type": "object",
-                                                                    "source": "src/index.ts",
-                                                                    "properties": {
-                                                                        "exp": {
-                                                                            "required": false,
-                                                                            "node": {
-                                                                                "type": "ref",
-                                                                                "ref": "Expression",
-                                                                                "title": "ExpressionObject.exp",
-                                                                                "description": "The expression to run"
-                                                                            }
-                                                                        }
-                                                                    },
-                                                                    "additionalProperties": false,
-                                                                    "title": "ExpressionObject",
-                                                                    "description": "An object with an expression in it"
-                                                                }
-                                                            ],
-                                                            "title": "NavigationBaseState.onStart",
-                                                            "description": "An optional expression to run when this view renders"
-                                                        }
-                                                    },
-                                                    "onEnd": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "type": "or",
-                                                            "or": [
-                                                                {
-                                                                    "type": "ref",
-                                                                    "ref": "Expression",
-                                                                    "title": "NavigationBaseState.onEnd"
-                                                                },
-                                                                {
-                                                                    "name": "ExpressionObject",
-                                                                    "type": "object",
-                                                                    "source": "src/index.ts",
-                                                                    "properties": {
-                                                                        "exp": {
-                                                                            "required": false,
-                                                                            "node": {
-                                                                                "type": "ref",
-                                                                                "ref": "Expression",
-                                                                                "title": "ExpressionObject.exp",
-                                                                                "description": "The expression to run"
-                                                                            }
-                                                                        }
-                                                                    },
-                                                                    "additionalProperties": false,
-                                                                    "title": "ExpressionObject",
-                                                                    "description": "An object with an expression in it"
-                                                                }
-                                                            ],
-                                                            "title": "NavigationBaseState.onEnd",
-                                                            "description": "An optional expression to run before view transition"
-                                                        }
-                                                    },
                                                     "exp": {
-                                                        "required": true,
+                                                        "required": false,
                                                         "node": {
                                                             "type": "ref",
                                                             "ref": "Expression",
-                                                            "title": "NavigationFlowActionState.exp",
-                                                            "description": "An expression to execute.\nThe return value determines the transition to take"
-                                                        }
-                                                    },
-                                                    "transitions": {
-                                                        "required": true,
-                                                        "node": {
-                                                            "name": "NavigationFlowTransition",
-                                                            "source": "src/index.ts",
-                                                            "type": "record",
-                                                            "keyType": {
-                                                                "type": "string"
-                                                            },
-                                                            "valueType": {
-                                                                "type": "string"
-                                                            },
-                                                            "title": "NavigationFlowTransitionableState.transitions",
-                                                            "description": "A mapping of transition-name to FlowState name"
+                                                            "title": "ExpressionObject.exp",
+                                                            "description": "The expression to run"
                                                         }
                                                     }
                                                 },
                                                 "additionalProperties": false,
-                                                "title": "NavigationFlowActionState",
-                                                "description": "Action states execute an expression to determine the next state to transition to"
+                                                "title": "ExpressionObject",
+                                                "description": "An object with an expression in it"
                                             },
                                             {
-                                                "name": "NavigationFlowExternalState",
-                                                "type": "object",
+                                                "name": "NavigationFlowState",
                                                 "source": "src/index.ts",
-                                                "properties": {
-                                                    "_comment": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "type": "string",
-                                                            "title": "CommentBase._comment",
-                                                            "description": "Add comments that will not be processing, but are useful for code explanation"
-                                                        }
+                                                "type": "or",
+                                                "or": [
+                                                    {
+                                                        "name": "NavigationFlowViewState",
+                                                        "type": "object",
+                                                        "source": "src/index.ts",
+                                                        "properties": {
+                                                            "_comment": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "title": "CommentBase._comment",
+                                                                    "description": "Add comments that will not be processing, but are useful for code explanation"
+                                                                }
+                                                            },
+                                                            "state_type": {
+                                                                "required": true,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "const": "VIEW",
+                                                                    "title": "NavigationBaseState.state_type",
+                                                                    "description": "A property to determine the type of state this is"
+                                                                }
+                                                            },
+                                                            "onStart": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "ref",
+                                                                            "ref": "Expression",
+                                                                            "title": "NavigationBaseState.onStart"
+                                                                        },
+                                                                        {
+                                                                            "name": "ExpressionObject",
+                                                                            "type": "object",
+                                                                            "source": "src/index.ts",
+                                                                            "properties": {
+                                                                                "exp": {
+                                                                                    "required": false,
+                                                                                    "node": {
+                                                                                        "type": "ref",
+                                                                                        "ref": "Expression",
+                                                                                        "title": "ExpressionObject.exp",
+                                                                                        "description": "The expression to run"
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            "additionalProperties": false,
+                                                                            "title": "ExpressionObject",
+                                                                            "description": "An object with an expression in it"
+                                                                        }
+                                                                    ],
+                                                                    "title": "NavigationBaseState.onStart",
+                                                                    "description": "An optional expression to run when this view renders"
+                                                                }
+                                                            },
+                                                            "onEnd": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "ref",
+                                                                            "ref": "Expression",
+                                                                            "title": "NavigationBaseState.onEnd"
+                                                                        },
+                                                                        {
+                                                                            "name": "ExpressionObject",
+                                                                            "type": "object",
+                                                                            "source": "src/index.ts",
+                                                                            "properties": {
+                                                                                "exp": {
+                                                                                    "required": false,
+                                                                                    "node": {
+                                                                                        "type": "ref",
+                                                                                        "ref": "Expression",
+                                                                                        "title": "ExpressionObject.exp",
+                                                                                        "description": "The expression to run"
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            "additionalProperties": false,
+                                                                            "title": "ExpressionObject",
+                                                                            "description": "An object with an expression in it"
+                                                                        }
+                                                                    ],
+                                                                    "title": "NavigationBaseState.onEnd",
+                                                                    "description": "An optional expression to run before view transition"
+                                                                }
+                                                            },
+                                                            "exp": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "title": "NavigationBaseState.exp",
+                                                                    "type": "never"
+                                                                }
+                                                            },
+                                                            "transitions": {
+                                                                "required": true,
+                                                                "node": {
+                                                                    "name": "NavigationFlowTransition",
+                                                                    "source": "src/index.ts",
+                                                                    "type": "record",
+                                                                    "keyType": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "valueType": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "title": "NavigationFlowTransitionableState.transitions",
+                                                                    "description": "A mapping of transition-name to FlowState name"
+                                                                }
+                                                            },
+                                                            "ref": {
+                                                                "required": true,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "title": "NavigationFlowViewState.ref",
+                                                                    "description": "An id corresponding to a view from the 'views' array"
+                                                                }
+                                                            },
+                                                            "attributes": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "object",
+                                                                    "properties": {},
+                                                                    "additionalProperties": {
+                                                                        "type": "any"
+                                                                    },
+                                                                    "title": "NavigationFlowViewState.attributes",
+                                                                    "description": "View meta-properties"
+                                                                }
+                                                            }
+                                                        },
+                                                        "additionalProperties": false,
+                                                        "title": "NavigationFlowViewState",
+                                                        "description": "A state representing a view"
                                                     },
-                                                    "state_type": {
-                                                        "required": true,
-                                                        "node": {
-                                                            "type": "string",
-                                                            "const": "EXTERNAL",
-                                                            "title": "NavigationBaseState.state_type",
-                                                            "description": "A property to determine the type of state this is"
-                                                        }
+                                                    {
+                                                        "name": "NavigationFlowEndState",
+                                                        "type": "object",
+                                                        "source": "src/index.ts",
+                                                        "properties": {
+                                                            "_comment": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "title": "CommentBase._comment",
+                                                                    "description": "Add comments that will not be processing, but are useful for code explanation"
+                                                                }
+                                                            },
+                                                            "state_type": {
+                                                                "required": true,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "const": "END",
+                                                                    "title": "NavigationBaseState.state_type",
+                                                                    "description": "A property to determine the type of state this is"
+                                                                }
+                                                            },
+                                                            "onStart": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "ref",
+                                                                            "ref": "Expression",
+                                                                            "title": "NavigationBaseState.onStart"
+                                                                        },
+                                                                        {
+                                                                            "name": "ExpressionObject",
+                                                                            "type": "object",
+                                                                            "source": "src/index.ts",
+                                                                            "properties": {
+                                                                                "exp": {
+                                                                                    "required": false,
+                                                                                    "node": {
+                                                                                        "type": "ref",
+                                                                                        "ref": "Expression",
+                                                                                        "title": "ExpressionObject.exp",
+                                                                                        "description": "The expression to run"
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            "additionalProperties": false,
+                                                                            "title": "ExpressionObject",
+                                                                            "description": "An object with an expression in it"
+                                                                        }
+                                                                    ],
+                                                                    "title": "NavigationBaseState.onStart",
+                                                                    "description": "An optional expression to run when this view renders"
+                                                                }
+                                                            },
+                                                            "onEnd": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "ref",
+                                                                            "ref": "Expression",
+                                                                            "title": "NavigationBaseState.onEnd"
+                                                                        },
+                                                                        {
+                                                                            "name": "ExpressionObject",
+                                                                            "type": "object",
+                                                                            "source": "src/index.ts",
+                                                                            "properties": {
+                                                                                "exp": {
+                                                                                    "required": false,
+                                                                                    "node": {
+                                                                                        "type": "ref",
+                                                                                        "ref": "Expression",
+                                                                                        "title": "ExpressionObject.exp",
+                                                                                        "description": "The expression to run"
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            "additionalProperties": false,
+                                                                            "title": "ExpressionObject",
+                                                                            "description": "An object with an expression in it"
+                                                                        }
+                                                                    ],
+                                                                    "title": "NavigationBaseState.onEnd",
+                                                                    "description": "An optional expression to run before view transition"
+                                                                }
+                                                            },
+                                                            "exp": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "title": "NavigationBaseState.exp",
+                                                                    "type": "never"
+                                                                }
+                                                            },
+                                                            "outcome": {
+                                                                "required": true,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "title": "NavigationFlowEndState.outcome",
+                                                                    "description": "A description of _how_ the flow ended.\nIf this is a flow started from another flow, the outcome determines the flow transition"
+                                                                }
+                                                            }
+                                                        },
+                                                        "additionalProperties": false,
+                                                        "title": "NavigationFlowEndState",
+                                                        "description": "An END state of the flow."
                                                     },
-                                                    "onStart": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "type": "or",
-                                                            "or": [
-                                                                {
+                                                    {
+                                                        "name": "NavigationFlowFlowState",
+                                                        "type": "object",
+                                                        "source": "src/index.ts",
+                                                        "properties": {
+                                                            "_comment": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "title": "CommentBase._comment",
+                                                                    "description": "Add comments that will not be processing, but are useful for code explanation"
+                                                                }
+                                                            },
+                                                            "state_type": {
+                                                                "required": true,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "const": "FLOW",
+                                                                    "title": "NavigationBaseState.state_type",
+                                                                    "description": "A property to determine the type of state this is"
+                                                                }
+                                                            },
+                                                            "onStart": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "ref",
+                                                                            "ref": "Expression",
+                                                                            "title": "NavigationBaseState.onStart"
+                                                                        },
+                                                                        {
+                                                                            "name": "ExpressionObject",
+                                                                            "type": "object",
+                                                                            "source": "src/index.ts",
+                                                                            "properties": {
+                                                                                "exp": {
+                                                                                    "required": false,
+                                                                                    "node": {
+                                                                                        "type": "ref",
+                                                                                        "ref": "Expression",
+                                                                                        "title": "ExpressionObject.exp",
+                                                                                        "description": "The expression to run"
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            "additionalProperties": false,
+                                                                            "title": "ExpressionObject",
+                                                                            "description": "An object with an expression in it"
+                                                                        }
+                                                                    ],
+                                                                    "title": "NavigationBaseState.onStart",
+                                                                    "description": "An optional expression to run when this view renders"
+                                                                }
+                                                            },
+                                                            "onEnd": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "ref",
+                                                                            "ref": "Expression",
+                                                                            "title": "NavigationBaseState.onEnd"
+                                                                        },
+                                                                        {
+                                                                            "name": "ExpressionObject",
+                                                                            "type": "object",
+                                                                            "source": "src/index.ts",
+                                                                            "properties": {
+                                                                                "exp": {
+                                                                                    "required": false,
+                                                                                    "node": {
+                                                                                        "type": "ref",
+                                                                                        "ref": "Expression",
+                                                                                        "title": "ExpressionObject.exp",
+                                                                                        "description": "The expression to run"
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            "additionalProperties": false,
+                                                                            "title": "ExpressionObject",
+                                                                            "description": "An object with an expression in it"
+                                                                        }
+                                                                    ],
+                                                                    "title": "NavigationBaseState.onEnd",
+                                                                    "description": "An optional expression to run before view transition"
+                                                                }
+                                                            },
+                                                            "exp": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "title": "NavigationBaseState.exp",
+                                                                    "type": "never"
+                                                                }
+                                                            },
+                                                            "transitions": {
+                                                                "required": true,
+                                                                "node": {
+                                                                    "name": "NavigationFlowTransition",
+                                                                    "source": "src/index.ts",
+                                                                    "type": "record",
+                                                                    "keyType": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "valueType": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "title": "NavigationFlowTransitionableState.transitions",
+                                                                    "description": "A mapping of transition-name to FlowState name"
+                                                                }
+                                                            },
+                                                            "ref": {
+                                                                "required": true,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "title": "NavigationFlowFlowState.ref",
+                                                                    "description": "A reference to a FLOW id state to run"
+                                                                }
+                                                            }
+                                                        },
+                                                        "additionalProperties": false,
+                                                        "title": "NavigationFlowFlowState"
+                                                    },
+                                                    {
+                                                        "name": "NavigationFlowActionState",
+                                                        "type": "object",
+                                                        "source": "src/index.ts",
+                                                        "properties": {
+                                                            "_comment": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "title": "CommentBase._comment",
+                                                                    "description": "Add comments that will not be processing, but are useful for code explanation"
+                                                                }
+                                                            },
+                                                            "state_type": {
+                                                                "required": true,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "const": "ACTION",
+                                                                    "title": "NavigationBaseState.state_type",
+                                                                    "description": "A property to determine the type of state this is"
+                                                                }
+                                                            },
+                                                            "onStart": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "ref",
+                                                                            "ref": "Expression",
+                                                                            "title": "NavigationBaseState.onStart"
+                                                                        },
+                                                                        {
+                                                                            "name": "ExpressionObject",
+                                                                            "type": "object",
+                                                                            "source": "src/index.ts",
+                                                                            "properties": {
+                                                                                "exp": {
+                                                                                    "required": false,
+                                                                                    "node": {
+                                                                                        "type": "ref",
+                                                                                        "ref": "Expression",
+                                                                                        "title": "ExpressionObject.exp",
+                                                                                        "description": "The expression to run"
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            "additionalProperties": false,
+                                                                            "title": "ExpressionObject",
+                                                                            "description": "An object with an expression in it"
+                                                                        }
+                                                                    ],
+                                                                    "title": "NavigationBaseState.onStart",
+                                                                    "description": "An optional expression to run when this view renders"
+                                                                }
+                                                            },
+                                                            "onEnd": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "ref",
+                                                                            "ref": "Expression",
+                                                                            "title": "NavigationBaseState.onEnd"
+                                                                        },
+                                                                        {
+                                                                            "name": "ExpressionObject",
+                                                                            "type": "object",
+                                                                            "source": "src/index.ts",
+                                                                            "properties": {
+                                                                                "exp": {
+                                                                                    "required": false,
+                                                                                    "node": {
+                                                                                        "type": "ref",
+                                                                                        "ref": "Expression",
+                                                                                        "title": "ExpressionObject.exp",
+                                                                                        "description": "The expression to run"
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            "additionalProperties": false,
+                                                                            "title": "ExpressionObject",
+                                                                            "description": "An object with an expression in it"
+                                                                        }
+                                                                    ],
+                                                                    "title": "NavigationBaseState.onEnd",
+                                                                    "description": "An optional expression to run before view transition"
+                                                                }
+                                                            },
+                                                            "exp": {
+                                                                "required": true,
+                                                                "node": {
                                                                     "type": "ref",
                                                                     "ref": "Expression",
-                                                                    "title": "NavigationBaseState.onStart"
-                                                                },
-                                                                {
-                                                                    "name": "ExpressionObject",
-                                                                    "type": "object",
-                                                                    "source": "src/index.ts",
-                                                                    "properties": {
-                                                                        "exp": {
-                                                                            "required": false,
-                                                                            "node": {
-                                                                                "type": "ref",
-                                                                                "ref": "Expression",
-                                                                                "title": "ExpressionObject.exp",
-                                                                                "description": "The expression to run"
-                                                                            }
-                                                                        }
-                                                                    },
-                                                                    "additionalProperties": false,
-                                                                    "title": "ExpressionObject",
-                                                                    "description": "An object with an expression in it"
+                                                                    "title": "NavigationFlowActionState.exp",
+                                                                    "description": "An expression to execute.\nThe return value determines the transition to take"
                                                                 }
-                                                            ],
-                                                            "title": "NavigationBaseState.onStart",
-                                                            "description": "An optional expression to run when this view renders"
-                                                        }
-                                                    },
-                                                    "onEnd": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "type": "or",
-                                                            "or": [
-                                                                {
-                                                                    "type": "ref",
-                                                                    "ref": "Expression",
-                                                                    "title": "NavigationBaseState.onEnd"
-                                                                },
-                                                                {
-                                                                    "name": "ExpressionObject",
-                                                                    "type": "object",
+                                                            },
+                                                            "transitions": {
+                                                                "required": true,
+                                                                "node": {
+                                                                    "name": "NavigationFlowTransition",
                                                                     "source": "src/index.ts",
-                                                                    "properties": {
-                                                                        "exp": {
-                                                                            "required": false,
-                                                                            "node": {
-                                                                                "type": "ref",
-                                                                                "ref": "Expression",
-                                                                                "title": "ExpressionObject.exp",
-                                                                                "description": "The expression to run"
-                                                                            }
-                                                                        }
+                                                                    "type": "record",
+                                                                    "keyType": {
+                                                                        "type": "string"
                                                                     },
-                                                                    "additionalProperties": false,
-                                                                    "title": "ExpressionObject",
-                                                                    "description": "An object with an expression in it"
+                                                                    "valueType": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "title": "NavigationFlowTransitionableState.transitions",
+                                                                    "description": "A mapping of transition-name to FlowState name"
                                                                 }
-                                                            ],
-                                                            "title": "NavigationBaseState.onEnd",
-                                                            "description": "An optional expression to run before view transition"
-                                                        }
+                                                            }
+                                                        },
+                                                        "additionalProperties": false,
+                                                        "title": "NavigationFlowActionState",
+                                                        "description": "Action states execute an expression to determine the next state to transition to"
                                                     },
-                                                    "exp": {
-                                                        "required": false,
-                                                        "node": {
-                                                            "title": "NavigationBaseState.exp",
-                                                            "type": "never"
-                                                        }
-                                                    },
-                                                    "transitions": {
-                                                        "required": true,
-                                                        "node": {
-                                                            "name": "NavigationFlowTransition",
-                                                            "source": "src/index.ts",
-                                                            "type": "record",
-                                                            "keyType": {
-                                                                "type": "string"
+                                                    {
+                                                        "name": "NavigationFlowExternalState",
+                                                        "type": "object",
+                                                        "source": "src/index.ts",
+                                                        "properties": {
+                                                            "_comment": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "title": "CommentBase._comment",
+                                                                    "description": "Add comments that will not be processing, but are useful for code explanation"
+                                                                }
                                                             },
-                                                            "valueType": {
-                                                                "type": "string"
+                                                            "state_type": {
+                                                                "required": true,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "const": "EXTERNAL",
+                                                                    "title": "NavigationBaseState.state_type",
+                                                                    "description": "A property to determine the type of state this is"
+                                                                }
                                                             },
-                                                            "title": "NavigationFlowTransitionableState.transitions",
-                                                            "description": "A mapping of transition-name to FlowState name"
-                                                        }
-                                                    },
-                                                    "ref": {
-                                                        "required": true,
-                                                        "node": {
-                                                            "type": "string",
-                                                            "title": "NavigationFlowExternalState.ref",
-                                                            "description": "A reference for this external state"
-                                                        }
+                                                            "onStart": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "ref",
+                                                                            "ref": "Expression",
+                                                                            "title": "NavigationBaseState.onStart"
+                                                                        },
+                                                                        {
+                                                                            "name": "ExpressionObject",
+                                                                            "type": "object",
+                                                                            "source": "src/index.ts",
+                                                                            "properties": {
+                                                                                "exp": {
+                                                                                    "required": false,
+                                                                                    "node": {
+                                                                                        "type": "ref",
+                                                                                        "ref": "Expression",
+                                                                                        "title": "ExpressionObject.exp",
+                                                                                        "description": "The expression to run"
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            "additionalProperties": false,
+                                                                            "title": "ExpressionObject",
+                                                                            "description": "An object with an expression in it"
+                                                                        }
+                                                                    ],
+                                                                    "title": "NavigationBaseState.onStart",
+                                                                    "description": "An optional expression to run when this view renders"
+                                                                }
+                                                            },
+                                                            "onEnd": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "ref",
+                                                                            "ref": "Expression",
+                                                                            "title": "NavigationBaseState.onEnd"
+                                                                        },
+                                                                        {
+                                                                            "name": "ExpressionObject",
+                                                                            "type": "object",
+                                                                            "source": "src/index.ts",
+                                                                            "properties": {
+                                                                                "exp": {
+                                                                                    "required": false,
+                                                                                    "node": {
+                                                                                        "type": "ref",
+                                                                                        "ref": "Expression",
+                                                                                        "title": "ExpressionObject.exp",
+                                                                                        "description": "The expression to run"
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            "additionalProperties": false,
+                                                                            "title": "ExpressionObject",
+                                                                            "description": "An object with an expression in it"
+                                                                        }
+                                                                    ],
+                                                                    "title": "NavigationBaseState.onEnd",
+                                                                    "description": "An optional expression to run before view transition"
+                                                                }
+                                                            },
+                                                            "exp": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "title": "NavigationBaseState.exp",
+                                                                    "type": "never"
+                                                                }
+                                                            },
+                                                            "transitions": {
+                                                                "required": true,
+                                                                "node": {
+                                                                    "name": "NavigationFlowTransition",
+                                                                    "source": "src/index.ts",
+                                                                    "type": "record",
+                                                                    "keyType": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "valueType": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "title": "NavigationFlowTransitionableState.transitions",
+                                                                    "description": "A mapping of transition-name to FlowState name"
+                                                                }
+                                                            },
+                                                            "ref": {
+                                                                "required": true,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "title": "NavigationFlowExternalState.ref",
+                                                                    "description": "A reference for this external state"
+                                                                }
+                                                            }
+                                                        },
+                                                        "additionalProperties": false,
+                                                        "title": "NavigationFlowExternalState",
+                                                        "description": "External Flow states represent states in the FSM that can't be resolved internally in Player.\nThe flow will wait for the embedded application to manage moving to the next state via a transition"
                                                     }
-                                                },
-                                                "additionalProperties": false,
-                                                "title": "NavigationFlowExternalState",
-                                                "description": "External Flow states represent states in the FSM that can't be resolved internally in the player.\nThe flow will wait for the embedded application to manage moving to the next state via a transition"
+                                                ],
+                                                "title": "NavigationFlowState"
                                             }
-                                        ],
-                                        "title": "NavigationFlowState"
-                                    }
-                                ]
-                            },
-                            "title": "NavigationFlow",
-                            "description": "A state machine in the navigation"
+                                        ]
+                                    },
+                                    "title": "NavigationFlow",
+                                    "description": "A state machine in the navigation"
+                                }
+                            ]
                         }
-                    ]
-                },
+                    }
+                ],
                 "title": "Flow.navigation",
                 "description": "A state machine to drive a user through the experience"
             }
@@ -1391,7 +1422,7 @@
         "type": "unknown"
     },
     "title": "Flow",
-    "description": "The JSON payload for running the player",
+    "description": "The JSON payload for running Player",
     "genericTokens": [
         {
             "symbol": "T",

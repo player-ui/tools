@@ -90,7 +90,6 @@ export function isPrimitiveTypeNode(node: NodeType): node is PrimitiveTypes {
     node.type === 'number' ||
     node.type === 'boolean' ||
     node.type === 'null' ||
-    node.type === 'template' ||
     node.type === 'any' ||
     node.type === 'never' ||
     node.type === 'undefined' ||

@@ -1,25 +1,8 @@
 {
     "name": "ActionAsset",
     "type": "object",
-    "source": "/Users/kreddy8/dev/player/reference-assets/action/dist/types.d.ts",
+    "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/plugins/reference-assets/core/src/assets/action/types.ts",
     "properties": {
-        "id": {
-            "required": true,
-            "node": {
-                "type": "string",
-                "title": "Asset.id",
-                "description": "Each asset requires a unique id per view"
-            }
-        },
-        "type": {
-            "required": true,
-            "node": {
-                "type": "string",
-                "const": "action",
-                "title": "Asset.type",
-                "description": "The asset type determines the semantics of how a user interacts with a page"
-            }
-        },
         "value": {
             "required": false,
             "node": {
@@ -69,7 +52,7 @@
                         "required": false,
                         "node": {
                             "name": "BeaconDataType",
-                            "source": "/Users/kreddy8/dev/player/plugins/beacon/dist/beacon.d.ts",
+                            "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/node_modules/@player-ui/beacon-plugin/dist/index.d.ts",
                             "type": "or",
                             "or": [
                                 {
@@ -106,9 +89,7 @@
             }
         }
     },
-    "additionalProperties": {
-        "type": "unknown"
-    },
+    "additionalProperties": false,
     "title": "ActionAsset",
     "description": "User actions can be represented in several places.\nEach view typically has one or more actions that allow the user to navigate away from that view.\nIn addition, several asset types can have actions that apply to that asset only.",
     "genericTokens": [
@@ -123,5 +104,15 @@
                 "ref": "Asset"
             }
         }
-    ]
+    ],
+    "extends": {
+        "type": "ref",
+        "ref": "Asset<'action'>",
+        "genericArguments": [
+            {
+                "type": "string",
+                "const": "action"
+            }
+        ]
+    }
 }

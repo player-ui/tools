@@ -3,7 +3,7 @@ import { XLRSDK } from '@player-tools/xlr-sdk';
 import type { ArrayType, NodeType, ObjectType } from '@player-tools/xlr';
 import type { ASTNode } from '../parser';
 import { mapFlowStateToType } from '../utils';
-import { PlayerxlrRegistry } from './registry';
+import { PlayerXLRRegistry } from './registry';
 
 export interface XLRContext {
   /** The name of the XLR at the provided position */
@@ -32,7 +32,7 @@ export class XLRService {
   public XLRSDK: XLRSDK;
 
   constructor() {
-    this.XLRSDK = new XLRSDK(new PlayerxlrRegistry());
+    this.XLRSDK = new XLRSDK(new PlayerXLRRegistry());
   }
 
   private walker(
@@ -97,9 +97,9 @@ export class XLRService {
     return undefined;
   }
 
-  public async getTypeInfoAtPosition(
+  public getTypeInfoAtPosition(
     node: ASTNode | undefined
-  ): Promise<XLRContext | undefined> {
+  ): XLRContext | undefined {
     if (!node) return;
 
     const pointer = node;

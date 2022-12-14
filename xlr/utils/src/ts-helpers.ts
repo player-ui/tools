@@ -20,8 +20,12 @@ export function tsStripOptionalType(node: ts.TypeNode): ts.TypeNode {
  * Returns if the top level declaration is exported
  */
 export function isExportedDeclaration(node: ts.Statement) {
-  return !!node.modifiers?.some(
-    (modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword
+  const modifiers = ts.canHaveModifiers(node)
+    ? ts.getModifiers(node)
+    : undefined;
+  return (
+    modifiers &&
+    modifiers.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword)
   );
 }
 
@@ -129,6 +133,7 @@ export function buildTemplateRegex(
 
 /**
  * Walks generics to fill in values from a combination of the default, constraint, and passed in map values
+ * TODO convert this to use simpleTransformGenerator
  */
 export function fillInGenerics(
   xlrNode: NodeType,

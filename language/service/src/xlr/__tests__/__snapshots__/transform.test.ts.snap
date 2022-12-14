@@ -6,6 +6,7 @@ Object {
     "type": "unknown",
   },
   "description": "Mock Asset for test",
+  "extends": undefined,
   "genericTokens": Array [
     Object {
       "constraints": Object {
@@ -34,6 +35,7 @@ Object {
         "description": "A text-like asset for the action's label",
         "genericArguments": Array [
           Object {
+            "genericArguments": undefined,
             "ref": "AnyAsset",
             "type": "ref",
           },
@@ -47,6 +49,7 @@ Object {
     "secondaryChildren": Object {
       "node": Object {
         "elementType": Object {
+          "genericArguments": undefined,
           "ref": "Asset",
           "type": "ref",
         },
@@ -186,6 +189,7 @@ Object {
     "type": "unknown",
   },
   "description": "Mock Asset for test",
+  "extends": undefined,
   "genericTokens": Array [
     Object {
       "constraints": Object {
@@ -214,6 +218,7 @@ Object {
         "description": "A text-like asset for the action's label",
         "genericArguments": Array [
           Object {
+            "genericArguments": undefined,
             "ref": "AnyAsset",
             "type": "ref",
           },
@@ -227,6 +232,7 @@ Object {
     "secondaryChildren": Object {
       "node": Object {
         "elementType": Object {
+          "genericArguments": undefined,
           "ref": "Asset",
           "type": "ref",
         },
@@ -238,6 +244,7 @@ Object {
       "node": Object {
         "description": "A list of templates to process for this node",
         "elementType": Object {
+          "genericArguments": undefined,
           "ref": "Template<Asset, \\"secondaryChildren\\">",
           "type": "ref",
         },
@@ -275,6 +282,7 @@ Object {
     "type": "unknown",
   },
   "description": "Mock Asset for test",
+  "extends": undefined,
   "genericTokens": Array [
     Object {
       "constraints": Object {
@@ -303,6 +311,7 @@ Object {
         "description": "A text-like asset for the action's label",
         "genericArguments": Array [
           Object {
+            "genericArguments": undefined,
             "ref": "AnyAsset",
             "type": "ref",
           },
@@ -316,6 +325,7 @@ Object {
     "secondaryChildren": Object {
       "node": Object {
         "elementType": Object {
+          "genericArguments": undefined,
           "ref": "Asset",
           "type": "ref",
         },
@@ -342,10 +352,12 @@ Object {
             "type": "string",
           },
           Object {
+            "genericArguments": undefined,
             "ref": "ExpressionRef",
             "type": "ref",
           },
           Object {
+            "genericArguments": undefined,
             "ref": "BindingRef",
             "type": "ref",
           },

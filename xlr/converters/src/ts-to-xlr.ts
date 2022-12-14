@@ -1,3 +1,8 @@
+import type {
+  NumberLiteralType,
+  StringLiteralType,
+  UnionType,
+} from 'typescript';
 import ts from 'typescript';
 import type {
   NodeType,
@@ -12,6 +17,7 @@ import type {
   ParamTypeNode,
   ConditionalType,
   RefType,
+  OrType,
 } from '@player-tools/xlr';
 import type { TopLevelDeclaration } from '@player-tools/xlr-utils';
 import {
@@ -160,7 +166,11 @@ export class TsConverter {
   /** Converts an arbitrary ts.TypeNode to XLRs */
   public convertTsTypeNode(node: ts.TypeNode): NodeType | undefined {
     if (this.context.cache.convertedNodes.has(node)) {
-      return this.context.cache.convertedNodes.get(node);
+      const cachedType = this.context.cache.convertedNodes.get(
+        node
+      ) as NodeType;
+      // return deep copy of node so modifications don't effect referenced to the original
+      return JSON.parse(JSON.stringify(cachedType));
     }
 
     const convertedNode = this.tsNodeToType(node);
@@ -391,20 +401,63 @@ export class TsConverter {
         ts.isTypeReferenceNode(node.objectType) &&
         ts.isLiteralTypeNode(node.indexType)
       ) {
-        const baseObject = this.convertTsTypeNode(
-          node.objectType
-        ) as ObjectType;
+        const baseObject = this.convertTsTypeNode(node.objectType);
         const accessor = node.indexType.literal.getText().replace(/["']/g, '');
-        if (Object.keys(baseObject.properties ?? {}).includes(accessor)) {
-          return baseObject.properties[accessor].node;
-        }
+        if (!baseObject) {
+          this.context.throwError(
+            `Error: Couldn't resolve index access on property ${accessor} on type ${node.objectType.typeName.getText()}`
+          );
+        } else if (baseObject.type === 'object') {
+          if (Object.keys(baseObject.properties ?? {}).includes(accessor)) {
+            return baseObject.properties[accessor].node;
+          }
 
-        if (baseObject.additionalProperties) {
-          return baseObject.additionalProperties;
+          if (baseObject.additionalProperties) {
+            return baseObject.additionalProperties;
+          }
+        } else if (baseObject.type === 'ref') {
+          return { ...baseObject, property: accessor };
+        } else {
+          this.context.throwError(
+            `Error: Index access on non object/ref type ${baseObject.type}`
+          );
         }
       }
 
-      return { type: 'null' };
+      if (ts.isTypeQueryNode(node.objectType)) {
+        const effectiveType = this.context.typeChecker.getTypeAtLocation(node);
+        // eslint-disable-next-line no-bitwise
+        if (ts.TypeFlags.Union & effectiveType.flags) {
+          return {
+            type: 'or',
+            or: (effectiveType as UnionType).types.map((type) => {
+              // eslint-disable-next-line no-bitwise
+              if (ts.TypeFlags.StringLiteral & type.flags) {
+                return {
+                  type: 'string',
+                  const: (type as StringLiteralType).value,
+                };
+              }
+
+              // eslint-disable-next-line no-bitwise
+              if (ts.TypeFlags.NumberLiteral & type.flags) {
+                return {
+                  type: 'number',
+                  const: (type as NumberLiteralType).value,
+                };
+              }
+
+              return {
+                type: 'unknown',
+              };
+            }),
+          } as OrType;
+        }
+      }
+
+      this.context.throwError(
+        `Error: could not solve IndexedAccessType ${node.getFullText()}`
+      );
     } else {
       this.context.throwError(`Unimplemented type ${ts.SyntaxKind[node.kind]}`);
     }
@@ -532,6 +585,11 @@ export class TsConverter {
           }
 
           typeToApply = this.convertDeclaration(parentInterface);
+
+          if (typeToApply.extends) {
+            extendsType = typeToApply.extends;
+          }
+
           if (parentInterface.typeParameters && parent.typeArguments) {
             typeToApply = this.solveGenerics(
               typeToApply as NodeTypeWithGenerics,

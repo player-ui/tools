@@ -1,5 +1,7 @@
-import type { TransformFunction } from '@player-tools/xlr';
+import type { NamedType, TransformFunction } from '@player-tools/xlr';
 import { parseTree } from 'jsonc-parser';
+import typesManifest from '@player-tools/static-xlrs/static_xlrs/core/xlr/manifest';
+import pluginManifest from '@player-tools/static-xlrs/static_xlrs/plugin/xlr/manifest';
 import type { Filters } from '../registry';
 import { XLRSDK } from '../sdk';
 
@@ -24,11 +26,8 @@ describe('Loading XLRs', () => {
 
   it('Loading from Module', async () => {
     const sdk = new XLRSDK();
-    await sdk.loadDefinitionsFromModule(
-      '../../../common/static_xlrs/plugin',
-      EXCLUDE
-    );
-    await sdk.loadDefinitionsFromModule('../../../common/static_xlrs/core');
+    await sdk.loadDefinitionsFromModule(pluginManifest, EXCLUDE);
+    await sdk.loadDefinitionsFromModule(typesManifest);
 
     expect(sdk.hasType('Asset')).toStrictEqual(true);
     expect(sdk.hasType('AssetWrapper')).toStrictEqual(true);
@@ -42,8 +41,26 @@ describe('Loading XLRs', () => {
   });
 });
 
+describe('Object Recall', () => {
+  it('Processed', () => {
+    const sdk = new XLRSDK();
+    sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
+    sdk.loadDefinitionsFromDisk('./common/static_xlrs/core');
+
+    expect(sdk.getType('InputAsset')).toMatchSnapshot();
+  });
+
+  it('Raw', () => {
+    const sdk = new XLRSDK();
+    sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
+    sdk.loadDefinitionsFromDisk('./common/static_xlrs/core');
+
+    expect(sdk.getType('InputAsset', { getRawType: true })).toMatchSnapshot();
+  });
+});
+
 describe('Basic Validation', () => {
-  it('Working Test', () => {
+  it('Basic Validation By Name', () => {
     const mockAsset = parseTree(`
     {
       "id": 1,
@@ -60,7 +77,30 @@ describe('Basic Validation', () => {
     sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
     sdk.loadDefinitionsFromDisk('./common/static_xlrs/core');
 
-    expect(sdk.validate('InputAsset', mockAsset)).toMatchSnapshot();
+    expect(sdk.validateByName('InputAsset', mockAsset)).toMatchSnapshot();
+  });
+
+  it('Basic Validation By Type', () => {
+    const mockAsset = parseTree(`
+    {
+      "id": 1,
+      "type": "input",
+      "binding": "some.data",
+      "label": {
+        "asset": {
+          "value": "{{input.label}}"
+        }
+      }
+    `);
+
+    const sdk = new XLRSDK();
+    sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
+    sdk.loadDefinitionsFromDisk('./common/static_xlrs/core');
+    const inputAsset = sdk.getType('InputAsset');
+    expect(inputAsset).toBeDefined();
+    expect(
+      sdk.validateByType(inputAsset as NamedType, mockAsset)
+    ).toMatchSnapshot();
   });
 });
 
@@ -75,6 +115,7 @@ describe('Export Test', () => {
 
     const sdk = new XLRSDK();
     sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
+    sdk.loadDefinitionsFromDisk('./common/static_xlrs/core', EXCLUDE);
     const results = sdk.exportRegistry('TypeScript', importMap);
     expect(results[0][0]).toBe('out.d.ts');
     expect(results[0][1]).toMatchSnapshot();
@@ -89,9 +130,11 @@ describe('Export Test', () => {
     ]);
 
     const sdk = new XLRSDK();
-    sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
+    sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin');
+    sdk.loadDefinitionsFromDisk('./common/static_xlrs/core', EXCLUDE);
     const results = sdk.exportRegistry('TypeScript', importMap, {
       typeFilter: 'Transformed',
+      pluginFilter: 'Types',
     });
     expect(results[0][0]).toBe('out.d.ts');
     expect(results[0][1]).toMatchSnapshot();
@@ -108,21 +151,33 @@ describe('Export Test', () => {
     /**
      *
      */
-    const transformFunction: TransformFunction = (input) => {
-      if (input.type === 'object') {
-        // eslint-disable-next-line no-param-reassign
-        input.properties.transformed = {
-          required: false,
-          node: { type: 'boolean', const: true },
-        };
+    const transformFunction: TransformFunction = (input, capability) => {
+      if (capability === 'Assets') {
+        const ret = { ...input };
+        if (ret.type === 'object') {
+          ret.properties.transformed = {
+            required: false,
+            node: { type: 'boolean', const: true },
+          };
+        }
+
+        return ret;
       }
+
+      return input;
     };
 
     const sdk = new XLRSDK();
     sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
-    const results = sdk.exportRegistry('TypeScript', importMap, {}, [
-      transformFunction,
-    ]);
+    sdk.loadDefinitionsFromDisk('./common/static_xlrs/core', EXCLUDE);
+    const results = sdk.exportRegistry(
+      'TypeScript',
+      importMap,
+      {
+        pluginFilter: 'Types',
+      },
+      [transformFunction]
+    );
     expect(results[0][0]).toBe('out.d.ts');
     expect(results[0][1]).toMatchSnapshot();
   });

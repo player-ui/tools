@@ -57,9 +57,7 @@ export class AssetWrapperArrayPlugin implements PlayerLanguageServicePlugin {
               return;
             }
 
-            const xlrInfo = await service.XLRService.getTypeInfoAtPosition(
-              arrayNode
-            );
+            const xlrInfo = service.XLRService.getTypeInfoAtPosition(arrayNode);
             if (!xlrInfo) return;
 
             const isAssetWrapper = checkTypesForAssetWrapper(xlrInfo.nodes);

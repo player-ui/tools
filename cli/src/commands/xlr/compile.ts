@@ -131,14 +131,24 @@ export default class XLRCompile extends BaseCommand {
         if (symbol) {
           // look at what they implement
           node.heritageClauses?.forEach((heritage) => {
-            capabilities.pluginName =
-              node.name?.text || capabilities.pluginName;
             heritage.types.forEach((hInterface) => {
               // check if heritage is right one
               if (
                 hInterface.expression.getText() !== PLAYER_PLUGIN_INTERFACE_NAME
               ) {
                 return;
+              }
+
+              // Get registration name of plugin
+              const nameProperty = node.members.find(
+                (member) =>
+                  ts.isPropertyDeclaration(member) &&
+                  member.name?.getText() === 'name'
+              ) as ts.PropertyDeclaration | undefined;
+              if (nameProperty && nameProperty.initializer) {
+                capabilities.pluginName = nameProperty.initializer
+                  ?.getText()
+                  .replace(/['"]+/g, '');
               }
 
               const provides: Map<string, Array<string>> = new Map();
@@ -251,11 +261,11 @@ export default class XLRCompile extends BaseCommand {
     const tsManifestFile = `${[...(capabilities.capabilities?.values() ?? [])]
       .flat(2)
       .map((capability) => {
-        return `import ${capability} from './${capability}.json'`;
+        return `const ${capability} = require('./${capability}.json')`;
       })
       .join('\n')}
 
-export default {
+module.exports = {
   "pluginName": "${capabilities.pluginName}",
   "capabilities": {
     ${[...(capabilities.capabilities?.entries() ?? [])]

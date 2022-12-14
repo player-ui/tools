@@ -16,6 +16,6 @@ javascript_pipeline(
         "@npm//typescript"
     ],
     test_data = [
-        "//common:static_xlrs"
+        "//common:@player-tools/static-xlrs",
     ]
 )

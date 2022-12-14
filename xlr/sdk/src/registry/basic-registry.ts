@@ -73,7 +73,6 @@ export class BasicXLRRegistry implements XLRRegistry {
         });
       }
     });
-
     return validTypes.map((type) => this.get(type) as NamedType);
   }
 

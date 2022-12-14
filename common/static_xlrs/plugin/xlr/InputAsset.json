@@ -1,25 +1,8 @@
 {
     "name": "InputAsset",
     "type": "object",
-    "source": "/Users/kreddy8/dev/player/reference-assets/input/dist/types.d.ts",
+    "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/plugins/reference-assets/core/src/assets/input/types.ts",
     "properties": {
-        "id": {
-            "required": true,
-            "node": {
-                "type": "string",
-                "title": "Asset.id",
-                "description": "Each asset requires a unique id per view"
-            }
-        },
-        "type": {
-            "required": true,
-            "node": {
-                "type": "string",
-                "const": "input",
-                "title": "Asset.type",
-                "description": "The asset type determines the semantics of how a user interacts with a page"
-            }
-        },
         "label": {
             "required": false,
             "node": {
@@ -33,6 +16,21 @@
                 ],
                 "title": "InputAsset.label",
                 "description": "Asset container for a field label."
+            }
+        },
+        "note": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "AssetWrapper<AnyTextAsset>",
+                "genericArguments": [
+                    {
+                        "type": "ref",
+                        "ref": "AnyTextAsset"
+                    }
+                ],
+                "title": "InputAsset.note",
+                "description": "Asset container for a note."
             }
         },
         "binding": {
@@ -53,7 +51,7 @@
                         "required": false,
                         "node": {
                             "name": "BeaconDataType",
-                            "source": "/Users/kreddy8/dev/player/plugins/beacon/dist/beacon.d.ts",
+                            "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/node_modules/@player-ui/beacon-plugin/dist/index.d.ts",
                             "type": "or",
                             "or": [
                                 {
@@ -82,9 +80,7 @@
             }
         }
     },
-    "additionalProperties": {
-        "type": "unknown"
-    },
+    "additionalProperties": false,
     "title": "InputAsset",
     "description": "This is the most generic way of gathering data. The input is bound to a data model using the 'binding' property.\nPlayers can get field type information from the 'schema' definition, thus to decide the input controls for visual rendering.",
     "genericTokens": [
@@ -99,5 +95,15 @@
                 "ref": "Asset"
             }
         }
-    ]
+    ],
+    "extends": {
+        "type": "ref",
+        "ref": "Asset<'input'>",
+        "genericArguments": [
+            {
+                "type": "string",
+                "const": "input"
+            }
+        ]
+    }
 }

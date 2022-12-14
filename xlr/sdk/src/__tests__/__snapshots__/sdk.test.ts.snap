@@ -1,6 +1,464 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Basic Validation Working Test 1`] = `
+exports[`Basic Validation Basic Validation By Name 1`] = `
+Array [
+  Object {
+    "message": "Expected type 'string' but got 'number'",
+    "node": Object {
+      "children": Array [
+        Object {
+          "length": 4,
+          "offset": 13,
+          "parent": [Circular],
+          "type": "string",
+          "value": "id",
+        },
+        Object {
+          "length": 1,
+          "offset": 19,
+          "parent": [Circular],
+          "type": "number",
+          "value": 1,
+        },
+      ],
+      "colonOffset": 17,
+      "length": 7,
+      "offset": 13,
+      "parent": Object {
+        "children": Array [
+          [Circular],
+          Object {
+            "children": Array [
+              Object {
+                "length": 6,
+                "offset": 28,
+                "parent": [Circular],
+                "type": "string",
+                "value": "type",
+              },
+              Object {
+                "length": 7,
+                "offset": 36,
+                "parent": [Circular],
+                "type": "string",
+                "value": "input",
+              },
+            ],
+            "colonOffset": 34,
+            "length": 15,
+            "offset": 28,
+            "parent": [Circular],
+            "type": "property",
+          },
+          Object {
+            "children": Array [
+              Object {
+                "length": 9,
+                "offset": 51,
+                "parent": [Circular],
+                "type": "string",
+                "value": "binding",
+              },
+              Object {
+                "length": 11,
+                "offset": 62,
+                "parent": [Circular],
+                "type": "string",
+                "value": "some.data",
+              },
+            ],
+            "colonOffset": 60,
+            "length": 22,
+            "offset": 51,
+            "parent": [Circular],
+            "type": "property",
+          },
+          Object {
+            "children": Array [
+              Object {
+                "length": 7,
+                "offset": 81,
+                "parent": [Circular],
+                "type": "string",
+                "value": "label",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "children": Array [
+                      Object {
+                        "length": 7,
+                        "offset": 100,
+                        "parent": [Circular],
+                        "type": "string",
+                        "value": "asset",
+                      },
+                      Object {
+                        "children": Array [
+                          Object {
+                            "children": Array [
+                              Object {
+                                "length": 7,
+                                "offset": 121,
+                                "parent": [Circular],
+                                "type": "string",
+                                "value": "value",
+                              },
+                              Object {
+                                "length": 17,
+                                "offset": 130,
+                                "parent": [Circular],
+                                "type": "string",
+                                "value": "{{input.label}}",
+                              },
+                            ],
+                            "colonOffset": 128,
+                            "length": 26,
+                            "offset": 121,
+                            "parent": [Circular],
+                            "type": "property",
+                          },
+                        ],
+                        "length": 48,
+                        "offset": 109,
+                        "parent": [Circular],
+                        "type": "object",
+                      },
+                    ],
+                    "colonOffset": 107,
+                    "length": 57,
+                    "offset": 100,
+                    "parent": [Circular],
+                    "type": "property",
+                  },
+                ],
+                "length": 75,
+                "offset": 90,
+                "parent": [Circular],
+                "type": "object",
+              },
+            ],
+            "colonOffset": 88,
+            "length": 84,
+            "offset": 81,
+            "parent": [Circular],
+            "type": "property",
+          },
+        ],
+        "length": 165,
+        "offset": 5,
+        "type": "object",
+      },
+      "type": "property",
+    },
+    "type": "type",
+  },
+  Object {
+    "message": "Property 'id' missing from type 'Asset'",
+    "node": Object {
+      "children": Array [
+        Object {
+          "children": Array [
+            Object {
+              "length": 7,
+              "offset": 121,
+              "parent": [Circular],
+              "type": "string",
+              "value": "value",
+            },
+            Object {
+              "length": 17,
+              "offset": 130,
+              "parent": [Circular],
+              "type": "string",
+              "value": "{{input.label}}",
+            },
+          ],
+          "colonOffset": 128,
+          "length": 26,
+          "offset": 121,
+          "parent": [Circular],
+          "type": "property",
+        },
+      ],
+      "length": 48,
+      "offset": 109,
+      "parent": Object {
+        "children": Array [
+          Object {
+            "length": 7,
+            "offset": 100,
+            "parent": [Circular],
+            "type": "string",
+            "value": "asset",
+          },
+          [Circular],
+        ],
+        "colonOffset": 107,
+        "length": 57,
+        "offset": 100,
+        "parent": Object {
+          "children": Array [
+            [Circular],
+          ],
+          "length": 75,
+          "offset": 90,
+          "parent": Object {
+            "children": Array [
+              Object {
+                "length": 7,
+                "offset": 81,
+                "parent": [Circular],
+                "type": "string",
+                "value": "label",
+              },
+              [Circular],
+            ],
+            "colonOffset": 88,
+            "length": 84,
+            "offset": 81,
+            "parent": Object {
+              "children": Array [
+                Object {
+                  "children": Array [
+                    Object {
+                      "length": 4,
+                      "offset": 13,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "id",
+                    },
+                    Object {
+                      "length": 1,
+                      "offset": 19,
+                      "parent": [Circular],
+                      "type": "number",
+                      "value": 1,
+                    },
+                  ],
+                  "colonOffset": 17,
+                  "length": 7,
+                  "offset": 13,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                Object {
+                  "children": Array [
+                    Object {
+                      "length": 6,
+                      "offset": 28,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "type",
+                    },
+                    Object {
+                      "length": 7,
+                      "offset": 36,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "input",
+                    },
+                  ],
+                  "colonOffset": 34,
+                  "length": 15,
+                  "offset": 28,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                Object {
+                  "children": Array [
+                    Object {
+                      "length": 9,
+                      "offset": 51,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "binding",
+                    },
+                    Object {
+                      "length": 11,
+                      "offset": 62,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "some.data",
+                    },
+                  ],
+                  "colonOffset": 60,
+                  "length": 22,
+                  "offset": 51,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                [Circular],
+              ],
+              "length": 165,
+              "offset": 5,
+              "type": "object",
+            },
+            "type": "property",
+          },
+          "type": "object",
+        },
+        "type": "property",
+      },
+      "type": "object",
+    },
+    "type": "missing",
+  },
+  Object {
+    "message": "Property 'type' missing from type 'Asset'",
+    "node": Object {
+      "children": Array [
+        Object {
+          "children": Array [
+            Object {
+              "length": 7,
+              "offset": 121,
+              "parent": [Circular],
+              "type": "string",
+              "value": "value",
+            },
+            Object {
+              "length": 17,
+              "offset": 130,
+              "parent": [Circular],
+              "type": "string",
+              "value": "{{input.label}}",
+            },
+          ],
+          "colonOffset": 128,
+          "length": 26,
+          "offset": 121,
+          "parent": [Circular],
+          "type": "property",
+        },
+      ],
+      "length": 48,
+      "offset": 109,
+      "parent": Object {
+        "children": Array [
+          Object {
+            "length": 7,
+            "offset": 100,
+            "parent": [Circular],
+            "type": "string",
+            "value": "asset",
+          },
+          [Circular],
+        ],
+        "colonOffset": 107,
+        "length": 57,
+        "offset": 100,
+        "parent": Object {
+          "children": Array [
+            [Circular],
+          ],
+          "length": 75,
+          "offset": 90,
+          "parent": Object {
+            "children": Array [
+              Object {
+                "length": 7,
+                "offset": 81,
+                "parent": [Circular],
+                "type": "string",
+                "value": "label",
+              },
+              [Circular],
+            ],
+            "colonOffset": 88,
+            "length": 84,
+            "offset": 81,
+            "parent": Object {
+              "children": Array [
+                Object {
+                  "children": Array [
+                    Object {
+                      "length": 4,
+                      "offset": 13,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "id",
+                    },
+                    Object {
+                      "length": 1,
+                      "offset": 19,
+                      "parent": [Circular],
+                      "type": "number",
+                      "value": 1,
+                    },
+                  ],
+                  "colonOffset": 17,
+                  "length": 7,
+                  "offset": 13,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                Object {
+                  "children": Array [
+                    Object {
+                      "length": 6,
+                      "offset": 28,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "type",
+                    },
+                    Object {
+                      "length": 7,
+                      "offset": 36,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "input",
+                    },
+                  ],
+                  "colonOffset": 34,
+                  "length": 15,
+                  "offset": 28,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                Object {
+                  "children": Array [
+                    Object {
+                      "length": 9,
+                      "offset": 51,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "binding",
+                    },
+                    Object {
+                      "length": 11,
+                      "offset": 62,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "some.data",
+                    },
+                  ],
+                  "colonOffset": 60,
+                  "length": 22,
+                  "offset": 51,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                [Circular],
+              ],
+              "length": 165,
+              "offset": 5,
+              "type": "object",
+            },
+            "type": "property",
+          },
+          "type": "object",
+        },
+        "type": "property",
+      },
+      "type": "object",
+    },
+    "type": "missing",
+  },
+]
+`;
+
+exports[`Basic Validation Basic Validation By Type 1`] = `
 Array [
   Object {
     "message": "Expected type 'string' but got 'number'",
@@ -469,9 +927,11 @@ export interface InputAsset<AnyTextAsset extends Asset = Asset> {
     /** Each asset requires a unique id per view */
     id: string;
     /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"input\\";
+    type: 'input';
     /** Asset container for a field label. */
     label?: AssetWrapper<AnyTextAsset>;
+    /** Asset container for a note. */
+    note?: AssetWrapper<AnyTextAsset>;
     /** The location in the data-model to store the data */
     binding: Binding;
     /** Optional additional data */
@@ -485,7 +945,7 @@ export interface TextAsset {
     /** Each asset requires a unique id per view */
     id: string;
     /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"text\\";
+    type: 'text';
     /** The text to display */
     value: string;
     /** Any modifiers on the text */
@@ -497,7 +957,7 @@ export interface TextAsset {
         [key: string]: unknown;
     } | {
         /** The link type denotes this as a link */
-        type: \\"link\\";
+        type: 'link';
         /** An optional expression to run before the link is opened */
         exp?: Expression;
         /** metaData about the link's target */
@@ -519,7 +979,7 @@ export interface ActionAsset<AnyTextAsset extends Asset = Asset> {
     /** Each asset requires a unique id per view */
     id: string;
     /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"action\\";
+    type: 'action';
     /** The transition value of the action in the state machine */
     value?: string;
     /** A text-like asset for the action's label */
@@ -541,7 +1001,7 @@ export interface InfoAsset {
     /** Each asset requires a unique id per view */
     id: string;
     /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"info\\";
+    type: 'info';
     /** The string value to show */
     title?: AssetWrapper;
     /** subtitle */
@@ -556,9 +1016,11 @@ export interface CollectionAsset {
     /** Each asset requires a unique id per view */
     id: string;
     /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"collection\\";
+    type: 'collection';
+    /** An optional label to title the collection */
+    label?: AssetWrapper;
     /** The string value to show */
-    values: Array<AssetWrapper>;
+    values?: Array<AssetWrapper>;
     [key: string]: unknown;
 }"
 `;
@@ -574,9 +1036,11 @@ export interface InputAsset<AnyTextAsset extends Asset = Asset> {
     /** Each asset requires a unique id per view */
     id: string;
     /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"input\\";
+    type: 'input';
     /** Asset container for a field label. */
     label?: AssetWrapper<AnyTextAsset>;
+    /** Asset container for a note. */
+    note?: AssetWrapper<AnyTextAsset>;
     /** The location in the data-model to store the data */
     binding: Binding;
     /** Optional additional data */
@@ -591,7 +1055,7 @@ export interface TextAsset {
     /** Each asset requires a unique id per view */
     id: string;
     /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"text\\";
+    type: 'text';
     /** The text to display */
     value: string;
     /** Any modifiers on the text */
@@ -603,7 +1067,7 @@ export interface TextAsset {
         [key: string]: unknown;
     } | {
         /** The link type denotes this as a link */
-        type: \\"link\\";
+        type: 'link';
         /** An optional expression to run before the link is opened */
         exp?: Expression;
         /** metaData about the link's target */
@@ -626,7 +1090,7 @@ export interface ActionAsset<AnyTextAsset extends Asset = Asset> {
     /** Each asset requires a unique id per view */
     id: string;
     /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"action\\";
+    type: 'action';
     /** The transition value of the action in the state machine */
     value?: string;
     /** A text-like asset for the action's label */
@@ -649,7 +1113,7 @@ export interface InfoAsset {
     /** Each asset requires a unique id per view */
     id: string;
     /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"info\\";
+    type: 'info';
     /** The string value to show */
     title?: AssetWrapper;
     /** subtitle */
@@ -665,9 +1129,11 @@ export interface CollectionAsset {
     /** Each asset requires a unique id per view */
     id: string;
     /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"collection\\";
+    type: 'collection';
+    /** An optional label to title the collection */
+    label?: AssetWrapper;
     /** The string value to show */
-    values: Array<AssetWrapper>;
+    values?: Array<AssetWrapper>;
     transformed?: true;
     [key: string]: unknown;
 }"
@@ -684,9 +1150,11 @@ export interface InputAsset<AnyTextAsset extends Asset = Asset> {
     /** Each asset requires a unique id per view */
     id: string;
     /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"input\\";
+    type: 'input';
     /** Asset container for a field label. */
     label?: AssetWrapper<AnyTextAsset>;
+    /** Asset container for a note. */
+    note?: AssetWrapper<AnyTextAsset>;
     /** The location in the data-model to store the data */
     binding: Binding;
     /** Optional additional data */
@@ -700,7 +1168,7 @@ export interface TextAsset {
     /** Each asset requires a unique id per view */
     id: string;
     /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"text\\";
+    type: 'text';
     /** The text to display */
     value: string;
     /** Any modifiers on the text */
@@ -712,7 +1180,7 @@ export interface TextAsset {
         [key: string]: unknown;
     } | {
         /** The link type denotes this as a link */
-        type: \\"link\\";
+        type: 'link';
         /** An optional expression to run before the link is opened */
         exp?: Expression;
         /** metaData about the link's target */
@@ -734,7 +1202,7 @@ export interface ActionAsset<AnyTextAsset extends Asset = Asset> {
     /** Each asset requires a unique id per view */
     id: string;
     /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"action\\";
+    type: 'action';
     /** The transition value of the action in the state machine */
     value?: string;
     /** A text-like asset for the action's label */
@@ -756,7 +1224,7 @@ export interface InfoAsset {
     /** Each asset requires a unique id per view */
     id: string;
     /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"info\\";
+    type: 'info';
     /** The string value to show */
     title?: AssetWrapper;
     /** subtitle */
@@ -771,9 +1239,1253 @@ export interface CollectionAsset {
     /** Each asset requires a unique id per view */
     id: string;
     /** The asset type determines the semantics of how a user interacts with a page */
-    type: \\"collection\\";
+    type: 'collection';
+    /** An optional label to title the collection */
+    label?: AssetWrapper;
     /** The string value to show */
-    values: Array<AssetWrapper>;
+    values?: Array<AssetWrapper>;
+    [key: string]: unknown;
+}
+/** An asset is the smallest unit of user interaction in a player view */
+export interface Asset<T extends string = string> {
+    /** Each asset requires a unique id per view */
+    id: string;
+    /** The asset type determines the semantics of how a user interacts with a page */
+    type: T;
+    [key: string]: unknown;
+}
+/** An asset that contains a Binding. */
+export interface AssetBinding<T extends string = string> {
+    /** Each asset requires a unique id per view */
+    id: string;
+    /** The asset type determines the semantics of how a user interacts with a page */
+    type: T;
+    /** A binding that points to somewhere in the data model */
+    binding: Binding;
+    [key: string]: unknown;
+}
+/** A single case statement to use in a switch */
+export interface SwitchCase<T extends Asset = Asset> {
+    /** The Asset to use if this case is applicable */
+    asset: T;
+    /** An expression to execute to determine if this case applies */
+    case: Expression | true;
+}
+/** A switch can replace an asset with the applicable case on first render */
+export type Switch<T extends Asset = Asset> = Array<{
+    /** The Asset to use if this case is applicable */
+    asset: T;
+    /** An expression to execute to determine if this case applies */
+    case: Expression | true;
+}>;
+/** An object that contains an asset */
+export interface AssetWrapper<T extends Asset = Asset> {
+    /** An asset instance */
+    asset: T;
+    [key: string]: unknown;
+}
+export type AssetWrapperOrSwitch<T extends Asset = Asset> = (AssetWrapper<T> & {
+    /** The dynamicSwitch property can't exist at the same time as 'asset' */
+    dynamicSwitch?: never;
+    /** The staticSwitch property can't exist at the same time as 'asset' */
+    staticSwitch?: never;
+}) | ({
+    /** A static switch only evaluates the applicable base on first render of the view */
+    staticSwitch: Array<{
+        /** The Asset to use if this case is applicable */
+        asset: T;
+        /** An expression to execute to determine if this case applies */
+        case: Expression | true;
+    }>;
+} & {
+    /** The staticSwitch property can't exist at the same time as 'asset' */
+    asset?: never;
+    /** The staticSwitch property can't exist at the same time as 'dynamicSwitch' */
+    dynamicSwitch?: never;
+}) | ({
+    /** A dynamic switch re-evaluates the applicable case as data changes */
+    dynamicSwitch: Array<{
+        /** The Asset to use if this case is applicable */
+        asset: T;
+        /** An expression to execute to determine if this case applies */
+        case: Expression | true;
+    }>;
+} & {
+    /** The dynamicSwitch property can't exist at the same time as 'asset' */
+    asset?: never;
+    /** The dynamicSwitch property can't exist at the same time as 'staticSwitch' */
+    staticSwitch?: never;
+});
+export type AssetSwitch<T extends Asset = Asset> = {
+    /** A static switch only evaluates the applicable base on first render of the view */
+    staticSwitch: Array<{
+        /** The Asset to use if this case is applicable */
+        asset: T;
+        /** An expression to execute to determine if this case applies */
+        case: Expression | true;
+    }>;
+} | {
+    /** A dynamic switch re-evaluates the applicable case as data changes */
+    dynamicSwitch: Array<{
+        /** The Asset to use if this case is applicable */
+        asset: T;
+        /** An expression to execute to determine if this case applies */
+        case: Expression | true;
+    }>;
+};
+export interface StaticSwitch<T extends Asset = Asset> {
+    /** A static switch only evaluates the applicable base on first render of the view */
+    staticSwitch: Array<{
+        /** The Asset to use if this case is applicable */
+        asset: T;
+        /** An expression to execute to determine if this case applies */
+        case: Expression | true;
+    }>;
+}
+export interface DynamicSwitch<T extends Asset = Asset> {
+    /** A dynamic switch re-evaluates the applicable case as data changes */
+    dynamicSwitch: Array<{
+        /** The Asset to use if this case is applicable */
+        asset: T;
+        /** An expression to execute to determine if this case applies */
+        case: Expression | true;
+    }>;
+}
+/**
+ * Expressions are a specialized way of executing code.
+ * If the expression is a composite, the last expression executed is the return value
+*/
+export type Expression = string | Array<string>;
+export type ExpressionRef = \`@[\${string}]@\`;
+/** Bindings describe locations in the data model. */
+export type Binding = string;
+export type BindingRef = \`{{\${string}}}\`;
+/** The data-model is the location that all user data is stored */
+export type DataModel = Record<any, unknown>;
+/** The navigation section of the flow describes a State Machine for the user. */
+export type Navigation = {
+    /** The name of the Flow to begin on */
+    BEGIN: string;
+} & Record<string, string | {
+    /** The first state to kick off the state machine */
+    startState: string;
+    /** An optional expression to run when this Flow starts */
+    onStart?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /** An optional expression to run when this Flow ends */
+    onEnd?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    [key: string]: undefined | string | Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    } | ({
+        /** Add comments that will not be processing, but are useful for code explanation */
+        _comment?: string;
+        /** A property to determine the type of state this is */
+        state_type: 'VIEW';
+        /** An optional expression to run when this view renders */
+        onStart?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        /** An optional expression to run before view transition */
+        onEnd?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        exp?: never;
+        /** A mapping of transition-name to FlowState name */
+        transitions: Record<string, string>;
+        /** An id corresponding to a view from the 'views' array */
+        ref: string;
+        /** View meta-properties */
+        attributes?: {
+            [key: string]: any;
+        };
+    } | {
+        /** Add comments that will not be processing, but are useful for code explanation */
+        _comment?: string;
+        /** A property to determine the type of state this is */
+        state_type: 'END';
+        /** An optional expression to run when this view renders */
+        onStart?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        /** An optional expression to run before view transition */
+        onEnd?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        exp?: never;
+        /**
+         * A description of _how_ the flow ended.
+         * If this is a flow started from another flow, the outcome determines the flow transition
+        */
+        outcome: string;
+    } | {
+        /** Add comments that will not be processing, but are useful for code explanation */
+        _comment?: string;
+        /** A property to determine the type of state this is */
+        state_type: 'FLOW';
+        /** An optional expression to run when this view renders */
+        onStart?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        /** An optional expression to run before view transition */
+        onEnd?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        exp?: never;
+        /** A mapping of transition-name to FlowState name */
+        transitions: Record<string, string>;
+        /** A reference to a FLOW id state to run */
+        ref: string;
+    } | {
+        /** Add comments that will not be processing, but are useful for code explanation */
+        _comment?: string;
+        /** A property to determine the type of state this is */
+        state_type: 'ACTION';
+        /** An optional expression to run when this view renders */
+        onStart?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        /** An optional expression to run before view transition */
+        onEnd?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        /**
+         * An expression to execute.
+         * The return value determines the transition to take
+        */
+        exp: Expression;
+        /** A mapping of transition-name to FlowState name */
+        transitions: Record<string, string>;
+    } | {
+        /** Add comments that will not be processing, but are useful for code explanation */
+        _comment?: string;
+        /** A property to determine the type of state this is */
+        state_type: 'EXTERNAL';
+        /** An optional expression to run when this view renders */
+        onStart?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        /** An optional expression to run before view transition */
+        onEnd?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        exp?: never;
+        /** A mapping of transition-name to FlowState name */
+        transitions: Record<string, string>;
+        /** A reference for this external state */
+        ref: string;
+    });
+}>;
+/** An object with an expression in it */
+export interface ExpressionObject {
+    /** The expression to run */
+    exp?: Expression;
+}
+/** A state machine in the navigation */
+export interface NavigationFlow {
+    /** The first state to kick off the state machine */
+    startState: string;
+    /** An optional expression to run when this Flow starts */
+    onStart?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /** An optional expression to run when this Flow ends */
+    onEnd?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    [key: string]: undefined | string | Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    } | ({
+        /** Add comments that will not be processing, but are useful for code explanation */
+        _comment?: string;
+        /** A property to determine the type of state this is */
+        state_type: 'VIEW';
+        /** An optional expression to run when this view renders */
+        onStart?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        /** An optional expression to run before view transition */
+        onEnd?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        exp?: never;
+        /** A mapping of transition-name to FlowState name */
+        transitions: Record<string, string>;
+        /** An id corresponding to a view from the 'views' array */
+        ref: string;
+        /** View meta-properties */
+        attributes?: {
+            [key: string]: any;
+        };
+    } | {
+        /** Add comments that will not be processing, but are useful for code explanation */
+        _comment?: string;
+        /** A property to determine the type of state this is */
+        state_type: 'END';
+        /** An optional expression to run when this view renders */
+        onStart?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        /** An optional expression to run before view transition */
+        onEnd?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        exp?: never;
+        /**
+         * A description of _how_ the flow ended.
+         * If this is a flow started from another flow, the outcome determines the flow transition
+        */
+        outcome: string;
+    } | {
+        /** Add comments that will not be processing, but are useful for code explanation */
+        _comment?: string;
+        /** A property to determine the type of state this is */
+        state_type: 'FLOW';
+        /** An optional expression to run when this view renders */
+        onStart?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        /** An optional expression to run before view transition */
+        onEnd?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        exp?: never;
+        /** A mapping of transition-name to FlowState name */
+        transitions: Record<string, string>;
+        /** A reference to a FLOW id state to run */
+        ref: string;
+    } | {
+        /** Add comments that will not be processing, but are useful for code explanation */
+        _comment?: string;
+        /** A property to determine the type of state this is */
+        state_type: 'ACTION';
+        /** An optional expression to run when this view renders */
+        onStart?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        /** An optional expression to run before view transition */
+        onEnd?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        /**
+         * An expression to execute.
+         * The return value determines the transition to take
+        */
+        exp: Expression;
+        /** A mapping of transition-name to FlowState name */
+        transitions: Record<string, string>;
+    } | {
+        /** Add comments that will not be processing, but are useful for code explanation */
+        _comment?: string;
+        /** A property to determine the type of state this is */
+        state_type: 'EXTERNAL';
+        /** An optional expression to run when this view renders */
+        onStart?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        /** An optional expression to run before view transition */
+        onEnd?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        exp?: never;
+        /** A mapping of transition-name to FlowState name */
+        transitions: Record<string, string>;
+        /** A reference for this external state */
+        ref: string;
+    });
+}
+export type NavigationFlowTransition = Record<string, string>;
+/** The base representation of a state within a Flow */
+export interface NavigationBaseState<T extends string = any> {
+    /** Add comments that will not be processing, but are useful for code explanation */
+    _comment?: string;
+    /** A property to determine the type of state this is */
+    state_type: T;
+    /** An optional expression to run when this view renders */
+    onStart?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /** An optional expression to run before view transition */
+    onEnd?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /**
+     * TS gets really confused with both the ActionState and the onStart state both declaring the \`exp\` property
+     * So this explicity says there should never be an exp prop on a state node that's not of type 'ACTION'
+    */
+    exp?: T extends T ? Expression : never;
+}
+/** A generic state that can transition to another state */
+export interface NavigationFlowTransitionableState<T extends string = any> {
+    /** Add comments that will not be processing, but are useful for code explanation */
+    _comment?: string;
+    /** A property to determine the type of state this is */
+    state_type: T;
+    /** An optional expression to run when this view renders */
+    onStart?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /** An optional expression to run before view transition */
+    onEnd?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /**
+     * TS gets really confused with both the ActionState and the onStart state both declaring the \`exp\` property
+     * So this explicity says there should never be an exp prop on a state node that's not of type 'ACTION'
+    */
+    exp?: T extends T ? Expression : never;
+    /** A mapping of transition-name to FlowState name */
+    transitions: Record<string, string>;
+}
+/** A state representing a view */
+export interface NavigationFlowViewState {
+    /** Add comments that will not be processing, but are useful for code explanation */
+    _comment?: string;
+    /** A property to determine the type of state this is */
+    state_type: 'VIEW';
+    /** An optional expression to run when this view renders */
+    onStart?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /** An optional expression to run before view transition */
+    onEnd?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    exp?: never;
+    /** A mapping of transition-name to FlowState name */
+    transitions: Record<string, string>;
+    /** An id corresponding to a view from the 'views' array */
+    ref: string;
+    /** View meta-properties */
+    attributes?: {
+        [key: string]: any;
+    };
+}
+/** An END state of the flow. */
+export interface NavigationFlowEndState {
+    /** Add comments that will not be processing, but are useful for code explanation */
+    _comment?: string;
+    /** A property to determine the type of state this is */
+    state_type: 'END';
+    /** An optional expression to run when this view renders */
+    onStart?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /** An optional expression to run before view transition */
+    onEnd?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    exp?: never;
+    /**
+     * A description of _how_ the flow ended.
+     * If this is a flow started from another flow, the outcome determines the flow transition
+    */
+    outcome: string;
+}
+/** Action states execute an expression to determine the next state to transition to */
+export interface NavigationFlowActionState {
+    /** Add comments that will not be processing, but are useful for code explanation */
+    _comment?: string;
+    /** A property to determine the type of state this is */
+    state_type: 'ACTION';
+    /** An optional expression to run when this view renders */
+    onStart?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /** An optional expression to run before view transition */
+    onEnd?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /**
+     * An expression to execute.
+     * The return value determines the transition to take
+    */
+    exp: Expression;
+    /** A mapping of transition-name to FlowState name */
+    transitions: Record<string, string>;
+}
+/**
+ * External Flow states represent states in the FSM that can't be resolved internally in Player.
+ * The flow will wait for the embedded application to manage moving to the next state via a transition
+*/
+export interface NavigationFlowExternalState {
+    /** Add comments that will not be processing, but are useful for code explanation */
+    _comment?: string;
+    /** A property to determine the type of state this is */
+    state_type: 'EXTERNAL';
+    /** An optional expression to run when this view renders */
+    onStart?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /** An optional expression to run before view transition */
+    onEnd?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    exp?: never;
+    /** A mapping of transition-name to FlowState name */
+    transitions: Record<string, string>;
+    /** A reference for this external state */
+    ref: string;
+}
+export interface NavigationFlowFlowState {
+    /** Add comments that will not be processing, but are useful for code explanation */
+    _comment?: string;
+    /** A property to determine the type of state this is */
+    state_type: 'FLOW';
+    /** An optional expression to run when this view renders */
+    onStart?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /** An optional expression to run before view transition */
+    onEnd?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    exp?: never;
+    /** A mapping of transition-name to FlowState name */
+    transitions: Record<string, string>;
+    /** A reference to a FLOW id state to run */
+    ref: string;
+}
+export type NavigationFlowState = {
+    /** Add comments that will not be processing, but are useful for code explanation */
+    _comment?: string;
+    /** A property to determine the type of state this is */
+    state_type: 'VIEW';
+    /** An optional expression to run when this view renders */
+    onStart?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /** An optional expression to run before view transition */
+    onEnd?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    exp?: never;
+    /** A mapping of transition-name to FlowState name */
+    transitions: Record<string, string>;
+    /** An id corresponding to a view from the 'views' array */
+    ref: string;
+    /** View meta-properties */
+    attributes?: {
+        [key: string]: any;
+    };
+} | {
+    /** Add comments that will not be processing, but are useful for code explanation */
+    _comment?: string;
+    /** A property to determine the type of state this is */
+    state_type: 'END';
+    /** An optional expression to run when this view renders */
+    onStart?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /** An optional expression to run before view transition */
+    onEnd?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    exp?: never;
+    /**
+     * A description of _how_ the flow ended.
+     * If this is a flow started from another flow, the outcome determines the flow transition
+    */
+    outcome: string;
+} | {
+    /** Add comments that will not be processing, but are useful for code explanation */
+    _comment?: string;
+    /** A property to determine the type of state this is */
+    state_type: 'FLOW';
+    /** An optional expression to run when this view renders */
+    onStart?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /** An optional expression to run before view transition */
+    onEnd?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    exp?: never;
+    /** A mapping of transition-name to FlowState name */
+    transitions: Record<string, string>;
+    /** A reference to a FLOW id state to run */
+    ref: string;
+} | {
+    /** Add comments that will not be processing, but are useful for code explanation */
+    _comment?: string;
+    /** A property to determine the type of state this is */
+    state_type: 'ACTION';
+    /** An optional expression to run when this view renders */
+    onStart?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /** An optional expression to run before view transition */
+    onEnd?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /**
+     * An expression to execute.
+     * The return value determines the transition to take
+    */
+    exp: Expression;
+    /** A mapping of transition-name to FlowState name */
+    transitions: Record<string, string>;
+} | {
+    /** Add comments that will not be processing, but are useful for code explanation */
+    _comment?: string;
+    /** A property to determine the type of state this is */
+    state_type: 'EXTERNAL';
+    /** An optional expression to run when this view renders */
+    onStart?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /** An optional expression to run before view transition */
+    onEnd?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    exp?: never;
+    /** A mapping of transition-name to FlowState name */
+    transitions: Record<string, string>;
+    /** A reference for this external state */
+    ref: string;
+};
+/** The data at the end of a flow */
+export interface FlowResult {
+    /** The outcome describes _how_ the flow ended (forwards, backwards, etc) */
+    endState: {
+        /** Add comments that will not be processing, but are useful for code explanation */
+        _comment?: string;
+        /** A property to determine the type of state this is */
+        state_type: 'END';
+        /** An optional expression to run when this view renders */
+        onStart?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        /** An optional expression to run before view transition */
+        onEnd?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        exp?: never;
+        /**
+         * A description of _how_ the flow ended.
+         * If this is a flow started from another flow, the outcome determines the flow transition
+        */
+        outcome: string;
+    };
+    /** The serialized data-model */
+    data?: any;
+}
+/** Any object that contains 1 or more templates */
+export interface Templatable {
+    /** A list of templates to process for this node */
+    template?: Array<{
+        /** A pointer to the data-model containing an array of elements to map over */
+        data: Binding;
+        /**
+         * The template to iterate over using each value in the supplied template data.
+         * Any reference to _index_ is replaced with the current iteration index.
+        */
+        value: ValueType;
+        /** should the template be recomputed when data changes */
+        dynamic?: boolean;
+        /**
+         * A property on the parent object to store the new map under.
+         * If it already exists, values are appended to the end.
+        */
+        output: Key;
+    }>;
+}
+/** A template describes a mapping from a data array -> array of objects */
+export interface Template<ValueType extends any = unknown, Key extends string = string> {
+    /** A pointer to the data-model containing an array of elements to map over */
+    data: Binding;
+    /**
+     * The template to iterate over using each value in the supplied template data.
+     * Any reference to _index_ is replaced with the current iteration index.
+    */
+    value: ValueType;
+    /** should the template be recomputed when data changes */
+    dynamic?: boolean;
+    /**
+     * A property on the parent object to store the new map under.
+     * If it already exists, values are appended to the end.
+    */
+    output: Key;
+}
+export type View<T extends Asset = Asset> = unknown extends unknown ? T & {
+    /** Each view can optionally supply a list of validations to run against a particular view */
+    validation?: Array<{
+        /**
+         * The name of the referenced validation type
+         * This will be used to lookup the proper handler
+        */
+        type: string;
+        /** An optional means of overriding the default message if the validation is triggered */
+        message?: string;
+        /** An optional means of overriding the default severity of the validation if triggered */
+        severity?: 'error' | 'warning';
+        /** When to run this particular validation */
+        trigger?: 'navigation' | 'change' | 'load';
+        /** Cross-field references and validation must run against the default (deformatted) value */
+        dataTarget?: never;
+        /** Where the error should be displayed */
+        displayTarget?: 'page' | 'section' | 'field';
+        /** The binding to associate this validation with */
+        ref?: Binding;
+        [key: string]: unknown;
+    }>;
+} : T;
+/** The JSON payload for running Player */
+export interface Flow<T extends Asset = Asset> {
+    /** A unique identifier for the flow */
+    id: string;
+    /** A list of views (each with an ID) that can be shown to a user */
+    views?: Array<unknown extends unknown ? T & {
+        /** Each view can optionally supply a list of validations to run against a particular view */
+        validation?: Array<{
+            /**
+             * The name of the referenced validation type
+             * This will be used to lookup the proper handler
+            */
+            type: string;
+            /** An optional means of overriding the default message if the validation is triggered */
+            message?: string;
+            /** An optional means of overriding the default severity of the validation if triggered */
+            severity?: 'error' | 'warning';
+            /** When to run this particular validation */
+            trigger?: 'navigation' | 'change' | 'load';
+            /** Cross-field references and validation must run against the default (deformatted) value */
+            dataTarget?: never;
+            /** Where the error should be displayed */
+            displayTarget?: 'page' | 'section' | 'field';
+            /** The binding to associate this validation with */
+            ref?: Binding;
+            [key: string]: unknown;
+        }>;
+    } : T>;
+    /**
+     * The schema for the supplied (or referenced data).
+     * This is used for validation, formatting, etc
+    */
+    schema?: {
+        /** The ROOT object is the top level object to use */
+        ROOT: {
+            [key: string]: {
+                /** The reference of the base type to use */
+                type: string;
+                /** The referenced object represents an array rather than an object */
+                isArray?: boolean;
+                /**
+                 * Any additional validations that are associated with this property
+                 * These will add to any base validations associated with the \\"type\\"
+                */
+                validation?: Array<{
+                    /**
+                     * The name of the referenced validation type
+                     * This will be used to lookup the proper handler
+                    */
+                    type: string;
+                    /** An optional means of overriding the default message if the validation is triggered */
+                    message?: string;
+                    /** An optional means of overriding the default severity of the validation if triggered */
+                    severity?: 'error' | 'warning';
+                    /** When to run this particular validation */
+                    trigger?: 'navigation' | 'change' | 'load';
+                    /**
+                     * Each validation is passed the value of the data to run it's validation against.
+                     * By default, this is the value stored in the data-model (deformatted).
+                     * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+                    */
+                    dataTarget?: 'formatted' | 'deformatted';
+                    /** Where the error should be displayed */
+                    displayTarget?: 'page' | 'section' | 'field';
+                    [key: string]: unknown;
+                }>;
+                /**
+                 * A reference to a specific data format to use.
+                 * If none is specified, will fallback to that of the base type
+                */
+                format?: {
+                    /** The name of the formatter (and de-formatter) to use */
+                    type: string;
+                    [key: string]: unknown;
+                };
+                /**
+                 * A default value for this property.
+                 * Any reads for this property will result in this default value being written to the model.
+                */
+                default?: T;
+                [key: string]: unknown;
+            };
+        };
+        [key: string]: {
+            [key: string]: {
+                /** The reference of the base type to use */
+                type: string;
+                /** The referenced object represents an array rather than an object */
+                isArray?: boolean;
+                /**
+                 * Any additional validations that are associated with this property
+                 * These will add to any base validations associated with the \\"type\\"
+                */
+                validation?: Array<{
+                    /**
+                     * The name of the referenced validation type
+                     * This will be used to lookup the proper handler
+                    */
+                    type: string;
+                    /** An optional means of overriding the default message if the validation is triggered */
+                    message?: string;
+                    /** An optional means of overriding the default severity of the validation if triggered */
+                    severity?: 'error' | 'warning';
+                    /** When to run this particular validation */
+                    trigger?: 'navigation' | 'change' | 'load';
+                    /**
+                     * Each validation is passed the value of the data to run it's validation against.
+                     * By default, this is the value stored in the data-model (deformatted).
+                     * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+                    */
+                    dataTarget?: 'formatted' | 'deformatted';
+                    /** Where the error should be displayed */
+                    displayTarget?: 'page' | 'section' | 'field';
+                    [key: string]: unknown;
+                }>;
+                /**
+                 * A reference to a specific data format to use.
+                 * If none is specified, will fallback to that of the base type
+                */
+                format?: {
+                    /** The name of the formatter (and de-formatter) to use */
+                    type: string;
+                    [key: string]: unknown;
+                };
+                /**
+                 * A default value for this property.
+                 * Any reads for this property will result in this default value being written to the model.
+                */
+                default?: T;
+                [key: string]: unknown;
+            };
+        };
+    };
+    /** Any initial data that the flow can use */
+    data?: Record<any, unknown>;
+    /** A state machine to drive a user through the experience */
+    navigation: {
+        /** The name of the Flow to begin on */
+        BEGIN: string;
+    } & Record<string, string | {
+        /** The first state to kick off the state machine */
+        startState: string;
+        /** An optional expression to run when this Flow starts */
+        onStart?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        /** An optional expression to run when this Flow ends */
+        onEnd?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        [key: string]: undefined | string | Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        } | ({
+            /** Add comments that will not be processing, but are useful for code explanation */
+            _comment?: string;
+            /** A property to determine the type of state this is */
+            state_type: 'VIEW';
+            /** An optional expression to run when this view renders */
+            onStart?: Expression | {
+                /** The expression to run */
+                exp?: Expression;
+            };
+            /** An optional expression to run before view transition */
+            onEnd?: Expression | {
+                /** The expression to run */
+                exp?: Expression;
+            };
+            exp?: never;
+            /** A mapping of transition-name to FlowState name */
+            transitions: Record<string, string>;
+            /** An id corresponding to a view from the 'views' array */
+            ref: string;
+            /** View meta-properties */
+            attributes?: {
+                [key: string]: any;
+            };
+        } | {
+            /** Add comments that will not be processing, but are useful for code explanation */
+            _comment?: string;
+            /** A property to determine the type of state this is */
+            state_type: 'END';
+            /** An optional expression to run when this view renders */
+            onStart?: Expression | {
+                /** The expression to run */
+                exp?: Expression;
+            };
+            /** An optional expression to run before view transition */
+            onEnd?: Expression | {
+                /** The expression to run */
+                exp?: Expression;
+            };
+            exp?: never;
+            /**
+             * A description of _how_ the flow ended.
+             * If this is a flow started from another flow, the outcome determines the flow transition
+            */
+            outcome: string;
+        } | {
+            /** Add comments that will not be processing, but are useful for code explanation */
+            _comment?: string;
+            /** A property to determine the type of state this is */
+            state_type: 'FLOW';
+            /** An optional expression to run when this view renders */
+            onStart?: Expression | {
+                /** The expression to run */
+                exp?: Expression;
+            };
+            /** An optional expression to run before view transition */
+            onEnd?: Expression | {
+                /** The expression to run */
+                exp?: Expression;
+            };
+            exp?: never;
+            /** A mapping of transition-name to FlowState name */
+            transitions: Record<string, string>;
+            /** A reference to a FLOW id state to run */
+            ref: string;
+        } | {
+            /** Add comments that will not be processing, but are useful for code explanation */
+            _comment?: string;
+            /** A property to determine the type of state this is */
+            state_type: 'ACTION';
+            /** An optional expression to run when this view renders */
+            onStart?: Expression | {
+                /** The expression to run */
+                exp?: Expression;
+            };
+            /** An optional expression to run before view transition */
+            onEnd?: Expression | {
+                /** The expression to run */
+                exp?: Expression;
+            };
+            /**
+             * An expression to execute.
+             * The return value determines the transition to take
+            */
+            exp: Expression;
+            /** A mapping of transition-name to FlowState name */
+            transitions: Record<string, string>;
+        } | {
+            /** Add comments that will not be processing, but are useful for code explanation */
+            _comment?: string;
+            /** A property to determine the type of state this is */
+            state_type: 'EXTERNAL';
+            /** An optional expression to run when this view renders */
+            onStart?: Expression | {
+                /** The expression to run */
+                exp?: Expression;
+            };
+            /** An optional expression to run before view transition */
+            onEnd?: Expression | {
+                /** The expression to run */
+                exp?: Expression;
+            };
+            exp?: never;
+            /** A mapping of transition-name to FlowState name */
+            transitions: Record<string, string>;
+            /** A reference for this external state */
+            ref: string;
+        });
+    }>;
     [key: string]: unknown;
 }"
+`;
+
+exports[`Object Recall Processed 1`] = `
+Object {
+  "additionalProperties": Object {
+    "type": "unknown",
+  },
+  "description": "This is the most generic way of gathering data. The input is bound to a data model using the 'binding' property.
+Players can get field type information from the 'schema' definition, thus to decide the input controls for visual rendering.",
+  "extends": undefined,
+  "genericTokens": Array [
+    Object {
+      "constraints": Object {
+        "ref": "Asset",
+        "type": "ref",
+      },
+      "default": Object {
+        "ref": "Asset",
+        "type": "ref",
+      },
+      "symbol": "AnyTextAsset",
+    },
+  ],
+  "name": "InputAsset",
+  "properties": Object {
+    "binding": Object {
+      "node": Object {
+        "description": "The location in the data-model to store the data",
+        "genericArguments": undefined,
+        "ref": "Binding",
+        "title": "InputAsset.binding",
+        "type": "ref",
+      },
+      "required": true,
+    },
+    "id": Object {
+      "node": Object {
+        "description": "Each asset requires a unique id per view",
+        "title": "Asset.id",
+        "type": "string",
+      },
+      "required": true,
+    },
+    "label": Object {
+      "node": Object {
+        "description": "Asset container for a field label.",
+        "genericArguments": Array [
+          Object {
+            "ref": "Asset",
+            "type": "ref",
+          },
+        ],
+        "ref": "AssetWrapper<AnyTextAsset>",
+        "title": "InputAsset.label",
+        "type": "ref",
+      },
+      "required": false,
+    },
+    "metaData": Object {
+      "node": Object {
+        "additionalProperties": false,
+        "description": "Optional additional data",
+        "extends": undefined,
+        "properties": Object {
+          "beacon": Object {
+            "node": Object {
+              "description": "Additional data to beacon when this input changes",
+              "name": "BeaconDataType",
+              "or": Array [
+                Object {
+                  "title": "BeaconDataType",
+                  "type": "string",
+                },
+                Object {
+                  "keyType": Object {
+                    "type": "string",
+                  },
+                  "title": "BeaconDataType",
+                  "type": "record",
+                  "valueType": Object {
+                    "type": "any",
+                  },
+                },
+              ],
+              "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/node_modules/@player-ui/beacon-plugin/dist/index.d.ts",
+              "title": "InputAsset.metaData.beacon",
+              "type": "or",
+            },
+            "required": false,
+          },
+        },
+        "title": "InputAsset.metaData",
+        "type": "object",
+      },
+      "required": false,
+    },
+    "note": Object {
+      "node": Object {
+        "description": "Asset container for a note.",
+        "genericArguments": Array [
+          Object {
+            "ref": "Asset",
+            "type": "ref",
+          },
+        ],
+        "ref": "AssetWrapper<AnyTextAsset>",
+        "title": "InputAsset.note",
+        "type": "ref",
+      },
+      "required": false,
+    },
+    "type": Object {
+      "node": Object {
+        "const": "input",
+        "description": "The asset type determines the semantics of how a user interacts with a page",
+        "title": "Asset.type",
+        "type": "string",
+      },
+      "required": true,
+    },
+  },
+  "source": "src/index.ts",
+  "title": "Asset",
+  "type": "object",
+}
+`;
+
+exports[`Object Recall Raw 1`] = `
+Object {
+  "additionalProperties": false,
+  "description": "This is the most generic way of gathering data. The input is bound to a data model using the 'binding' property.
+Players can get field type information from the 'schema' definition, thus to decide the input controls for visual rendering.",
+  "extends": Object {
+    "genericArguments": Array [
+      Object {
+        "const": "input",
+        "type": "string",
+      },
+    ],
+    "ref": "Asset<'input'>",
+    "type": "ref",
+  },
+  "genericTokens": Array [
+    Object {
+      "constraints": Object {
+        "ref": "Asset",
+        "type": "ref",
+      },
+      "default": Object {
+        "ref": "Asset",
+        "type": "ref",
+      },
+      "symbol": "AnyTextAsset",
+    },
+  ],
+  "name": "InputAsset",
+  "properties": Object {
+    "binding": Object {
+      "node": Object {
+        "description": "The location in the data-model to store the data",
+        "ref": "Binding",
+        "title": "InputAsset.binding",
+        "type": "ref",
+      },
+      "required": true,
+    },
+    "label": Object {
+      "node": Object {
+        "description": "Asset container for a field label.",
+        "genericArguments": Array [
+          Object {
+            "ref": "AnyTextAsset",
+            "type": "ref",
+          },
+        ],
+        "ref": "AssetWrapper<AnyTextAsset>",
+        "title": "InputAsset.label",
+        "type": "ref",
+      },
+      "required": false,
+    },
+    "metaData": Object {
+      "node": Object {
+        "additionalProperties": false,
+        "description": "Optional additional data",
+        "properties": Object {
+          "beacon": Object {
+            "node": Object {
+              "description": "Additional data to beacon when this input changes",
+              "name": "BeaconDataType",
+              "or": Array [
+                Object {
+                  "title": "BeaconDataType",
+                  "type": "string",
+                },
+                Object {
+                  "keyType": Object {
+                    "type": "string",
+                  },
+                  "title": "BeaconDataType",
+                  "type": "record",
+                  "valueType": Object {
+                    "type": "any",
+                  },
+                },
+              ],
+              "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/node_modules/@player-ui/beacon-plugin/dist/index.d.ts",
+              "title": "InputAsset.metaData.beacon",
+              "type": "or",
+            },
+            "required": false,
+          },
+        },
+        "title": "InputAsset.metaData",
+        "type": "object",
+      },
+      "required": false,
+    },
+    "note": Object {
+      "node": Object {
+        "description": "Asset container for a note.",
+        "genericArguments": Array [
+          Object {
+            "ref": "AnyTextAsset",
+            "type": "ref",
+          },
+        ],
+        "ref": "AssetWrapper<AnyTextAsset>",
+        "title": "InputAsset.note",
+        "type": "ref",
+      },
+      "required": false,
+    },
+  },
+  "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/plugins/reference-assets/core/src/assets/input/types.ts",
+  "title": "InputAsset",
+  "type": "object",
+}
 `;

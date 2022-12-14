@@ -3,7 +3,7 @@ import type { NamedType, NodeType } from '.';
 export type TransformFunction = (
   input: NamedType<NodeType> | NodeType,
   capabilityType: string
-) => void;
+) => NamedType | NodeType;
 
 export interface Capability {
   /** Name of the capability that is provided to Player */
