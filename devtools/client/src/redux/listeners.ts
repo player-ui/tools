@@ -1,35 +1,39 @@
-import { Message } from "@player-tools/devtools-common";
+import { Events, Message } from "@player-tools/devtools-common";
+import { eventActions } from "./actions";
 import { Store } from "redux";
-import { Actions } from '.';
-
+import { GET_DATA_BINDING_DETAILS } from "./aliases";
 
 export function handleMessage(store: Store, message: Message) {
+  // propagate message to default event handlers
+  const { type } = message;
+  if (type in Events.RuntimeEventTypes) {
+    eventActions[type as Events.RuntimeEventTypes](message as any)
+  }
+
+  // other event handlers
   switch (message.type) {
     case 'runtime-init':
       store.dispatch(clearStore());
       break;
-    case 'player-init':
-      store.dispatch(Actions.Events['player-init'](message));
-      store.dispatch(selectedPlayerAction());
-      break;
     case 'player-removed':
-      store.dispatch(playerRemoveAction(message.playerID));
+    case 'player-init':
       store.dispatch(selectedPlayerAction());
       break;
     case 'player-flow-start':
-      store.dispatch(playerFlowStartAction(message));
-      store.dispatch(playerTimelineAction(message));
+      // TODO: Can I map an action to another action? alias?
+      // store.dispatch(playerTimelineAction(message));
+      // retrieve data model on start
       store.dispatch({
         type: GET_DATA_BINDING_DETAILS,
         payload: { playerID: message.playerID, binding: '' },
       });
       break;
-    case 'player-log-event':
-      store.dispatch(playerTimelineAction(message));
-      break;
-    case 'player-view-update-event':
-      store.dispatch(playerViewUpdateAction(message));
-      break;
+    // case 'player-log-event':
+    //   store.dispatch(playerTimelineAction(message));
+    //   break;
+    // case 'player-view-update-event':
+    //   store.dispatch(playerViewUpdateAction(message));
+    //   break;
     case 'player-data-change-event': {
       const { players } = store.getState();
 

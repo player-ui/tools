@@ -83,8 +83,6 @@ export type Message =
   | RPCResponseMessageEvent<any>
   | Events.RuntimeEvent;
 
-  
-
 // TODO: export via plugins
 export type ProfilerNode = {
   /**

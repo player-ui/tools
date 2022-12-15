@@ -33,6 +33,7 @@ type Methods = {
 };
 
 export function plugin(client: PluginClient<Events, Methods>) {
+  // Build RPC handlers (delegation to plugin for how to handle communications to hook up to redux)
   const rpcHandlers: RuntimeRPCRequestHandlers = buildRPCRequests(
     async (message: RPCRequestMessageEvent<Runtime.RuntimeRPC>) => {
       // TODO: Do `send('rpc-request', message)`
@@ -41,6 +42,8 @@ export function plugin(client: PluginClient<Events, Methods>) {
       rpcHandlers[message.rpcType].onMessage(response);
     }
   );
+
+  // Build redux actions to hook up 
   const actions = buildRPCActions(rpcHandlers);
   const store = createStore(
     buildAliases(actions),

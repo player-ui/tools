@@ -123,6 +123,8 @@ export namespace Events {
     | PlayerLogEvent
     | PlayerViewUpdateEvent
     | PlayerFlowStartEvent
+    | PlayerFlowTransitionEvent
+    | PlayerFlowEndEvent
     | RuntimeInitEvent;
 
   export const RuntimeEventTypes = [
@@ -136,6 +138,10 @@ export namespace Events {
     'player-flow-start',
     'player-flow-end',
   ] as const;
+
+  // export const RuntimeEventTypes2 = [
+  //   key in RuntimeEventTypes["type"]
+  // ]
 
   export type RuntimeEventTypes = typeof RuntimeEventTypes[number];
 }

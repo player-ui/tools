@@ -1,6 +1,9 @@
 import type { RPCFunctionCallback } from '../rpc';
 import type { Runtime } from '../types';
 
+
+// TODO: Not sure about these types staying in common
+
 export type RuntimeEventWithoutSource =
   | Omit<Runtime.PlayerDataChangeEvent, 'source'>
   | Omit<Runtime.PlayerLogEvent, 'source'>

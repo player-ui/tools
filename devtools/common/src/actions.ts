@@ -1,6 +1,7 @@
 import { Binding, Flow, Schema, View } from '@player-ui/types';
 import { BaseRPCType, ProfilerNode } from './types';
 
+// TODO: Settle on actions vs RPC nomenclature
 // Bidirectional RPCs originating from the devtools client
 export namespace Actions {
   export interface PlayerConfigRPC
