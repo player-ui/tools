@@ -1,5 +1,5 @@
-import { Severity } from "@player-ui/logger";
-import { Binding, Flow, View } from "@player-ui/types";
+import type { Severity } from "@player-ui/player";
+import type { Binding, Flow, View } from "@player-ui/types";
 import { BaseEventMessage, BaseMessageWithPlayerID, DiscriminateByType } from ".";
 import { RUNTIME_SOURCE } from "./logger";
 
