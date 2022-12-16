@@ -1,13 +1,13 @@
 import React from 'react';
-import type { Runtime } from '@player-tools/devtools-client';
+import type { ActivePlayerState } from '@player-tools/devtools-client';
 import { ObjectInspector } from '@devtools-ds/object-inspector';
 import { Controls, Navigation, Tab, TabList } from '@devtools-ds/navigation';
 import { headerCase } from 'change-case';
 
-export const SUB_PANEL_IDS = ['plugins', 'schema', 'expressions'] as const;
+const SUB_PANEL_IDS = ['plugins', 'schema', 'expressions'] as const;
 
 interface ConfigProps {
-  configState: Runtime.PlayerConfigRPC['result'];
+  configState: ActivePlayerState["configState"]
 }
 
 export const Config = ({ configState }: ConfigProps) => {

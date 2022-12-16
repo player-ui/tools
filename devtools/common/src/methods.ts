@@ -1,11 +1,29 @@
 import { Binding, Flow, Schema, View } from '@player-ui/types';
-import { BaseRPCType, ProfilerNode } from './types';
+import { DiscriminateByType, ProfilerNode } from './types';
 
-// TODO: Settle on actions vs RPC nomenclature
-// Bidirectional RPCs originating from the devtools client
-export namespace Actions {
-  export interface PlayerConfigRPC
-    extends BaseRPCType<'player-config-request'> {
+// Bidirectional methods originating from the devtools client
+export namespace Methods {
+
+  export /** TODO: */ interface BaseMethod<T extends Methods.MethodTypes> {
+    /**
+     * Source of the RPC type
+     */
+    source: string;
+    /**
+     * Unique type associated with the RPC type.
+     */
+    type: T;
+    /**
+     * Parameters associated with the RPC type.
+     */
+    params?: unknown;
+    /**
+     * Result of the RPC call.
+     */
+    result?: unknown;
+  }
+
+  export interface PlayerConfigMethod extends BaseMethod<'player-config-request'> {
     /**
      * Parameters associated with the Runtime Info RPC.
      */
@@ -34,8 +52,7 @@ export namespace Actions {
     };
   }
 
-  export interface PlayerDataBindingRPC
-    extends BaseRPCType<'player-data-binding-details'> {
+  export interface PlayerDataBindingMethod extends BaseMethod<'player-data-binding-details'> {
     /**
      * Parameters associated with the Data Binding RPC.
      */
@@ -90,8 +107,7 @@ export namespace Actions {
     };
   }
 
-  export interface PlayerViewDetailsRPC
-    extends BaseRPCType<'player-view-details-request'> {
+  export interface PlayerViewDetailsMethod extends BaseMethod<'player-view-details-request'> {
     /**
      * Parameters associated with the View Details RPC.
      */
@@ -112,8 +128,7 @@ export namespace Actions {
     };
   }
 
-  export interface PlayerRuntimeInfoRPC
-    extends BaseRPCType<'player-runtime-info-request'> {
+  export interface PlayerRuntimeInfoMethod extends BaseMethod<'player-runtime-info-request'> {
     /**
      * Parameters associated with the Runtime Info RPC.
      */
@@ -146,8 +161,7 @@ export namespace Actions {
     };
   }
 
-  export interface PlayerExpressionRPC
-    extends BaseRPCType<'player-execute-expression'> {
+  export interface PlayerExpressionMethod extends BaseMethod<'player-execute-expression'> {
     /**
      * Parameters associated with the Expression RPC.
      */
@@ -195,8 +209,7 @@ export namespace Actions {
         };
   }
 
-  export interface PlayerStartProfilerRPC
-    extends BaseRPCType<'player-start-profiler-request'> {
+  export interface PlayerStartProfilerMethod extends BaseMethod<'player-start-profiler-request'> {
     /**
      * Parameters associated with the Profiler Details RPC.
      */
@@ -217,8 +230,7 @@ export namespace Actions {
     };
   }
 
-  export interface PlayerStopProfilerRPC
-    extends BaseRPCType<'player-stop-profiler-request'> {
+  export interface PlayerStopProfilerMethod extends BaseMethod<'player-stop-profiler-request'> {
     /**
      * Parameters associated with the Profiler Details RPC.
      */
@@ -239,17 +251,17 @@ export namespace Actions {
     };
   }
 
-  export type RuntimeRPC =
-    | PlayerConfigRPC
-    | PlayerDataBindingRPC
-    | PlayerViewDetailsRPC
-    | PlayerRuntimeInfoRPC
-    | PlayerExpressionRPC
-    | PlayerStartProfilerRPC
-    | PlayerStopProfilerRPC;
+  export type Method =
+    | PlayerConfigMethod
+    | PlayerDataBindingMethod
+    | PlayerViewDetailsMethod
+    | PlayerRuntimeInfoMethod
+    | PlayerExpressionMethod
+    | PlayerStartProfilerMethod
+    | PlayerStopProfilerMethod;
 
   // TODO: Generate this from `RuntimeRPC['type']` if I ever can
-  export const RuntimeRPCTypes = [
+  export const MethodTypes = [
     'player-config-request',
     'player-data-binding-details',
     'player-view-details-request',
@@ -259,5 +271,7 @@ export namespace Actions {
     'player-stop-profiler-request',
   ] as const;
 
-  export type RuntimeRPCTypes = typeof RuntimeRPCTypes[number];
+  export type MethodTypes = typeof MethodTypes[number];
+
+  export type ByType<T extends MethodTypes> = DiscriminateByType<Method, T>;
 }

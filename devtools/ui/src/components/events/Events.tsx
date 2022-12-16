@@ -1,18 +1,17 @@
 import React from 'react';
 import { ObjectInspector } from '@devtools-ds/object-inspector';
 import { Table } from '@devtools-ds/table';
-import type { Runtime } from '@player-tools/devtools-common';
+import type { ActivePlayerState } from '@player-tools/devtools-client';
 import styles from './events.css';
 
 const EVENT_NAME_MAP: Record<
-  | Runtime.PlayerDataChangeEvent['type']
-  | Runtime.PlayerLogEvent['type']
-  | Runtime.PlayerFlowStartEvent['type'],
+  ActivePlayerState['timelineEvents'][number]['type'],
   string
 > = {
   'player-data-change-event': 'Data Change',
   'player-log-event': 'Log',
   'player-flow-start': 'Flow Start',
+  'player-view-update-event': 'View Update',
 };
 
 function createEmptyCells(
@@ -29,11 +28,7 @@ function createEmptyCells(
 }
 
 interface EventsProps {
-  events: Array<
-    | Runtime.PlayerDataChangeEvent
-    | Runtime.PlayerLogEvent
-    | Runtime.PlayerFlowStartEvent
-  >;
+  events: ActivePlayerState['timelineEvents'];
 }
 
 export const Events = ({ events }: EventsProps) => {

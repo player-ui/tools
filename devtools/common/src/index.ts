@@ -1,12 +1,16 @@
-import { Actions as actions } from './actions';
 import { Events as events } from './events';
+import { Methods as methods } from './methods';
 
 export * from './types';
 export * from './logger';
-export { Events } from './events';
-export { Actions } from './actions';
 
+export { Events } from './events';
+export { Methods } from './methods';
+
+// TODO: I'm really not sure about the Runtime namespace
 export namespace Runtime {
-  export const Actions = actions;
-  export const Events = events;
+  // export const Methods = methods;
+  // export const Events = events;
+  // export namespace Methods {}
+  // export namespace Events {}
 }

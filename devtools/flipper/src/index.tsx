@@ -1,62 +1,50 @@
 import React from 'react';
 import { PluginClient, usePlugin } from 'flipper-plugin';
 import {
-  createStore,
   Runtime,
-  RPCRequestMessageEvent,
-  RPCResponseMessageEvent,
+  Events,
+  Methods,
 } from '@player-tools/devtools-common';
 import {
+  createDevtoolsStore,
   handleMessage,
-  buildAliases,
-  buildPlayerReducerCallback,
-  buildRPCActions,
-  buildRPCRequests,
-  RuntimeRPCRequestHandlers,
 } from '@player-tools/devtools-client';
 // TODO: Fix import lol -- maybe try to bundle this package _before_ it hits flipper-pkg? i'm so tired of monkeying with this
 import { App } from '@player-tools/devtools-ui';
 
 type Events = {
-  [key in Runtime.RuntimeEventTypes]: Extract<
-    Runtime.RuntimeEvent,
-    { type: key }
-  >;
-} & {
-  'rpc-response': RPCResponseMessageEvent<Runtime.RuntimeRPC>;
-};
+  [type in Events.Event['type']]: Events.ByType<type>;
+}; 
+// & {
+//   'rpc-response': RPCResponseMessageEvent<Runtime.RuntimeRPC>;
+// };
 
 type Methods = {
-  [key in Runtime.RuntimeRPCTypes]: (
-    payload: RPCRequestMessageEvent<Runtime.RuntimeRPC>
-  ) => Promise<RPCResponseMessageEvent<Runtime.RuntimeRPC>>;
+  [type in Methods.Method["type"]]: (
+    payload: Methods.ByType<type>["params"]
+  ) => Promise<Methods.ByType<type>["result"]>;
 };
 
 export function plugin(client: PluginClient<Events, Methods>) {
-  // Build RPC handlers (delegation to plugin for how to handle communications to hook up to redux)
-  const rpcHandlers: RuntimeRPCRequestHandlers = buildRPCRequests(
-    async (message: RPCRequestMessageEvent<Runtime.RuntimeRPC>) => {
-      // TODO: Do `send('rpc-request', message)`
-      const response = await client.send(message.rpcType, message);
-      // TODO: This doesn't currently work
-      rpcHandlers[message.rpcType].onMessage(response);
-    }
-  );
-
-  // Build redux actions to hook up 
-  const actions = buildRPCActions(rpcHandlers);
-  const store = createStore(
-    buildAliases(actions),
-    buildPlayerReducerCallback(actions)
-  );
-
-  Runtime.RuntimeEventTypes.forEach((event) => {
-    client.onMessage(event, (message) => {
-      handleMessage(store, message);
-    });
+  // Listen for events
+  Events.EventTypes.forEach((event) => {
+    client.onMessage(event, handleMessage);
   });
 
-  return { store };
+  // Delegate to plugin for how to handle communications
+  const methodHandler = async <T extends Methods.MethodTypes>(
+    method: Methods.ByType<T>
+  ): Promise<Methods.ByType<T>['result']> => {
+    if (await client.supportsMethod(method.type)) {
+      return (await client.send(
+        method.type,
+        method.params as any
+      )) as Methods.ByType<T>['result'];
+    }
+    // TODO: What do we do when things aren't supported?
+  };
+
+  return { store: createDevtoolsStore(methodHandler) };
 }
 
 export const Component = () => {

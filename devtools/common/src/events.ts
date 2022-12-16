@@ -1,11 +1,12 @@
 import { Severity } from "@player-ui/logger";
 import { Binding, Flow, View } from "@player-ui/types";
-import { BaseEventMessage, BaseMessageWithPlayerID } from ".";
+import { BaseEventMessage, BaseMessageWithPlayerID, DiscriminateByType } from ".";
 import { RUNTIME_SOURCE } from "./logger";
 
+// TODO: Maybe reverse the pluralness
 // Unidirectional events originating from the Player
 export namespace Events {
-  interface PlayerTimelineEvent<T extends Events.RuntimeEventTypes>
+  export interface PlayerTimelineEvent<T extends Events.EventTypes>
     extends BaseMessageWithPlayerID<T> {
     /**
      * The time in milliseconds when the event was received.
@@ -116,18 +117,21 @@ export namespace Events {
     id: string;
   }
 
-  export type RuntimeEvent =
-    | PlayerInitEvent
-    | PlayerRemovedEvent
+  export type TimelineEvents =
     | PlayerDataChangeEvent
     | PlayerLogEvent
-    | PlayerViewUpdateEvent
     | PlayerFlowStartEvent
+    | PlayerViewUpdateEvent;
+
+  export type Event =
+    | TimelineEvents
+    | PlayerInitEvent
+    | PlayerRemovedEvent
     | PlayerFlowTransitionEvent
     | PlayerFlowEndEvent
     | RuntimeInitEvent;
 
-  export const RuntimeEventTypes = [
+  export const EventTypes = [
     'runtime-init',
     'player-init',
     'player-removed',
@@ -139,9 +143,7 @@ export namespace Events {
     'player-flow-end',
   ] as const;
 
-  // export const RuntimeEventTypes2 = [
-  //   key in RuntimeEventTypes["type"]
-  // ]
+  export type EventTypes = typeof EventTypes[number];
 
-  export type RuntimeEventTypes = typeof RuntimeEventTypes[number];
+  export type ByType<T extends EventTypes> = DiscriminateByType<Event, T>;
 }

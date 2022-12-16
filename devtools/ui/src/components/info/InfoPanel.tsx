@@ -1,9 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import type { Flow } from '@player-ui/types';
 import {
-  type Runtime,
-  type StoreState,
   selectCurrentFlow,
   selectFlowInfo,
   selectSelectedPlayerId,
@@ -19,16 +16,9 @@ import styles from '../app.css';
 export const InfoPanel = () => {
   const dispatch = useDispatch();
 
-  const currentPlayerID = useSelector<StoreState, string | null>(
-    selectSelectedPlayerId
-  );
-
-  const info = useSelector<
-    StoreState,
-    Runtime.PlayerRuntimeInfoRPC['result'] | null
-  >(selectFlowInfo);
-
-  const flow = useSelector<StoreState, Flow | undefined>(selectCurrentFlow);
+  const currentPlayerID = useSelector(selectSelectedPlayerId);
+  const info = useSelector(selectFlowInfo);
+  const flow = useSelector(selectCurrentFlow);
 
   React.useEffect(() => {
     if (

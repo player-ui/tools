@@ -1,95 +1,82 @@
-import { type AsyncThunk, createAsyncThunk } from '@reduxjs/toolkit';
+import { type AsyncThunk, createAsyncThunk, AnyAction } from '@reduxjs/toolkit';
 import {
   createAction,
-  PayloadAction,
   ActionCreatorWithPayload,
 } from '@reduxjs/toolkit';
 import {
-  Runtime,
   createLogger,
   BACKGROUND_SOURCE,
-  Actions,
-  Events,
+  // TODO: This is where being able to import the `Runtime` namespace is beneficial
+  Methods as RuntimeMethods,
+  Events as RuntimeEvents,
 } from '@player-tools/devtools-common';
-import type { RuntimeRPCRequestHandlers } from '../rpc';
 
 const logger = createLogger(BACKGROUND_SOURCE);
 
-export type AsyncRPCActions = {
-  [key in Actions.RuntimeRPCTypes]: AsyncThunk<
-    Extract<Actions.RuntimeRPC, { type: key }>['result'],
-    Extract<Actions.RuntimeRPC, { type: key }>['params'],
-    any
-  >;
+export namespace Methods {
+
+  /** Type describing an object containing async thunks for each Method defined */
+  export type MethodThunks = {
+    [key in RuntimeMethods.Method["type"]]: AsyncThunk<
+      RuntimeMethods.ByType<key>['result'],
+      RuntimeMethods.ByType<key>,
+      any
+    >;
+  };
+
+  export type MethodHandler = <T extends RuntimeMethods.MethodTypes>(
+    method: RuntimeMethods.ByType<T>
+  ) => Promise<RuntimeMethods.ByType<T>['result']>;
+
+  export const buildAsyncThunks = (
+    onMethodRequest: MethodHandler
+  ): MethodThunks => Object.fromEntries(
+    RuntimeMethods.MethodTypes.map(method => 
+      [method, createAsyncThunk<
+        RuntimeMethods.ByType<typeof method>['result'],
+        RuntimeMethods.ByType<typeof method>
+      >(method, async (method) => {
+        logger.log(`Requesting ${method.type}`, method.params);
+        const data = (await onMethodRequest(method)) as 
+          RuntimeMethods.ByType<typeof method.type>['result'];
+        logger.log(`Response from ${method.type}`, data);
+        return data;
+      })]
+    )
+  ) as MethodThunks
+}
+
+// TODO: What the hell should we do here? merged namespace for Events or new namespace?
+export namespace Events {
+
+  /** Redux actions associated against all possible event types */
+  type EventActions = {
+    [key in RuntimeEvents.EventTypes]: ActionCreatorWithPayload<
+      RuntimeEvents.ByType<key>,
+      key
+    >;
+  };
+
+  export interface EventAction<T extends RuntimeEvents.EventTypes = RuntimeEvents.EventTypes> extends AnyAction {
+    payload: RuntimeEvents.ByType<T>;
+  }
+
+  /** Redux actions associated against all defined event types */
+  export const actions: EventActions = Object.fromEntries(
+    RuntimeEvents.EventTypes.map(event => 
+      [event, createAction<RuntimeEvents.ByType<typeof event>>(event)]
+    )
+  ) as EventActions
+}
+
+export const Actions = {
+  // Explicit actions TODO: Is this level of redundancy okay?
+  'selected-player': createAction<string | undefined>('selected-player'),
+  'player-timeline-event': createAction<RuntimeEvents.TimelineEvents>('player-timeline-event'),
+
+  // Reset actions
+  'clear-selected-data-details': createAction('clear-selected-data-details'),
+  'clear-console': createAction('clear-console'),
+  'clear-logs': createAction('clear-logs'),
+  'clear-store': createAction('clear-store'),
 };
-
-export type EventActions = {
-  [key in Events.RuntimeEvent["type"]]: ActionCreatorWithPayload<
-    Extract<Events.RuntimeEvent, { type: key }>,
-    key
-  >;
-};
-
-export const buildRPCActions = (
-  handlers: RuntimeRPCRequestHandlers
-): AsyncRPCActions =>
-  Actions.RuntimeRPCTypes.reduce((acc, rpcType) => {
-    // TODO: Fix this
-    // @ts-ignore
-    acc[rpcType] = createAsyncThunk<
-      Extract<Actions.RuntimeRPC, { type: typeof rpcType }>['result'],
-      Extract<Actions.RuntimeRPC, { type: typeof rpcType }>['params']
-    >(rpcType, async (params) => {
-      logger.log(`Requesting ${rpcType}`, params);
-      const data = (await handlers[rpcType].call(params)) as Extract<
-        Actions.RuntimeRPC,
-        { type: typeof rpcType }
-      >['result'];
-      logger.log(`Response from ${rpcType}`, data);
-      return data;
-    });
-    return acc;
-  }, {} as AsyncRPCActions);
-
-export const eventActions: EventActions = Object.fromEntries(Events.RuntimeEventTypes.map(event => [event, createAction<Extract<Events.RuntimeEvent, { type: typeof event }>>(event)])) as EventActions
-
-// export const playerInitAction =
-//   createAction<Runtime.PlayerInitEvent>('player-init');
-// export const playerRemoveAction = createAction<string>('player-removed');
-// export const selectedPlayerAction = createAction<string | undefined>(
-//   'selected-player'
-// );
-// export const playerFlowStartAction =
-//   createAction<Runtime.PlayerFlowStartEvent>('player-flow-start');
-// export const playerTimelineAction = createAction<
-//   | Runtime.PlayerDataChangeEvent
-//   | Runtime.PlayerLogEvent
-//   | Runtime.PlayerFlowStartEvent
-// >('player-timeline-event');
-// export const playerViewUpdateAction =
-//   createAction<Runtime.PlayerViewUpdateEvent>('player-view-update-event');
-// export const clearSelectedDataDetails = createAction<void>(
-//   'clear-selected-data-details'
-// );
-// export const consoleClearAction = createAction('console-clear');
-// export const clearStore = createAction<void>('clear-store');
-// export const logsClearAction = createAction('logs-clear')
-
-// export namespace Actions {
-//   export const Events = Runtime.RuntimeEventTypes.reduce((actions, event) => {
-//     actions[event] =
-//       createAction<Extract<Runtime.RuntimeEvent, { type: typeof event }>>(
-//         event
-//       );
-
-//     return actions;
-//   }, {} as EventActions);
-
-  
-// }
-
-// export namespace Actions {
-//   export namespace Console {
-//     export const clear = createAction('console-clear');
-//   }
-// }

@@ -1,8 +1,8 @@
 import { Events } from './events';
-import { Actions } from './actions';
+import { Methods } from './methods';
 
 export interface BaseEventMessage<
-  T extends Events.RuntimeEventTypes | 'rpc-request' | 'rpc-response'
+  T extends Events.EventTypes | 'rpc-request' | 'rpc-response'
 > {
   /**
    * Source of the Message
@@ -14,26 +14,7 @@ export interface BaseEventMessage<
   type: T;
 }
 
-export interface BaseRPCType<T extends Actions.RuntimeRPCTypes> {
-  /**
-   * Source of the RPC type
-   */
-  source: string;
-  /**
-   * Unique type associated with the RPC type.
-   */
-  type: T;
-  /**
-   * Parameters associated with the RPC type.
-   */
-  params?: unknown;
-  /**
-   * Result of the RPC call.
-   */
-  result?: unknown;
-}
-
-export interface BaseMessageWithPlayerID<T extends Events.RuntimeEventTypes>
+export interface BaseMessageWithPlayerID<T extends Events.EventTypes>
   extends BaseEventMessage<T> {
   /**
    * Unique Player Id associated with the message.
@@ -41,7 +22,7 @@ export interface BaseMessageWithPlayerID<T extends Events.RuntimeEventTypes>
   playerID: string;
 }
 
-export interface RPCRequestMessageEvent<T extends BaseRPCType<any>>
+export interface MethodRequestMessageEvent<T extends Methods.BaseMethod<any>>
   extends BaseEventMessage<'rpc-request'> {
   /**
    * Unique Player Id associated with the RPC Request message.
@@ -57,7 +38,7 @@ export interface RPCRequestMessageEvent<T extends BaseRPCType<any>>
   params: T['params'];
 }
 
-export interface RPCResponseMessageEvent<T extends BaseRPCType<any>>
+export interface MethodResponseMessageEvent<T extends Methods.BaseMethod<any>>
   extends BaseEventMessage<'rpc-response'> {
   /**
    * Unique Id associated with the RPC Response message.
@@ -77,11 +58,10 @@ export interface RPCResponseMessageEvent<T extends BaseRPCType<any>>
   params: T['params'];
 }
 
-// TODO: Convert to RPC
 export type Message =
-  | RPCRequestMessageEvent<any>
-  | RPCResponseMessageEvent<any>
-  | Events.RuntimeEvent;
+  | MethodRequestMessageEvent<any>
+  | MethodResponseMessageEvent<any>
+  | Events.Event;
 
 // TODO: export via plugins
 export type ProfilerNode = {
@@ -112,3 +92,4 @@ export type ProfilerNode = {
   children: ProfilerNode[];
 };
 
+export type DiscriminateByType<Types, T extends string> = Extract<Types, { type: T }>

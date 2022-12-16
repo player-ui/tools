@@ -1,35 +1,35 @@
 import type { RPCFunctionCallback } from '../rpc';
-import type { Runtime } from '../types';
+import type { Events, Methods } from '..';
 
 
 // TODO: Not sure about these types staying in common
 
 export type RuntimeEventWithoutSource =
-  | Omit<Runtime.PlayerDataChangeEvent, 'source'>
-  | Omit<Runtime.PlayerLogEvent, 'source'>
-  | Omit<Runtime.PlayerInitEvent, 'source'>
-  | Omit<Runtime.PlayerViewUpdateEvent, 'source'>
-  | Omit<Runtime.RuntimeInitEvent, 'source'>
-  | Omit<Runtime.PlayerFlowStartEvent, 'source'>
-  | Omit<Runtime.PlayerRemovedEvent, 'source'>;
+  | Omit<Events.PlayerDataChangeEvent, 'source'>
+  | Omit<Events.PlayerLogEvent, 'source'>
+  | Omit<Events.PlayerInitEvent, 'source'>
+  | Omit<Events.PlayerViewUpdateEvent, 'source'>
+  | Omit<Events.RuntimeInitEvent, 'source'>
+  | Omit<Events.PlayerFlowStartEvent, 'source'>
+  | Omit<Events.PlayerRemovedEvent, 'source'>;
 
 export type RuntimeEventPublisher = (
   message: RuntimeEventWithoutSource
 ) => void;
 
-export type ConfigRequestHandler = RPCFunctionCallback<Runtime.PlayerConfigRPC>;
+export type ConfigRequestHandler = RPCFunctionCallback<Methods.PlayerConfigMethod>;
 export type DataBindingRequestHandler =
-  RPCFunctionCallback<Runtime.PlayerDataBindingRPC>;
+  RPCFunctionCallback<Methods.PlayerDataBindingMethod>;
 export type RuntimeInfoRequestHandler =
-  RPCFunctionCallback<Runtime.PlayerRuntimeInfoRPC>;
+  RPCFunctionCallback<Methods.PlayerRuntimeInfoMethod>;
 export type ViewInfoRequestHandler =
-  RPCFunctionCallback<Runtime.PlayerViewDetailsRPC>;
+  RPCFunctionCallback<Methods.PlayerViewDetailsMethod>;
 export type ExpressionEvalHandler =
-  RPCFunctionCallback<Runtime.PlayerExpressionRPC>;
+  RPCFunctionCallback<Methods.PlayerExpressionMethod>;
 export type StartProfilerRequestHandler =
-  RPCFunctionCallback<Runtime.PlayerStartProfilerRPC>;
+  RPCFunctionCallback<Methods.PlayerStartProfilerMethod>;
 export type StopProfilerRequestHandler =
-  RPCFunctionCallback<Runtime.PlayerStopProfilerRPC>;
+  RPCFunctionCallback<Methods.PlayerStopProfilerMethod>;
 
 export interface PlayerRuntimeRPCCallbacks {
   /**

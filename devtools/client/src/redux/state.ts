@@ -1,23 +1,19 @@
 import { Flow, View } from '@player-ui/types';
-import { Runtime, Actions, Events, ProfilerNode } from '@player-tools/devtools-common';
+import { Methods, Events, ProfilerNode } from '@player-tools/devtools-common';
 
 export type ActivePlayerState = {
   /**
    * state associated with player config
    */
-  configState?: Actions.PlayerConfigRPC['result'] | null;
+  configState?: Methods.PlayerConfigMethod['result'] | null;
   /**
    * Flow related Information of the player.
    */
-  flowInfo?: Actions.PlayerRuntimeInfoRPC['result'] | null;
+  flowInfo?: Methods.PlayerRuntimeInfoMethod['result'] | null;
   /**
    * A collection of all the events associated with the running player instance.
    */
-  timelineEvents: Array<
-    | Events.PlayerDataChangeEvent
-    | Events.PlayerLogEvent
-    | Events.PlayerFlowStartEvent
-  >;
+  timelineEvents: Array<Events.TimelineEvents>;
   /**
    * View related information of the player.
    */
@@ -81,11 +77,11 @@ export type DataState = {
   /**
    * The binding selected on the Data panel.
    */
-  selectedBinding?: Actions.PlayerDataBindingRPC['result'];
+  selectedBinding?: Methods.PlayerDataBindingMethod['result'];
   /**
    * All the bindings in the data state.
    */
-  allBindings?: Actions.PlayerDataBindingRPC['result'];
+  allBindings?: Methods.PlayerDataBindingMethod['result'];
 };
 
 export interface ConsoleState {
@@ -104,6 +100,6 @@ export interface ConsoleState {
     /**
      * Result of the console evaluation.
      */
-    result: Actions.PlayerExpressionRPC['result'];
+    result: Methods.PlayerExpressionMethod['result'];
   }>;
 }
