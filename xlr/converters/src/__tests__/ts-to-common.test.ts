@@ -466,3 +466,123 @@ describe('Edge Cases', () => {
     expect(XLR).toMatchSnapshot();
   });
 });
+
+describe('Variable Exports', () => {
+  it('Primitive const exports', () => {
+    const sc = `
+      export const foo = 1;
+
+      export const bar = "test";
+
+      export const far = true;
+    `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+
+  it('Object const exports', () => {
+    const sc = `
+      export const foo = {
+        foo: 1,
+        bar: "test",
+        far: false
+      }
+    `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+
+  it('Object const exports with spread', () => {
+    const sc = `
+      const foo = {
+        foo: 1,
+        bar: "test",
+        far: false
+      }
+
+      export const far = {
+        ...foo,
+        mar: 2
+      }
+    `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+
+  it('Array const exports', () => {
+    const sc = `
+      export const foo = [1,2,3]
+    `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+
+  it('Array const exports with spread', () => {
+    const sc = `
+      const foo = [1,2,3]
+      export const bar = [...foo, 4]
+    `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+
+  it('Function with primitive return type', () => {
+    const sc = `
+      function test(arg1: string): string {
+        return ""
+      }
+
+      export const foo = test("1")
+    `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+
+  it('Function with object return type', () => {
+    const sc = `
+      interface Bar {
+        foo: string
+        fuz: number
+      }
+
+      function test(arg1: string): Bar {
+        return {
+            foo: "1",
+            fuz: 1
+        }
+      }
+      
+      export const foo = test("1")
+    `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+});

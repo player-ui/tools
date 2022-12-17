@@ -1,5 +1,618 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Player Data Types Export 1`] = `
+Array [
+  Object {
+    "additionalProperties": false,
+    "name": "BooleanTypeRef",
+    "properties": Object {
+      "type": Object {
+        "node": Object {
+          "const": "BooleanType",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "IntegerTypeRef",
+    "properties": Object {
+      "type": Object {
+        "node": Object {
+          "const": "IntegerType",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "IntegerPosTypeRef",
+    "properties": Object {
+      "type": Object {
+        "node": Object {
+          "const": "IntegerPosType",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "IntegerNNTypeRef",
+    "properties": Object {
+      "type": Object {
+        "node": Object {
+          "const": "IntegerNNType",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "StringTypeRef",
+    "properties": Object {
+      "type": Object {
+        "node": Object {
+          "const": "StringType",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "CollectionTypeRef",
+    "properties": Object {
+      "type": Object {
+        "node": Object {
+          "const": "CollectionType",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "DateTypeRef",
+    "properties": Object {
+      "type": Object {
+        "node": Object {
+          "const": "DateType",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "PhoneTypeRef",
+    "properties": Object {
+      "type": Object {
+        "node": Object {
+          "const": "PhoneType",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "BooleanType",
+    "properties": Object {
+      "default": Object {
+        "node": Object {
+          "const": false,
+          "type": "boolean",
+        },
+        "required": true,
+      },
+      "type": Object {
+        "node": Object {
+          "const": "BooleanType",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "validation": Object {
+        "node": Object {
+          "const": Array [
+            Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "message": Object {
+                  "node": Object {
+                    "const": "Value must be true or false",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+                "options": Object {
+                  "node": Object {
+                    "const": Array [
+                      Object {
+                        "const": true,
+                        "type": "boolean",
+                      },
+                      Object {
+                        "const": false,
+                        "type": "boolean",
+                      },
+                    ],
+                    "elementType": Object {
+                      "type": "any",
+                    },
+                    "type": "array",
+                  },
+                  "required": true,
+                },
+                "type": Object {
+                  "node": Object {
+                    "const": "oneOf",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+              },
+              "type": "object",
+            },
+          ],
+          "elementType": Object {
+            "type": "any",
+          },
+          "type": "array",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "IntegerType",
+    "properties": Object {
+      "format": Object {
+        "node": Object {
+          "additionalProperties": false,
+          "properties": Object {
+            "type": Object {
+              "node": Object {
+                "const": "integer",
+                "type": "string",
+              },
+              "required": true,
+            },
+          },
+          "type": "object",
+        },
+        "required": true,
+      },
+      "type": Object {
+        "node": Object {
+          "const": "IntegerType",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "validation": Object {
+        "node": Object {
+          "const": Array [
+            Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "type": Object {
+                  "node": Object {
+                    "const": "integer",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+              },
+              "type": "object",
+            },
+          ],
+          "elementType": Object {
+            "type": "any",
+          },
+          "type": "array",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "IntegerPosType",
+    "properties": Object {
+      "format": Object {
+        "node": Object {
+          "additionalProperties": false,
+          "properties": Object {
+            "type": Object {
+              "node": Object {
+                "const": "integer",
+                "type": "string",
+              },
+              "required": true,
+            },
+          },
+          "type": "object",
+        },
+        "required": true,
+      },
+      "type": Object {
+        "node": Object {
+          "const": "IntegerPosType",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "validation": Object {
+        "node": Object {
+          "const": Array [
+            Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "type": Object {
+                  "node": Object {
+                    "const": "integer",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+              },
+              "type": "object",
+            },
+            Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "type": Object {
+                  "node": Object {
+                    "const": "min",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+                "value": Object {
+                  "node": Object {
+                    "const": 1,
+                    "type": "number",
+                  },
+                  "required": true,
+                },
+              },
+              "type": "object",
+            },
+          ],
+          "elementType": Object {
+            "type": "any",
+          },
+          "type": "array",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "IntegerNNType",
+    "properties": Object {
+      "format": Object {
+        "node": Object {
+          "additionalProperties": false,
+          "properties": Object {
+            "type": Object {
+              "node": Object {
+                "const": "integer",
+                "type": "string",
+              },
+              "required": true,
+            },
+          },
+          "type": "object",
+        },
+        "required": true,
+      },
+      "type": Object {
+        "node": Object {
+          "const": "IntegerNNType",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "validation": Object {
+        "node": Object {
+          "const": Array [
+            Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "type": Object {
+                  "node": Object {
+                    "const": "integer",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+              },
+              "type": "object",
+            },
+            Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "type": Object {
+                  "node": Object {
+                    "const": "min",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+                "value": Object {
+                  "node": Object {
+                    "const": 0,
+                    "type": "number",
+                  },
+                  "required": true,
+                },
+              },
+              "type": "object",
+            },
+          ],
+          "elementType": Object {
+            "type": "any",
+          },
+          "type": "array",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "StringType",
+    "properties": Object {
+      "default": Object {
+        "node": Object {
+          "const": "",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "format": Object {
+        "node": Object {
+          "additionalProperties": false,
+          "properties": Object {
+            "type": Object {
+              "node": Object {
+                "const": "string",
+                "type": "string",
+              },
+              "required": true,
+            },
+          },
+          "type": "object",
+        },
+        "required": true,
+      },
+      "type": Object {
+        "node": Object {
+          "const": "StringType",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "validation": Object {
+        "node": Object {
+          "const": Array [
+            Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "type": Object {
+                  "node": Object {
+                    "const": "string",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+              },
+              "type": "object",
+            },
+          ],
+          "elementType": Object {
+            "type": "any",
+          },
+          "type": "array",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "CollectionType",
+    "properties": Object {
+      "type": Object {
+        "node": Object {
+          "const": "CollectionType",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "validation": Object {
+        "node": Object {
+          "const": Array [
+            Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "type": Object {
+                  "node": Object {
+                    "const": "collection",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+              },
+              "type": "object",
+            },
+          ],
+          "elementType": Object {
+            "type": "any",
+          },
+          "type": "array",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "DateType",
+    "properties": Object {
+      "format": Object {
+        "node": Object {
+          "additionalProperties": false,
+          "properties": Object {
+            "type": Object {
+              "node": Object {
+                "const": "date",
+                "type": "string",
+              },
+              "required": true,
+            },
+          },
+          "type": "object",
+        },
+        "required": true,
+      },
+      "type": Object {
+        "node": Object {
+          "const": "DateType",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "validation": Object {
+        "node": Object {
+          "const": Array [
+            Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "type": Object {
+                  "node": Object {
+                    "const": "string",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+              },
+              "type": "object",
+            },
+          ],
+          "elementType": Object {
+            "type": "any",
+          },
+          "type": "array",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "PhoneType",
+    "properties": Object {
+      "format": Object {
+        "node": Object {
+          "additionalProperties": false,
+          "properties": Object {
+            "type": Object {
+              "node": Object {
+                "const": "phone",
+                "type": "string",
+              },
+              "required": true,
+            },
+          },
+          "type": "object",
+        },
+        "required": true,
+      },
+      "type": Object {
+        "node": Object {
+          "const": "PhoneType",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "validation": Object {
+        "node": Object {
+          "const": Array [
+            Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "type": Object {
+                  "node": Object {
+                    "const": "phone",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+              },
+              "type": "object",
+            },
+          ],
+          "elementType": Object {
+            "type": "any",
+          },
+          "type": "array",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+]
+`;
+
 exports[`Player Types Export 1`] = `
 Array [
   Object {

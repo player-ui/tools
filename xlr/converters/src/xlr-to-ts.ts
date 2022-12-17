@@ -259,6 +259,10 @@ export class TSWriter {
         return this.context.factory.createKeywordTypeNode(
           ts.SyntaxKind.UndefinedKeyword
         );
+      case 'void':
+        return this.context.factory.createKeywordTypeNode(
+          ts.SyntaxKind.VoidKeyword
+        );
       default:
         this.context.throwError(
           `Unknown primitive type ${(xlrNode as any).type}`

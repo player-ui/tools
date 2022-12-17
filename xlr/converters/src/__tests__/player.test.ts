@@ -450,3 +450,379 @@ export interface Flow<T extends Asset = Asset> {
 
   expect(XLR).toMatchSnapshot();
 });
+
+it('Player Data Types Export', () => {
+  const customPrimitives = [
+    'Expression',
+    'Asset',
+    'Binding',
+    'AssetWrapper',
+    'Schema.DataType',
+  ];
+
+  const sc = `
+
+  export const BooleanTypeRef: Language.DataTypeRef = {
+    type: 'BooleanType',
+  };
+  
+  export const IntegerTypeRef: Language.DataTypeRef = {
+    type: 'IntegerType',
+  };
+  
+  export const IntegerPosTypeRef: Language.DataTypeRef = {
+    type: 'IntegerPosType',
+  };
+  
+  export const IntegerNNTypeRef: Language.DataTypeRef = {
+    type: 'IntegerNNType',
+  };
+  
+  export const StringTypeRef: Language.DataTypeRef = {
+    type: 'StringType',
+  };
+  
+  export const CollectionTypeRef: Language.DataTypeRef = {
+    type: 'CollectionType',
+  };
+  
+  export const DateTypeRef: Language.DataTypeRef = {
+    type: 'DateType',
+  };
+  
+  export const PhoneTypeRef: Language.DataTypeRef = {
+    type: 'PhoneType',
+  };
+
+  export const BooleanType: Schema.DataType<boolean> = {
+    ...BooleanTypeRef,
+    default: false,
+    validation: [
+      {
+        type: 'oneOf',
+        message: 'Value must be true or false',
+        options: [true, false],
+      },
+    ],
+  };
+  
+  export const IntegerType: Schema.DataType<number> = {
+    ...IntegerTypeRef,
+    validation: [
+      {
+        type: 'integer',
+      },
+    ],
+    format: {
+      type: 'integer',
+    },
+  };
+  
+  export const IntegerPosType: Schema.DataType<number> = {
+    ...IntegerPosTypeRef,
+    validation: [
+      {
+        type: 'integer',
+      },
+      {
+        type: 'min',
+        value: 1,
+      },
+    ],
+    format: {
+      type: 'integer',
+    },
+  };
+  
+  export const IntegerNNType: Schema.DataType<number> = {
+    ...IntegerNNTypeRef,
+    validation: [
+      {
+        type: 'integer',
+      },
+      {
+        type: 'min',
+        value: 0,
+      },
+    ],
+    format: {
+      type: 'integer',
+    },
+  };
+  
+  export const StringType: Schema.DataType<string> = {
+    ...StringTypeRef,
+    default: '',
+    validation: [
+      {
+        type: 'string',
+      },
+    ],
+    format: {
+      type: 'string',
+    },
+  };
+  
+  export const CollectionType: Schema.DataType<Array<unknown>> = {
+    ...CollectionTypeRef,
+    validation: [
+      {
+        type: 'collection',
+      },
+    ],
+  };
+  
+  export const DateType: Schema.DataType<string> = {
+    ...DateTypeRef,
+    validation: [
+      {
+        type: 'string',
+      },
+    ],
+    format: {
+      type: 'date',
+    },
+  };
+  
+  export const PhoneType: Schema.DataType<string> = {
+    ...PhoneTypeRef,
+    validation: [
+      {
+        type: 'phone',
+      },
+    ],
+    format: {
+      type: 'phone',
+    },
+  };
+  
+
+`;
+
+  const { sf, tc } = setupTestEnv(sc);
+  const converter = new TsConverter(tc, customPrimitives);
+  const XLR = converter.convertSourceFile(sf).data.types;
+
+  expect(XLR).toMatchSnapshot();
+});
+
+it('Player Expression Types Export', () => {
+  const customPrimitives = [
+    'Expression',
+    'Asset',
+    'Binding',
+    'AssetWrapper',
+    'Schema.DataType',
+    'ExpressionHandler',
+  ];
+
+  const sc = `
+
+  const ExpNodeOpaqueIdentifier = Symbol('Expression Node ID');
+
+  interface NodePosition {
+    /** The character location */
+    character: number;
+  }
+
+  interface NodeLocation {
+    // We only care about the character offset, not the line/column for now
+    // But making these objects allows us to add more (like line number) later
+
+    /** The start of the node */
+    start: NodePosition;
+
+    /** The end of the node */
+    end: NodePosition;
+  }
+
+  interface BaseNode<T> {
+    /** The thing to discriminate the AST type on */
+    type: T;
+
+    /** How to tell this apart from other objects */
+    __id: typeof ExpNodeOpaqueIdentifier;
+
+    /** The location of the node in the source expression string */
+    location?: NodeLocation;
+  }
+
+  /** A helper interface for nodes that container left and right children */
+  interface DirectionalNode {
+    /** The left node. Often for the left hand side of an expression */
+    left: ExpressionNode;
+
+    /** The right child. Often for the right hand side of an expression */
+    right: ExpressionNode;
+  }
+
+  interface LiteralNode extends BaseNode<'Literal'> {
+    /** A node that holds a literal value */
+    value: string | number;
+
+    /** The unprocessed value */
+    raw?: any;
+  }
+
+  interface BinaryNode extends BaseNode<'BinaryExpression'>, DirectionalNode {
+    /** The operation to perform on the nodes */
+    operator: string;
+  }
+
+  interface LogicalNode extends BaseNode<'LogicalExpression'>, DirectionalNode {
+    /** The logical operation to perform on the nodes */
+    operator: string;
+  }
+
+  interface UnaryNode extends BaseNode<'UnaryExpression'> {
+    /** The operation to perform on the node */
+    operator: string;
+
+    /** The single argument that the operation should be performed on */
+    argument: ExpressionNode;
+  }
+
+  type ThisNode = BaseNode<'ThisExpression'>;
+
+  interface ModelRefNode extends BaseNode<'ModelRef'> {
+    /** The binding that the model reference points to */
+    ref: string;
+  }
+
+  interface ObjectNode extends BaseNode<'Object'> {
+    /**  */
+    attributes: Array<{
+      /** The property name of the object */
+      key: ExpressionNode;
+
+      /** the associated value */
+      value: ExpressionNode;
+    }>;
+  }
+
+  interface MemberExpressionNode extends BaseNode<'MemberExpression'> {
+    /** The object to be introspected */
+    object: ExpressionNode;
+
+    /** If the property uses . or open-bracket */
+    computed: boolean;
+
+    /** The property to access on the object */
+    property: ExpressionNode;
+  }
+
+  interface ConditionalExpressionNode extends BaseNode<'ConditionalExpression'> {
+    /** The test for the ternary */
+    test: ExpressionNode;
+
+    /** The truthy case for the ternary */
+    consequent: ExpressionNode;
+
+    /** The falsy case for the ternary */
+    alternate: ExpressionNode;
+  }
+
+  interface CompoundNode extends BaseNode<'Compound'> {
+    /** The contents of the compound expression */
+    body: ExpressionNode[];
+  }
+
+  interface CallExpressionNode extends BaseNode<'CallExpression'> {
+    /** The arguments to the function */
+    args: ExpressionNode[];
+
+    /** The function name */
+    callTarget: IdentifierNode;
+  }
+
+  interface ArrayExpressionNode extends BaseNode<'ArrayExpression'> {
+    /** The items in an array */
+    elements: ExpressionNode[];
+  }
+
+  interface IdentifierNode extends BaseNode<'Identifier'> {
+    /** The variable name */
+    name: string;
+  }
+
+  type AssignmentNode = BaseNode<'Assignment'> & DirectionalNode;
+
+  interface ModificationNode extends BaseNode<'Modification'>, DirectionalNode {
+    /** The operator for the modification */
+    operator: string;
+  }
+
+  type ExpressionLiteralType = string | number | boolean | undefined | null;
+
+  type ExpressionNode =
+    | LiteralNode
+    | BinaryNode
+    | LogicalNode
+    | UnaryNode
+    | ThisNode
+    | ModelRefNode
+    | MemberExpressionNode
+    | ConditionalExpressionNode
+    | CompoundNode
+    | CallExpressionNode
+    | ArrayExpressionNode
+    | IdentifierNode
+    | AssignmentNode
+    | ModificationNode
+    | ObjectNode;
+
+  type ExpressionType =
+    | object
+    | ExpressionLiteralType
+    | Array<ExpressionLiteralType>
+    | ExpressionNode;
+
+  interface ExpressionContext {
+    /** A means of executing an expression */
+    evaluate: (expr: ExpressionType) => unknown;
+  }
+
+  interface OperatorProcessingOptions {
+    /**
+     * When set to a falsy value, the arguments passed to the handler will be raw AST Nodes
+     * This enables lazy evaluation of arguments
+     */
+    resolveParams: boolean;
+  }
+
+  type ExpressionHandler<T extends readonly unknown[] = unknown[], R = void> = ((
+    context: ExpressionContext,
+    ...args: T
+  ) => R) &
+    Partial<OperatorProcessingOptions>;
+
+  /** Generates a function by removing the first context argument */
+  function withoutContext<T extends unknown[], Return>(
+    fn: (...args: T) => Return
+  ): ExpressionHandler<T, Return> {
+    return (_context, ...args) => fn(...args);
+  }
+
+  export const replace = withoutContext(
+    (str: unknown, pattern: unknown, replacement: unknown = '') => {
+      if (
+        typeof str === 'string' &&
+        typeof pattern === 'string' &&
+        typeof replacement === 'string'
+      ) {
+        const replacementRegex = new RegExp(pattern, 'g');
+
+        return str.replace(replacementRegex, replacement);
+      }
+
+      return str;
+    }
+  );
+`;
+
+  const { sf, tc } = setupTestEnv(sc);
+  const converter = new TsConverter(tc, customPrimitives);
+  const XLR = converter.convertSourceFile(sf).data.types;
+
+  expect(XLR).toMatchSnapshot();
+});

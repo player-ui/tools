@@ -15,41 +15,6 @@ export interface Annotations {
   comment?: string;
 }
 
-export interface TypeMap {
-  /** */
-  and: void;
-  /** */
-  or: void;
-  /** */
-  ref: string;
-  /** */
-  any: unknown;
-  /** */
-  null: null;
-  /** */
-  string: string;
-  /** */
-  number: number;
-  /** */
-  boolean: boolean;
-  /** */
-  object: object;
-  /** */
-  array: Array<unknown>;
-  /** */
-  tuple: Array<unknown>;
-  /** */
-  function: () => unknown;
-  /** */
-  record: Record<string | number | symbol, unknown>;
-  /** */
-  undefined: undefined;
-  /** */
-  never: never;
-  /**  */
-  unknown: unknown;
-}
-
 export interface Const<T> {
   /** The literal value for the node */
   const?: T;
@@ -74,6 +39,7 @@ export type UndefinedType = TypeNode<'undefined'> &
   CommonTypeInfo<undefined> &
   Annotations;
 export type NullType = TypeNode<'null'> & CommonTypeInfo<null> & Annotations;
+export type VoidType = TypeNode<'void'> & CommonTypeInfo<void> & Annotations;
 export type StringType = TypeNode<'string'> &
   CommonTypeInfo<string> &
   Annotations;
@@ -205,7 +171,8 @@ export type PrimitiveTypes =
   | BooleanType
   | AnyType
   | UnknownType
-  | UndefinedType;
+  | UndefinedType
+  | VoidType;
 
 /** Set of all Node Types */
 export type NodeType =
@@ -226,7 +193,8 @@ export type NodeType =
   | OrType
   | RefType
   | FunctionType
-  | ConditionalType;
+  | ConditionalType
+  | VoidType;
 
 export type NodeTypeStrings = Pick<NodeType, 'type'>['type'];
 

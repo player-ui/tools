@@ -56,10 +56,25 @@ export type TopLevelDeclaration =
 /**
  * Returns if the node is an interface or a type declaration
  */
-export function isTopLevelNode(node: ts.Node): node is TopLevelDeclaration {
+export function isTopLevelDeclaration(
+  node: ts.Node
+): node is TopLevelDeclaration {
   return (
     node.kind === ts.SyntaxKind.InterfaceDeclaration ||
     node.kind === ts.SyntaxKind.TypeAliasDeclaration
+  );
+}
+
+export type TopLevelNode = TopLevelDeclaration | ts.VariableStatement;
+
+/**
+ * Returns if the node is an interface or a type declaration
+ */
+export function isTopLevelNode(node: ts.Node): node is TopLevelNode {
+  return (
+    node.kind === ts.SyntaxKind.InterfaceDeclaration ||
+    node.kind === ts.SyntaxKind.TypeAliasDeclaration ||
+    node.kind === ts.SyntaxKind.VariableStatement
   );
 }
 
@@ -93,7 +108,8 @@ export function isPrimitiveTypeNode(node: NodeType): node is PrimitiveTypes {
     node.type === 'any' ||
     node.type === 'never' ||
     node.type === 'undefined' ||
-    node.type === 'unknown'
+    node.type === 'unknown' ||
+    node.type === 'void'
   );
 }
 
