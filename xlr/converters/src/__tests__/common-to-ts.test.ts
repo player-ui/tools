@@ -191,4 +191,161 @@ describe('Type Exports', () => {
     expect(nodeText).toMatchSnapshot();
     expect(referencedImports).toBeUndefined();
   });
+
+  it('Static Type Conversion Objects', () => {
+    const xlr = {
+      name: 'test',
+      source: 'test.ts',
+      type: 'object',
+      properties: {
+        foo: {
+          required: true,
+          node: {
+            type: 'string',
+            const: 'foo',
+          },
+        },
+        bar: {
+          required: true,
+          node: {
+            type: 'number',
+            const: 1,
+          },
+        },
+        bax: {
+          required: true,
+          node: {
+            type: 'boolean',
+            const: false,
+          },
+        },
+      },
+      additionalProperties: false,
+    } as NamedType;
+
+    const converter = new TSWriter(ts.factory);
+
+    const { type: tsNode, referencedTypes: referencedImports } =
+      converter.convertNamedType(xlr);
+
+    const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
+    const resultFile = ts.createSourceFile(
+      'output.d.ts',
+      '',
+      ts.ScriptTarget.ES2017,
+      false, // setParentNodes
+      ts.ScriptKind.TS
+    );
+
+    const nodeText = printer.printNode(
+      ts.EmitHint.Unspecified,
+      tsNode,
+      resultFile
+    );
+
+    expect(nodeText).toMatchSnapshot();
+    expect(referencedImports).toBeUndefined();
+  });
+
+  it('Static Type Conversion Arrays', () => {
+    const xlr = {
+      name: 'test',
+      source: 'test.ts',
+      type: 'array',
+      elementType: {
+        type: 'any',
+      },
+      const: [
+        {
+          type: 'string',
+          const: 'foo',
+        },
+        {
+          type: 'number',
+          const: 1,
+        },
+        {
+          type: 'boolean',
+          const: false,
+        },
+      ],
+    } as NamedType;
+
+    const converter = new TSWriter(ts.factory);
+
+    const { type: tsNode, referencedTypes: referencedImports } =
+      converter.convertNamedType(xlr);
+
+    const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
+    const resultFile = ts.createSourceFile(
+      'output.d.ts',
+      '',
+      ts.ScriptTarget.ES2017,
+      false, // setParentNodes
+      ts.ScriptKind.TS
+    );
+
+    const nodeText = printer.printNode(
+      ts.EmitHint.Unspecified,
+      tsNode,
+      resultFile
+    );
+
+    expect(nodeText).toMatchSnapshot();
+    expect(referencedImports).toBeUndefined();
+  });
+
+  it('Dynamic results Conversion', () => {
+    const xlr = {
+      source: 'test.ts',
+      name: 'size',
+      type: 'ref',
+      ref: 'ExpressionHandler',
+      genericArguments: [
+        {
+          type: 'tuple',
+          elementTypes: [
+            {
+              name: 'val',
+              type: {
+                type: 'unknown',
+              },
+            },
+          ],
+          additionalItems: false,
+          minItems: 1,
+        },
+        {
+          type: 'number',
+        },
+      ],
+    } as NamedType;
+
+    const converter = new TSWriter(ts.factory);
+
+    const { type: tsNode, referencedTypes: referencedImports } =
+      converter.convertNamedType(xlr);
+
+    const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
+    const resultFile = ts.createSourceFile(
+      'output.d.ts',
+      '',
+      ts.ScriptTarget.ES2017,
+      false, // setParentNodes
+      ts.ScriptKind.TS
+    );
+
+    const nodeText = printer.printNode(
+      ts.EmitHint.Unspecified,
+      tsNode,
+      resultFile
+    );
+
+    expect(nodeText).toMatchSnapshot();
+    expect(referencedImports).toMatchInlineSnapshot(`
+      Set {
+        "ExpressionHandler",
+      }
+    `);
+  });
 });

@@ -143,9 +143,14 @@ export class TSWriter {
     }
 
     if (type.type === 'array') {
-      return this.context.factory.createTypeReferenceNode(
-        this.context.factory.createIdentifier('Array'),
-        [this.convertTypeNode(type.elementType)]
+      if (type.const) {
+        return this.context.factory.createTupleTypeNode(
+          type.const.map((element) => this.convertTypeNode(element as NodeType))
+        );
+      }
+
+      return this.context.factory.createArrayTypeNode(
+        this.convertTypeNode(type.elementType)
       );
     }
 
@@ -183,6 +188,7 @@ export class TSWriter {
   }
 
   private createRefNode(xlrNode: RefType): ts.TypeReferenceNode {
+    const typeArgs: ts.TypeNode[] = [];
     if (xlrNode.genericArguments) {
       xlrNode.genericArguments.forEach((genericArg) => {
         if (genericArg.name) {
@@ -208,13 +214,15 @@ export class TSWriter {
               this.additionalTypes.set(type.name, additionalType);
             }
           });
+        } else {
+          typeArgs.push(this.convertTypeNode(genericArg));
         }
       });
     }
 
     const importName = xlrNode.ref.split('<')[0];
     this.importSet.add(importName);
-    return this.context.factory.createTypeReferenceNode(xlrNode.ref);
+    return this.context.factory.createTypeReferenceNode(xlrNode.ref, typeArgs);
   }
 
   private createPrimitiveNode(xlrNode: PrimitiveTypes): ts.TypeNode {
@@ -304,7 +312,20 @@ export class TSWriter {
 
   private createTupleNode(xlrNode: TupleType): ts.TypeNode {
     return this.context.factory.createTupleTypeNode(
-      xlrNode.elementTypes.map((e) => this.convertTypeNode(e.type))
+      xlrNode.elementTypes.map((e) => {
+        if (e.name) {
+          return this.context.factory.createNamedTupleMember(
+            undefined,
+            this.context.factory.createIdentifier(e.name),
+            e.optional
+              ? this.context.factory.createToken(ts.SyntaxKind.QuestionToken)
+              : undefined,
+            this.convertTypeNode(e.type)
+          );
+        }
+
+        return this.convertTypeNode(e.type);
+      })
     );
   }
 
