@@ -613,6 +613,50 @@ Array [
 ]
 `;
 
+exports[`Player Expression Types Export 1`] = `
+Array [
+  Object {
+    "genericArguments": Array [
+      Object {
+        "additionalItems": false,
+        "elementTypes": Array [
+          Object {
+            "name": "str",
+            "optional": undefined,
+            "type": Object {
+              "type": "unknown",
+            },
+          },
+          Object {
+            "name": "pattern",
+            "optional": undefined,
+            "type": Object {
+              "type": "unknown",
+            },
+          },
+          Object {
+            "name": "replacement",
+            "optional": true,
+            "type": Object {
+              "type": "unknown",
+            },
+          },
+        ],
+        "minItems": 2,
+        "type": "tuple",
+      },
+      Object {
+        "type": "unknown",
+      },
+    ],
+    "name": "replace",
+    "ref": "ExpressionHandler",
+    "source": "filename.ts",
+    "type": "ref",
+  },
+]
+`;
+
 exports[`Player Types Export 1`] = `
 Array [
   Object {
@@ -722,7 +766,6 @@ Array [
             },
             Object {
               "const": true,
-              "title": "SwitchCase.case",
               "type": "boolean",
             },
           ],
@@ -776,7 +819,6 @@ Array [
               },
               Object {
                 "const": true,
-                "title": "SwitchCase.case",
                 "type": "boolean",
               },
             ],
@@ -963,7 +1005,6 @@ Array [
                             },
                             Object {
                               "const": true,
-                              "title": "SwitchCase.case",
                               "type": "boolean",
                             },
                           ],
@@ -1089,7 +1130,6 @@ Array [
                             },
                             Object {
                               "const": true,
-                              "title": "SwitchCase.case",
                               "type": "boolean",
                             },
                           ],
@@ -1234,7 +1274,6 @@ Array [
                         },
                         Object {
                           "const": true,
-                          "title": "SwitchCase.case",
                           "type": "boolean",
                         },
                       ],
@@ -1331,7 +1370,6 @@ Array [
                         },
                         Object {
                           "const": true,
-                          "title": "SwitchCase.case",
                           "type": "boolean",
                         },
                       ],
@@ -1433,7 +1471,6 @@ Array [
                     },
                     Object {
                       "const": true,
-                      "title": "SwitchCase.case",
                       "type": "boolean",
                     },
                   ],
@@ -1530,7 +1567,6 @@ Array [
                     },
                     Object {
                       "const": true,
-                      "title": "SwitchCase.case",
                       "type": "boolean",
                     },
                   ],
@@ -5129,17 +5165,14 @@ Any reference to _index_ is replaced with the current iteration index.",
                           "or": Array [
                             Object {
                               "const": "page",
-                              "title": "DisplayTarget",
                               "type": "string",
                             },
                             Object {
                               "const": "section",
-                              "title": "DisplayTarget",
                               "type": "string",
                             },
                             Object {
                               "const": "field",
-                              "title": "DisplayTarget",
                               "type": "string",
                             },
                           ],
@@ -5175,12 +5208,10 @@ Any reference to _index_ is replaced with the current iteration index.",
                           "or": Array [
                             Object {
                               "const": "error",
-                              "title": "Severity",
                               "type": "string",
                             },
                             Object {
                               "const": "warning",
-                              "title": "Severity",
                               "type": "string",
                             },
                           ],
@@ -5198,17 +5229,14 @@ Any reference to _index_ is replaced with the current iteration index.",
                           "or": Array [
                             Object {
                               "const": "navigation",
-                              "title": "Trigger",
                               "type": "string",
                             },
                             Object {
                               "const": "change",
-                              "title": "Trigger",
                               "type": "string",
                             },
                             Object {
                               "const": "load",
-                              "title": "Trigger",
                               "type": "string",
                             },
                           ],
@@ -6171,12 +6199,10 @@ In the off chance you'd like this validator to run against the formatted value (
                             "or": Array [
                               Object {
                                 "const": "formatted",
-                                "title": "Reference.dataTarget",
                                 "type": "string",
                               },
                               Object {
                                 "const": "deformatted",
-                                "title": "Reference.dataTarget",
                                 "type": "string",
                               },
                             ],
@@ -6192,17 +6218,14 @@ In the off chance you'd like this validator to run against the formatted value (
                             "or": Array [
                               Object {
                                 "const": "page",
-                                "title": "DisplayTarget",
                                 "type": "string",
                               },
                               Object {
                                 "const": "section",
-                                "title": "DisplayTarget",
                                 "type": "string",
                               },
                               Object {
                                 "const": "field",
-                                "title": "DisplayTarget",
                                 "type": "string",
                               },
                             ],
@@ -6226,12 +6249,10 @@ In the off chance you'd like this validator to run against the formatted value (
                             "or": Array [
                               Object {
                                 "const": "error",
-                                "title": "Severity",
                                 "type": "string",
                               },
                               Object {
                                 "const": "warning",
-                                "title": "Severity",
                                 "type": "string",
                               },
                             ],
@@ -6247,17 +6268,14 @@ In the off chance you'd like this validator to run against the formatted value (
                             "or": Array [
                               Object {
                                 "const": "navigation",
-                                "title": "Trigger",
                                 "type": "string",
                               },
                               Object {
                                 "const": "change",
-                                "title": "Trigger",
                                 "type": "string",
                               },
                               Object {
                                 "const": "load",
-                                "title": "Trigger",
                                 "type": "string",
                               },
                             ],
@@ -6392,12 +6410,10 @@ In the off chance you'd like this validator to run against the formatted value (
                                 "or": Array [
                                   Object {
                                     "const": "formatted",
-                                    "title": "Reference.dataTarget",
                                     "type": "string",
                                   },
                                   Object {
                                     "const": "deformatted",
-                                    "title": "Reference.dataTarget",
                                     "type": "string",
                                   },
                                 ],
@@ -6413,17 +6429,14 @@ In the off chance you'd like this validator to run against the formatted value (
                                 "or": Array [
                                   Object {
                                     "const": "page",
-                                    "title": "DisplayTarget",
                                     "type": "string",
                                   },
                                   Object {
                                     "const": "section",
-                                    "title": "DisplayTarget",
                                     "type": "string",
                                   },
                                   Object {
                                     "const": "field",
-                                    "title": "DisplayTarget",
                                     "type": "string",
                                   },
                                 ],
@@ -6447,12 +6460,10 @@ In the off chance you'd like this validator to run against the formatted value (
                                 "or": Array [
                                   Object {
                                     "const": "error",
-                                    "title": "Severity",
                                     "type": "string",
                                   },
                                   Object {
                                     "const": "warning",
-                                    "title": "Severity",
                                     "type": "string",
                                   },
                                 ],
@@ -6468,17 +6479,14 @@ In the off chance you'd like this validator to run against the formatted value (
                                 "or": Array [
                                   Object {
                                     "const": "navigation",
-                                    "title": "Trigger",
                                     "type": "string",
                                   },
                                   Object {
                                     "const": "change",
-                                    "title": "Trigger",
                                     "type": "string",
                                   },
                                   Object {
                                     "const": "load",
-                                    "title": "Trigger",
                                     "type": "string",
                                   },
                                 ],
@@ -6597,17 +6605,14 @@ This will be used to lookup the proper handler",
                                   "or": Array [
                                     Object {
                                       "const": "page",
-                                      "title": "DisplayTarget",
                                       "type": "string",
                                     },
                                     Object {
                                       "const": "section",
-                                      "title": "DisplayTarget",
                                       "type": "string",
                                     },
                                     Object {
                                       "const": "field",
-                                      "title": "DisplayTarget",
                                       "type": "string",
                                     },
                                   ],
@@ -6640,12 +6645,10 @@ This will be used to lookup the proper handler",
                                   "or": Array [
                                     Object {
                                       "const": "error",
-                                      "title": "Severity",
                                       "type": "string",
                                     },
                                     Object {
                                       "const": "warning",
-                                      "title": "Severity",
                                       "type": "string",
                                     },
                                   ],
@@ -6661,17 +6664,14 @@ This will be used to lookup the proper handler",
                                   "or": Array [
                                     Object {
                                       "const": "navigation",
-                                      "title": "Trigger",
                                       "type": "string",
                                     },
                                     Object {
                                       "const": "change",
-                                      "title": "Trigger",
                                       "type": "string",
                                     },
                                     Object {
                                       "const": "load",
-                                      "title": "Trigger",
                                       "type": "string",
                                     },
                                   ],

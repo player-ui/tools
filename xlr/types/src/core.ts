@@ -106,9 +106,18 @@ export interface ConditionalNode extends TypeNode<'conditional'> {
 
 export type ConditionalType = ConditionalNode & Annotations;
 
+export interface TupleMember {
+  /** Optional Name of the Tuple Member */
+  name?: string;
+  /** Type constraint of the Tuple Member */
+  type: NodeType;
+  /** Is the Tuple Member Optional */
+  optional?: boolean;
+}
+
 export interface TupleNode extends TypeNode<'tuple'> {
   /** The types in the tuple */
-  elementTypes: Array<NodeType>;
+  elementTypes: Array<TupleMember>;
   /** The minimum number of items */
   minItems: number;
   /** What, if any, additional types can be provided */

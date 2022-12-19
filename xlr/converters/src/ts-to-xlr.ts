@@ -437,7 +437,7 @@ export class TsConverter {
         const elements = this.tsNodeToType(node.objectType) as TupleType;
         return {
           type: 'or',
-          or: [...elements.elementTypes],
+          or: [...elements.elementTypes.map((element) => element.type)],
         };
       }
 
@@ -565,7 +565,17 @@ export class TsConverter {
   private resolveLiteralReference(expression: ts.Expression): NodeType {
     if (ts.isIdentifier(expression)) {
       const symbol = this.context.typeChecker.getSymbolAtLocation(expression);
-      const expressionReference = symbol?.declarations?.[0];
+      let expressionReference = symbol?.declarations?.[0];
+      if (
+        symbol &&
+        expressionReference &&
+        ts.isImportSpecifier(expressionReference)
+      ) {
+        const referencedDeclaration =
+          this.context.typeChecker.getAliasedSymbol(symbol);
+        expressionReference = referencedDeclaration.declarations?.[0];
+      }
+
       if (
         expressionReference &&
         ts.isVariableDeclaration(expressionReference) &&
@@ -622,7 +632,7 @@ export class TsConverter {
         }
 
         this.context.throwError(
-          `Error: could not determine effective return type of ${functionCall.getText()}`
+          `Error: could not get referenced type ${syntheticNode.getText()}`
         );
       }
 
@@ -684,18 +694,33 @@ export class TsConverter {
         ]
       : [[...node.elements], undefined];
 
-    const elementTypes = elements.map(
-      (element) =>
-        this.convertTsTypeNode(tsStripOptionalType(element)) ?? AnyTypeNode
-    );
+    const elementTypes = elements.map((element) => {
+      if (ts.isNamedTupleMember(element)) {
+        let typeNode;
+        if (element.type) {
+          typeNode = this.convertTsTypeNode(element.type);
+        }
+
+        return {
+          name: element.name.text,
+          type: typeNode ?? AnyTypeNode,
+          optional: element.questionToken ? true : undefined,
+        };
+      }
+
+      return {
+        type: this.convertTsTypeNode(tsStripOptionalType(element)),
+        optional: ts.isOptionalTypeNode(element),
+      };
+    });
 
     const additionalItems = rest
       ? this.convertTsTypeNode((rest.type as ts.ArrayTypeNode).elementType) ??
         AnyTypeNode
       : false;
 
-    const firstOptional = elements.findIndex((element) =>
-      ts.isOptionalTypeNode(element)
+    const firstOptional = elementTypes.findIndex(
+      (element) => element.optional === true
     );
     const minItems = firstOptional === -1 ? elements.length : firstOptional;
 
@@ -1002,9 +1027,20 @@ export class TsConverter {
       });
     }
 
+    let ref;
+    if (
+      node.pos === -1 &&
+      ts.isTypeReferenceNode(node) &&
+      ts.isIdentifier(node.typeName)
+    ) {
+      ref = node.typeName.text;
+    } else {
+      ref = node.getText();
+    }
+
     return {
       type: 'ref',
-      ref: node.getText(),
+      ref,
       ...decorateNode(node),
       genericArguments: genericArgs.length > 0 ? genericArgs : undefined,
     };

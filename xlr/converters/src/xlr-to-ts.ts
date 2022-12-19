@@ -304,7 +304,7 @@ export class TSWriter {
 
   private createTupleNode(xlrNode: TupleType): ts.TypeNode {
     return this.context.factory.createTupleTypeNode(
-      xlrNode.elementTypes.map((e) => this.convertTypeNode(e))
+      xlrNode.elementTypes.map((e) => this.convertTypeNode(e.type))
     );
   }
 

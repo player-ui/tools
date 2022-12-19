@@ -6,7 +6,7 @@ import globby from 'globby';
 import logSymbols from 'log-symbols';
 import { TsConverter } from '@player-tools/xlr-converters';
 import type { Manifest } from '@player-tools/xlr';
-import { isNodeExported } from '@player-tools/xlr-utils';
+import { isNodeExported, isTopLevelNode } from '@player-tools/xlr-utils';
 import chalk from 'chalk';
 import { BaseCommand } from '../../utils/base-command';
 
@@ -17,6 +17,7 @@ const customPrimitives = [
   'Binding',
   'AssetWrapper',
   'Schema.DataType',
+  'ExpressionHandler',
 ];
 
 enum Mode {
@@ -165,21 +166,38 @@ export default class XLRCompile extends BaseCommand {
                   if (ts.isTupleTypeNode(exportedCapabilities)) {
                     const capabilityNames = exportedCapabilities.elements.map(
                       (element) => {
-                        if (ts.isTypeReferenceNode(element)) {
-                          const referenceSymbol = checker.getSymbolAtLocation(
-                            element.typeName
-                          );
-                          const alias = referenceSymbol
-                            ? checker.getAliasedSymbol(referenceSymbol)
+                        if (
+                          ts.isTypeReferenceNode(element) ||
+                          ts.isTypeQueryNode(element)
+                        ) {
+                          let referencedSymbol;
+                          if (ts.isTypeReferenceNode(element)) {
+                            referencedSymbol = checker.getSymbolAtLocation(
+                              element.typeName
+                            );
+                          } else {
+                            referencedSymbol = checker.getSymbolAtLocation(
+                              element.exprName
+                            );
+                          }
+
+                          const alias = referencedSymbol
+                            ? checker.getAliasedSymbol(referencedSymbol)
                             : undefined;
-                          const varDecl = alias?.declarations?.[0];
-                          if (
-                            varDecl &&
-                            (ts.isInterfaceDeclaration(varDecl) ||
-                              ts.isTypeAliasDeclaration(varDecl))
-                          ) {
+                          let varDecl;
+                          /**
+                           * The TypeChecker will return the interface/type declaration or the variable statement
+                           * so if we are getting a variable, we need to grab the variable declaration
+                           */
+                          if (ts.isTypeReferenceNode(element)) {
+                            varDecl = alias?.declarations?.[0];
+                          } else {
+                            varDecl = alias?.declarations?.[0].parent.parent;
+                          }
+
+                          if (varDecl && isTopLevelNode(varDecl)) {
                             const capabilityDescription =
-                              converter.convertDeclaration(varDecl);
+                              converter.convertTopLevelNode(varDecl);
                             const capabilityName =
                               capabilityDescription?.name ?? 'error';
                             fs.writeFileSync(
