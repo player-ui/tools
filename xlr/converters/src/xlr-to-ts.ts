@@ -81,11 +81,6 @@ export class TSWriter {
     const typeName = type.name;
     const tsNode = this.convertTypeNode(type);
 
-    let generics;
-    if (isGenericNamedType(type)) {
-      generics = this.createTypeParameters(type);
-    }
-
     let customPrimitiveHeritageClass;
     if (type.type === 'object' && type.extends) {
       const refName = type.extends.ref.split('<')[0];
@@ -104,6 +99,17 @@ export class TSWriter {
           ]
         ),
       ];
+    }
+
+    let generics;
+    if (isGenericNamedType(type)) {
+      generics = this.createTypeParameters(type);
+      type.genericTokens.forEach((token) => {
+        // clean up any references that are actually generic tokens
+        if (this.importSet.has(token.symbol)) {
+          this.importSet.delete(token.symbol);
+        }
+      });
     }
 
     let finalNode;
@@ -149,8 +155,9 @@ export class TSWriter {
         );
       }
 
-      return this.context.factory.createArrayTypeNode(
-        this.convertTypeNode(type.elementType)
+      return this.context.factory.createTypeReferenceNode(
+        this.context.factory.createIdentifier('Array'),
+        [this.convertTypeNode(type.elementType)]
       );
     }
 
@@ -222,7 +229,7 @@ export class TSWriter {
 
     const importName = xlrNode.ref.split('<')[0];
     this.importSet.add(importName);
-    return this.context.factory.createTypeReferenceNode(xlrNode.ref, typeArgs);
+    return this.context.factory.createTypeReferenceNode(importName, typeArgs);
   }
 
   private createPrimitiveNode(xlrNode: PrimitiveTypes): ts.TypeNode {

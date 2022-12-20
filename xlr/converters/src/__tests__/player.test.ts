@@ -818,6 +818,22 @@ it('Player Expression Types Export', () => {
       return str;
     }
   );
+
+  export const isEmpty: ExpressionHandler<[unknown], boolean> = (ctx, val) => {
+    if (val === undefined || val === null) {
+      return true;
+    }
+  
+    if (typeof val === 'object' || typeof val === 'string') {
+      return size(ctx, val) === 0;
+    }
+  
+    return false;
+  };
+
+  export const sum = withoutContext<Array<number | string>, number>((...args) => {
+    return args.reduce<number>((s, next) => s + (toNum(next) ?? 0), 0);
+  });
 `;
 
   const { sf, tc } = setupTestEnv(sc);

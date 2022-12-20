@@ -179,7 +179,10 @@ export class TsConverter {
       const variable = variableDeclarations[0];
       if (variable.initializer) {
         let resultingNode;
-        if (ts.isCallExpression(variable.initializer)) {
+        if (
+          ts.isCallExpression(variable.initializer) ||
+          ts.isArrowFunction(variable.initializer)
+        ) {
           resultingNode = this.resolveFunctionCall(
             variable.initializer,
             node.parent
@@ -238,7 +241,10 @@ export class TsConverter {
     }
 
     if (ts.isParenthesizedTypeNode(node)) {
-      const children = [...node.getChildren()];
+      const children: ts.Node[] = [];
+      node.forEachChild((child) => {
+        children.push(child);
+      });
 
       if (children[0]?.kind === ts.SyntaxKind.OpenParenToken) {
         children.shift();
@@ -370,7 +376,11 @@ export class TsConverter {
       };
     }
 
-    if (ts.isFunctionTypeNode(node) || ts.isFunctionDeclaration(node)) {
+    if (
+      ts.isFunctionTypeNode(node) ||
+      ts.isFunctionDeclaration(node) ||
+      ts.isArrowFunction(node)
+    ) {
       const parameters: Array<FunctionTypeParameters> = node.parameters.map(
         (param) => {
           let typeNode;
@@ -559,7 +569,15 @@ export class TsConverter {
       return ret;
     }
 
-    this.context.throwError('Literal type not understood');
+    if (ts.isIdentifier(node)) {
+      return this.resolveLiteralReference(node);
+    }
+
+    this.context.throwError(
+      `Literal type not understood ${
+        ts.SyntaxKind[node.kind]
+      } at ${node.getText()}`
+    );
   }
 
   private resolveLiteralReference(expression: ts.Expression): NodeType {
@@ -581,7 +599,9 @@ export class TsConverter {
         ts.isVariableDeclaration(expressionReference) &&
         expressionReference.initializer
       ) {
-        return this.tsLiteralToType(expressionReference.initializer);
+        return this.convertVariable(
+          expressionReference.parent.parent as ts.VariableStatement
+        );
       }
 
       this.context.throwError(
@@ -595,9 +615,17 @@ export class TsConverter {
   }
 
   private resolveFunctionCall(
-    functionCall: ts.CallExpression,
+    functionCall: ts.CallExpression | ts.ArrowFunction,
     document: ts.Node
   ): NodeType {
+    if (ts.isArrowFunction(functionCall)) {
+      const declaredReturnType = (functionCall.parent as ts.VariableDeclaration)
+        .type;
+      if (declaredReturnType) {
+        return this.tsNodeToType(declaredReturnType);
+      }
+    }
+
     const functionReturnType =
       this.context.typeChecker.getTypeAtLocation(functionCall);
 

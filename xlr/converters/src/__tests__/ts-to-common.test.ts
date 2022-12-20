@@ -585,4 +585,53 @@ describe('Variable Exports', () => {
 
     expect(XLR).toMatchSnapshot();
   });
+
+  it('Arrow function with object return type', () => {
+    const sc = `
+      interface Bar {
+        foo: string;
+        fuz: number;
+      }
+      
+      export const foo = (): Bar => {
+        return {
+          foo: '1',
+          fuz: 1,
+        };
+      };
+    
+    `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+
+  it('Aliased variable', () => {
+    const sc = `
+      interface Bar {
+        foo: string
+        fuz: number
+      }
+
+      function test(arg1: string): Bar {
+        return {
+            foo: "1",
+            fuz: 1
+        }
+      }
+      
+      const foo = test("1")
+
+      export const bar = foo
+    `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
 });

@@ -826,6 +826,35 @@ Array [
 ]
 `;
 
+exports[`Variable Exports Aliased variable 1`] = `
+Array [
+  Object {
+    "additionalProperties": false,
+    "genericTokens": undefined,
+    "name": "Bar",
+    "properties": Object {
+      "foo": Object {
+        "node": Object {
+          "title": "Bar.foo",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "fuz": Object {
+        "node": Object {
+          "title": "Bar.fuz",
+          "type": "number",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "title": "Bar",
+    "type": "object",
+  },
+]
+`;
+
 exports[`Variable Exports Array const exports 1`] = `
 Array [
   Object {
@@ -880,6 +909,41 @@ Array [
     "name": "bar",
     "source": "filename.ts",
     "type": "array",
+  },
+]
+`;
+
+exports[`Variable Exports Arrow function with object return type 1`] = `
+Array [
+  Object {
+    "name": "foo",
+    "parameters": Array [],
+    "returnType": Object {
+      "additionalProperties": false,
+      "genericTokens": undefined,
+      "name": "Bar",
+      "properties": Object {
+        "foo": Object {
+          "node": Object {
+            "title": "Bar.foo",
+            "type": "string",
+          },
+          "required": true,
+        },
+        "fuz": Object {
+          "node": Object {
+            "title": "Bar.fuz",
+            "type": "number",
+          },
+          "required": true,
+        },
+      },
+      "source": "filename.ts",
+      "title": "Bar",
+      "type": "object",
+    },
+    "source": "filename.ts",
+    "type": "function",
   },
 ]
 `;

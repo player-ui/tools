@@ -654,6 +654,57 @@ Array [
     "source": "filename.ts",
     "type": "ref",
   },
+  Object {
+    "genericArguments": Array [
+      Object {
+        "additionalItems": false,
+        "elementTypes": Array [
+          Object {
+            "optional": false,
+            "type": Object {
+              "title": "0",
+              "type": "unknown",
+            },
+          },
+        ],
+        "minItems": 1,
+        "type": "tuple",
+      },
+      Object {
+        "type": "boolean",
+      },
+    ],
+    "name": "isEmpty",
+    "ref": "ExpressionHandler<[unknown], boolean>",
+    "source": "filename.ts",
+    "type": "ref",
+  },
+  Object {
+    "genericArguments": Array [
+      Object {
+        "elementType": Object {
+          "or": Array [
+            Object {
+              "type": "string",
+            },
+            Object {
+              "type": "number",
+            },
+          ],
+          "type": "or",
+        },
+        "title": "[]",
+        "type": "array",
+      },
+      Object {
+        "type": "number",
+      },
+    ],
+    "name": "sum",
+    "ref": "ExpressionHandler",
+    "source": "filename.ts",
+    "type": "ref",
+  },
 ]
 `;
 
