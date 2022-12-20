@@ -1,8 +1,3 @@
-import type {
-  NumberLiteralType,
-  StringLiteralType,
-  UnionType,
-} from 'typescript';
 import ts from 'typescript';
 import type {
   NodeType,
@@ -17,9 +12,12 @@ import type {
   ParamTypeNode,
   ConditionalType,
   RefType,
-  OrType,
+  ArrayType,
 } from '@player-tools/xlr';
-import type { TopLevelDeclaration } from '@player-tools/xlr-utils';
+import type {
+  TopLevelDeclaration,
+  TopLevelNode,
+} from '@player-tools/xlr-utils';
 import {
   buildTemplateRegex,
   decorateNode,
@@ -37,6 +35,7 @@ import {
   applyPartialOrRequiredToNodeType,
   applyPickOrOmitToNodeType,
   isTopLevelNode,
+  isTopLevelDeclaration,
   resolveConditional,
 } from '@player-tools/xlr-utils';
 import { ConversionError } from './types';
@@ -94,15 +93,11 @@ export class TsConverter {
 
   /** Converts all exported objects to a XLR representation */
   public convertSourceFile(sourceFile: ts.SourceFile) {
-    const declarations = sourceFile.statements.filter(
-      (statement): statement is TopLevelDeclaration =>
-        ts.isTypeAliasDeclaration(statement) ||
-        ts.isInterfaceDeclaration(statement)
-    );
+    const declarations = sourceFile.statements.filter(isTopLevelNode);
 
     const types = declarations
       .filter((declaration) => isExportedDeclaration(declaration))
-      .map((statement) => this.convertDeclaration(statement) as NamedType)
+      .map((statement) => this.convertTopLevelNode(statement) as NamedType)
       .filter(<T>(v: T): v is NonNullable<T> => !!v);
 
     return {
@@ -111,12 +106,29 @@ export class TsConverter {
     };
   }
 
+  public convertTopLevelNode(
+    node: TopLevelNode
+  ): NamedType | NamedTypeWithGenerics {
+    const sourceFile = node.parent as ts.SourceFile;
+    const { fileName } = sourceFile;
+
+    if (ts.isVariableStatement(node)) {
+      return {
+        source: fileName,
+        ...this.convertVariable(node),
+      } as NamedType;
+    }
+
+    return {
+      source: fileName,
+      ...this.convertDeclaration(node),
+    } as NamedType;
+  }
+
   /** Converts a single type/interface declaration to XLRs */
   public convertDeclaration(
     node: TopLevelDeclaration
-  ): NamedType<ObjectType> | NamedTypeWithGenerics<ObjectType> {
-    const sourceFile = node.parent as ts.SourceFile;
-    const { fileName } = sourceFile;
+  ): ObjectType | NodeTypeWithGenerics<ObjectType> {
     if (ts.isTypeAliasDeclaration(node)) {
       let genericTokens;
       if (isGenericTypeDeclaration(node)) {
@@ -125,7 +137,6 @@ export class TsConverter {
 
       return {
         name: node.name.getText(),
-        source: fileName,
         ...(this.convertTsTypeNode(node.type) ?? AnyTypeNode),
         ...decorateNode(node),
         genericTokens,
@@ -141,8 +152,7 @@ export class TsConverter {
       const baseObject = {
         name: node.name.getText(),
         type: 'object',
-        source: fileName,
-        ...this.fromTsObjectMembers(node),
+        ...this.tsObjectMembersToProperties(node),
         ...decorateNode(node),
         genericTokens,
       };
@@ -155,7 +165,7 @@ export class TsConverter {
         ) as NamedType<ObjectType>;
       }
 
-      return baseObject as NamedType<ObjectType>;
+      return baseObject as ObjectType;
     }
 
     this.context.throwError(
@@ -163,8 +173,38 @@ export class TsConverter {
     );
   }
 
+  public convertVariable(node: ts.VariableStatement): NodeType {
+    const variableDeclarations = node.declarationList.declarations;
+    if (variableDeclarations.length === 1) {
+      const variable = variableDeclarations[0];
+      if (variable.initializer) {
+        let resultingNode;
+        if (
+          ts.isCallExpression(variable.initializer) ||
+          ts.isArrowFunction(variable.initializer)
+        ) {
+          resultingNode = this.resolveFunctionCall(
+            variable.initializer,
+            node.parent
+          );
+        } else {
+          resultingNode = this.tsLiteralToType(variable.initializer);
+        }
+
+        return {
+          name: variable.name.getText(),
+          ...resultingNode,
+        } as NamedType;
+      }
+    }
+
+    this.context.throwError(
+      `Error: Multi-variable declaration on line ${node.pos} is not supported for conversion`
+    );
+  }
+
   /** Converts an arbitrary ts.TypeNode to XLRs */
-  public convertTsTypeNode(node: ts.TypeNode): NodeType | undefined {
+  public convertTsTypeNode(node: ts.TypeNode): NodeType {
     if (this.context.cache.convertedNodes.has(node)) {
       const cachedType = this.context.cache.convertedNodes.get(
         node
@@ -178,7 +218,8 @@ export class TsConverter {
     return convertedNode;
   }
 
-  private tsNodeToType(node: ts.TypeNode): NodeType | undefined {
+  /** Should not be called directly unless you want to bypass the cache, use `convertTsTypeNode` */
+  private tsNodeToType(node: ts.TypeNode): NodeType {
     if (ts.isUnionTypeNode(node)) {
       return {
         type: 'or',
@@ -200,7 +241,10 @@ export class TsConverter {
     }
 
     if (ts.isParenthesizedTypeNode(node)) {
-      const children = [...node.getChildren()];
+      const children: ts.Node[] = [];
+      node.forEachChild((child) => {
+        children.push(child);
+      });
 
       if (children[0]?.kind === ts.SyntaxKind.OpenParenToken) {
         children.shift();
@@ -262,6 +306,13 @@ export class TsConverter {
       };
     }
 
+    if (node.kind === ts.SyntaxKind.VoidKeyword) {
+      return {
+        type: 'void',
+        ...decorateNode(node),
+      };
+    }
+
     if (ts.isTemplateLiteralTypeNode(node)) {
       let format;
 
@@ -308,60 +359,28 @@ export class TsConverter {
     if (ts.isTupleTypeNode(node)) {
       return {
         type: 'tuple',
-        ...this.fromTsTuple(node),
+        ...this.tsTupleToType(node),
         ...decorateNode(node),
       };
     }
 
     if (ts.isLiteralTypeNode(node)) {
-      if (ts.isNumericLiteral(node.literal)) {
-        return {
-          type: 'number',
-          const: Number(node.literal.text),
-          ...decorateNode(node),
-        };
-      }
+      return this.tsLiteralToType(node.literal);
+    }
 
-      if (ts.isStringLiteral(node.literal)) {
-        return {
-          type: 'string',
-          const: node.literal.text,
-          ...decorateNode(node),
-        };
-      }
-
-      if (node.literal.kind === ts.SyntaxKind.TrueKeyword) {
-        return {
-          type: 'boolean',
-          const: true,
-          ...decorateNode(node),
-        };
-      }
-
-      if (node.literal.kind === ts.SyntaxKind.FalseKeyword) {
-        return {
-          type: 'boolean',
-          const: false,
-          ...decorateNode(node),
-        };
-      }
-
-      if (node.literal.kind === ts.SyntaxKind.NullKeyword) {
-        return { type: 'null', ...decorateNode(node) };
-      }
-
-      if (node.literal.kind === ts.SyntaxKind.PrefixUnaryExpression) {
-        this.context.throwError('Prefix unary expressions not supported');
-      }
-
-      this.context.throwError('Literal type not understood');
-    } else if (ts.isTypeLiteralNode(node)) {
+    if (ts.isTypeLiteralNode(node)) {
       return {
         type: 'object',
-        ...this.fromTsObjectMembers(node),
+        ...this.tsObjectMembersToProperties(node),
         ...decorateNode(node),
       };
-    } else if (ts.isFunctionTypeNode(node)) {
+    }
+
+    if (
+      ts.isFunctionTypeNode(node) ||
+      ts.isFunctionDeclaration(node) ||
+      ts.isArrowFunction(node)
+    ) {
       const parameters: Array<FunctionTypeParameters> = node.parameters.map(
         (param) => {
           let typeNode;
@@ -382,10 +401,10 @@ export class TsConverter {
         }
       );
 
-      const returnType =
-        node.type.kind === ts.SyntaxKind.VoidKeyword
-          ? undefined
-          : this.convertTsTypeNode(node.type);
+      let returnType;
+      if (node.type !== undefined) {
+        returnType = this.convertTsTypeNode(node.type);
+      }
 
       return {
         type: 'function',
@@ -396,7 +415,7 @@ export class TsConverter {
     }
 
     // Handle generics
-    else if (ts.isIndexedAccessTypeNode(node)) {
+    if (ts.isIndexedAccessTypeNode(node)) {
       if (
         ts.isTypeReferenceNode(node.objectType) &&
         ts.isLiteralTypeNode(node.indexType)
@@ -425,45 +444,235 @@ export class TsConverter {
       }
 
       if (ts.isTypeQueryNode(node.objectType)) {
-        const effectiveType = this.context.typeChecker.getTypeAtLocation(node);
-        // eslint-disable-next-line no-bitwise
-        if (ts.TypeFlags.Union & effectiveType.flags) {
-          return {
-            type: 'or',
-            or: (effectiveType as UnionType).types.map((type) => {
-              // eslint-disable-next-line no-bitwise
-              if (ts.TypeFlags.StringLiteral & type.flags) {
-                return {
-                  type: 'string',
-                  const: (type as StringLiteralType).value,
-                };
-              }
-
-              // eslint-disable-next-line no-bitwise
-              if (ts.TypeFlags.NumberLiteral & type.flags) {
-                return {
-                  type: 'number',
-                  const: (type as NumberLiteralType).value,
-                };
-              }
-
-              return {
-                type: 'unknown',
-              };
-            }),
-          } as OrType;
-        }
+        const elements = this.tsNodeToType(node.objectType) as TupleType;
+        return {
+          type: 'or',
+          or: [...elements.elementTypes.map((element) => element.type)],
+        };
       }
 
       this.context.throwError(
         `Error: could not solve IndexedAccessType ${node.getFullText()}`
       );
-    } else {
-      this.context.throwError(`Unimplemented type ${ts.SyntaxKind[node.kind]}`);
     }
+
+    if (ts.isTypeQueryNode(node)) {
+      const effectiveType = this.context.typeChecker.getTypeAtLocation(node);
+      const syntheticType = this.context.typeChecker.typeToTypeNode(
+        effectiveType,
+        node,
+        undefined
+      );
+      if (syntheticType) {
+        return this.tsNodeToType(syntheticType);
+      }
+
+      this.context.throwError(
+        `Error: could not synthesize type for ${node.getText()}`
+      );
+    }
+
+    if (ts.isTypeOperatorNode(node)) {
+      return this.tsNodeToType(node.type);
+    }
+
+    this.context.throwError(
+      `Unimplemented type ${ts.SyntaxKind[node.kind]} at ${node.getText()}`
+    );
   }
 
-  private fromTsObjectMembers(
+  private tsLiteralToType(node: ts.Expression): NodeType {
+    if (ts.isNumericLiteral(node)) {
+      return {
+        type: 'number',
+        const: Number(node.text),
+        ...decorateNode(node),
+      };
+    }
+
+    if (ts.isStringLiteral(node)) {
+      return {
+        type: 'string',
+        const: node.text,
+        ...decorateNode(node),
+      };
+    }
+
+    if (node.kind === ts.SyntaxKind.TrueKeyword) {
+      return {
+        type: 'boolean',
+        const: true,
+        ...decorateNode(node),
+      };
+    }
+
+    if (node.kind === ts.SyntaxKind.FalseKeyword) {
+      return {
+        type: 'boolean',
+        const: false,
+        ...decorateNode(node),
+      };
+    }
+
+    if (node.kind === ts.SyntaxKind.NullKeyword) {
+      return { type: 'null', ...decorateNode(node) };
+    }
+
+    if (ts.isPrefixUnaryExpression(node)) {
+      this.context.throwError('Prefix unary expressions not supported');
+    }
+
+    if (ts.isArrayLiteralExpression(node)) {
+      const arrayElements: unknown[] = [];
+      node.elements.forEach((element) => {
+        if (ts.isSpreadElement(element)) {
+          const arrayReference = this.resolveLiteralReference(
+            element.expression
+          ) as ArrayType;
+          arrayElements.push(...(arrayReference.const ?? []));
+        } else {
+          arrayElements.push(this.tsLiteralToType(element));
+        }
+      });
+      return {
+        type: 'array',
+        elementType: { type: 'any' },
+        const: arrayElements,
+      };
+    }
+
+    if (ts.isObjectLiteralExpression(node)) {
+      const ret = {
+        type: 'object',
+        properties: {},
+        additionalProperties: false,
+      } as ObjectType;
+
+      node.properties.forEach((property) => {
+        if (ts.isPropertyAssignment(property)) {
+          const propertyName = property.name?.getText() as string;
+          ret.properties[propertyName] = {
+            required: true,
+            node: this.tsLiteralToType(property.initializer),
+          };
+        } else if (ts.isSpreadAssignment(property)) {
+          const spreadValue = this.resolveLiteralReference(
+            property.expression
+          ) as ObjectType;
+          ret.properties = {
+            ...ret.properties,
+            ...spreadValue.properties,
+          };
+        }
+      });
+
+      return ret;
+    }
+
+    if (ts.isIdentifier(node)) {
+      return this.resolveLiteralReference(node);
+    }
+
+    this.context.throwError(
+      `Literal type not understood ${
+        ts.SyntaxKind[node.kind]
+      } at ${node.getText()}`
+    );
+  }
+
+  private resolveLiteralReference(expression: ts.Expression): NodeType {
+    if (ts.isIdentifier(expression)) {
+      const symbol = this.context.typeChecker.getSymbolAtLocation(expression);
+      let expressionReference = symbol?.declarations?.[0];
+      if (
+        symbol &&
+        expressionReference &&
+        ts.isImportSpecifier(expressionReference)
+      ) {
+        const referencedDeclaration =
+          this.context.typeChecker.getAliasedSymbol(symbol);
+        expressionReference = referencedDeclaration.declarations?.[0];
+      }
+
+      if (
+        expressionReference &&
+        ts.isVariableDeclaration(expressionReference) &&
+        expressionReference.initializer
+      ) {
+        return this.convertVariable(
+          expressionReference.parent.parent as ts.VariableStatement
+        );
+      }
+
+      this.context.throwError(
+        `Error: Can't resolve non-variable declaration ${expressionReference?.getText()}`
+      );
+    }
+
+    this.context.throwError(
+      `Error: Can't resolve non-identifier reference in literal ${expression.getText()}`
+    );
+  }
+
+  private resolveFunctionCall(
+    functionCall: ts.CallExpression | ts.ArrowFunction,
+    document: ts.Node
+  ): NodeType {
+    if (ts.isArrowFunction(functionCall)) {
+      const declaredReturnType = (functionCall.parent as ts.VariableDeclaration)
+        .type;
+      if (declaredReturnType) {
+        return this.tsNodeToType(declaredReturnType);
+      }
+    }
+
+    const functionReturnType =
+      this.context.typeChecker.getTypeAtLocation(functionCall);
+
+    const syntheticNode = this.context.typeChecker.typeToTypeNode(
+      functionReturnType,
+      document,
+      undefined
+    );
+
+    if (syntheticNode) {
+      if (
+        ts.isTypeReferenceNode(syntheticNode) &&
+        ts.isIdentifier(syntheticNode.typeName)
+      ) {
+        const { typeName } = syntheticNode;
+
+        if (this.context.customPrimitives.includes(typeName.text)) {
+          return this.makeBasicRefNode(syntheticNode);
+        }
+
+        // Can't use typechecker on synthetic nodes
+        const declarationSymbol = (typeName as any).symbol as ts.Symbol;
+
+        if (declarationSymbol && declarationSymbol.declarations?.[0]) {
+          const declaration = declarationSymbol.declarations[0];
+          if (
+            ts.isTypeAliasDeclaration(declaration) ||
+            ts.isInterfaceDeclaration(declaration)
+          ) {
+            return this.convertDeclaration(declaration);
+          }
+        }
+
+        this.context.throwError(
+          `Error: could not get referenced type ${syntheticNode.getText()}`
+        );
+      }
+
+      return this.tsNodeToType(syntheticNode) as NodeType;
+    }
+
+    this.context.throwError(
+      `Error: could not determine effective return type of ${functionCall.getText()}`
+    );
+  }
+
+  private tsObjectMembersToProperties(
     node: ts.InterfaceDeclaration | ts.TypeLiteralNode
   ): Pick<ObjectType, 'properties' | 'additionalProperties'> {
     const ret: Pick<ObjectType, 'properties' | 'additionalProperties'> = {
@@ -497,7 +706,7 @@ export class TsConverter {
     return ret;
   }
 
-  private fromTsTuple(
+  private tsTupleToType(
     node: ts.TupleTypeNode
   ): Pick<TupleType, 'elementTypes' | 'additionalItems' | 'minItems'> {
     if (node.elements.length === 0) {
@@ -513,18 +722,33 @@ export class TsConverter {
         ]
       : [[...node.elements], undefined];
 
-    const elementTypes = elements.map(
-      (element) =>
-        this.convertTsTypeNode(tsStripOptionalType(element)) ?? AnyTypeNode
-    );
+    const elementTypes = elements.map((element) => {
+      if (ts.isNamedTupleMember(element)) {
+        let typeNode;
+        if (element.type) {
+          typeNode = this.convertTsTypeNode(element.type);
+        }
+
+        return {
+          name: element.name.text,
+          type: typeNode ?? AnyTypeNode,
+          optional: element.questionToken ? true : undefined,
+        };
+      }
+
+      return {
+        type: this.convertTsTypeNode(tsStripOptionalType(element)),
+        optional: ts.isOptionalTypeNode(element),
+      };
+    });
 
     const additionalItems = rest
       ? this.convertTsTypeNode((rest.type as ts.ArrayTypeNode).elementType) ??
         AnyTypeNode
       : false;
 
-    const firstOptional = elements.findIndex((element) =>
-      ts.isOptionalTypeNode(element)
+    const firstOptional = elementTypes.findIndex(
+      (element) => element.optional === true
     );
     const minItems = firstOptional === -1 ? elements.length : firstOptional;
 
@@ -591,7 +815,7 @@ export class TsConverter {
           }
 
           if (parentInterface.typeParameters && parent.typeArguments) {
-            typeToApply = this.solveGenerics(
+            typeToApply = this.resolveGenerics(
               typeToApply as NodeTypeWithGenerics,
               parentInterface.typeParameters,
               parent.typeArguments
@@ -633,7 +857,7 @@ export class TsConverter {
     };
   }
 
-  private solveGenerics(
+  private resolveGenerics(
     baseInterface: NodeTypeWithGenerics,
     typeParameters: ts.NodeArray<ts.TypeParameterDeclaration>,
     typeArguments?: ts.NodeArray<ts.TypeNode>
@@ -757,11 +981,11 @@ export class TsConverter {
     if (!this.context.customPrimitives.includes(refName)) {
       const typeInfo = getReferencedType(node, this.context.typeChecker);
       if (typeInfo) {
-        const genericType = this.convertDeclaration(typeInfo.declaration);
+        const genericType = this.convertTopLevelNode(typeInfo.declaration);
         const genericParams = typeInfo.declaration.typeParameters;
         const genericArgs = node.typeArguments;
         if (genericType && genericParams && genericArgs) {
-          return this.solveGenerics(
+          return this.resolveGenerics(
             genericType as NamedTypeWithGenerics,
             genericParams,
             genericArgs
@@ -815,7 +1039,7 @@ export class TsConverter {
     if (node.typeArguments) {
       node.typeArguments.forEach((typeArg) => {
         let convertedNode;
-        if (isTopLevelNode(typeArg)) {
+        if (isTopLevelDeclaration(typeArg)) {
           convertedNode = this.convertDeclaration(typeArg);
         } else {
           convertedNode = this.convertTsTypeNode(typeArg);
@@ -831,9 +1055,20 @@ export class TsConverter {
       });
     }
 
+    let ref;
+    if (
+      node.pos === -1 &&
+      ts.isTypeReferenceNode(node) &&
+      ts.isIdentifier(node.typeName)
+    ) {
+      ref = node.typeName.text;
+    } else {
+      ref = node.getText();
+    }
+
     return {
       type: 'ref',
-      ref: node.getText(),
+      ref,
       ...decorateNode(node),
       genericArguments: genericArgs.length > 0 ? genericArgs : undefined,
     };

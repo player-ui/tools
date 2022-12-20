@@ -25,4 +25,26 @@ export interface ActionAsset<AnyTextAsset extends Asset = Asset> extends Asset<'
 }"
 `;
 
+exports[`Type Exports Dynamic results Conversion 1`] = `
+"export type size = ExpressionHandler<[
+    val: unknown
+], number>;"
+`;
+
+exports[`Type Exports Static Type Conversion Arrays 1`] = `
+"export type test = [
+    'foo',
+    1,
+    boolean
+];"
+`;
+
+exports[`Type Exports Static Type Conversion Objects 1`] = `
+"export interface test {
+    foo: 'foo';
+    bar: 1;
+    bax: boolean;
+}"
+`;
+
 exports[`Type Exports Template Type Conversion 1`] = `"export type BindingRef = \`{{\${string}}}\`;"`;

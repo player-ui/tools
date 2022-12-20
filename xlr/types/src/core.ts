@@ -15,41 +15,6 @@ export interface Annotations {
   comment?: string;
 }
 
-export interface TypeMap {
-  /** */
-  and: void;
-  /** */
-  or: void;
-  /** */
-  ref: string;
-  /** */
-  any: unknown;
-  /** */
-  null: null;
-  /** */
-  string: string;
-  /** */
-  number: number;
-  /** */
-  boolean: boolean;
-  /** */
-  object: object;
-  /** */
-  array: Array<unknown>;
-  /** */
-  tuple: Array<unknown>;
-  /** */
-  function: () => unknown;
-  /** */
-  record: Record<string | number | symbol, unknown>;
-  /** */
-  undefined: undefined;
-  /** */
-  never: never;
-  /**  */
-  unknown: unknown;
-}
-
 export interface Const<T> {
   /** The literal value for the node */
   const?: T;
@@ -74,6 +39,7 @@ export type UndefinedType = TypeNode<'undefined'> &
   CommonTypeInfo<undefined> &
   Annotations;
 export type NullType = TypeNode<'null'> & CommonTypeInfo<null> & Annotations;
+export type VoidType = TypeNode<'void'> & CommonTypeInfo<void> & Annotations;
 export type StringType = TypeNode<'string'> &
   CommonTypeInfo<string> &
   Annotations;
@@ -140,9 +106,18 @@ export interface ConditionalNode extends TypeNode<'conditional'> {
 
 export type ConditionalType = ConditionalNode & Annotations;
 
+export interface TupleMember {
+  /** Optional Name of the Tuple Member */
+  name?: string;
+  /** Type constraint of the Tuple Member */
+  type: NodeType;
+  /** Is the Tuple Member Optional */
+  optional?: boolean;
+}
+
 export interface TupleNode extends TypeNode<'tuple'> {
   /** The types in the tuple */
-  elementTypes: Array<NodeType>;
+  elementTypes: Array<TupleMember>;
   /** The minimum number of items */
   minItems: number;
   /** What, if any, additional types can be provided */
@@ -205,7 +180,8 @@ export type PrimitiveTypes =
   | BooleanType
   | AnyType
   | UnknownType
-  | UndefinedType;
+  | UndefinedType
+  | VoidType;
 
 /** Set of all Node Types */
 export type NodeType =
@@ -226,7 +202,8 @@ export type NodeType =
   | OrType
   | RefType
   | FunctionType
-  | ConditionalType;
+  | ConditionalType
+  | VoidType;
 
 export type NodeTypeStrings = Pick<NodeType, 'type'>['type'];
 

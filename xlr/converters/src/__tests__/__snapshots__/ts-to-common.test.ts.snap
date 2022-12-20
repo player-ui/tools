@@ -825,3 +825,262 @@ Array [
   },
 ]
 `;
+
+exports[`Variable Exports Aliased variable 1`] = `
+Array [
+  Object {
+    "additionalProperties": false,
+    "genericTokens": undefined,
+    "name": "Bar",
+    "properties": Object {
+      "foo": Object {
+        "node": Object {
+          "title": "Bar.foo",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "fuz": Object {
+        "node": Object {
+          "title": "Bar.fuz",
+          "type": "number",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "title": "Bar",
+    "type": "object",
+  },
+]
+`;
+
+exports[`Variable Exports Array const exports 1`] = `
+Array [
+  Object {
+    "const": Array [
+      Object {
+        "const": 1,
+        "type": "number",
+      },
+      Object {
+        "const": 2,
+        "type": "number",
+      },
+      Object {
+        "const": 3,
+        "type": "number",
+      },
+    ],
+    "elementType": Object {
+      "type": "any",
+    },
+    "name": "foo",
+    "source": "filename.ts",
+    "type": "array",
+  },
+]
+`;
+
+exports[`Variable Exports Array const exports with spread 1`] = `
+Array [
+  Object {
+    "const": Array [
+      Object {
+        "const": 1,
+        "type": "number",
+      },
+      Object {
+        "const": 2,
+        "type": "number",
+      },
+      Object {
+        "const": 3,
+        "type": "number",
+      },
+      Object {
+        "const": 4,
+        "type": "number",
+      },
+    ],
+    "elementType": Object {
+      "type": "any",
+    },
+    "name": "bar",
+    "source": "filename.ts",
+    "type": "array",
+  },
+]
+`;
+
+exports[`Variable Exports Arrow function with object return type 1`] = `
+Array [
+  Object {
+    "name": "foo",
+    "parameters": Array [],
+    "returnType": Object {
+      "additionalProperties": false,
+      "genericTokens": undefined,
+      "name": "Bar",
+      "properties": Object {
+        "foo": Object {
+          "node": Object {
+            "title": "Bar.foo",
+            "type": "string",
+          },
+          "required": true,
+        },
+        "fuz": Object {
+          "node": Object {
+            "title": "Bar.fuz",
+            "type": "number",
+          },
+          "required": true,
+        },
+      },
+      "source": "filename.ts",
+      "title": "Bar",
+      "type": "object",
+    },
+    "source": "filename.ts",
+    "type": "function",
+  },
+]
+`;
+
+exports[`Variable Exports Function with object return type 1`] = `
+Array [
+  Object {
+    "additionalProperties": false,
+    "genericTokens": undefined,
+    "name": "Bar",
+    "properties": Object {
+      "foo": Object {
+        "node": Object {
+          "title": "Bar.foo",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "fuz": Object {
+        "node": Object {
+          "title": "Bar.fuz",
+          "type": "number",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "title": "Bar",
+    "type": "object",
+  },
+]
+`;
+
+exports[`Variable Exports Function with primitive return type 1`] = `
+Array [
+  Object {
+    "name": "foo",
+    "source": "filename.ts",
+    "type": "string",
+  },
+]
+`;
+
+exports[`Variable Exports Object const exports 1`] = `
+Array [
+  Object {
+    "additionalProperties": false,
+    "name": "foo",
+    "properties": Object {
+      "bar": Object {
+        "node": Object {
+          "const": "test",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "far": Object {
+        "node": Object {
+          "const": false,
+          "type": "boolean",
+        },
+        "required": true,
+      },
+      "foo": Object {
+        "node": Object {
+          "const": 1,
+          "type": "number",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+]
+`;
+
+exports[`Variable Exports Object const exports with spread 1`] = `
+Array [
+  Object {
+    "additionalProperties": false,
+    "name": "far",
+    "properties": Object {
+      "bar": Object {
+        "node": Object {
+          "const": "test",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "far": Object {
+        "node": Object {
+          "const": false,
+          "type": "boolean",
+        },
+        "required": true,
+      },
+      "foo": Object {
+        "node": Object {
+          "const": 1,
+          "type": "number",
+        },
+        "required": true,
+      },
+      "mar": Object {
+        "node": Object {
+          "const": 2,
+          "type": "number",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+]
+`;
+
+exports[`Variable Exports Primitive const exports 1`] = `
+Array [
+  Object {
+    "const": 1,
+    "name": "foo",
+    "source": "filename.ts",
+    "type": "number",
+  },
+  Object {
+    "const": "test",
+    "name": "bar",
+    "source": "filename.ts",
+    "type": "string",
+  },
+  Object {
+    "const": true,
+    "name": "far",
+    "source": "filename.ts",
+    "type": "boolean",
+  },
+]
+`;

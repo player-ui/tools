@@ -1,5 +1,713 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Player Data Types Export 1`] = `
+Array [
+  Object {
+    "additionalProperties": false,
+    "name": "BooleanTypeRef",
+    "properties": Object {
+      "type": Object {
+        "node": Object {
+          "const": "BooleanType",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "IntegerTypeRef",
+    "properties": Object {
+      "type": Object {
+        "node": Object {
+          "const": "IntegerType",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "IntegerPosTypeRef",
+    "properties": Object {
+      "type": Object {
+        "node": Object {
+          "const": "IntegerPosType",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "IntegerNNTypeRef",
+    "properties": Object {
+      "type": Object {
+        "node": Object {
+          "const": "IntegerNNType",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "StringTypeRef",
+    "properties": Object {
+      "type": Object {
+        "node": Object {
+          "const": "StringType",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "CollectionTypeRef",
+    "properties": Object {
+      "type": Object {
+        "node": Object {
+          "const": "CollectionType",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "DateTypeRef",
+    "properties": Object {
+      "type": Object {
+        "node": Object {
+          "const": "DateType",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "PhoneTypeRef",
+    "properties": Object {
+      "type": Object {
+        "node": Object {
+          "const": "PhoneType",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "BooleanType",
+    "properties": Object {
+      "default": Object {
+        "node": Object {
+          "const": false,
+          "type": "boolean",
+        },
+        "required": true,
+      },
+      "type": Object {
+        "node": Object {
+          "const": "BooleanType",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "validation": Object {
+        "node": Object {
+          "const": Array [
+            Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "message": Object {
+                  "node": Object {
+                    "const": "Value must be true or false",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+                "options": Object {
+                  "node": Object {
+                    "const": Array [
+                      Object {
+                        "const": true,
+                        "type": "boolean",
+                      },
+                      Object {
+                        "const": false,
+                        "type": "boolean",
+                      },
+                    ],
+                    "elementType": Object {
+                      "type": "any",
+                    },
+                    "type": "array",
+                  },
+                  "required": true,
+                },
+                "type": Object {
+                  "node": Object {
+                    "const": "oneOf",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+              },
+              "type": "object",
+            },
+          ],
+          "elementType": Object {
+            "type": "any",
+          },
+          "type": "array",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "IntegerType",
+    "properties": Object {
+      "format": Object {
+        "node": Object {
+          "additionalProperties": false,
+          "properties": Object {
+            "type": Object {
+              "node": Object {
+                "const": "integer",
+                "type": "string",
+              },
+              "required": true,
+            },
+          },
+          "type": "object",
+        },
+        "required": true,
+      },
+      "type": Object {
+        "node": Object {
+          "const": "IntegerType",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "validation": Object {
+        "node": Object {
+          "const": Array [
+            Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "type": Object {
+                  "node": Object {
+                    "const": "integer",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+              },
+              "type": "object",
+            },
+          ],
+          "elementType": Object {
+            "type": "any",
+          },
+          "type": "array",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "IntegerPosType",
+    "properties": Object {
+      "format": Object {
+        "node": Object {
+          "additionalProperties": false,
+          "properties": Object {
+            "type": Object {
+              "node": Object {
+                "const": "integer",
+                "type": "string",
+              },
+              "required": true,
+            },
+          },
+          "type": "object",
+        },
+        "required": true,
+      },
+      "type": Object {
+        "node": Object {
+          "const": "IntegerPosType",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "validation": Object {
+        "node": Object {
+          "const": Array [
+            Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "type": Object {
+                  "node": Object {
+                    "const": "integer",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+              },
+              "type": "object",
+            },
+            Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "type": Object {
+                  "node": Object {
+                    "const": "min",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+                "value": Object {
+                  "node": Object {
+                    "const": 1,
+                    "type": "number",
+                  },
+                  "required": true,
+                },
+              },
+              "type": "object",
+            },
+          ],
+          "elementType": Object {
+            "type": "any",
+          },
+          "type": "array",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "IntegerNNType",
+    "properties": Object {
+      "format": Object {
+        "node": Object {
+          "additionalProperties": false,
+          "properties": Object {
+            "type": Object {
+              "node": Object {
+                "const": "integer",
+                "type": "string",
+              },
+              "required": true,
+            },
+          },
+          "type": "object",
+        },
+        "required": true,
+      },
+      "type": Object {
+        "node": Object {
+          "const": "IntegerNNType",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "validation": Object {
+        "node": Object {
+          "const": Array [
+            Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "type": Object {
+                  "node": Object {
+                    "const": "integer",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+              },
+              "type": "object",
+            },
+            Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "type": Object {
+                  "node": Object {
+                    "const": "min",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+                "value": Object {
+                  "node": Object {
+                    "const": 0,
+                    "type": "number",
+                  },
+                  "required": true,
+                },
+              },
+              "type": "object",
+            },
+          ],
+          "elementType": Object {
+            "type": "any",
+          },
+          "type": "array",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "StringType",
+    "properties": Object {
+      "default": Object {
+        "node": Object {
+          "const": "",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "format": Object {
+        "node": Object {
+          "additionalProperties": false,
+          "properties": Object {
+            "type": Object {
+              "node": Object {
+                "const": "string",
+                "type": "string",
+              },
+              "required": true,
+            },
+          },
+          "type": "object",
+        },
+        "required": true,
+      },
+      "type": Object {
+        "node": Object {
+          "const": "StringType",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "validation": Object {
+        "node": Object {
+          "const": Array [
+            Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "type": Object {
+                  "node": Object {
+                    "const": "string",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+              },
+              "type": "object",
+            },
+          ],
+          "elementType": Object {
+            "type": "any",
+          },
+          "type": "array",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "CollectionType",
+    "properties": Object {
+      "type": Object {
+        "node": Object {
+          "const": "CollectionType",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "validation": Object {
+        "node": Object {
+          "const": Array [
+            Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "type": Object {
+                  "node": Object {
+                    "const": "collection",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+              },
+              "type": "object",
+            },
+          ],
+          "elementType": Object {
+            "type": "any",
+          },
+          "type": "array",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "DateType",
+    "properties": Object {
+      "format": Object {
+        "node": Object {
+          "additionalProperties": false,
+          "properties": Object {
+            "type": Object {
+              "node": Object {
+                "const": "date",
+                "type": "string",
+              },
+              "required": true,
+            },
+          },
+          "type": "object",
+        },
+        "required": true,
+      },
+      "type": Object {
+        "node": Object {
+          "const": "DateType",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "validation": Object {
+        "node": Object {
+          "const": Array [
+            Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "type": Object {
+                  "node": Object {
+                    "const": "string",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+              },
+              "type": "object",
+            },
+          ],
+          "elementType": Object {
+            "type": "any",
+          },
+          "type": "array",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+  Object {
+    "additionalProperties": false,
+    "name": "PhoneType",
+    "properties": Object {
+      "format": Object {
+        "node": Object {
+          "additionalProperties": false,
+          "properties": Object {
+            "type": Object {
+              "node": Object {
+                "const": "phone",
+                "type": "string",
+              },
+              "required": true,
+            },
+          },
+          "type": "object",
+        },
+        "required": true,
+      },
+      "type": Object {
+        "node": Object {
+          "const": "PhoneType",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "validation": Object {
+        "node": Object {
+          "const": Array [
+            Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "type": Object {
+                  "node": Object {
+                    "const": "phone",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+              },
+              "type": "object",
+            },
+          ],
+          "elementType": Object {
+            "type": "any",
+          },
+          "type": "array",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "type": "object",
+  },
+]
+`;
+
+exports[`Player Expression Types Export 1`] = `
+Array [
+  Object {
+    "genericArguments": Array [
+      Object {
+        "additionalItems": false,
+        "elementTypes": Array [
+          Object {
+            "name": "str",
+            "optional": undefined,
+            "type": Object {
+              "type": "unknown",
+            },
+          },
+          Object {
+            "name": "pattern",
+            "optional": undefined,
+            "type": Object {
+              "type": "unknown",
+            },
+          },
+          Object {
+            "name": "replacement",
+            "optional": true,
+            "type": Object {
+              "type": "unknown",
+            },
+          },
+        ],
+        "minItems": 2,
+        "type": "tuple",
+      },
+      Object {
+        "type": "unknown",
+      },
+    ],
+    "name": "replace",
+    "ref": "ExpressionHandler",
+    "source": "filename.ts",
+    "type": "ref",
+  },
+  Object {
+    "genericArguments": Array [
+      Object {
+        "additionalItems": false,
+        "elementTypes": Array [
+          Object {
+            "optional": false,
+            "type": Object {
+              "title": "0",
+              "type": "unknown",
+            },
+          },
+        ],
+        "minItems": 1,
+        "type": "tuple",
+      },
+      Object {
+        "type": "boolean",
+      },
+    ],
+    "name": "isEmpty",
+    "ref": "ExpressionHandler<[unknown], boolean>",
+    "source": "filename.ts",
+    "type": "ref",
+  },
+  Object {
+    "genericArguments": Array [
+      Object {
+        "elementType": Object {
+          "or": Array [
+            Object {
+              "type": "string",
+            },
+            Object {
+              "type": "number",
+            },
+          ],
+          "type": "or",
+        },
+        "title": "[]",
+        "type": "array",
+      },
+      Object {
+        "type": "number",
+      },
+    ],
+    "name": "sum",
+    "ref": "ExpressionHandler",
+    "source": "filename.ts",
+    "type": "ref",
+  },
+]
+`;
+
 exports[`Player Types Export 1`] = `
 Array [
   Object {
@@ -109,7 +817,6 @@ Array [
             },
             Object {
               "const": true,
-              "title": "SwitchCase.case",
               "type": "boolean",
             },
           ],
@@ -163,7 +870,6 @@ Array [
               },
               Object {
                 "const": true,
-                "title": "SwitchCase.case",
                 "type": "boolean",
               },
             ],
@@ -350,7 +1056,6 @@ Array [
                             },
                             Object {
                               "const": true,
-                              "title": "SwitchCase.case",
                               "type": "boolean",
                             },
                           ],
@@ -476,7 +1181,6 @@ Array [
                             },
                             Object {
                               "const": true,
-                              "title": "SwitchCase.case",
                               "type": "boolean",
                             },
                           ],
@@ -621,7 +1325,6 @@ Array [
                         },
                         Object {
                           "const": true,
-                          "title": "SwitchCase.case",
                           "type": "boolean",
                         },
                       ],
@@ -718,7 +1421,6 @@ Array [
                         },
                         Object {
                           "const": true,
-                          "title": "SwitchCase.case",
                           "type": "boolean",
                         },
                       ],
@@ -820,7 +1522,6 @@ Array [
                     },
                     Object {
                       "const": true,
-                      "title": "SwitchCase.case",
                       "type": "boolean",
                     },
                   ],
@@ -917,7 +1618,6 @@ Array [
                     },
                     Object {
                       "const": true,
-                      "title": "SwitchCase.case",
                       "type": "boolean",
                     },
                   ],
@@ -4516,17 +5216,14 @@ Any reference to _index_ is replaced with the current iteration index.",
                           "or": Array [
                             Object {
                               "const": "page",
-                              "title": "DisplayTarget",
                               "type": "string",
                             },
                             Object {
                               "const": "section",
-                              "title": "DisplayTarget",
                               "type": "string",
                             },
                             Object {
                               "const": "field",
-                              "title": "DisplayTarget",
                               "type": "string",
                             },
                           ],
@@ -4562,12 +5259,10 @@ Any reference to _index_ is replaced with the current iteration index.",
                           "or": Array [
                             Object {
                               "const": "error",
-                              "title": "Severity",
                               "type": "string",
                             },
                             Object {
                               "const": "warning",
-                              "title": "Severity",
                               "type": "string",
                             },
                           ],
@@ -4585,17 +5280,14 @@ Any reference to _index_ is replaced with the current iteration index.",
                           "or": Array [
                             Object {
                               "const": "navigation",
-                              "title": "Trigger",
                               "type": "string",
                             },
                             Object {
                               "const": "change",
-                              "title": "Trigger",
                               "type": "string",
                             },
                             Object {
                               "const": "load",
-                              "title": "Trigger",
                               "type": "string",
                             },
                           ],
@@ -5558,12 +6250,10 @@ In the off chance you'd like this validator to run against the formatted value (
                             "or": Array [
                               Object {
                                 "const": "formatted",
-                                "title": "Reference.dataTarget",
                                 "type": "string",
                               },
                               Object {
                                 "const": "deformatted",
-                                "title": "Reference.dataTarget",
                                 "type": "string",
                               },
                             ],
@@ -5579,17 +6269,14 @@ In the off chance you'd like this validator to run against the formatted value (
                             "or": Array [
                               Object {
                                 "const": "page",
-                                "title": "DisplayTarget",
                                 "type": "string",
                               },
                               Object {
                                 "const": "section",
-                                "title": "DisplayTarget",
                                 "type": "string",
                               },
                               Object {
                                 "const": "field",
-                                "title": "DisplayTarget",
                                 "type": "string",
                               },
                             ],
@@ -5613,12 +6300,10 @@ In the off chance you'd like this validator to run against the formatted value (
                             "or": Array [
                               Object {
                                 "const": "error",
-                                "title": "Severity",
                                 "type": "string",
                               },
                               Object {
                                 "const": "warning",
-                                "title": "Severity",
                                 "type": "string",
                               },
                             ],
@@ -5634,17 +6319,14 @@ In the off chance you'd like this validator to run against the formatted value (
                             "or": Array [
                               Object {
                                 "const": "navigation",
-                                "title": "Trigger",
                                 "type": "string",
                               },
                               Object {
                                 "const": "change",
-                                "title": "Trigger",
                                 "type": "string",
                               },
                               Object {
                                 "const": "load",
-                                "title": "Trigger",
                                 "type": "string",
                               },
                             ],
@@ -5779,12 +6461,10 @@ In the off chance you'd like this validator to run against the formatted value (
                                 "or": Array [
                                   Object {
                                     "const": "formatted",
-                                    "title": "Reference.dataTarget",
                                     "type": "string",
                                   },
                                   Object {
                                     "const": "deformatted",
-                                    "title": "Reference.dataTarget",
                                     "type": "string",
                                   },
                                 ],
@@ -5800,17 +6480,14 @@ In the off chance you'd like this validator to run against the formatted value (
                                 "or": Array [
                                   Object {
                                     "const": "page",
-                                    "title": "DisplayTarget",
                                     "type": "string",
                                   },
                                   Object {
                                     "const": "section",
-                                    "title": "DisplayTarget",
                                     "type": "string",
                                   },
                                   Object {
                                     "const": "field",
-                                    "title": "DisplayTarget",
                                     "type": "string",
                                   },
                                 ],
@@ -5834,12 +6511,10 @@ In the off chance you'd like this validator to run against the formatted value (
                                 "or": Array [
                                   Object {
                                     "const": "error",
-                                    "title": "Severity",
                                     "type": "string",
                                   },
                                   Object {
                                     "const": "warning",
-                                    "title": "Severity",
                                     "type": "string",
                                   },
                                 ],
@@ -5855,17 +6530,14 @@ In the off chance you'd like this validator to run against the formatted value (
                                 "or": Array [
                                   Object {
                                     "const": "navigation",
-                                    "title": "Trigger",
                                     "type": "string",
                                   },
                                   Object {
                                     "const": "change",
-                                    "title": "Trigger",
                                     "type": "string",
                                   },
                                   Object {
                                     "const": "load",
-                                    "title": "Trigger",
                                     "type": "string",
                                   },
                                 ],
@@ -5984,17 +6656,14 @@ This will be used to lookup the proper handler",
                                   "or": Array [
                                     Object {
                                       "const": "page",
-                                      "title": "DisplayTarget",
                                       "type": "string",
                                     },
                                     Object {
                                       "const": "section",
-                                      "title": "DisplayTarget",
                                       "type": "string",
                                     },
                                     Object {
                                       "const": "field",
-                                      "title": "DisplayTarget",
                                       "type": "string",
                                     },
                                   ],
@@ -6027,12 +6696,10 @@ This will be used to lookup the proper handler",
                                   "or": Array [
                                     Object {
                                       "const": "error",
-                                      "title": "Severity",
                                       "type": "string",
                                     },
                                     Object {
                                       "const": "warning",
-                                      "title": "Severity",
                                       "type": "string",
                                     },
                                   ],
@@ -6048,17 +6715,14 @@ This will be used to lookup the proper handler",
                                   "or": Array [
                                     Object {
                                       "const": "navigation",
-                                      "title": "Trigger",
                                       "type": "string",
                                     },
                                     Object {
                                       "const": "change",
-                                      "title": "Trigger",
                                       "type": "string",
                                     },
                                     Object {
                                       "const": "load",
-                                      "title": "Trigger",
                                       "type": "string",
                                     },
                                   ],

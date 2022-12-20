@@ -89,9 +89,13 @@ export function simpleTransformGenerator<
       if (node.type === 'tuple') {
         return {
           ...node,
-          elementTypes: node.elementTypes.map((type) =>
-            walker(type, capability)
-          ),
+          elementTypes: node.elementTypes.map((element) => {
+            return {
+              name: element.name,
+              type: walker(element.type, capability),
+              optional: element.optional,
+            };
+          }),
           additionalItems: node.additionalItems
             ? walker(node.additionalItems, capability)
             : false,
