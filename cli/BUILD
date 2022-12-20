@@ -31,6 +31,7 @@ BUILD_DATA = [
     "@npm//mkdirp",
     "@npm//vscode-languageserver-textdocument",
     "@npm//vscode-languageserver-types",
+    "@npm//typescript",
     "//language/dsl:@player-tools/dsl",
     "//language/service:@player-tools/language-service",
     "//xlr/sdk:@player-tools/xlr-sdk",
