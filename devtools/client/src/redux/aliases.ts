@@ -1,4 +1,4 @@
-import type { Methods as RuntimeMethods } from '@player-tools/devtools-common';
+import { Methods as RuntimeMethods, RUNTIME_SOURCE } from '@player-tools/devtools-common';
 import { Methods } from './actions';
 
 export const GET_INFO_DETAILS = 'GET_INFO_DETAILS';
@@ -11,7 +11,7 @@ export const STOP_PROFILER = 'STOP_PROFILER';
 
 
 export interface MethodAction<T extends RuntimeMethods.MethodTypes> {
-  payload: RuntimeMethods.ByType<T>;
+  payload: RuntimeMethods.ByType<T>['params'];
 }
 
 // Copied from webext redux library not allowed in flipper
@@ -25,7 +25,12 @@ const _alias = (aliases: any) => () => (next: any) => (action: any) => {
   return next(action);
 };
 
-const alias = <T extends RuntimeMethods.MethodTypes>(alias: T, methods: Methods.MethodThunks) => (action: MethodAction<T>) => methods[alias](action.payload)
+// TODO: Make sure typings are correct here
+const alias = <T extends RuntimeMethods.MethodTypes>(type: T, methods: Methods.MethodThunks) => (action: MethodAction<T>) => methods[type]({
+  type,
+  params: action.payload,
+  source: RUNTIME_SOURCE,
+} as RuntimeMethods.ByType<T>)
 
 export const buildAliases = (methods: Methods.MethodThunks) =>
   _alias({

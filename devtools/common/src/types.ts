@@ -58,6 +58,7 @@ export interface MethodResponseMessageEvent<T extends Methods.BaseMethod<any>>
   params: T['params'];
 }
 
+// TODO: This should include methods
 export type Message =
   | MethodRequestMessageEvent<any>
   | MethodResponseMessageEvent<any>
@@ -92,4 +93,14 @@ export type ProfilerNode = {
   children: ProfilerNode[];
 };
 
-export type DiscriminateByType<Types, T extends string> = Extract<Types, { type: T }>
+export type DiscriminateByType<Types, T extends string> = Extract<
+  Types,
+  { type: T }
+>;
+
+/** Higher order utility for determining what types things are */
+export const isKnownType = <Types, T extends string>(types: readonly T[]) => 
+  <Provided extends T>(value: any, type?: Provided): value is DiscriminateByType<Types, Provided> =>
+    typeof value === 'object' &&
+    types.includes(value.type) &&
+    (!type || value.type === type);

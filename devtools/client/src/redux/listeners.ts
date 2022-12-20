@@ -1,10 +1,8 @@
-import { Events, Message } from "@player-tools/devtools-common";
+import { Events } from "@player-tools/devtools-common";
+import { Dispatch } from "redux";
 import { Events as EventActions } from "./actions";
 
-export function handleMessage(message: Message) {
-  // propagate message to default event handlers
-  const { type } = message;
-  if (type in Events.EventTypes) {
-    EventActions.actions[type as Events.EventTypes](message as any)
-  }
+/** Utility method to filter known events from a supplied message and dispatch the corresponding action */
+export const dispatchEvents = (dispatch: Dispatch) => (message: any) => {
+  if (Events.isEvent(message)) dispatch(EventActions.actions[message.type](message as any))
 }

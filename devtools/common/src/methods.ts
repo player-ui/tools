@@ -1,9 +1,8 @@
 import { Binding, Flow, Schema, View } from '@player-ui/types';
-import { DiscriminateByType, ProfilerNode } from './types';
+import { DiscriminateByType, isKnownType, ProfilerNode } from './types';
 
 // Bidirectional methods originating from the devtools client
 export namespace Methods {
-
   export /** TODO: */ interface BaseMethod<T extends Methods.MethodTypes> {
     /**
      * Source of the RPC type
@@ -274,4 +273,6 @@ export namespace Methods {
   export type MethodTypes = typeof MethodTypes[number];
 
   export type ByType<T extends MethodTypes> = DiscriminateByType<Method, T>;
+
+  export const isMethod = isKnownType<Method, MethodTypes>(MethodTypes);
 }

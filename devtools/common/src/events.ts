@@ -1,6 +1,6 @@
 import type { Severity } from "@player-ui/player";
 import type { Binding, Flow, View } from "@player-ui/types";
-import { BaseEventMessage, BaseMessageWithPlayerID, DiscriminateByType } from ".";
+import { BaseEventMessage, BaseMessageWithPlayerID, DiscriminateByType, isKnownType } from "./types";
 import { RUNTIME_SOURCE } from "./logger";
 
 // TODO: Maybe reverse the pluralness
@@ -146,4 +146,6 @@ export namespace Events {
   export type EventTypes = typeof EventTypes[number];
 
   export type ByType<T extends EventTypes> = DiscriminateByType<Event, T>;
+
+  export const isEvent = isKnownType<Event, EventTypes>(EventTypes);
 }

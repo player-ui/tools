@@ -7,17 +7,14 @@ import {
 } from '@player-tools/devtools-common';
 import {
   createDevtoolsStore,
-  handleMessage,
+  dispatchEvents,
 } from '@player-tools/devtools-client';
 // TODO: Fix import lol -- maybe try to bundle this package _before_ it hits flipper-pkg? i'm so tired of monkeying with this
 import { App } from '@player-tools/devtools-ui';
 
 type Events = {
   [type in Events.Event['type']]: Events.ByType<type>;
-}; 
-// & {
-//   'rpc-response': RPCResponseMessageEvent<Runtime.RuntimeRPC>;
-// };
+};
 
 type Methods = {
   [type in Methods.Method["type"]]: (
@@ -26,11 +23,6 @@ type Methods = {
 };
 
 export function plugin(client: PluginClient<Events, Methods>) {
-  // Listen for events
-  Events.EventTypes.forEach((event) => {
-    client.onMessage(event, handleMessage);
-  });
-
   // Delegate to plugin for how to handle communications
   const methodHandler = async <T extends Methods.MethodTypes>(
     method: Methods.ByType<T>
@@ -44,7 +36,14 @@ export function plugin(client: PluginClient<Events, Methods>) {
     // TODO: What do we do when things aren't supported?
   };
 
-  return { store: createDevtoolsStore(methodHandler) };
+  const store = createDevtoolsStore(methodHandler)
+
+  // Listen for events
+  Events.EventTypes.forEach((event) => {
+    client.onMessage(event, dispatchEvents(store.dispatch));
+  });
+
+  return { store };
 }
 
 export const Component = () => {
