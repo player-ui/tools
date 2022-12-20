@@ -1,3 +1,32 @@
+# 0.2.1 (Wed Dec 14 2022)
+
+### Release Notes
+
+#### Fix only one heritage class being parsed ([#14](https://github.com/player-ui/tools/pull/14))
+
+Fixed a bug with interfaces that extended more than one other interface.
+
+---
+
+#### 🐛 Bug Fix
+
+- Additional `Extends` Functionality [#16](https://github.com/player-ui/tools/pull/16) ([@KetanReddy](https://github.com/KetanReddy))
+- [WIP] Devtools [#11](https://github.com/player-ui/tools/pull/11) ([@sugarmanz](https://github.com/sugarmanz))
+- Fix parsing mapped types as heritage classes. Upgrade TypeScript and Fix test venv. [#16](https://github.com/player-ui/tools/pull/16) ([@KetanReddy](https://github.com/KetanReddy))
+- Canary support [#13](https://github.com/player-ui/tools/pull/13) ([@sugarmanz](https://github.com/sugarmanz))
+- Fix only one heritage class being parsed [#14](https://github.com/player-ui/tools/pull/14) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### ⚠️ Pushed to `main`
+
+- gif instructions ([@sugarmanz](https://github.com/sugarmanz))
+
+#### Authors: 2
+
+- Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz))
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
 # 0.2.0 (Fri Oct 28 2022)
 
 ### Release Notes
