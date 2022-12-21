@@ -10,7 +10,7 @@ import {
   dispatchEvents,
 } from '@player-tools/devtools-client';
 // TODO: Fix import lol -- maybe try to bundle this package _before_ it hits flipper-pkg? i'm so tired of monkeying with this
-import { App } from '@player-tools/devtools-ui';
+import { App } from '@player-tools/devtools-ui/dist/devtools-ui.prod';
 
 type Events = {
   [type in Events.Event['type']]: Events.ByType<type>;
