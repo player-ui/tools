@@ -25,7 +25,7 @@ const _alias = (aliases: any) => () => (next: any) => (action: any) => {
   return next(action);
 };
 
-// TODO: Make sure typings are correct here
+/** Helper for building corresponding method action via supplied thunks */
 const alias = <T extends RuntimeMethods.MethodTypes>(type: T, methods: Methods.MethodThunks) => (action: MethodAction<T>) => methods[type]({
   type,
   params: action.payload,

@@ -1,30 +1,28 @@
 import { Binding, Flow, Schema, View } from '@player-ui/types';
-import { DiscriminateByType, isKnownType, ProfilerNode } from './types';
+import { ProfilerNode } from './types';
+import { DiscriminateByType, DiscriminatedType, isKnownType } from './utils';
 
 // Bidirectional methods originating from the devtools client
 export namespace Methods {
-  export /** TODO: */ interface BaseMethod<T extends Methods.MethodTypes> {
+  interface BaseMethod<T extends Methods.MethodTypes> extends DiscriminatedType<T> {
+    // TODO: I don't think I need a source -- esp for methods? unless i use that to determine if the event has been responded to or not?
     /**
-     * Source of the RPC type
+     * Source of the method type
      */
     source: string;
     /**
-     * Unique type associated with the RPC type.
-     */
-    type: T;
-    /**
-     * Parameters associated with the RPC type.
+     * Parameters associated with the method request.
      */
     params?: unknown;
     /**
-     * Result of the RPC call.
+     * Result of the method response.
      */
     result?: unknown;
   }
 
   export interface PlayerConfigMethod extends BaseMethod<'player-config-request'> {
     /**
-     * Parameters associated with the Runtime Info RPC.
+     * Parameters associated with the Runtime Info method request.
      */
     params: {
       /**
@@ -33,7 +31,7 @@ export namespace Methods {
       playerID: string;
     };
     /**
-     * Result of the RPC call.
+     * Result of the method response.
      */
     result?: {
       /**
@@ -53,7 +51,7 @@ export namespace Methods {
 
   export interface PlayerDataBindingMethod extends BaseMethod<'player-data-binding-details'> {
     /**
-     * Parameters associated with the Data Binding RPC.
+     * Parameters associated with the Data Binding method request.
      */
     params: {
       /**
@@ -61,16 +59,16 @@ export namespace Methods {
        */
       playerID: string;
       /**
-       * Binding associated with the Data binding RPC.
+       * Binding associated with the Data binding method request.
        */
       binding: Binding;
     };
     /**
-     * Result of the RPC call.
+     * Result of the method response.
      */
     result?: {
       /**
-       * Binding associated with the Data binding RPC result.
+       * Binding associated with the Data binding method response.
        */
       binding: Binding;
       /**
@@ -108,7 +106,7 @@ export namespace Methods {
 
   export interface PlayerViewDetailsMethod extends BaseMethod<'player-view-details-request'> {
     /**
-     * Parameters associated with the View Details RPC.
+     * Parameters associated with the View Details method request.
      */
     params: {
       /**
@@ -117,7 +115,7 @@ export namespace Methods {
       playerID: string;
     };
     /**
-     * Result of the RPC call.
+     * Result of the method response.
      */
     result?: {
       /**
@@ -129,7 +127,7 @@ export namespace Methods {
 
   export interface PlayerRuntimeInfoMethod extends BaseMethod<'player-runtime-info-request'> {
     /**
-     * Parameters associated with the Runtime Info RPC.
+     * Parameters associated with the Runtime Info method request.
      */
     params: {
       /**
@@ -138,7 +136,7 @@ export namespace Methods {
       playerID: string;
     };
     /**
-     * Result of the RPC call.
+     * Result of the method response.
      */
     result?: {
       /**
@@ -162,7 +160,7 @@ export namespace Methods {
 
   export interface PlayerExpressionMethod extends BaseMethod<'player-execute-expression'> {
     /**
-     * Parameters associated with the Expression RPC.
+     * Parameters associated with the Expression method request.
      */
     params: {
       /**
@@ -175,7 +173,7 @@ export namespace Methods {
       expression: string;
     };
     /**
-     * Result of the RPC call.
+     * Result of the method response.
      */
     result?:
       | {
@@ -210,7 +208,7 @@ export namespace Methods {
 
   export interface PlayerStartProfilerMethod extends BaseMethod<'player-start-profiler-request'> {
     /**
-     * Parameters associated with the Profiler Details RPC.
+     * Parameters associated with the Profiler Details method request.
      */
     params: {
       /**
@@ -219,7 +217,7 @@ export namespace Methods {
       playerID: string;
     };
     /**
-     * Result of the RPC call.
+     * Result of the method response.
      */
     result?: {
       /**
@@ -231,7 +229,7 @@ export namespace Methods {
 
   export interface PlayerStopProfilerMethod extends BaseMethod<'player-stop-profiler-request'> {
     /**
-     * Parameters associated with the Profiler Details RPC.
+     * Parameters associated with the Profiler Details method request.
      */
     params: {
       /**
@@ -240,7 +238,7 @@ export namespace Methods {
       playerID: string;
     };
     /**
-     * Result of the RPC call.
+     * Result of the method response.
      */
     result?: {
       /**
@@ -259,7 +257,7 @@ export namespace Methods {
     | PlayerStartProfilerMethod
     | PlayerStopProfilerMethod;
 
-  // TODO: Generate this from `RuntimeRPC['type']` if I ever can
+  // TODO: Generate this from `Method['type']` if I ever can
   export const MethodTypes = [
     'player-config-request',
     'player-data-binding-details',

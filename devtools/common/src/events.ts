@@ -1,28 +1,38 @@
 import type { Severity } from "@player-ui/player";
 import type { Binding, Flow, View } from "@player-ui/types";
-import { BaseEventMessage, BaseMessageWithPlayerID, DiscriminateByType, isKnownType } from "./types";
+import { DiscriminateByType, DiscriminatedType, isKnownType } from "./utils";
 import { RUNTIME_SOURCE } from "./logger";
 
 // TODO: Maybe reverse the pluralness
 // Unidirectional events originating from the Player
 export namespace Events {
-  export interface PlayerTimelineEvent<T extends Events.EventTypes>
-    extends BaseMessageWithPlayerID<T> {
+  interface BaseEvent<T extends Events.EventTypes> extends DiscriminatedType<T> {
+    /** Source of the method type */
+    source: string;
+  }
+
+  interface BaseEventWithPlayerID<T extends Events.EventTypes> extends BaseEvent<T> {
+    /**
+     * Unique Player Id associated with the message.
+     */
+    playerID: string;
+  }
+
+  interface PlayerTimelineEvent<T extends Events.EventTypes> extends BaseEventWithPlayerID<T> {
     /**
      * The time in milliseconds when the event was received.
      */
     timestamp: number;
   }
 
-  export interface RuntimeInitEvent extends BaseEventMessage<'runtime-init'> {
+  export interface RuntimeInitEvent extends BaseEvent<'runtime-init'> {
     /**
      * Source of the event.
      */
     source: typeof RUNTIME_SOURCE;
   }
 
-  export interface PlayerInitEvent
-    extends BaseMessageWithPlayerID<'player-init'> {
+  export interface PlayerInitEvent extends BaseEventWithPlayerID<'player-init'> {
     /**
      * Source of the event.
      */
@@ -33,16 +43,14 @@ export namespace Events {
     version: string;
   }
 
-  export interface PlayerRemovedEvent
-    extends BaseMessageWithPlayerID<'player-removed'> {
+  export interface PlayerRemovedEvent extends BaseEventWithPlayerID<'player-removed'> {
     /**
      * Source of the event.
      */
     source: string;
   }
 
-  export interface PlayerLogEvent
-    extends PlayerTimelineEvent<'player-log-event'> {
+  export interface PlayerLogEvent extends PlayerTimelineEvent<'player-log-event'> {
     /**
      * Source of the event.
      */
@@ -57,8 +65,7 @@ export namespace Events {
     message: Array<any>;
   }
 
-  export interface PlayerDataChangeEvent
-    extends PlayerTimelineEvent<'player-data-change-event'> {
+  export interface PlayerDataChangeEvent extends PlayerTimelineEvent<'player-data-change-event'> {
     /**
      * Source of the event.
      */
@@ -77,8 +84,7 @@ export namespace Events {
     newValue: any;
   }
 
-  export interface PlayerViewUpdateEvent
-    extends PlayerTimelineEvent<'player-view-update-event'> {
+  export interface PlayerViewUpdateEvent extends PlayerTimelineEvent<'player-view-update-event'> {
     /**
      * Source of the event.
      */
@@ -89,8 +95,7 @@ export namespace Events {
     update: View;
   }
 
-  export interface PlayerFlowTransitionEvent
-    extends PlayerTimelineEvent<'player-flow-transition-event'> {
+  export interface PlayerFlowTransitionEvent extends PlayerTimelineEvent<'player-flow-transition-event'> {
     /**
      * The state from which the transition has taken place.
      */

@@ -24,12 +24,11 @@ document.documentElement.append(getScript());
 type MethodWithId<T extends Methods.MethodTypes = Methods.MethodTypes> = Methods.ByType<T> & { id: string };
 
 /** Tracker for method requests sent to the frontend */
-// TODO: Clear on store reset?
 const requestsInFlight = new Map<string, (response: Methods.Method['result']) => void>();
 
-/** Send method requests from background to Player */
+/** Handle messages sent from the background to the content script */
 browser.runtime.onMessage.addListener((request) => {
-  // Only process request if known and we don't have a result yet
+  // Forward method requests to Player context
   if (Methods.isMethod(request) && !request.result) {
     const id = uuid();
     window.postMessage({
@@ -40,10 +39,10 @@ browser.runtime.onMessage.addListener((request) => {
     return new Promise((resolve) => {
       requestsInFlight.set(id, resolve)
     })
+  } else if (request.type === 'clear-store') {
+    // If we clear the store, we don't care about any pending information
+    requestsInFlight.clear()
   }
-
-  // TODO: Fail silently?
-  return Promise.reject(`Unknown request: ${JSON.stringify(request)}`)
 });
 
 /** Send window events from Player to background */
@@ -52,8 +51,9 @@ window.addEventListener('message', ({ data, source }: MessageEvent<MethodWithId 
 
   if (Methods.isMethod(data) && data.result) {
     // TODO: Should this return the full method request?
-    requestsInFlight.get(data.id)?.(data.result);
+    requestsInFlight.get(data.id)?.(data.result)
   } else if (Events.isEvent(data)) {
+    // Forward events to background
     browser.runtime.sendMessage(data);
   }
 });

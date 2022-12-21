@@ -4,7 +4,7 @@ import {
   BACKGROUND_SOURCE,
   type Methods,
 } from '@player-tools/devtools-common';
-import { createDevtoolsStore, dispatchEvents } from '@player-tools/devtools-client';
+import { createDevtoolsStore, dispatchEvents, Actions, listenerMiddleware } from '@player-tools/devtools-client';
 import { browser } from 'webextension-polyfill-ts';
 
 const logger = createLogger(BACKGROUND_SOURCE);
@@ -21,6 +21,15 @@ async function sendMessage<T extends Methods.MethodTypes>(
 
   return await browser.tabs.sendMessage(tabId, method);
 }
+
+// Configure middleware to forward 'clear-store' actions
+// to the content script so it can clear any caches when
+// we reset the store! This also serves as an example for
+// how to configure other side effects, if necessary.
+listenerMiddleware.startListening({
+  actionCreator: Actions['clear-store'],
+  effect: sendMessage,
+})
 
 const store = createDevtoolsStore(sendMessage);
 

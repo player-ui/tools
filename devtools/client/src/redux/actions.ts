@@ -69,6 +69,7 @@ export namespace Events {
   ) as EventActions
 }
 
+/** Explicit actions that don't correspond to a specific event or method */
 export const Actions = {
   // Explicit actions TODO: Is this level of redundancy okay?
   'selected-player': createAction<string | undefined>('selected-player'),

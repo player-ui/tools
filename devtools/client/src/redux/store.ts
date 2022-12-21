@@ -28,12 +28,11 @@ const createStore = (
       ...reducers,
     },
     middleware: (getDefaultMiddleware) => {
-      // TODO: Potentially hook up our own middleware for dispatching additional actions from event actions
       const m = getDefaultMiddleware()
         .prepend(buildAliases(methodThunks))
         .concat(listenerMiddleware.middleware)
 
-      if (middleware) m.prepend(middleware);
+      if (middleware) m.concat(middleware)
 
       return m;
     },
@@ -45,7 +44,7 @@ const createStore = (
  * @param reducers Additional reducers to be added to the store. Optional
  * @returns
  */
-// TODO: Turn into store enhancer?
+// TODO: Turn into store enhancer? Maybe remove middleware and additionalReducers?
 export const createDevtoolsStore = (
   onMethodRequest: Methods.MethodHandler,
   middleware?: Middleware<any, StoreState, Dispatch<AnyAction>>,
