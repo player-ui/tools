@@ -9,17 +9,15 @@ import { browser } from 'webextension-polyfill-ts';
 
 const logger = createLogger(BACKGROUND_SOURCE);
 
-async function sendMessage<T extends Methods.MethodTypes>(
-  method: Methods.ByType<T>,
-): Promise<Methods.ByType<T>['result']> {
+async function sendMessage(message: any): Promise<any> {
   const [{ id: tabId }] = await browser.tabs.query({
     active: true,
     currentWindow: true,
   });
 
-  if (!tabId) return Promise.reject("could not find active tab");
+  if (!tabId) return Promise.reject('could not find active tab');
 
-  return await browser.tabs.sendMessage(tabId, method);
+  return await browser.tabs.sendMessage(tabId, message);
 }
 
 // Configure middleware to forward 'clear-store' actions

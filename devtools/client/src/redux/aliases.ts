@@ -1,5 +1,5 @@
-import { Methods as RuntimeMethods, RUNTIME_SOURCE } from '@player-tools/devtools-common';
-import { Methods } from './actions';
+import { Methods as Methods, RUNTIME_SOURCE } from '@player-tools/devtools-common';
+import { MethodThunks } from './actions/methods';
 
 export const GET_INFO_DETAILS = 'GET_INFO_DETAILS';
 export const GET_CONFIG_DETAILS = 'GET_CONFIG_DETAILS';
@@ -10,8 +10,8 @@ export const START_PROFILER = 'START_PROFILER';
 export const STOP_PROFILER = 'STOP_PROFILER';
 
 
-export interface MethodAction<T extends RuntimeMethods.MethodTypes> {
-  payload: RuntimeMethods.ByType<T>['params'];
+interface MethodAction<T extends Methods.MethodTypes> {
+  payload: Methods.ByType<T>['params'];
 }
 
 // Copied from webext redux library not allowed in flipper
@@ -26,13 +26,13 @@ const _alias = (aliases: any) => () => (next: any) => (action: any) => {
 };
 
 /** Helper for building corresponding method action via supplied thunks */
-const alias = <T extends RuntimeMethods.MethodTypes>(type: T, methods: Methods.MethodThunks) => (action: MethodAction<T>) => methods[type]({
+const alias = <T extends Methods.MethodTypes>(type: T, methods: MethodThunks) => (action: MethodAction<T>) => methods[type]({
   type,
   params: action.payload,
   source: RUNTIME_SOURCE,
-} as RuntimeMethods.ByType<T>)
+} as Methods.ByType<T>)
 
-export const buildAliases = (methods: Methods.MethodThunks) =>
+export const buildAliases = (methods: MethodThunks) =>
   _alias({
     GET_INFO_DETAILS: alias('player-runtime-info-request', methods),
     GET_CONFIG_DETAILS: alias('player-config-request', methods),

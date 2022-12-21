@@ -1,14 +1,13 @@
-import { ActionReducerMapBuilder, createReducer } from '@reduxjs/toolkit';
+import { type ActionReducerMapBuilder, createReducer } from '@reduxjs/toolkit';
 import type { PlayersState } from './state';
-import { Actions, Events, Methods } from './actions';
+import { Actions, EventActions, type MethodThunks } from './actions';
 
 const initialState = {
   selectedPlayerId: null,
   activePlayers: {},
 } as PlayersState;
 
-// TODO: It'd be nice if methodThunks didn't have to be passed in - but it is kinda client dependent
-export const methodsReducer = (methods: Methods.MethodThunks) => (builder: ActionReducerMapBuilder<PlayersState>) => {
+const methodsReducer = (methods: MethodThunks) => (builder: ActionReducerMapBuilder<PlayersState>) => {
   builder.addCase(
     methods['player-runtime-info-request'].fulfilled,
     (state, action) => {
@@ -116,8 +115,8 @@ export const methodsReducer = (methods: Methods.MethodThunks) => (builder: Actio
   );
 };
 
-export const eventsReducer = (builder: ActionReducerMapBuilder<PlayersState>) => {
-  builder.addCase(Events.actions['player-init'], (state, action) => {
+const eventsReducer = (builder: ActionReducerMapBuilder<PlayersState>) => {
+  builder.addCase(EventActions['player-init'], (state, action) => {
     const {
       payload: { version, playerID },
     } = action;
@@ -129,11 +128,11 @@ export const eventsReducer = (builder: ActionReducerMapBuilder<PlayersState>) =>
     state.version = version;
   });
 
-  builder.addCase(Events.actions['player-removed'], (state, action) => {
+  builder.addCase(EventActions['player-removed'], (state, action) => {
     delete state.activePlayers[action.payload.playerID];
   });
 
-  builder.addCase(Events.actions['player-flow-start'], (state, action) => {
+  builder.addCase(EventActions['player-flow-start'], (state, action) => {
     const {
       payload: { flow, playerID },
     } = action;
@@ -155,7 +154,7 @@ export const eventsReducer = (builder: ActionReducerMapBuilder<PlayersState>) =>
     };
   });
 
-  builder.addCase(Events.actions['player-view-update-event'], (state, action) => {
+  builder.addCase(EventActions['player-view-update-event'], (state, action) => {
     const {
       payload: { playerID, update },
     } = action;
@@ -175,7 +174,7 @@ export const eventsReducer = (builder: ActionReducerMapBuilder<PlayersState>) =>
   });
 };
 
-export const actionsReducer = (builder: ActionReducerMapBuilder<PlayersState>) => {
+const actionsReducer = (builder: ActionReducerMapBuilder<PlayersState>) => {
   builder.addCase(Actions['selected-player'], (state, action) => {
     if (action.payload) {
       state.selectedPlayerId = action.payload;
@@ -240,7 +239,7 @@ export const actionsReducer = (builder: ActionReducerMapBuilder<PlayersState>) =
   });
 };
 
-export const playersReducer = (methods: Methods.MethodThunks) =>
+export const playersReducer = (methods: MethodThunks) =>
   createReducer<PlayersState>(initialState, (builder) => {
     actionsReducer(builder)
     eventsReducer(builder)

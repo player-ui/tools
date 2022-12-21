@@ -7,13 +7,17 @@ import {
   ReducersMapObject,
 } from '@reduxjs/toolkit';
 import { StoreState } from './state';
-import { Methods } from './actions';
+import {
+  type MethodThunks,
+  type MethodHandler,
+  buildMethodThunks,
+} from './actions';
 import { playersReducer } from './reducers';
 import { listenerMiddleware } from './middleware';
 import { buildAliases } from './aliases';
 
 const createStore = (
-  methodThunks: Methods.MethodThunks,
+  methodThunks: MethodThunks,
   middleware?: Middleware<any, StoreState, Dispatch<AnyAction>>,
   reducers?: ReducersMapObject<StoreState, AnyAction>
 ): EnhancedStore<
@@ -30,9 +34,9 @@ const createStore = (
     middleware: (getDefaultMiddleware) => {
       const m = getDefaultMiddleware()
         .prepend(buildAliases(methodThunks))
-        .concat(listenerMiddleware.middleware)
+        .concat(listenerMiddleware.middleware);
 
-      if (middleware) m.concat(middleware)
+      if (middleware) m.concat(middleware);
 
       return m;
     },
@@ -46,11 +50,16 @@ const createStore = (
  */
 // TODO: Turn into store enhancer? Maybe remove middleware and additionalReducers?
 export const createDevtoolsStore = (
-  onMethodRequest: Methods.MethodHandler,
+  onMethodRequest: MethodHandler,
   middleware?: Middleware<any, StoreState, Dispatch<AnyAction>>,
   additionalReducers?: any
 ): EnhancedStore<
   StoreState,
   any,
   Middleware<any, StoreState, Dispatch<AnyAction>>[]
-> => createStore(Methods.buildAsyncThunks(onMethodRequest), middleware, additionalReducers)
+> =>
+  createStore(
+    buildMethodThunks(onMethodRequest),
+    middleware,
+    additionalReducers
+  );
