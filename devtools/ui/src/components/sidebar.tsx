@@ -1,12 +1,11 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  type StoreState,
-  selectedPlayerAction,
+  Actions,
   selectPlayerIds,
   selectSelectedPlayerId,
   selectPlayerVersion,
-} from '@player-tools/devtools-common';
+} from '@player-tools/devtools-client';
 import logo from '../media/player-logo.png';
 import { InfoPanel } from './info';
 import styles from './sidebar.css';
@@ -17,13 +16,9 @@ import styles from './sidebar.css';
  */
 export const Sidebar = () => {
   const dispatch = useDispatch();
-  const playerIDs = useSelector<StoreState, Array<string>>(selectPlayerIds);
-  const selectedPlayerID = useSelector<StoreState, string | null>(
-    selectSelectedPlayerId
-  );
-  const playerVersion = useSelector<StoreState, string | undefined>(
-    selectPlayerVersion
-  );
+  const playerIDs = useSelector(selectPlayerIds);
+  const selectedPlayerID = useSelector(selectSelectedPlayerId);
+  const playerVersion = useSelector(selectPlayerVersion);
 
   const details = selectedPlayerID ? (
     <section>
@@ -37,7 +32,7 @@ export const Sidebar = () => {
         id="player-select"
         value={selectedPlayerID}
         onChange={(event) => {
-          dispatch(selectedPlayerAction(event.target.value));
+          dispatch(Actions['selected-player'](event.target.value));
         }}
       >
         {playerIDs.map((playerID) => (

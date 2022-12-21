@@ -1,7 +1,5 @@
 import React from 'react';
 import {
-  type ProfilerNode,
-  type StoreState,
   selectProfiler,
   selectSelectedPlayerId,
   START_PROFILER,
@@ -16,12 +14,8 @@ import styles from '../app.css';
  * @returns
  */
 export const ProfilerPanel = () => {
-  const currentPlayerID = useSelector<StoreState, string | null>(
-    selectSelectedPlayerId
-  );
-  const profiler = useSelector<StoreState, ProfilerNode | undefined>(
-    selectProfiler
-  );
+  const currentPlayerID = useSelector(selectSelectedPlayerId);
+  const profiler = useSelector(selectProfiler);
   const dispatch = useDispatch();
 
   const StartProfiler = () => {

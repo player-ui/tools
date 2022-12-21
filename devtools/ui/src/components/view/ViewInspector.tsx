@@ -1,9 +1,9 @@
 import React from 'react';
-import type { View } from '@player-ui/types';
 import { ObjectInspector } from '@devtools-ds/object-inspector';
+import { ActivePlayerState } from '@player-tools/devtools-client';
 
 interface ViewInspectorProps {
-  currentView: View;
+  currentView: ActivePlayerState['view'];
 }
 
 /**

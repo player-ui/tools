@@ -1,58 +1,46 @@
 import React from 'react';
 import { PluginClient, usePlugin } from 'flipper-plugin';
 import {
-  createStore,
   Runtime,
-  RPCRequestMessageEvent,
-  RPCResponseMessageEvent,
+  Events,
+  Methods,
 } from '@player-tools/devtools-common';
 import {
-  handleMessage,
-  buildAliases,
-  buildPlayerReducerCallback,
-  buildRPCActions,
-  buildRPCRequests,
-  RuntimeRPCRequestHandlers,
+  createDevtoolsStore,
+  dispatchEvents,
 } from '@player-tools/devtools-client';
 // TODO: Fix import lol -- maybe try to bundle this package _before_ it hits flipper-pkg? i'm so tired of monkeying with this
 import { App } from '@player-tools/devtools-ui/dist/devtools-ui.prod';
 
 type Events = {
-  [key in Runtime.RuntimeEventTypes]: Extract<
-    Runtime.RuntimeEvent,
-    { type: key }
-  >;
-} & {
-  'rpc-response': RPCResponseMessageEvent<Runtime.RuntimeRPC>;
+  [type in Events.Event['type']]: Events.ByType<type>;
 };
 
 type Methods = {
-  [key in Runtime.RuntimeRPCTypes]: (
-    payload: RPCRequestMessageEvent<Runtime.RuntimeRPC>
-  ) => Promise<void>;
+  [type in Methods.Method["type"]]: (
+    payload: Methods.ByType<type>["params"]
+  ) => Promise<Methods.ByType<type>["result"]>;
 };
 
 export function plugin(client: PluginClient<Events, Methods>) {
-  const rpcHandlers: RuntimeRPCRequestHandlers = buildRPCRequests(
-    (message: RPCRequestMessageEvent<Runtime.RuntimeRPC>) => {
-      // TODO: Do `send('rpc-request', message)`
-      client.send(message.rpcType, message);
+  // Delegate to plugin for how to handle communications
+  const methodHandler = async <T extends Methods.MethodTypes>(
+    method: Methods.ByType<T>
+  ): Promise<Methods.ByType<T>['result']> => {
+    if (await client.supportsMethod(method.type)) {
+      return (await client.send(
+        method.type,
+        method.params as any
+      )) as Methods.ByType<T>['result'];
     }
-  );
-  const actions = buildRPCActions(rpcHandlers);
-  const store = createStore(
-    buildAliases(actions),
-    buildPlayerReducerCallback(actions)
-  );
+    // TODO: What do we do when things aren't supported?
+  };
 
-  Runtime.RuntimeEventTypes.forEach((event) => {
-    client.onMessage(event, (message) => {
-      handleMessage(store, message);
-    });
-  });
+  const store = createDevtoolsStore(methodHandler)
 
-  client.onMessage('rpc-response', (params) => {
-    rpcHandlers[params.rpcType].onMessage(params);
+  // Listen for events
+  Events.EventTypes.forEach((event) => {
+    client.onMessage(event, dispatchEvents(store.dispatch));
   });
 
   return { store };

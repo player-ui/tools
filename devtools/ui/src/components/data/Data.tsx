@@ -2,19 +2,17 @@ import React from 'react';
 import { ObjectInspector } from '@devtools-ds/object-inspector';
 import Split from 'react-split';
 import type { ResolvedASTNode, ASTNode } from '@devtools-ds/object-parser';
-import type { Runtime } from '@player-tools/devtools-common';
+import type { DataState } from '@player-tools/devtools-client';
 import styles from './data.css';
 import commonStyles from '../app.css';
 
 interface DataDetailsPanelProps {
-  details?: Runtime.PlayerDataBindingRPC['result'];
+  details?: DataState["selectedBinding"];
 }
 
-export const DataDetailsPanel = (props: DataDetailsPanelProps) => {
-  const { details } = props;
-
+export const DataDetailsPanel = ({ details }: DataDetailsPanelProps) => {
   return (
-    <div key={props.details?.binding} className={styles['data-details']}>
+    <div key={details?.binding} className={styles['data-details']}>
       <h3>Details</h3>
       {details ? (
         <div>
@@ -96,12 +94,10 @@ export const DataDetailsPanel = (props: DataDetailsPanelProps) => {
 };
 
 interface DataProps {
-  allBindings: Runtime.PlayerDataBindingRPC['result'];
-  selectedBinding: Runtime.PlayerDataBindingRPC['result'];
   onSelect: (astNode: ASTNode | ResolvedASTNode | undefined) => Promise<void>;
 }
 
-export const Data = ({ allBindings, selectedBinding, onSelect }: DataProps) => (
+export const Data = ({ allBindings, selectedBinding, onSelect }: DataProps & DataState) => (
   <Split
     direction="horizontal"
     sizes={[75, 25]}

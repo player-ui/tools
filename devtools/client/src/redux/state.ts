@@ -1,23 +1,19 @@
-import type { Flow, View } from '@player-ui/types';
-import type { Runtime } from '.';
+import { Flow, View } from '@player-ui/types';
+import { Methods, Events, ProfilerNode } from '@player-tools/devtools-common';
 
 export type ActivePlayerState = {
   /**
    * state associated with player config
    */
-  configState?: Runtime.PlayerConfigRPC['result'] | null;
+  configState?: Methods.PlayerConfigMethod['result'] | null;
   /**
    * Flow related Information of the player.
    */
-  flowInfo?: Runtime.PlayerRuntimeInfoRPC['result'] | null;
+  flowInfo?: Methods.PlayerRuntimeInfoMethod['result'] | null;
   /**
    * A collection of all the events associated with the running player instance.
    */
-  timelineEvents: Array<
-    | Runtime.PlayerDataChangeEvent
-    | Runtime.PlayerLogEvent
-    | Runtime.PlayerFlowStartEvent
-  >;
+  timelineEvents: Array<Events.TimelineEvents>;
   /**
    * View related information of the player.
    */
@@ -81,11 +77,11 @@ export type DataState = {
   /**
    * The binding selected on the Data panel.
    */
-  selectedBinding?: Runtime.PlayerDataBindingRPC['result'];
+  selectedBinding?: Methods.PlayerDataBindingMethod['result'];
   /**
    * All the bindings in the data state.
    */
-  allBindings?: Runtime.PlayerDataBindingRPC['result'];
+  allBindings?: Methods.PlayerDataBindingMethod['result'];
 };
 
 export interface ConsoleState {
@@ -104,34 +100,6 @@ export interface ConsoleState {
     /**
      * Result of the console evaluation.
      */
-    result: Runtime.PlayerExpressionRPC['result'];
+    result: Methods.PlayerExpressionMethod['result'];
   }>;
 }
-
-export type ProfilerNode = {
-  /**
-   * hook name
-   */
-  name: string;
-  /**
-   * startTime of the hook
-   */
-  startTime?: number;
-  /**
-   * endTime of the hook
-   */
-  endTime?: number;
-  /**
-   * duration of hook resolution times
-   * unit: ms
-   */
-  value?: number;
-  /**
-   * tooltip to be shown on hover
-   */
-  tooltip?: string;
-  /**
-   * subhook profiler nodes
-   */
-  children: ProfilerNode[];
-};

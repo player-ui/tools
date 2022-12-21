@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import type { StoreState, PlayersState } from '../types/state';
+import type { StoreState, PlayersState } from './state';
 
 /**
  * Selects the player state
@@ -18,12 +18,12 @@ const selectActivePlayers = createSelector(
   (players: PlayersState) => players.activePlayers
 );
 
-export const selectPlayerVersion: any = createSelector(
+export const selectPlayerVersion = createSelector(
   selectPlayers,
   (players: PlayersState) => players.version
 );
 
-export const selectPlayerIds: any = createSelector(
+export const selectPlayerIds = createSelector(
   selectActivePlayers,
   (activePlayers) => Object.keys(activePlayers) || []
 );
@@ -31,12 +31,12 @@ export const selectPlayerIds: any = createSelector(
 /**
  * Selects the selected/currently active player Id.
  */
-export const selectSelectedPlayerId: any = createSelector(
+export const selectSelectedPlayerId = createSelector(
   selectPlayers,
   (players: PlayersState) => players.selectedPlayerId
 );
 
-export const selectCurrentPlayer: any = createSelector(
+export const selectCurrentPlayer = createSelector(
   selectActivePlayers,
   selectSelectedPlayerId,
   (activePlayers, selectedPlayerId) => {
@@ -48,18 +48,18 @@ export const selectCurrentPlayer: any = createSelector(
   }
 );
 
-export const selectConfig: any = createSelector(
+export const selectConfig = createSelector(
   selectCurrentPlayer,
   (currentPlayer) => {
     return currentPlayer?.configState ?? null;
   }
 );
 
-const selectData: any = createSelector(selectCurrentPlayer, (currentPlayer) => {
+const selectData = createSelector(selectCurrentPlayer, (currentPlayer) => {
   return currentPlayer?.dataState;
 });
 
-export const selectFlowInfo: any = createSelector(
+export const selectFlowInfo = createSelector(
   selectCurrentPlayer,
   (currentPlayer) => {
     if (!currentPlayer) {
@@ -70,21 +70,21 @@ export const selectFlowInfo: any = createSelector(
   }
 );
 
-export const selectCurrentFlow: any = createSelector(
+export const selectCurrentFlow = createSelector(
   selectFlowInfo,
   (flowInfo) => {
     return flowInfo?.currentFlow;
   }
 );
 
-export const selectCurrentTopic: any = createSelector(
+export const selectCurrentTopic = createSelector(
   selectCurrentFlow,
   (currentFlow) => {
     return currentFlow?.topic;
   }
 );
 
-export const selectEvents: any = createSelector(
+export const selectEvents = createSelector(
   selectCurrentPlayer,
   (currentPlayer) => {
     if (!currentPlayer) {
@@ -95,7 +95,7 @@ export const selectEvents: any = createSelector(
   }
 );
 
-export const selectView: any = createSelector(
+export const selectView = createSelector(
   selectCurrentPlayer,
   (currentPlayer) => {
     if (!currentPlayer) {
@@ -106,15 +106,15 @@ export const selectView: any = createSelector(
   }
 );
 
-export const selectAllBindings: any = createSelector(selectData, (data) => {
+export const selectAllBindings = createSelector(selectData, (data) => {
   return data?.allBindings;
 });
 
-export const selectSelectedBinding: any = createSelector(selectData, (data) => {
+export const selectSelectedBinding = createSelector(selectData, (data) => {
   return data?.selectedBinding;
 });
 
-export const selectConsole: any = createSelector(
+export const selectConsole = createSelector(
   selectCurrentPlayer,
   (currentPlayer) => {
     if (!currentPlayer) {
@@ -125,7 +125,7 @@ export const selectConsole: any = createSelector(
   }
 );
 
-export const selectProfiler: any = createSelector(
+export const selectProfiler = createSelector(
   selectCurrentPlayer,
   (currentPlayer) => {
     return currentPlayer?.profilerInfo;

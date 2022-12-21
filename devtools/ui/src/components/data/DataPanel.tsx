@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  type Runtime,
   selectAllBindings,
   selectSelectedBinding,
   selectSelectedPlayerId,
-  clearSelectedDataDetails,
+  Actions,
   GET_DATA_BINDING_DETAILS,
 } from '@player-tools/devtools-client';
 import type { ASTNode, ResolvedASTNode } from '@devtools-ds/object-parser';
@@ -26,11 +25,8 @@ const getBindingFromSelectedNode = (
 };
 
 export const DataPanel = () => {
-  const allBindings: Runtime.PlayerDataBindingRPC['result'] =
-    useSelector(selectAllBindings);
-  const selectedBinding: Runtime.PlayerDataBindingRPC['result'] = useSelector(
-    selectSelectedBinding
-  );
+  const allBindings = useSelector(selectAllBindings);
+  const selectedBinding = useSelector(selectSelectedBinding);
   const currentPlayerID = useSelector(selectSelectedPlayerId);
   const dispatch = useDispatch();
 
@@ -59,7 +55,7 @@ export const DataPanel = () => {
         }
 
         if (!binding) {
-          dispatch(clearSelectedDataDetails());
+          dispatch(Actions['clear-selected-data-details']());
           return;
         }
 
