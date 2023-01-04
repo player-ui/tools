@@ -1,4 +1,4 @@
-import type { Severity } from '@player-ui/logger';
+import type { Severity } from '@player-ui/player';
 import type { Binding, Flow, Schema, View } from '@player-ui/types';
 import type { RUNTIME_SOURCE } from '../constants';
 import type { ProfilerNode } from './state';

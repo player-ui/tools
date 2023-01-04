@@ -10,6 +10,7 @@ vsce(
     data = [
         "package.json",
         ".vscodeignore",
-        "language-configuration.json"
+        "language-configuration.json",
+        "//language/typescript-expression-plugin:@player-tools/typescript-expression-plugin",
     ] + glob(["syntaxes/*"])
 )

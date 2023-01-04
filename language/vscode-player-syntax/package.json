@@ -7,6 +7,9 @@
   "engines": {
     "vscode": "^1.56.0"
   },
+  "dependencies": {
+    "@player-tools/typescript-expression-plugin": "0.0.0-PLACEHOLDER"
+  },
   "files": [
     "player-syntax.vsix",
     "syntaxes",
@@ -72,6 +75,12 @@
         "embeddedLanguages": {
           "meta.embedded.block.binding": "source.player.binding"
         }
+      }
+    ],
+    "typescriptServerPlugins": [
+      {
+        "name": "@player-tools/typescript-expression-plugin",
+        "enableForWorkspaceTypeScriptVersions": true
       }
     ]
   }
