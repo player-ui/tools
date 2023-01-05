@@ -14179,6 +14179,11 @@ rollup-plugin-esbuild@^4.7.2:
     joycon "^3.0.1"
     jsonc-parser "^3.0.0"
 
+rollup-plugin-node-externals@^5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-node-externals/-/rollup-plugin-node-externals-5.0.3.tgz#77522654ddbae6f28f6ae15a849d54427d5a637d"
+  integrity sha512-2hehUFt243Lra6tf1cJyRMz5OlTf+kn8zYyl8wR4MLkUiX+X96YVhfer7qsn2X30mnuGVvpY/oyFlJ86i9DF3Q==
+
 rollup-plugin-string@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/rollup-plugin-string/-/rollup-plugin-string-3.0.0.tgz#fed2d6301fae1e59eb610957df757ef13fada3f0"
