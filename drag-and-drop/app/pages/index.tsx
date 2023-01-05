@@ -106,6 +106,13 @@ const config: DragAndDropControllerOptions = {
       manifest: pluginManifest as TSManifest,
     },
   ],
+  async resolveRequiredProperties(
+    asset: AssetType<string>,
+    type: ObjectType
+  ): Promise<AssetType<string>> {
+    console.log('Asset has required properties');
+    return asset;
+  },
 };
 
 const controller = new DragAndDropController(config);
