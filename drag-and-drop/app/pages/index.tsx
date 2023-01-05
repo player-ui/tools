@@ -16,6 +16,13 @@ import {
   AccordionIcon,
   AccordionPanel,
   VStack,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  ModalContent,
+  ModalOverlay,
+  ModalCloseButton,
+  Input,
 } from '@chakra-ui/react';
 import { setIn } from 'timm';
 import type {
@@ -48,6 +55,17 @@ const PropertiesContext = React.createContext<{
 }>({
   setDisplayedAssetID: () => {},
 });
+
+const ControllerContext = React.createContext<
+  | {
+      controller: DragAndDropController;
+    }
+  | undefined
+>(undefined);
+
+function useController() {
+  return React.useContext(ControllerContext);
+}
 
 /**
  * Component that indicates that an Asset can be placed at this location
@@ -96,26 +114,6 @@ const AssetDropTarget = (props: TransformedDropTargetAssetType) => {
     </Box>
   );
 };
-
-const config: DragAndDropControllerOptions = {
-  Component: AssetDropTarget,
-  types: typesManifest as TSManifest,
-  extensions: [
-    {
-      plugin: ReferenceAssetsPlugin,
-      manifest: pluginManifest as TSManifest,
-    },
-  ],
-  async resolveRequiredProperties(
-    asset: AssetType<string>,
-    type: ObjectType
-  ): Promise<AssetType<string>> {
-    console.log('Asset has required properties');
-    return asset;
-  },
-};
-
-const controller = new DragAndDropController(config);
 
 /**
  * Component that can be dropped onto the canvas to add an Asst/View
@@ -172,7 +170,8 @@ export const CapabilityPanel = (props: CapabilityPanelProps) => {
  * Left panel for selecting Assets/Views
  */
 const AssetSelectorPanel = () => {
-  const availableComponents = controller.getAvailableAssets();
+  const { controller } = useController() ?? {};
+  const availableComponents = controller?.getAvailableAssets() ?? [];
   const assets = availableComponents.filter((c) => c.capability === 'Assets');
   const views = availableComponents.filter((c) => c.capability === 'Views');
 
@@ -195,10 +194,15 @@ const AssetSelectorPanel = () => {
  * Right panel for editing a dropped Asset/View
  */
 const AssetDetailsPanel = () => {
+  const { controller } = useController() ?? {};
   const propContext = React.useContext(PropertiesContext);
   const [modifiedAsset, setModifiedAsset] = React.useState<
     AssetType | undefined
   >(undefined);
+
+  if (!controller) {
+    return null;
+  }
 
   if (!propContext.displayedAssetID) {
     return (
@@ -245,35 +249,146 @@ const AssetDetailsPanel = () => {
   );
 };
 
+const Canvas = () => {
+  const { controller } = useController() ?? {};
+  const [render, setRender] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    if (controller) {
+      setRender(true);
+    }
+  }, [controller]);
+
+  if (!render) {
+    return null;
+  }
+
+  return <controller.Canvas />;
+};
+
+interface PendingPropertyResolution {
+  asset: AssetType;
+  type: ObjectType;
+
+  onComplete: (asset: AssetType) => void;
+}
+
+const PropertyResolver = (props: PendingPropertyResolution) => {
+  const [value, setValue] = React.useState<string>(props.asset.value ?? '');
+
+  return (
+    <Modal isOpen onClose={() => {}}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Resolve Required Properties</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Box>
+            <Input
+              value={value}
+              onChange={(e) => {
+                setValue(e.target.value);
+              }}
+            />
+            <Button
+              isDisabled={value.length === 0}
+              onClick={() =>
+                props.onComplete({
+                  ...props.asset,
+                  value,
+                })
+              }
+            >
+              Complete
+            </Button>
+          </Box>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+};
+
 /**
  * Main Page
  */
 const App = () => {
   const [displayedAssetID, setDisplayedAssetID] = React.useState<string>();
+  const [pendingPropertyResolutions, setPendingPropertyResolutions] =
+    React.useState<PendingPropertyResolution | undefined>(undefined);
+
+  const controllerState = React.useMemo(() => {
+    const config: DragAndDropControllerOptions = {
+      Component: AssetDropTarget,
+      types: typesManifest as TSManifest,
+      extensions: [
+        {
+          plugin: ReferenceAssetsPlugin,
+          manifest: pluginManifest as TSManifest,
+        },
+      ],
+      async resolveRequiredProperties(
+        asset: AssetType<string>,
+        type: ObjectType
+      ): Promise<AssetType<string>> {
+        const pending: PendingPropertyResolution = {
+          asset,
+          type,
+          onComplete: () => asset,
+        };
+
+        const prom = new Promise<AssetType<string>>((resolve) => {
+          pending.onComplete = resolve;
+        });
+
+        setPendingPropertyResolutions(pending);
+        return prom;
+      },
+    };
+
+    return {
+      controller: new DragAndDropController(config),
+    };
+  }, [setPendingPropertyResolutions]);
+
+  const { controller } = controllerState;
 
   return (
-    <PropertiesContext.Provider
-      value={{
-        displayedAssetID,
-        setDisplayedAssetID,
-      }}
-    >
-      <ChakraProvider>
-        <controller.Context>
-          <Flex justifyContent="space-between" flexDir="row">
-            <Box flex={1} margin="20px">
-              <AssetSelectorPanel />
-            </Box>
-            <Box flexGrow={1} margin="20px">
-              <controller.Canvas />
-            </Box>
-            <Box flex={1} margin="20px">
-              <AssetDetailsPanel />
-            </Box>
-          </Flex>
-        </controller.Context>
-      </ChakraProvider>
-    </PropertiesContext.Provider>
+    <ControllerContext.Provider value={controllerState}>
+      <PropertiesContext.Provider
+        value={React.useMemo(
+          () => ({
+            displayedAssetID,
+            setDisplayedAssetID,
+          }),
+          []
+        )}
+      >
+        <ChakraProvider>
+          <controller.Context>
+            <Flex justifyContent="space-between" flexDir="row">
+              <Box flex={1} margin="20px">
+                <AssetSelectorPanel />
+              </Box>
+              <Box flexGrow={1} margin="20px">
+                <Canvas />
+              </Box>
+              <Box flex={1} margin="20px">
+                <AssetDetailsPanel />
+              </Box>
+            </Flex>
+            {pendingPropertyResolutions && (
+              <PropertyResolver
+                {...pendingPropertyResolutions}
+                onComplete={(asset) => {
+                  setPendingPropertyResolutions(undefined);
+                  return pendingPropertyResolutions.onComplete(asset);
+                }}
+              />
+            )}
+          </controller.Context>
+        </ChakraProvider>
+      </PropertiesContext.Provider>
+    </ControllerContext.Provider>
   );
 };
 
