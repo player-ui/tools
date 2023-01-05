@@ -1,7 +1,7 @@
 import React from 'react';
 import { Asset } from '@player-ui/react-asset';
 import type { TransformedDropTargetAssetType } from '../types';
-import { useDroppableAsset } from '../hooks';
+import { useDroppableAsset } from '../hooks/useDroppableAsset';
 
 export const DropComponent = (props: TransformedDropTargetAssetType) => {
   const [{ isOver }, drop] = useDroppableAsset(props);

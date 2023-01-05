@@ -32,6 +32,9 @@ export interface ExtensionProviderAssetIdentifier {
 
   /** The asset type in the plugin */
   name: string;
+
+  /** The capability the type belongs to */
+  capability: string;
 }
 
 export const isDropTargetAsset = (obj: unknown): obj is DropTargetAssetType => {
@@ -52,7 +55,7 @@ export interface DropTargetAssetType extends Asset<'drop-target'> {
    */
   context?: {
     /** The identifier for the parent asset type */
-    parent: ExtensionProviderAssetIdentifier;
+    parent: Omit<ExtensionProviderAssetIdentifier, 'capability'>;
 
     /** The name of the property that this asset fulfills */
     propertyName?: string;
