@@ -25,6 +25,7 @@ data = [
   "@npm//@player-ui/reference-assets-plugin-react",
   "@npm//@types/react",
   "@npm//@types/node",
+  "@npm//timm",
 ]
 
 next_export(

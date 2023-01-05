@@ -1,5 +1,5 @@
 import React from 'react';
-import type { AssetWrapper, View } from '@player-ui/react';
+import type { Asset, AssetWrapper, View } from '@player-ui/react';
 import { ConsoleLogger, WebPlayer } from '@player-ui/react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -62,6 +62,7 @@ export class DragAndDropController {
       return {
         pluginName: typeInfo.plugin,
         name: assetName,
+        capability: typeInfo.capability,
       };
     });
   }
@@ -70,6 +71,10 @@ export class DragAndDropController {
     return this.PlayerXLRService.XLRSDK.getType(
       assetName
     ) as NamedType<ObjectNode>;
+  }
+
+  public getAsset(assetID: string) {
+    return this.runtimeState.get(assetID);
   }
 
   public Context: React.ComponentType<React.PropsWithChildren<unknown>>;
@@ -116,8 +121,8 @@ export class DragAndDropController {
     this.webPlayer.start(this.runtimeState.flow);
   }
 
-  setProperties(id: string, properties: Record<string, any>) {
-    this.runtimeState.setProperties(id, properties);
+  updateAsset(id: string, newObject: Asset) {
+    this.runtimeState.updateAsset(id, newObject);
     this.dndWebPlayerPlugin.refresh(this.webPlayer.player);
   }
 

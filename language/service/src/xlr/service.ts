@@ -17,7 +17,7 @@ export interface XLRContext {
 }
 
 /**
- * XLRs Manager for
+ * XLRs Manager for abstracting away Player specific interactions with XLR
  */
 export class XLRService {
   private baseTypes = [

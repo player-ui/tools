@@ -37,7 +37,7 @@ export class RuntimeFlowState {
     };
   }
 
-  setProperties(id: string, properties: Record<string, any>) {
+  updateAsset(id: string, newAsset: Asset) {
     const asset = this.assetMappings[id];
     if (!asset) {
       throw new Error(`Cannot set asset value for unknown id: ${id}`);
@@ -47,10 +47,7 @@ export class RuntimeFlowState {
       throw new Error(`Cannot set properties on asset without a value`);
     }
 
-    asset.value.asset = {
-      ...asset.value.asset,
-      ...properties,
-    };
+    asset.value.asset = newAsset;
   }
 
   private createNewAsset(idPrefix: string, type: ObjectType): Asset {
@@ -119,6 +116,20 @@ export class RuntimeFlowState {
       ...replacement,
       asset: newAsset,
     };
+  }
+
+  get(id: string): {
+    /** The Asset that correlates to the given ID */
+    asset: Asset;
+    /** The underlying XLR type for the Asset */
+    type: ObjectType;
+  } {
+    const asset = this.assetMappings[id];
+    if (!asset || !asset.value) {
+      throw new Error(`Cannot get asset value for unknown id: ${id}`);
+    }
+
+    return { asset: asset.value.asset, type: asset.value.type };
   }
 
   append(
