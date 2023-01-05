@@ -9,26 +9,49 @@ import { DragAndDropAssetType } from '../types';
 
 /** The type for exporting and restoring the flow state */
 export interface ExportedRuntimeFlowState {
+  /**
+   *
+   */
   root: DropTargetAssetType;
 }
 
 export interface RuntimeFlowStateOptions {
+  /**
+   *
+   */
   restoreFrom?: {
+    /**
+     *
+     */
     state: ExportedRuntimeFlowState;
   };
+
+  /**
+   * Function to call when a placed asset has required properties that need to be resolved before actually placing it.
+   */
+  resolveRequiredProperties: (asset: Asset, type: ObjectType) => Promise<Asset>;
 }
 
+/**
+ *
+ */
 export class RuntimeFlowState {
   private ROOT: DropTargetAssetType;
   private assetMappings: Record<string, DropTargetAssetType> = {};
+  private resolveRequiredProperties: (
+    asset: Asset,
+    type: ObjectType
+  ) => Promise<Asset>;
 
-  constructor(options?: RuntimeFlowStateOptions) {
+  constructor(options: RuntimeFlowStateOptions) {
     this.ROOT = {
       __type: DragAndDropAssetType,
       id: 'drag-and-drop-view',
       type: 'drop-target',
     };
     this.assetMappings[this.ROOT.id] = this.ROOT;
+
+    this.resolveRequiredProperties = options?.resolveRequiredProperties;
   }
 
   export(): ExportedRuntimeFlowState {
@@ -50,7 +73,10 @@ export class RuntimeFlowState {
     asset.value.asset = newAsset;
   }
 
-  private createNewAsset(idPrefix: string, type: ObjectType): Asset {
+  private async createNewAsset(
+    idPrefix: string,
+    type: ObjectType
+  ): Promise<Asset> {
     const typeProp =
       type.properties.type.node.type === 'string'
         ? type.properties.type.node.const
@@ -60,14 +86,20 @@ export class RuntimeFlowState {
       throw new Error('type property must be a constant');
     }
 
-    const asset: Asset = {
+    let asset: Asset = {
       id: `${idPrefix}-test-1`,
       type: typeProp,
     };
 
+    let hasRequiredProperties = false;
+
     Object.entries(type.properties).forEach(([key, prop]) => {
       if (prop.node.type === 'string' && prop.node.const !== undefined) {
         asset[key] = prop.node.const;
+      }
+
+      if (prop.required === true) {
+        hasRequiredProperties = true;
       }
 
       if (
@@ -92,10 +124,14 @@ export class RuntimeFlowState {
       }
     });
 
+    if (hasRequiredProperties) {
+      asset = await this.resolveRequiredProperties(asset, type);
+    }
+
     return asset;
   }
 
-  replace(
+  async replace(
     id: string,
     replacement: {
       /** The identifier for where the populated asset is from */
@@ -104,13 +140,13 @@ export class RuntimeFlowState {
       /** The current descriptor for the value stored at this asset */
       type: ObjectType;
     }
-  ) {
+  ): Promise<void> {
     const asset = this.assetMappings[id];
     if (!asset) {
       throw new Error(`Cannot set asset value for unknown id: ${id}`);
     }
 
-    const newAsset = this.createNewAsset(id, replacement.type);
+    const newAsset = await this.createNewAsset(id, replacement.type);
 
     asset.value = {
       ...replacement,

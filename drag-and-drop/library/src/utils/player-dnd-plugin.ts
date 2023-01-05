@@ -28,6 +28,9 @@ export interface PlayerDndPluginOptions<
   /** An optional override for the transition name when refreshing a flow */
   refreshTransition?: string;
 
+  /**
+   *
+   */
   getXLRTypeForAsset: (
     identifier: ExtensionProviderAssetIdentifier
   ) => ObjectNode;
@@ -71,11 +74,12 @@ export class PlayerDndPlugin implements WebPlayerPlugin {
             replaceAsset: (identifier: ExtensionProviderAssetIdentifier) => {
               console.log(`Replacing asset at: ${asset.id}`);
 
-              this.options.state.replace(asset.id, {
-                identifier,
-                type: this.options.getXLRTypeForAsset(identifier),
-              });
-              this.refresh(player);
+              this.options.state
+                .replace(asset.id, {
+                  identifier,
+                  type: this.options.getXLRTypeForAsset(identifier),
+                })
+                .then(() => this.refresh(player));
             },
             appendAsset: (identifier: ExtensionProviderAssetIdentifier) => {
               console.log(`Appending to asset at: ${asset.id}`);
