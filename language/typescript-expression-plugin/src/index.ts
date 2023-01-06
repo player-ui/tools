@@ -3,21 +3,42 @@ import { decorateWithTemplateLanguageService } from 'typescript-template-languag
 import { ExpressionLanguageService } from './service';
 import { LSPLogger } from './logger';
 
-export = (mod: { typescript: typeof ts }) => {
-  return {
-    create(info: ts.server.PluginCreateInfo): ts.LanguageService {
-      const logger = new LSPLogger(info);
+interface InitParams {
+  typescript: typeof ts;
+}
+class Plugin implements ts.server.PluginModule {
+  private readonly initOptions: InitParams;
+  private logger?: LSPLogger;
+  private templateService?: ExpressionLanguageService;
 
-      const templateService = new ExpressionLanguageService({ logger });
+  constructor(initOptions: InitParams) {
+    this.initOptions = initOptions;
+  }
 
-      return decorateWithTemplateLanguageService(
-        mod.typescript,
-        info.languageService,
-        info.project,
-        templateService,
-        { tags: ['e', 'expr'], enableForStringWithSubstitutions: true },
-        { logger }
-      );
-    },
-  };
-};
+  create(info: ts.server.PluginCreateInfo): ts.LanguageService {
+    const logger = new LSPLogger(info);
+    this.logger = logger;
+
+    const templateService = new ExpressionLanguageService({ logger });
+    this.templateService = templateService;
+
+    return decorateWithTemplateLanguageService(
+      this.initOptions.typescript,
+      info.languageService,
+      info.project,
+      templateService,
+      { tags: ['e', 'expr'], enableForStringWithSubstitutions: true },
+      { logger }
+    );
+  }
+
+  onConfigurationChanged(config: any) {
+    this.templateService?.setConfig(config);
+  }
+}
+
+function init(mod: InitParams): ts.server.PluginModule {
+  return new Plugin(mod);
+}
+
+export = init;

@@ -1084,3 +1084,63 @@ Array [
   },
 ]
 `;
+
+exports[`Variable Exports gets named tuple members 1`] = `
+Array [
+  Object {
+    "additionalItems": false,
+    "elementTypes": Array [
+      Object {
+        "name": "argName",
+        "optional": undefined,
+        "type": Object {
+          "type": "string",
+        },
+      },
+      Object {
+        "name": "argValue",
+        "optional": undefined,
+        "type": Object {
+          "type": "string",
+        },
+      },
+    ],
+    "genericTokens": undefined,
+    "minItems": 2,
+    "name": "Foo",
+    "source": "filename.ts",
+    "title": "Foo",
+    "type": "tuple",
+  },
+]
+`;
+
+exports[`Variable Exports named tuples in generics 1`] = `
+Array [
+  Object {
+    "additionalItems": false,
+    "elementTypes": Array [
+      Object {
+        "name": "argName",
+        "optional": undefined,
+        "type": Object {
+          "type": "string",
+        },
+      },
+      Object {
+        "name": "argValue",
+        "optional": undefined,
+        "type": Object {
+          "type": "string",
+        },
+      },
+    ],
+    "genericTokens": undefined,
+    "minItems": 2,
+    "name": "Foo",
+    "source": "filename.ts",
+    "title": "Bar",
+    "type": "tuple",
+  },
+]
+`;
