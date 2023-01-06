@@ -20,6 +20,14 @@ import {
   ModalContent,
   ModalOverlay,
   ButtonGroup,
+  Table,
+  TableCaption,
+  TableContainer,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
 } from '@chakra-ui/react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { setIn } from 'timm';
@@ -40,10 +48,12 @@ import type { ObjectType, TSManifest } from '@player-tools/xlr';
 import pluginManifest from '@player-tools/static-xlrs/static_xlrs/plugin/xlr/manifest';
 import typesManifest from '@player-tools/static-xlrs/static_xlrs/core/xlr/manifest';
 import { AssetEditorPanel } from './components/AssetEditorPanel';
+import { covertXLRtoAssetDoc } from './utils/converters';
 
 const PropertiesContext = React.createContext<{
   /**
-   * Current Asset thats selected
+   * Current Asset thats selected in the right panel
+   * will be either an asset ID or a XLR type
    */
   displayedAssetID?: string;
   /**
@@ -120,6 +130,7 @@ const AssetDropTarget = (props: TransformedDropTargetAssetType) => {
       onClick={(e) => {
         if (props.value) {
           propContext.setDisplayedAssetID(props.id);
+          propContext.setRightPanelState('edit');
           e.stopPropagation();
         }
       }}
@@ -139,10 +150,20 @@ const AssetDropTarget = (props: TransformedDropTargetAssetType) => {
  * Component that can be dropped onto the canvas to add an Asst/View
  */
 const DroppableAsset = (props: ExtensionProviderAssetIdentifier) => {
+  const { setRightPanelState, setDisplayedAssetID } =
+    React.useContext(PropertiesContext);
   const [, ref] = useDraggableAsset(props) ?? [];
   return (
     <Box ref={ref}>
-      <Button colorScheme="blue">{props.name}</Button>
+      <Button
+        colorScheme="blue"
+        onClick={(event) => {
+          setRightPanelState('docs');
+          setDisplayedAssetID(props.name);
+        }}
+      >
+        {props.name}
+      </Button>
     </Box>
   );
 };
@@ -241,15 +262,6 @@ const AssetDetailsPanel = () => {
 
   if (!controller) {
     return null;
-  }
-
-  if (!propContext.displayedAssetID) {
-    return (
-      <Box>
-        <Heading>Properties</Heading>
-        <Text>Select an asset to begin editing</Text>
-      </Box>
-    );
   }
 
   const { asset, type } = controller.getAsset(propContext.displayedAssetID);
@@ -406,6 +418,78 @@ const ContentExportModal = () => {
 };
 
 /**
+ * Panel to show the full docs for the selected asset
+ */
+const AssetDocsPanel = () => {
+  const { displayedAssetID } = React.useContext(PropertiesContext);
+  const { controller } = useController() ?? {};
+  const type = controller.getAssetDetails(displayedAssetID);
+  const docs = covertXLRtoAssetDoc(type);
+  return (
+    <Card>
+      <CardHeader>
+        <Heading>Docs for {type.name}</Heading>
+        <Text fontSize="xl"> {docs.description}</Text>
+      </CardHeader>
+      <CardBody>
+        <TableContainer>
+          <Table variant="simple">
+            <Thead>
+              <Tr>
+                <Th>Name</Th>
+                <Th>Required</Th>
+                <Th>Description</Th>
+                <Th>Type</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {Object.keys(docs.props).map((prop) => {
+                const propDetails = docs.props[prop];
+                return (
+                  <Tr key={prop}>
+                    <Td>{prop}</Td>
+                    <Td>{propDetails.required ? 'Yes' : 'No'}</Td>
+                    <Td>{propDetails.description}</Td>
+                    <Td>
+                      {propDetails.type.value
+                        ? `"${propDetails.type.value}`
+                        : propDetails.type.name}
+                    </Td>
+                  </Tr>
+                );
+              })}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      </CardBody>
+    </Card>
+  );
+};
+
+/**
+ * Asset to switch what is shown on the right panel
+ */
+const RightPanel = () => {
+  const { rightPanelState, displayedAssetID } =
+    React.useContext(PropertiesContext);
+
+  if (rightPanelState === 'edit') {
+    if (displayedAssetID) {
+      return <AssetDetailsPanel />;
+    }
+
+    return (
+      <Box>
+        <Heading>Properties</Heading>
+        <Text>Select an asset to begin editing</Text>
+      </Box>
+    );
+  }
+
+  return <AssetDocsPanel />;
+};
+
+/**
  * Main Page
  */
 const App = () => {
@@ -478,7 +562,7 @@ const App = () => {
                 <Canvas />
               </Box>
               <Box flex={1} margin="20px">
-                <AssetDetailsPanel />
+                <RightPanel />
               </Box>
             </Flex>
             {pendingPropertyResolutions && (

@@ -26,7 +26,8 @@ data = [
   "@npm//@types/react",
   "@npm//@types/node",
   "@npm//timm",
-  "@npm//react-syntax-highlighter"
+  "@npm//react-syntax-highlighter",
+  "@npm//react-docgen-typescript"
 ]
 
 next_export(
