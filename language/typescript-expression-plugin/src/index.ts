@@ -27,7 +27,10 @@ class Plugin implements ts.server.PluginModule {
       info.languageService,
       info.project,
       templateService,
-      { tags: ['e', 'expr'], enableForStringWithSubstitutions: true },
+      {
+        tags: ['e', 'expr', 'expression'],
+        enableForStringWithSubstitutions: true,
+      },
       { logger }
     );
   }
@@ -41,4 +44,5 @@ function init(mod: InitParams): ts.server.PluginModule {
   return new Plugin(mod);
 }
 
-export = init;
+export default init;
+// export = init;

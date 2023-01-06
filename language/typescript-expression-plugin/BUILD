@@ -11,6 +11,6 @@ javascript_pipeline(
       "@npm//typescript-template-language-service-decorator",
     ],
     test_data = [
-        "//common:static_xlrs"
+        "//common:@player-tools/static-xlrs"
     ]
 )

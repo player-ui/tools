@@ -29,6 +29,7 @@ export interface ExpressionLanguageServiceConfig {
   plugins: Array<TSManifest>;
 }
 
+// TODO: This should move into the xlr/cli package so expressions are converted to functions at build time
 function reduceExpression(plugins: Array<TSManifest>): ExpressionList {
   // Overlaps in names will be resolved by the last plugin to be loaded
   // So use a map to ensure no duplicates
