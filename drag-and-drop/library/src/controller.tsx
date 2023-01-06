@@ -128,12 +128,17 @@ export class DragAndDropController {
     return this.runtimeState.get(assetID);
   }
 
-  updateAsset(id: string, newObject: Asset) {
+  public updateAsset(id: string, newObject: Asset) {
     this.runtimeState.updateAsset(id, newObject);
     this.dndWebPlayerPlugin.refresh(this.webPlayer.player);
   }
 
-  exportView(): View {
+  public removeAsset(id: string){
+    this.runtimeState.clear(id);
+    this.dndWebPlayerPlugin.refresh(this.webPlayer.player);
+  }
+
+  public exportView(): View {
     const baseView = this.runtimeState.view;
 
     /**
