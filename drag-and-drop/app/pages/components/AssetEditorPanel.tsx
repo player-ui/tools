@@ -158,8 +158,6 @@ const PropertyBox = (props: PropertyBoxProps) => {
         })}
       </Box>
     );
-  } else {
-    renderedComponent = <Text>{JSON.stringify(node)}</Text>;
   }
 
   // Catch unimplemented form controls during development
