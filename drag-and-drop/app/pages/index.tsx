@@ -17,14 +17,11 @@ import {
   AccordionPanel,
   VStack,
   Modal,
-  ModalBody,
-  ModalHeader,
   ModalContent,
   ModalOverlay,
   ButtonGroup,
-  ModalFooter,
-  useColorMode,
 } from '@chakra-ui/react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { setIn } from 'timm';
 import type {
   DragAndDropControllerOptions,
@@ -53,8 +50,26 @@ const PropertiesContext = React.createContext<{
    * Sets `displayedAssetID`
    */
   setDisplayedAssetID: (id: string) => void;
+
+  /**
+   * If the export modal is open
+   */
+  exportOpen: boolean;
+
+  /** Sets `exportOpen` */
+  setExportOpen: (state: boolean) => void;
+
+  /** If the right panel is docs or edit */
+  rightPanelState: 'docs' | 'edit';
+
+  /** Sets `rightPanelState` */
+  setRightPanelState: (state: 'docs' | 'edit') => void;
 }>({
   setDisplayedAssetID: () => {},
+  setExportOpen: () => {},
+  setRightPanelState: () => {},
+  exportOpen: false,
+  rightPanelState: 'edit',
 });
 
 const ControllerContext = React.createContext<
@@ -175,6 +190,7 @@ export const CapabilityPanel = (props: CapabilityPanelProps) => {
  * Left panel for selecting Assets/Views
  */
 const AssetSelectorPanel = () => {
+  const context = React.useContext(PropertiesContext);
   const { controller } = useController() ?? {};
   const availableComponents = controller?.getAvailableAssets() ?? [];
   const assets = availableComponents.filter((c) => c.capability === 'Assets');
@@ -200,8 +216,7 @@ const AssetSelectorPanel = () => {
               <Button
                 colorScheme="green"
                 onClick={(event) => {
-                  const content = controller.exportView();
-                  console.log(content);
+                  context.setExportOpen(true);
                 }}
               >
                 Export View
@@ -287,7 +302,7 @@ const AssetDetailsPanel = () => {
 };
 
 /**
- *
+ * Main editing canvas
  */
 const Canvas = () => {
   const { controller } = useController() ?? {};
@@ -316,9 +331,8 @@ interface PendingPropertyResolution {
   onComplete: (asset: AssetType) => void;
 }
 
-/** */
+/** Modal for filling in required properties on a dropped Asset */
 const PropertyResolver = (props: PendingPropertyResolution) => {
-  const { colorMode } = useColorMode();
   const [modifiedAsset, setModifiedAsset] = React.useState<AssetType>(
     props.asset
   );
@@ -359,11 +373,47 @@ const PropertyResolver = (props: PendingPropertyResolution) => {
   );
 };
 
+/** Modal for showing the JSON version of the created flow */
+const ContentExportModal = () => {
+  const context = React.useContext(PropertiesContext);
+  const { controller } = useController() ?? {};
+  const content = JSON.stringify(controller.exportView());
+  return (
+    <Modal isOpen size="xlg" onClose={() => {}}>
+      <ModalOverlay />
+      <ModalContent>
+        <Card>
+          <CardHeader>
+            <Heading>Player Content</Heading>
+          </CardHeader>
+          <CardBody>
+            <SyntaxHighlighter language="json">{content}</SyntaxHighlighter>
+          </CardBody>
+          <CardFooter>
+            <Button
+              colorScheme="red"
+              onClick={(event) => {
+                context.setExportOpen(false);
+              }}
+            >
+              Done
+            </Button>
+          </CardFooter>
+        </Card>
+      </ModalContent>
+    </Modal>
+  );
+};
+
 /**
  * Main Page
  */
 const App = () => {
   const [displayedAssetID, setDisplayedAssetID] = React.useState<string>();
+  const [exportOpen, setExportOpen] = React.useState<boolean>(false);
+  const [rightPanelState, setRightPanelState] = React.useState<'docs' | 'edit'>(
+    'edit'
+  );
   const [pendingPropertyResolutions, setPendingPropertyResolutions] =
     React.useState<PendingPropertyResolution | undefined>(undefined);
 
@@ -410,8 +460,12 @@ const App = () => {
           () => ({
             displayedAssetID,
             setDisplayedAssetID,
+            exportOpen,
+            setExportOpen,
+            rightPanelState,
+            setRightPanelState,
           }),
-          [displayedAssetID]
+          [displayedAssetID, exportOpen, rightPanelState]
         )}
       >
         <ChakraProvider>
@@ -436,6 +490,7 @@ const App = () => {
                 }}
               />
             )}
+            {exportOpen && <ContentExportModal />}
           </controller.Context>
         </ChakraProvider>
       </PropertiesContext.Provider>
