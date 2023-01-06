@@ -21,8 +21,9 @@ import {
   ModalHeader,
   ModalContent,
   ModalOverlay,
-  ModalCloseButton,
-  Input,
+  ButtonGroup,
+  ModalFooter,
+  useColorMode,
 } from '@chakra-ui/react';
 import { setIn } from 'timm';
 import type {
@@ -58,11 +59,15 @@ const PropertiesContext = React.createContext<{
 
 const ControllerContext = React.createContext<
   | {
+      /** */
       controller: DragAndDropController;
     }
   | undefined
 >(undefined);
 
+/**
+ *
+ */
 function useController() {
   return React.useContext(ControllerContext);
 }
@@ -181,9 +186,28 @@ const AssetSelectorPanel = () => {
         <Heading>Available Components</Heading>
       </CardHeader>
       <CardBody>
-        <Accordion>
+        <Accordion allowToggle>
           <CapabilityPanel displayName="Views" capabilities={views} />
           <CapabilityPanel displayName="Assets" capabilities={assets} />
+          <AccordionItem>
+            <AccordionButton>
+              <Box as="span" flex="1" textAlign="left">
+                Options
+              </Box>
+              <AccordionIcon />
+            </AccordionButton>
+            <AccordionPanel pb={4}>
+              <Button
+                colorScheme="green"
+                onClick={(event) => {
+                  const content = controller.exportView();
+                  console.log(content);
+                }}
+              >
+                Export View
+              </Button>
+            </AccordionPanel>
+          </AccordionItem>
         </Accordion>
       </CardBody>
     </Card>
@@ -235,20 +259,36 @@ const AssetDetailsPanel = () => {
         />
       </CardBody>
       <CardFooter>
-        <Button
-          colorScheme="blue"
-          onClick={(event) => {
-            console.log(modifiedAsset);
-            controller.updateAsset(propContext.displayedAssetID, modifiedAsset);
-          }}
-        >
-          Update Component
-        </Button>
+        <ButtonGroup spacing="10">
+          <Button
+            colorScheme="blue"
+            onClick={(event) => {
+              controller.updateAsset(
+                propContext.displayedAssetID,
+                modifiedAsset
+              );
+            }}
+          >
+            Update Component
+          </Button>
+          <Button
+            colorScheme="red"
+            onClick={(event) => {
+              controller.removeAsset(propContext.displayedAssetID);
+              propContext.setDisplayedAssetID(undefined);
+            }}
+          >
+            Delete Component
+          </Button>
+        </ButtonGroup>
       </CardFooter>
     </Card>
   );
 };
 
+/**
+ *
+ */
 const Canvas = () => {
   const { controller } = useController() ?? {};
   const [render, setRender] = React.useState<boolean>(false);
@@ -267,42 +307,53 @@ const Canvas = () => {
 };
 
 interface PendingPropertyResolution {
+  /** */
   asset: AssetType;
+  /** */
   type: ObjectType;
 
+  /** */
   onComplete: (asset: AssetType) => void;
 }
 
+/** */
 const PropertyResolver = (props: PendingPropertyResolution) => {
-  const [value, setValue] = React.useState<string>(props.asset.value ?? '');
+  const { colorMode } = useColorMode();
+  const [modifiedAsset, setModifiedAsset] = React.useState<AssetType>(
+    props.asset
+  );
+
+  /** */
+  const updateObject = (path: Array<string | number>, value: any) => {
+    setModifiedAsset(setIn(modifiedAsset, path, value) as AssetType);
+  };
 
   return (
-    <Modal isOpen onClose={() => {}}>
+    <Modal isOpen size="lg" onClose={() => {}}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Resolve Required Properties</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Box>
-            <Input
-              value={value}
-              onChange={(e) => {
-                setValue(e.target.value);
-              }}
+        <Card>
+          <CardHeader>
+            <Heading>Resolve Required Properties</Heading>
+          </CardHeader>
+          <CardBody>
+            <AssetEditorPanel
+              asset={modifiedAsset}
+              type={props.type}
+              onUpdate={updateObject}
             />
+          </CardBody>
+          <CardFooter>
             <Button
-              isDisabled={value.length === 0}
-              onClick={() =>
-                props.onComplete({
-                  ...props.asset,
-                  value,
-                })
-              }
+              colorScheme="blue"
+              onClick={(event) => {
+                props.onComplete(modifiedAsset);
+              }}
             >
-              Complete
+              Place Component
             </Button>
-          </Box>
-        </ModalBody>
+          </CardFooter>
+        </Card>
       </ModalContent>
     </Modal>
   );
@@ -360,7 +411,7 @@ const App = () => {
             displayedAssetID,
             setDisplayedAssetID,
           }),
-          []
+          [displayedAssetID]
         )}
       >
         <ChakraProvider>

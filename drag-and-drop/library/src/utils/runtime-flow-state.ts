@@ -98,7 +98,7 @@ export class RuntimeFlowState {
         asset[key] = prop.node.const;
       }
 
-      if (prop.required === true) {
+      if (prop.required === true && !['type', 'id'].includes(key)) {
         hasRequiredProperties = true;
       }
 
