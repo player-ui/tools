@@ -1,42 +1,41 @@
 {
-    "source": "/private/var/tmp/_bazel_adierkens/27576a73da70b0b10d1fbcaea9c1e658/sandbox/darwin-sandbox/177/execroot/player/plugins/common-expressions/core/src/expressions/index.ts",
-    "name": "containsAny",
-    "type": "ref",
-    "ref": "ExpressionHandler",
-    "genericArguments": [
+  "name": "containsAny",
+  "type": "ref",
+  "ref": "ExpressionHandler",
+  "genericArguments": [
+    {
+      "type": "tuple",
+      "elementTypes": [
         {
-            "type": "tuple",
-            "elementTypes": [
-                {
-                    "type": {
-                        "type": "string"
-                    },
-                    "optional": false
-                },
-                {
-                    "type": {
-                        "type": "or",
-                        "or": [
-                            {
-                                "type": "string"
-                            },
-                            {
-                                "type": "array",
-                                "elementType": {
-                                    "type": "string"
-                                },
-                                "title": "[]"
-                            }
-                        ]
-                    },
-                    "optional": false
-                }
-            ],
-            "additionalItems": false,
-            "minItems": 2
+          "type": {
+            "type": "string"
+          },
+          "optional": false
         },
         {
-            "type": "boolean"
+          "type": {
+            "type": "or",
+            "or": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "elementType": {
+                  "type": "string"
+                },
+                "title": "[]"
+              }
+            ]
+          },
+          "optional": false
         }
-    ]
+      ],
+      "additionalItems": false,
+      "minItems": 2
+    },
+    {
+      "type": "boolean"
+    }
+  ]
 }

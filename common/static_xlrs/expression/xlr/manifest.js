@@ -22,6 +22,6 @@ module.exports = {
   "capabilities": {
     "Assets":[],
 		"Views":[],
-		"Expressions":[size,size,isEmpty,isNotEmpty,concat,trim,upperCase,lowerCase,replace,titleCase,sentenceCase,number,round,floor,ceil,sum,findPropertyIndex,findProperty,containsAny],
+		"Expressions":[size,isEmpty,isNotEmpty,concat,trim,upperCase,lowerCase,replace,titleCase,sentenceCase,number,round,floor,ceil,sum,findPropertyIndex,findProperty,containsAny],
   }
 }

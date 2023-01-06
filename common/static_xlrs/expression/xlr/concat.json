@@ -1,18 +1,17 @@
 {
-    "source": "/private/var/tmp/_bazel_adierkens/27576a73da70b0b10d1fbcaea9c1e658/sandbox/darwin-sandbox/177/execroot/player/plugins/common-expressions/core/src/expressions/index.ts",
-    "name": "concat",
-    "type": "ref",
-    "ref": "ExpressionHandler",
-    "genericArguments": [
-        {
-            "type": "array",
-            "elementType": {
-                "type": "unknown"
-            },
-            "title": "[]"
-        },
-        {
-            "type": "unknown"
-        }
-    ]
+  "name": "concat",
+  "type": "ref",
+  "ref": "ExpressionHandler",
+  "genericArguments": [
+    {
+      "type": "array",
+      "elementType": {
+        "type": "unknown"
+      },
+      "title": "[]"
+    },
+    {
+      "type": "unknown"
+    }
+  ]
 }

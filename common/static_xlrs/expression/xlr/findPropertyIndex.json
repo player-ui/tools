@@ -1,63 +1,62 @@
 {
-    "source": "/private/var/tmp/_bazel_adierkens/27576a73da70b0b10d1fbcaea9c1e658/sandbox/darwin-sandbox/177/execroot/player/plugins/common-expressions/core/src/expressions/index.ts",
-    "name": "findPropertyIndex",
-    "type": "ref",
-    "ref": "ExpressionHandler<\n  [Array<any> | Binding, string | undefined, any],\n  number\n>",
-    "genericArguments": [
+  "name": "findPropertyIndex",
+  "type": "ref",
+  "ref": "ExpressionHandler<\n  [Array<any> | Binding, string | undefined, any],\n  number\n>",
+  "genericArguments": [
+    {
+      "type": "tuple",
+      "elementTypes": [
         {
-            "type": "tuple",
-            "elementTypes": [
-                {
-                    "type": {
-                        "type": "or",
-                        "or": [
-                            {
-                                "type": "array",
-                                "elementType": {
-                                    "type": "any"
-                                },
-                                "title": "0"
-                            },
-                            {
-                                "type": "ref",
-                                "ref": "Binding",
-                                "title": "0"
-                            }
-                        ],
-                        "title": "0"
-                    },
-                    "optional": false
+          "type": {
+            "type": "or",
+            "or": [
+              {
+                "type": "array",
+                "elementType": {
+                  "type": "any"
                 },
-                {
-                    "type": {
-                        "type": "or",
-                        "or": [
-                            {
-                                "type": "string",
-                                "title": "1"
-                            },
-                            {
-                                "type": "undefined",
-                                "title": "1"
-                            }
-                        ],
-                        "title": "1"
-                    },
-                    "optional": false
-                },
-                {
-                    "type": {
-                        "type": "any",
-                        "title": "2"
-                    },
-                    "optional": false
-                }
+                "title": "0"
+              },
+              {
+                "type": "ref",
+                "ref": "Binding",
+                "title": "0"
+              }
             ],
-            "additionalItems": false,
-            "minItems": 3
+            "title": "0"
+          },
+          "optional": false
         },
         {
-            "type": "number"
+          "type": {
+            "type": "or",
+            "or": [
+              {
+                "type": "string",
+                "title": "1"
+              },
+              {
+                "type": "undefined",
+                "title": "1"
+              }
+            ],
+            "title": "1"
+          },
+          "optional": false
+        },
+        {
+          "type": {
+            "type": "any",
+            "title": "2"
+          },
+          "optional": false
         }
-    ]
+      ],
+      "additionalItems": false,
+      "minItems": 3
+    },
+    {
+      "type": "number"
+    }
+  ]
 }

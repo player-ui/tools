@@ -1,31 +1,30 @@
 {
-    "source": "/private/var/tmp/_bazel_adierkens/27576a73da70b0b10d1fbcaea9c1e658/sandbox/darwin-sandbox/177/execroot/player/plugins/common-expressions/core/src/expressions/index.ts",
-    "name": "number",
-    "type": "ref",
-    "ref": "ExpressionHandler",
-    "genericArguments": [
+  "name": "number",
+  "type": "ref",
+  "ref": "ExpressionHandler",
+  "genericArguments": [
+    {
+      "type": "tuple",
+      "elementTypes": [
         {
-            "type": "tuple",
-            "elementTypes": [
-                {
-                    "name": "val",
-                    "type": {
-                        "type": "unknown"
-                    }
-                },
-                {
-                    "name": "coerceTo0",
-                    "type": {
-                        "type": "boolean"
-                    },
-                    "optional": true
-                }
-            ],
-            "additionalItems": false,
-            "minItems": 1
+          "name": "val",
+          "type": {
+            "type": "unknown"
+          }
         },
         {
-            "type": "number"
+          "name": "coerceTo0",
+          "type": {
+            "type": "boolean"
+          },
+          "optional": true
         }
-    ]
+      ],
+      "additionalItems": false,
+      "minItems": 1
+    },
+    {
+      "type": "number"
+    }
+  ]
 }
