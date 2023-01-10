@@ -70,7 +70,7 @@ describe('language-service', () => {
 
     it('validate basic args', () => {
       const diagnostics = service.getSemanticDiagnostics({
-        text: 'containsAny(123, 123)',
+        text: 'containsAny({ "foo": "bar"}, "123")',
         node: {
           getSourceFile: () => null,
         },
@@ -82,17 +82,9 @@ describe('language-service', () => {
             "category": 1,
             "code": 1,
             "file": null,
-            "length": 3,
-            "messageText": "Expected type 'string' but got 'number'",
+            "length": 15,
+            "messageText": "Expected type 'string' but got 'object'",
             "start": 12,
-          },
-          Object {
-            "category": 1,
-            "code": 1,
-            "file": null,
-            "length": 3,
-            "messageText": "Does not match any of the expected types for type: 'arg_1'",
-            "start": 17,
           },
         ]
       `);
@@ -170,7 +162,7 @@ describe('language-service', () => {
       );
 
       expect(
-        symbolDisplayToString((info as ts.QuickInfo).displayParts)
+        symbolDisplayToString(info?.displayParts as ts.SymbolDisplayPart[])
       ).toMatchInlineSnapshot(`"function trim(arg: unknown): unknown"`);
     });
   });
