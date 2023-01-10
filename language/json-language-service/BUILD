@@ -2,7 +2,7 @@
 load("//:index.bzl", "javascript_pipeline")
 
 javascript_pipeline(
-    name = "@player-tools/language-service",
+    name = "@player-tools/json-language-service",
     dependencies = [
         "//xlr/types:@player-tools/xlr",
         "//xlr/sdk:@player-tools/xlr-sdk",
@@ -16,9 +16,6 @@ javascript_pipeline(
         "@npm//typescript",
         "@npm//vscode-languageserver-textdocument",
         "@npm//vscode-languageserver-types"
-    ],
-    data = [
-        "tsconfig.json"
     ],
     test_data = [
         "//common:static_xlrs"

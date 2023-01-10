@@ -3,7 +3,7 @@ load("//:index.bzl", "javascript_pipeline")
 javascript_pipeline(
     name = "@player-tools/devtools-common",
     dependencies = [
-        "@npm//@player-ui/logger",
+        "@npm//@player-ui/player",
         "@npm//@player-ui/types",
         "@npm//@reduxjs/toolkit",
         "@npm//@types/uuid",

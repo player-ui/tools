@@ -1,0 +1,24 @@
+{
+  "name": "isEmpty",
+  "type": "ref",
+  "ref": "ExpressionHandler<[unknown], boolean>",
+  "genericArguments": [
+    {
+      "type": "tuple",
+      "elementTypes": [
+        {
+          "type": {
+            "type": "unknown",
+            "title": "0"
+          },
+          "optional": false
+        }
+      ],
+      "additionalItems": false,
+      "minItems": 1
+    },
+    {
+      "type": "boolean"
+    }
+  ]
+}

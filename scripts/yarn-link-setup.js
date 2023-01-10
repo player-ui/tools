@@ -29,10 +29,4 @@ dependencyMap.forEach(([pkgName, pkgPath]) => {
     }
 
     execSync(`ln -sf ${path.join(rootDir, pkgPath)} ${nodeModDir}`);
-
-    if (!fs.existsSync(nodeModDir)) {
-        return;
-    }
-
-    execSync(`cd ${nodeModDir} && yarn link`);
 });

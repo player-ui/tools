@@ -1,0 +1,23 @@
+{
+  "name": "size",
+  "type": "ref",
+  "ref": "ExpressionHandler",
+  "genericArguments": [
+    {
+      "type": "tuple",
+      "elementTypes": [
+        {
+          "name": "val",
+          "type": {
+            "type": "unknown"
+          }
+        }
+      ],
+      "additionalItems": false,
+      "minItems": 1
+    },
+    {
+      "type": "number"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "sum",
+  "type": "ref",
+  "ref": "ExpressionHandler",
+  "genericArguments": [
+    {
+      "type": "array",
+      "elementType": {
+        "type": "or",
+        "or": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "number"
+          }
+        ]
+      },
+      "title": "[]"
+    },
+    {
+      "type": "number"
+    }
+  ]
+}

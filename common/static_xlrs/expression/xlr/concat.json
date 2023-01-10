@@ -1,0 +1,17 @@
+{
+  "name": "concat",
+  "type": "ref",
+  "ref": "ExpressionHandler",
+  "genericArguments": [
+    {
+      "type": "array",
+      "elementType": {
+        "type": "unknown"
+      },
+      "title": "[]"
+    },
+    {
+      "type": "unknown"
+    }
+  ]
+}

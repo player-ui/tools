@@ -4,7 +4,7 @@
 import { Command, Flags } from '@oclif/core';
 import path from 'path';
 import { cosmiconfig } from 'cosmiconfig';
-import { PlayerLanguageService } from '@player-tools/language-service';
+import { PlayerLanguageService } from '@player-tools/json-language-service';
 import { DSLCompiler } from '@player-tools/dsl';
 import type { ExportTypes } from '@player-tools/xlr-sdk';
 import type { TransformFunction } from '@player-tools/xlr';

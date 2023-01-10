@@ -1,4 +1,4 @@
-# @player-tools/language-service
+# @player-tools/json-language-service
 
 The player LSP currently supports: 
 

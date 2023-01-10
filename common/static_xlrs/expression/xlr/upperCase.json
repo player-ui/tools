@@ -1,0 +1,23 @@
+{
+  "name": "upperCase",
+  "type": "ref",
+  "ref": "ExpressionHandler",
+  "genericArguments": [
+    {
+      "type": "tuple",
+      "elementTypes": [
+        {
+          "name": "arg",
+          "type": {
+            "type": "unknown"
+          }
+        }
+      ],
+      "additionalItems": false,
+      "minItems": 1
+    },
+    {
+      "type": "unknown"
+    }
+  ]
+}

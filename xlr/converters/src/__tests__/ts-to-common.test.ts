@@ -634,4 +634,29 @@ describe('Variable Exports', () => {
 
     expect(XLR).toMatchSnapshot();
   });
+
+  it('gets named tuple members', () => {
+    const sc = `
+    export type Foo = [argName: string, argValue: string];
+  `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+
+  it('named tuples in generics', () => {
+    const sc = `
+    type Foo<T> = T;
+    export type Bar = Foo<[argName: string, argValue: string]>;
+  `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
 });
