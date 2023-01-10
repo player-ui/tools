@@ -1,4 +1,5 @@
 import SampleExpression from '@player-tools/static-xlrs/static_xlrs/expression/xlr/manifest';
+import { symbolDisplayToString } from '@player-tools/xlr-utils';
 import { ExpressionLanguageService } from '../service';
 
 describe('language-service', () => {
@@ -44,29 +45,29 @@ describe('language-service', () => {
     `);
   });
 
-  it('should validate number of expression arguments', () => {
-    const diagnostics = service.getSemanticDiagnostics({
-      text: 'trim()',
-      node: {
-        getSourceFile: () => null,
-      },
-    } as any);
-
-    expect(diagnostics).toMatchInlineSnapshot(`
-      Array [
-        Object {
-          "category": 1,
-          "code": 1,
-          "file": null,
-          "length": 4,
-          "messageText": "Expected 1 argument(s), got 0",
-          "start": 0,
-        },
-      ]
-    `);
-  });
-
   describe('validations', () => {
+    it('should validate number of expression arguments', () => {
+      const diagnostics = service.getSemanticDiagnostics({
+        text: 'trim()',
+        node: {
+          getSourceFile: () => null,
+        },
+      } as any);
+
+      expect(diagnostics).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "category": 1,
+            "code": 1,
+            "file": null,
+            "length": 4,
+            "messageText": "Expected 1 argument(s), got 0",
+            "start": 0,
+          },
+        ]
+      `);
+    });
+
     it('validate basic args', () => {
       const diagnostics = service.getSemanticDiagnostics({
         text: 'containsAny(123, 123)',
@@ -128,6 +129,49 @@ describe('language-service', () => {
       } as any);
 
       expect(diagnostics).toMatchInlineSnapshot(`Array []`);
+    });
+
+    it('should validate typos', () => {
+      const diagnostics = service.getSyntacticDiagnostics({
+        text: 'containsAny("123',
+        node: {
+          getSourceFile: () => null,
+        },
+      } as any);
+
+      expect(diagnostics).toMatchInlineSnapshot(`
+        Array [
+          Object {
+            "category": 1,
+            "code": 1,
+            "file": null,
+            "length": 16,
+            "messageText": "Unclosed quote after \\"123\\" at character 16",
+            "start": 0,
+          },
+        ]
+      `);
+    });
+  });
+
+  describe('quick info', () => {
+    it('should get quick info for expression', () => {
+      const info = service.getQuickInfoAtPosition(
+        {
+          text: 'trim()',
+          node: {
+            getSourceFile: () => null,
+          },
+        } as any,
+        {
+          line: 0,
+          character: 0,
+        }
+      );
+
+      expect(
+        symbolDisplayToString((info as ts.QuickInfo).displayParts)
+      ).toMatchInlineSnapshot(`"function trim(arg: unknown): unknown"`);
     });
   });
 });
