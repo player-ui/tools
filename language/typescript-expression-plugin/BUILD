@@ -8,6 +8,7 @@ javascript_pipeline(
       "//xlr/sdk:@player-tools/xlr-sdk",
       "//xlr/utils:@player-tools/xlr-utils",
       "@npm//@player-ui/player",
+      "@npm//jsonc-parser",
       "@npm//typescript-template-language-service-decorator",
     ],
     test_data = [
