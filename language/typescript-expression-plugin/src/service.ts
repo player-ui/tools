@@ -310,13 +310,16 @@ export class ExpressionLanguageService implements TemplateLanguageService {
         });
 
         if (expectedArgs.length > actualArgs.length) {
-          diags.push({
-            category: ts.DiagnosticCategory.Error,
-            code: 1,
-            file: context.node.getSourceFile(),
-            ...toTSLocation(node.callTarget),
-            messageText: `Expected ${expectedArgs.length} argument(s), got ${actualArgs.length}`,
-          });
+          const requiredArgs = expectedArgs.filter((a) => !a.optional);
+          if (actualArgs.length < requiredArgs.length) {
+            diags.push({
+              category: ts.DiagnosticCategory.Error,
+              code: 1,
+              file: context.node.getSourceFile(),
+              ...toTSLocation(node.callTarget),
+              messageText: `Expected ${requiredArgs.length} argument(s), got ${actualArgs.length}`,
+            });
+          }
         }
       } else {
         diags.push({
