@@ -336,6 +336,11 @@ export class ExpressionLanguageService implements TemplateLanguageService {
   }
 
   getSemanticDiagnostics(context: TemplateContext): ts.Diagnostic[] {
+    // Shortcut any type-checking if we don't have any info about what expressions are registered
+    if (this._plugins.length === 0) {
+      return [];
+    }
+
     const parsed = parseExpression(context.text.trim(), { strict: false });
     return this.getDiagnosticsForNode(context, parsed);
   }

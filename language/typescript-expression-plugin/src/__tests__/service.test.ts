@@ -46,6 +46,21 @@ describe('language-service', () => {
   });
 
   describe('validations', () => {
+    it('ships expression validations when no plugins are registered', () => {
+      service.setConfig({
+        plugins: [],
+      });
+
+      const diagnostics = service.getSemanticDiagnostics({
+        text: 'trim()',
+        node: {
+          getSourceFile: () => null,
+        },
+      } as any);
+
+      expect(diagnostics).toMatchInlineSnapshot(`Array []`);
+    });
+
     it('should validate number of expression arguments', () => {
       const diagnostics = service.getSemanticDiagnostics({
         text: 'trim()',
