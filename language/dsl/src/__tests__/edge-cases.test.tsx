@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '..';
+import { render, expression as e } from '..';
 import { Collection, Input, Text } from './helpers/asset-library';
 
 test('works with a Component that returns a Fragment of items', async () => {
@@ -61,4 +61,20 @@ test('works with a Component that returns a Fragment of items', async () => {
   );
 
   expect(contentWithoutFragment.jsonValue).toStrictEqual(expected);
+});
+
+test('handles invalid expressions', async () => {
+  const App = () => {
+    return (
+      <Collection>
+        <Collection.Values>
+          <Text applicability={e`foo() + '`}>Hello</Text>
+        </Collection.Values>
+      </Collection>
+    );
+  };
+
+  await expect(render(<App />)).rejects.toThrow(
+    'Unclosed quote after "" at character 9'
+  );
 });
