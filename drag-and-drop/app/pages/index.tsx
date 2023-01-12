@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import {
   ChakraProvider,
   Box,
@@ -21,13 +21,13 @@ import {
   ModalOverlay,
   ButtonGroup,
   Table,
-  TableCaption,
   TableContainer,
   Tbody,
   Td,
   Th,
   Thead,
   Tr,
+  Spinner,
 } from '@chakra-ui/react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { setIn } from 'timm';
@@ -47,8 +47,8 @@ import { ReferenceAssetsPlugin } from '@player-ui/reference-assets-plugin-react'
 import type { ObjectType, TSManifest } from '@player-tools/xlr';
 import pluginManifest from '@player-tools/static-xlrs/static_xlrs/plugin/xlr/manifest';
 import typesManifest from '@player-tools/static-xlrs/static_xlrs/core/xlr/manifest';
-import { AssetEditorPanel } from './components/AssetEditorPanel';
-import { covertXLRtoAssetDoc } from './utils/converters';
+import { AssetEditorPanel } from '../components/AssetEditorPanel';
+import { covertXLRtoAssetDoc } from '../utils/converters';
 
 const PropertiesContext = React.createContext<{
   /**
@@ -559,7 +559,9 @@ const App = () => {
                 <AssetSelectorPanel />
               </Box>
               <Box flexGrow={1} margin="20px">
-                <Canvas />
+                <Suspense fallback={<Spinner />}>
+                  <Canvas />
+                </Suspense>
               </Box>
               <Box flex={1} margin="20px">
                 <RightPanel />
