@@ -31,7 +31,7 @@ data = [
 ]
 
 next_export(
-  name = "app",
+  name = "site",
   data = data,
   srcs = srcs,
   env = {
