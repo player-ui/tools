@@ -826,50 +826,6 @@ Array [
 ]
 `;
 
-exports[`Variable Exports Aliased function 1`] = `
-Array [
-  Object {
-    "name": "foo",
-    "parameters": Array [
-      Object {
-        "default": undefined,
-        "name": "input",
-        "optional": undefined,
-        "type": Object {
-          "type": "number",
-        },
-      },
-    ],
-    "returnType": Object {
-      "additionalProperties": false,
-      "genericTokens": undefined,
-      "name": "Bar",
-      "properties": Object {
-        "foo": Object {
-          "node": Object {
-            "title": "Bar.foo",
-            "type": "string",
-          },
-          "required": true,
-        },
-        "fuz": Object {
-          "node": Object {
-            "title": "Bar.fuz",
-            "type": "number",
-          },
-          "required": true,
-        },
-      },
-      "source": "filename.ts",
-      "title": "Bar",
-      "type": "object",
-    },
-    "source": "filename.ts",
-    "type": "function",
-  },
-]
-`;
-
 exports[`Variable Exports Aliased variable 1`] = `
 Array [
   Object {
@@ -962,6 +918,50 @@ Array [
   Object {
     "name": "foo",
     "parameters": Array [],
+    "returnType": Object {
+      "additionalProperties": false,
+      "genericTokens": undefined,
+      "name": "Bar",
+      "properties": Object {
+        "foo": Object {
+          "node": Object {
+            "title": "Bar.foo",
+            "type": "string",
+          },
+          "required": true,
+        },
+        "fuz": Object {
+          "node": Object {
+            "title": "Bar.fuz",
+            "type": "number",
+          },
+          "required": true,
+        },
+      },
+      "source": "filename.ts",
+      "title": "Bar",
+      "type": "object",
+    },
+    "source": "filename.ts",
+    "type": "function",
+  },
+]
+`;
+
+exports[`Variable Exports Arrow function with parameters 1`] = `
+Array [
+  Object {
+    "name": "foo",
+    "parameters": Array [
+      Object {
+        "default": undefined,
+        "name": "input",
+        "optional": undefined,
+        "type": Object {
+          "type": "number",
+        },
+      },
+    ],
     "returnType": Object {
       "additionalProperties": false,
       "genericTokens": undefined,
