@@ -629,11 +629,21 @@ export class TsConverter {
     const functionReturnType =
       this.context.typeChecker.getTypeAtLocation(functionCall);
 
-    const syntheticNode = this.context.typeChecker.typeToTypeNode(
+    let syntheticNode = this.context.typeChecker.typeToTypeNode(
       functionReturnType,
       document,
       undefined
     );
+
+    // Synthetic node loses parameter location information, and text making it unable
+    // to get the parameter name in tsNodeToType
+    if (ts.isArrowFunction(functionCall)) {
+      const syntheticWithParameters = {
+        ...syntheticNode,
+        parameters: functionCall.parameters,
+      };
+      syntheticNode = syntheticWithParameters as unknown as ts.TypeNode;
+    }
 
     if (syntheticNode) {
       if (
