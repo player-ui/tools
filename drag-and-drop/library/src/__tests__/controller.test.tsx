@@ -1,7 +1,8 @@
 import { waitFor } from '@testing-library/react';
-import type { InProgressState } from '@player-ui/react';
+import type { Asset, InProgressState } from '@player-ui/react';
 import pluginManifest from '@player-tools/static-xlrs/static_xlrs/plugin/xlr/manifest';
 import typesManifest from '@player-tools/static-xlrs/static_xlrs/core/xlr/manifest';
+import type { ObjectType } from '@player-tools/xlr';
 import { DragAndDropController } from '../controller';
 import type { ExtensionProvider } from '../types';
 
@@ -17,9 +18,18 @@ describe('drag-and-drop', () => {
     const dndController = new DragAndDropController({
       types: typesManifest,
       extensions: [referenceAssetExtension],
+      resolveRequiredProperties: async (
+        asset: Asset<string>,
+        type: ObjectType
+      ) => {
+        return asset;
+      },
     });
 
     const { player } = dndController.webPlayer;
+    /**
+     *
+     */
     const getView = () =>
       (player.getState() as InProgressState).controllers?.view.currentView
         ?.lastUpdate;
