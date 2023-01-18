@@ -634,4 +634,26 @@ describe('Variable Exports', () => {
 
     expect(XLR).toMatchSnapshot();
   });
+
+  it('Aliased function', () => {
+    const sc = `
+      interface Bar {
+        foo: string
+        fuz: number
+      }
+
+      export const foo = (input: number): Bar => {
+        return {
+          foo: '1',
+          fuz: 1,
+        };
+      };
+    `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
 });
