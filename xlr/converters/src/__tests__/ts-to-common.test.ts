@@ -635,7 +635,7 @@ describe('Variable Exports', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Aliased function', () => {
+  it('Arrow function with parameters', () => {
     const sc = `
       interface Bar {
         foo: string
