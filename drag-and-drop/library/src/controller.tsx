@@ -133,7 +133,7 @@ export class DragAndDropController {
     this.dndWebPlayerPlugin.refresh(this.webPlayer.player);
   }
 
-  public removeAsset(id: string){
+  public removeAsset(id: string) {
     this.runtimeState.clear(id);
     this.dndWebPlayerPlugin.refresh(this.webPlayer.player);
   }
