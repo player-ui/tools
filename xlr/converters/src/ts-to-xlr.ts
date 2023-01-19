@@ -177,7 +177,18 @@ export class TsConverter {
     const variableDeclarations = node.declarationList.declarations;
     if (variableDeclarations.length === 1) {
       const variable = variableDeclarations[0];
+
       if (variable.initializer) {
+        const type = this.context.typeChecker.getTypeAtLocation(
+          variable.initializer
+        );
+
+        const typeNode = this.context.typeChecker.typeToTypeNode(
+          type,
+          variable.initializer,
+          ts.NodeBuilderFlags.None
+        );
+
         let resultingNode;
         if (
           ts.isCallExpression(variable.initializer) ||
@@ -189,6 +200,13 @@ export class TsConverter {
           );
         } else {
           resultingNode = this.tsLiteralToType(variable.initializer);
+        }
+
+        // If initializer type is a reference to a function and not a concrete value
+        // we need to update the name to be the name of the exporting variable
+        // not the name of the identifier its aliasing
+        if (ts.isFunctionLike(typeNode)) {
+          resultingNode = { ...resultingNode, name: variable.name.getText() };
         }
 
         return {
