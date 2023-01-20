@@ -36,8 +36,8 @@ import type {
   ExtensionProviderAssetIdentifier,
   TransformedDropTargetAssetType,
 } from '@player-tools/dnd-lib';
-import { Asset } from '@player-ui/react-asset';
-import type { Asset as AssetType } from '@player-ui/types';
+import { ReactAsset } from '@player-ui/react';
+import type { Asset } from '@player-ui/types';
 import {
   DragAndDropController,
   useDroppableAsset,
@@ -136,7 +136,7 @@ const AssetDropTarget = (props: TransformedDropTargetAssetType) => {
       }}
     >
       {props.value ? (
-        <Asset {...props.value.asset} />
+        <ReactAsset {...props.value.asset} />
       ) : (
         <span>
           {props.context?.parent.name} - {props.context?.propertyName}
@@ -256,9 +256,9 @@ const AssetSelectorPanel = () => {
 const AssetDetailsPanel = () => {
   const { controller } = useController() ?? {};
   const propContext = React.useContext(PropertiesContext);
-  const [modifiedAsset, setModifiedAsset] = React.useState<
-    AssetType | undefined
-  >(undefined);
+  const [modifiedAsset, setModifiedAsset] = React.useState<Asset | undefined>(
+    undefined
+  );
 
   if (!controller) {
     return null;
@@ -270,7 +270,7 @@ const AssetDetailsPanel = () => {
    * Updates the selected asset thats stored as a temporary value
    */
   const updateObject = (path: Array<string | number>, value: any) => {
-    setModifiedAsset(setIn(modifiedAsset ?? asset, path, value) as AssetType);
+    setModifiedAsset(setIn(modifiedAsset ?? asset, path, value) as Asset);
   };
 
   return (
@@ -335,23 +335,21 @@ const Canvas = () => {
 
 interface PendingPropertyResolution {
   /** */
-  asset: AssetType;
+  asset: Asset;
   /** */
   type: ObjectType;
 
   /** */
-  onComplete: (asset: AssetType) => void;
+  onComplete: (asset: Asset) => void;
 }
 
 /** Modal for filling in required properties on a dropped Asset */
 const PropertyResolver = (props: PendingPropertyResolution) => {
-  const [modifiedAsset, setModifiedAsset] = React.useState<AssetType>(
-    props.asset
-  );
+  const [modifiedAsset, setModifiedAsset] = React.useState<Asset>(props.asset);
 
   /** */
   const updateObject = (path: Array<string | number>, value: any) => {
-    setModifiedAsset(setIn(modifiedAsset, path, value) as AssetType);
+    setModifiedAsset(setIn(modifiedAsset, path, value) as Asset);
   };
 
   return (
@@ -512,16 +510,16 @@ const App = () => {
         },
       ],
       async resolveRequiredProperties(
-        asset: AssetType<string>,
+        asset: Asset<string>,
         type: ObjectType
-      ): Promise<AssetType<string>> {
+      ): Promise<Asset<string>> {
         const pending: PendingPropertyResolution = {
           asset,
           type,
           onComplete: () => asset,
         };
 
-        const prom = new Promise<AssetType<string>>((resolve) => {
+        const prom = new Promise<Asset<string>>((resolve) => {
           pending.onComplete = resolve;
         });
 

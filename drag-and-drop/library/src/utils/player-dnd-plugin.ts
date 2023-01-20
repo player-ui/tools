@@ -1,7 +1,7 @@
 import type { ObjectNode } from '@player-tools/xlr';
 import type {
-  WebPlayer,
-  WebPlayerPlugin,
+  ReactPlayer,
+  ReactPlayerPlugin,
   Asset,
   ViewController,
   Player,
@@ -47,7 +47,7 @@ interface PlayerDndPluginState {
 /**
  * A plugin that handles drag and drop integration
  */
-export class PlayerDndPlugin implements WebPlayerPlugin {
+export class PlayerDndPlugin implements ReactPlayerPlugin {
   name = 'player-dnd-plugin';
 
   private state: WeakMap<Player, PlayerDndPluginState> = new WeakMap();
@@ -126,7 +126,7 @@ export class PlayerDndPlugin implements WebPlayerPlugin {
     this.state.set(player, state);
   }
 
-  applyWeb(webPlayer: WebPlayer) {
+  applyWeb(webPlayer: ReactPlayer) {
     const match = { type: this.options.Target.type ?? 'drop-target' };
     webPlayer.assetRegistry.set(match, this.options.Target.Component);
   }
