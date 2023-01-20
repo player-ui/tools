@@ -1,5 +1,5 @@
 import ts from 'typescript';
-import {
+import type {
   NodeType,
   FunctionTypeParameters,
   TupleType,
