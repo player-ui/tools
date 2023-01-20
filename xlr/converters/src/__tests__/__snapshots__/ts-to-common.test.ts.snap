@@ -826,7 +826,7 @@ Array [
 ]
 `;
 
-exports[`Variable Exports Aliased Arrow function with parameters 1`] = `
+exports[`Variable Exports Aliased Arrow function exports its own name 1`] = `
 Array [
   Object {
     "name": "foo",
