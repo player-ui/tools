@@ -4185,291 +4185,128 @@
   dependencies:
     "@octokit/openapi-types" "^12.11.0"
 
-"@player-ui/asset-provider-plugin-react@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/asset-provider-plugin-react/-/asset-provider-plugin-react-0.2.0.tgz#6cff232d7e9ce70cf963f996ba6845d49e51ffb9"
-  integrity sha512-THMru7jpDeGYlRbGpj0tYFNGMLHF1WFkfHHn5zD3LaiKrDsWrZbH2shxz4TmvuEfivTSNWXEPzBInKnasDIr5Q==
+"@player-ui/asset-provider-plugin-react@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@player-ui/asset-provider-plugin-react/-/asset-provider-plugin-react-0.3.0.tgz#f285adce23f125fbb75ee20bc00735cf1a6ab363"
+  integrity sha512-Ys7N5HQp4g6WoL6XmOcRq+zxC+Gbf5M9JDRYGn1WuicxfZ5RCF1V24vd3DGslRGxzbgXQ+4d2Cy7mn2PDi1P4A==
   dependencies:
     "@babel/runtime" "7.15.4"
-    "@player-ui/react-asset" "0.2.0"
-    "@player-ui/react-subscribe" "0.2.0"
+    "@player-ui/react-subscribe" "0.3.0"
 
-"@player-ui/asset-transform-plugin@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/asset-transform-plugin/-/asset-transform-plugin-0.2.0.tgz#3e1473229d1189f1d5bc7005cc8c27a144ba96dd"
-  integrity sha512-MFzdlgukCtnpjnfYcXdTSxkbMHTgBCBqOj6Dv113rfo55W13Npu563t2UkDhpHQkBSsWXTSaFbb6T9I7vqE7PQ==
+"@player-ui/asset-transform-plugin@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@player-ui/asset-transform-plugin/-/asset-transform-plugin-0.3.0.tgz#a4301266e28f0e9baa90336710b49a88ade4adff"
+  integrity sha512-uk2E33G87URTREXW5BhmI/PMeJoj81ztWkqevjYHvU/TmdoC1zPPrTQwcjcnO+PwjvkpZjbvENaSjai6V4q6ng==
   dependencies:
     "@babel/runtime" "7.15.4"
-    "@player-ui/partial-match-registry" "0.2.0"
+    "@player-ui/partial-match-registry" "0.3.0"
 
-"@player-ui/beacon-plugin-react@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/beacon-plugin-react/-/beacon-plugin-react-0.2.0.tgz#5da5fae1bad282a4f3c7043c9bd95cc65931d386"
-  integrity sha512-3X/t+BgclCDWMb+TMcOvYm6e8wrHHR8MKnGfkIWb7rmC6fnR+0KzBlNsRjP5UQp3n5JCLRFhYrzcxXqyNdTG4w==
+"@player-ui/beacon-plugin-react@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@player-ui/beacon-plugin-react/-/beacon-plugin-react-0.3.0.tgz#9ca522a4a7ebb5db29d9af6b3d7783fff871fb7c"
+  integrity sha512-gr6DB1AUoztsJhACJ7N37iyuz7cQsl7e+GcSWdnlwx3MQ0UWm4hqDitM+3slgBUA7BSux31GPTTr2+0WTcZKBw==
   dependencies:
     "@babel/runtime" "7.15.4"
-    "@player-ui/beacon-plugin" "0.2.0"
-    "@player-ui/react-utils" "0.2.0"
+    "@player-ui/beacon-plugin" "0.3.0"
 
-"@player-ui/beacon-plugin@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/beacon-plugin/-/beacon-plugin-0.2.0.tgz#597925021b08fd95207e72de73eb5b49faa0b101"
-  integrity sha512-nhrFAZslLjG5qB4ysq60PzYlf+huCV9iH/LesRT3VYGf7ubmO2YGLVQIFLyqrV7YIX9pEN5zJgyaigsCoSrWhw==
+"@player-ui/beacon-plugin@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@player-ui/beacon-plugin/-/beacon-plugin-0.3.0.tgz#91e677243e95583b3874a12bef771032da6d31df"
+  integrity sha512-2l/IZNw/j6Z3AZ6SeRIAPMr3JND+M9Oko/nQaMT5FcknzSpz37+iAtHtKpDYyy2ZpXtTAvyVP8mN0uaP3Xbf6Q==
   dependencies:
     "@babel/runtime" "7.15.4"
     tapable-ts "^0.1.0"
     timm "^1.6.2"
 
-"@player-ui/binding-grammar@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/binding-grammar/-/binding-grammar-0.2.0.tgz#36e772943f82255602c1c2cd80e5e371f0a22fd4"
-  integrity sha512-C17FjmMPYW74GYi6PRxgKRcH2bZTPjEgn+5DPKVexmnrq1jvXRhivs4xmOjNbdaxBsMTWV11DPvuABVnwm9xcA==
+"@player-ui/metrics-plugin@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@player-ui/metrics-plugin/-/metrics-plugin-0.3.0.tgz#dd5fd59e2cea5abcde48d941ad726b5c6d9ba3b6"
+  integrity sha512-0bIan24i6PCJV9QLQ/4ERSdoU6wOErg7ikPh8BUAxRuwYFhe3ijgoBMad6jO1m3CHo/IaQQYXyKqbTVo9a1cRQ==
   dependencies:
     "@babel/runtime" "7.15.4"
-    "@types/parsimmon" "^1.10.0"
-    arr-flatten "^1.1.0"
-    ebnf "^1.9.0"
-    parsimmon "^1.12.0"
-
-"@player-ui/binding@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/binding/-/binding-0.2.0.tgz#b13032a704c588bac116c669c3a269d56b5ff36d"
-  integrity sha512-f1548zZoHVGjCRQjAG4XUZFqJVu+8MkNAq12DvasZIwlUsrT/m+A8n2Zj6TjoBRIzNJLE8UB7Apy4+1fqczxeQ==
-  dependencies:
-    "@babel/runtime" "7.15.4"
-    "@player-ui/binding-grammar" "0.2.0"
-    "@types/nested-error-stacks" "^2.1.0"
-    nested-error-stacks "^2.1.1"
+    "@player-ui/beacon-plugin" "0.3.0"
     tapable-ts "^0.1.0"
 
-"@player-ui/constants@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/constants/-/constants-0.2.0.tgz#7c60739b7c6064b26041fb0389b3fd7314e38c54"
-  integrity sha512-bHnoUQEtvzD2r5aVDdpYmyJtZ6PIvvJogQp03l2fgvq96Mct9Rp3VelzhKJtakj7scMr5wt2yblD2n13aR8IWQ==
-  dependencies:
-    "@babel/runtime" "7.15.4"
-
-"@player-ui/data@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/data/-/data-0.2.0.tgz#a2408102b45818b7fab627768393022d02f308f1"
-  integrity sha512-0MSDpeQXLWD010uCj/zjCsbGwDE3cvoKGj5Nt75/1cSzQYSNwzxwGtjTs7Kjb0kay7exZA4BeiX4UqyTlqv5mQ==
-  dependencies:
-    "@babel/runtime" "7.15.4"
-    "@player-ui/binding" "0.2.0"
-    "@types/dlv" "^1.1.2"
-    dlv "^1.1.3"
-    tapable-ts "^0.1.0"
-    timm "^1.6.2"
-
-"@player-ui/expressions@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/expressions/-/expressions-0.2.0.tgz#2fce99572fe187974b939272a3de062fb7f2675a"
-  integrity sha512-V/FF5WX2Im/ekzAL5zjE4goCya6NeVN/LGosjAW5GoWNCnRNi4z1PXzE/zo3dOjle6bM58JgiIIdTlefj+OE8g==
-  dependencies:
-    "@babel/runtime" "7.15.4"
-    "@player-ui/binding" "0.2.0"
-    "@player-ui/data" "0.2.0"
-    "@player-ui/logger" "0.2.0"
-    "@player-ui/string-resolver" "0.2.0"
-    "@player-ui/types" "0.2.0"
-    tapable-ts "^0.1.0"
-
-"@player-ui/flow@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/flow/-/flow-0.2.0.tgz#4834f2d3c23807c54b49a462749531d4269cb643"
-  integrity sha512-gsfNkRTTKS7c2x8kOQUboUXI+OkLb8SVF4ANtmFnVh4yY7i9fdlw1zWkrdBiSUaU78qBUggM5asN1JRmpXt1ow==
-  dependencies:
-    "@babel/runtime" "7.15.4"
-    "@player-ui/logger" "0.2.0"
-    "@player-ui/types" "0.2.0"
-    p-defer "^3.0.0"
-    tapable-ts "^0.1.0"
-
-"@player-ui/logger@0.2.0", "@player-ui/logger@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/logger/-/logger-0.2.0.tgz#8cda9d07922a2f1a4090cb849a42f7e9499fbda9"
-  integrity sha512-rwWOuWDRCEsLv8SpHJgpVei18PcXLzr/F6ZS8SPR2UIlZ4y6T1TxPd/qjIdPMs6CeP5pzOVeZVIevhDQNHO+lQ==
-  dependencies:
-    "@babel/runtime" "7.15.4"
-    tapable-ts "^0.1.0"
-
-"@player-ui/metrics-plugin@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/metrics-plugin/-/metrics-plugin-0.2.0.tgz#714dac415f9360abef1d3f324212f15ec9dd49b6"
-  integrity sha512-Llg5skUncdtTiQf0pSEC0X+kYVUxoIHVOh8l5gyRoiklRMOfoYGiKt70A3vsC1oUt1WacTrD+uug6+Nm4KO1Zw==
-  dependencies:
-    "@babel/runtime" "7.15.4"
-    "@player-ui/beacon-plugin" "0.2.0"
-    tapable-ts "^0.1.0"
-
-"@player-ui/partial-match-registry@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/partial-match-registry/-/partial-match-registry-0.2.0.tgz#ed1a0b52ea96f06e53f500a092bd83d37b73d74b"
-  integrity sha512-jikqr0ZBSSfsEUPSbE21ZYsI7vyQlan4oxBHMZdYfnDs3QVaILNQbiqD/EiEj2i6dnCQmO/fMVGF8EjQCoqLoQ==
+"@player-ui/partial-match-registry@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@player-ui/partial-match-registry/-/partial-match-registry-0.3.0.tgz#cd102b947ccba754e390a1a022d8ccd8698053c4"
+  integrity sha512-jssryLQrPMz/A7KmtDH4M3/i2aWSVF4K6WCLZWFCxWhXKF0DXV/kdCH+8TIWMZ2mBjPwh3DZ3H6yFEhfU7DGCg==
   dependencies:
     "@babel/runtime" "7.15.4"
     "@types/dlv" "^1.1.2"
     dlv "^1.1.3"
     sorted-array "^2.0.4"
 
-"@player-ui/player@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/player/-/player-0.2.0.tgz#080252ec597d5b97163a8b8316013e3d4816e93c"
-  integrity sha512-CV4BaEzIfPBO7usuyYtq/tRRH1lX6Yi9clgC2iW6yEUFwyLvM2JXq4TKlXgbW1cVot+y57Ippd62Xdf71egRSg==
+"@player-ui/player@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@player-ui/player/-/player-0.3.0.tgz#6cfbed27577e86c94ff0281be2c908081fe760a2"
+  integrity sha512-Tdd/g0yTLlCC/egXXt/DRypH/STtQYb4ZQGVvMPmonWCGo/f86DzygHUwsDEVeJCceme0nxw8gTaTlBYpAw/vQ==
   dependencies:
     "@babel/runtime" "7.15.4"
-    "@player-ui/binding" "0.2.0"
-    "@player-ui/constants" "0.2.0"
-    "@player-ui/data" "0.2.0"
-    "@player-ui/expressions" "0.2.0"
-    "@player-ui/flow" "0.2.0"
-    "@player-ui/logger" "0.2.0"
-    "@player-ui/partial-match-registry" "0.2.0"
-    "@player-ui/schema" "0.2.0"
-    "@player-ui/string-resolver" "0.2.0"
-    "@player-ui/types" "0.2.0"
-    "@player-ui/utils" "0.2.0"
-    "@player-ui/validator" "0.2.0"
-    "@player-ui/view" "0.2.0"
-    babel-plugin-preval "^5.0.0"
+    "@player-ui/partial-match-registry" "0.3.0"
+    "@player-ui/types" "0.3.0"
+    "@types/nested-error-stacks" "^2.1.0"
+    "@types/parsimmon" "^1.10.0"
+    arr-flatten "^1.1.0"
     dequal "^2.0.2"
+    ebnf "^1.9.0"
+    nested-error-stacks "^2.1.1"
     p-defer "^3.0.0"
+    parsimmon "^1.12.0"
     queue-microtask "^1.2.3"
     tapable-ts "^0.1.0"
     timm "^1.6.2"
 
-"@player-ui/react-asset@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/react-asset/-/react-asset-0.2.0.tgz#7a14e8e768bf7653a8f8784721f1ffef0e3ec643"
-  integrity sha512-feH55Y0ymoxzHjN95D4LaD7p4P7XO1Affk4K/Z8hulLYRR5Wq95txhLAHSQyYMvEVbpM4LtV2b3HLOcZn+9Z3A==
-  dependencies:
-    "@babel/runtime" "7.15.4"
-
-"@player-ui/react-subscribe@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/react-subscribe/-/react-subscribe-0.2.0.tgz#c2f2653f24ab5c80b71a785fbce19ca2db13420b"
-  integrity sha512-vDkWMorGcl2XQVEFknnUjtXT5/gBmiO/NrZ3JucYuFhSK0+GfHRKZhNzi8GnH5o1Q1M01HBK0WbiaSUvwfWlwg==
+"@player-ui/react-subscribe@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@player-ui/react-subscribe/-/react-subscribe-0.3.0.tgz#3b8191e299be799aa706664c578da8d5cf45cff7"
+  integrity sha512-WZ+uKQaFUaHUs1dqOStgW0fgTyklIgt2/QDiNT3inxcN4GPnNiuj8siuwRZq7cZOskxWRf+LlR6yHW15CPUS6A==
   dependencies:
     "@babel/runtime" "7.15.4"
     p-defer "^3.0.0"
 
-"@player-ui/react-utils@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/react-utils/-/react-utils-0.2.0.tgz#7145965af38b50385aa87b0f9e4b918742f7c997"
-  integrity sha512-SpGE7VOwcz5IWDdN9jgvcs95Nig3X6mpsvLV/YsRU44y6FGSYcMq0MJY4rR+nb0PXpZreuxvpCyAMTt/akjbWA==
+"@player-ui/react@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@player-ui/react/-/react-0.3.0.tgz#ead658a6f32342629c4a5de8c6ce194c5157d111"
+  integrity sha512-0SeLfHF0//WoskTBAvTucdodR4uWMlYHoh/hRvBHytlvBLckpdepEdWs/DlaCxYz/C5PFIgROI2V9dWoOxfrQQ==
   dependencies:
     "@babel/runtime" "7.15.4"
-
-"@player-ui/react@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/react/-/react-0.2.0.tgz#6b76ec60571f4891521628402683c033073e1a2e"
-  integrity sha512-XNLHpO9n1bgFeDC/4OB/yTQn7TJJAMPobYpo7qplXnz3vr0BnnWWOIsN0++N6w6QCTnOk8WyDzHiasSBdqeI2w==
-  dependencies:
-    "@babel/runtime" "7.15.4"
-    "@player-ui/metrics-plugin" "0.2.0"
-    "@player-ui/partial-match-registry" "0.2.0"
-    "@player-ui/player" "0.2.0"
-    "@player-ui/react-asset" "0.2.0"
-    "@player-ui/react-subscribe" "0.2.0"
-    "@player-ui/react-utils" "0.2.0"
+    "@player-ui/metrics-plugin" "0.3.0"
+    "@player-ui/partial-match-registry" "0.3.0"
+    "@player-ui/player" "0.3.0"
+    "@player-ui/react-subscribe" "0.3.0"
     react-error-boundary "^3.1.3"
     tapable-ts "^0.1.0"
 
-"@player-ui/reference-assets-plugin-react@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/reference-assets-plugin-react/-/reference-assets-plugin-react-0.2.0.tgz#6f296a40982f7d733472b4f64114576dac6ffcc8"
-  integrity sha512-OavS1QNOChoFv0r2qeJ7CKOoWfHH7jhaflXA7UXAumtQVZl8T9R1X+v/EJXpZ2elLKUcV0JW/b8U311K+/xExA==
+"@player-ui/reference-assets-plugin-react@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@player-ui/reference-assets-plugin-react/-/reference-assets-plugin-react-0.3.0.tgz#d3eca60f10f865f6cf1fa02466501f288c7b2dad"
+  integrity sha512-gDEoHPvPEhSWlxXJ/t+Vj1tmtRV3iq+VeKiXNjXedgZfA0JkbdarsKRauUelIEI53OraBkxYI0Y+iYDivJ+R5Q==
   dependencies:
     "@babel/runtime" "7.15.4"
     "@chakra-ui/icons" "^1.1.1"
     "@chakra-ui/react" "^1.7.3"
-    "@player-ui/asset-provider-plugin-react" "0.2.0"
-    "@player-ui/beacon-plugin-react" "0.2.0"
-    "@player-ui/partial-match-registry" "0.2.0"
-    "@player-ui/reference-assets-plugin" "0.2.0"
+    "@player-ui/asset-provider-plugin-react" "0.3.0"
+    "@player-ui/beacon-plugin-react" "0.3.0"
+    "@player-ui/partial-match-registry" "0.3.0"
+    "@player-ui/reference-assets-plugin" "0.3.0"
     clsx "^1.1.1"
 
-"@player-ui/reference-assets-plugin@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/reference-assets-plugin/-/reference-assets-plugin-0.2.0.tgz#ccdfc0242be74a99f02dbd6fb37498919db5cb80"
-  integrity sha512-qmAgUtbxJ2UdsplwJLB7Lb5pfbyNQniTFSOUnLcz3L5vXUF63Qm/7DzjNvqWPeJ2s3KL/XlI0+ILeLe3NFR+7w==
+"@player-ui/reference-assets-plugin@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@player-ui/reference-assets-plugin/-/reference-assets-plugin-0.3.0.tgz#bda8c8817e0516d20a89d80a130baf49640b6625"
+  integrity sha512-9umL/lUUbvOcbPsh24Ss0RQ0k4Mp8FQesFWzV85DyIxGufv3gBLLinZK6CIZOrHft2vI1TXhwDrZhf99dhlbZA==
   dependencies:
     "@babel/runtime" "7.15.4"
-    "@player-ui/asset-transform-plugin" "0.2.0"
-    "@player-ui/beacon-plugin" "0.2.0"
+    "@player-ui/asset-transform-plugin" "0.3.0"
+    "@player-ui/beacon-plugin" "0.3.0"
 
-"@player-ui/schema@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/schema/-/schema-0.2.0.tgz#0107779cf3789622a81a1e82bfdf3f6408f99030"
-  integrity sha512-O8RYnrNhBPblh/NgO/pAVjBiKPpHzAUlf1JZPjxYiZ6hN4BxC6Pf47A+IWLdsbhWP7unBfqDD6V1fYaX0hm7AA==
+"@player-ui/types@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@player-ui/types/-/types-0.3.0.tgz#821a78b59363bcd81f283f7d2882d5446937f000"
+  integrity sha512-feq7R8Pdm5yhSJmR7LHK+69IZQ1s0XAEN1HEiSyqqKP4x4IjROH9iRZ2x9lXjC6vh1Qi8uK5JSOht8ZxRYcm2Q==
   dependencies:
     "@babel/runtime" "7.15.4"
-    "@player-ui/binding" "0.2.0"
-    "@player-ui/data" "0.2.0"
-    "@player-ui/types" "0.2.0"
-    "@player-ui/validator" "0.2.0"
-    tapable-ts "^0.1.0"
-
-"@player-ui/string-resolver@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/string-resolver/-/string-resolver-0.2.0.tgz#16136a14c3761c500e83d3cb500de588fa4cc8a1"
-  integrity sha512-5hN7u4BG2O3Dk6NGTKcpArNI+E6patHnYDS4Yxa1mnh5Zi7R0EpAd1wSa5LENtuDKo9ueVvKSWDjtBB9svV7lw==
-  dependencies:
-    "@babel/runtime" "7.15.4"
-    "@player-ui/binding" "0.2.0"
-    "@player-ui/data" "0.2.0"
-    "@player-ui/types" "0.2.0"
-    timm "^1.6.2"
-
-"@player-ui/types@0.2.0", "@player-ui/types@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/types/-/types-0.2.0.tgz#72990b70621d65ceebf02da9f813481e8eb17692"
-  integrity sha512-Lj7XNWQ9bHeVQbPJQwObXhYJddvr5iEhFCivCdbREuqiuF7RhG6Sodn3nT88L8EQPr78n88I7oxD6G8fQ/iEjw==
-  dependencies:
-    "@babel/runtime" "7.15.4"
-
-"@player-ui/utils@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/utils/-/utils-0.2.0.tgz#a0f8d9b0d3ff365ffbb5e8d1faa08737ab8a3b26"
-  integrity sha512-4Jt7eKwnuNQT/6rJkJTInO1XrL1P4L//ndRfDPnQq0M2//VD4KVhfKFzmkodQnlHddcUx3KwapJ+F5b+cjrvpw==
-  dependencies:
-    "@babel/runtime" "7.15.4"
-
-"@player-ui/validator@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/validator/-/validator-0.2.0.tgz#6e955b30894a692313ce6b35ad69fb60f7f24eb1"
-  integrity sha512-ETpZXpHtgLn868kkXOAipsn4GBWzko7LLUTCN8a2kb6qNpmI5OtwirHYNLWM07bnpjKEXZ9amdHkKD56iHmiSA==
-  dependencies:
-    "@babel/runtime" "7.15.4"
-    "@player-ui/binding" "0.2.0"
-    "@player-ui/constants" "0.2.0"
-    "@player-ui/data" "0.2.0"
-    "@player-ui/expressions" "0.2.0"
-    "@player-ui/logger" "0.2.0"
-    "@player-ui/types" "0.2.0"
-    tapable-ts "^0.1.0"
-    timm "^1.6.2"
-
-"@player-ui/view@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@player-ui/view/-/view-0.2.0.tgz#e118e1d759728251d39a5e21a30e8043943e7b86"
-  integrity sha512-KaYTGdabtL0wUsINiSNFpEDTgvFnqrc9a4aqhQwDhXq0s+TbaOesYzOMZwQ8KCs4GTnbg9ArOzviitGVBemv9g==
-  dependencies:
-    "@babel/runtime" "7.15.4"
-    "@player-ui/binding" "0.2.0"
-    "@player-ui/constants" "0.2.0"
-    "@player-ui/data" "0.2.0"
-    "@player-ui/expressions" "0.2.0"
-    "@player-ui/flow" "0.2.0"
-    "@player-ui/logger" "0.2.0"
-    "@player-ui/schema" "0.2.0"
-    "@player-ui/string-resolver" "0.2.0"
-    "@player-ui/types" "0.2.0"
-    "@player-ui/validator" "0.2.0"
-    dequal "^2.0.2"
-    dlv "^1.1.3"
-    tapable-ts "^0.1.0"
-    timm "^1.6.2"
 
 "@popperjs/core@^2.9.3":
   version "2.11.6"
@@ -4788,7 +4625,7 @@
   resolved "https://registry.yarnpkg.com/@types/aria-query/-/aria-query-4.2.2.tgz#ed4e0ad92306a704f9fb132a0cfcf77486dbe2bc"
   integrity sha512-HnYpAE1Y6kRyKM/XkEuiRQhTHvkzMBurTHnpFLYLBGPIylZNPs9jJcuOOYWxPLJCSEtmZT0Y8rHDokKN7rRTig==
 
-"@types/babel__core@*", "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.12", "@types/babel__core@^7.1.14":
+"@types/babel__core@*", "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.14":
   version "7.1.19"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.19.tgz#7b497495b7d1b4812bdb9d02804d0576f43ee460"
   integrity sha512-WEOTgRsbYkvA/KCsDwVEGkd7WAr1e3g31VHQ8zy5gul/V1qKullU/BU5I68X5v7V3GnB9eotmom4v5a5gjxorw==
@@ -6165,7 +6002,7 @@ babel-plugin-jest-hoist@^27.5.1:
     "@types/babel__core" "^7.0.0"
     "@types/babel__traverse" "^7.0.6"
 
-babel-plugin-macros@^3.0.1, babel-plugin-macros@^3.1.0:
+babel-plugin-macros@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-macros/-/babel-plugin-macros-3.1.0.tgz#9ef6dc74deb934b4db344dc973ee851d148c50c1"
   integrity sha512-Cg7TFGpIr01vOQNODXOOaGz2NpCU5gl8x1qJFbb6hbZxR7XrcE2vtbAsTAbJ7/xwJtUuJEw8K8Zr/AE0LHlesg==
@@ -6197,16 +6034,6 @@ babel-plugin-polyfill-regenerator@^0.4.1:
   integrity sha512-NtQGmyQDXjQqQ+IzRkBVwEOz9lQ4zxAQZgoAYEtU9dJjnl1Oc98qnN7jcp+bE7O7aYzVpavXE3/VKXNzUbh7aw==
   dependencies:
     "@babel/helper-define-polyfill-provider" "^0.3.3"
-
-babel-plugin-preval@^5.0.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/babel-plugin-preval/-/babel-plugin-preval-5.1.0.tgz#6efb89bf6b97af592cd1400c6df49c0e9e6ab027"
-  integrity sha512-G5R+xmo5LS41A4UyZjOjV0mp9AvkuCyUOAJ6TOv/jTZS+VKh7L7HUDRcCSOb0YCM/u0fFarh7Diz0wjY8rFNFg==
-  dependencies:
-    "@babel/runtime" "^7.12.5"
-    "@types/babel__core" "^7.1.12"
-    babel-plugin-macros "^3.0.1"
-    require-from-string "^2.0.2"
 
 babel-plugin-syntax-trailing-function-commas@^7.0.0-beta.0:
   version "7.0.0-beta.0"
@@ -15365,11 +15192,6 @@ require-directory@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/require-directory/-/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
   integrity sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==
-
-require-from-string@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/require-from-string/-/require-from-string-2.0.2.tgz#89a7fdd938261267318eafe14f9c32e598c36909"
-  integrity sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==
 
 require-main-filename@^2.0.0:
   version "2.0.0"

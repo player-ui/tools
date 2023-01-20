@@ -1,5 +1,5 @@
 import type { ObjectType, TSManifest } from '@player-tools/xlr';
-import type { Asset, WebPlayerPlugin, Flow, View } from '@player-ui/react';
+import type { Asset, ReactPlayerPlugin, Flow, View } from '@player-ui/react';
 
 export const DroppedItemTypes = {
   ASSET: 'ASSET',
@@ -19,7 +19,7 @@ export interface DroppedAsset {
 export interface ExtensionProvider {
   /** A constructor to create an instance of the plugin */
   plugin: {
-    new (): WebPlayerPlugin;
+    new (): ReactPlayerPlugin;
   };
 
   /** A manifest describing the plugins capabilities */

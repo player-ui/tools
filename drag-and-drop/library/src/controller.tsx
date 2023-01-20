@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Asset, AssetWrapper, View } from '@player-ui/react';
+import type { Asset, AssetWrapper, ReactPlayer, View } from '@player-ui/react';
 import { ConsoleLogger, WebPlayer } from '@player-ui/react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -44,7 +44,7 @@ export interface DragAndDropControllerOptions {
  */
 export class DragAndDropController {
   private readonly options: DragAndDropControllerOptions;
-  public readonly webPlayer: WebPlayer;
+  public readonly webPlayer: ReactPlayer;
 
   private readonly dndWebPlayerPlugin: PlayerDndPlugin;
   private readonly runtimeState: RuntimeFlowState;
