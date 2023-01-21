@@ -126,7 +126,7 @@ export class PlayerDndPlugin implements ReactPlayerPlugin {
     this.state.set(player, state);
   }
 
-  applyWeb(webPlayer: ReactPlayer) {
+  applyReact(webPlayer: ReactPlayer) {
     const match = { type: this.options.Target.type ?? 'drop-target' };
     webPlayer.assetRegistry.set(match, this.options.Target.Component);
   }
