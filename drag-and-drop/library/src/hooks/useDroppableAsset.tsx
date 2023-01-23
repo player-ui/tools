@@ -13,7 +13,7 @@ export const useDroppableAsset = (props: TransformedDropTargetAssetType) => {
         return;
       }
 
-      props.replaceAsset(item);
+      props.placeAsset(item);
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),

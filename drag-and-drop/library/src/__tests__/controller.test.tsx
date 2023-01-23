@@ -24,6 +24,56 @@ describe('drag-and-drop', () => {
       ) => {
         return asset;
       },
+      resolveCollectionConversion: async (assets, XLRSDK) => {
+        return {
+          asset: {
+            id: 'generated-collection',
+            type: 'collection',
+            values: assets.map((asset) => asset.asset),
+          },
+          type: {
+            name: 'CollectionAsset',
+            type: 'object',
+            source:
+              '/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/plugins/reference-assets/core/src/assets/collection/types.ts',
+            properties: {
+              label: {
+                required: false,
+                node: {
+                  type: 'ref',
+                  ref: 'AssetWrapper',
+                  title: 'CollectionAsset.label',
+                  description: 'An optional label to title the collection',
+                },
+              },
+              values: {
+                required: false,
+                node: {
+                  type: 'array',
+                  elementType: {
+                    type: 'ref',
+                    ref: 'AssetWrapper',
+                  },
+                  title: 'CollectionAsset.values',
+                  description: 'The string value to show',
+                },
+              },
+            },
+            additionalProperties: false,
+            title: 'CollectionAsset',
+            extends: {
+              type: 'ref',
+              ref: "Asset<'collection'>",
+              genericArguments: [
+                {
+                  type: 'string',
+                  const: 'collection',
+                },
+              ],
+            },
+          },
+        };
+      },
     });
 
     const { player } = dndController.webPlayer;
@@ -36,7 +86,7 @@ describe('drag-and-drop', () => {
 
     expect(getView()?.id).toBe('drag-and-drop-view');
 
-    getView()?.replaceAsset({
+    getView()?.placeAsset({
       pluginName: 'BaseAssetsPlugin',
       name: 'InfoAsset',
     });
@@ -45,7 +95,7 @@ describe('drag-and-drop', () => {
       expect(getView()?.value?.asset.type).toBe('info');
     });
 
-    getView()?.value.asset.title.asset.replaceAsset({
+    getView()?.value.asset.title.asset.placeAsset({
       pluginName: 'BaseAssetsPlugin',
       name: 'TextAsset',
     });
@@ -54,15 +104,18 @@ describe('drag-and-drop', () => {
       expect(getView()?.value?.asset.title.asset.value.asset.type).toBe('text');
     });
 
-    expect(dndController.exportView()).toStrictEqual({
-      id: 'drag-and-drop-view-test-1',
-      type: 'info',
-      title: {
-        asset: {
-          id: 'drag-and-drop-view-title-test-1',
-          type: 'text',
+    expect(dndController.exportContent()).toMatchInlineSnapshot(`
+      Object {
+        "actions": Array [],
+        "id": "drag-and-drop-view-info",
+        "title": Object {
+          "asset": Object {
+            "id": "drag-and-drop-view-title-text",
+            "type": "text",
+          },
         },
-      },
-    });
+        "type": "info",
+      }
+    `);
   });
 });

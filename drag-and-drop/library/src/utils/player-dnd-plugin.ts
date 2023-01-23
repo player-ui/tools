@@ -1,4 +1,4 @@
-import type { ObjectNode } from '@player-tools/xlr';
+import type { NamedType, ObjectType } from '@player-tools/xlr';
 import type {
   ReactPlayer,
   ReactPlayerPlugin,
@@ -10,6 +10,7 @@ import type {
   ExtensionProviderAssetIdentifier,
   TransformedDropTargetAssetType,
 } from '../types';
+import { UUIDSymbol } from '../types';
 import type { RuntimeFlowState } from './runtime-flow-state';
 
 /** Options for controlling the drag-and-drop functionality */
@@ -33,7 +34,7 @@ export interface PlayerDndPluginOptions<
    */
   getXLRTypeForAsset: (
     identifier: ExtensionProviderAssetIdentifier
-  ) => ObjectNode;
+  ) => NamedType<ObjectType>;
 
   /** A manager for the current flow state */
   state: RuntimeFlowState;
@@ -63,37 +64,39 @@ export class PlayerDndPlugin implements ReactPlayerPlugin {
 
   apply(player: Player) {
     const match = { type: this.options.Target.type ?? 'drop-target' };
+    const assetIDToSymbolMap: Map<string, symbol> = new Map();
 
     player.hooks.viewController.tap(this.name, (vc) => {
+      vc.hooks.view.tap(this.name, (vi) => {
+        vi.hooks.parser.tap(this.name, (pa) => {
+          pa.hooks.onParseObject.tap(this.name, (o: any) => {
+            if (o.id) {
+              assetIDToSymbolMap.set(o.id, o[UUIDSymbol]);
+            }
+
+            return o;
+          });
+        });
+      });
       vc.transformRegistry.set(match, {
-        resolve: (asset) => {
+        resolve: (asset: Asset) => {
           return {
             ...asset,
-
             // Send back up to the runtime-state handler to compute the new view
-            replaceAsset: (identifier: ExtensionProviderAssetIdentifier) => {
-              console.log(`Replacing asset at: ${asset.id}`);
-
+            placeAsset: (identifier: ExtensionProviderAssetIdentifier) => {
+              console.log(`Placing asset at: ${asset.id}`);
+              const targetSymbol = assetIDToSymbolMap.get(asset.id) as symbol;
               this.options.state
-                .replace(asset.id, {
+                .placeAsset(targetSymbol, {
                   identifier,
                   type: this.options.getXLRTypeForAsset(identifier),
                 })
                 .then(() => this.refresh(player));
             },
-            appendAsset: (identifier: ExtensionProviderAssetIdentifier) => {
-              console.log(`Appending to asset at: ${asset.id}`);
-
-              this.options.state.append(asset.id, {
-                identifier,
-                type: this.options.getXLRTypeForAsset(identifier),
-              });
-              this.refresh(player);
-            },
-            clearAsset: () => {
+            clearAsset: (assetSymbol: symbol) => {
               console.log(`Clearing asset at: ${asset.id}`);
 
-              this.options.state.clear(asset.id);
+              this.options.state.clearAsset(assetSymbol);
               this.refresh(player);
             },
           };

@@ -1,76 +1,121 @@
 import type { ObjectType } from '@player-tools/xlr';
-import type { Asset, View } from '@player-ui/types';
+import type { Asset, Flow, View } from '@player-ui/types';
 import type {
   ExtensionProviderAssetIdentifier,
   FlowWithOneView,
   DropTargetAssetType,
+  PlacedAsset,
 } from '../types';
-import { DragAndDropAssetType } from '../types';
+import { UUIDSymbol } from '../types';
+import { makeDropTarget, getAssetSymbol } from '../types';
+import { isDropTargetAsset } from '../types';
 
 /** The type for exporting and restoring the flow state */
 export interface ExportedRuntimeFlowState {
   /**
-   *
+   * The root node of the drag and drop view
    */
   root: DropTargetAssetType;
 }
 
 export interface RuntimeFlowStateOptions {
   /**
-   *
-   */
-  restoreFrom?: {
-    /**
-     *
-     */
-    state: ExportedRuntimeFlowState;
-  };
-
-  /**
    * Function to call when a placed asset has required properties that need to be resolved before actually placing it.
    */
   resolveRequiredProperties: (asset: Asset, type: ObjectType) => Promise<Asset>;
+
+  /**
+   * Function that will be called when multiple assets are dropped onto the same target and a collection needs to be created
+   */
+  resolveCollectionConversion: (assets: Array<PlacedAsset>) => Promise<{
+    /** The generated collection asset with the provided `assets` array as children */
+    asset: Asset;
+    /** The corresponding type for the generated collection asset */
+    type: ObjectType;
+  }>;
+
+  /**
+   * The content to initialize the editing experience with
+   */
+  restoreFrom?:
+    | {
+        /**
+         * The editor state to resume from
+         */
+        state: ExportedRuntimeFlowState;
+
+        /**
+         * The full Player flow to initialize with
+         */
+        flow: never;
+      }
+    | {
+        /**
+         * The editor state to resume from
+         */
+        flow: Flow;
+        /**
+         * The full Player flow to initialize with
+         */
+        state: never;
+      };
 }
 
 /**
- *
+ * Manages the translation between Drag and Drop state to Player state
  */
 export class RuntimeFlowState {
   private ROOT: DropTargetAssetType;
-  private assetMappings: Record<string, DropTargetAssetType> = {};
+  private realAssetMappings: Map<symbol, PlacedAsset> = new Map();
+  private dropTargetAssets: Map<symbol, DropTargetAssetType> = new Map();
+  private assetsToTargets: Map<symbol, symbol> = new Map();
   private resolveRequiredProperties: (
     asset: Asset,
     type: ObjectType
   ) => Promise<Asset>;
 
-  constructor(options: RuntimeFlowStateOptions) {
-    this.ROOT = {
-      __type: DragAndDropAssetType,
-      id: 'drag-and-drop-view',
-      type: 'drop-target',
-    };
-    this.assetMappings[this.ROOT.id] = this.ROOT;
+  private resolveCollectionConversion: (assets: Array<PlacedAsset>) => Promise<{
+    /** The generated collection asset with the provided `assets` array as children */
+    asset: Asset;
+    /** The corresponding type for the generated collection asset */
+    type: ObjectType;
+  }>;
 
-    this.resolveRequiredProperties = options?.resolveRequiredProperties;
+  constructor(options: RuntimeFlowStateOptions) {
+    this.ROOT = makeDropTarget('drag-and-drop-view');
+    this.dropTargetAssets.set(getAssetSymbol(this.ROOT), this.ROOT);
+    this.resolveRequiredProperties = options.resolveRequiredProperties;
+    this.resolveCollectionConversion = options.resolveCollectionConversion;
   }
 
-  export(): ExportedRuntimeFlowState {
+  exportState(): ExportedRuntimeFlowState {
     return {
       root: this.ROOT,
     };
   }
 
-  updateAsset(id: string, newAsset: Asset) {
-    const asset = this.assetMappings[id];
-    if (!asset) {
-      throw new Error(`Cannot set asset value for unknown id: ${id}`);
+  updateAsset(id: symbol, newAsset: Asset) {
+    let placedAsset = this.realAssetMappings.get(id);
+    if (!placedAsset) {
+      throw new Error(
+        `Cannot set asset value for unknown id: ${id.toString()}`
+      );
     }
 
-    if (!asset.value) {
-      throw new Error(`Cannot set properties on asset without a value`);
+    if (!placedAsset.asset) {
+      throw new Error(
+        `Cannot update an asset that doesn't have any properties`
+      );
     }
 
-    asset.value.asset = newAsset;
+    placedAsset = {
+      ...placedAsset,
+      asset: {
+        ...placedAsset.asset,
+        ...newAsset,
+      },
+    };
+    this.realAssetMappings.set(id, placedAsset);
   }
 
   private async createNewAsset(
@@ -87,8 +132,9 @@ export class RuntimeFlowState {
     }
 
     let asset: Asset = {
-      id: `${idPrefix}-test-1`,
+      id: `${idPrefix}-${typeProp}`,
       type: typeProp,
+      [UUIDSymbol]: Symbol(`${idPrefix}-${typeProp}`),
     };
 
     let hasRequiredProperties = false;
@@ -103,24 +149,29 @@ export class RuntimeFlowState {
       }
 
       if (
-        prop.node.type === 'ref' &&
-        prop.node.ref.startsWith('AssetWrapper')
+        (prop.node.type === 'ref' &&
+          prop.node.ref.startsWith('AssetWrapper')) ||
+        (prop.node.type === 'array' &&
+          prop.node.elementType.type === 'ref' &&
+          prop.node.elementType.ref.startsWith('AssetWrapper'))
       ) {
-        const generatedAsset: DropTargetAssetType = {
-          __type: DragAndDropAssetType,
-          id: `${idPrefix}-${key}`,
-          type: 'drop-target',
-          context: {
-            propertyName: key,
-            parent: {
-              pluginName: 'test',
-              name: typeProp,
-            },
+        const isArray = prop.node.type === 'array';
+        const context = {
+          propertyName: key,
+          parent: {
+            pluginName: 'drag-and-drop-placeholder',
+            name: typeProp,
           },
         };
+        const id = isArray ? `${idPrefix}-${key}-0` : `${idPrefix}-${key}`;
+        const assetSlot = makeDropTarget(id, context);
 
-        this.assetMappings[generatedAsset.id] = generatedAsset;
-        asset[key] = { asset: generatedAsset };
+        this.dropTargetAssets.set(getAssetSymbol(assetSlot), assetSlot);
+        if (isArray) {
+          asset[key] = [{ asset: assetSlot }];
+        } else {
+          asset[key] = { asset: assetSlot };
+        }
       }
     });
 
@@ -131,8 +182,9 @@ export class RuntimeFlowState {
     return asset;
   }
 
-  async replace(
-    id: string,
+  async placeAsset(
+    /** The symbol for the drop target to place the asset in */
+    id: symbol,
     replacement: {
       /** The identifier for where the populated asset is from */
       identifier: ExtensionProviderAssetIdentifier;
@@ -141,54 +193,118 @@ export class RuntimeFlowState {
       type: ObjectType;
     }
   ): Promise<void> {
-    const asset = this.assetMappings[id];
+    const asset = this.dropTargetAssets.get(id);
     if (!asset) {
-      throw new Error(`Cannot set asset value for unknown id: ${id}`);
+      throw new Error(
+        `Cannot set asset value for unknown drop target: ${id.toString()}`
+      );
     }
 
-    const newAsset = await this.createNewAsset(id, replacement.type);
+    if (!isDropTargetAsset(asset)) {
+      throw new Error(`Cannot drop asset onto non drop target asset`);
+    }
 
-    asset.value = {
-      ...replacement,
+    const newAsset = await this.createNewAsset(asset.id, replacement.type);
+    asset.values?.push({
       asset: newAsset,
-    };
+      ...replacement,
+    });
+
+    const newAssetSymbol = getAssetSymbol(newAsset);
+    this.assetsToTargets.set(newAssetSymbol, id);
   }
 
-  get(id: string): {
+  getAsset(id: symbol): {
     /** The Asset that correlates to the given ID */
     asset: Asset;
     /** The underlying XLR type for the Asset */
     type: ObjectType;
   } {
-    const asset = this.assetMappings[id];
-    if (!asset || !asset.value) {
-      throw new Error(`Cannot get asset value for unknown id: ${id}`);
+    const placedAsset = this.realAssetMappings.get(id);
+    if (!placedAsset) {
+      throw new Error(
+        `Cannot get asset value for unknown id: ${id.toString()}`
+      );
     }
 
-    return { asset: asset.value.asset, type: asset.value.type };
+    return { ...placedAsset };
   }
 
-  append(
-    id: string,
-    replacement: {
-      /** The identifier for where the populated asset is from */
-      identifier: ExtensionProviderAssetIdentifier;
-
-      /** The current descriptor for the value stored at this asset */
-      type: ObjectType;
-    }
-  ) {}
-
-  clear(id: string) {
-    const asset = this.assetMappings[id];
-    if (!asset) {
-      throw new Error(`Cannot clear asset. Not found: ${id}`);
+  clearAsset(id: symbol) {
+    const parentDropTargetSymbol = this.assetsToTargets.get(id);
+    if (!parentDropTargetSymbol) {
+      throw new Error(`Cannot find parent drop target ${id.toString()}`);
     }
 
-    asset.value = undefined;
+    const parentDropTarget = this.dropTargetAssets.get(parentDropTargetSymbol);
+    if (!parentDropTarget) {
+      throw new Error(`Cannot get parent drop target ${id.toString()}`);
+    }
+
+    parentDropTarget.values = parentDropTarget.values?.filter(
+      (pa) => getAssetSymbol(pa.asset) === id
+    );
+
+    this.realAssetMappings.delete(id);
   }
 
   get view(): View {
+    // do processing to add in drop targets where needed and generate collections where needed.
+
+    // Iterate though drop targets to figure out what the effective asset that should be shown is
+    this.dropTargetAssets.forEach(async (dropTarget) => {
+      if (dropTarget.values?.length === 1) {
+        // eslint-disable-next-line no-param-reassign
+        dropTarget.value = dropTarget.values[0];
+      } else if (dropTarget.values && dropTarget.values.length > 1) {
+        // eslint-disable-next-line no-param-reassign
+        dropTarget.value = await this.resolveCollectionConversion(
+          dropTarget.values
+        );
+      }
+    });
+
+    // Iterate though Assets to insert new drop targets in properties that take arrays of assets
+    this.realAssetMappings.forEach((asset) => {
+      if (asset.type.type === 'object') {
+        Object.entries(asset.type.properties).forEach(([key, prop]) => {
+          if (
+            prop.node.type === 'array' &&
+            prop.node.elementType.type === 'ref' &&
+            prop.node.elementType.ref.startsWith('AssetWrapper')
+          ) {
+            const typeProp =
+              asset.type.properties.type.node.type === 'string' &&
+              asset.type.properties.type.node.const
+                ? asset.type.properties.type.node.const
+                : 'unknown';
+
+            const actualObjectProperty = asset.asset[key] as Array<Asset>;
+            const i = 0;
+            while (i < actualObjectProperty.length) {
+              if (i % 2) {
+                if (!isDropTargetAsset(actualObjectProperty[i])) {
+                  const id = `${key}-0`;
+                  const context = {
+                    propertyName: key,
+                    parent: {
+                      pluginName: 'drag-and-drop-placeholder',
+                      name: typeProp,
+                    },
+                  };
+                  actualObjectProperty.splice(
+                    i,
+                    0,
+                    makeDropTarget(id, context)
+                  );
+                }
+              }
+            }
+          }
+        });
+      }
+    });
+
     return this.ROOT;
   }
 
