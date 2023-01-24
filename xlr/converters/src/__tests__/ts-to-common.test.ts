@@ -634,4 +634,50 @@ describe('Variable Exports', () => {
 
     expect(XLR).toMatchSnapshot();
   });
+
+  it('Arrow function with parameters', () => {
+    const sc = `
+      interface Bar {
+        foo: string
+        fuz: number
+      }
+
+      export const foo = (input: number): Bar => {
+        return {
+          foo: '1',
+          fuz: 1,
+        };
+      };
+    `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+
+  it('Aliased Arrow function exports its own name', () => {
+    const sc = `
+      interface Bar {
+        foo: string
+        fuz: number
+      }
+
+      export const foo = (input: number): Bar => {
+        return {
+          foo: '1',
+          fuz: 1,
+        };
+      };
+
+      export const baz = foo
+    `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
 });
