@@ -192,10 +192,10 @@ export class TsConverter {
           resultingNode = this.tsLiteralToType(variable.initializer);
         }
 
-        // If resultingNode is a reference to a function and not a concrete value
+        // If resultingNode is a reference to a function or custom primitive and not a concrete value
         // we need to update the name to be the name of the exporting variable
         // not the name of the identifier its aliasing
-        if (resultingNode.type === 'function') {
+        if (resultingNode.type === 'function' || resultingNode.type === 'ref') {
           resultingNode = { ...resultingNode, name: variable.name.getText() };
         }
 
