@@ -1,5 +1,5 @@
 /* eslint-disable no-template-curly-in-string */
-import { setupTestEnv } from '../test-helpers';
+import { setupTestEnv } from './helpers/test-helpers';
 import { TsConverter } from '..';
 
 describe('Type Exports', () => {
