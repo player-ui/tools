@@ -1,4 +1,4 @@
-import { setupTestEnv } from '@player-tools/xlr-utils';
+import { setupTestEnv } from './helpers/test-helpers';
 import { TsConverter } from '..';
 
 it('Player Types Export', () => {
