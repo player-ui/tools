@@ -1,5 +1,5 @@
 /* eslint-disable no-template-curly-in-string */
-import { setupTestEnv } from '@player-tools/xlr-utils';
+import { setupTestEnv } from '../test-helpers';
 import { TsConverter } from '..';
 
 describe('Type Exports', () => {
