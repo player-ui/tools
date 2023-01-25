@@ -5,7 +5,10 @@ import type {
 } from '../types';
 import { DroppedItemTypes } from '../types';
 
-export const useDroppableAsset = (props: TransformedDropTargetAssetType) => {
+export const useDroppableAsset = (
+  props: TransformedDropTargetAssetType,
+  action: 'replace' | 'append' | 'prepend'
+) => {
   const [p, ref] = useDrop({
     accept: DroppedItemTypes.ASSET,
     drop: (item: ExtensionProviderAssetIdentifier, monitor) => {
@@ -13,7 +16,7 @@ export const useDroppableAsset = (props: TransformedDropTargetAssetType) => {
         return;
       }
 
-      props.placeAsset(item);
+      props.placeAsset(item, action);
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),

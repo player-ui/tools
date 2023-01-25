@@ -27,12 +27,12 @@ export interface RuntimeFlowStateOptions {
   /**
    * Function that will be called when multiple assets are dropped onto the same target and a collection needs to be created
    */
-  resolveCollectionConversion: (assets: Array<PlacedAsset>) => Promise<{
+  resolveCollectionConversion: (assets: Array<PlacedAsset>) => {
     /** The generated collection asset with the provided `assets` array as children */
     asset: Asset;
     /** The corresponding type for the generated collection asset */
     type: ObjectType;
-  }>;
+  };
 
   /**
    * The content to initialize the editing experience with
@@ -74,12 +74,12 @@ export class RuntimeFlowState {
     type: ObjectType
   ) => Promise<Asset>;
 
-  private resolveCollectionConversion: (assets: Array<PlacedAsset>) => Promise<{
+  private resolveCollectionConversion: (assets: Array<PlacedAsset>) => {
     /** The generated collection asset with the provided `assets` array as children */
     asset: Asset;
     /** The corresponding type for the generated collection asset */
     type: ObjectType;
-  }>;
+  };
 
   constructor(options: RuntimeFlowStateOptions) {
     this.ROOT = makeDropTarget('drag-and-drop-view');
@@ -191,9 +191,13 @@ export class RuntimeFlowState {
 
       /** The current descriptor for the value stored at this asset */
       type: ObjectType;
-    }
+    },
+    action: 'replace' | 'append' | 'prepend'
   ): Promise<void> {
     const asset = this.dropTargetAssets.get(id);
+
+    console.log('placing asset', id, replacement, action);
+
     if (!asset) {
       throw new Error(
         `Cannot set asset value for unknown drop target: ${id.toString()}`
@@ -205,10 +209,62 @@ export class RuntimeFlowState {
     }
 
     const newAsset = await this.createNewAsset(asset.id, replacement.type);
-    asset.values?.push({
+
+    const newWrappedAsset = {
       asset: newAsset,
       ...replacement,
-    });
+    };
+
+    if (action === 'replace') {
+      asset.values = [newWrappedAsset];
+    } else if (action === 'append') {
+      asset.values = [...(asset.values ?? []), newWrappedAsset];
+    } else if (action === 'prepend') {
+      asset.values = [newWrappedAsset, ...(asset.values ?? [])];
+    }
+
+    asset.value = undefined;
+
+    if (asset.values?.length === 1) {
+      asset.value = asset.values[0];
+    } else if (asset.values !== undefined && asset.values.length > 1) {
+      const assetsWithPlaceholders = asset.values.reduce<any[]>(
+        (coll, placedAsset, index) => {
+          const prefixAsset = makeDropTarget(
+            `${asset.id}-${index * 2 - 1}`,
+            asset.context
+              ? {
+                  ...asset.context,
+                  propertyIndex: index * 2 - 1,
+                }
+              : undefined
+          );
+
+          if (index > 0) {
+            this.dropTargetAssets.set(getAssetSymbol(prefixAsset), prefixAsset);
+          }
+
+          const updatedPlacedAsset = {
+            ...placedAsset,
+            asset: {
+              ...placedAsset.asset,
+              id: `${asset.id}-${index * 2}`,
+            },
+          };
+
+          return [
+            ...coll,
+            ...(index > 0 ? [{ asset: prefixAsset }] : []),
+            updatedPlacedAsset,
+          ];
+        },
+        []
+      );
+
+      asset.value = await this.resolveCollectionConversion(
+        assetsWithPlaceholders as any
+      );
+    }
 
     const newAssetSymbol = getAssetSymbol(newAsset);
     this.assetsToTargets.set(newAssetSymbol, id);
@@ -249,62 +305,6 @@ export class RuntimeFlowState {
   }
 
   get view(): View {
-    // do processing to add in drop targets where needed and generate collections where needed.
-
-    // Iterate though drop targets to figure out what the effective asset that should be shown is
-    this.dropTargetAssets.forEach(async (dropTarget) => {
-      if (dropTarget.values?.length === 1) {
-        // eslint-disable-next-line no-param-reassign
-        dropTarget.value = dropTarget.values[0];
-      } else if (dropTarget.values && dropTarget.values.length > 1) {
-        // eslint-disable-next-line no-param-reassign
-        dropTarget.value = await this.resolveCollectionConversion(
-          dropTarget.values
-        );
-      }
-    });
-
-    // Iterate though Assets to insert new drop targets in properties that take arrays of assets
-    this.realAssetMappings.forEach((asset) => {
-      if (asset.type.type === 'object') {
-        Object.entries(asset.type.properties).forEach(([key, prop]) => {
-          if (
-            prop.node.type === 'array' &&
-            prop.node.elementType.type === 'ref' &&
-            prop.node.elementType.ref.startsWith('AssetWrapper')
-          ) {
-            const typeProp =
-              asset.type.properties.type.node.type === 'string' &&
-              asset.type.properties.type.node.const
-                ? asset.type.properties.type.node.const
-                : 'unknown';
-
-            const actualObjectProperty = asset.asset[key] as Array<Asset>;
-            const i = 0;
-            while (i < actualObjectProperty.length) {
-              if (i % 2) {
-                if (!isDropTargetAsset(actualObjectProperty[i])) {
-                  const id = `${key}-0`;
-                  const context = {
-                    propertyName: key,
-                    parent: {
-                      pluginName: 'drag-and-drop-placeholder',
-                      name: typeProp,
-                    },
-                  };
-                  actualObjectProperty.splice(
-                    i,
-                    0,
-                    makeDropTarget(id, context)
-                  );
-                }
-              }
-            }
-          }
-        });
-      }
-    });
-
     return this.ROOT;
   }
 

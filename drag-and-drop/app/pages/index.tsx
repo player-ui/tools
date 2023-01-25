@@ -37,7 +37,7 @@ import type {
   TransformedDropTargetAssetType,
 } from '@player-tools/dnd-lib';
 import { getAssetSymbol } from '@player-tools/dnd-lib';
-import { ReactAsset } from '@player-ui/react-asset';
+import { ReactAsset } from '@player-ui/react';
 import type { Asset } from '@player-ui/types';
 import {
   DragAndDropController,
@@ -107,6 +107,23 @@ function useController() {
   return React.useContext(ControllerContext);
 }
 
+const AssetSlotExtension = (
+  props: TransformedDropTargetAssetType & {
+    action: 'prepend' | 'append';
+  }
+) => {
+  const { action } = props;
+  const [{ isOver }, drop] = useDroppableAsset(props, action);
+
+  return (
+    <div ref={drop} style={{ border: isOver ? '1px solid red' : undefined }}>
+      <span>
+        {action} - {props.context?.parent.name} - {props.context?.propertyName}
+      </span>
+    </div>
+  );
+};
+
 /**
  * Component that indicates that an Asset can be placed at this location
  */
@@ -128,6 +145,8 @@ const AssetDropTarget = (props: TransformedDropTargetAssetType) => {
     );
   }
 
+  const isArrayInsertion = props.context?.propertyIndex !== undefined;
+
   return (
     <Box
       ref={drop}
@@ -139,20 +158,28 @@ const AssetDropTarget = (props: TransformedDropTargetAssetType) => {
       }}
       onClick={(e) => {
         if (props.value) {
-          console.log(props)
+          console.log(props);
           propContext.setDisplayedAssetID(getAssetSymbol(props));
           propContext.setRightPanelState('edit');
           e.stopPropagation();
         }
       }}
     >
-      {props.value ? (
-        <ReactAsset {...props.value.asset} />
-      ) : (
+      {props.value && (
+        <>
+          {isOver && <AssetSlotExtension {...props} action="prepend" />}
+          <ReactAsset {...props.value.asset} />
+          {isOver && <AssetSlotExtension {...props} action="append" />}
+        </>
+      )}
+
+      {!props.value && !isArrayInsertion && (
         <span>
           {props.context?.parent.name} - {props.context?.propertyName}
         </span>
       )}
+
+      {!props.value && isArrayInsertion && <span>Insert</span>}
     </Box>
   );
 };

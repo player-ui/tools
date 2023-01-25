@@ -83,14 +83,21 @@ export class PlayerDndPlugin implements ReactPlayerPlugin {
           return {
             ...asset,
             // Send back up to the runtime-state handler to compute the new view
-            placeAsset: (identifier: ExtensionProviderAssetIdentifier) => {
+            placeAsset: (
+              identifier: ExtensionProviderAssetIdentifier,
+              action: 'replace' | 'append' | 'prepend' = 'replace'
+            ) => {
               console.log(`Placing asset at: ${asset.id}`);
               const targetSymbol = assetIDToSymbolMap.get(asset.id) as symbol;
               this.options.state
-                .placeAsset(targetSymbol, {
-                  identifier,
-                  type: this.options.getXLRTypeForAsset(identifier),
-                })
+                .placeAsset(
+                  targetSymbol,
+                  {
+                    identifier,
+                    type: this.options.getXLRTypeForAsset(identifier),
+                  },
+                  action
+                )
                 .then(() => this.refresh(player));
             },
             clearAsset: (assetSymbol: symbol) => {

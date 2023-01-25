@@ -36,12 +36,12 @@ export interface DragAndDropControllerOptions {
   resolveCollectionConversion: (
     assets: Array<PlacedAsset>,
     XLRSDK: XLRService
-  ) => Promise<{
+  ) => {
     /** The generated collection asset with the provided `assets` array as children */
     asset: Asset;
     /** The corresponding type for the generated collection asset */
     type: ObjectType;
-  }>;
+  };
 
   /** A custom component to use for rendering droppable Assets */
   Component?: React.ComponentType<TransformedDropTargetAssetType>;

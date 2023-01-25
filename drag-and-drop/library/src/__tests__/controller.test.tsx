@@ -34,8 +34,7 @@ describe('drag-and-drop', () => {
           type: {
             name: 'CollectionAsset',
             type: 'object',
-            source:
-              '/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/plugins/reference-assets/core/src/assets/collection/types.ts',
+            source: '',
             properties: {
               label: {
                 required: false,

@@ -94,6 +94,9 @@ export interface DropTargetAssetType extends Asset<'drop-target'> {
 
     /** The name of the property that this asset fulfills */
     propertyName?: string;
+
+    /** The index of the property that this asset fulfills */
+    propertyIndex?: number;
   };
 
   /** The effective value that should be rendered. Generated from `.values` */
@@ -120,7 +123,10 @@ export interface TransformedDropTargetAssetType extends DropTargetAssetType {
   context?: DropTargetAssetType['context'];
 
   /** Set the value of this slot to the replacement value */
-  placeAsset: (identifier: ExtensionProviderAssetIdentifier) => void;
+  placeAsset: (
+    identifier: ExtensionProviderAssetIdentifier,
+    action: 'replace' | 'append' | 'prepend'
+  ) => void;
 
   /** Append the asset to the slot */
   appendAsset: (identifier: ExtensionProviderAssetIdentifier) => void;
