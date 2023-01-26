@@ -35,6 +35,8 @@ commands:
             - v1-bazel-cache-core-{{ .Branch }} 
             - v1-bazel-cache-core-main 
 
+      - run: yarn
+      
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
       - run: echo -e $GPG_KEY | gpg --import --batch
       - run: |
