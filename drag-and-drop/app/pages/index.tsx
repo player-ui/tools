@@ -107,8 +107,14 @@ function useController() {
   return React.useContext(ControllerContext);
 }
 
+/**
+ *
+ */
 const AssetSlotExtension = (
   props: TransformedDropTargetAssetType & {
+    /**
+     *
+     */
     action: 'prepend' | 'append';
   }
 ) => {
@@ -128,7 +134,7 @@ const AssetSlotExtension = (
  * Component that indicates that an Asset can be placed at this location
  */
 const AssetDropTarget = (props: TransformedDropTargetAssetType) => {
-  const [{ isOver }, drop] = useDroppableAsset(props);
+  const [{ isOver }, drop] = useDroppableAsset(props, 'replace');
   const propContext = React.useContext(PropertiesContext);
 
   if (!props.value && !props.context) {
@@ -179,7 +185,12 @@ const AssetDropTarget = (props: TransformedDropTargetAssetType) => {
         </span>
       )}
 
-      {!props.value && isArrayInsertion && <span>Insert</span>}
+      {!props.value && isArrayInsertion && (
+        <span>
+          Insert into {props.context?.parent.name} -
+          {props.context?.propertyName}
+        </span>
+      )}
     </Box>
   );
 };
@@ -566,14 +577,14 @@ const App = () => {
         setPendingPropertyResolutions(pending);
         return prom;
       },
-      async resolveCollectionConversion(assets, XLRSDK) {
+      resolveCollectionConversion(assets, XLRSDK) {
         const collectionType = XLRSDK.XLRSDK.getType('collection');
         return {
           asset: {
             id: `autogen-collection`,
             type: 'collection',
             values: assets,
-          },
+          } as Asset,
           type: collectionType as NamedType<ObjectType>,
         };
       },

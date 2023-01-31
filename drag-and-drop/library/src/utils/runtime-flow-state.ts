@@ -1,5 +1,5 @@
 import type { ObjectType } from '@player-tools/xlr';
-import type { Asset, Flow, View } from '@player-ui/types';
+import type { Asset, AssetWrapper, Flow, View } from '@player-ui/types';
 import type {
   ExtensionProviderAssetIdentifier,
   FlowWithOneView,
@@ -66,9 +66,15 @@ export interface RuntimeFlowStateOptions {
  */
 export class RuntimeFlowState {
   private ROOT: DropTargetAssetType;
+  /** Symbol to Real Asset */
   private realAssetMappings: Map<symbol, PlacedAsset> = new Map();
+  /** Symbol to Drop Target Asset */
   private dropTargetAssets: Map<symbol, DropTargetAssetType> = new Map();
+  /** Asset Symbol to Drop Target Symbol */
   private assetsToTargets: Map<symbol, symbol> = new Map();
+  /** Drop Target Symbol to Asset Symbol */
+  private targetsToAssets: Map<symbol, symbol> = new Map();
+
   private resolveRequiredProperties: (
     asset: Asset,
     type: ObjectType
@@ -162,11 +168,16 @@ export class RuntimeFlowState {
             pluginName: 'drag-and-drop-placeholder',
             name: typeProp,
           },
+          propertyIndex: isArray ? 0 : undefined,
         };
         const id = isArray ? `${idPrefix}-${key}-0` : `${idPrefix}-${key}`;
         const assetSlot = makeDropTarget(id, context);
 
         this.dropTargetAssets.set(getAssetSymbol(assetSlot), assetSlot);
+        this.targetsToAssets.set(
+          getAssetSymbol(assetSlot),
+          getAssetSymbol(asset)
+        );
         if (isArray) {
           asset[key] = [{ asset: assetSlot }];
         } else {
@@ -195,9 +206,6 @@ export class RuntimeFlowState {
     action: 'replace' | 'append' | 'prepend'
   ): Promise<void> {
     const asset = this.dropTargetAssets.get(id);
-
-    console.log('placing asset', id, replacement, action);
-
     if (!asset) {
       throw new Error(
         `Cannot set asset value for unknown drop target: ${id.toString()}`
@@ -215,6 +223,8 @@ export class RuntimeFlowState {
       ...replacement,
     };
 
+    this.realAssetMappings.set(getAssetSymbol(newAsset), newWrappedAsset);
+
     if (action === 'replace') {
       asset.values = [newWrappedAsset];
     } else if (action === 'append') {
@@ -225,6 +235,7 @@ export class RuntimeFlowState {
 
     asset.value = undefined;
 
+    // Resolve Collections
     if (asset.values?.length === 1) {
       asset.value = asset.values[0];
     } else if (asset.values !== undefined && asset.values.length > 1) {
@@ -268,6 +279,80 @@ export class RuntimeFlowState {
 
     const newAssetSymbol = getAssetSymbol(newAsset);
     this.assetsToTargets.set(newAssetSymbol, id);
+
+    // Resolve Arrays in parent
+    if (
+      asset.context?.propertyIndex !== undefined &&
+      asset.context.propertyName
+    ) {
+      const containingAssetSymbol = this.targetsToAssets.get(id);
+      if (!containingAssetSymbol) {
+        throw new Error(
+          `Error: can't get parent asset mapping of drop target ${id.toString()}`
+        );
+      }
+
+      const containingAsset = this.realAssetMappings.get(containingAssetSymbol);
+
+      if (!containingAsset) {
+        throw new Error(
+          `Error: can't get asset for symbol ${containingAssetSymbol.toString()}`
+        );
+      }
+
+      const arrayProperty = containingAsset.asset[
+        asset.context.propertyName
+      ] as Array<AssetWrapper<DropTargetAssetType>>;
+      const asdf = arrayProperty.find((element) => {
+        return getAssetSymbol(element.asset) === id;
+      });
+
+      if (!asdf) {
+        throw new Error('cant calculate array insertion');
+      }
+
+      const insertionIndex = arrayProperty.indexOf(asdf);
+      // Check if drop targets around placed asset need to be updated
+      const leftNeighbor = arrayProperty[insertionIndex - 1];
+      if (!leftNeighbor || leftNeighbor.asset.values?.length !== 0) {
+        const newLeftAsset = makeDropTarget(`${asset.id}-left`, {
+          ...asset.context,
+          propertyIndex: insertionIndex,
+        });
+        this.dropTargetAssets.set(getAssetSymbol(newLeftAsset), newLeftAsset);
+        this.targetsToAssets.set(
+          getAssetSymbol(newLeftAsset),
+          containingAssetSymbol
+        );
+        arrayProperty.splice(insertionIndex, 0, {
+          asset: {
+            ...newLeftAsset,
+          },
+        });
+        asset.context.propertyIndex = insertionIndex + 1;
+      }
+
+      arrayProperty[insertionIndex + 1] = { asset };
+
+      const rightNeighbor = arrayProperty[insertionIndex + 2];
+      if (!rightNeighbor || rightNeighbor.asset.values?.length !== 0) {
+        const newRightAsset = makeDropTarget(`${asset.id}-right`, {
+          ...asset.context,
+          propertyIndex: insertionIndex + 2,
+        });
+        this.dropTargetAssets.set(getAssetSymbol(newRightAsset), newRightAsset);
+        this.targetsToAssets.set(
+          getAssetSymbol(newRightAsset),
+          containingAssetSymbol
+        );
+        arrayProperty.splice(insertionIndex + 2, 0, {
+          asset: {
+            ...newRightAsset,
+          },
+        });
+      }
+
+    }
   }
 
   getAsset(id: symbol): {
