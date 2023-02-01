@@ -189,4 +189,9 @@ export class DragAndDropController {
     // we only want JSON compliant values
     return JSON.parse(JSON.stringify(removeDndStateFromView(baseView)));
   }
+
+  public importView(view: View, pluginName = '') {
+    this.runtimeState.importView(view, this.PlayerXLRService, pluginName);
+    this.dndWebPlayerPlugin.refresh(this.webPlayer.player);
+  }
 }

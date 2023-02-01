@@ -8,6 +8,8 @@ javascript_pipeline(
       "@npm//@player-ui/react",
       "@npm//react-dnd",
       "@npm//react-dnd-html5-backend",
+      "@npm//uuid",
+      "@npm//@types/uuid",
     ],
     peer_dependencies = [
       "@npm//react",
