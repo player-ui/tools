@@ -49,6 +49,7 @@ import pluginManifest from '@player-tools/static-xlrs/static_xlrs/plugin/xlr/man
 import typesManifest from '@player-tools/static-xlrs/static_xlrs/core/xlr/manifest';
 import { AssetEditorPanel } from '../components/AssetEditorPanel';
 import { covertXLRtoAssetDoc } from '../utils/converters';
+import Files from "react-files";
 
 const PropertiesContext = React.createContext<{
   /**
@@ -243,6 +244,26 @@ const AssetSelectorPanel = () => {
                 Export View
               </Button>
             </AccordionPanel>
+            <AccordionPanel pb={4}>
+            <Files
+              onChange={file => {
+                const fileReader = new FileReader();
+                fileReader.onload = () => {
+                  controller.importView(JSON.parse(fileReader.result as string).views[0]);
+                };
+                fileReader.readAsText(file[0]);
+              }}
+              accepts={[".json"]}
+              clickable
+            >
+              <Button
+                colorScheme="green"
+              >
+                Import View
+              </Button>
+            </Files>
+              
+            </AccordionPanel>
           </AccordionItem>
         </Accordion>
       </CardBody>
@@ -422,6 +443,7 @@ const AssetDocsPanel = () => {
   const { displayedAssetID } = React.useContext(PropertiesContext);
   const { controller } = useController() ?? {};
   const type = controller.getAssetDetails(displayedAssetID);
+
   const docs = covertXLRtoAssetDoc(type);
   return (
     <Card>
