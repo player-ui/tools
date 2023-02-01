@@ -13,6 +13,8 @@ export interface Annotations {
   see?: string | Array<string>;
   /** The Typescript comment associated with the type */
   comment?: string;
+  /** The JSDoc `@metatag` string for this type */
+  metatags?: string | Record<string, string>;
 }
 
 export interface Const<T> {
