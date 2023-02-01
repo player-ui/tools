@@ -56,7 +56,7 @@ export function normalizeText(options: {
   node: React.ReactNode;
 
   /** A component to render a text asset */
-  TextComp?: React.ComponentType;
+  TextComp?: React.ComponentType<React.PropsWithChildren>;
 }): React.ReactNode {
   const { node, TextComp } = options;
 
@@ -88,7 +88,7 @@ export function normalizeToCollection(options: {
   TextComp?: React.ComponentType;
 
   /** A collection asset */
-  CollectionComp?: React.ComponentType;
+  CollectionComp?: React.ComponentType<React.PropsWithChildren>;
 }) {
   const { node, CollectionComp } = options;
 
