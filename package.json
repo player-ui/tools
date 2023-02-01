@@ -62,7 +62,7 @@
     "@types/micromatch": "^4.0.2",
     "@types/mkdirp": "^1.0.2",
     "@types/node": "^16.11.12",
-    "@types/react": "^17.0.25",
+    "@types/react": "18.0.27",
     "@types/signale": "^1.4.2",
     "@types/std-mocks": "^1.0.1",
     "@types/uuid": "^8.3.4",
