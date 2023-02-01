@@ -84,6 +84,9 @@ export interface DropTargetAssetType extends Asset<'drop-target'> {
   /** An opaque identifier for the placeholder */
   __type: typeof DragAndDropAssetType;
 
+  /** Shadow ID of drop target */
+  [UUIDSymbol]: symbol
+
   /**
    * The context for what this value is in
    * Used for determining if a value is allowed to be dropped in this slot or not
@@ -95,8 +98,11 @@ export interface DropTargetAssetType extends Asset<'drop-target'> {
     /** The name of the property that this asset fulfills */
     propertyName?: string;
 
-    /** The index of the property that this asset fulfills */
-    propertyIndex?: number;
+    /** If the drop target is an element in an array*/
+    arrayElement?: boolean;
+
+    /** If the drop target is generated on the fly from a collection */
+    mockTarget?: boolean
   };
 
   /** The effective value that should be rendered. Generated from `.values` */
@@ -121,6 +127,9 @@ export interface DropTargetAssetType extends Asset<'drop-target'> {
 export interface TransformedDropTargetAssetType extends DropTargetAssetType {
   /** Context relative to the parent's position */
   context?: DropTargetAssetType['context'];
+
+  /** Unique identifier to reference the asset within the drop target */
+  assetSymbol?: symbol;
 
   /** Set the value of this slot to the replacement value */
   placeAsset: (

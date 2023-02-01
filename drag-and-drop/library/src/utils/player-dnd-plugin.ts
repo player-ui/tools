@@ -6,6 +6,7 @@ import type {
   ViewController,
   Player,
 } from '@player-ui/react';
+import { DropTargetAssetType, getAssetSymbol } from '../types';
 import type {
   ExtensionProviderAssetIdentifier,
   TransformedDropTargetAssetType,
@@ -79,16 +80,19 @@ export class PlayerDndPlugin implements ReactPlayerPlugin {
         });
       });
       vc.transformRegistry.set(match, {
-        resolve: (asset: Asset) => {
+        resolve: (asset: DropTargetAssetType) => {
           return {
             ...asset,
+            assetSymbol: asset.value?.asset
+              ? getAssetSymbol(asset.value.asset)
+              : undefined,
             // Send back up to the runtime-state handler to compute the new view
             placeAsset: (
               identifier: ExtensionProviderAssetIdentifier,
               action: 'replace' | 'append' | 'prepend' = 'replace'
             ) => {
               console.log(`Placing asset at: ${asset.id}`);
-              const targetSymbol = assetIDToSymbolMap.get(asset.id) as symbol;
+              const targetSymbol = getAssetSymbol(asset);
               this.options.state
                 .placeAsset(
                   targetSymbol,
@@ -96,7 +100,8 @@ export class PlayerDndPlugin implements ReactPlayerPlugin {
                     identifier,
                     type: this.options.getXLRTypeForAsset(identifier),
                   },
-                  action
+                  action,
+                  asset.context?.mockTarget && asset.value?.asset ? getAssetSymbol(asset.value?.asset) : undefined
                 )
                 .then(() => this.refresh(player));
             },

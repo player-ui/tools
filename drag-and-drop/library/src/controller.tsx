@@ -34,7 +34,7 @@ export interface DragAndDropControllerOptions {
    * Function that will be called when multiple assets are dropped onto the same target and a collection needs to be created
    */
   resolveCollectionConversion: (
-    assets: Array<PlacedAsset>,
+    assets: Array<AssetWrapper>,
     XLRSDK: XLRService
   ) => {
     /** The generated collection asset with the provided `assets` array as children */
@@ -77,7 +77,7 @@ export class DragAndDropController {
 
     this.runtimeState = new RuntimeFlowState({
       resolveRequiredProperties: options.resolveRequiredProperties,
-      resolveCollectionConversion: (assets: Array<PlacedAsset>) => {
+      resolveCollectionConversion: (assets: Array<AssetWrapper>) => {
         return options.resolveCollectionConversion(
           assets,
           this.PlayerXLRService

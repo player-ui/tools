@@ -27,7 +27,7 @@ export interface RuntimeFlowStateOptions {
   /**
    * Function that will be called when multiple assets are dropped onto the same target and a collection needs to be created
    */
-  resolveCollectionConversion: (assets: Array<PlacedAsset>) => {
+  resolveCollectionConversion: (assets: Array<AssetWrapper>) => {
     /** The generated collection asset with the provided `assets` array as children */
     asset: Asset;
     /** The corresponding type for the generated collection asset */
@@ -80,7 +80,7 @@ export class RuntimeFlowState {
     type: ObjectType
   ) => Promise<Asset>;
 
-  private resolveCollectionConversion: (assets: Array<PlacedAsset>) => {
+  private resolveCollectionConversion: (assets: Array<AssetWrapper>) => {
     /** The generated collection asset with the provided `assets` array as children */
     asset: Asset;
     /** The corresponding type for the generated collection asset */
@@ -100,28 +100,65 @@ export class RuntimeFlowState {
     };
   }
 
-  updateAsset(id: symbol, newAsset: Asset) {
-    let placedAsset = this.realAssetMappings.get(id);
-    if (!placedAsset) {
-      throw new Error(
-        `Cannot set asset value for unknown id: ${id.toString()}`
-      );
+  private computeViewForDropTarget(
+    asset: DropTargetAssetType
+  ): DropTargetAssetType['value'] | undefined {
+    if (!asset.values || asset.values.length === 0) {
+      return undefined;
     }
 
-    if (!placedAsset.asset) {
-      throw new Error(
-        `Cannot update an asset that doesn't have any properties`
-      );
+    if (asset.values.length === 1) {
+      return asset.values[0];
     }
 
-    placedAsset = {
-      ...placedAsset,
-      asset: {
-        ...placedAsset.asset,
-        ...newAsset,
+    const realDropTargetSymbol = getAssetSymbol(asset);
+    const assetsWithPlaceholders = asset.values.reduce<AssetWrapper[]>(
+      (coll, placedAsset, index) => {
+        const prefixAsset = makeDropTarget(
+          `${asset.id}-${index * 2 - 1}`,
+          asset.context
+            ? {
+                ...asset.context,
+                arrayElement: true,
+              }
+            : undefined
+        );
+
+        if (index > 0) {
+          this.dropTargetAssets.set(getAssetSymbol(prefixAsset), prefixAsset);
+        }
+
+        const mockDropTarget = makeDropTarget(
+          `${asset.id}-${index * 2}`,
+          asset.context
+            ? {
+                ...asset.context,
+                arrayElement: true,
+                mockTarget: true,
+              }
+            : undefined
+        );
+
+        mockDropTarget[UUIDSymbol] = realDropTargetSymbol;
+
+        mockDropTarget.value =  {
+          ...placedAsset,
+          asset: {
+            ...placedAsset.asset,
+            id: `${asset.id}-${index * 2}`,
+          },
+        };
+
+        return [
+          ...coll,
+          ...(index > 0 ? [{ asset: prefixAsset }] : []),
+          {asset: mockDropTarget },
+        ];
       },
-    };
-    this.realAssetMappings.set(id, placedAsset);
+      []
+    );
+
+    return this.resolveCollectionConversion(assetsWithPlaceholders as any);
   }
 
   private async createNewAsset(
@@ -168,7 +205,7 @@ export class RuntimeFlowState {
             pluginName: 'drag-and-drop-placeholder',
             name: typeProp,
           },
-          propertyIndex: isArray ? 0 : undefined,
+          arrayElement: isArray,
         };
         const id = isArray ? `${idPrefix}-${key}-0` : `${idPrefix}-${key}`;
         const assetSlot = makeDropTarget(id, context);
@@ -193,9 +230,59 @@ export class RuntimeFlowState {
     return asset;
   }
 
+  updateAsset(assetSymbol: symbol, newAsset: Asset) {
+    let placedAsset = this.realAssetMappings.get(assetSymbol);
+    if (!placedAsset) {
+      throw new Error(
+        `Cannot set asset value for unknown id: ${assetSymbol.toString()}`
+      );
+    }
+
+    if (!placedAsset.asset) {
+      throw new Error(
+        `Cannot update an asset that doesn't have any properties`
+      );
+    }
+
+    placedAsset = {
+      ...placedAsset,
+      asset: {
+        ...placedAsset.asset,
+        ...newAsset,
+      },
+    };
+    this.realAssetMappings.set(assetSymbol, placedAsset);
+
+    const containingDropTargetSymbol = this.assetsToTargets.get(assetSymbol);
+    if (!containingDropTargetSymbol){
+      throw new Error('Cant get parent drop target symbol');
+    }
+
+    const containingDropTarget = this.dropTargetAssets.get(
+      containingDropTargetSymbol
+    );
+
+    if (!containingDropTarget){
+      throw new Error('Cant get parent drop target');
+    } 
+
+    const updateIndex = containingDropTarget.values?.findIndex((value) => {
+      return getAssetSymbol(value.asset) === assetSymbol;
+    })
+
+    if (updateIndex === undefined || !containingDropTarget.values){
+      throw new Error('Cant find index to update in drop target')
+    };
+    
+    containingDropTarget.values[updateIndex] = placedAsset;
+
+    containingDropTarget.value = this.computeViewForDropTarget(containingDropTarget)
+  }
+
   async placeAsset(
     /** The symbol for the drop target to place the asset in */
-    id: symbol,
+    dropTargetSymbol: symbol,
+    /** XLR Info about the asset being placed */
     replacement: {
       /** The identifier for where the populated asset is from */
       identifier: ExtensionProviderAssetIdentifier;
@@ -203,20 +290,22 @@ export class RuntimeFlowState {
       /** The current descriptor for the value stored at this asset */
       type: ObjectType;
     },
-    action: 'replace' | 'append' | 'prepend'
+    action: 'replace' | 'append' | 'prepend',
+    /** The symbol for the asset to replace if the new asset is being dropped into a generated collection*/
+    assetSymbol?: symbol
   ): Promise<void> {
-    const asset = this.dropTargetAssets.get(id);
-    if (!asset) {
+    const containingDropTarget = this.dropTargetAssets.get(dropTargetSymbol);
+    if (!containingDropTarget) {
       throw new Error(
-        `Cannot set asset value for unknown drop target: ${id.toString()}`
+        `Cannot set asset value for unknown drop target: ${dropTargetSymbol.toString()}`
       );
     }
 
-    if (!isDropTargetAsset(asset)) {
+    if (!isDropTargetAsset(containingDropTarget)) {
       throw new Error(`Cannot drop asset onto non drop target asset`);
     }
 
-    const newAsset = await this.createNewAsset(asset.id, replacement.type);
+    const newAsset = await this.createNewAsset(containingDropTarget.id, replacement.type);
 
     const newWrappedAsset = {
       asset: newAsset,
@@ -226,69 +315,39 @@ export class RuntimeFlowState {
     this.realAssetMappings.set(getAssetSymbol(newAsset), newWrappedAsset);
 
     if (action === 'replace') {
-      asset.values = [newWrappedAsset];
+      if(assetSymbol){
+        const updateIndex = containingDropTarget.values?.findIndex((value) => {
+          return getAssetSymbol(value.asset) === assetSymbol;
+        })
+    
+        if (updateIndex === undefined || !containingDropTarget.values){
+          throw new Error('Cant find index to update in drop target')
+        };
+        
+        containingDropTarget.values[updateIndex] = newWrappedAsset;
+      } else {
+        containingDropTarget.values = [newWrappedAsset];
+      }
     } else if (action === 'append') {
-      asset.values = [...(asset.values ?? []), newWrappedAsset];
+      containingDropTarget.values = [...(containingDropTarget.values ?? []), newWrappedAsset];
     } else if (action === 'prepend') {
-      asset.values = [newWrappedAsset, ...(asset.values ?? [])];
+      containingDropTarget.values = [newWrappedAsset, ...(containingDropTarget.values ?? [])];
     }
 
-    asset.value = undefined;
-
-    // Resolve Collections
-    if (asset.values?.length === 1) {
-      asset.value = asset.values[0];
-    } else if (asset.values !== undefined && asset.values.length > 1) {
-      const assetsWithPlaceholders = asset.values.reduce<any[]>(
-        (coll, placedAsset, index) => {
-          const prefixAsset = makeDropTarget(
-            `${asset.id}-${index * 2 - 1}`,
-            asset.context
-              ? {
-                  ...asset.context,
-                  propertyIndex: index * 2 - 1,
-                }
-              : undefined
-          );
-
-          if (index > 0) {
-            this.dropTargetAssets.set(getAssetSymbol(prefixAsset), prefixAsset);
-          }
-
-          const updatedPlacedAsset = {
-            ...placedAsset,
-            asset: {
-              ...placedAsset.asset,
-              id: `${asset.id}-${index * 2}`,
-            },
-          };
-
-          return [
-            ...coll,
-            ...(index > 0 ? [{ asset: prefixAsset }] : []),
-            updatedPlacedAsset,
-          ];
-        },
-        []
-      );
-
-      asset.value = await this.resolveCollectionConversion(
-        assetsWithPlaceholders as any
-      );
-    }
+    containingDropTarget.value = this.computeViewForDropTarget(containingDropTarget);
 
     const newAssetSymbol = getAssetSymbol(newAsset);
-    this.assetsToTargets.set(newAssetSymbol, id);
+    this.assetsToTargets.set(newAssetSymbol, dropTargetSymbol);
 
     // Resolve Arrays in parent
     if (
-      asset.context?.propertyIndex !== undefined &&
-      asset.context.propertyName
+      containingDropTarget.context?.arrayElement &&
+      containingDropTarget.context.propertyName
     ) {
-      const containingAssetSymbol = this.targetsToAssets.get(id);
+      const containingAssetSymbol = this.targetsToAssets.get(dropTargetSymbol);
       if (!containingAssetSymbol) {
         throw new Error(
-          `Error: can't get parent asset mapping of drop target ${id.toString()}`
+          `Error: can't get parent asset mapping of drop target ${dropTargetSymbol.toString()}`
         );
       }
 
@@ -301,10 +360,10 @@ export class RuntimeFlowState {
       }
 
       const arrayProperty = containingAsset.asset[
-        asset.context.propertyName
+        containingDropTarget.context.propertyName
       ] as Array<AssetWrapper<DropTargetAssetType>>;
       const asdf = arrayProperty.find((element) => {
-        return getAssetSymbol(element.asset) === id;
+        return getAssetSymbol(element.asset) === dropTargetSymbol;
       });
 
       if (!asdf) {
@@ -315,9 +374,8 @@ export class RuntimeFlowState {
       // Check if drop targets around placed asset need to be updated
       const leftNeighbor = arrayProperty[insertionIndex - 1];
       if (!leftNeighbor || leftNeighbor.asset.values?.length !== 0) {
-        const newLeftAsset = makeDropTarget(`${asset.id}-left`, {
-          ...asset.context,
-          propertyIndex: insertionIndex,
+        const newLeftAsset = makeDropTarget(`${containingDropTarget.id}-left`, {
+          ...containingDropTarget.context
         });
         this.dropTargetAssets.set(getAssetSymbol(newLeftAsset), newLeftAsset);
         this.targetsToAssets.set(
@@ -326,19 +384,17 @@ export class RuntimeFlowState {
         );
         arrayProperty.splice(insertionIndex, 0, {
           asset: {
-            ...newLeftAsset,
+            ...newLeftAsset
           },
         });
-        asset.context.propertyIndex = insertionIndex + 1;
       }
 
-      arrayProperty[insertionIndex + 1] = { asset };
+      arrayProperty[insertionIndex + 1] = { asset: containingDropTarget };
 
       const rightNeighbor = arrayProperty[insertionIndex + 2];
       if (!rightNeighbor || rightNeighbor.asset.values?.length !== 0) {
-        const newRightAsset = makeDropTarget(`${asset.id}-right`, {
-          ...asset.context,
-          propertyIndex: insertionIndex + 2,
+        const newRightAsset = makeDropTarget(`${containingDropTarget.id}-right`, {
+          ...containingDropTarget.context
         });
         this.dropTargetAssets.set(getAssetSymbol(newRightAsset), newRightAsset);
         this.targetsToAssets.set(
@@ -351,42 +407,42 @@ export class RuntimeFlowState {
           },
         });
       }
-
     }
   }
 
-  getAsset(id: symbol): {
+  getAsset(assetSymbol: symbol): {
     /** The Asset that correlates to the given ID */
     asset: Asset;
     /** The underlying XLR type for the Asset */
     type: ObjectType;
   } {
-    const placedAsset = this.realAssetMappings.get(id);
+    const placedAsset = this.realAssetMappings.get(assetSymbol);
     if (!placedAsset) {
       throw new Error(
-        `Cannot get asset value for unknown id: ${id.toString()}`
+        `Cannot get asset value for unknown id: ${assetSymbol.toString()}`
       );
     }
 
     return { ...placedAsset };
   }
 
-  clearAsset(id: symbol) {
-    const parentDropTargetSymbol = this.assetsToTargets.get(id);
+  clearAsset(assetSymbol: symbol) {
+    const parentDropTargetSymbol = this.assetsToTargets.get(assetSymbol);
     if (!parentDropTargetSymbol) {
-      throw new Error(`Cannot find parent drop target ${id.toString()}`);
+      throw new Error(`Cannot find parent drop target ${assetSymbol.toString()}`);
     }
 
     const parentDropTarget = this.dropTargetAssets.get(parentDropTargetSymbol);
     if (!parentDropTarget) {
-      throw new Error(`Cannot get parent drop target ${id.toString()}`);
+      throw new Error(`Cannot get parent drop target ${assetSymbol.toString()}`);
     }
 
     parentDropTarget.values = parentDropTarget.values?.filter(
-      (pa) => getAssetSymbol(pa.asset) === id
+      (pa) => getAssetSymbol(pa.asset) !== assetSymbol
     );
 
-    this.realAssetMappings.delete(id);
+    this.realAssetMappings.delete(assetSymbol);
+    parentDropTarget.value = this.computeViewForDropTarget(parentDropTarget);
   }
 
   get view(): View {

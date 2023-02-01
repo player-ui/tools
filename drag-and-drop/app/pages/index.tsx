@@ -36,7 +36,6 @@ import type {
   ExtensionProviderAssetIdentifier,
   TransformedDropTargetAssetType,
 } from '@player-tools/dnd-lib';
-import { getAssetSymbol } from '@player-tools/dnd-lib';
 import { ReactAsset } from '@player-ui/react';
 import type { Asset } from '@player-ui/types';
 import {
@@ -46,8 +45,10 @@ import {
 } from '@player-tools/dnd-lib';
 import { ReferenceAssetsPlugin } from '@player-ui/reference-assets-plugin-react';
 import type { NamedType, ObjectType, TSManifest } from '@player-tools/xlr';
-import pluginManifest from '@player-tools/static-xlrs/static_xlrs/plugin/xlr/manifest';
-import typesManifest from '@player-tools/static-xlrs/static_xlrs/core/xlr/manifest';
+// eslint-disable-next-line import/extensions, import/no-unresolved
+import pluginManifest from '@player-ui/reference-assets-plugin-react/dist/xlr/manifest';
+// eslint-disable-next-line import/extensions, import/no-unresolved
+import typesManifest from '@player-ui/types/dist/xlr/manifest';
 import { AssetEditorPanel } from '../components/AssetEditorPanel';
 import { covertXLRtoAssetDoc } from '../utils/converters';
 
@@ -124,7 +125,7 @@ const AssetSlotExtension = (
   return (
     <div ref={drop} style={{ border: isOver ? '1px solid red' : undefined }}>
       <span>
-        {action} - {props.context?.parent.name} - {props.context?.propertyName}
+        {action} to {props.context?.propertyName ?? 'root'}
       </span>
     </div>
   );
@@ -151,7 +152,7 @@ const AssetDropTarget = (props: TransformedDropTargetAssetType) => {
     );
   }
 
-  const isArrayInsertion = props.context?.propertyIndex !== undefined;
+  const isArrayInsertion = props.context?.arrayElement ?? false;
 
   return (
     <Box
@@ -165,7 +166,7 @@ const AssetDropTarget = (props: TransformedDropTargetAssetType) => {
       onClick={(e) => {
         if (props.value) {
           console.log(props);
-          propContext.setDisplayedAssetID(getAssetSymbol(props));
+          propContext.setDisplayedAssetID(props.assetSymbol);
           propContext.setRightPanelState('edit');
           e.stopPropagation();
         }
@@ -187,8 +188,7 @@ const AssetDropTarget = (props: TransformedDropTargetAssetType) => {
 
       {!props.value && isArrayInsertion && (
         <span>
-          Insert into {props.context?.parent.name} -
-          {props.context?.propertyName}
+          Insert into {props.context?.parent.name} - {props.context?.propertyName} List
         </span>
       )}
     </Box>

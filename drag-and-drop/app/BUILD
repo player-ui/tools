@@ -19,9 +19,9 @@ srcs = glob([
 
 data = [
   "//drag-and-drop/library:@player-tools/dnd-lib",
-  "//common:@player-tools/static-xlrs",
   "@npm//typescript",
   "@npm//@chakra-ui/react",
+  "@npm//@player-ui/types",
   "@npm//@player-ui/reference-assets-plugin-react",
   "@npm//@types/react",
   "@npm//@types/node",
