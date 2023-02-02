@@ -3,7 +3,7 @@ import type ts from 'typescript';
 
 export interface VisitorProps {
   /** The source file to process */
-  sourceFile: ts.SourceFile;
+  sourceFiles: Array<ts.SourceFile>;
 
   /** An instance of a typescript type checker */
   checker: ts.TypeChecker;

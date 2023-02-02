@@ -4,10 +4,10 @@ import fs from 'fs';
 import type { VisitorProps } from './types';
 
 /** export all exported types in the file */
-export function fileVisitor(args: VisitorProps): Manifest | undefined {
+export function tagVisitor(args: VisitorProps): Manifest | undefined {
   const { sourceFiles, converter, outputDirectory } = args;
 
-  const types = new Array<string>();
+  const capabilities = new Map<string, Array<string>>();
 
   sourceFiles.forEach((sourceFile) => {
     const convertedTypes = converter.convertSourceFile(sourceFile);
@@ -17,19 +17,24 @@ export function fileVisitor(args: VisitorProps): Manifest | undefined {
           path.join(outputDirectory, `${type.name}.json`),
           JSON.stringify(type, undefined, 4)
         );
-      });
 
-      types.push(...convertedTypes.convertedTypes);
+        const capability = type?.metadata?.capability ?? 'unknown';
+        if (!capabilities.has(capability)) {
+          capabilities.set(capability, []);
+        }
+
+        capabilities.get(capability)?.push(type.name);
+      });
     }
   });
 
-  if (types.length === 0) {
+  if (capabilities.size === 0) {
     return undefined;
   }
 
   const manifest: Manifest = {
     pluginName: 'Types',
-    capabilities: new Map([['Types', types]]),
+    capabilities,
   };
 
   return manifest;

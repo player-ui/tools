@@ -11,4 +11,5 @@ export const customPrimitives = [
 export enum Mode {
   PLUGIN = 'plugin',
   TYPES = 'types',
+  TAG = 'tag',
 }

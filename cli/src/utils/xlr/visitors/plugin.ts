@@ -141,85 +141,91 @@ function generateXLR(
 
 /** visit nodes finding exported classes */
 export function pluginVisitor(args: VisitorProps): Manifest | undefined {
-  const { sourceFile, checker, converter, outputDirectory } = args;
+  const { sourceFiles, checker, converter, outputDirectory } = args;
 
   let capabilities: Manifest | undefined;
-
-  ts.forEachChild(sourceFile, (node) => {
-    // Only consider exported nodes
-    if (!isNodeExported(node)) {
-      return;
-    }
-
-    // Plugins are classes so filter those
-    if (ts.isClassDeclaration(node) && node.name) {
-      const symbol = checker.getSymbolAtLocation(node.name);
-      if (symbol) {
-        // look at what they implement
-        node.heritageClauses?.forEach((heritage) => {
-          heritage.types.forEach((hInterface) => {
-            // check if heritage is right one
-            if (
-              hInterface.expression.getText() !== PLAYER_PLUGIN_INTERFACE_NAME
-            ) {
-              return;
-            }
-
-            capabilities = {
-              pluginName: 'Unknown Plugin',
-            };
-
-            // Get registration name of plugin
-            const nameProperty = node.members.find(
-              (member) =>
-                ts.isPropertyDeclaration(member) &&
-                member.name?.getText() === 'name'
-            ) as ts.PropertyDeclaration | undefined;
-            if (nameProperty && nameProperty.initializer) {
-              capabilities.pluginName = nameProperty.initializer
-                ?.getText()
-                .replace(/['"]+/g, '');
-            }
-
-            const provides: Map<string, Array<string>> = new Map();
-            const typeArgs = hInterface.typeArguments;
-
-            const pluginDec = checker.getTypeAtLocation(hInterface).symbol
-              ?.declarations?.[0] as ts.InterfaceDeclaration | undefined;
-            // process type parameters to figure out what capabilities are provided
-            pluginDec?.typeParameters?.forEach((param, index) => {
-              const capabilityType = param.name.getText();
-              if (index < (typeArgs?.length ?? 0)) {
-                const exportedCapabilities = typeArgs?.[index] as ts.TypeNode;
-                // if its an array process each type
-                if (ts.isTupleTypeNode(exportedCapabilities)) {
-                  const capabilityNames = exportedCapabilities.elements.map(
-                    (element) =>
-                      generateXLR(element, checker, converter, outputDirectory)
-                  );
-
-                  provides.set(capabilityType, capabilityNames);
-                } else if (
-                  ts.isTypeReferenceNode(exportedCapabilities) ||
-                  ts.isTypeQueryNode(exportedCapabilities)
-                ) {
-                  const capabilityName = generateXLR(
-                    exportedCapabilities,
-                    checker,
-                    converter,
-                    outputDirectory
-                  );
-                  provides.set(capabilityType, [capabilityName]);
-                } else {
-                  throw new Error(`Can't figure out type ${capabilityType}`);
-                }
-              }
-            });
-            capabilities.capabilities = provides;
-          });
-        });
+  sourceFiles.forEach((sourceFile) => {
+    ts.forEachChild(sourceFile, (node) => {
+      // Only consider exported nodes
+      if (!isNodeExported(node)) {
+        return;
       }
-    }
+
+      // Plugins are classes so filter those
+      if (ts.isClassDeclaration(node) && node.name) {
+        const symbol = checker.getSymbolAtLocation(node.name);
+        if (symbol) {
+          // look at what they implement
+          node.heritageClauses?.forEach((heritage) => {
+            heritage.types.forEach((hInterface) => {
+              // check if heritage is right one
+              if (
+                hInterface.expression.getText() !== PLAYER_PLUGIN_INTERFACE_NAME
+              ) {
+                return;
+              }
+
+              capabilities = {
+                pluginName: 'Unknown Plugin',
+              };
+
+              // Get registration name of plugin
+              const nameProperty = node.members.find(
+                (member) =>
+                  ts.isPropertyDeclaration(member) &&
+                  member.name?.getText() === 'name'
+              ) as ts.PropertyDeclaration | undefined;
+              if (nameProperty && nameProperty.initializer) {
+                capabilities.pluginName = nameProperty.initializer
+                  ?.getText()
+                  .replace(/['"]+/g, '');
+              }
+
+              const provides: Map<string, Array<string>> = new Map();
+              const typeArgs = hInterface.typeArguments;
+
+              const pluginDec = checker.getTypeAtLocation(hInterface).symbol
+                ?.declarations?.[0] as ts.InterfaceDeclaration | undefined;
+              // process type parameters to figure out what capabilities are provided
+              pluginDec?.typeParameters?.forEach((param, index) => {
+                const capabilityType = param.name.getText();
+                if (index < (typeArgs?.length ?? 0)) {
+                  const exportedCapabilities = typeArgs?.[index] as ts.TypeNode;
+                  // if its an array process each type
+                  if (ts.isTupleTypeNode(exportedCapabilities)) {
+                    const capabilityNames = exportedCapabilities.elements.map(
+                      (element) =>
+                        generateXLR(
+                          element,
+                          checker,
+                          converter,
+                          outputDirectory
+                        )
+                    );
+
+                    provides.set(capabilityType, capabilityNames);
+                  } else if (
+                    ts.isTypeReferenceNode(exportedCapabilities) ||
+                    ts.isTypeQueryNode(exportedCapabilities)
+                  ) {
+                    const capabilityName = generateXLR(
+                      exportedCapabilities,
+                      checker,
+                      converter,
+                      outputDirectory
+                    );
+                    provides.set(capabilityType, [capabilityName]);
+                  } else {
+                    throw new Error(`Can't figure out type ${capabilityType}`);
+                  }
+                }
+              });
+              capabilities.capabilities = provides;
+            });
+          });
+        }
+      }
+    });
   });
 
   return capabilities;

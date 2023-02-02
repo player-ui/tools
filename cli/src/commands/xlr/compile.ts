@@ -5,10 +5,13 @@ import path from 'path';
 import globby from 'globby';
 import logSymbols from 'log-symbols';
 import { TsConverter } from '@player-tools/xlr-converters';
-import type { Manifest } from '@player-tools/xlr';
 import chalk from 'chalk';
 import { BaseCommand } from '../../utils/base-command';
-import { pluginVisitor, fileVisitor } from '../../utils/xlr/visitors';
+import {
+  pluginVisitor,
+  fileVisitor,
+  tagVisitor,
+} from '../../utils/xlr/visitors';
 import { Mode, customPrimitives } from '../../utils/xlr/consts';
 
 /**
@@ -32,8 +35,8 @@ export default class XLRCompile extends BaseCommand {
     mode: Flags.enum({
       char: 'm',
       description:
-        'Search strategy for types to export: plugin (default, looks for exported EnchancedPlayerPlugin classes) or type (all exported types)',
-      options: ['plugin', 'types'],
+        'Search strategy for types to export: plugin (default, looks for exported EnchancedPlayerPlugin classes), type (all exported types) or by tag (@metadata "capability" JSDOC tag)',
+      options: [Mode.PLUGIN, Mode.TYPES, Mode.TAG],
       default: 'plugin',
     }),
   };
@@ -45,10 +48,11 @@ export default class XLRCompile extends BaseCommand {
     const input = config.xlr?.input ?? flags.input;
     const output = config.xlr?.output ?? flags.output;
     const modeValue = config.xlr?.mode ?? flags.mode;
+
     return {
       inputPath: input,
       outputDir: path.join(output, 'xlr'),
-      mode: modeValue === 'plugin' ? Mode.PLUGIN : Mode.TYPES,
+      mode: modeValue,
     };
   }
 
@@ -91,7 +95,7 @@ export default class XLRCompile extends BaseCommand {
     fileNames: string[],
     outputDirectory: string,
     options: ts.CompilerOptions,
-    mode: Mode = Mode.PLUGIN
+    mode: string
   ): void {
     // Build a program using the set of root file names in fileNames
     const program = ts.createProgram(fileNames, options);
@@ -102,42 +106,39 @@ export default class XLRCompile extends BaseCommand {
 
     const converter = new TsConverter(checker, customPrimitives);
 
-    let capabilities: Manifest | undefined;
+    const sourceFiles = program
+      .getSourceFiles()
+      .filter((sf) => !sf.isDeclarationFile);
 
-    // Visit every sourceFile in the program
-    program.getSourceFiles().forEach((sourceFile) => {
-      if (!sourceFile.isDeclarationFile) {
-        // Walk the tree to search for classes
-        let generatedCapabilites;
+    let visitor;
 
-        if (mode === Mode.PLUGIN) {
-          generatedCapabilites = pluginVisitor({
-            sourceFile,
-            converter,
-            checker,
-            outputDirectory,
-          });
-        } else if (mode === Mode.TYPES) {
-          generatedCapabilites = fileVisitor({
-            sourceFile,
-            converter,
-            checker,
-            outputDirectory,
-          });
-        } else {
-          throw new Error(
-            `Error: Option ${mode} not recognized. Valid options are: plugin or type`
-          );
-        }
+    switch (mode) {
+      case Mode.PLUGIN:
+        visitor = pluginVisitor;
+        break;
+      case Mode.TYPES:
+        visitor = fileVisitor;
+        break;
+      case Mode.TAG:
+        visitor = tagVisitor;
+        break;
+      default:
+        throw new Error(
+          chalk.red(
+            `Error: Option ${mode} not recognized. Valid options are: plugin, type, tag`
+          )
+        );
+    }
 
-        if (generatedCapabilites) {
-          capabilities = generatedCapabilites;
-        }
-      }
+    const capabilities = visitor({
+      sourceFiles,
+      converter,
+      checker,
+      outputDirectory,
     });
 
     if (!capabilities) {
-      throw new Error('Error: Unable to parse any XLRs in package');
+      throw new Error(chalk.red('Error: Unable to parse any XLRs in package'));
     }
 
     // print out the manifest files
