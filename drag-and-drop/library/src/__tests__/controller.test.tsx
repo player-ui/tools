@@ -16,7 +16,7 @@ const referenceAssetExtension: ExtensionProvider = {
 describe('drag-and-drop', () => {
   it('Fills in placeholder assets when dropped', async () => {
     const dndController = new DragAndDropController({
-      types: typesManifest,
+      playerTypes: typesManifest,
       extensions: [referenceAssetExtension],
       resolveRequiredProperties: async (
         asset: Asset<string>,
@@ -24,7 +24,7 @@ describe('drag-and-drop', () => {
       ) => {
         return asset;
       },
-      resolveCollectionConversion: async (assets, XLRSDK) => {
+      resolveCollectionConversion: (assets, XLRSDK) => {
         return {
           asset: {
             id: 'generated-collection',
@@ -87,7 +87,7 @@ describe('drag-and-drop', () => {
 
     getView()?.placeAsset({
       pluginName: 'BaseAssetsPlugin',
-      name: 'InfoAsset',
+      assetName: 'InfoAsset',
     });
 
     await waitFor(() => {
@@ -96,7 +96,7 @@ describe('drag-and-drop', () => {
 
     getView()?.value.asset.title.asset.placeAsset({
       pluginName: 'BaseAssetsPlugin',
-      name: 'TextAsset',
+      assetName: 'TextAsset',
     });
 
     await waitFor(() => {

@@ -152,8 +152,6 @@ const AssetDropTarget = (props: TransformedDropTargetAssetType) => {
     );
   }
 
-  const isArrayInsertion = props.context?.arrayElement ?? false;
-
   return (
     <Box
       ref={drop}
@@ -165,7 +163,6 @@ const AssetDropTarget = (props: TransformedDropTargetAssetType) => {
       }}
       onClick={(e) => {
         if (props.value) {
-          console.log(props);
           propContext.setDisplayedAssetID(props.assetSymbol);
           propContext.setRightPanelState('edit');
           e.stopPropagation();
@@ -180,15 +177,16 @@ const AssetDropTarget = (props: TransformedDropTargetAssetType) => {
         </>
       )}
 
-      {!props.value && !isArrayInsertion && (
+      {!props.value && !props.context?.isArrayElement && (
         <span>
-          {props.context?.parent.name} - {props.context?.propertyName}
+          {props.context?.parent.assetName} - {props.context?.propertyName}
         </span>
       )}
 
-      {!props.value && isArrayInsertion && (
+      {!props.value && props.context?.isArrayElement && (
         <span>
-          Insert into {props.context?.parent.name} - {props.context?.propertyName} List
+          Insert into {props.context?.parent.assetName} -{' '}
+          {props.context?.propertyName} List
         </span>
       )}
     </Box>
@@ -208,10 +206,10 @@ const DroppableAsset = (props: ExtensionProviderAssetIdentifier) => {
         colorScheme="blue"
         onClick={(event) => {
           setRightPanelState('docs');
-          setDisplayedXLRDocType(props.name);
+          setDisplayedXLRDocType(props.assetName);
         }}
       >
-        {props.name}
+        {props.assetName}
       </Button>
     </Box>
   );
@@ -242,7 +240,7 @@ export const CapabilityPanel = (props: CapabilityPanelProps) => {
           {props.capabilities.length > 0 ? (
             props.capabilities.map((asset) => {
               return (
-                <Box key={`${asset.pluginName} - ${asset.name}`}>
+                <Box key={`${asset.pluginName} - ${asset.assetName}`}>
                   <DroppableAsset {...asset} />
                 </Box>
               );
@@ -553,7 +551,7 @@ const App = () => {
   const controllerState = React.useMemo(() => {
     const config: DragAndDropControllerOptions = {
       Component: AssetDropTarget,
-      types: typesManifest as TSManifest,
+      playerTypes: typesManifest as TSManifest,
       extensions: [
         {
           plugin: ReferenceAssetsPlugin,

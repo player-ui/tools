@@ -6,7 +6,8 @@ import type {
   ViewController,
   Player,
 } from '@player-ui/react';
-import { DropTargetAssetType, getAssetSymbol } from '../types';
+import type { DropTargetAsset } from '../types';
+import { getAssetSymbol } from './helpers';
 import type {
   ExtensionProviderAssetIdentifier,
   TransformedDropTargetAssetType,
@@ -80,7 +81,7 @@ export class PlayerDndPlugin implements ReactPlayerPlugin {
         });
       });
       vc.transformRegistry.set(match, {
-        resolve: (asset: DropTargetAssetType) => {
+        resolve: (asset: DropTargetAsset) => {
           return {
             ...asset,
             assetSymbol: asset.value?.asset
@@ -101,7 +102,9 @@ export class PlayerDndPlugin implements ReactPlayerPlugin {
                     type: this.options.getXLRTypeForAsset(identifier),
                   },
                   action,
-                  asset.context?.mockTarget && asset.value?.asset ? getAssetSymbol(asset.value?.asset) : undefined
+                  asset.context?.isMockTarget && asset.value?.asset
+                    ? getAssetSymbol(asset.value?.asset)
+                    : undefined
                 )
                 .then(() => this.refresh(player));
             },

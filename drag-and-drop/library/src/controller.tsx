@@ -8,10 +8,9 @@ import { XLRService } from '@player-tools/language-service';
 import type { TypeMetadata } from '@player-tools/xlr-sdk';
 import { PlayerDndPlugin } from './utils';
 import type {
-  DropTargetAssetType,
+  DropTargetAsset,
   ExtensionProvider,
   ExtensionProviderAssetIdentifier,
-  PlacedAsset,
   TransformedDropTargetAssetType,
 } from './types';
 import { isDropTargetAsset } from './types';
@@ -23,24 +22,31 @@ export interface DragAndDropControllerOptions {
   extensions?: Array<ExtensionProvider>;
 
   /** Manifest for the base Player types package  to use */
-  types: TSManifest;
+  playerTypes: TSManifest;
 
   /**
    * Function to call when a placed asset has required properties that need to be resolved before actually placing it.
    */
-  resolveRequiredProperties: (asset: Asset, type: ObjectType) => Promise<Asset>;
+  resolveRequiredProperties: (
+    /** The basic Asset that could be generated */
+    asset: Asset,
+    /** The XLR Type for the Asset being generated */
+    type: NamedType<ObjectType>
+  ) => Promise<Asset>;
 
   /**
    * Function that will be called when multiple assets are dropped onto the same target and a collection needs to be created
    */
   resolveCollectionConversion: (
+    /** The Assets to include in the collection */
     assets: Array<AssetWrapper>,
+    /** An instance of the XLRSDK to perform any required type lookups */
     XLRSDK: XLRService
   ) => {
     /** The generated collection asset with the provided `assets` array as children */
     asset: Asset;
     /** The corresponding type for the generated collection asset */
-    type: ObjectType;
+    type: NamedType<ObjectType>;
   };
 
   /** A custom component to use for rendering droppable Assets */
@@ -68,7 +74,7 @@ export class DragAndDropController {
     this.options = options ?? {};
 
     this.PlayerXLRService = new XLRService();
-    this.PlayerXLRService.XLRSDK.loadDefinitionsFromModule(options.types);
+    this.PlayerXLRService.XLRSDK.loadDefinitionsFromModule(options.playerTypes);
     options?.extensions?.forEach((extension) => {
       this.PlayerXLRService.XLRSDK.loadDefinitionsFromModule(
         extension.manifest
@@ -91,9 +97,22 @@ export class DragAndDropController {
         Component: this.options.Component ?? DropComponent,
       },
       getXLRTypeForAsset: (identifier) => {
-        return this.PlayerXLRService.XLRSDK.getType(
-          identifier.name
-        ) as NamedType<ObjectType>;
+        const asset = this.PlayerXLRService.XLRSDK.getType(
+          identifier.assetName
+        );
+        if (!asset) {
+          throw new Error(
+            `SDK Error: Unable to get asset ${identifier.assetName}`
+          );
+        }
+
+        if (asset.type !== 'object') {
+          throw new Error(
+            `SDK Error: Type ${identifier.assetName} doesn't appear to be an Asset`
+          );
+        }
+
+        return asset;
       },
     });
 
@@ -114,6 +133,10 @@ export class DragAndDropController {
     this.webPlayer.start(this.runtimeState.flow);
   }
 
+  /**
+   * Gets info on all XLRs that have been registered to the SDK
+   * This won't return anything that is registered as a Type or has "Transformed" in its named
+   */
   public getAvailableAssets(): Array<ExtensionProviderAssetIdentifier> {
     const assets = this.PlayerXLRService.XLRSDK.listTypes({
       capabilityFilter: 'Types',
@@ -126,29 +149,56 @@ export class DragAndDropController {
       ) as TypeMetadata;
       return {
         pluginName: typeInfo.plugin,
-        name: assetName,
+        assetName,
         capability: typeInfo.capability,
       };
     });
   }
 
+  /**
+   * Returns the XLR for an Asset/View
+   *
+   * @param assetName - Player 'type' string for the Asset/View to retrieve
+   */
   public getAssetDetails(assetName: string): NamedType<ObjectType> {
     return this.PlayerXLRService.XLRSDK.getType(
       assetName
     ) as NamedType<ObjectType>;
   }
 
-  public getAsset(assetID: symbol) {
-    return this.runtimeState.getAsset(assetID);
+  /**
+   * Returns the underlying Asset and XLR type for a dropped Asset in the tree
+   *
+   * @param assetSymbol - UUID Symbol attached to the Asset
+   */
+  public getAsset(assetSymbol: symbol): {
+    /** The Asset that correlates to the given ID */
+    asset: Asset;
+    /** The underlying XLR type for the Asset */
+    type: ObjectType;
+  } {
+    return this.runtimeState.getAsset(assetSymbol);
   }
 
-  public updateAsset(id: symbol, newObject: Asset) {
-    this.runtimeState.updateAsset(id, newObject);
+  /**
+   * Updates a dropped asset with the provided properties
+   * **It is not recommended to update any AssetWrapper or Array<AssetWrapper> properties**
+   *
+   * @param assetSymbol - UUID Symbol attached to the Asset
+   * @param newObject - The updates to apply to the dropped asset
+   */
+  public updateAsset(assetSymbol: symbol, newObject: Asset) {
+    this.runtimeState.updateAsset(assetSymbol, newObject);
     this.dndWebPlayerPlugin.refresh(this.webPlayer.player);
   }
 
-  public removeAsset(id: symbol) {
-    this.runtimeState.clearAsset(id);
+  /**
+   * Removes an Asset from the View
+   *
+   * @param assetSymbol - UUID Symbol attached to the Asset
+   */
+  public removeAsset(assetSymbol: symbol) {
+    this.runtimeState.clearAsset(assetSymbol);
     this.dndWebPlayerPlugin.refresh(this.webPlayer.player);
   }
 
@@ -159,9 +209,7 @@ export class DragAndDropController {
   public exportContent(): View {
     const baseView = this.runtimeState.view;
 
-    /**
-     *
-     */
+    /** Walks the drag and drop state to remove any drop target assets */
     const removeDndStateFromView = (obj: unknown): any => {
       if (obj === baseView && isDropTargetAsset(obj)) {
         if (obj.value?.asset) {
@@ -179,7 +227,7 @@ export class DragAndDropController {
 
       if (typeof obj === 'object' && obj !== null) {
         if ('asset' in obj) {
-          const asWrapper: AssetWrapper<DropTargetAssetType> = obj as any;
+          const asWrapper: AssetWrapper<DropTargetAsset> = obj as any;
           if ('asset' in obj && isDropTargetAsset(asWrapper.asset)) {
             if (asWrapper.asset.value) {
               const nestedValue = removeDndStateFromView(
