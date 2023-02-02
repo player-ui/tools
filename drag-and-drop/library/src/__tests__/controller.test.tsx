@@ -66,9 +66,9 @@ describe('drag-and-drop', () => {
     });
   });
 
-  it('Import existing FRF into drag and drop', async () => {
+  it('Import existing content into drag and drop', async () => {
     // arrange
-    const frf = {
+    const content = {
       id: 'drag-and-drop-view-collection-1',
       type: 'collection',
       label: {
@@ -142,7 +142,7 @@ describe('drag-and-drop', () => {
     const { player } = dndController.webPlayer;
 
     // act
-    dndController.importView(frf, 'TestPlugin');
+    dndController.importView(content);
     /**
      *
      */
@@ -153,7 +153,9 @@ describe('drag-and-drop', () => {
     // assert
     const dndView = getView() || {};
     expect(dndView.type).toStrictEqual('drop-target');
-    expect(dndView.value.identifier.pluginName).toStrictEqual('TestPlugin');
+    expect(dndView.value.identifier.pluginName).toStrictEqual(
+      'BaseAssetsPlugin'
+    );
     expect(dndView.value.identifier.name).toStrictEqual('CollectionAsset');
     expect(dndView.value.identifier.capability).toStrictEqual('Views');
     expect(dndView.value.type.name).toStrictEqual('CollectionAsset');

@@ -1,7 +1,7 @@
 import type { ObjectType } from '@player-tools/xlr';
 import type { XLRService } from '@player-tools/language-service';
-import { v4 as uuidv4 } from 'uuid';
-import type { Asset, AssetWrapper, View } from '@player-ui/types';
+import type { TypeMetadata } from '@player-tools/xlr-sdk';
+import type { Asset, View } from '@player-ui/types';
 import type {
   ExtensionProviderAssetIdentifier,
   FlowWithOneView,
@@ -32,6 +32,15 @@ export interface RuntimeFlowStateOptions {
    * Function to call when a placed asset has required properties that need to be resolved before actually placing it.
    */
   resolveRequiredProperties: (asset: Asset, type: ObjectType) => Promise<Asset>;
+}
+
+/** The context for the drop target */
+interface DropTargetContextType {
+  /** The name of the property that this asset fulfills */
+  propName: string;
+
+  /** The parent asset type */
+  parentAssetType: string;
 }
 
 /**
@@ -192,33 +201,41 @@ export class RuntimeFlowState {
   }
 
   createDropTarget(
-    pluginName: string,
-    targetAssetType: ObjectType,
+    xlrService: XLRService,
     targetAsset: Asset,
-    propName = '',
-    parentAssetType = ''
+    dropTargetContext: DropTargetContextType
   ): DropTargetAssetType {
+    const targetAssetType = xlrService.XLRSDK.getType(
+      targetAsset.type
+    ) as ObjectType;
+    const { plugin } = xlrService.XLRSDK.getTypeInfo(
+      targetAsset.type
+    ) as TypeMetadata;
     const dropTarget: DropTargetAssetType = {
-      id: uuidv4(),
+      id: `${targetAsset.id}-dropTarget`,
       __type: DragAndDropAssetType,
       type: 'drop-target',
       value: {
         identifier: {
-          pluginName,
-          name: targetAssetType.name || '',
-          capability: parentAssetType.length === 0 ? 'Views' : 'Assets',
+          pluginName: plugin,
+          name: targetAssetType.name ?? '',
+          capability:
+            dropTargetContext.parentAssetType.length === 0 ? 'Views' : 'Assets',
         },
         type: targetAssetType,
         asset: targetAsset,
       },
     };
 
-    if (parentAssetType.length > 0 && propName.length > 0) {
+    if (
+      dropTargetContext.parentAssetType.length > 0 &&
+      dropTargetContext.propName.length > 0
+    ) {
       dropTarget.context = {
-        propertyName: propName,
+        propertyName: dropTargetContext.propName,
         parent: {
-          pluginName,
-          name: parentAssetType,
+          pluginName: plugin,
+          name: dropTargetContext.parentAssetType,
         },
       };
     }
@@ -227,67 +244,72 @@ export class RuntimeFlowState {
     return dropTarget;
   }
 
-  addDropTarget(
-    assetWrapper: AssetWrapper,
+  addDndStateToAsset(
+    obj: any,
     xlrService: XLRService,
-    pluginName: string,
-    propName: string,
-    parentAssetType: string
+    dropTargetContext: DropTargetContextType
   ) {
-    const targetAsset = assetWrapper.asset;
-    const targetAssetType = xlrService.XLRSDK.getType(
-      targetAsset.type
-    ) as ObjectType;
-    /* eslint-disable-next-line no-param-reassign */
-    assetWrapper.asset = this.createDropTarget(
-      pluginName,
-      targetAssetType,
-      targetAsset,
-      propName,
-      parentAssetType
-    );
-    this.addDndStateToAsset(targetAsset, xlrService, pluginName);
-  }
-
-  addDndStateToAsset(asset: Asset, xlrService: XLRService, pluginName: string) {
-    const assetType = xlrService.XLRSDK.getType(asset.type) as ObjectType;
-    if (assetType === undefined || assetType.name === undefined) {
-      throw new Error(`cannot find asset type: ${asset.type}`);
+    if (obj === null) {
+      return obj;
     }
 
-    Object.entries(asset).forEach(([key]) => {
-      if (key in assetType.properties) {
+    const newObj = { ...obj };
+    const assetType = xlrService.XLRSDK.getType(obj.type) as ObjectType;
+    Object.keys(newObj).forEach((key) => {
+      let isAssetWrapper = false;
+      if (assetType && key in assetType.properties) {
         const { node } = assetType.properties[key];
-        if (node.type === 'ref' && node.ref.startsWith('AssetWrapper')) {
-          this.addDropTarget(
-            asset[key] as AssetWrapper,
-            xlrService,
-            pluginName,
-            key,
-            asset.type
-          );
-        } else if (
-          node.type === 'array' &&
-          node.elementType.type === 'ref' &&
-          node.elementType.ref.startsWith('AssetWrapper')
+        if (
+          (node.type === 'ref' && node.ref.startsWith('AssetWrapper')) ||
+          (node.type === 'array' &&
+            node.elementType.type === 'ref' &&
+            node.elementType.ref.startsWith('AssetWrapper'))
         ) {
-          (asset[key] as Array<AssetWrapper>).forEach((value: AssetWrapper) => {
-            this.addDropTarget(value, xlrService, pluginName, key, asset.type);
-          });
+          isAssetWrapper = true;
         }
       }
-    });
-  }
 
-  importView(view: View, xlrService: XLRService, pluginName: string) {
-    const viewType = xlrService.XLRSDK.getType(view.type) as ObjectType;
-    if (viewType === undefined || viewType.name === undefined) {
-      throw new Error(`cannot find view type: ${view.type}`);
+      if (
+        key === 'asset' &&
+        dropTargetContext.propName.length > 0 &&
+        dropTargetContext.parentAssetType.length > 0
+      ) {
+        newObj[key] = this.createDropTarget(
+          xlrService,
+          this.addDndStateToAsset(obj[key], xlrService, dropTargetContext),
+          dropTargetContext
+        );
+      } else if (typeof obj[key] === 'object') {
+        newObj[key] = this.addDndStateToAsset(
+          obj[key],
+          xlrService,
+          isAssetWrapper
+            ? { propName: key, parentAssetType: obj.type }
+            : dropTargetContext
+        );
+      } else {
+        newObj[key] = obj[key];
+      }
+    });
+    if (Array.isArray(obj)) {
+      newObj.length = obj.length;
+      return Array.from(newObj);
     }
 
+    return newObj;
+  }
+
+  importView(view: View, xlrService: XLRService) {
+    const dropTargetContext: DropTargetContextType = {
+      propName: '',
+      parentAssetType: '',
+    };
     this.assetMappings = {};
-    this.addDndStateToAsset(view, xlrService, pluginName);
-    this.ROOT = this.createDropTarget(pluginName, viewType, view);
+    this.ROOT = this.createDropTarget(
+      xlrService,
+      this.addDndStateToAsset(view, xlrService, dropTargetContext),
+      dropTargetContext
+    );
   }
 
   get view(): View {
