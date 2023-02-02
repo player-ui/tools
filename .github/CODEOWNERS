@@ -1,5 +1,13 @@
 # Fallback
-* @adierkens
+* @KetanReddy 
 
 # Language
 language/ @KetanReddy @adierkens
+cli/ @KetanReddy @adierkens
+
+# XLR
+xlr/ @KetanReddy
+drag-and-drop/ @KetanReddy @adierkens
+
+# DevTools
+devtools/ @sugarmanz

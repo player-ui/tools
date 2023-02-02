@@ -1,3 +1,46 @@
+# 0.3.0 (Thu Jan 26 2023)
+
+### Release Notes
+
+#### Reorg xlr compile target, support player specific post processing ([#29](https://github.com/player-ui/tools/pull/29))
+
+Player CLI - Fixes some Expressions that don't export with variable names.
+
+#### Pin typescript version in cli now that we're using new features. ([#19](https://github.com/player-ui/tools/pull/19))
+
+Fixes errors in projects using typescript < 4.8
+
+#### Feature/xlr variable export ([#18](https://github.com/player-ui/tools/pull/18))
+
+XLR export for static and dynamic `const` exports
+
+---
+
+#### 🚀 Enhancement
+
+- Feature/xlr variable export [#18](https://github.com/player-ui/tools/pull/18) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### 🐛 Bug Fix
+
+- Release ${GITHUB_REF##*/} [#34](https://github.com/player-ui/tools/pull/34) ([@intuit-svc](https://github.com/intuit-svc))
+- Reorg xlr compile target, support player specific post processing [#29](https://github.com/player-ui/tools/pull/29) ([@KetanReddy](https://github.com/KetanReddy))
+- fix function aliasing exporting wrong name [#28](https://github.com/player-ui/tools/pull/28) ([@hborawski](https://github.com/hborawski))
+- forward parameters to synthetic node for arrow functions with parameters [#26](https://github.com/player-ui/tools/pull/26) ([@hborawski](https://github.com/hborawski) [@sugarmanz](https://github.com/sugarmanz))
+- Pin typescript version in cli now that we're using new features. [#19](https://github.com/player-ui/tools/pull/19) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### ⚠️ Pushed to `main`
+
+- Try and fix release stage ([@KetanReddy](https://github.com/KetanReddy))
+
+#### Authors: 4
+
+- [@intuit-svc](https://github.com/intuit-svc)
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+- Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz))
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
 # 0.2.1 (Wed Dec 14 2022)
 
 ### Release Notes
