@@ -6,24 +6,10 @@ import globby from 'globby';
 import logSymbols from 'log-symbols';
 import { TsConverter } from '@player-tools/xlr-converters';
 import type { Manifest } from '@player-tools/xlr';
-import { isNodeExported, isTopLevelNode } from '@player-tools/xlr-utils';
 import chalk from 'chalk';
 import { BaseCommand } from '../../utils/base-command';
-
-const PLAYER_PLUGIN_INTERFACE_NAME = 'ExtendedPlayerPlugin';
-const customPrimitives = [
-  'Expression',
-  'Asset',
-  'Binding',
-  'AssetWrapper',
-  'Schema.DataType',
-  'ExpressionHandler',
-];
-
-enum Mode {
-  PLUGIN = 'plugin',
-  TYPES = 'types',
-}
+import { pluginVisitor, fileVisitor } from '../../utils/xlr/visitors';
+import { Mode, customPrimitives } from '../../utils/xlr/consts';
 
 /**
  * Exports TS Interfaces/Types to XLR format
@@ -76,7 +62,7 @@ export default class XLRCompile extends BaseCommand {
       `${inputPath}/**/*.tsx`,
     ]);
     try {
-      this.processPlugin(inputFiles, outputDir, {}, mode);
+      this.processTypes(inputFiles, outputDir, {}, mode);
     } catch (e: any) {
       console.log('');
       console.log(
@@ -101,180 +87,62 @@ export default class XLRCompile extends BaseCommand {
   }
 
   /** Generate extension manifest/description files from an Enhanced Player Plugin */
-  private processPlugin(
+  private processTypes(
     fileNames: string[],
-    outputDir: string,
+    outputDirectory: string,
     options: ts.CompilerOptions,
     mode: Mode = Mode.PLUGIN
   ): void {
     // Build a program using the set of root file names in fileNames
     const program = ts.createProgram(fileNames, options);
-    fs.mkdirSync(outputDir, { recursive: true });
+    fs.mkdirSync(outputDirectory, { recursive: true });
 
     // Get the checker, we will use it to find more about classes
     const checker = program.getTypeChecker();
-    const capabilities: Manifest = {
-      pluginName: 'Unknown Plugin',
-    };
 
     const converter = new TsConverter(checker, customPrimitives);
 
-    /** visit nodes finding exported classes */
-    function pluginVisitor(node: ts.Node) {
-      // Only consider exported nodes
-      if (!isNodeExported(node)) {
-        return;
-      }
-
-      // Plugins are classes so filter those
-      if (ts.isClassDeclaration(node) && node.name) {
-        const symbol = checker.getSymbolAtLocation(node.name);
-        if (symbol) {
-          // look at what they implement
-          node.heritageClauses?.forEach((heritage) => {
-            heritage.types.forEach((hInterface) => {
-              // check if heritage is right one
-              if (
-                hInterface.expression.getText() !== PLAYER_PLUGIN_INTERFACE_NAME
-              ) {
-                return;
-              }
-
-              // Get registration name of plugin
-              const nameProperty = node.members.find(
-                (member) =>
-                  ts.isPropertyDeclaration(member) &&
-                  member.name?.getText() === 'name'
-              ) as ts.PropertyDeclaration | undefined;
-              if (nameProperty && nameProperty.initializer) {
-                capabilities.pluginName = nameProperty.initializer
-                  ?.getText()
-                  .replace(/['"]+/g, '');
-              }
-
-              const provides: Map<string, Array<string>> = new Map();
-              const typeArgs = hInterface.typeArguments;
-
-              const pluginDec = checker.getTypeAtLocation(hInterface).symbol
-                ?.declarations?.[0] as ts.InterfaceDeclaration | undefined;
-              // process type parameters to figure out what capabilities are provided
-              pluginDec?.typeParameters?.forEach((param, index) => {
-                const capabilityType = param.name.getText();
-                if (index < (typeArgs?.length ?? 0)) {
-                  const exportedCapabilities = typeArgs?.[index] as ts.TypeNode;
-                  // if its an array process each type
-                  if (ts.isTupleTypeNode(exportedCapabilities)) {
-                    const capabilityNames = exportedCapabilities.elements.map(
-                      (element) => {
-                        if (
-                          ts.isTypeReferenceNode(element) ||
-                          ts.isTypeQueryNode(element)
-                        ) {
-                          let referencedSymbol;
-                          if (ts.isTypeReferenceNode(element)) {
-                            referencedSymbol = checker.getSymbolAtLocation(
-                              element.typeName
-                            );
-                          } else {
-                            referencedSymbol = checker.getSymbolAtLocation(
-                              element.exprName
-                            );
-                          }
-
-                          const alias = referencedSymbol
-                            ? checker.getAliasedSymbol(referencedSymbol)
-                            : undefined;
-                          let varDecl;
-                          /**
-                           * The TypeChecker will return the interface/type declaration or the variable statement
-                           * so if we are getting a variable, we need to grab the variable declaration
-                           */
-                          if (ts.isTypeReferenceNode(element)) {
-                            varDecl = alias?.declarations?.[0];
-                          } else {
-                            varDecl = alias?.declarations?.[0].parent.parent;
-                          }
-
-                          if (varDecl && isTopLevelNode(varDecl)) {
-                            const capabilityDescription =
-                              converter.convertTopLevelNode(varDecl);
-                            const capabilityName =
-                              capabilityDescription?.name ?? 'error';
-                            fs.writeFileSync(
-                              path.join(outputDir, `${capabilityName}.json`),
-                              JSON.stringify(
-                                capabilityDescription,
-                                undefined,
-                                4
-                              )
-                            );
-                            return capabilityName;
-                          }
-                        }
-
-                        throw new Error(
-                          `Can't export non reference type ${element.getText()}`
-                        );
-                      }
-                    );
-
-                    provides.set(capabilityType, capabilityNames);
-                  } else if (ts.isTypeReferenceNode(exportedCapabilities)) {
-                    const capabilityName =
-                      exportedCapabilities.typeName.getText();
-                    const capabilityDescription =
-                      converter.convertTsTypeNode(exportedCapabilities);
-                    fs.writeFileSync(
-                      path.join(outputDir, `${capabilityName}.json`),
-                      JSON.stringify(capabilityDescription, undefined, 4)
-                    );
-                    provides.set(capabilityType, [capabilityName]);
-                  } else {
-                    throw new Error(`Can't figure out type ${capabilityType}`);
-                  }
-                }
-              });
-              capabilities.capabilities = provides;
-            });
-          });
-        }
-      }
-    }
-
-    /** export all exported types in the file */
-    function fileVisitor(file: ts.SourceFile) {
-      const convertedTypes = converter.convertSourceFile(file);
-      convertedTypes.data.types.forEach((type) => {
-        fs.writeFileSync(
-          path.join(outputDir, `${type.name}.json`),
-          JSON.stringify(type, undefined, 4)
-        );
-      });
-      capabilities.capabilities = new Map([
-        ['Types', convertedTypes.convertedTypes],
-      ]);
-    }
+    let capabilities: Manifest | undefined;
 
     // Visit every sourceFile in the program
     program.getSourceFiles().forEach((sourceFile) => {
       if (!sourceFile.isDeclarationFile) {
         // Walk the tree to search for classes
+        let generatedCapabilites;
+
         if (mode === Mode.PLUGIN) {
-          ts.forEachChild(sourceFile, pluginVisitor);
+          generatedCapabilites = pluginVisitor({
+            sourceFile,
+            converter,
+            checker,
+            outputDirectory,
+          });
         } else if (mode === Mode.TYPES) {
-          capabilities.pluginName = 'Types';
-          fileVisitor(sourceFile);
+          generatedCapabilites = fileVisitor({
+            sourceFile,
+            converter,
+            checker,
+            outputDirectory,
+          });
         } else {
           throw new Error(
             `Error: Option ${mode} not recognized. Valid options are: plugin or type`
           );
         }
+
+        if (generatedCapabilites) {
+          capabilities = generatedCapabilites;
+        }
       }
     });
 
+    if (!capabilities) {
+      throw new Error('Error: Unable to parse any XLRs in package');
+    }
+
     // print out the manifest files
     const jsonManifest = JSON.stringify(capabilities, this.replacer, 4);
-    fs.writeFileSync(path.join(outputDir, 'manifest.json'), jsonManifest);
+    fs.writeFileSync(path.join(outputDirectory, 'manifest.json'), jsonManifest);
 
     const tsManifestFile = `${[...(capabilities.capabilities?.values() ?? [])]
       .flat(2)
@@ -295,6 +163,6 @@ module.exports = {
 }
 `;
 
-    fs.writeFileSync(path.join(outputDir, 'manifest.js'), tsManifestFile);
+    fs.writeFileSync(path.join(outputDirectory, 'manifest.js'), tsManifestFile);
   }
 }
