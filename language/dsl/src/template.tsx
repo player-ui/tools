@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 import React from 'react';
 import type { ObjectNode, JsonNode } from 'react-json-reconciler';
 import {
@@ -163,24 +164,26 @@ export const Template = (props: TemplateProps) => {
 
   return (
     <proxy ref={proxyRef}>
-      {createPortal(
-        <OptionalIDSuffixProvider
-          wrapperRef={valueRef}
-          templateIndex={`_index${
-            baseContext.depth === 0 ? '' : baseContext.depth
-          }_`}
-        >
-          <TemplateProvider>
-            <object>
-              <property name="data">{props.data.toValue()}</property>
-              <property name="output">{outputProp}</property>
-              <property name="value">{props.children}</property>
-            </object>
-          </TemplateProvider>
-        </OptionalIDSuffixProvider>,
-        outputElement
-      )}
-      <value ref={valueRef} value={undefined} />
+      <>
+        {createPortal(
+          <OptionalIDSuffixProvider
+            wrapperRef={valueRef}
+            templateIndex={`_index${
+              baseContext.depth === 0 ? '' : baseContext.depth
+            }_`}
+          >
+            <TemplateProvider>
+              <object>
+                <property name="data">{props.data.toValue()}</property>
+                <property name="output">{outputProp}</property>
+                <property name="value">{props.children}</property>
+              </object>
+            </TemplateProvider>
+          </OptionalIDSuffixProvider>,
+          outputElement
+        )}
+        <value ref={valueRef} value={undefined} />
+      </>
     </proxy>
   );
 };

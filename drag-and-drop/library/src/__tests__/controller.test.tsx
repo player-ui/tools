@@ -16,13 +16,62 @@ const referenceAssetExtension: ExtensionProvider = {
 describe('drag-and-drop', () => {
   it('Fills in placeholder assets when dropped', async () => {
     const dndController = new DragAndDropController({
-      types: typesManifest,
+      playerTypes: typesManifest,
       extensions: [referenceAssetExtension],
       resolveRequiredProperties: async (
         asset: Asset<string>,
         type: ObjectType
       ) => {
         return asset;
+      },
+      resolveCollectionConversion: (assets, XLRSDK) => {
+        return {
+          asset: {
+            id: 'generated-collection',
+            type: 'collection',
+            values: assets.map((asset) => asset.asset),
+          },
+          type: {
+            name: 'CollectionAsset',
+            type: 'object',
+            source: '',
+            properties: {
+              label: {
+                required: false,
+                node: {
+                  type: 'ref',
+                  ref: 'AssetWrapper',
+                  title: 'CollectionAsset.label',
+                  description: 'An optional label to title the collection',
+                },
+              },
+              values: {
+                required: false,
+                node: {
+                  type: 'array',
+                  elementType: {
+                    type: 'ref',
+                    ref: 'AssetWrapper',
+                  },
+                  title: 'CollectionAsset.values',
+                  description: 'The string value to show',
+                },
+              },
+            },
+            additionalProperties: false,
+            title: 'CollectionAsset',
+            extends: {
+              type: 'ref',
+              ref: "Asset<'collection'>",
+              genericArguments: [
+                {
+                  type: 'string',
+                  const: 'collection',
+                },
+              ],
+            },
+          },
+        };
       },
     });
 
@@ -36,34 +85,37 @@ describe('drag-and-drop', () => {
 
     expect(getView()?.id).toBe('drag-and-drop-view');
 
-    getView()?.replaceAsset({
+    getView()?.placeAsset({
       pluginName: 'BaseAssetsPlugin',
-      name: 'InfoAsset',
+      assetName: 'InfoAsset',
     });
 
     await waitFor(() => {
       expect(getView()?.value?.asset.type).toBe('info');
     });
 
-    getView()?.value.asset.title.asset.replaceAsset({
+    getView()?.value.asset.title.asset.placeAsset({
       pluginName: 'BaseAssetsPlugin',
-      name: 'TextAsset',
+      assetName: 'TextAsset',
     });
 
     await waitFor(() => {
       expect(getView()?.value?.asset.title.asset.value.asset.type).toBe('text');
     });
 
-    expect(dndController.exportView()).toStrictEqual({
-      id: 'drag-and-drop-view-test-1',
-      type: 'info',
-      title: {
-        asset: {
-          id: 'drag-and-drop-view-title-test-1',
-          type: 'text',
+    expect(dndController.exportContent()).toMatchInlineSnapshot(`
+      Object {
+        "actions": Array [],
+        "id": "drag-and-drop-view-info",
+        "title": Object {
+          "asset": Object {
+            "id": "drag-and-drop-view-title-text",
+            "type": "text",
+          },
         },
-      },
-    });
+        "type": "info",
+      }
+    `);
   });
 
   it('Import existing content into drag and drop', async () => {

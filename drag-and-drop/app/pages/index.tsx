@@ -44,23 +44,33 @@ import {
   useDraggableAsset,
 } from '@player-tools/dnd-lib';
 import { ReferenceAssetsPlugin } from '@player-ui/reference-assets-plugin-react';
-import type { ObjectType, TSManifest } from '@player-tools/xlr';
-import pluginManifest from '@player-tools/static-xlrs/static_xlrs/plugin/xlr/manifest';
-import typesManifest from '@player-tools/static-xlrs/static_xlrs/core/xlr/manifest';
+import type { NamedType, ObjectType, TSManifest } from '@player-tools/xlr';
+// eslint-disable-next-line import/extensions, import/no-unresolved
+import pluginManifest from '@player-ui/reference-assets-plugin-react/dist/xlr/manifest';
+// eslint-disable-next-line import/extensions, import/no-unresolved
+import typesManifest from '@player-ui/types/dist/xlr/manifest';
 import { AssetEditorPanel } from '../components/AssetEditorPanel';
 import { covertXLRtoAssetDoc } from '../utils/converters';
 import Files from "react-files";
 
 const PropertiesContext = React.createContext<{
   /**
-   * Current Asset thats selected in the right panel
-   * will be either an asset ID or a XLR type
+   * Current Asset thats selected in the edit panel on the right
    */
-  displayedAssetID?: string;
+  displayedAssetID?: symbol;
   /**
    * Sets `displayedAssetID`
    */
-  setDisplayedAssetID: (id: string) => void;
+  setDisplayedAssetID: (id: symbol) => void;
+
+  /**
+   * Current XLR Type thats selected in the docs panel on the right
+   */
+  displayedXLRDocType?: string;
+  /**
+   * Sets `displayedAssetID`
+   */
+  setDisplayedXLRDocType: (id: string) => void;
 
   /**
    * If the export modal is open
@@ -81,6 +91,7 @@ const PropertiesContext = React.createContext<{
   setRightPanelState: () => {},
   exportOpen: false,
   rightPanelState: 'edit',
+  setDisplayedXLRDocType: () => {},
 });
 
 const ControllerContext = React.createContext<
@@ -99,10 +110,33 @@ function useController() {
 }
 
 /**
+ *
+ */
+const AssetSlotExtension = (
+  props: TransformedDropTargetAssetType & {
+    /**
+     *
+     */
+    action: 'prepend' | 'append';
+  }
+) => {
+  const { action } = props;
+  const [{ isOver }, drop] = useDroppableAsset(props, action);
+
+  return (
+    <div ref={drop} style={{ border: isOver ? '1px solid red' : undefined }}>
+      <span>
+        {action} to {props.context?.propertyName ?? 'root'}
+      </span>
+    </div>
+  );
+};
+
+/**
  * Component that indicates that an Asset can be placed at this location
  */
 const AssetDropTarget = (props: TransformedDropTargetAssetType) => {
-  const [{ isOver }, drop] = useDroppableAsset(props);
+  const [{ isOver }, drop] = useDroppableAsset(props, 'replace');
   const propContext = React.useContext(PropertiesContext);
 
   if (!props.value && !props.context) {
@@ -130,17 +164,30 @@ const AssetDropTarget = (props: TransformedDropTargetAssetType) => {
       }}
       onClick={(e) => {
         if (props.value) {
-          propContext.setDisplayedAssetID(props.id);
+          propContext.setDisplayedAssetID(props.assetSymbol);
           propContext.setRightPanelState('edit');
           e.stopPropagation();
         }
       }}
     >
-      {props.value ? (
-        <ReactAsset {...props.value.asset} />
-      ) : (
+      {props.value && (
+        <>
+          {isOver && <AssetSlotExtension {...props} action="prepend" />}
+          <ReactAsset {...props.value.asset} />
+          {isOver && <AssetSlotExtension {...props} action="append" />}
+        </>
+      )}
+
+      {!props.value && !props.context?.isArrayElement && (
         <span>
-          {props.context?.parent.name} - {props.context?.propertyName}
+          {props.context?.parent.assetName} - {props.context?.propertyName}
+        </span>
+      )}
+
+      {!props.value && props.context?.isArrayElement && (
+        <span>
+          Insert into {props.context?.parent.assetName} -{' '}
+          {props.context?.propertyName} List
         </span>
       )}
     </Box>
@@ -151,7 +198,7 @@ const AssetDropTarget = (props: TransformedDropTargetAssetType) => {
  * Component that can be dropped onto the canvas to add an Asst/View
  */
 const DroppableAsset = (props: ExtensionProviderAssetIdentifier) => {
-  const { setRightPanelState, setDisplayedAssetID } =
+  const { setRightPanelState, setDisplayedXLRDocType } =
     React.useContext(PropertiesContext);
   const [, ref] = useDraggableAsset(props) ?? [];
   return (
@@ -160,10 +207,10 @@ const DroppableAsset = (props: ExtensionProviderAssetIdentifier) => {
         colorScheme="blue"
         onClick={(event) => {
           setRightPanelState('docs');
-          setDisplayedAssetID(props.name);
+          setDisplayedXLRDocType(props.assetName);
         }}
       >
-        {props.name}
+        {props.assetName}
       </Button>
     </Box>
   );
@@ -194,7 +241,7 @@ export const CapabilityPanel = (props: CapabilityPanelProps) => {
           {props.capabilities.length > 0 ? (
             props.capabilities.map((asset) => {
               return (
-                <Box key={`${asset.pluginName} - ${asset.name}`}>
+                <Box key={`${asset.pluginName} - ${asset.assetName}`}>
                   <DroppableAsset {...asset} />
                 </Box>
               );
@@ -408,7 +455,7 @@ const PropertyResolver = (props: PendingPropertyResolution) => {
 const ContentExportModal = () => {
   const context = React.useContext(PropertiesContext);
   const { controller } = useController() ?? {};
-  const content = JSON.stringify(controller.exportView());
+  const content = JSON.stringify(controller.exportContent());
   return (
     <Modal isOpen size="xlg" onClose={() => {}}>
       <ModalOverlay />
@@ -440,10 +487,9 @@ const ContentExportModal = () => {
  * Panel to show the full docs for the selected asset
  */
 const AssetDocsPanel = () => {
-  const { displayedAssetID } = React.useContext(PropertiesContext);
+  const { displayedXLRDocType } = React.useContext(PropertiesContext);
   const { controller } = useController() ?? {};
-  const type = controller.getAssetDetails(displayedAssetID);
-
+  const type = controller.getAssetDetails(displayedXLRDocType);
   const docs = covertXLRtoAssetDoc(type);
   return (
     <Card>
@@ -513,7 +559,9 @@ const RightPanel = () => {
  * Main Page
  */
 const App = () => {
-  const [displayedAssetID, setDisplayedAssetID] = React.useState<string>();
+  const [displayedAssetID, setDisplayedAssetID] = React.useState<symbol>();
+  const [displayedXLRDocType, setDisplayedXLRDocType] =
+    React.useState<string>();
   const [exportOpen, setExportOpen] = React.useState<boolean>(false);
   const [rightPanelState, setRightPanelState] = React.useState<'docs' | 'edit'>(
     'edit'
@@ -524,7 +572,7 @@ const App = () => {
   const controllerState = React.useMemo(() => {
     const config: DragAndDropControllerOptions = {
       Component: AssetDropTarget,
-      types: typesManifest as TSManifest,
+      playerTypes: typesManifest as TSManifest,
       extensions: [
         {
           plugin: ReferenceAssetsPlugin,
@@ -548,10 +596,21 @@ const App = () => {
         setPendingPropertyResolutions(pending);
         return prom;
       },
+      resolveCollectionConversion(assets, XLRSDK) {
+        const collectionType = XLRSDK.XLRSDK.getType('collection');
+        return {
+          asset: {
+            id: `autogen-collection`,
+            type: 'collection',
+            values: assets,
+          } as Asset,
+          type: collectionType as NamedType<ObjectType>,
+        };
+      },
     };
-
+    const controller = new DragAndDropController(config);
     return {
-      controller: new DragAndDropController(config),
+      controller,
     };
   }, [setPendingPropertyResolutions]);
 
@@ -564,12 +623,14 @@ const App = () => {
           () => ({
             displayedAssetID,
             setDisplayedAssetID,
+            displayedXLRDocType,
+            setDisplayedXLRDocType,
             exportOpen,
             setExportOpen,
             rightPanelState,
             setRightPanelState,
           }),
-          [displayedAssetID, exportOpen, rightPanelState]
+          [displayedAssetID, displayedXLRDocType, exportOpen, rightPanelState]
         )}
       >
         <ChakraProvider>

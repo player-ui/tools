@@ -2,7 +2,7 @@ import type { Schema, Language } from '@player-ui/types';
 import signale from 'signale';
 import { dequal } from 'dequal';
 import { SyncWaterfallHook } from 'tapable-ts';
-import { binding as b } from '..';
+import { binding as b } from '../string-templates';
 import type { BindingTemplateInstance } from '../string-templates';
 
 const bindingSymbol = Symbol('binding');
