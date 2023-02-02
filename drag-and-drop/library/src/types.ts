@@ -1,20 +1,17 @@
-import type { ObjectType, TSManifest } from '@player-tools/xlr';
+import type { NamedType, ObjectType, TSManifest } from '@player-tools/xlr';
 import type { Asset, ReactPlayerPlugin, Flow, View } from '@player-ui/react';
+
+export const DragAndDropAssetType = Symbol('drop-target');
+export const UUIDSymbol = Symbol('drag-and-drop-uuid');
 
 export const DroppedItemTypes = {
   ASSET: 'ASSET',
 };
 
-export const DragAndDropAssetType = 'test';
-
 export type FlowWithOneView<T extends Asset = Asset> = Flow<T> & {
+  /** Single flow to render */
   views: [View<T>];
 };
-
-export interface DroppedAsset {
-  type: typeof DroppedItemTypes.ASSET;
-  identifier: ExtensionProviderAssetIdentifier;
-}
 
 export interface ExtensionProvider {
   /** A constructor to create an instance of the plugin */
@@ -31,67 +28,88 @@ export interface ExtensionProviderAssetIdentifier {
   pluginName: string;
 
   /** The asset type in the plugin */
-  name: string;
+  assetName: string;
 
   /** The capability the type belongs to */
   capability: string;
 }
 
-export const isDropTargetAsset = (obj: unknown): obj is DropTargetAssetType => {
+export const isDropTargetAsset = (obj: unknown): obj is DropTargetAsset => {
   return (
     typeof obj === 'object' &&
     obj !== null &&
-    (obj as DropTargetAssetType).__type === DragAndDropAssetType
+    (obj as DropTargetAsset).__type === DragAndDropAssetType
   );
 };
 
-export interface DropTargetAssetType extends Asset<'drop-target'> {
+export interface PlacedAsset {
+  /** The identifier for where the populated asset is from */
+  identifier: ExtensionProviderAssetIdentifier;
+
+  /** The current descriptor for the value stored at this asset */
+  type: NamedType<ObjectType>;
+
+  /** A mapping of asset slot name to drop target handlers */
+  asset: Asset;
+}
+
+/** The `context` property of a DropTargetAsset */
+export interface DropTargetAssetContext {
+  /** The identifier for the parent asset type */
+  parent: Omit<ExtensionProviderAssetIdentifier, 'capability'>;
+
+  /** The name of the property that this asset fulfills */
+  propertyName?: string;
+
+  /** If the drop target is an element in an array */
+  isArrayElement?: boolean;
+
+  /** If the drop target is generated on the fly from a collection */
+  isMockTarget?: boolean;
+}
+
+export interface DropTargetAsset extends Asset<'drop-target'> {
   /** An opaque identifier for the placeholder */
   __type: typeof DragAndDropAssetType;
+
+  /** Shadow ID of drop target */
+  [UUIDSymbol]: symbol;
 
   /**
    * The context for what this value is in
    * Used for determining if a value is allowed to be dropped in this slot or not
    */
-  context?: {
-    /** The identifier for the parent asset type */
-    parent: Omit<ExtensionProviderAssetIdentifier, 'capability'>;
+  context?: DropTargetAssetContext;
 
-    /** The name of the property that this asset fulfills */
-    propertyName?: string;
+  /** The effective value that should be rendered. Generated from `.values` */
+  value?: {
+    /** The current descriptor for the value stored at this asset */
+    type: NamedType<ObjectType>;
+
+    /** A mapping of asset slot name to drop target handlers */
+    asset: Asset;
   };
 
   /**
-   * An asset that's currently populating this slot
+   * The raw list of assets that currently populate this slot
    * if not set, then this slot is empty and a placeholder will be shown instead
+   * if multiple assets are in the slot, they will be converted to a collection on the fly
    */
-  value?: {
-    /** The identifier for where the populated asset is from */
-    identifier: ExtensionProviderAssetIdentifier;
-
-    /** The current descriptor for the value stored at this asset */
-    type: ObjectType;
-
-    /**
-     * A mapping of asset slot name to drop target handlers
-     */
-    asset: Asset;
-  };
+  values?: Array<PlacedAsset>;
 }
 
-export interface TransformedDropTargetAssetType extends DropTargetAssetType {
+export interface TransformedDropTargetAssetType extends DropTargetAsset {
   /** Context relative to the parent's position */
-  context?: DropTargetAssetType['context'] & {
-    /**
-     * If the slot should accept being appended to
-     * Set if the parent asset supports an array (and this is the last item)
-     * or if the parent slot is a single item and we can convert to a collection
-     */
-    allowArrayAppend: boolean;
-  };
+  context?: DropTargetAsset['context'];
+
+  /** Unique identifier to reference the asset within the drop target */
+  assetSymbol?: symbol;
 
   /** Set the value of this slot to the replacement value */
-  replaceAsset: (identifier: ExtensionProviderAssetIdentifier) => void;
+  placeAsset: (
+    identifier: ExtensionProviderAssetIdentifier,
+    action: 'replace' | 'append' | 'prepend'
+  ) => void;
 
   /** Append the asset to the slot */
   appendAsset: (identifier: ExtensionProviderAssetIdentifier) => void;
