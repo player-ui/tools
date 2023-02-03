@@ -842,3 +842,24 @@ it('Player Expression Types Export', () => {
 
   expect(XLR).toMatchSnapshot();
 });
+
+it('Player JSDoc @metatag Export', () => {
+  const sc = `
+  /**
+ * An asset is the smallest unit of user interaction in a player view
+ * @metatag category:views
+ * @metatag screenshot:/path/image.png
+ */
+export interface Asset<T extends string = string> {
+  /** Each asset requires a unique id per view */
+  id: string;
+  [key: string]: unknown;
+}
+`;
+
+  const { sf, tc } = setupTestEnv(sc);
+  const converter = new TsConverter(tc);
+  const XLR = converter.convertSourceFile(sf).data.types;
+
+  expect(XLR).toMatchSnapshot();
+});
