@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
 import {
-  type Runtime,
-  type StoreState,
   selectConfig,
   selectSelectedPlayerId,
   GET_CONFIG_DETAILS,
@@ -10,16 +8,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from '../app.css';
 import { Config } from './Config';
 
-export const SUB_PANEL_IDS = ['plugins', 'schema', 'expressions'] as const;
-
 export const ConfigPanel = () => {
-  const currentPlayerID = useSelector<StoreState, string | null>(
-    selectSelectedPlayerId
-  );
-  const configState = useSelector<
-    StoreState,
-    Runtime.PlayerConfigRPC['result']
-  >(selectConfig);
+  const currentPlayerID = useSelector(selectSelectedPlayerId);
+  const configState = useSelector(selectConfig);
 
   const dispatch = useDispatch();
 

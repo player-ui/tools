@@ -1,8 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import type { View } from '@player-ui/types';
 import {
-  type StoreState,
   selectSelectedPlayerId,
   selectView,
   GET_VIEW_DETAILS,
@@ -15,12 +13,8 @@ import styles from '../app.css';
  * @returns
  */
 export const ViewPanel = () => {
-  const currentPlayerID = useSelector<StoreState, string | null>(
-    selectSelectedPlayerId
-  );
-  const currentView = useSelector<StoreState, View | undefined | null>(
-    selectView
-  );
+  const currentPlayerID = useSelector(selectSelectedPlayerId);
+  const currentView = useSelector(selectView);
   const dispatch = useDispatch();
 
   React.useEffect(() => {

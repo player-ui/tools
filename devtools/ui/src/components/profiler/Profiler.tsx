@@ -1,11 +1,11 @@
 import React from 'react';
 import { FlameGraph } from 'react-flame-graph';
 import { ObjectInspector } from '@devtools-ds/object-inspector';
-import type { ProfilerNode } from '@player-tools/devtools-common';
+import { ActivePlayerState } from '@player-tools/devtools-client';
 import styles from '../app.css';
 
 interface ProfilerProps {
-  profiler?: ProfilerNode;
+  profiler?: ActivePlayerState['profilerInfo'];
   onStart: () => void;
   onStop: () => void;
 }

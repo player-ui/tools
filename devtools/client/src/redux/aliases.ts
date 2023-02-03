@@ -1,12 +1,5 @@
-import type {
-  AliasAction,
-  ConfigAction,
-  DataBindingAction,
-  ExpressionAction,
-  StartProfilerAction,
-  StopProfilerAction,
-} from '@player-tools/devtools-common';
-import type { AsyncRPCActions } from './actions';
+import { Methods as Methods, RUNTIME_SOURCE } from '@player-tools/devtools-common';
+import { MethodThunks } from './actions/methods';
 
 export const GET_INFO_DETAILS = 'GET_INFO_DETAILS';
 export const GET_CONFIG_DETAILS = 'GET_CONFIG_DETAILS';
@@ -16,6 +9,12 @@ export const GET_CONSOLE_EVAL = 'GET_CONSOLE_EVAL';
 export const START_PROFILER = 'START_PROFILER';
 export const STOP_PROFILER = 'STOP_PROFILER';
 
+
+interface MethodAction<T extends Methods.MethodTypes> {
+  payload: Methods.ByType<T>['params'];
+}
+
+// Copied from webext redux library not allowed in flipper
 const _alias = (aliases: any) => () => (next: any) => (action: any) => {
   const alias = aliases[action.type];
 
@@ -26,20 +25,20 @@ const _alias = (aliases: any) => () => (next: any) => (action: any) => {
   return next(action);
 };
 
-export const buildAliases = (actions: AsyncRPCActions) =>
+/** Helper for building corresponding method action via supplied thunks */
+const alias = <T extends Methods.MethodTypes>(type: T, methods: MethodThunks) => (action: MethodAction<T>) => methods[type]({
+  type,
+  params: action.payload,
+  source: RUNTIME_SOURCE,
+} as Methods.ByType<T>)
+
+export const buildAliases = (methods: MethodThunks) =>
   _alias({
-    GET_INFO_DETAILS: (action: AliasAction) =>
-      actions['player-runtime-info-request'](action.payload),
-    GET_CONFIG_DETAILS: (action: ConfigAction) =>
-      actions['player-config-request'](action.payload),
-    GET_VIEW_DETAILS: (action: AliasAction) =>
-      actions['player-view-details-request'](action.payload),
-    GET_DATA_BINDING_DETAILS: (action: DataBindingAction) =>
-      actions['player-data-binding-details'](action.payload),
-    GET_CONSOLE_EVAL: (action: ExpressionAction) =>
-      actions['player-execute-expression'](action.payload),
-    START_PROFILER: (action: StartProfilerAction) =>
-      actions['player-start-profiler-request'](action.payload),
-    STOP_PROFILER: (action: StopProfilerAction) =>
-      actions['player-stop-profiler-request'](action.payload),
+    GET_INFO_DETAILS: alias('player-runtime-info-request', methods),
+    GET_CONFIG_DETAILS: alias('player-config-request', methods),
+    GET_VIEW_DETAILS: alias('player-view-details-request', methods),
+    GET_DATA_BINDING_DETAILS: alias('player-data-binding-details', methods),
+    GET_CONSOLE_EVAL: alias('player-execute-expression', methods),
+    START_PROFILER: alias('player-start-profiler-request', methods),
+    STOP_PROFILER: alias('player-stop-profiler-request', methods),
   });
