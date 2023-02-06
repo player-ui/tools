@@ -13,8 +13,8 @@ export interface Annotations {
   see?: string | Array<string>;
   /** The Typescript comment associated with the type */
   comment?: string;
-  /** The JSDoc `@metatag` string for this type */
-  metatags?: string | Record<string, string>;
+  /** The JSDoc `@meta` string for this type */
+  meta?: Record<string, string>;
 }
 
 export interface Const<T> {
@@ -210,8 +210,8 @@ export type NodeType =
 export type NodeTypeStrings = Pick<NodeType, 'type'>['type'];
 
 export type NodeTypeMap = {
-  // eslint-disable-next-line jsdoc/require-jsdoc, prettier/prettier
-  [K in NodeTypeStrings]: Extract<NodeType,{type: K}>;
+  // eslint-disable-next-line jsdoc/require-jsdoc
+  [K in NodeTypeStrings]: Extract<NodeType, { type: K }>;
 };
 
 export type NamedType<T extends NodeType = NodeType> = T & {

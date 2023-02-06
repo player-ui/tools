@@ -20,12 +20,12 @@ describe('Annotations', () => {
     expect(decorateNode(sf.statements[0])).toMatchSnapshot();
   });
 
-  it('JSDoc @metatag', () => {
+  it('JSDoc @meta', () => {
     const sc = `
     /**
    * An asset is the smallest unit of user interaction in a player view
-   * @metatag category:views
-   * @metatag screenshot:/path/image.png
+   * @meta category:views
+   * @meta screenshot:/path/image.png
    */
   export interface Asset<T extends string = string> {
     id: string;

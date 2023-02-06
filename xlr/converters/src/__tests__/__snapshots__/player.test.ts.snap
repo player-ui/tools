@@ -708,7 +708,7 @@ Array [
 ]
 `;
 
-exports[`Player JSDoc @metatag Export 1`] = `
+exports[`Player JSDoc @meta Export 1`] = `
 Array [
   Object {
     "additionalProperties": Object {
@@ -726,7 +726,7 @@ Array [
         "symbol": "T",
       },
     ],
-    "metatags": Object {
+    "meta": Object {
       "category": "views",
       "screenshot": "/path/image.png",
     },

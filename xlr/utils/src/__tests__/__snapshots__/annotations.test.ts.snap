@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Annotations JSDoc @metatag 1`] = `
+exports[`Annotations JSDoc @meta 1`] = `
 Object {
   "description": "An asset is the smallest unit of user interaction in a player view",
-  "metatags": Object {
+  "meta": Object {
     "category": "views",
     "screenshot": "/path/image.png",
   },

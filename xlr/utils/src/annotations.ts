@@ -131,7 +131,7 @@ function extractTags(tags: ReadonlyArray<ts.JSDocTag>): Annotations {
   const examples: Array<string> = [];
   const _default: Array<string> = [];
   const see: Array<string> = [];
-  const metatags: Record<string, string> = {};
+  const meta: Record<string, string> = {};
 
   /**
    *
@@ -153,9 +153,9 @@ function extractTags(tags: ReadonlyArray<ts.JSDocTag>): Annotations {
       _default.push(stringifyDoc(tag.comment)?.trim() ?? '');
     } else if (tag.tagName.text === 'see') {
       see.push(extractSee(tag as ts.JSDocSeeTag));
-    } else if (tag.tagName.text === 'metatag') {
+    } else if (tag.tagName.text === 'meta') {
       const [key, value] = tag.comment.toString().split(/:(.*)/);
-      metatags[key] = value?.trim() ?? '';
+      meta[key] = value?.trim() ?? '';
     } else {
       const text = stringifyDoc(tag.comment)?.trim() ?? '';
       descriptions.push(`@${tag.tagName.text} ${text}`);
@@ -169,7 +169,7 @@ function extractTags(tags: ReadonlyArray<ts.JSDocTag>): Annotations {
     ...(examples.length === 0 ? {} : { examples }),
     ...(_default.length === 0 ? {} : { default: _default.join('\n') }),
     ...(see.length === 0 ? {} : { see }),
-    ...(metatags && Object.keys(metatags).length === 0 ? {} : { metatags }),
+    ...(meta && Object.keys(meta).length === 0 ? {} : { meta }),
   };
 }
 
@@ -204,7 +204,7 @@ function mergeAnnotations(nodes: Array<Annotations>): Annotations {
   const see = join(
     nodes.map((n) => (Array.isArray(n.see) ? join(n.see) : n.see))
   );
-  const metatags = nodes.find((n) => n.metatags)?.metatags;
+  const meta = nodes.find((n) => n.meta)?.meta;
   return {
     ...(name ? { name } : {}),
     ...(title ? { title } : {}),
@@ -213,7 +213,7 @@ function mergeAnnotations(nodes: Array<Annotations>): Annotations {
     ...(_default ? { default: _default } : {}),
     ...(see ? { see } : {}),
     ...(comment ? { comment } : {}),
-    ...(metatags ? { metatags } : {}),
+    ...(meta ? { meta } : {}),
   };
 }
 

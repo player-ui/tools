@@ -843,12 +843,12 @@ it('Player Expression Types Export', () => {
   expect(XLR).toMatchSnapshot();
 });
 
-it('Player JSDoc @metatag Export', () => {
+it('Player JSDoc @meta Export', () => {
   const sc = `
   /**
  * An asset is the smallest unit of user interaction in a player view
- * @metatag category:views
- * @metatag screenshot:/path/image.png
+ * @meta category:views
+ * @meta screenshot:/path/image.png
  */
 export interface Asset<T extends string = string> {
   /** Each asset requires a unique id per view */
