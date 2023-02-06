@@ -7,6 +7,7 @@ import type {
   FlowWithOneView,
   DropTargetAsset,
   PlacedAsset,
+  DropTargetAssetContext,
 } from '../types';
 import { UUIDSymbol } from '../types';
 import { makeDropTarget, getAssetSymbol } from './helpers';
@@ -66,15 +67,6 @@ export interface RuntimeFlowStateOptions {
          */
         state: never;
       };
-}
-
-/** The context for the drop target */
-interface DropTargetContextType {
-  /** The name of the property that this asset fulfills */
-  propName: string;
-
-  /** The parent asset type */
-  parentAssetType: string;
 }
 
 /**
@@ -233,7 +225,6 @@ export class RuntimeFlowState {
       }
 
       const containingAsset = this.realAssetMappings.get(containingAssetSymbol);
-
       if (!containingAsset) {
         throw new Error(
           `Error: can't get asset for symbol ${containingAssetSymbol.toString()}`
@@ -243,6 +234,7 @@ export class RuntimeFlowState {
       const arrayProperty = containingAsset.asset[
         containingDropTarget.context.propertyName
       ] as Array<AssetWrapper<DropTargetAsset>>;
+
       const dropTargetIndex = arrayProperty.find((element) => {
         return getAssetSymbol(element.asset) === dropTargetSymbol;
       });
@@ -494,54 +486,68 @@ export class RuntimeFlowState {
     parentDropTarget.value = this.computeViewForDropTarget(parentDropTarget);
   }
 
+  makeDropTargetContext(
+    xlrService: XLRService,
+    parent: Asset,
+    propertyName: string,
+    isArrayElement?: boolean
+  ): DropTargetAssetContext {
+    const { plugin: pluginName } = xlrService.XLRSDK.getTypeInfo(
+      parent.type
+    ) as TypeMetadata;
+    return {
+      parent: {
+        pluginName,
+        assetName: parent.type,
+      },
+      propertyName,
+      isArrayElement,
+    };
+  }
+
   createDropTarget(
     xlrService: XLRService,
     targetAsset: Asset,
-    dropTargetContext: DropTargetContextType
-  ): DropTargetAssetType {
+    dropTargetContext?: DropTargetAssetContext,
+    parentAsset?: Asset
+  ): DropTargetAsset {
     const targetAssetType = xlrService.XLRSDK.getType(
       targetAsset.type
-    ) as ObjectType;
-    const { plugin } = xlrService.XLRSDK.getTypeInfo(
+    ) as NamedType<ObjectType>;
+    const { plugin: pluginName } = xlrService.XLRSDK.getTypeInfo(
       targetAsset.type
     ) as TypeMetadata;
-    const dropTarget: DropTargetAssetType = {
-      id: `${targetAsset.id}-dropTarget`,
-      __type: DragAndDropAssetType,
-      type: 'drop-target',
-      value: {
-        identifier: {
-          pluginName: plugin,
-          name: targetAssetType.name ?? '',
-          capability:
-            dropTargetContext.parentAssetType.length === 0 ? 'Views' : 'Assets',
-        },
-        type: targetAssetType,
-        asset: targetAsset,
+    const dropTarget = makeDropTarget(`${targetAsset.id}-dropTarget`);
+    dropTarget.context = dropTargetContext;
+    const wrappedTargetAsset: PlacedAsset = {
+      identifier: {
+        pluginName,
+        assetName: targetAssetType.name ?? '',
+        capability: dropTargetContext ? 'Assets' : 'Views',
       },
+      type: targetAssetType,
+      asset: targetAsset,
     };
-
-    if (
-      dropTargetContext.parentAssetType.length > 0 &&
-      dropTargetContext.propName.length > 0
-    ) {
-      dropTarget.context = {
-        propertyName: dropTargetContext.propName,
-        parent: {
-          pluginName: plugin,
-          name: dropTargetContext.parentAssetType,
-        },
-      };
+    dropTarget.values?.push(wrappedTargetAsset);
+    const dropTargetSymbol = getAssetSymbol(dropTarget);
+    const targetAssetSymbol = getAssetSymbol(targetAsset);
+    this.dropTargetAssets.set(dropTargetSymbol, dropTarget);
+    this.realAssetMappings.set(targetAssetSymbol, wrappedTargetAsset);
+    this.assetsToTargets.set(targetAssetSymbol, dropTargetSymbol);
+    if (parentAsset) {
+      this.targetsToAssets.set(dropTargetSymbol, getAssetSymbol(parentAsset));
     }
 
-    this.assetMappings[dropTarget.id] = dropTarget;
+    dropTarget.value = this.computeViewForDropTarget(dropTarget);
+
     return dropTarget;
   }
 
   addDndStateToAsset(
     obj: any,
     xlrService: XLRService,
-    dropTargetContext: DropTargetContextType
+    dropTargetContext?: DropTargetAssetContext,
+    parentAsset?: Asset
   ) {
     if (obj === null) {
       return obj;
@@ -549,8 +555,13 @@ export class RuntimeFlowState {
 
     const newObj = { ...obj };
     const assetType = xlrService.XLRSDK.getType(obj.type) as ObjectType;
+    if (assetType) {
+      newObj[UUIDSymbol] = Symbol(`${newObj.id}-${newObj.type}`);
+    }
+
     Object.keys(newObj).forEach((key) => {
       let isAssetWrapper = false;
+      let isArrayElement = false;
       if (assetType && key in assetType.properties) {
         const { node } = assetType.properties[key];
         if (
@@ -560,26 +571,39 @@ export class RuntimeFlowState {
             node.elementType.ref.startsWith('AssetWrapper'))
         ) {
           isAssetWrapper = true;
+          isArrayElement = node.type === 'array';
         }
       }
 
       if (
         key === 'asset' &&
-        dropTargetContext.propName.length > 0 &&
-        dropTargetContext.parentAssetType.length > 0
+        dropTargetContext &&
+        dropTargetContext?.parent.assetName.length > 0
       ) {
         newObj[key] = this.createDropTarget(
           xlrService,
-          this.addDndStateToAsset(obj[key], xlrService, dropTargetContext),
-          dropTargetContext
+          this.addDndStateToAsset(
+            obj[key],
+            xlrService,
+            dropTargetContext,
+            parentAsset
+          ),
+          dropTargetContext,
+          parentAsset
         );
       } else if (typeof obj[key] === 'object') {
         newObj[key] = this.addDndStateToAsset(
           obj[key],
           xlrService,
           isAssetWrapper
-            ? { propName: key, parentAssetType: obj.type }
-            : dropTargetContext
+            ? this.makeDropTargetContext(
+                xlrService,
+                newObj,
+                key,
+                isArrayElement
+              )
+            : dropTargetContext,
+          isAssetWrapper ? newObj : parentAsset
         );
       } else {
         newObj[key] = obj[key];
@@ -594,15 +618,13 @@ export class RuntimeFlowState {
   }
 
   importView(view: View, xlrService: XLRService) {
-    const dropTargetContext: DropTargetContextType = {
-      propName: '',
-      parentAssetType: '',
-    };
-    this.assetMappings = {};
+    this.realAssetMappings.clear();
+    this.dropTargetAssets.clear();
+    this.assetsToTargets.clear();
+    this.targetsToAssets.clear();
     this.ROOT = this.createDropTarget(
       xlrService,
-      this.addDndStateToAsset(view, xlrService, dropTargetContext),
-      dropTargetContext
+      this.addDndStateToAsset(view, xlrService)
     );
   }
 

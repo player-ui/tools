@@ -1,10 +1,15 @@
 import { waitFor } from '@testing-library/react';
-import type { Asset, InProgressState } from '@player-ui/react';
+import type { Asset, AssetWrapper, InProgressState } from '@player-ui/react';
 import pluginManifest from '@player-tools/static-xlrs/static_xlrs/plugin/xlr/manifest';
 import typesManifest from '@player-tools/static-xlrs/static_xlrs/core/xlr/manifest';
 import type { ObjectType } from '@player-tools/xlr';
 import { DragAndDropController } from '../controller';
-import type { ExtensionProvider } from '../types';
+import type {
+  DropTargetAsset,
+  DropTargetAssetContext,
+  ExtensionProvider,
+} from '../types';
+import { getAssetSymbol } from '../utils/helpers';
 
 const referenceAssetExtension: ExtensionProvider = {
   plugin: class test {
@@ -182,14 +187,10 @@ describe('drag-and-drop', () => {
       ],
     };
     const dndController = new DragAndDropController({
-      types: typesManifest,
+      playerTypes: typesManifest,
       extensions: [referenceAssetExtension],
-      resolveRequiredProperties: async (
-        asset: Asset<string>,
-        type: ObjectType
-      ) => {
-        return asset;
-      },
+      resolveRequiredProperties: jest.fn(),
+      resolveCollectionConversion: jest.fn(),
     });
     const { player } = dndController.webPlayer;
 
@@ -208,7 +209,7 @@ describe('drag-and-drop', () => {
     expect(dndView.value.identifier.pluginName).toStrictEqual(
       'BaseAssetsPlugin'
     );
-    expect(dndView.value.identifier.name).toStrictEqual('CollectionAsset');
+    expect(dndView.value.identifier.assetName).toStrictEqual('CollectionAsset');
     expect(dndView.value.identifier.capability).toStrictEqual('Views');
     expect(dndView.value.type.name).toStrictEqual('CollectionAsset');
     expect(dndView.value.asset.id).toStrictEqual(
@@ -216,9 +217,9 @@ describe('drag-and-drop', () => {
     );
     expect(dndView.value.asset.type).toStrictEqual('collection');
     expect(dndView.value.asset.label.asset.type).toStrictEqual('drop-target');
-    expect(dndView.value.asset.label.asset.context.parent.name).toStrictEqual(
-      'collection'
-    );
+    expect(
+      dndView.value.asset.label.asset.context.parent.assetName
+    ).toStrictEqual('collection');
     expect(dndView.value.asset.label.asset.context.propertyName).toStrictEqual(
       'label'
     );
@@ -230,5 +231,18 @@ describe('drag-and-drop', () => {
     const { note } = values[1].asset.value.asset;
     expect(note.asset.type).toStrictEqual('drop-target');
     expect(note.asset.value.asset.value).toStrictEqual('input note');
+    const state = dndController.exportState() as DropTargetAsset;
+    const label = state.value?.asset.label as AssetWrapper;
+    expect(label.asset.type).toStrictEqual('drop-target');
+    const labelContext = label.asset.context as DropTargetAssetContext;
+    expect(labelContext.isArrayElement).toStrictEqual(false);
+    expect(labelContext.propertyName).toStrictEqual('label');
+    expect(labelContext.parent.assetName).toStrictEqual('collection');
+    const collectionAssetWrapper = state.value as AssetWrapper;
+    const collection = dndController.getAsset(
+      getAssetSymbol(collectionAssetWrapper.asset)
+    );
+    expect(collection).not.toBeNull();
+    expect(collection.type.name).toStrictEqual('CollectionAsset');
   });
 });

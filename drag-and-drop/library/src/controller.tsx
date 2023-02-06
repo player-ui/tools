@@ -262,12 +262,15 @@ export class DragAndDropController {
     return JSON.parse(JSON.stringify(removeDndStateFromView(baseView)));
   }
 
-
+  /**
+   * Imports existing content and populates the state of drag and drop
+   * @param view - player content
+   */
   public importView(view: View) {
     this.runtimeState.importView(view, this.PlayerXLRService);
     this.dndWebPlayerPlugin.refresh(this.webPlayer.player);
   }
-  
+
   /**
    * Exports the full state of the drag and drop editor that can be used to resume editing later
    */
