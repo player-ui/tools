@@ -800,6 +800,252 @@ Array [
 ]
 `;
 
+exports[`Type with typeof Indexing (long) 1`] = `
+Array [
+  Object {
+    "genericTokens": undefined,
+    "name": "options",
+    "or": Array [
+      Object {
+        "const": 1,
+        "type": "number",
+      },
+      Object {
+        "const": 2,
+        "type": "number",
+      },
+      Object {
+        "const": 3,
+        "type": "number",
+      },
+      Object {
+        "const": 4,
+        "type": "number",
+      },
+      Object {
+        "const": 5,
+        "type": "number",
+      },
+      Object {
+        "const": 6,
+        "type": "number",
+      },
+      Object {
+        "const": 7,
+        "type": "number",
+      },
+      Object {
+        "const": 8,
+        "type": "number",
+      },
+      Object {
+        "const": 9,
+        "type": "number",
+      },
+      Object {
+        "const": 10,
+        "type": "number",
+      },
+      Object {
+        "const": 11,
+        "type": "number",
+      },
+      Object {
+        "const": 12,
+        "type": "number",
+      },
+      Object {
+        "const": 13,
+        "type": "number",
+      },
+      Object {
+        "const": 14,
+        "type": "number",
+      },
+      Object {
+        "const": 15,
+        "type": "number",
+      },
+      Object {
+        "const": 16,
+        "type": "number",
+      },
+      Object {
+        "const": 17,
+        "type": "number",
+      },
+      Object {
+        "const": 18,
+        "type": "number",
+      },
+      Object {
+        "const": 19,
+        "type": "number",
+      },
+      Object {
+        "const": 20,
+        "type": "number",
+      },
+      Object {
+        "const": 21,
+        "type": "number",
+      },
+      Object {
+        "const": 22,
+        "type": "number",
+      },
+      Object {
+        "const": 23,
+        "type": "number",
+      },
+      Object {
+        "const": 24,
+        "type": "number",
+      },
+      Object {
+        "const": 25,
+        "type": "number",
+      },
+      Object {
+        "const": 26,
+        "type": "number",
+      },
+      Object {
+        "const": 27,
+        "type": "number",
+      },
+      Object {
+        "const": 28,
+        "type": "number",
+      },
+      Object {
+        "const": 29,
+        "type": "number",
+      },
+      Object {
+        "const": 30,
+        "type": "number",
+      },
+      Object {
+        "const": 31,
+        "type": "number",
+      },
+      Object {
+        "const": 32,
+        "type": "number",
+      },
+      Object {
+        "const": 33,
+        "type": "number",
+      },
+      Object {
+        "const": 34,
+        "type": "number",
+      },
+      Object {
+        "const": 35,
+        "type": "number",
+      },
+      Object {
+        "const": 36,
+        "type": "number",
+      },
+      Object {
+        "const": 37,
+        "type": "number",
+      },
+      Object {
+        "const": 38,
+        "type": "number",
+      },
+      Object {
+        "const": 39,
+        "type": "number",
+      },
+      Object {
+        "const": 40,
+        "type": "number",
+      },
+      Object {
+        "const": 41,
+        "type": "number",
+      },
+      Object {
+        "const": 42,
+        "type": "number",
+      },
+      Object {
+        "const": 43,
+        "type": "number",
+      },
+      Object {
+        "const": 44,
+        "type": "number",
+      },
+      Object {
+        "const": 45,
+        "type": "number",
+      },
+      Object {
+        "const": 46,
+        "type": "number",
+      },
+      Object {
+        "const": 47,
+        "type": "number",
+      },
+      Object {
+        "const": 48,
+        "type": "number",
+      },
+      Object {
+        "const": 49,
+        "type": "number",
+      },
+      Object {
+        "const": 50,
+        "type": "number",
+      },
+      Object {
+        "const": 51,
+        "type": "number",
+      },
+      Object {
+        "const": 52,
+        "type": "number",
+      },
+      Object {
+        "const": 53,
+        "type": "number",
+      },
+      Object {
+        "const": 54,
+        "type": "number",
+      },
+      Object {
+        "const": 55,
+        "type": "number",
+      },
+      Object {
+        "const": 56,
+        "type": "number",
+      },
+      Object {
+        "const": 57,
+        "type": "number",
+      },
+      Object {
+        "const": 58,
+        "type": "number",
+      },
+    ],
+    "source": "filename.ts",
+    "title": "options",
+    "type": "or",
+  },
+]
+`;
+
 exports[`Type with typeof Indexing 1`] = `
 Array [
   Object {
