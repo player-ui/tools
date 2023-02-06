@@ -12,7 +12,6 @@ import type {
   ExtensionProviderAssetIdentifier,
   TransformedDropTargetAssetType,
 } from '../types';
-import { UUIDSymbol } from '../types';
 import type { RuntimeFlowState } from './runtime-flow-state';
 
 /** Options for controlling the drag-and-drop functionality */
@@ -65,22 +64,20 @@ export class PlayerDndPlugin implements ReactPlayerPlugin {
   }
 
   apply(player: Player) {
-    const match = { type: this.options.Target.type ?? 'drop-target' };
-    const assetIDToSymbolMap: Map<string, symbol> = new Map();
+    const match = {
+      type: this.options.Target.type ?? 'drop-target',
+    };
 
     player.hooks.viewController.tap(this.name, (vc) => {
-      vc.hooks.view.tap(this.name, (vi) => {
-        vi.hooks.parser.tap(this.name, (pa) => {
-          pa.hooks.onParseObject.tap(this.name, (o: any) => {
-            if (o.id) {
-              assetIDToSymbolMap.set(o.id, o[UUIDSymbol]);
-            }
-
-            return o;
-          });
-        });
-      });
       vc.transformRegistry.set(match, {
+        beforeResolve: (asset) => {
+          return {
+            ...asset,
+            children: asset.children?.filter((child) => {
+              return child.path[0] !== 'values';
+            }),
+          };
+        },
         resolve: (asset: DropTargetAsset) => {
           return {
             ...asset,

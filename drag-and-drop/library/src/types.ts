@@ -105,6 +105,9 @@ export interface TransformedDropTargetAssetType extends DropTargetAsset {
   /** Unique identifier to reference the asset within the drop target */
   assetSymbol?: symbol;
 
+  /** The raw Drag and Drag state should not be made available to Player's runtime */
+  values: never;
+
   /** Set the value of this slot to the replacement value */
   placeAsset: (
     identifier: ExtensionProviderAssetIdentifier,
