@@ -1,4 +1,4 @@
-import { setupTestEnv } from '../test-helpers';
+import { setupTestEnv } from './helpers/test-helpers';
 import { decorateNode } from '../annotations';
 
 describe('Annotations', () => {
