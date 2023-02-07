@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Annotations JSDoc @meta 1`] = `
+Object {
+  "description": "An asset is the smallest unit of user interaction in a player view",
+  "meta": Object {
+    "category": "views",
+    "screenshot": "/path/image.png",
+  },
+  "title": "Asset",
+}
+`;
+
+exports[`Annotations JSDoc comments to strings 1`] = `
+Object {
+  "default": "default value",
+  "description": "An asset is the smallest unit of user interaction in a player view",
+  "examples": "Example usage of interface Asset",
+  "see": "see for implementation details",
+  "title": "Asset",
+}
+`;
