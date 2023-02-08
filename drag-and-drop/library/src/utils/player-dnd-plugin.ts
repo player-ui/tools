@@ -74,7 +74,15 @@ export class PlayerDndPlugin implements ReactPlayerPlugin {
           return {
             ...asset,
             children: asset.children?.filter((child) => {
-              return child.path[0] !== 'values';
+              if (child.path[0] === 'values') {
+                return false;
+              }
+
+              if (child.path[0] === 'value' && child.path[1] === 'type') {
+                return false;
+              }
+
+              return true;
             }),
           };
         },
