@@ -10,6 +10,7 @@
             "AssetWrapperOrSwitch",
             "AssetSwitch",
             "StaticSwitch",
+            "CustomPrimitive",
             "DynamicSwitch",
             "Expression",
             "ExpressionRef",
