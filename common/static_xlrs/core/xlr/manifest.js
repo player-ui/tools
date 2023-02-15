@@ -34,5 +34,13 @@ module.exports = {
   "pluginName": "Types",
   "capabilities": {
     "Types":[Asset,AssetBinding,SwitchCase,Switch,AssetWrapper,AssetWrapperOrSwitch,AssetSwitch,StaticSwitch,DynamicSwitch,Expression,ExpressionRef,Binding,BindingRef,DataModel,Navigation,ExpressionObject,NavigationFlow,NavigationFlowTransition,NavigationBaseState,NavigationFlowTransitionableState,NavigationFlowViewState,NavigationFlowEndState,NavigationFlowActionState,NavigationFlowExternalState,NavigationFlowFlowState,NavigationFlowState,FlowResult,Templatable,Template,View,Flow],
-  }
+  },
+  "customPrimitives":[
+    'Expression',
+    'Asset',
+    'Binding',
+    'AssetWrapper',
+    'Schema.DataType',
+    'ExpressionHandler',
+  ]
 }

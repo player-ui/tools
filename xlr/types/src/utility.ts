@@ -18,7 +18,7 @@ export interface Manifest {
   /** Map of capabilities provided by the plugin to the name of the XLR for the capabilities */
   capabilities?: Map<string, Array<string>>;
   /** CustomPrimitives that are the most basic types in the Payer Ecosystem */
-  customPrimitives: Array<string>;
+  customPrimitives?: Array<string>;
 }
 
 export interface TSManifest {
