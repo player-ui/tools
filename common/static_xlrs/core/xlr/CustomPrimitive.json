@@ -1,0 +1,9 @@
+{
+    "name": "CustomPrimitive",
+    "source": "src/index.ts",
+    "type": "object",
+    "keyType": {
+        "type": "any"
+    },
+    "title": "CustomPrimitive"
+}

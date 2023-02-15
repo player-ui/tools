@@ -20,6 +20,7 @@ describe('Loading XLRs', () => {
     expect(sdk.hasType('ExpressionRef')).toStrictEqual(true);
     expect(sdk.hasType('ActionAsset')).toStrictEqual(true);
     expect(sdk.hasType('InputAsset')).toStrictEqual(true);
+    expect(sdk.hasType('CustomPrimitive')).toStrictEqual(true);
     expect(sdk.hasType('TransformedAction')).toStrictEqual(false);
     expect(sdk.hasType('TransformedInput')).toStrictEqual(false);
   });

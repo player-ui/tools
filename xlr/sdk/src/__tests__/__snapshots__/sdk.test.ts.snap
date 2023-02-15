@@ -1342,6 +1342,8 @@ export interface StaticSwitch<T extends Asset = Asset> {
         case: Expression | true;
     }>;
 }
+export interface CustomPrimitive {
+}
 export interface DynamicSwitch<T extends Asset = Asset> {
     /** A dynamic switch re-evaluates the applicable case as data changes */
     dynamicSwitch: Array<{
