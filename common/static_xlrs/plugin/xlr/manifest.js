@@ -10,5 +10,13 @@ module.exports = {
   "pluginName": "BaseAssetsPlugin",
   "capabilities": {
     "Assets":[InputAsset,TextAsset,ActionAsset,InfoAsset,CollectionAsset, TransformedAction, TransformedInput],
-  }
+  },
+  "customPrimitives":[
+    'Expression',
+    'Asset',
+    'Binding',
+    'AssetWrapper',
+    'Schema.DataType',
+    'ExpressionHandler',
+  ]
 }

@@ -29,11 +29,10 @@ const Templatable = require( './Templatable.json')
 const Template = require( './Template.json')
 const View = require( './View.json')
 const Flow = require( './Flow.json')
-const CustomPrimitive = require('./CustomPrimitive.json')
 
 module.exports = {
   "pluginName": "Types",
   "capabilities": {
-    "Types":[Asset,AssetBinding,SwitchCase,Switch,AssetWrapper,AssetWrapperOrSwitch,AssetSwitch,StaticSwitch,DynamicSwitch,Expression,ExpressionRef,Binding,BindingRef,DataModel,Navigation,ExpressionObject,NavigationFlow,NavigationFlowTransition,NavigationBaseState,NavigationFlowTransitionableState,NavigationFlowViewState,NavigationFlowEndState,NavigationFlowActionState,NavigationFlowExternalState,NavigationFlowFlowState,NavigationFlowState,FlowResult,Templatable,Template,View,Flow,CustomPrimitive],
+    "Types":[Asset,AssetBinding,SwitchCase,Switch,AssetWrapper,AssetWrapperOrSwitch,AssetSwitch,StaticSwitch,DynamicSwitch,Expression,ExpressionRef,Binding,BindingRef,DataModel,Navigation,ExpressionObject,NavigationFlow,NavigationFlowTransition,NavigationBaseState,NavigationFlowTransitionableState,NavigationFlowViewState,NavigationFlowEndState,NavigationFlowActionState,NavigationFlowExternalState,NavigationFlowFlowState,NavigationFlowState,FlowResult,Templatable,Template,View,Flow],
   }
 }

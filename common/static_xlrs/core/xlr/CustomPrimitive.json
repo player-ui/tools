@@ -1,9 +1,0 @@
-{
-    "name": "CustomPrimitive",
-    "source": "src/index.ts",
-    "type": "object",
-    "properties":{
-
-    },
-    "title": "CustomPrimitive"
-}
