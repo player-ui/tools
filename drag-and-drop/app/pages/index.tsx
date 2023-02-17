@@ -607,6 +607,9 @@ const App = () => {
           type: collectionType as NamedType<ObjectType>,
         };
       },
+      handleDndStateChange(content) {
+        console.log('handle state changes here');
+      }
     };
     const controller = new DragAndDropController(config);
     return {

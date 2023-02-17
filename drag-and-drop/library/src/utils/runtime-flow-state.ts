@@ -43,6 +43,14 @@ export interface RuntimeFlowStateOptions {
   };
 
   /**
+   * Function that will be called when Drag and Drop state changes
+   */
+  handleDndStateChange: (
+    /** The player content without any drag and drop specific assets */
+    content: View
+  ) => void;
+
+  /**
    * The content to initialize the editing experience with
    */
   restoreFrom?:
@@ -95,11 +103,17 @@ export class RuntimeFlowState {
     type: NamedType<ObjectType>;
   };
 
+  private handleDndStateChange: (
+    /** The player content without any drag and drop specific assets */
+    content: View
+  ) => void;
+
   constructor(options: RuntimeFlowStateOptions) {
     this.ROOT = makeDropTarget('drag-and-drop-view');
     this.dropTargetAssets.set(getAssetSymbol(this.ROOT), this.ROOT);
     this.resolveRequiredProperties = options.resolveRequiredProperties;
     this.resolveCollectionConversion = options.resolveCollectionConversion;
+    this.handleDndStateChange = options.handleDndStateChange;
   }
 
   exportState(): ExportedRuntimeFlowState {
@@ -399,6 +413,8 @@ export class RuntimeFlowState {
 
     containingDropTarget.value =
       this.computeViewForDropTarget(containingDropTarget);
+
+    this.handleDndStateChange(this.exportContent());
   }
 
   public async placeAsset(
@@ -457,6 +473,8 @@ export class RuntimeFlowState {
 
     // Resolve Arrays in parent
     this.updateArrayInParent(dropTarget, dropTargetSymbol);
+
+    this.handleDndStateChange(this.exportContent());
   }
 
   public getAsset(assetSymbol: symbol): {
@@ -484,6 +502,8 @@ export class RuntimeFlowState {
 
     this.realAssetMappings.delete(assetSymbol);
     parentDropTarget.value = this.computeViewForDropTarget(parentDropTarget);
+
+    this.handleDndStateChange(this.exportContent());
   }
 
   makeDropTargetContext(
@@ -626,6 +646,62 @@ export class RuntimeFlowState {
       xlrService,
       this.addDndStateToAsset(view, xlrService)
     );
+  }
+
+  exportContent(): View {
+    const baseView = this.view;
+
+    /** Walks the drag and drop state to remove any drop target assets */
+    const removeDndStateFromView = (obj: unknown): any => {
+      if (obj === baseView && isDropTargetAsset(obj)) {
+        if (obj.value?.asset) {
+          return removeDndStateFromView(obj.value.asset);
+        }
+
+        return undefined;
+      }
+
+      if (Array.isArray(obj)) {
+        return obj
+          .map((objectMember) => removeDndStateFromView(objectMember))
+          .filter((n) => n !== null && n !== undefined);
+      }
+
+      if (typeof obj === 'object' && obj !== null) {
+        if ('asset' in obj) {
+          const asWrapper: AssetWrapper<DropTargetAsset> = obj as any;
+          if ('asset' in obj && isDropTargetAsset(asWrapper.asset)) {
+            if (asWrapper.asset.value) {
+              const nestedValue = removeDndStateFromView(
+                asWrapper.asset.value.asset
+              );
+
+              // eslint-disable-next-line max-depth
+              if (nestedValue) {
+                return {
+                  asset: nestedValue,
+                };
+              }
+            }
+
+            return undefined;
+          }
+        }
+
+        return Object.fromEntries(
+          Object.entries(obj).map(([key, value]) => [
+            key,
+            removeDndStateFromView(value),
+          ])
+        );
+      }
+
+      return obj;
+    };
+
+    // remove any undefined values from the view
+    // we only want JSON compliant values
+    return JSON.parse(JSON.stringify(removeDndStateFromView(baseView)));
   }
 
   get view(): View {

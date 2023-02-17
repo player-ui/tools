@@ -20,6 +20,7 @@ const referenceAssetExtension: ExtensionProvider = {
 
 describe('drag-and-drop', () => {
   it('Fills in placeholder assets when dropped', async () => {
+    const mockHandleStateChange = jest.fn();
     const dndController = new DragAndDropController({
       playerTypes: typesManifest,
       extensions: [referenceAssetExtension],
@@ -78,6 +79,7 @@ describe('drag-and-drop', () => {
           },
         };
       },
+      handleDndStateChange: mockHandleStateChange,
     });
 
     const { player } = dndController.webPlayer;
@@ -121,6 +123,18 @@ describe('drag-and-drop', () => {
         "type": "info",
       }
     `);
+
+    expect(mockHandleStateChange).toBeCalledWith({
+      actions: [],
+      id: 'drag-and-drop-view-info',
+      title: {
+        asset: {
+          id: 'drag-and-drop-view-title-text',
+          type: 'text',
+        },
+      },
+      type: 'info',
+    });
   });
 
   it('Import existing content into drag and drop', async () => {
@@ -191,6 +205,7 @@ describe('drag-and-drop', () => {
       extensions: [referenceAssetExtension],
       resolveRequiredProperties: jest.fn(),
       resolveCollectionConversion: jest.fn(),
+      handleDndStateChange: jest.fn(),
     });
     const { player } = dndController.webPlayer;
 
