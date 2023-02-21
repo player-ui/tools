@@ -131,6 +131,10 @@ export default class XLRCompile extends BaseCommand {
         }
 
         if (generatedCapabilites) {
+          generatedCapabilites = {
+            ...generatedCapabilites,
+            customPrimitives,
+          };
           capabilities = generatedCapabilites;
         }
       }
@@ -142,6 +146,7 @@ export default class XLRCompile extends BaseCommand {
 
     // print out the manifest files
     const jsonManifest = JSON.stringify(capabilities, this.replacer, 4);
+    
     fs.writeFileSync(path.join(outputDirectory, 'manifest.json'), jsonManifest);
 
     const tsManifestFile = `${[...(capabilities.capabilities?.values() ?? [])]
@@ -151,16 +156,19 @@ export default class XLRCompile extends BaseCommand {
       })
       .join('\n')}
 
-module.exports = {
-  "pluginName": "${capabilities.pluginName}",
-  "capabilities": {
-    ${[...(capabilities.capabilities?.entries() ?? [])]
-      .map(([capabilityName, provides]) => {
-        return `"${capabilityName}":[${provides.join(',')}],`;
-      })
-      .join('\n\t\t')}
-  }
-}
+    module.exports = {
+      "pluginName": "${capabilities.pluginName}",
+      "capabilities": {
+        ${[...(capabilities.capabilities?.entries() ?? [])]
+          .map(([capabilityName, provides]) => {
+            return `"${capabilityName}":[${provides.join(',')}],`;
+          })
+          .join('\n\t\t')}
+      },
+      "customPrimitives": {
+        ${[...(capabilities.customPrimitives?.values() ?? [])]}
+      }
+    }
 `;
 
     fs.writeFileSync(path.join(outputDirectory, 'manifest.js'), tsManifestFile);
