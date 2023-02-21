@@ -1,5 +1,5 @@
-import ts from 'typescript';
-import tsvfs from '@typescript/vfs';
+import * as ts from 'typescript';
+import * as tsvfs from '@typescript/vfs';
 
 export interface SetupReturnType {
   /**

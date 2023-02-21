@@ -708,6 +708,46 @@ Array [
 ]
 `;
 
+exports[`Player JSDoc @meta Export 1`] = `
+Array [
+  Object {
+    "additionalProperties": Object {
+      "type": "unknown",
+    },
+    "description": "An asset is the smallest unit of user interaction in a player view",
+    "genericTokens": Array [
+      Object {
+        "constraints": Object {
+          "type": "string",
+        },
+        "default": Object {
+          "type": "string",
+        },
+        "symbol": "T",
+      },
+    ],
+    "meta": Object {
+      "category": "views",
+      "screenshot": "/path/image.png",
+    },
+    "name": "Asset",
+    "properties": Object {
+      "id": Object {
+        "node": Object {
+          "description": "Each asset requires a unique id per view",
+          "title": "Asset.id",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "title": "Asset",
+    "type": "object",
+  },
+]
+`;
+
 exports[`Player Types Export 1`] = `
 Array [
   Object {

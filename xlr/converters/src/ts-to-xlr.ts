@@ -469,7 +469,7 @@ export class TsConverter {
       const syntheticType = this.context.typeChecker.typeToTypeNode(
         effectiveType,
         node,
-        undefined
+        ts.NodeBuilderFlags.NoTruncation
       );
       if (syntheticType) {
         return this.tsNodeToType(syntheticType);

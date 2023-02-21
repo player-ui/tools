@@ -35,7 +35,7 @@ export default class XLRCompile extends BaseCommand {
     mode: Flags.enum({
       char: 'm',
       description:
-        'Search strategy for types to export: plugin (default, looks for exported EnchancedPlayerPlugin classes), type (all exported types) or by tag (@metadata "capability" JSDOC tag)',
+        'Search strategy for types to export: plugin (default, looks for exported EnchancedPlayerPlugin classes), type (all exported types) or by tag (@meta "capability" JSDOC tag)',
       options: [Mode.PLUGIN, Mode.TYPES, Mode.TAG],
       default: 'plugin',
     }),

@@ -18,7 +18,7 @@ export function tagVisitor(args: VisitorProps): Manifest | undefined {
           JSON.stringify(type, undefined, 4)
         );
 
-        const capability = type?.metadata?.capability ?? 'unknown';
+        const capability = type?.meta?.capability ?? 'unknown';
         if (!capabilities.has(capability)) {
           capabilities.set(capability, []);
         }
