@@ -260,4 +260,41 @@ describe('drag-and-drop', () => {
     expect(collection).not.toBeNull();
     expect(collection.type.name).toStrictEqual('CollectionAsset');
   });
+
+  it('Populates placeholder targets when importing existing content', async () => {
+    // arrange
+    const content = {
+      id: 'drag-and-drop-view-collection-1',
+      type: 'collection',
+    };
+    const dndController = new DragAndDropController({
+      playerTypes: typesManifest,
+      extensions: [referenceAssetExtension],
+      resolveRequiredProperties: jest.fn(),
+      resolveCollectionConversion: jest.fn(),
+      handleDndStateChange: jest.fn(),
+    });
+    const { player } = dndController.webPlayer;
+
+    // act
+    dndController.importView(content);
+    /**
+     *
+     */
+    const getView = () =>
+      (player.getState() as InProgressState).controllers?.view.currentView
+        ?.lastUpdate;
+
+    // assert
+    const dndView = getView() || {};
+    console.log(dndView);
+    const { label } = dndView.value.asset;
+    const { values } = dndView.value.asset;
+    expect(label.asset.type).toStrictEqual('drop-target');
+    expect(label.asset.context.propertyName).toStrictEqual('label');
+    expect(label.asset.context.isArrayElement).toStrictEqual(false);
+    expect(values[0].asset.type).toStrictEqual('drop-target');
+    expect(values[0].asset.context.propertyName).toStrictEqual('values');
+    expect(values[0].asset.context.isArrayElement).toStrictEqual(true);
+  });
 });

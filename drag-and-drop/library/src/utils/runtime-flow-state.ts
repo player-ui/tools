@@ -527,33 +527,38 @@ export class RuntimeFlowState {
 
   createDropTarget(
     xlrService: XLRService,
-    targetAsset: Asset,
+    targetAsset?: Asset,
     dropTargetContext?: DropTargetAssetContext,
     parentAsset?: Asset
   ): DropTargetAsset {
-    const targetAssetType = xlrService.XLRSDK.getType(
-      targetAsset.type
-    ) as NamedType<ObjectType>;
-    const { plugin: pluginName } = xlrService.XLRSDK.getTypeInfo(
-      targetAsset.type
-    ) as TypeMetadata;
-    const dropTarget = makeDropTarget(`${targetAsset.id}-dropTarget`);
-    dropTarget.context = dropTargetContext;
-    const wrappedTargetAsset: PlacedAsset = {
-      identifier: {
-        pluginName,
-        assetName: targetAssetType.name ?? '',
-        capability: dropTargetContext ? 'Assets' : 'Views',
-      },
-      type: targetAssetType,
-      asset: targetAsset,
-    };
-    dropTarget.values?.push(wrappedTargetAsset);
+    const id = targetAsset
+      ? `${targetAsset.id}-dropTarget`
+      : `${parentAsset?.id}-dropTarget`;
+    const dropTarget = makeDropTarget(id, dropTargetContext);
     const dropTargetSymbol = getAssetSymbol(dropTarget);
-    const targetAssetSymbol = getAssetSymbol(targetAsset);
     this.dropTargetAssets.set(dropTargetSymbol, dropTarget);
-    this.realAssetMappings.set(targetAssetSymbol, wrappedTargetAsset);
-    this.assetsToTargets.set(targetAssetSymbol, dropTargetSymbol);
+    if (targetAsset) {
+      const targetAssetType = xlrService.XLRSDK.getType(
+        targetAsset.type
+      ) as NamedType<ObjectType>;
+      const { plugin: pluginName } = xlrService.XLRSDK.getTypeInfo(
+        targetAsset.type
+      ) as TypeMetadata;
+      const wrappedTargetAsset: PlacedAsset = {
+        identifier: {
+          pluginName,
+          assetName: targetAssetType.name ?? '',
+          capability: dropTargetContext ? 'Assets' : 'Views',
+        },
+        type: targetAssetType,
+        asset: targetAsset,
+      };
+      const targetAssetSymbol = getAssetSymbol(targetAsset);
+      dropTarget.values?.push(wrappedTargetAsset);
+      this.realAssetMappings.set(targetAssetSymbol, wrappedTargetAsset);
+      this.assetsToTargets.set(targetAssetSymbol, dropTargetSymbol);
+    }
+
     if (parentAsset) {
       this.targetsToAssets.set(dropTargetSymbol, getAssetSymbol(parentAsset));
     }
@@ -578,6 +583,8 @@ export class RuntimeFlowState {
     if (assetType) {
       newObj[UUIDSymbol] = Symbol(`${newObj.id}-${newObj.type}`);
     }
+
+    const propsList = Object.keys(newObj);
 
     Object.keys(newObj).forEach((key) => {
       let isAssetWrapper = false;
@@ -612,7 +619,7 @@ export class RuntimeFlowState {
           parentAsset
         );
       } else if (typeof obj[key] === 'object') {
-        newObj[key] = this.addDndStateToAsset(
+        const targetAsset = this.addDndStateToAsset(
           obj[key],
           xlrService,
           isAssetWrapper
@@ -625,10 +632,50 @@ export class RuntimeFlowState {
             : dropTargetContext,
           isAssetWrapper ? newObj : parentAsset
         );
+
+        if (
+          targetAsset &&
+          Array.isArray(targetAsset) &&
+          targetAsset.length === 0
+        ) {
+          propsList.splice(propsList.indexOf(key), 1);
+        }
+
+        newObj[key] = targetAsset;
       } else {
         newObj[key] = obj[key];
       }
     });
+
+    if (assetType) {
+      Object.keys(assetType.properties)
+        .filter((x) => !propsList.includes(x))
+        .forEach((key) => {
+          const { node } = assetType.properties[key];
+          if (
+            (node.type === 'ref' && node.ref.startsWith('AssetWrapper')) ||
+            (node.type === 'array' &&
+              node.elementType.type === 'ref' &&
+              node.elementType.ref.startsWith('AssetWrapper'))
+          ) {
+            const targetAsset = {
+              asset: this.createDropTarget(
+                xlrService,
+                undefined,
+                this.makeDropTargetContext(
+                  xlrService,
+                  newObj,
+                  key,
+                  node.type === 'array'
+                ),
+                newObj
+              ),
+            };
+            newObj[key] = node.type === 'array' ? [targetAsset] : targetAsset;
+          }
+        });
+    }
+
     if (Array.isArray(obj)) {
       newObj.length = obj.length;
       return Array.from(newObj);
