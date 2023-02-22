@@ -146,7 +146,6 @@ export default class XLRCompile extends BaseCommand {
 
     // print out the manifest files
     const jsonManifest = JSON.stringify(capabilities, this.replacer, 4);
-    debugger;
     fs.writeFileSync(path.join(outputDirectory, 'manifest.json'), jsonManifest);
 
     const tsManifestFile = `${[...(capabilities.capabilities?.values() ?? [])]
