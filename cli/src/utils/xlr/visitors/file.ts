@@ -2,7 +2,6 @@ import type { Manifest } from '@player-tools/xlr';
 import path from 'path';
 import fs from 'fs';
 import type { VisitorProps } from './types';
-
 /** export all exported types in the file */
 export function fileVisitor(args: VisitorProps): Manifest | undefined {
   const { sourceFile, converter, outputDirectory } = args;
