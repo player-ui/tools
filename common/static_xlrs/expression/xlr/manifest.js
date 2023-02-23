@@ -1,4 +1,5 @@
 const size = require('./size.json')
+const length = require('./length.json')
 const isEmpty = require('./isEmpty.json')
 const isNotEmpty = require('./isNotEmpty.json')
 const concat = require('./concat.json')
@@ -22,6 +23,6 @@ module.exports = {
   "capabilities": {
     "Assets":[],
 		"Views":[],
-		"Expressions":[size,isEmpty,isNotEmpty,concat,trim,upperCase,lowerCase,replace,titleCase,sentenceCase,number,round,floor,ceil,sum,findPropertyIndex,findProperty,containsAny],
+		"Expressions":[size,length,isEmpty,isNotEmpty,concat,trim,upperCase,lowerCase,replace,titleCase,sentenceCase,number,round,floor,ceil,sum,findPropertyIndex,findProperty,containsAny],
   }
 }

@@ -1,14 +1,12 @@
 {
-    "pluginName": "BaseAssetsPlugin",
+    "pluginName": "reference-assets-web-plugin",
     "capabilities": {
         "Assets": [
             "InputAsset",
             "TextAsset",
             "ActionAsset",
             "InfoAsset",
-            "CollectionAsset",
-            "TransformedAction",
-            "TransformedInput"
+            "CollectionAsset"
         ]
     }
 }

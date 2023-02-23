@@ -1,6 +1,6 @@
 {
     "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/59/execroot/player/plugins/common-expressions/core/src/expressions/index.ts",
-    "name": "lowerCase",
+    "name": "length",
     "type": "ref",
     "ref": "ExpressionHandler",
     "genericArguments": [
@@ -8,7 +8,7 @@
             "type": "tuple",
             "elementTypes": [
                 {
-                    "name": "arg",
+                    "name": "val",
                     "type": {
                         "type": "unknown"
                     }
@@ -18,7 +18,7 @@
             "minItems": 1
         },
         {
-            "type": "unknown"
+            "type": "number"
         }
     ]
 }
