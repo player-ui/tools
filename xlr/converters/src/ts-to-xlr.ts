@@ -177,6 +177,7 @@ export class TsConverter {
     const variableDeclarations = node.declarationList.declarations;
     if (variableDeclarations.length === 1) {
       const variable = variableDeclarations[0];
+
       if (variable.initializer) {
         let resultingNode;
         if (
@@ -189,6 +190,13 @@ export class TsConverter {
           );
         } else {
           resultingNode = this.tsLiteralToType(variable.initializer);
+        }
+
+        // If resultingNode is a reference to a function or custom primitive and not a concrete value
+        // we need to update the name to be the name of the exporting variable
+        // not the name of the identifier its aliasing
+        if (resultingNode.type === 'function' || resultingNode.type === 'ref') {
+          resultingNode = { ...resultingNode, name: variable.name.getText() };
         }
 
         return {
@@ -461,7 +469,7 @@ export class TsConverter {
       const syntheticType = this.context.typeChecker.typeToTypeNode(
         effectiveType,
         node,
-        undefined
+        ts.NodeBuilderFlags.NoTruncation
       );
       if (syntheticType) {
         return this.tsNodeToType(syntheticType);
@@ -629,11 +637,21 @@ export class TsConverter {
     const functionReturnType =
       this.context.typeChecker.getTypeAtLocation(functionCall);
 
-    const syntheticNode = this.context.typeChecker.typeToTypeNode(
+    let syntheticNode = this.context.typeChecker.typeToTypeNode(
       functionReturnType,
       document,
       undefined
     );
+
+    // Synthetic node loses parameter location information, and text making it unable
+    // to get the parameter name in tsNodeToType
+    if (ts.isArrowFunction(functionCall)) {
+      const syntheticWithParameters = {
+        ...syntheticNode,
+        parameters: functionCall.parameters,
+      };
+      syntheticNode = syntheticWithParameters as unknown as ts.TypeNode;
+    }
 
     if (syntheticNode) {
       if (

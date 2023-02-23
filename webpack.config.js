@@ -30,6 +30,7 @@ module.exports = (env, argv) => ({
       },
       {
         test: /\.m?js$/,
+        type: 'javascript/auto',
         use: {
           loader: 'babel-loader',
           options: {

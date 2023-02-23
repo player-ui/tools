@@ -436,6 +436,25 @@ describe('Type with typeof', () => {
 
     expect(XLR).toMatchSnapshot();
   });
+
+  it('Indexing (long)', () => {
+    const sc = `
+    const options = [
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+      23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41,
+      42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58,
+    ] as const;
+    
+    export type options = typeof options[number];    
+
+    `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
 });
 
 describe('Edge Cases', () => {
@@ -637,8 +656,30 @@ describe('Variable Exports', () => {
 
   it('gets named tuple members', () => {
     const sc = `
-    export type Foo = [argName: string, argValue: string];
-  `;
+      export type Foo = [argName: string, argValue: string];
+    `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+
+  it('Arrow function with parameters', () => {
+    const sc = `
+      interface Bar {
+        foo: string
+        fuz: number
+      }
+
+      export const foo = (input: number): Bar => {
+        return {
+          foo: '1',
+          fuz: 1,
+        };
+      };
+    `;
 
     const { sf, tc } = setupTestEnv(sc);
     const converter = new TsConverter(tc);
@@ -649,9 +690,33 @@ describe('Variable Exports', () => {
 
   it('named tuples in generics', () => {
     const sc = `
-    type Foo<T> = T;
-    export type Bar = Foo<[argName: string, argValue: string]>;
-  `;
+      type Foo<T> = T;
+      export type Bar = Foo<[argName: string, argValue: string]>;
+    `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+
+  it('Aliased Arrow function exports its own name', () => {
+    const sc = `
+      interface Bar {
+        foo: string
+        fuz: number
+      }
+
+      export const foo = (input: number): Bar => {
+        return {
+          foo: '1',
+          fuz: 1,
+        };
+      };
+
+      export const baz = foo
+    `;
 
     const { sf, tc } = setupTestEnv(sc);
     const converter = new TsConverter(tc);
