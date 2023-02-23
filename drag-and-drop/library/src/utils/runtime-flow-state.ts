@@ -1,7 +1,15 @@
 import type { NamedType, ObjectType } from '@player-tools/xlr';
 import type { XLRService } from '@player-tools/language-service';
 import type { TypeMetadata } from '@player-tools/xlr-sdk';
-import type { Asset, AssetWrapper, Flow, View } from '@player-ui/types';
+import type {
+  Asset,
+  AssetWrapper,
+  DataModel,
+  Flow,
+  View,
+  Schema,
+  Navigation,
+} from '@player-ui/types';
 import type {
   ExtensionProviderAssetIdentifier,
   FlowWithOneView,
@@ -73,7 +81,14 @@ export interface RuntimeFlowStateOptions {
  * Manages the translation between Drag and Drop state to Player state
  */
 export class RuntimeFlowState {
+  /** The root drag and drop asset */
   private ROOT: DropTargetAsset;
+  /** The schema section of the content */
+  public schema?: Schema.Schema;
+  /** The data section of the content */
+  public data?: DataModel;
+  /** The navigation section of the content */
+  public navigation: Navigation;
   /** Symbol to Real Asset */
   private realAssetMappings: Map<symbol, PlacedAsset> = new Map();
   /** Symbol to Drop Target Asset */
@@ -97,6 +112,20 @@ export class RuntimeFlowState {
 
   constructor(options: RuntimeFlowStateOptions) {
     this.ROOT = makeDropTarget('drag-and-drop-view');
+    this.navigation = {
+      BEGIN: 'FLOW_1',
+      FLOW_1: {
+        startState: 'VIEW_1',
+        VIEW_1: {
+          state_type: 'VIEW',
+          ref: this.view.id,
+          transitions: {
+            '*': 'VIEW_1',
+          },
+        },
+      },
+    };
+
     this.dropTargetAssets.set(getAssetSymbol(this.ROOT), this.ROOT);
     this.resolveRequiredProperties = options.resolveRequiredProperties;
     this.resolveCollectionConversion = options.resolveCollectionConversion;
@@ -638,19 +667,9 @@ export class RuntimeFlowState {
     return {
       id: 'dnd-controller',
       views: [view],
-      navigation: {
-        BEGIN: 'FLOW_1',
-        FLOW_1: {
-          startState: 'VIEW_1',
-          VIEW_1: {
-            state_type: 'VIEW',
-            ref: view.id,
-            transitions: {
-              '*': 'VIEW_1',
-            },
-          },
-        },
-      },
+      schema: this.schema,
+      data: this.data,
+      navigation: this.navigation,
     };
   }
 }

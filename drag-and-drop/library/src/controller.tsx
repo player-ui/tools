@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Asset, AssetWrapper, ReactPlayer, View } from '@player-ui/react';
+import type { DataModel, Navigation, Schema } from '@player-ui/player';
 import { ConsoleLogger, WebPlayer } from '@player-ui/react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -68,6 +69,30 @@ export class DragAndDropController {
 
   public get Canvas() {
     return this.webPlayer.Component;
+  }
+
+  public getPlayerNavigationSection(): Navigation {
+    return this.runtimeState.navigation;
+  }
+
+  public setPlayerNavigationSection(navigation: Navigation) {
+    this.runtimeState.navigation = navigation;
+  }
+
+  public getPlayerSchemaSection() {
+    return this.runtimeState.schema;
+  }
+
+  public setPlayerSchemaSection(schema: Schema.Schema) {
+    this.runtimeState.schema = schema;
+  }
+
+  public getPlayerDataSection() {
+    return this.runtimeState.data;
+  }
+
+  public setPlayerDataSection(data: DataModel) {
+    this.runtimeState.data = data;
   }
 
   constructor(options: DragAndDropControllerOptions) {
