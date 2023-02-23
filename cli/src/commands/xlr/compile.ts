@@ -133,8 +133,14 @@ export default class XLRCompile extends BaseCommand {
         if (generatedCapabilites) {
           generatedCapabilites = {
             ...generatedCapabilites,
-            customPrimitives,
           };
+          if (customPrimitives) {
+            generatedCapabilites = {
+              ...generatedCapabilites,
+              customPrimitives,
+            };
+          }
+
           capabilities = generatedCapabilites;
         }
       }
