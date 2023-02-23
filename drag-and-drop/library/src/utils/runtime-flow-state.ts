@@ -10,7 +10,11 @@ import type {
   DropTargetAssetContext,
 } from '../types';
 import { UUIDSymbol } from '../types';
-import { makeDropTarget, getAssetSymbol } from './helpers';
+import {
+  makeDropTarget,
+  getAssetSymbol,
+  removeDndStateFromView,
+} from './helpers';
 import { isDropTargetAsset } from '../types';
 
 /** The type for exporting and restoring the flow state */
@@ -414,7 +418,7 @@ export class RuntimeFlowState {
     containingDropTarget.value =
       this.computeViewForDropTarget(containingDropTarget);
 
-    this.handleDndStateChange(this.exportContent());
+    this.handleDndStateChange(removeDndStateFromView(this.view));
   }
 
   public async placeAsset(
@@ -474,7 +478,7 @@ export class RuntimeFlowState {
     // Resolve Arrays in parent
     this.updateArrayInParent(dropTarget, dropTargetSymbol);
 
-    this.handleDndStateChange(this.exportContent());
+    this.handleDndStateChange(removeDndStateFromView(this.view));
   }
 
   public getAsset(assetSymbol: symbol): {
@@ -503,10 +507,10 @@ export class RuntimeFlowState {
     this.realAssetMappings.delete(assetSymbol);
     parentDropTarget.value = this.computeViewForDropTarget(parentDropTarget);
 
-    this.handleDndStateChange(this.exportContent());
+    this.handleDndStateChange(removeDndStateFromView(this.view));
   }
 
-  makeDropTargetContext(
+  private makeDropTargetContext(
     xlrService: XLRService,
     parent: Asset,
     propertyName: string,
@@ -525,7 +529,7 @@ export class RuntimeFlowState {
     };
   }
 
-  createDropTarget(
+  private createDropTarget(
     xlrService: XLRService,
     targetAsset?: Asset,
     dropTargetContext?: DropTargetAssetContext,
@@ -568,7 +572,7 @@ export class RuntimeFlowState {
     return dropTarget;
   }
 
-  addDndStateToAsset(
+  private addDndStateToAsset(
     obj: any,
     xlrService: XLRService,
     dropTargetContext?: DropTargetAssetContext,
@@ -684,7 +688,7 @@ export class RuntimeFlowState {
     return newObj;
   }
 
-  importView(view: View, xlrService: XLRService) {
+  public importView(view: View, xlrService: XLRService) {
     this.realAssetMappings.clear();
     this.dropTargetAssets.clear();
     this.assetsToTargets.clear();
@@ -693,62 +697,6 @@ export class RuntimeFlowState {
       xlrService,
       this.addDndStateToAsset(view, xlrService)
     );
-  }
-
-  exportContent(): View {
-    const baseView = this.view;
-
-    /** Walks the drag and drop state to remove any drop target assets */
-    const removeDndStateFromView = (obj: unknown): any => {
-      if (obj === baseView && isDropTargetAsset(obj)) {
-        if (obj.value?.asset) {
-          return removeDndStateFromView(obj.value.asset);
-        }
-
-        return undefined;
-      }
-
-      if (Array.isArray(obj)) {
-        return obj
-          .map((objectMember) => removeDndStateFromView(objectMember))
-          .filter((n) => n !== null && n !== undefined);
-      }
-
-      if (typeof obj === 'object' && obj !== null) {
-        if ('asset' in obj) {
-          const asWrapper: AssetWrapper<DropTargetAsset> = obj as any;
-          if ('asset' in obj && isDropTargetAsset(asWrapper.asset)) {
-            if (asWrapper.asset.value) {
-              const nestedValue = removeDndStateFromView(
-                asWrapper.asset.value.asset
-              );
-
-              // eslint-disable-next-line max-depth
-              if (nestedValue) {
-                return {
-                  asset: nestedValue,
-                };
-              }
-            }
-
-            return undefined;
-          }
-        }
-
-        return Object.fromEntries(
-          Object.entries(obj).map(([key, value]) => [
-            key,
-            removeDndStateFromView(value),
-          ])
-        );
-      }
-
-      return obj;
-    };
-
-    // remove any undefined values from the view
-    // we only want JSON compliant values
-    return JSON.parse(JSON.stringify(removeDndStateFromView(baseView)));
   }
 
   get view(): View {

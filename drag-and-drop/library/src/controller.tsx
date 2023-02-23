@@ -8,14 +8,13 @@ import { XLRService } from '@player-tools/language-service';
 import type { TypeMetadata } from '@player-tools/xlr-sdk';
 import { PlayerDndPlugin } from './utils';
 import type {
-  DropTargetAsset,
   ExtensionProvider,
   ExtensionProviderAssetIdentifier,
   TransformedDropTargetAssetType,
 } from './types';
-import { isDropTargetAsset } from './types';
 import { RuntimeFlowState } from './utils/runtime-flow-state';
 import { DropComponent } from './utils/drop-component';
+import { removeDndStateFromView } from './utils/helpers';
 
 export interface DragAndDropControllerOptions {
   /** The list of XLR enabled extensions to load as available resources */
@@ -216,11 +215,12 @@ export class DragAndDropController {
    * This content will be able to run in a player configured with the same plugins loaded into the editor
    * */
   public exportContent(): View {
-    return this.runtimeState.exportContent();
+    return removeDndStateFromView(this.runtimeState.view);
   }
 
   /**
    * Imports existing content and populates the state of drag and drop
+   *
    * @param view - player content
    */
   public importView(view: View) {
