@@ -4,12 +4,7 @@ import type {
   TemplateContext,
   Logger,
 } from 'typescript-template-language-service-decorator';
-import type {
-  FunctionType,
-  TSManifest,
-  FunctionTypeParameters,
-  NodeType,
-} from '@player-tools/xlr';
+import type { FunctionType, TSManifest, NodeType } from '@player-tools/xlr';
 import { createTSDocString } from '@player-tools/xlr-utils';
 import { XLRSDK } from '@player-tools/xlr-sdk';
 import type { ExpressionNode } from '@player-ui/player';
@@ -19,90 +14,41 @@ import {
   toTSLocation,
   convertExprToJSONNode,
 } from './utils';
+import { toFunction } from './transforms';
 
-interface ExpEntry {
+interface ExpressionEntry {
+  /**
+   * The name of the expression
+   */
   name: string;
-  description: string;
+  /**
+   * The description of the expression
+   */
+  description?: string;
+  /**
+   * The XLR type of the expression
+   */
   type: FunctionType;
+  /**
+   * The XLR enabled plugin the expression was sourced from
+   */
   source: TSManifest;
 }
 
-interface ExpressionList {
-  entries: Map<string, ExpEntry>;
-}
-
 export interface ExpressionLanguageServiceConfig {
+  /**
+   * The list of XLR enabled plugins to load
+   */
   plugins: Array<TSManifest>;
 }
 
-// TODO: This should move into the xlr/cli package so expressions are converted to functions at build time
-function reduceExpression(plugins: Array<TSManifest>): ExpressionList {
-  // Overlaps in names will be resolved by the last plugin to be loaded
-  // So use a map to ensure no duplicates
-  const expressions = new Map<string, ExpEntry>();
-
-  plugins.forEach((plugin) => {
-    const { capabilities } = plugin;
-    const registeredExpressions = capabilities?.Expressions ?? [];
-
-    registeredExpressions.forEach((exp) => {
-      if (exp.type !== 'ref' || !exp.genericArguments) {
-        return;
-      }
-
-      const expName = exp.name;
-      const [args, returnType] = exp.genericArguments;
-
-      const parameters: Array<FunctionTypeParameters> = (
-        args.type === 'tuple' ? args.elementTypes : []
-      ).map((elementType, index) => {
-        return {
-          name:
-            elementType.name ??
-            elementType.type.name ??
-            elementType.type.title ??
-            `arg_${index}`,
-
-          type: {
-            name:
-              elementType.name ??
-              elementType.type.name ??
-              elementType.type.title ??
-              `arg_${index}`,
-            ...elementType.type,
-          },
-          optional:
-            elementType.optional === true ? elementType.optional : undefined,
-        };
-      });
-
-      const entry: ExpEntry = {
-        name: expName,
-        description: exp.description ?? '',
-        source: plugin,
-        type: {
-          ...exp,
-          type: 'function',
-          parameters,
-          returnType,
-        },
-      };
-
-      expressions.set(expName, entry);
-    });
-  });
-
-  const expList: ExpressionList = {
-    entries: expressions,
-  };
-
-  return expList;
-}
-
+/**
+ * Language server to check Player expression syntax and usage
+ */
 export class ExpressionLanguageService implements TemplateLanguageService {
   private logger?: Logger;
   private _plugins: Array<TSManifest> = [];
-  private _expressions: ExpressionList;
+  private _expressions: Map<string, ExpressionEntry>;
   private xlr: XLRSDK;
 
   constructor(
@@ -110,22 +56,50 @@ export class ExpressionLanguageService implements TemplateLanguageService {
   ) {
     this.logger = options?.logger;
     this._plugins = options?.plugins ?? [];
-    this._expressions = reduceExpression(this._plugins);
     this.xlr = new XLRSDK();
 
     this._plugins.forEach((p) => {
-      this.xlr.loadDefinitionsFromModule(p);
+      this.xlr.loadDefinitionsFromModule(p, undefined, [toFunction]);
     });
+    this._expressions = this.reduceExpression();
   }
 
   setConfig(config: ExpressionLanguageServiceConfig) {
     this._plugins = config.plugins;
-    this._expressions = reduceExpression(this._plugins);
     this.xlr = new XLRSDK();
 
     this._plugins.forEach((p) => {
-      this.xlr.loadDefinitionsFromModule(p);
+      this.xlr.loadDefinitionsFromModule(p, undefined, [toFunction]);
     });
+    this._expressions = this.reduceExpression();
+  }
+
+  private reduceExpression(): Map<string, ExpressionEntry> {
+    // Overlaps in names will be resolved by the last plugin to be loaded
+    // So use a map to ensure no duplicates
+    const expressions = new Map<string, ExpressionEntry>();
+
+    this.xlr.listTypes().forEach((type) => {
+      const typeInfo = this.xlr.getTypeInfo(type.name);
+      const source = this._plugins.find(
+        (value) => value.pluginName === typeInfo?.plugin
+      );
+
+      if (
+        type.type === 'function' &&
+        typeInfo?.capability === 'Expressions' &&
+        source
+      ) {
+        expressions.set(type.name, {
+          name: type.name,
+          description: type.description,
+          type: type as FunctionType,
+          source,
+        });
+      }
+    });
+
+    return expressions;
   }
 
   getCompletionsAtPosition(
@@ -143,7 +117,7 @@ export class ExpressionLanguageService implements TemplateLanguageService {
       // This happens for the start of an expression (e``)
       // Provide all the completions in this case
 
-      this._expressions.entries.forEach((exp) => {
+      this._expressions.forEach((exp) => {
         completionInfo.entries.push({
           name: exp.name,
           kind: ts.ScriptElementKind.functionElement,
@@ -163,7 +137,7 @@ export class ExpressionLanguageService implements TemplateLanguageService {
     if (token?.type === 'Compound' && token.error) {
       // We hit the end of the expression, and it's expecting more
       // so provide all the completions
-      this._expressions.entries.forEach((exp) => {
+      this._expressions.forEach((exp) => {
         completionInfo.entries.push({
           name: exp.name,
           kind: ts.ScriptElementKind.functionElement,
@@ -180,9 +154,9 @@ export class ExpressionLanguageService implements TemplateLanguageService {
       // get the relevant start of the identifier
       const start = token.location?.start ?? { character: 0 };
       const wordFromStart = line.slice(start.character, position.character);
-      const allCompletions = Array.from(
-        this._expressions.entries.keys()
-      ).filter((key) => key.startsWith(wordFromStart));
+      const allCompletions = Array.from(this._expressions.keys()).filter(
+        (key) => key.startsWith(wordFromStart)
+      );
 
       allCompletions.forEach((c) => {
         completionInfo.entries.push({
@@ -203,7 +177,7 @@ export class ExpressionLanguageService implements TemplateLanguageService {
     position: ts.LineAndCharacter,
     name: string
   ): ts.CompletionEntryDetails {
-    const expression = this._expressions.entries.get(name);
+    const expression = this._expressions.get(name);
 
     const completionDetails: ts.CompletionEntryDetails = {
       name,
@@ -230,7 +204,7 @@ export class ExpressionLanguageService implements TemplateLanguageService {
     const token = getTokenAtPosition(parsed, position);
 
     if (token?.type === 'Identifier') {
-      const expression = this._expressions.entries.get(token.name);
+      const expression = this._expressions.get(token.name);
 
       if (expression) {
         const completionDetails = this.getCompletionEntryDetails(
@@ -289,7 +263,7 @@ export class ExpressionLanguageService implements TemplateLanguageService {
     if (node.type === 'CallExpression') {
       // Check that the expression is valid
       const exprName = node.callTarget.name;
-      const expression = this._expressions.entries.get(exprName);
+      const expression = this._expressions.get(exprName);
 
       node.args.forEach((n) => {
         diags.push(...this.getDiagnosticsForNode(context, n));

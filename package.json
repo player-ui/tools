@@ -66,6 +66,7 @@
     "all-contributors-cli": "^6.20.0",
     "auto": "^10.37.2",
     "babel-loader": "^8.2.5",
+    "bundle-analyzer": "^0.0.6",
     "c8": "^7.10.0",
     "case-sensitive-paths-webpack-plugin": "^2.3.0",
     "chalk": "^4.0.1",
