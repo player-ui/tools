@@ -73,10 +73,11 @@ const createTemplateInstance = (
   }, '');
 
   /** Try to parse the expression as valid */
-  const parsedExpression = parseExpression(value, { strict: false });
-
-  if (parsedExpression.error) {
-    throw parsedExpression.error;
+  if (options.nestedContext === 'expression') {
+    const parsedExpression = parseExpression(value, { strict: false });
+    if (parsedExpression.error) {
+      throw parsedExpression.error;
+    }
   }
 
   /** get the unwrapped version */
