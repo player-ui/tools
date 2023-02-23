@@ -8,14 +8,13 @@ import { XLRService } from '@player-tools/language-service';
 import type { TypeMetadata } from '@player-tools/xlr-sdk';
 import { PlayerDndPlugin } from './utils';
 import type {
-  DropTargetAsset,
   ExtensionProvider,
   ExtensionProviderAssetIdentifier,
   TransformedDropTargetAssetType,
 } from './types';
-import { isDropTargetAsset } from './types';
 import { RuntimeFlowState } from './utils/runtime-flow-state';
 import { DropComponent } from './utils/drop-component';
+import { removeDndStateFromView } from './utils/helpers';
 
 export interface DragAndDropControllerOptions {
   /** The list of XLR enabled extensions to load as available resources */
@@ -48,6 +47,14 @@ export interface DragAndDropControllerOptions {
     /** The corresponding type for the generated collection asset */
     type: NamedType<ObjectType>;
   };
+
+  /**
+   * Function that will be called when Drag and Drop state changes
+   */
+  handleDndStateChange: (
+    /** The player content without any drag and drop specific assets */
+    content: View
+  ) => void;
 
   /** A custom component to use for rendering droppable Assets */
   Component?: React.ComponentType<TransformedDropTargetAssetType>;
@@ -89,6 +96,7 @@ export class DragAndDropController {
           this.PlayerXLRService
         );
       },
+      handleDndStateChange: options.handleDndStateChange,
     });
 
     this.dndWebPlayerPlugin = new PlayerDndPlugin({
@@ -207,63 +215,12 @@ export class DragAndDropController {
    * This content will be able to run in a player configured with the same plugins loaded into the editor
    * */
   public exportContent(): View {
-    const baseView = this.runtimeState.view;
-
-    /** Walks the drag and drop state to remove any drop target assets */
-    const removeDndStateFromView = (obj: unknown): any => {
-      if (obj === baseView && isDropTargetAsset(obj)) {
-        if (obj.value?.asset) {
-          return removeDndStateFromView(obj.value.asset);
-        }
-
-        return undefined;
-      }
-
-      if (Array.isArray(obj)) {
-        return obj
-          .map((objectMember) => removeDndStateFromView(objectMember))
-          .filter((n) => n !== null && n !== undefined);
-      }
-
-      if (typeof obj === 'object' && obj !== null) {
-        if ('asset' in obj) {
-          const asWrapper: AssetWrapper<DropTargetAsset> = obj as any;
-          if ('asset' in obj && isDropTargetAsset(asWrapper.asset)) {
-            if (asWrapper.asset.value) {
-              const nestedValue = removeDndStateFromView(
-                asWrapper.asset.value.asset
-              );
-
-              // eslint-disable-next-line max-depth
-              if (nestedValue) {
-                return {
-                  asset: nestedValue,
-                };
-              }
-            }
-
-            return undefined;
-          }
-        }
-
-        return Object.fromEntries(
-          Object.entries(obj).map(([key, value]) => [
-            key,
-            removeDndStateFromView(value),
-          ])
-        );
-      }
-
-      return obj;
-    };
-
-    // remove any undefined values from the view
-    // we only want JSON compliant values
-    return JSON.parse(JSON.stringify(removeDndStateFromView(baseView)));
+    return removeDndStateFromView(this.runtimeState.view);
   }
 
   /**
    * Imports existing content and populates the state of drag and drop
+   *
    * @param view - player content
    */
   public importView(view: View) {
