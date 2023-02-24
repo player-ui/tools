@@ -1,0 +1,24 @@
+{
+    "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/59/execroot/player/plugins/common-expressions/core/src/expressions/index.ts",
+    "name": "length",
+    "type": "ref",
+    "ref": "ExpressionHandler",
+    "genericArguments": [
+        {
+            "type": "tuple",
+            "elementTypes": [
+                {
+                    "name": "val",
+                    "type": {
+                        "type": "unknown"
+                    }
+                }
+            ],
+            "additionalItems": false,
+            "minItems": 1
+        },
+        {
+            "type": "number"
+        }
+    ]
+}

@@ -1,14 +1,12 @@
-const InputAsset = require( './InputAsset.json')
-const TextAsset = require( './TextAsset.json')
-const ActionAsset = require( './ActionAsset.json')
-const InfoAsset = require( './InfoAsset.json')
-const CollectionAsset = require( './CollectionAsset.json')
-const TransformedAction = require( './TransformedAction.json')
-const TransformedInput = require( './TransformedInput.json')
+const InputAsset = require('./InputAsset.json')
+const TextAsset = require('./TextAsset.json')
+const ActionAsset = require('./ActionAsset.json')
+const InfoAsset = require('./InfoAsset.json')
+const CollectionAsset = require('./CollectionAsset.json')
 
 module.exports = {
-  "pluginName": "BaseAssetsPlugin",
+  "pluginName": "reference-assets-web-plugin",
   "capabilities": {
-    "Assets":[InputAsset,TextAsset,ActionAsset,InfoAsset,CollectionAsset, TransformedAction, TransformedInput],
+    "Assets":[InputAsset,TextAsset,ActionAsset,InfoAsset,CollectionAsset],
   }
 }

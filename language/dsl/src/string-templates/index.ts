@@ -1,4 +1,5 @@
 import React from 'react';
+import { parseExpression } from '@player-ui/player';
 
 export type TemplateInstanceRefStringContext = 'binding' | 'expression';
 export interface TemplateRefStringOptions {
@@ -70,6 +71,14 @@ const createTemplateInstance = (
 
     return sum + next + (element?.toRefString(options) ?? '');
   }, '');
+
+  /** Try to parse the expression as valid */
+  if (options.nestedContext === 'expression') {
+    const parsedExpression = parseExpression(value, { strict: false });
+    if (parsedExpression.error) {
+      throw parsedExpression.error;
+    }
+  }
 
   /** get the unwrapped version */
   const toString = () => {

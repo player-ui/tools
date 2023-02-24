@@ -4,6 +4,7 @@ javascript_pipeline(
     name = "@player-tools/dsl",
     dependencies = [
       "@npm//@player-ui/types",
+      "@npm//@player-ui/player",
       "@npm//@types/mkdirp",
       "@npm//@types/signale",
       "@npm//chalk",

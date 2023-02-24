@@ -1,0 +1,66 @@
+{
+    "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/59/execroot/player/plugins/common-expressions/core/src/expressions/index.ts",
+    "name": "findPropertyIndex",
+    "type": "ref",
+    "ref": "ExpressionHandler<\n  [Array<any> | Binding, string | undefined, any],\n  number\n>",
+    "genericArguments": [
+        {
+            "type": "tuple",
+            "elementTypes": [
+                {
+                    "type": {
+                        "type": "or",
+                        "or": [
+                            {
+                                "type": "array",
+                                "elementType": {
+                                    "type": "any"
+                                },
+                                "title": "0"
+                            },
+                            {
+                                "type": "ref",
+                                "ref": "Binding",
+                                "title": "0"
+                            }
+                        ],
+                        "title": "0"
+                    },
+                    "optional": false,
+                    "name": "bindingOrModel"
+                },
+                {
+                    "type": {
+                        "type": "or",
+                        "or": [
+                            {
+                                "type": "string",
+                                "title": "1"
+                            },
+                            {
+                                "type": "undefined",
+                                "title": "1"
+                            }
+                        ],
+                        "title": "1"
+                    },
+                    "optional": false,
+                    "name": "propToCheck"
+                },
+                {
+                    "type": {
+                        "type": "any",
+                        "title": "2"
+                    },
+                    "optional": false,
+                    "name": "valueToCheck"
+                }
+            ],
+            "additionalItems": false,
+            "minItems": 3
+        },
+        {
+            "type": "number"
+        }
+    ]
+}

@@ -1,4 +1,4 @@
-import type { PlayerLanguageService } from '@player-tools/language-service';
+import type { PlayerLanguageService } from '@player-tools/json-language-service';
 import type { DSLCompiler } from '@player-tools/dsl';
 import type { ExportTypes } from '@player-tools/xlr-sdk';
 import type { TransformFunction } from '@player-tools/xlr';
