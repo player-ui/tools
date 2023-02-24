@@ -1,5 +1,7 @@
+import React from 'react';
 import {
   Box,
+  Button,
   Card,
   CardBody,
   Input,
@@ -12,10 +14,13 @@ import {
   RadioGroup,
   Stack,
   Text,
+  Select,
 } from '@chakra-ui/react';
 import type { NodeType, ObjectType } from '@player-tools/xlr';
 import type { Asset } from '@player-ui/types';
-import React from 'react';
+import { UUIDSymbol } from '@player-tools/dnd-lib';
+import { useController } from './controller';
+import { useProperties } from './application';
 
 export interface AssetEditorPanelProps {
   /** Current authored Asset */
@@ -53,6 +58,50 @@ const ConstantPropertyBox = (props) => {
   return <Input isDisabled value={props.value} />;
 };
 
+const AvailableAssetsDropDown = (props) => {
+  const { controller } = useController();
+  const availableAssets =
+    controller?.getAvailableAssets().filter((c) => c.capability === 'Assets') ??
+    [];
+
+  return (
+    <Select
+      placeholder="Select An Asset to Insert"
+      onChange={(event) => {
+        console.log(`Dropping a ${event.target.value}`);
+        const assetToDrop = availableAssets.find(
+          (asset) => asset.assetName === event.target.value
+        );
+        if (assetToDrop) {
+          controller.placeAsset(
+            props.dropTargetSymbol,
+            assetToDrop,
+            controller.getAssetDetails(assetToDrop.assetName)
+          );
+        }
+      }}
+    >
+      {availableAssets.map((asset) => {
+        return <option key={asset.assetName}>{asset.assetName}</option>;
+      })}
+    </Select>
+  );
+};
+
+const AssetLink = (props) => {
+  const properties = useProperties();
+
+  return (
+    <Button
+      onClick={(event) => {
+        properties.setDisplayedAssetID(props.asset[UUIDSymbol]);
+      }}
+    >
+      {props.type.name}
+    </Button>
+  );
+};
+
 /**
  *
  */
@@ -62,11 +111,26 @@ const PropertyBox = (props: PropertyBoxProps) => {
 
   let renderedComponent;
 
+  if (node.type === 'ref' && node.ref.includes('AssetWrapper')) {
+    console.log(`switch for ${path} is ${(asset as any)?.asset.value} `);
+    if ((asset as any)?.asset.value) {
+      renderedComponent = (
+        <AssetLink
+          asset={(asset as any)?.asset.value.asset}
+          type={(asset as any)?.asset.value.type}
+        />
+      );
+    } else {
+      renderedComponent = (
+        <AvailableAssetsDropDown dropTargetSymbol={asset.asset[UUIDSymbol]} />
+      );
+    }
+  }
+
   if (
-    (node.type === 'ref' && node.ref.includes('AssetWrapper')) ||
-    (node.type === 'array' &&
-      node.elementType.type === 'ref' &&
-      node.elementType.ref.includes('AssetWrapper'))
+    node.type === 'array' &&
+    node.elementType.type === 'ref' &&
+    node.elementType.ref.includes('AssetWrapper')
   ) {
     return null;
   }

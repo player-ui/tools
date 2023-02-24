@@ -54,7 +54,7 @@ export interface DragAndDropControllerOptions {
    */
   handleDndStateChange: (
     /** The player content without any drag and drop specific assets */
-    content: View
+    controller: DragAndDropController
   ) => void;
 
   /** A custom component to use for rendering droppable Assets */
@@ -121,7 +121,7 @@ export class DragAndDropController {
           this.PlayerXLRService
         );
       },
-      handleDndStateChange: options.handleDndStateChange,
+      handleDndStateChange: () => options.handleDndStateChange(this),
     });
 
     this.dndWebPlayerPlugin = new PlayerDndPlugin({
@@ -222,6 +222,19 @@ export class DragAndDropController {
    */
   public updateAsset(assetSymbol: symbol, newObject: Asset) {
     this.runtimeState.updateAsset(assetSymbol, newObject);
+    this.dndWebPlayerPlugin.refresh(this.webPlayer.player);
+  }
+
+  public async placeAsset(
+    dropTargetSymbol: symbol,
+    identifier: ExtensionProviderAssetIdentifier,
+    type: NamedType<ObjectType>
+  ) {
+    await this.runtimeState.placeAsset(
+      dropTargetSymbol,
+      { identifier, type },
+      'replace'
+    );
     this.dndWebPlayerPlugin.refresh(this.webPlayer.player);
   }
 

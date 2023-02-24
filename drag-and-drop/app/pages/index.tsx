@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect, useLayoutEffect } from 'react';
 import {
   ChakraProvider,
   Box,
@@ -45,69 +45,33 @@ import {
 } from '@player-tools/dnd-lib';
 import { ReferenceAssetsPlugin } from '@player-ui/reference-assets-plugin-react';
 import type { NamedType, ObjectType, TSManifest } from '@player-tools/xlr';
-// eslint-disable-next-line import/extensions, import/no-unresolved
+
 import pluginManifest from '@player-ui/reference-assets-plugin-react/dist/xlr/manifest';
-// eslint-disable-next-line import/extensions, import/no-unresolved
+
 import typesManifest from '@player-ui/types/dist/xlr/manifest';
+import Files from 'react-files';
 import { AssetEditorPanel } from '../components/AssetEditorPanel';
 import { covertXLRtoAssetDoc } from '../utils/converters';
-import Files from "react-files";
-
-const PropertiesContext = React.createContext<{
-  /**
-   * Current Asset thats selected in the edit panel on the right
-   */
-  displayedAssetID?: symbol;
-  /**
-   * Sets `displayedAssetID`
-   */
-  setDisplayedAssetID: (id: symbol) => void;
-
-  /**
-   * Current XLR Type thats selected in the docs panel on the right
-   */
-  displayedXLRDocType?: string;
-  /**
-   * Sets `displayedAssetID`
-   */
-  setDisplayedXLRDocType: (id: string) => void;
-
-  /**
-   * If the export modal is open
-   */
-  exportOpen: boolean;
-
-  /** Sets `exportOpen` */
-  setExportOpen: (state: boolean) => void;
-
-  /** If the right panel is docs or edit */
-  rightPanelState: 'docs' | 'edit';
-
-  /** Sets `rightPanelState` */
-  setRightPanelState: (state: 'docs' | 'edit') => void;
-}>({
-  setDisplayedAssetID: () => {},
-  setExportOpen: () => {},
-  setRightPanelState: () => {},
-  exportOpen: false,
-  rightPanelState: 'edit',
-  setDisplayedXLRDocType: () => {},
-});
-
-const ControllerContext = React.createContext<
-  | {
-      /** */
-      controller: DragAndDropController;
-    }
-  | undefined
->(undefined);
+import type { DisplayedAssetInformation } from '../components/application';
+import { PropertiesContext, useProperties } from '../components/application';
+import { ControllerContext, useController } from '../components/controller';
 
 /**
  *
  */
-function useController() {
-  return React.useContext(ControllerContext);
-}
+const useDisplayedAsset = (displayedAssetID: symbol) => {
+  const { controller } = useController();
+  const [displayedAsset, setDisplayedAsset] =
+    React.useState<DisplayedAssetInformation>(
+      controller.getAsset(displayedAssetID)
+    );
+
+  useLayoutEffect(() => {
+    setDisplayedAsset(controller.getAsset(displayedAssetID));
+  }, []);
+
+  return displayedAsset;
+};
 
 /**
  *
@@ -137,7 +101,7 @@ const AssetSlotExtension = (
  */
 const AssetDropTarget = (props: TransformedDropTargetAssetType) => {
   const [{ isOver }, drop] = useDroppableAsset(props, 'replace');
-  const propContext = React.useContext(PropertiesContext);
+  const propContext = useProperties();
 
   if (!props.value && !props.context) {
     return (
@@ -198,8 +162,7 @@ const AssetDropTarget = (props: TransformedDropTargetAssetType) => {
  * Component that can be dropped onto the canvas to add an Asst/View
  */
 const DroppableAsset = (props: ExtensionProviderAssetIdentifier) => {
-  const { setRightPanelState, setDisplayedXLRDocType } =
-    React.useContext(PropertiesContext);
+  const { setRightPanelState, setDisplayedXLRDocType } = useProperties();
   const [, ref] = useDraggableAsset(props) ?? [];
   return (
     <Box ref={ref}>
@@ -259,7 +222,7 @@ export const CapabilityPanel = (props: CapabilityPanelProps) => {
  * Left panel for selecting Assets/Views
  */
 const AssetSelectorPanel = () => {
-  const context = React.useContext(PropertiesContext);
+  const context = useProperties();
   const { controller } = useController() ?? {};
   const availableComponents = controller?.getAvailableAssets() ?? [];
   const assets = availableComponents.filter((c) => c.capability === 'Assets');
@@ -292,24 +255,22 @@ const AssetSelectorPanel = () => {
               </Button>
             </AccordionPanel>
             <AccordionPanel pb={4}>
-            <Files
-              onChange={file => {
-                const fileReader = new FileReader();
-                fileReader.onload = () => {
-                  controller.importView(JSON.parse(fileReader.result as string).views[0]);
-                };
-                fileReader.readAsText(file[0]);
-              }}
-              accepts={[".json"]}
-              clickable
-            >
-              <Button
-                colorScheme="green"
+              <Files
+                clickable
+                accepts={['.json']}
+                onChange={(file) => {
+                  const fileReader = new FileReader();
+                  fileReader.onload = () => {
+                    controller.importView(
+                      JSON.parse(fileReader.result as string).views[0]
+                    );
+                  };
+
+                  fileReader.readAsText(file[0]);
+                }}
               >
-                Import View
-              </Button>
-            </Files>
-              
+                <Button colorScheme="green">Import View</Button>
+              </Files>
             </AccordionPanel>
           </AccordionItem>
         </Accordion>
@@ -323,16 +284,16 @@ const AssetSelectorPanel = () => {
  */
 const AssetDetailsPanel = () => {
   const { controller } = useController() ?? {};
-  const propContext = React.useContext(PropertiesContext);
+  const propContext = useProperties();
   const [modifiedAsset, setModifiedAsset] = React.useState<Asset | undefined>(
     undefined
   );
 
-  if (!controller) {
+  const { asset, type } = controller.getAsset(propContext.displayedAssetID);
+
+  if (!asset || !type) {
     return null;
   }
-
-  const { asset, type } = controller.getAsset(propContext.displayedAssetID);
 
   /**
    * Updates the selected asset thats stored as a temporary value
@@ -453,7 +414,7 @@ const PropertyResolver = (props: PendingPropertyResolution) => {
 
 /** Modal for showing the JSON version of the created flow */
 const ContentExportModal = () => {
-  const context = React.useContext(PropertiesContext);
+  const context = useProperties();
   const { controller } = useController() ?? {};
   const content = JSON.stringify(controller.exportContent());
   return (
@@ -487,7 +448,7 @@ const ContentExportModal = () => {
  * Panel to show the full docs for the selected asset
  */
 const AssetDocsPanel = () => {
-  const { displayedXLRDocType } = React.useContext(PropertiesContext);
+  const { displayedXLRDocType } = useProperties();
   const { controller } = useController() ?? {};
   const type = controller.getAssetDetails(displayedXLRDocType);
   const docs = covertXLRtoAssetDoc(type);
@@ -536,8 +497,7 @@ const AssetDocsPanel = () => {
  * Asset to switch what is shown on the right panel
  */
 const RightPanel = () => {
-  const { rightPanelState, displayedAssetID } =
-    React.useContext(PropertiesContext);
+  const { rightPanelState, displayedAssetID } = useProperties();
 
   if (rightPanelState === 'edit') {
     if (displayedAssetID) {
@@ -568,7 +528,8 @@ const App = () => {
   );
   const [pendingPropertyResolutions, setPendingPropertyResolutions] =
     React.useState<PendingPropertyResolution | undefined>(undefined);
-
+  const [displayedAsset, setDisplayedAsset] =
+    React.useState<DisplayedAssetInformation>();
   const controllerState = React.useMemo(() => {
     const config: DragAndDropControllerOptions = {
       Component: AssetDropTarget,
@@ -607,9 +568,7 @@ const App = () => {
           type: collectionType as NamedType<ObjectType>,
         };
       },
-      handleDndStateChange(content) {
-        console.log('handle state changes here');
-      }
+      handleDndStateChange(controller) {},
     };
     const controller = new DragAndDropController(config);
     return {
@@ -632,6 +591,8 @@ const App = () => {
             setExportOpen,
             rightPanelState,
             setRightPanelState,
+            displayedAsset,
+            setDisplayedAsset,
           }),
           [displayedAssetID, displayedXLRDocType, exportOpen, rightPanelState]
         )}

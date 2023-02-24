@@ -24,6 +24,7 @@ import {
   removeDndStateFromView,
 } from './helpers';
 import { isDropTargetAsset } from '../types';
+import { DragAndDropController } from '../controller';
 
 /** The type for exporting and restoring the flow state */
 export interface ExportedRuntimeFlowState {
@@ -57,10 +58,7 @@ export interface RuntimeFlowStateOptions {
   /**
    * Function that will be called when Drag and Drop state changes
    */
-  handleDndStateChange: (
-    /** The player content without any drag and drop specific assets */
-    content: View
-  ) => void;
+  handleDndStateChange: () => void;
 
   /**
    * The content to initialize the editing experience with
@@ -122,10 +120,7 @@ export class RuntimeFlowState {
     type: NamedType<ObjectType>;
   };
 
-  private handleDndStateChange: (
-    /** The player content without any drag and drop specific assets */
-    content: View
-  ) => void;
+  private handleDndStateChange: () => void;
 
   constructor(options: RuntimeFlowStateOptions) {
     this.ROOT = makeDropTarget('drag-and-drop-view');
@@ -447,7 +442,7 @@ export class RuntimeFlowState {
     containingDropTarget.value =
       this.computeViewForDropTarget(containingDropTarget);
 
-    this.handleDndStateChange(removeDndStateFromView(this.view));
+    this.handleDndStateChange();
   }
 
   public async placeAsset(
@@ -507,7 +502,7 @@ export class RuntimeFlowState {
     // Resolve Arrays in parent
     this.updateArrayInParent(dropTarget, dropTargetSymbol);
 
-    this.handleDndStateChange(removeDndStateFromView(this.view));
+    this.handleDndStateChange();
   }
 
   public getAsset(assetSymbol: symbol): {
@@ -536,7 +531,7 @@ export class RuntimeFlowState {
     this.realAssetMappings.delete(assetSymbol);
     parentDropTarget.value = this.computeViewForDropTarget(parentDropTarget);
 
-    this.handleDndStateChange(removeDndStateFromView(this.view));
+    this.handleDndStateChange();
   }
 
   private makeDropTargetContext(
