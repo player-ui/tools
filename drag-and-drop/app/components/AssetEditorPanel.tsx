@@ -44,7 +44,7 @@ export interface PropertyBoxProps {
   /** Is the property required */
   required?: boolean;
   /** The name of the parent property being rendered */
-  path: Array<string | number>;
+  path?: Array<string | number>;
   /** Should a title be displayed for the rendered element */
   title?: boolean;
   /** Function to propagate updates with */
@@ -105,8 +105,8 @@ const AssetLink = (props) => {
 /**
  *
  */
-const PropertyBox = (props: PropertyBoxProps) => {
-  const { asset, path, type: node, title = true } = props;
+export const PropertyBox = (props: PropertyBoxProps) => {
+  const { asset, path = [], type: node, title = true } = props;
   const required = props.required ?? false;
 
   let renderedComponent;
@@ -122,7 +122,9 @@ const PropertyBox = (props: PropertyBoxProps) => {
       );
     } else {
       renderedComponent = (
-        <AvailableAssetsDropDown dropTargetSymbol={asset.asset[UUIDSymbol]} />
+        <AvailableAssetsDropDown
+          dropTargetSymbol={(asset as any)?.asset?.[UUIDSymbol]}
+        />
       );
     }
   }
@@ -231,19 +233,5 @@ const PropertyBox = (props: PropertyBoxProps) => {
       {title && <Text as="b">{parentProperty}</Text>}
       {renderedComponent}
     </div>
-  );
-};
-
-/**
- * A top level panel for editing an Asset
- */
-export const AssetEditorPanel = (props: AssetEditorPanelProps) => {
-  return (
-    <PropertyBox
-      type={props.type}
-      asset={props.asset}
-      path={[]}
-      onUpdate={props.onUpdate}
-    />
   );
 };

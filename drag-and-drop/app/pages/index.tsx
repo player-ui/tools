@@ -37,7 +37,7 @@ import type {
   TransformedDropTargetAssetType,
 } from '@player-tools/dnd-lib';
 import { ReactAsset } from '@player-ui/react';
-import type { Asset } from '@player-ui/types';
+import type { Asset, Flow, View } from '@player-ui/types';
 import {
   DragAndDropController,
   useDroppableAsset,
@@ -50,7 +50,7 @@ import pluginManifest from '@player-ui/reference-assets-plugin-react/dist/xlr/ma
 
 import typesManifest from '@player-ui/types/dist/xlr/manifest';
 import Files from 'react-files';
-import { AssetEditorPanel } from '../components/AssetEditorPanel';
+import { PropertyBox } from '../components/AssetEditorPanel';
 import { covertXLRtoAssetDoc } from '../utils/converters';
 import type { DisplayedAssetInformation } from '../components/application';
 import { PropertiesContext, useProperties } from '../components/application';
@@ -61,14 +61,15 @@ import { ControllerContext, useController } from '../components/controller';
  */
 const useDisplayedAsset = (displayedAssetID: symbol) => {
   const { controller } = useController();
+  const { playerContent } = useProperties();
   const [displayedAsset, setDisplayedAsset] =
     React.useState<DisplayedAssetInformation>(
       controller.getAsset(displayedAssetID)
     );
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setDisplayedAsset(controller.getAsset(displayedAssetID));
-  }, []);
+  }, [playerContent, displayedAssetID, controller]);
 
   return displayedAsset;
 };
@@ -285,14 +286,13 @@ const AssetSelectorPanel = () => {
 const AssetDetailsPanel = () => {
   const { controller } = useController() ?? {};
   const propContext = useProperties();
+  const { asset, type } = useDisplayedAsset(propContext.displayedAssetID);
   const [modifiedAsset, setModifiedAsset] = React.useState<Asset | undefined>(
-    undefined
+    asset
   );
 
-  const { asset, type } = controller.getAsset(propContext.displayedAssetID);
-
-  if (!asset || !type) {
-    return null;
+  if (asset.id !== modifiedAsset.id) {
+    setModifiedAsset(asset);
   }
 
   /**
@@ -308,7 +308,7 @@ const AssetDetailsPanel = () => {
         <Heading>Properties for {type.name}</Heading>
       </CardHeader>
       <CardBody>
-        <AssetEditorPanel
+        <PropertyBox
           asset={modifiedAsset ?? asset}
           type={type}
           onUpdate={updateObject}
@@ -390,7 +390,7 @@ const PropertyResolver = (props: PendingPropertyResolution) => {
             <Heading>Resolve Required Properties</Heading>
           </CardHeader>
           <CardBody>
-            <AssetEditorPanel
+            <PropertyBox
               asset={modifiedAsset}
               type={props.type}
               onUpdate={updateObject}
@@ -528,8 +528,7 @@ const App = () => {
   );
   const [pendingPropertyResolutions, setPendingPropertyResolutions] =
     React.useState<PendingPropertyResolution | undefined>(undefined);
-  const [displayedAsset, setDisplayedAsset] =
-    React.useState<DisplayedAssetInformation>();
+  const [playerContent, setPlayerContent] = React.useState<View>(undefined);
   const controllerState = React.useMemo(() => {
     const config: DragAndDropControllerOptions = {
       Component: AssetDropTarget,
@@ -568,7 +567,9 @@ const App = () => {
           type: collectionType as NamedType<ObjectType>,
         };
       },
-      handleDndStateChange(controller) {},
+      handleDndStateChange(controller) {
+        setPlayerContent(controller.exportContent());
+      },
     };
     const controller = new DragAndDropController(config);
     return {
@@ -591,8 +592,8 @@ const App = () => {
             setExportOpen,
             rightPanelState,
             setRightPanelState,
-            displayedAsset,
-            setDisplayedAsset,
+            playerContent,
+            setPlayerContent,
           }),
           [displayedAssetID, displayedXLRDocType, exportOpen, rightPanelState]
         )}

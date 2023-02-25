@@ -1,5 +1,5 @@
 import type { ObjectType } from '@player-tools/xlr';
-import type { Asset } from '@player-ui/types';
+import type { Asset, View } from '@player-ui/types';
 import React from 'react';
 
 export interface DisplayedAssetInformation {
@@ -18,6 +18,10 @@ export const PropertiesContext = React.createContext<{
    * Sets `displayedAssetID`
    */
   setDisplayedAssetID: (id: symbol) => void;
+
+  playerContent: View;
+
+  setPlayerContent: (content: View) => void;
 
   /**
    * Current XLR Type thats selected in the docs panel on the right
@@ -48,6 +52,8 @@ export const PropertiesContext = React.createContext<{
   exportOpen: false,
   rightPanelState: 'edit',
   setDisplayedXLRDocType: () => {},
+  playerContent: undefined,
+  setPlayerContent: () => {},
 });
 
 /**
