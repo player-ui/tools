@@ -4,14 +4,10 @@ import pluginManifest from '@player-tools/static-xlrs/static_xlrs/plugin/xlr/man
 import typesManifest from '@player-tools/static-xlrs/static_xlrs/core/xlr/manifest';
 import type { ObjectType } from '@player-tools/xlr';
 import { DragAndDropController } from '../controller';
-import type {
-  DropTargetAsset,
-  DropTargetAssetContext,
-  ExtensionProvider,
-} from '../types';
+import type { DropTargetAsset, DropTargetAssetContext } from '../types';
 import { getAssetSymbol } from '../utils/helpers';
 
-const referenceAssetExtension: ExtensionProvider = {
+const referenceAssetExtension = {
   plugin: class test {
     name = 'test';
   },
@@ -23,7 +19,8 @@ describe('drag-and-drop', () => {
     const mockHandleStateChange = jest.fn();
     const dndController = new DragAndDropController({
       playerTypes: typesManifest,
-      extensions: [referenceAssetExtension],
+      manifests: [referenceAssetExtension.manifest],
+      plugins: [referenceAssetExtension.plugin],
       resolveRequiredProperties: async (
         asset: Asset<string>,
         type: ObjectType
@@ -202,7 +199,8 @@ describe('drag-and-drop', () => {
     };
     const dndController = new DragAndDropController({
       playerTypes: typesManifest,
-      extensions: [referenceAssetExtension],
+      manifests: [referenceAssetExtension.manifest],
+      plugins: [referenceAssetExtension.plugin],
       resolveRequiredProperties: jest.fn(),
       resolveCollectionConversion: jest.fn(),
       handleDndStateChange: jest.fn(),
@@ -269,7 +267,8 @@ describe('drag-and-drop', () => {
     };
     const dndController = new DragAndDropController({
       playerTypes: typesManifest,
-      extensions: [referenceAssetExtension],
+      manifests: [referenceAssetExtension.manifest],
+      plugins: [referenceAssetExtension.plugin],
       resolveRequiredProperties: jest.fn(),
       resolveCollectionConversion: jest.fn(),
       handleDndStateChange: jest.fn(),
