@@ -11,7 +11,7 @@ import type {
 } from '../types';
 import { getAssetSymbol } from '../utils/helpers';
 
-const referenceAssetExtension: ExtensionProvider = {
+const referenceAssetExtension = {
   plugin: class test {
     name = 'test';
   },
@@ -23,7 +23,8 @@ describe('drag-and-drop', () => {
     const mockHandleStateChange = jest.fn();
     const dndController = new DragAndDropController({
       playerTypes: typesManifest,
-      extensions: [referenceAssetExtension],
+      extensionTypes: [referenceAssetExtension.manifest],
+      extensions: [referenceAssetExtension.plugin],
       resolveRequiredProperties: async (
         asset: Asset<string>,
         type: ObjectType
@@ -202,7 +203,8 @@ describe('drag-and-drop', () => {
     };
     const dndController = new DragAndDropController({
       playerTypes: typesManifest,
-      extensions: [referenceAssetExtension],
+      extensionTypes: [referenceAssetExtension.manifest],
+      extensions: [referenceAssetExtension.plugin],
       resolveRequiredProperties: jest.fn(),
       resolveCollectionConversion: jest.fn(),
       handleDndStateChange: jest.fn(),
@@ -269,7 +271,8 @@ describe('drag-and-drop', () => {
     };
     const dndController = new DragAndDropController({
       playerTypes: typesManifest,
-      extensions: [referenceAssetExtension],
+      extensionTypes: [referenceAssetExtension.manifest],
+      extensions: [referenceAssetExtension.plugin],
       resolveRequiredProperties: jest.fn(),
       resolveCollectionConversion: jest.fn(),
       handleDndStateChange: jest.fn(),

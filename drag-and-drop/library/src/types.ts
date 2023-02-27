@@ -15,12 +15,7 @@ export type FlowWithOneView<T extends Asset = Asset> = Flow<T> & {
 
 export interface ExtensionProvider {
   /** A constructor to create an instance of the plugin */
-  plugin: {
-    new (): ReactPlayerPlugin;
-  };
-
-  /** A manifest describing the plugins capabilities */
-  manifest: TSManifest;
+  new (): ReactPlayerPlugin;
 }
 
 export interface ExtensionProviderAssetIdentifier {

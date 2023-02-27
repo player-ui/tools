@@ -23,10 +23,13 @@ import { DropComponent } from './utils/drop-component';
 import { removeDndStateFromView } from './utils/helpers';
 
 export interface DragAndDropControllerOptions {
-  /** The list of XLR enabled extensions to load as available resources */
+  /** The list of extensions to load as available resources or extend Player */
   extensions?: Array<ExtensionProvider>;
   /** Player plugins that aren't necessarily assets to be dragged and dropped. */
   plugins?: Array<ReactPlayerPlugin>;
+
+  /** Manifest for extensions that have drag and drop assets */
+  extensionTypes?: Array<TSManifest>;
 
   /** Manifest for the base Player types package  to use */
   playerTypes: TSManifest;
@@ -90,10 +93,8 @@ export class DragAndDropController {
 
     this.PlayerXLRService = new XLRService();
     this.PlayerXLRService.XLRSDK.loadDefinitionsFromModule(options.playerTypes);
-    options?.extensions?.forEach((extension) => {
-      this.PlayerXLRService.XLRSDK.loadDefinitionsFromModule(
-        extension.manifest
-      );
+    options?.extensionTypes?.forEach((manifest) => {
+      this.PlayerXLRService.XLRSDK.loadDefinitionsFromModule(manifest);
     });
 
     this.runtimeState = new RuntimeFlowState({
@@ -136,8 +137,7 @@ export class DragAndDropController {
       plugins: [
         this.dndWebPlayerPlugin,
         // eslint-disable-next-line new-cap
-        ...(options?.extensions ?? []).map((e) => new e.plugin()),
-        ...(options?.plugins ?? []),
+        ...(options?.extensions ?? []).map((e) => new e()),
       ],
     });
 
