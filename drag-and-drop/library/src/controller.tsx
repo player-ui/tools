@@ -8,8 +8,8 @@ import { XLRService } from '@player-tools/language-service';
 import type { TypeMetadata } from '@player-tools/xlr-sdk';
 import { PlayerDndPlugin } from './utils';
 import type {
-  ExtensionProvider,
   ExtensionProviderAssetIdentifier,
+  PluginProvider,
   TransformedDropTargetAssetType,
 } from './types';
 import { RuntimeFlowState } from './utils/runtime-flow-state';
@@ -17,8 +17,11 @@ import { DropComponent } from './utils/drop-component';
 import { removeDndStateFromView } from './utils/helpers';
 
 export interface DragAndDropControllerOptions {
-  /** The list of XLR enabled extensions to load as available resources */
-  extensions?: Array<ExtensionProvider>;
+  /** Player plugins for adding assets and functionality */
+  plugins?: Array<PluginProvider>;
+
+  /** Manifest for extensions that have drag and drop assets */
+  manifests?: Array<TSManifest>;
 
   /** Manifest for the base Player types package  to use */
   playerTypes: TSManifest;
@@ -82,10 +85,8 @@ export class DragAndDropController {
 
     this.PlayerXLRService = new XLRService();
     this.PlayerXLRService.XLRSDK.loadDefinitionsFromModule(options.playerTypes);
-    options?.extensions?.forEach((extension) => {
-      this.PlayerXLRService.XLRSDK.loadDefinitionsFromModule(
-        extension.manifest
-      );
+    options?.manifests?.forEach((manifest) => {
+      this.PlayerXLRService.XLRSDK.loadDefinitionsFromModule(manifest);
     });
 
     this.runtimeState = new RuntimeFlowState({
@@ -128,7 +129,7 @@ export class DragAndDropController {
       plugins: [
         this.dndWebPlayerPlugin,
         // eslint-disable-next-line new-cap
-        ...(options?.extensions ?? []).map((e) => new e.plugin()),
+        ...(options?.plugins ?? []).map((e) => new e()),
       ],
     });
 
