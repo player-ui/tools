@@ -1,11 +1,15 @@
 import { Flags } from '@oclif/core';
 import path from 'path';
 import fs from 'fs';
+import ts from 'typescript';
 import chalk from 'chalk';
 import type { ExportTypes } from '@player-tools/xlr-sdk';
 import { XLRSDK } from '@player-tools/xlr-sdk';
 import logSymbols from 'log-symbols';
+import type { NamedType } from '@player-tools/xlr';
 import { BaseCommand } from '../../utils/base-command';
+import { TopLevelDeclaration } from '@player-tools/xlr-utils';
+import { TSWriter } from '@player-tools/xlr-converters';
 
 const PlayerImportMap = new Map([
   [
@@ -39,6 +43,8 @@ export default class XLRConvert extends BaseCommand {
     }),
   };
 
+  private tsWriter = new TSWriter();
+
   private async getOptions() {
     const { flags } = await this.parse(XLRConvert);
 
@@ -51,7 +57,7 @@ export default class XLRConvert extends BaseCommand {
     const language = flags.lang as ExportTypes;
 
     if (!language) {
-      throw new Error(`Need to specifiy lanauge to export to`);
+      throw new Error(`Need to specify language to export to`);
     }
 
     return {
@@ -59,6 +65,71 @@ export default class XLRConvert extends BaseCommand {
       outputDir: path.join(output, language),
       language,
     };
+  }
+
+  private exportToTypeScript(
+    typesToExport: NamedType[],
+    importMap: Map<string, string[]>
+  ): string {
+    const referencedImports: Set<string> = new Set();
+    const exportedTypes: Map<string, TopLevelDeclaration> = new Map();
+    const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
+
+    let resultFile = ts.createSourceFile(
+      'output.d.ts',
+      '',
+      ts.ScriptTarget.ES2017,
+      false, // setParentNodes
+      ts.ScriptKind.TS
+    );
+
+    typesToExport.forEach((typeNode) => {
+      const { type, referencedTypes, additionalTypes } =
+        this.tsWriter.convertNamedType(typeNode);
+      exportedTypes.set(typeNode.name, type);
+      additionalTypes?.forEach((additionalType, name) =>
+        exportedTypes.set(name, additionalType)
+      );
+      referencedTypes?.forEach((referencedType) =>
+        referencedImports.add(referencedType)
+      );
+    });
+
+    const typesToPrint: Array<string> = [];
+
+    exportedTypes.forEach((type) =>
+      typesToPrint.push(
+        printer.printNode(ts.EmitHint.Unspecified, type, resultFile)
+      )
+    );
+
+    importMap.forEach((imports, packageName) => {
+      const applicableImports = imports.filter((i) => referencedImports.has(i));
+      resultFile = ts.factory.updateSourceFile(resultFile, [
+        ts.factory.createImportDeclaration(
+          /* modifiers */ undefined,
+          ts.factory.createImportClause(
+            false,
+            undefined,
+            ts.factory.createNamedImports(
+              applicableImports.map((i) =>
+                ts.factory.createImportSpecifier(
+                  false,
+                  undefined,
+                  ts.factory.createIdentifier(i)
+                )
+              )
+            )
+          ),
+          ts.factory.createStringLiteral(packageName)
+        ),
+        ...resultFile.statements,
+      ]);
+    });
+
+    const headerText = printer.printFile(resultFile);
+    const nodeText = typesToPrint.join('\n');
+    return `${headerText}\n${nodeText}`;
   }
 
   async run(): Promise<{
@@ -73,8 +144,16 @@ export default class XLRConvert extends BaseCommand {
 
       const sdk = new XLRSDK();
       sdk.loadDefinitionsFromDisk(inputPath);
-      const files = sdk.exportRegistry(language, PlayerImportMap);
-      files.forEach(([filename, fileContents]) => {
+      const types = sdk.exportRegistry();
+      let writtenFiles;
+      if (language === 'TypeScript') {
+        const outputString = this.exportToTypeScript(types, PlayerImportMap);
+        writtenFiles = [['out.d.ts', outputString]];
+      } else {
+        throw new Error(`Unknown export format ${language}`);
+      }
+
+      writtenFiles.forEach(([filename, fileContents]) => {
         fs.writeFileSync(path.join(outputDir, filename), fileContents, {});
       });
     } catch (e: any) {

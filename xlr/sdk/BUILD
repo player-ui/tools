@@ -12,9 +12,6 @@ javascript_pipeline(
         "@npm//@types/fs-extra",
         "@npm//fs-extra",
     ],
-    peer_dependencies = [
-        "@npm//typescript"
-    ],
     test_data = [
         "//common:@player-tools/static-xlrs",
     ]
