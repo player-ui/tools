@@ -1,5 +1,11 @@
 import React from 'react';
-import type { Asset, AssetWrapper, ReactPlayer, View } from '@player-ui/react';
+import type {
+  Asset,
+  AssetWrapper,
+  ReactPlayer,
+  View,
+  ReactPlayerPlugin,
+} from '@player-ui/react';
 import { ConsoleLogger, WebPlayer } from '@player-ui/react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -19,6 +25,8 @@ import { removeDndStateFromView } from './utils/helpers';
 export interface DragAndDropControllerOptions {
   /** The list of XLR enabled extensions to load as available resources */
   extensions?: Array<ExtensionProvider>;
+  /** Player plugins that aren't necessarily assets to be dragged and dropped. */
+  plugins?: Array<ReactPlayerPlugin>;
 
   /** Manifest for the base Player types package  to use */
   playerTypes: TSManifest;
@@ -129,6 +137,7 @@ export class DragAndDropController {
         this.dndWebPlayerPlugin,
         // eslint-disable-next-line new-cap
         ...(options?.extensions ?? []).map((e) => new e.plugin()),
+        ...(options?.plugins ?? []),
       ],
     });
 
