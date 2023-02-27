@@ -1,5 +1,5 @@
 import type { NamedType, ObjectType } from '@player-tools/xlr';
-import type { XLRService } from '@player-tools/language-service';
+import type { XLRService } from '@player-tools/json-language-service';
 import type { TypeMetadata } from '@player-tools/xlr-sdk';
 import type { Asset, AssetWrapper, Flow, View } from '@player-ui/types';
 import type {

@@ -6,9 +6,11 @@ javascript_pipeline(
     dependencies = [
         "//xlr/types:@player-tools/xlr",
         "//xlr/utils:@player-tools/xlr-utils",
-        "@npm//@typescript/vfs",
     ],
     peer_dependencies = [
         "@npm//typescript"
+    ],
+    test_data = [
+        "//xlr/testing-utils:@player-tools/xlr-testing-utils"
     ]
 )

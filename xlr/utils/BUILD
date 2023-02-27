@@ -10,5 +10,8 @@ javascript_pipeline(
     peer_dependencies = [
         "@npm//typescript",
         "@npm//jsonc-parser"
+    ],
+    test_data = [
+        "//xlr/testing-utils:@player-tools/xlr-testing-utils"
     ]
 )

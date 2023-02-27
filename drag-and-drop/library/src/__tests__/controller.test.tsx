@@ -220,7 +220,7 @@ describe('drag-and-drop', () => {
     const dndView = getView() || {};
     expect(dndView.type).toStrictEqual('drop-target');
     expect(dndView.value.identifier.pluginName).toStrictEqual(
-      'BaseAssetsPlugin'
+      'reference-assets-web-plugin'
     );
     expect(dndView.value.identifier.assetName).toStrictEqual('CollectionAsset');
     expect(dndView.value.identifier.capability).toStrictEqual('Views');

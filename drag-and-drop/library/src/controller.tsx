@@ -4,7 +4,7 @@ import { ConsoleLogger, WebPlayer } from '@player-ui/react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import type { NamedType, ObjectType, TSManifest } from '@player-tools/xlr';
-import { XLRService } from '@player-tools/language-service';
+import { XLRService } from '@player-tools/json-language-service';
 import type { TypeMetadata } from '@player-tools/xlr-sdk';
 import { PlayerDndPlugin } from './utils';
 import type {
