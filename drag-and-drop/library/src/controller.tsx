@@ -1,11 +1,5 @@
 import React from 'react';
-import type {
-  Asset,
-  AssetWrapper,
-  ReactPlayer,
-  View,
-  ReactPlayerPlugin,
-} from '@player-ui/react';
+import type { Asset, AssetWrapper, ReactPlayer, View } from '@player-ui/react';
 import { ConsoleLogger, WebPlayer } from '@player-ui/react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -14,8 +8,8 @@ import { XLRService } from '@player-tools/language-service';
 import type { TypeMetadata } from '@player-tools/xlr-sdk';
 import { PlayerDndPlugin } from './utils';
 import type {
-  ExtensionProvider,
   ExtensionProviderAssetIdentifier,
+  PluginProvider,
   TransformedDropTargetAssetType,
 } from './types';
 import { RuntimeFlowState } from './utils/runtime-flow-state';
@@ -23,13 +17,11 @@ import { DropComponent } from './utils/drop-component';
 import { removeDndStateFromView } from './utils/helpers';
 
 export interface DragAndDropControllerOptions {
-  /** The list of extensions to load as available resources or extend Player */
-  extensions?: Array<ExtensionProvider>;
-  /** Player plugins that aren't necessarily assets to be dragged and dropped. */
-  plugins?: Array<ReactPlayerPlugin>;
+  /** Player plugins for adding assets and functionality */
+  plugins?: Array<PluginProvider>;
 
   /** Manifest for extensions that have drag and drop assets */
-  extensionTypes?: Array<TSManifest>;
+  manifests?: Array<TSManifest>;
 
   /** Manifest for the base Player types package  to use */
   playerTypes: TSManifest;
@@ -93,7 +85,7 @@ export class DragAndDropController {
 
     this.PlayerXLRService = new XLRService();
     this.PlayerXLRService.XLRSDK.loadDefinitionsFromModule(options.playerTypes);
-    options?.extensionTypes?.forEach((manifest) => {
+    options?.manifests?.forEach((manifest) => {
       this.PlayerXLRService.XLRSDK.loadDefinitionsFromModule(manifest);
     });
 
@@ -137,7 +129,7 @@ export class DragAndDropController {
       plugins: [
         this.dndWebPlayerPlugin,
         // eslint-disable-next-line new-cap
-        ...(options?.extensions ?? []).map((e) => new e()),
+        ...(options?.plugins ?? []).map((e) => new e()),
       ],
     });
 

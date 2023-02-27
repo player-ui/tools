@@ -573,8 +573,8 @@ const App = () => {
     const config: DragAndDropControllerOptions = {
       Component: AssetDropTarget,
       playerTypes: typesManifest as TSManifest,
-      extensionTypes: [pluginManifest as TSManifest],
-      extensions: [ReferenceAssetsPlugin],
+      manifests: [pluginManifest as TSManifest],
+      plugins: [ReferenceAssetsPlugin],
       async resolveRequiredProperties(
         asset: Asset<string>,
         type: ObjectType

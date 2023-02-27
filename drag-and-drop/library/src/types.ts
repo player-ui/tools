@@ -13,7 +13,7 @@ export type FlowWithOneView<T extends Asset = Asset> = Flow<T> & {
   views: [View<T>];
 };
 
-export interface ExtensionProvider {
+export interface PluginProvider {
   /** A constructor to create an instance of the plugin */
   new (): ReactPlayerPlugin;
 }
