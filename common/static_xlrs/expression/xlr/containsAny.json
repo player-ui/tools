@@ -1,0 +1,44 @@
+{
+    "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/59/execroot/player/plugins/common-expressions/core/src/expressions/index.ts",
+    "name": "containsAny",
+    "type": "ref",
+    "ref": "ExpressionHandler",
+    "genericArguments": [
+        {
+            "type": "tuple",
+            "elementTypes": [
+                {
+                    "type": {
+                        "type": "string"
+                    },
+                    "optional": false,
+                    "name": "str"
+                },
+                {
+                    "type": {
+                        "type": "or",
+                        "or": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "array",
+                                "elementType": {
+                                    "type": "string"
+                                },
+                                "title": "[]"
+                            }
+                        ]
+                    },
+                    "optional": false,
+                    "name": "keywords"
+                }
+            ],
+            "additionalItems": false,
+            "minItems": 2
+        },
+        {
+            "type": "boolean"
+        }
+    ]
+}

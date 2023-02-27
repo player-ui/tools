@@ -1,0 +1,26 @@
+{
+    "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/59/execroot/player/plugins/common-expressions/core/src/expressions/index.ts",
+    "name": "isEmpty",
+    "type": "ref",
+    "ref": "ExpressionHandler<[unknown], boolean>",
+    "genericArguments": [
+        {
+            "type": "tuple",
+            "elementTypes": [
+                {
+                    "type": {
+                        "type": "unknown",
+                        "title": "0"
+                    },
+                    "optional": false,
+                    "name": "val"
+                }
+            ],
+            "additionalItems": false,
+            "minItems": 1
+        },
+        {
+            "type": "boolean"
+        }
+    ]
+}

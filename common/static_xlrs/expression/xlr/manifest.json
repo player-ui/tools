@@ -1,0 +1,28 @@
+{
+    "pluginName": "CommonExpressions",
+    "capabilities": {
+        "Assets": [],
+        "Views": [],
+        "Expressions": [
+            "size",
+            "length",
+            "isEmpty",
+            "isNotEmpty",
+            "concat",
+            "trim",
+            "upperCase",
+            "lowerCase",
+            "replace",
+            "titleCase",
+            "sentenceCase",
+            "number",
+            "round",
+            "floor",
+            "ceil",
+            "sum",
+            "findPropertyIndex",
+            "findProperty",
+            "containsAny"
+        ]
+    }
+}

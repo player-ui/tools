@@ -1,7 +1,7 @@
 {
+    "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/134/execroot/player/node_modules/@player-ui/reference-assets-plugin/dist/index.d.ts",
     "name": "ActionAsset",
     "type": "object",
-    "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/plugins/reference-assets/core/src/assets/action/types.ts",
     "properties": {
         "value": {
             "required": false,
@@ -51,8 +51,8 @@
                     "beacon": {
                         "required": false,
                         "node": {
+                            "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/134/execroot/player/node_modules/@player-ui/beacon-plugin/dist/index.d.ts",
                             "name": "BeaconDataType",
-                            "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/node_modules/@player-ui/beacon-plugin/dist/index.d.ts",
                             "type": "or",
                             "or": [
                                 {

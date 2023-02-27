@@ -1,0 +1,19 @@
+{
+    "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/59/execroot/player/plugins/common-expressions/core/src/expressions/index.ts",
+    "name": "concat",
+    "type": "ref",
+    "ref": "ExpressionHandler",
+    "genericArguments": [
+        {
+            "type": "array",
+            "elementType": {
+                "type": "unknown"
+            },
+            "title": "[]",
+            "name": "args"
+        },
+        {
+            "type": "unknown"
+        }
+    ]
+}

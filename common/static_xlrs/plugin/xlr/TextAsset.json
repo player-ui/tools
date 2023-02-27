@@ -1,7 +1,7 @@
 {
+    "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/134/execroot/player/node_modules/@player-ui/reference-assets-plugin/dist/index.d.ts",
     "name": "TextAsset",
     "type": "object",
-    "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/plugins/reference-assets/core/src/assets/text/types.ts",
     "properties": {
         "value": {
             "required": true,
@@ -16,14 +16,14 @@
             "node": {
                 "type": "array",
                 "elementType": {
+                    "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/134/execroot/player/node_modules/@player-ui/reference-assets-plugin/dist/index.d.ts",
                     "name": "TextModifier",
-                    "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/plugins/reference-assets/core/src/assets/text/types.ts",
                     "type": "or",
                     "or": [
                         {
+                            "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/134/execroot/player/node_modules/@player-ui/reference-assets-plugin/dist/index.d.ts",
                             "name": "BasicTextModifier",
                             "type": "object",
-                            "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/plugins/reference-assets/core/src/assets/text/types.ts",
                             "properties": {
                                 "type": {
                                     "required": true,
@@ -48,9 +48,9 @@
                             "title": "BasicTextModifier"
                         },
                         {
+                            "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/134/execroot/player/node_modules/@player-ui/reference-assets-plugin/dist/index.d.ts",
                             "name": "LinkModifier",
                             "type": "object",
-                            "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/181/execroot/player/plugins/reference-assets/core/src/assets/text/types.ts",
                             "properties": {
                                 "type": {
                                     "required": true,
