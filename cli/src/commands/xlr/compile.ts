@@ -171,10 +171,7 @@ export default class XLRCompile extends BaseCommand {
           .join('\n\t\t')}
       },
       "customPrimitives": [
-        ${[
-          ...(capabilities.customPrimitives?.map((i) => `'${i}'`).join(',') ??
-            ''),
-        ]}
+        ${[capabilities.customPrimitives?.map((i) => `'${i}'`).join(',') ?? '']}
       ]
     }
 `;
