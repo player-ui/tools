@@ -4,7 +4,7 @@ import { ConsoleLogger, WebPlayer } from '@player-ui/react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import type { NamedType, ObjectType, TSManifest } from '@player-tools/xlr';
-import { XLRService } from '@player-tools/json-language-service';
+import { TRANSFORM_FUNCTIONS, XLRService } from '@player-tools/json-language-service';
 import type { TypeMetadata } from '@player-tools/xlr-sdk';
 import { PlayerDndPlugin } from './utils';
 import type {
@@ -86,7 +86,11 @@ export class DragAndDropController {
     this.PlayerXLRService = new XLRService();
     this.PlayerXLRService.XLRSDK.loadDefinitionsFromModule(options.playerTypes);
     options?.manifests?.forEach((manifest) => {
-      this.PlayerXLRService.XLRSDK.loadDefinitionsFromModule(manifest);
+      this.PlayerXLRService.XLRSDK.loadDefinitionsFromModule(
+        manifest,
+        {},
+        TRANSFORM_FUNCTIONS
+      );
     });
 
     this.runtimeState = new RuntimeFlowState({
