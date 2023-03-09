@@ -1,15 +1,21 @@
 import React from 'react';
 import type { Asset, AssetWrapper, ReactPlayer, View } from '@player-ui/react';
+import type { DataModel, Navigation, Schema } from '@player-ui/player';
 import { ConsoleLogger, WebPlayer } from '@player-ui/react';
+import { Subscribe } from '@player-ui/react-subscribe';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import type { NamedType, ObjectType, TSManifest } from '@player-tools/xlr';
-import { TRANSFORM_FUNCTIONS, XLRService } from '@player-tools/json-language-service';
+import {
+  TRANSFORM_FUNCTIONS,
+  XLRService,
+} from '@player-tools/json-language-service';
 import type { TypeMetadata } from '@player-tools/xlr-sdk';
+import type { XLRSDK } from '@player-tools/xlr-sdk';
 import { PlayerDndPlugin } from './utils';
 import type {
-  ExtensionProviderAssetIdentifier,
   PluginProvider,
+  ExtensionProviderAssetIdentifier,
   TransformedDropTargetAssetType,
 } from './types';
 import { RuntimeFlowState } from './utils/runtime-flow-state';
@@ -43,7 +49,7 @@ export interface DragAndDropControllerOptions {
     /** The Assets to include in the collection */
     assets: Array<AssetWrapper>,
     /** An instance of the XLRSDK to perform any required type lookups */
-    XLRSDK: XLRService
+    XLRSDK: XLRSDK
   ) => {
     /** The generated collection asset with the provided `assets` array as children */
     asset: Asset;
@@ -53,10 +59,12 @@ export interface DragAndDropControllerOptions {
 
   /**
    * Function that will be called when Drag and Drop state changes
+   *
+   * @deprecated Will be removed soon
    */
   handleDndStateChange: (
-    /** The player content without any drag and drop specific assets */
-    content: View
+    /** An instance of the controller object to access any new information that you may need */
+    controller: DragAndDropController
   ) => void;
 
   /** A custom component to use for rendering droppable Assets */
@@ -69,10 +77,12 @@ export interface DragAndDropControllerOptions {
 export class DragAndDropController {
   private readonly options: DragAndDropControllerOptions;
   public readonly webPlayer: ReactPlayer;
+  public readonly stateUpdateSubscription =
+    new Subscribe<DragAndDropController>();
 
   private readonly dndWebPlayerPlugin: PlayerDndPlugin;
   private readonly runtimeState: RuntimeFlowState;
-  private readonly PlayerXLRService: XLRService;
+  private readonly XLRSDK: XLRSDK;
 
   public Context: React.ComponentType<React.PropsWithChildren<unknown>>;
 
@@ -80,28 +90,48 @@ export class DragAndDropController {
     return this.webPlayer.Component;
   }
 
+  public getPlayerNavigationSection(): Navigation {
+    return this.runtimeState.navigation;
+  }
+
+  public setPlayerNavigationSection(navigation: Navigation) {
+    this.runtimeState.navigation = navigation;
+  }
+
+  public getPlayerSchemaSection() {
+    return this.runtimeState.schema;
+  }
+
+  public setPlayerSchemaSection(schema: Schema.Schema) {
+    this.runtimeState.schema = schema;
+  }
+
+  public getPlayerDataSection() {
+    return this.runtimeState.data;
+  }
+
+  public setPlayerDataSection(data: DataModel) {
+    this.runtimeState.data = data;
+  }
+
   constructor(options: DragAndDropControllerOptions) {
     this.options = options ?? {};
 
-    this.PlayerXLRService = new XLRService();
-    this.PlayerXLRService.XLRSDK.loadDefinitionsFromModule(options.playerTypes);
+    this.XLRSDK = new XLRService().XLRSDK;
+    this.XLRSDK.loadDefinitionsFromModule(options.playerTypes);
     options?.manifests?.forEach((manifest) => {
-      this.PlayerXLRService.XLRSDK.loadDefinitionsFromModule(
-        manifest,
-        {},
-        TRANSFORM_FUNCTIONS
-      );
+      this.XLRSDK.loadDefinitionsFromModule(manifest, {}, TRANSFORM_FUNCTIONS);
     });
 
     this.runtimeState = new RuntimeFlowState({
       resolveRequiredProperties: options.resolveRequiredProperties,
       resolveCollectionConversion: (assets: Array<AssetWrapper>) => {
-        return options.resolveCollectionConversion(
-          assets,
-          this.PlayerXLRService
-        );
+        return options.resolveCollectionConversion(assets, this.XLRSDK);
       },
-      handleDndStateChange: options.handleDndStateChange,
+      handleDndStateChange: () => {
+        this.stateUpdateSubscription.publish(this);
+        options.handleDndStateChange(this);
+      },
     });
 
     this.dndWebPlayerPlugin = new PlayerDndPlugin({
@@ -110,9 +140,7 @@ export class DragAndDropController {
         Component: this.options.Component ?? DropComponent,
       },
       getXLRTypeForAsset: (identifier) => {
-        const asset = this.PlayerXLRService.XLRSDK.getType(
-          identifier.assetName
-        );
+        const asset = this.XLRSDK.getType(identifier.assetName);
         if (!asset) {
           throw new Error(
             `SDK Error: Unable to get asset ${identifier.assetName}`
@@ -132,8 +160,7 @@ export class DragAndDropController {
     this.webPlayer = new WebPlayer({
       plugins: [
         this.dndWebPlayerPlugin,
-        // eslint-disable-next-line new-cap
-        ...(options?.plugins ?? []).map((e) => new e()),
+        ...(options?.plugins?.map((Plugin) => new Plugin()) ?? []),
       ],
     });
 
@@ -151,15 +178,13 @@ export class DragAndDropController {
    * This won't return anything that is registered as a Type or has "Transformed" in its named
    */
   public getAvailableAssets(): Array<ExtensionProviderAssetIdentifier> {
-    const assets = this.PlayerXLRService.XLRSDK.listTypes({
+    const assets = this.XLRSDK.listTypes({
       capabilityFilter: 'Types',
       typeFilter: 'Transformed',
     });
     return assets.map((asset) => {
       const assetName = asset.name;
-      const typeInfo = this.PlayerXLRService.XLRSDK.getTypeInfo(
-        assetName
-      ) as TypeMetadata;
+      const typeInfo = this.XLRSDK.getTypeInfo(assetName) as TypeMetadata;
       return {
         pluginName: typeInfo.plugin,
         assetName,
@@ -174,9 +199,7 @@ export class DragAndDropController {
    * @param assetName - Player 'type' string for the Asset/View to retrieve
    */
   public getAssetDetails(assetName: string): NamedType<ObjectType> {
-    return this.PlayerXLRService.XLRSDK.getType(
-      assetName
-    ) as NamedType<ObjectType>;
+    return this.XLRSDK.getType(assetName) as NamedType<ObjectType>;
   }
 
   /**
@@ -203,6 +226,22 @@ export class DragAndDropController {
   public updateAsset(assetSymbol: symbol, newObject: Asset) {
     this.runtimeState.updateAsset(assetSymbol, newObject);
     this.dndWebPlayerPlugin.refresh(this.webPlayer.player);
+    this.stateUpdateSubscription.publish(this);
+  }
+
+  public async placeAsset(
+    dropTargetSymbol: symbol,
+    identifier: ExtensionProviderAssetIdentifier,
+    type: NamedType<ObjectType>,
+    action: 'replace' | 'append' | 'prepend' = 'replace'
+  ) {
+    await this.runtimeState.placeAsset(
+      dropTargetSymbol,
+      { identifier, type },
+      action
+    );
+    this.dndWebPlayerPlugin.refresh(this.webPlayer.player);
+    this.stateUpdateSubscription.publish(this);
   }
 
   /**
@@ -213,6 +252,7 @@ export class DragAndDropController {
   public removeAsset(assetSymbol: symbol) {
     this.runtimeState.clearAsset(assetSymbol);
     this.dndWebPlayerPlugin.refresh(this.webPlayer.player);
+    this.stateUpdateSubscription.publish(this);
   }
 
   /**
@@ -229,7 +269,7 @@ export class DragAndDropController {
    * @param view - player content
    */
   public importView(view: View) {
-    this.runtimeState.importView(view, this.PlayerXLRService);
+    this.runtimeState.importView(view, this.XLRSDK);
     this.dndWebPlayerPlugin.refresh(this.webPlayer.player);
   }
 

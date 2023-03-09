@@ -6,6 +6,7 @@ javascript_pipeline(
       "//xlr/types:@player-tools/xlr",
       "//language/json-language-service:@player-tools/json-language-service",
       "@npm//@player-ui/react",
+      "@npm//@player-ui/react-subscribe",
       "@npm//react-dnd",
       "@npm//react-dnd-html5-backend",
     ],

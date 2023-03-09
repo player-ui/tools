@@ -45,6 +45,7 @@
     "@reduxjs/toolkit": "^1.6.1",
     "@rollup/plugin-image": "^2.1.1",
     "@player-ui/react": "0.4.0-next.7",
+    "@player-ui/react-subscribe": "0.4.0-next.7",
     "@player-ui/reference-assets-plugin-react": "0.4.0-next.7",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.6",

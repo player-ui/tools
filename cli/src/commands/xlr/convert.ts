@@ -7,9 +7,9 @@ import type { ExportTypes } from '@player-tools/xlr-sdk';
 import { XLRSDK } from '@player-tools/xlr-sdk';
 import logSymbols from 'log-symbols';
 import type { NamedType } from '@player-tools/xlr';
-import { BaseCommand } from '../../utils/base-command';
-import { TopLevelDeclaration } from '@player-tools/xlr-utils';
+import type { TopLevelDeclaration } from '@player-tools/xlr-utils';
 import { TSWriter } from '@player-tools/xlr-converters';
+import { BaseCommand } from '../../utils/base-command';
 
 const PlayerImportMap = new Map([
   [

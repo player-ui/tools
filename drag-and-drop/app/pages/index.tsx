@@ -593,7 +593,7 @@ const App = () => {
         return prom;
       },
       resolveCollectionConversion(assets, XLRSDK) {
-        const collectionType = XLRSDK.XLRSDK.getType('collection');
+        const collectionType = XLRSDK.getType('collection');
         return {
           asset: {
             id: `autogen-collection`,

@@ -1,7 +1,14 @@
 import type { NamedType, ObjectType } from '@player-tools/xlr';
-import type { XLRService } from '@player-tools/json-language-service';
-import type { TypeMetadata } from '@player-tools/xlr-sdk';
-import type { Asset, AssetWrapper, Flow, View } from '@player-ui/types';
+import type { TypeMetadata, XLRSDK } from '@player-tools/xlr-sdk';
+import type {
+  Asset,
+  AssetWrapper,
+  DataModel,
+  Flow,
+  View,
+  Schema,
+  Navigation,
+} from '@player-ui/types';
 import type {
   ExtensionProviderAssetIdentifier,
   FlowWithOneView,
@@ -10,11 +17,7 @@ import type {
   DropTargetAssetContext,
 } from '../types';
 import { UUIDSymbol } from '../types';
-import {
-  makeDropTarget,
-  getAssetSymbol,
-  removeDndStateFromView,
-} from './helpers';
+import { makeDropTarget, getAssetSymbol } from './helpers';
 import { isDropTargetAsset } from '../types';
 
 /** The type for exporting and restoring the flow state */
@@ -49,10 +52,7 @@ export interface RuntimeFlowStateOptions {
   /**
    * Function that will be called when Drag and Drop state changes
    */
-  handleDndStateChange: (
-    /** The player content without any drag and drop specific assets */
-    content: View
-  ) => void;
+  handleDndStateChange: () => void;
 
   /**
    * The content to initialize the editing experience with
@@ -85,7 +85,14 @@ export interface RuntimeFlowStateOptions {
  * Manages the translation between Drag and Drop state to Player state
  */
 export class RuntimeFlowState {
+  /** The root drag and drop asset */
   private ROOT: DropTargetAsset;
+  /** The schema section of the content */
+  public schema?: Schema.Schema;
+  /** The data section of the content */
+  public data?: DataModel;
+  /** The navigation section of the content */
+  public navigation: Navigation;
   /** Symbol to Real Asset */
   private realAssetMappings: Map<symbol, PlacedAsset> = new Map();
   /** Symbol to Drop Target Asset */
@@ -107,20 +114,32 @@ export class RuntimeFlowState {
     type: NamedType<ObjectType>;
   };
 
-  private handleDndStateChange: (
-    /** The player content without any drag and drop specific assets */
-    content: View
-  ) => void;
+  /** Called whenever drag and drop state changes */
+  private handleDndStateChange: () => void;
 
   constructor(options: RuntimeFlowStateOptions) {
     this.ROOT = makeDropTarget('drag-and-drop-view');
+    this.navigation = {
+      BEGIN: 'FLOW_1',
+      FLOW_1: {
+        startState: 'VIEW_1',
+        VIEW_1: {
+          state_type: 'VIEW',
+          ref: this.view.id,
+          transitions: {
+            '*': 'VIEW_1',
+          },
+        },
+      },
+    };
+
     this.dropTargetAssets.set(getAssetSymbol(this.ROOT), this.ROOT);
     this.resolveRequiredProperties = options.resolveRequiredProperties;
     this.resolveCollectionConversion = options.resolveCollectionConversion;
     this.handleDndStateChange = options.handleDndStateChange;
   }
 
-  exportState(): ExportedRuntimeFlowState {
+  public exportState(): ExportedRuntimeFlowState {
     return {
       root: this.ROOT,
     };
@@ -418,7 +437,7 @@ export class RuntimeFlowState {
     containingDropTarget.value =
       this.computeViewForDropTarget(containingDropTarget);
 
-    this.handleDndStateChange(removeDndStateFromView(this.view));
+    this.handleDndStateChange();
   }
 
   public async placeAsset(
@@ -478,7 +497,7 @@ export class RuntimeFlowState {
     // Resolve Arrays in parent
     this.updateArrayInParent(dropTarget, dropTargetSymbol);
 
-    this.handleDndStateChange(removeDndStateFromView(this.view));
+    this.handleDndStateChange();
   }
 
   public getAsset(assetSymbol: symbol): {
@@ -507,18 +526,16 @@ export class RuntimeFlowState {
     this.realAssetMappings.delete(assetSymbol);
     parentDropTarget.value = this.computeViewForDropTarget(parentDropTarget);
 
-    this.handleDndStateChange(removeDndStateFromView(this.view));
+    this.handleDndStateChange();
   }
 
   private makeDropTargetContext(
-    xlrService: XLRService,
+    sdk: XLRSDK,
     parent: Asset,
     propertyName: string,
     isArrayElement?: boolean
   ): DropTargetAssetContext {
-    const { plugin: pluginName } = xlrService.XLRSDK.getTypeInfo(
-      parent.type
-    ) as TypeMetadata;
+    const { plugin: pluginName } = sdk.getTypeInfo(parent.type) as TypeMetadata;
     return {
       parent: {
         pluginName,
@@ -530,7 +547,7 @@ export class RuntimeFlowState {
   }
 
   private createDropTarget(
-    xlrService: XLRService,
+    sdk: XLRSDK,
     targetAsset?: Asset,
     dropTargetContext?: DropTargetAssetContext,
     parentAsset?: Asset
@@ -542,10 +559,10 @@ export class RuntimeFlowState {
     const dropTargetSymbol = getAssetSymbol(dropTarget);
     this.dropTargetAssets.set(dropTargetSymbol, dropTarget);
     if (targetAsset) {
-      const targetAssetType = xlrService.XLRSDK.getType(
+      const targetAssetType = sdk.getType(
         targetAsset.type
       ) as NamedType<ObjectType>;
-      const { plugin: pluginName } = xlrService.XLRSDK.getTypeInfo(
+      const { plugin: pluginName } = sdk.getTypeInfo(
         targetAsset.type
       ) as TypeMetadata;
       const wrappedTargetAsset: PlacedAsset = {
@@ -574,7 +591,7 @@ export class RuntimeFlowState {
 
   private addDndStateToAsset(
     obj: any,
-    xlrService: XLRService,
+    sdk: XLRSDK,
     dropTargetContext?: DropTargetAssetContext,
     parentAsset?: Asset
   ) {
@@ -583,7 +600,7 @@ export class RuntimeFlowState {
     }
 
     const newObj = { ...obj };
-    const assetType = xlrService.XLRSDK.getType(obj.type) as ObjectType;
+    const assetType = sdk.getType(obj.type) as ObjectType;
     if (assetType) {
       newObj[UUIDSymbol] = Symbol(`${newObj.id}-${newObj.type}`);
     }
@@ -612,10 +629,10 @@ export class RuntimeFlowState {
         dropTargetContext?.parent.assetName.length > 0
       ) {
         newObj[key] = this.createDropTarget(
-          xlrService,
+          sdk,
           this.addDndStateToAsset(
             obj[key],
-            xlrService,
+            sdk,
             dropTargetContext,
             parentAsset
           ),
@@ -625,14 +642,9 @@ export class RuntimeFlowState {
       } else if (typeof obj[key] === 'object') {
         const targetAsset = this.addDndStateToAsset(
           obj[key],
-          xlrService,
+          sdk,
           isAssetWrapper
-            ? this.makeDropTargetContext(
-                xlrService,
-                newObj,
-                key,
-                isArrayElement
-              )
+            ? this.makeDropTargetContext(sdk, newObj, key, isArrayElement)
             : dropTargetContext,
           isAssetWrapper ? newObj : parentAsset
         );
@@ -664,10 +676,10 @@ export class RuntimeFlowState {
           ) {
             const targetAsset = {
               asset: this.createDropTarget(
-                xlrService,
+                sdk,
                 undefined,
                 this.makeDropTargetContext(
-                  xlrService,
+                  sdk,
                   newObj,
                   key,
                   node.type === 'array'
@@ -688,7 +700,7 @@ export class RuntimeFlowState {
     return newObj;
   }
 
-  public importView(view: View, xlrService: XLRService) {
+  public importView(view: View, xlrService: XLRSDK) {
     this.realAssetMappings.clear();
     this.dropTargetAssets.clear();
     this.assetsToTargets.clear();
@@ -709,19 +721,9 @@ export class RuntimeFlowState {
     return {
       id: 'dnd-controller',
       views: [view],
-      navigation: {
-        BEGIN: 'FLOW_1',
-        FLOW_1: {
-          startState: 'VIEW_1',
-          VIEW_1: {
-            state_type: 'VIEW',
-            ref: view.id,
-            transitions: {
-              '*': 'VIEW_1',
-            },
-          },
-        },
-      },
+      schema: this.schema,
+      data: this.data,
+      navigation: this.navigation,
     };
   }
 }

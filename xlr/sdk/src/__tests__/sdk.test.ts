@@ -106,50 +106,27 @@ describe('Basic Validation', () => {
 
 describe('Export Test', () => {
   it('Exports Typescript types', () => {
-    const importMap = new Map([
-      [
-        '@player-ui/types',
-        ['Expression', 'Asset', 'Binding', 'AssetWrapper', 'Schema.DataType'],
-      ],
-    ]);
-
     const sdk = new XLRSDK();
     sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
     sdk.loadDefinitionsFromDisk('./common/static_xlrs/core', EXCLUDE);
-    const results = sdk.exportRegistry('TypeScript', importMap);
-    expect(results[0][0]).toBe('out.d.ts');
-    expect(results[0][1]).toMatchSnapshot();
+    const results = sdk.exportRegistry();
+    expect(results).toMatchSnapshot();
   });
 
   it('Exports Typescript Types With Filters', () => {
-    const importMap = new Map([
-      [
-        '@player-ui/types',
-        ['Expression', 'Asset', 'Binding', 'AssetWrapper', 'Schema.DataType'],
-      ],
-    ]);
-
     const sdk = new XLRSDK();
     sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin');
     sdk.loadDefinitionsFromDisk('./common/static_xlrs/core', EXCLUDE);
-    const results = sdk.exportRegistry('TypeScript', importMap, {
+    const results = sdk.exportRegistry({
       typeFilter: 'Transformed',
       pluginFilter: 'Types',
     });
-    expect(results[0][0]).toBe('out.d.ts');
-    expect(results[0][1]).toMatchSnapshot();
+    expect(results).toMatchSnapshot();
   });
 
   it('Exports Typescript Types With Transforms', () => {
-    const importMap = new Map([
-      [
-        '@player-ui/types',
-        ['Expression', 'Asset', 'Binding', 'AssetWrapper', 'Schema.DataType'],
-      ],
-    ]);
-
     /**
-     *
+     * Sample transform
      */
     const transformFunction: TransformFunction = (input, capability) => {
       if (capability === 'Assets') {
@@ -170,15 +147,7 @@ describe('Export Test', () => {
     const sdk = new XLRSDK();
     sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
     sdk.loadDefinitionsFromDisk('./common/static_xlrs/core', EXCLUDE);
-    const results = sdk.exportRegistry(
-      'TypeScript',
-      importMap,
-      {
-        pluginFilter: 'Types',
-      },
-      [transformFunction]
-    );
-    expect(results[0][0]).toBe('out.d.ts');
-    expect(results[0][1]).toMatchSnapshot();
+    const results = sdk.exportRegistry({}, [transformFunction]);
+    expect(results).toMatchSnapshot();
   });
 });

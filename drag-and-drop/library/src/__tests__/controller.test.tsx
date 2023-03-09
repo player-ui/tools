@@ -7,20 +7,12 @@ import { DragAndDropController } from '../controller';
 import type { DropTargetAsset, DropTargetAssetContext } from '../types';
 import { getAssetSymbol } from '../utils/helpers';
 
-const referenceAssetExtension = {
-  plugin: class test {
-    name = 'test';
-  },
-  manifest: pluginManifest as any,
-};
-
 describe('drag-and-drop', () => {
   it('Fills in placeholder assets when dropped', async () => {
     const mockHandleStateChange = jest.fn();
     const dndController = new DragAndDropController({
       playerTypes: typesManifest,
-      manifests: [referenceAssetExtension.manifest],
-      plugins: [referenceAssetExtension.plugin],
+      manifests: [pluginManifest],
       resolveRequiredProperties: async (
         asset: Asset<string>,
         type: ObjectType
@@ -121,17 +113,7 @@ describe('drag-and-drop', () => {
       }
     `);
 
-    expect(mockHandleStateChange).toBeCalledWith({
-      actions: [],
-      id: 'drag-and-drop-view-info',
-      title: {
-        asset: {
-          id: 'drag-and-drop-view-title-text',
-          type: 'text',
-        },
-      },
-      type: 'info',
-    });
+    expect(mockHandleStateChange).toBeCalled();
   });
 
   it('Import existing content into drag and drop', async () => {
@@ -199,8 +181,7 @@ describe('drag-and-drop', () => {
     };
     const dndController = new DragAndDropController({
       playerTypes: typesManifest,
-      manifests: [referenceAssetExtension.manifest],
-      plugins: [referenceAssetExtension.plugin],
+      manifests: [pluginManifest],
       resolveRequiredProperties: jest.fn(),
       resolveCollectionConversion: jest.fn(),
       handleDndStateChange: jest.fn(),
@@ -267,8 +248,8 @@ describe('drag-and-drop', () => {
     };
     const dndController = new DragAndDropController({
       playerTypes: typesManifest,
-      manifests: [referenceAssetExtension.manifest],
-      plugins: [referenceAssetExtension.plugin],
+      manifests: [pluginManifest],
+      plugins: [pluginManifest],
       resolveRequiredProperties: jest.fn(),
       resolveCollectionConversion: jest.fn(),
       handleDndStateChange: jest.fn(),
