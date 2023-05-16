@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import {
   ChakraProvider,
   Box,
@@ -322,32 +322,51 @@ const AssetSelectorPanel = () => {
 const AssetDetailsPanel = () => {
   const { controller } = useController() ?? {};
   const propContext = React.useContext(PropertiesContext);
-  const [modifiedAsset, setModifiedAsset] = React.useState<Asset | undefined>(
-    undefined
+  const [sourceAssetID, setSourceAssetID] = React.useState<symbol | undefined>(
+    propContext.displayedAssetID
   );
+
+  const { asset, type } = controller.getAsset(sourceAssetID);
+
+  const [localAsset, setLocalAsset] = React.useState<Asset | undefined>(asset);
+
+  const [localType, setLocalType] = React.useState<ObjectType | undefined>(
+    type
+  );
+
+  useEffect(() => {
+    if (propContext.displayedAssetID !== sourceAssetID) {
+      setSourceAssetID(propContext.displayedAssetID);
+    }
+  }, [propContext.displayedAssetID, sourceAssetID]);
+
+  useEffect(() => {
+    const { asset: newAsset, type: newType } =
+      controller.getAsset(sourceAssetID);
+    setLocalAsset(newAsset);
+    setLocalType(newType);
+  }, [sourceAssetID, controller]);
 
   if (!controller) {
     return null;
   }
 
-  const { asset, type } = controller.getAsset(propContext.displayedAssetID);
-
   /**
    * Updates the selected asset thats stored as a temporary value
    */
   const updateObject = (path: Array<string | number>, value: any) => {
-    setModifiedAsset(setIn(modifiedAsset ?? asset, path, value) as Asset);
+    setLocalAsset(setIn(localAsset, path, value) as Asset);
   };
 
   return (
     <Card>
       <CardHeader>
-        <Heading>Properties for {type.name}</Heading>
+        <Heading>Properties for {localType.name}</Heading>
       </CardHeader>
       <CardBody>
         <AssetEditorPanel
-          asset={modifiedAsset ?? asset}
-          type={type}
+          asset={localAsset}
+          type={localType}
           onUpdate={updateObject}
         />
       </CardBody>
@@ -356,10 +375,7 @@ const AssetDetailsPanel = () => {
           <Button
             colorScheme="blue"
             onClick={(event) => {
-              controller.updateAsset(
-                propContext.displayedAssetID,
-                modifiedAsset
-              );
+              controller.updateAsset(propContext.displayedAssetID, localAsset);
             }}
           >
             Update Component
