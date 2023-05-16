@@ -89,6 +89,17 @@ export class PlayerDndPlugin implements ReactPlayerPlugin {
         resolve: (asset: DropTargetAsset) => {
           return {
             ...asset,
+            values: [],
+            ...(asset.value
+              ? {
+                  value: {
+                    ...asset.value,
+                    type: this.options.getXLRTypeForAsset(
+                      asset.value.identifier as ExtensionProviderAssetIdentifier
+                    ),
+                  },
+                }
+              : {}),
             assetSymbol: asset.value?.asset
               ? getAssetSymbol(asset.value.asset)
               : undefined,

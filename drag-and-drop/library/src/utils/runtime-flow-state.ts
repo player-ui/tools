@@ -46,7 +46,7 @@ export interface RuntimeFlowStateOptions {
     /** The generated collection asset with the provided `assets` array as children */
     asset: Asset;
     /** The corresponding type for the generated collection asset */
-    type: NamedType<ObjectType>;
+    identifier: ExtensionProviderAssetIdentifier;
   };
 
   /**
@@ -111,7 +111,7 @@ export class RuntimeFlowState {
     /** The generated collection asset with the provided `assets` array as children */
     asset: Asset;
     /** The corresponding type for the generated collection asset */
-    type: NamedType<ObjectType>;
+    identifier: ExtensionProviderAssetIdentifier;
   };
 
   /** Called whenever drag and drop state changes */
@@ -468,9 +468,9 @@ export class RuntimeFlowState {
 
     const newAsset = await this.createNewAsset(dropTarget.id, replacement.type);
 
-    const newWrappedAsset = {
+    const newWrappedAsset: PlacedAsset = {
       asset: newAsset,
-      ...replacement,
+      identifier: replacement.identifier,
     };
 
     this.realAssetMappings.set(getAssetSymbol(newAsset), newWrappedAsset);
@@ -500,12 +500,7 @@ export class RuntimeFlowState {
     this.handleDndStateChange();
   }
 
-  public getAsset(assetSymbol: symbol): {
-    /** The Asset that correlates to the given ID */
-    asset: Asset;
-    /** The underlying XLR type for the Asset */
-    type: ObjectType;
-  } {
+  public getAsset(assetSymbol: symbol): PlacedAsset {
     const placedAsset = this.realAssetMappings.get(assetSymbol);
     if (!placedAsset) {
       throw new Error(
@@ -513,7 +508,7 @@ export class RuntimeFlowState {
       );
     }
 
-    return { ...placedAsset };
+    return placedAsset;
   }
 
   public clearAsset(assetSymbol: symbol) {
@@ -571,7 +566,6 @@ export class RuntimeFlowState {
           assetName: targetAssetType.name ?? '',
           capability: dropTargetContext ? 'Assets' : 'Views',
         },
-        type: targetAssetType,
         asset: targetAsset,
       };
       const targetAssetSymbol = getAssetSymbol(targetAsset);

@@ -41,9 +41,6 @@ export interface PlacedAsset {
   /** The identifier for where the populated asset is from */
   identifier: ExtensionProviderAssetIdentifier;
 
-  /** The current descriptor for the value stored at this asset */
-  type: NamedType<ObjectType>;
-
   /** A mapping of asset slot name to drop target handlers */
   asset: Asset;
 }
@@ -78,11 +75,11 @@ export interface DropTargetAsset extends Asset<'drop-target'> {
 
   /** The effective value that should be rendered. Generated from `.values` */
   value?: {
-    /** The current descriptor for the value stored at this asset */
-    type: NamedType<ObjectType>;
-
     /** A mapping of asset slot name to drop target handlers */
     asset: Asset;
+
+    /** The current descriptor for the value stored at this asset */
+    identifier: ExtensionProviderAssetIdentifier;
   };
 
   /**
@@ -94,8 +91,11 @@ export interface DropTargetAsset extends Asset<'drop-target'> {
 }
 
 export interface TransformedDropTargetAssetType extends DropTargetAsset {
-  /** Context relative to the parent's position */
-  context?: DropTargetAsset['context'];
+  /** The effective value that should be rendered with XLR information. Generated from `.values` */
+  value?: DropTargetAsset['value'] & {
+    /** The current descriptor for the value stored at this asset */
+    type: NamedType<ObjectType>;
+  };
 
   /** Unique identifier to reference the asset within the drop target */
   assetSymbol?: symbol;

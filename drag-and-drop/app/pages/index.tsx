@@ -45,13 +45,13 @@ import {
 } from '@player-tools/dnd-lib';
 import { ReferenceAssetsPlugin } from '@player-ui/reference-assets-plugin-react';
 import type { NamedType, ObjectType, TSManifest } from '@player-tools/xlr';
-// eslint-disable-next-line import/extensions, import/no-unresolved
+
 import pluginManifest from '@player-ui/reference-assets-plugin-react/dist/xlr/manifest';
-// eslint-disable-next-line import/extensions, import/no-unresolved
+
 import typesManifest from '@player-ui/types/dist/xlr/manifest';
+import Files from 'react-files';
 import { AssetEditorPanel } from '../components/AssetEditorPanel';
 import { covertXLRtoAssetDoc } from '../utils/converters';
-import Files from "react-files";
 
 const PropertiesContext = React.createContext<{
   /**
@@ -292,24 +292,22 @@ const AssetSelectorPanel = () => {
               </Button>
             </AccordionPanel>
             <AccordionPanel pb={4}>
-            <Files
-              onChange={file => {
-                const fileReader = new FileReader();
-                fileReader.onload = () => {
-                  controller.importView(JSON.parse(fileReader.result as string).views[0]);
-                };
-                fileReader.readAsText(file[0]);
-              }}
-              accepts={[".json"]}
-              clickable
-            >
-              <Button
-                colorScheme="green"
+              <Files
+                clickable
+                accepts={['.json']}
+                onChange={(file) => {
+                  const fileReader = new FileReader();
+                  fileReader.onload = () => {
+                    controller.importView(
+                      JSON.parse(fileReader.result as string).views[0]
+                    );
+                  };
+
+                  fileReader.readAsText(file[0]);
+                }}
               >
-                Import View
-              </Button>
-            </Files>
-              
+                <Button colorScheme="green">Import View</Button>
+              </Files>
             </AccordionPanel>
           </AccordionItem>
         </Accordion>
@@ -603,9 +601,6 @@ const App = () => {
           type: collectionType as NamedType<ObjectType>,
         };
       },
-      handleDndStateChange(content) {
-        console.log('handle state changes here');
-      }
     };
     const controller = new DragAndDropController(config);
     return {

@@ -57,22 +57,12 @@ export interface DragAndDropControllerOptions {
     type: NamedType<ObjectType>;
   };
 
-  /**
-   * Function that will be called when Drag and Drop state changes
-   *
-   * @deprecated Will be removed soon
-   */
-  handleDndStateChange: (
-    /** An instance of the controller object to access any new information that you may need */
-    controller: DragAndDropController
-  ) => void;
-
   /** A custom component to use for rendering droppable Assets */
   Component?: React.ComponentType<TransformedDropTargetAssetType>;
 }
 
 /**
- *
+ * The DragAndDropController is the main entry point for the Drag and Drop library.
  */
 export class DragAndDropController {
   private readonly options: DragAndDropControllerOptions;
@@ -126,11 +116,29 @@ export class DragAndDropController {
     this.runtimeState = new RuntimeFlowState({
       resolveRequiredProperties: options.resolveRequiredProperties,
       resolveCollectionConversion: (assets: Array<AssetWrapper>) => {
-        return options.resolveCollectionConversion(assets, this.XLRSDK);
+        const { asset, type } = options.resolveCollectionConversion(
+          assets,
+          this.XLRSDK
+        );
+
+        const typeInfo = this.XLRSDK.getTypeInfo(type.name);
+        if (!typeInfo) {
+          throw new Error(
+            `SDK Error: Unable to get type info for collection type ${type.name}`
+          );
+        }
+
+        return {
+          asset,
+          identifier: {
+            assetName: type.name,
+            pluginName: typeInfo.plugin,
+            capability: typeInfo.capability,
+          },
+        };
       },
       handleDndStateChange: () => {
         this.stateUpdateSubscription.publish(this);
-        options.handleDndStateChange(this);
       },
     });
 
@@ -213,7 +221,18 @@ export class DragAndDropController {
     /** The underlying XLR type for the Asset */
     type: ObjectType;
   } {
-    return this.runtimeState.getAsset(assetSymbol);
+    const placedAsset = this.runtimeState.getAsset(assetSymbol);
+    const type = this.XLRSDK.getType(placedAsset?.identifier.assetName);
+    if (!type) {
+      throw new Error(
+        `Unable to find type for asset ${placedAsset?.identifier.assetName}`
+      );
+    }
+
+    return {
+      asset: placedAsset.asset,
+      type: type as ObjectType,
+    };
   }
 
   /**
