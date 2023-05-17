@@ -50,64 +50,14 @@ import pluginManifest from '@player-ui/reference-assets-plugin-react/dist/xlr/ma
 
 import typesManifest from '@player-ui/types/dist/xlr/manifest';
 import Files from 'react-files';
-import { AssetEditorPanel } from '../components/AssetEditorPanel';
+import { PropertyBox } from '../components/AssetEditorPanel';
 import { covertXLRtoAssetDoc } from '../utils/converters';
-
-const PropertiesContext = React.createContext<{
-  /**
-   * Current Asset thats selected in the edit panel on the right
-   */
-  displayedAssetID?: symbol;
-  /**
-   * Sets `displayedAssetID`
-   */
-  setDisplayedAssetID: (id: symbol) => void;
-
-  /**
-   * Current XLR Type thats selected in the docs panel on the right
-   */
-  displayedXLRDocType?: string;
-  /**
-   * Sets `displayedAssetID`
-   */
-  setDisplayedXLRDocType: (id: string) => void;
-
-  /**
-   * If the export modal is open
-   */
-  exportOpen: boolean;
-
-  /** Sets `exportOpen` */
-  setExportOpen: (state: boolean) => void;
-
-  /** If the right panel is docs or edit */
-  rightPanelState: 'docs' | 'edit';
-
-  /** Sets `rightPanelState` */
-  setRightPanelState: (state: 'docs' | 'edit') => void;
-}>({
-  setDisplayedAssetID: () => {},
-  setExportOpen: () => {},
-  setRightPanelState: () => {},
-  exportOpen: false,
-  rightPanelState: 'edit',
-  setDisplayedXLRDocType: () => {},
-});
-
-const ControllerContext = React.createContext<
-  | {
-      /** */
-      controller: DragAndDropController;
-    }
-  | undefined
->(undefined);
-
-/**
- *
- */
-function useController() {
-  return React.useContext(ControllerContext);
-}
+import {
+  ControllerContext,
+  PropertiesContext,
+  useController,
+  useProperties,
+} from '../utils/context';
 
 /**
  *
@@ -321,7 +271,7 @@ const AssetSelectorPanel = () => {
  */
 const AssetDetailsPanel = () => {
   const { controller } = useController() ?? {};
-  const propContext = React.useContext(PropertiesContext);
+  const propContext = useProperties();
   const [sourceAssetID, setSourceAssetID] = React.useState<symbol | undefined>(
     propContext.displayedAssetID
   );
@@ -364,7 +314,7 @@ const AssetDetailsPanel = () => {
         <Heading>Properties for {localType.name}</Heading>
       </CardHeader>
       <CardBody>
-        <AssetEditorPanel
+        <PropertyBox
           asset={localAsset}
           type={localType}
           onUpdate={updateObject}
@@ -443,7 +393,7 @@ const PropertyResolver = (props: PendingPropertyResolution) => {
             <Heading>Resolve Required Properties</Heading>
           </CardHeader>
           <CardBody>
-            <AssetEditorPanel
+            <PropertyBox
               asset={modifiedAsset}
               type={props.type}
               onUpdate={updateObject}
@@ -467,7 +417,7 @@ const PropertyResolver = (props: PendingPropertyResolution) => {
 
 /** Modal for showing the JSON version of the created flow */
 const ContentExportModal = () => {
-  const context = React.useContext(PropertiesContext);
+  const context = useProperties();
   const { controller } = useController() ?? {};
   const content = JSON.stringify(controller.exportContent());
   return (

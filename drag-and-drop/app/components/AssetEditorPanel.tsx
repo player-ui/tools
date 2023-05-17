@@ -1,5 +1,7 @@
+import React from 'react';
 import {
   Box,
+  Button,
   Card,
   CardBody,
   Input,
@@ -12,10 +14,12 @@ import {
   RadioGroup,
   Stack,
   Text,
+  Select,
 } from '@chakra-ui/react';
 import type { NodeType, ObjectType } from '@player-tools/xlr';
 import type { Asset } from '@player-ui/types';
-import React from 'react';
+import { UUIDSymbol } from '@player-tools/dnd-lib';
+import { useController, useProperties } from '../utils/context';
 
 export interface AssetEditorPanelProps {
   /** Current authored Asset */
@@ -39,7 +43,7 @@ export interface PropertyBoxProps {
   /** Is the property required */
   required?: boolean;
   /** The name of the parent property being rendered */
-  path: Array<string | number>;
+  path?: Array<string | number>;
   /** Should a title be displayed for the rendered element */
   title?: boolean;
   /** Function to propagate updates with */
@@ -53,20 +57,87 @@ const ConstantPropertyBox = (props) => {
   return <Input isDisabled value={props.value} />;
 };
 
+const AvailableAssetsDropDown = (props) => {
+  const { controller } = useController();
+  const availableAssets =
+    controller?.getAvailableAssets().filter((c) => c.capability === 'Assets') ??
+    [];
+
+  return (
+    <Select
+      placeholder="Select An Asset to Insert"
+      onChange={(event) => {
+        console.log(`Dropping a ${event.target.value}`);
+        const assetToDrop = availableAssets.find(
+          (asset) => asset.assetName === event.target.value
+        );
+        if (assetToDrop) {
+          controller.placeAsset(
+            props.dropTargetSymbol,
+            assetToDrop,
+            controller.getAssetDetails(assetToDrop.assetName)
+          );
+        }
+      }}
+    >
+      {availableAssets.map((asset) => {
+        return <option key={asset.assetName}>{asset.assetName}</option>;
+      })}
+    </Select>
+  );
+};
+
+const AssetLink = (props) => {
+  const properties = useProperties();
+
+  return (
+    <Button
+      colorScheme="yellow"
+      onClick={(event) => {
+        properties.setDisplayedAssetID(props.asset[UUIDSymbol]);
+      }}
+    >
+      {props.identifier.assetName}
+    </Button>
+  );
+};
+
 /**
  *
  */
-const PropertyBox = (props: PropertyBoxProps) => {
-  const { asset, path, type: node, title = true } = props;
-  const required = props.required ?? false;
+export const PropertyBox = (props: PropertyBoxProps) => {
+  const {
+    asset,
+    path = [],
+    type: node,
+    title = true,
+    required = false,
+  } = props;
 
   let renderedComponent;
 
+  if (node.type === 'ref' && node.ref.includes('AssetWrapper')) {
+    console.log(`switch for ${path} is ${(asset as any)?.asset.value} `);
+    if ((asset as any)?.asset.value) {
+      renderedComponent = (
+        <AssetLink
+          asset={(asset as any)?.asset.value.asset}
+          identifier={(asset as any)?.asset.value.identifier}
+        />
+      );
+    } else {
+      renderedComponent = (
+        <AvailableAssetsDropDown
+          dropTargetSymbol={(asset as any)?.asset?.[UUIDSymbol]}
+        />
+      );
+    }
+  }
+
   if (
-    (node.type === 'ref' && node.ref.includes('AssetWrapper')) ||
-    (node.type === 'array' &&
-      node.elementType.type === 'ref' &&
-      node.elementType.ref.includes('AssetWrapper'))
+    node.type === 'array' &&
+    node.elementType.type === 'ref' &&
+    node.elementType.ref.includes('AssetWrapper')
   ) {
     return null;
   }
@@ -167,19 +238,5 @@ const PropertyBox = (props: PropertyBoxProps) => {
       {title && <Text as="b">{parentProperty}</Text>}
       {renderedComponent}
     </div>
-  );
-};
-
-/**
- * A top level panel for editing an Asset
- */
-export const AssetEditorPanel = (props: AssetEditorPanelProps) => {
-  return (
-    <PropertyBox
-      type={props.type}
-      asset={props.asset}
-      path={[]}
-      onUpdate={props.onUpdate}
-    />
   );
 };
