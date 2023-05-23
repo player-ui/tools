@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import {
   Box,
@@ -15,6 +16,8 @@ import {
   Stack,
   Text,
   Select,
+  StackDivider,
+  VStack,
 } from '@chakra-ui/react';
 import type { NodeType, ObjectType } from '@player-tools/xlr';
 import type { Asset } from '@player-ui/types';
@@ -57,6 +60,9 @@ const ConstantPropertyBox = (props) => {
   return <Input isDisabled value={props.value} />;
 };
 
+/**
+ *
+ */
 const AvailableAssetsDropDown = (props) => {
   const { controller } = useController();
   const availableAssets =
@@ -87,6 +93,9 @@ const AvailableAssetsDropDown = (props) => {
   );
 };
 
+/**
+ *
+ */
 const AssetLink = (props) => {
   const properties = useProperties();
 
@@ -117,7 +126,6 @@ export const PropertyBox = (props: PropertyBoxProps) => {
   let renderedComponent;
 
   if (node.type === 'ref' && node.ref.includes('AssetWrapper')) {
-    console.log(`switch for ${path} is ${(asset as any)?.asset.value} `);
     if ((asset as any)?.asset.value) {
       renderedComponent = (
         <AssetLink
@@ -132,17 +140,7 @@ export const PropertyBox = (props: PropertyBoxProps) => {
         />
       );
     }
-  }
-
-  if (
-    node.type === 'array' &&
-    node.elementType.type === 'ref' &&
-    node.elementType.ref.includes('AssetWrapper')
-  ) {
-    return null;
-  }
-
-  if (
+  } else if (
     (node.type === 'string' ||
       node.type === 'number' ||
       node.type === 'boolean') &&
@@ -160,6 +158,7 @@ export const PropertyBox = (props: PropertyBoxProps) => {
       <Input
         value={(asset as string) ?? ''}
         isRequired={required}
+        placeholder={node.type === 'ref' ? `some ${node.ref}` : undefined}
         onChange={(event) => {
           props.onUpdate(path, event.target.value);
         }}
@@ -207,36 +206,44 @@ export const PropertyBox = (props: PropertyBoxProps) => {
     renderedComponent = (
       <Card>
         <CardBody>
-          <Stack spacing="4">{filteredChildren}</Stack>
+          <VStack
+            spacing={4}
+            align="stretch"
+            divider={<StackDivider borderColor="gray.600" />}
+          >
+            {filteredChildren}
+          </VStack>
         </CardBody>
       </Card>
     );
   } else if (node.type === 'or') {
     renderedComponent = (
-      <Box>
+      <VStack spacing={4} align="stretch">
         {node.or.map((element, index) => {
           return (
-            <PropertyBox
-              // eslint-disable-next-line react/no-array-index-key
-              key={index}
-              asset={props.asset}
-              type={element}
-              path={path}
-              title={false}
-              onUpdate={props.onUpdate}
-            />
+            <Box key={index}>
+              {index !== 0 && <Text as="b">or</Text>}
+              <PropertyBox
+                key={index}
+                asset={props.asset}
+                type={element}
+                path={path}
+                title={false}
+                onUpdate={props.onUpdate}
+              />
+            </Box>
           );
         })}
-      </Box>
+      </VStack>
     );
   }
 
   // Catch unimplemented form controls during development
   const parentProperty = path[path.length - 1];
   return (
-    <div>
+    <VStack spacing={4} align="stretch">
       {title && <Text as="b">{parentProperty}</Text>}
       {renderedComponent}
-    </div>
+    </VStack>
   );
 };

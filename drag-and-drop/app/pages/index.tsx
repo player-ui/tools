@@ -287,8 +287,14 @@ const AssetDetailsPanel = () => {
   useEffect(() => {
     if (propContext.displayedAssetID !== sourceAssetID) {
       setSourceAssetID(propContext.displayedAssetID);
+      const { asset: newAsset, type: newType } = controller.getAsset(
+        propContext.displayedAssetID
+      );
+
+      setLocalAsset(newAsset);
+      setLocalType(newType);
     }
-  }, [propContext.displayedAssetID, sourceAssetID]);
+  }, [controller, propContext.displayedAssetID, sourceAssetID]);
 
   useEffect(() => {
     const id = controller.stateUpdateSubscription.add(() => {
