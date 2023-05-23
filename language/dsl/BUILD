@@ -24,9 +24,7 @@ javascript_pipeline(
       "@npm//dequal"
     ],
     peer_dependencies = [
-      "@npm//react"
-    ],
-    test_data = [
+      "@npm//react",
       "@npm//@types/react"
-    ],   
+    ], 
 )

@@ -1,4 +1,4 @@
-import { setupTestEnv } from '../test-helpers';
+import { setupTestEnv } from '@player-tools/xlr-testing-utils';
 import { decorateNode } from '../annotations';
 
 describe('Annotations', () => {
