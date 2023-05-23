@@ -291,10 +291,17 @@ const AssetDetailsPanel = () => {
   }, [propContext.displayedAssetID, sourceAssetID]);
 
   useEffect(() => {
-    const { asset: newAsset, type: newType } =
-      controller.getAsset(sourceAssetID);
-    setLocalAsset(newAsset);
-    setLocalType(newType);
+    const id = controller.stateUpdateSubscription.add(() => {
+      const { asset: newAsset, type: newType } =
+        controller.getAsset(sourceAssetID);
+
+      setLocalAsset(newAsset);
+      setLocalType(newType);
+    });
+
+    return () => {
+      controller.stateUpdateSubscription.remove(id);
+    };
   }, [sourceAssetID, controller]);
 
   if (!controller) {
