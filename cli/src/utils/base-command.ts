@@ -155,7 +155,11 @@ export abstract class BaseCommand extends Command {
   }
 
   async createDSLCompiler(): Promise<DSLCompiler> {
-    const compiler = new DSLCompiler();
+    const compiler = new DSLCompiler({
+      error: this.error.bind(this),
+      warn: this.warn.bind(this),
+      log: this.log.bind(this),
+    });
     const { plugins } = await this.getPlayerConfig();
     for (let i = 0; i < plugins.length; i++) {
       // eslint-disable-next-line no-await-in-loop

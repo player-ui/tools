@@ -39,6 +39,7 @@
     "@kendallgassner/eslint-plugin-package-json": "^0.2.1",
     "@oclif/core": "1.9.0",
     "@oclif/plugin-legacy": "^1.2.7",
+    "@oclif/plugin-plugins": "^1.9.0",
     "@player-ui/player": "0.4.0-next.7",
     "@player-ui/types": "0.4.0-next.7",
     "@reduxjs/toolkit": "^1.6.1",

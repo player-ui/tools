@@ -162,8 +162,14 @@ describe('Schema Bindings Generate Properly', () => {
     `);
   });
 
-  it('throws errors if two types have the same name but are different', () => {
-    const g = new SchemaGenerator();
+  it('logs warning if two types have the same name but are different', () => {
+    const mockLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+      log: jest.fn(),
+    };
+
+    const g = new SchemaGenerator(mockLogger);
 
     const badObj = {
       main: {
@@ -181,9 +187,52 @@ describe('Schema Bindings Generate Properly', () => {
       },
     };
 
-    expect(() => g.toSchema(badObj)).toThrowError(
-      'Error: Generated two intermediate types with the name: subType'
+    const results = g.toSchema(badObj);
+    expect(mockLogger.warn).toHaveBeenCalledTimes(1);
+    expect(mockLogger.warn).toHaveBeenCalledWith(
+      'WARNING: Generated two intermediate types with the name: subType that are of different shapes, using artificial type subType2'
     );
+    expect(results).toMatchInlineSnapshot(`
+      Object {
+        "ROOT": Object {
+          "main": Object {
+            "type": "mainType",
+          },
+        },
+        "mainType": Object {
+          "sub": Object {
+            "type": "subType",
+          },
+          "sub2": Object {
+            "type": "sub2Type",
+          },
+        },
+        "sub2Type": Object {
+          "sub": Object {
+            "type": "subType2",
+          },
+        },
+        "subType": Object {
+          "a": Object {
+            "type": "FooType",
+          },
+          "b": Object {
+            "type": "BarType",
+          },
+          "c": Object {
+            "type": "BarType",
+          },
+        },
+        "subType2": Object {
+          "a": Object {
+            "type": "FooType",
+          },
+          "b": Object {
+            "type": "BarType",
+          },
+        },
+      }
+    `);
   });
 
   it('doesnt throw errors if two types have the same name and are the same', () => {

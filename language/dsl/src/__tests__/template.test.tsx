@@ -30,6 +30,33 @@ test('finds output property based on array context', async () => {
   });
 });
 
+test('finds dynamic property in a template', async () => {
+  const element = (
+    <obj>
+      <property name="foo">
+        <array>
+          <value>Foo</value>
+          <Template dynamic data={b`foo.output`}>
+            <value>bar</value>
+          </Template>
+        </array>
+      </property>
+    </obj>
+  );
+
+  expect((await render(element)).jsonValue).toStrictEqual({
+    foo: ['Foo'],
+    template: [
+      {
+        data: 'foo.output',
+        dynamic: true,
+        value: 'bar',
+        output: 'foo',
+      },
+    ],
+  });
+});
+
 test('works if already in a template array', async () => {
   const element = (
     <obj>

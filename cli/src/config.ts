@@ -44,4 +44,7 @@ export interface PlayerConfigResolvedShape {
 
   /** Flattened list of plugins */
   plugins: Array<PlayerCLIPlugin>;
+
+  /** Catch for any other things that may be in the config for plugged in functionality */
+  [key: string]: any;
 }

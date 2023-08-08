@@ -1,13 +1,20 @@
 import type { Schema, Language } from '@player-ui/types';
-import signale from 'signale';
 import { dequal } from 'dequal';
 import { SyncWaterfallHook } from 'tapable-ts';
+import type { LoggingInterface } from '..';
 import { binding as b } from '..';
 import type { BindingTemplateInstance } from '../string-templates';
 
 const bindingSymbol = Symbol('binding');
 
 export const SchemaTypeName = Symbol('Schema Rename');
+
+interface GeneratedDataType {
+  /** The SchemaNode that was generated */
+  node: SchemaNode;
+  /** How many times it has been generated */
+  count: number;
+}
 
 interface SchemaChildren {
   /** Object property that will be used to create the intermediate type */
@@ -36,7 +43,8 @@ const isTypeDef = (property: SchemaNode): property is Schema.DataType => {
  */
 export class SchemaGenerator {
   private children: Array<SchemaChildren>;
-  private generatedDataTypeNames: Map<string, SchemaNode>;
+  private generatedDataTypes: Map<string, GeneratedDataType>;
+  private logger: LoggingInterface;
 
   public hooks = {
     createSchemaNode: new SyncWaterfallHook<
@@ -47,9 +55,10 @@ export class SchemaGenerator {
     >(),
   };
 
-  constructor() {
+  constructor(logger?: LoggingInterface) {
     this.children = [];
-    this.generatedDataTypeNames = new Map();
+    this.generatedDataTypes = new Map();
+    this.logger = logger ?? console;
   }
 
   /**
@@ -62,12 +71,12 @@ export class SchemaGenerator {
     };
 
     this.children = [];
-    this.generatedDataTypeNames.clear();
+    this.generatedDataTypes.clear();
 
     Object.keys(schema).forEach((property) => {
       const subType = schema[property] as SchemaNode;
       newSchema.ROOT[property] = this.hooks.createSchemaNode.call(
-        this.processChildren(property, subType),
+        this.processChild(property, subType),
         subType as any
       );
     });
@@ -84,7 +93,7 @@ export class SchemaGenerator {
       Object.keys(child).forEach((property) => {
         const subType = (child as any)[property] as SchemaNode;
         typeDef[property] = this.hooks.createSchemaNode.call(
-          this.processChildren(property, subType),
+          this.processChild(property, subType),
           subType as any
         );
       });
@@ -98,10 +107,7 @@ export class SchemaGenerator {
    * Processes the children of an object Node
    * Newly discovered children get added to the provided array
    */
-  private processChildren(
-    property: string,
-    subType: SchemaNode
-  ): Schema.DataType {
+  private processChild(property: string, subType: SchemaNode): Schema.DataType {
     if (isTypeDef(subType)) {
       return subType;
     }
@@ -110,7 +116,7 @@ export class SchemaGenerator {
 
     if (Array.isArray(subType)) {
       if (subType.length > 1) {
-        signale.warn(
+        this.logger.warn(
           `Type ${property} has multiple types in array, should only contain one top level object type. Only taking first defined type`
         );
       }
@@ -124,23 +130,37 @@ export class SchemaGenerator {
       this.children.push({ name: intermediateType.type, child: subType });
     }
 
-    if (this.generatedDataTypeNames.has(intermediateType.type)) {
+    if (this.generatedDataTypes.has(intermediateType.type)) {
+      const generatedType = this.generatedDataTypes.get(
+        intermediateType.type
+      ) as GeneratedDataType;
       if (
         !dequal(
           subType,
-          this.generatedDataTypeNames.get(intermediateType.type) as object
+          this.generatedDataTypes.get(intermediateType.type)?.node as object
         )
       ) {
-        throw new Error(
-          `Error: Generated two intermediate types with the name: ${intermediateType.type} that are of different shapes`
+        generatedType.count += 1;
+        const newIntermediateType = {
+          ...intermediateType,
+          type: `${intermediateType.type}${generatedType.count}`,
+        };
+        this.logger.warn(
+          `WARNING: Generated two intermediate types with the name: ${intermediateType.type} that are of different shapes, using artificial type ${newIntermediateType.type}`
         );
+        intermediateType = newIntermediateType;
+        this.children.pop();
+        this.children.push({ name: intermediateType.type, child: subType });
       }
 
       // remove last added type since we don't need to reprocess it
       this.children.pop();
     }
 
-    this.generatedDataTypeNames.set(intermediateType.type, subType);
+    this.generatedDataTypes.set(intermediateType.type, {
+      node: subType,
+      count: 1,
+    });
     return intermediateType;
   }
 

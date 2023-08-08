@@ -16,3 +16,5 @@ export type SerializablePlayerExportTypes =
   | FlowWithReactViews
   | Schema.Schema
   | Navigation;
+
+export type LoggingInterface = Pick<Console, 'warn' | 'error' | 'log'>;

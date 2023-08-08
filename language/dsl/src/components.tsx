@@ -2,6 +2,7 @@ import React from 'react';
 import flattenChildren from 'react-flatten-children';
 import type { ObjectNode, PropertyNode } from 'react-json-reconciler';
 import mergeRefs from 'react-merge-refs';
+import type { View as ViewType } from '@player-ui/types';
 import type { PlayerApplicability, WithChildren } from './types';
 import {
   IDProvider,
@@ -13,8 +14,23 @@ import {
 import {
   normalizeText,
   normalizeToCollection,
+  toJsonElement,
   toJsonProperties,
 } from './utils';
+
+export type AssetProps = PlayerApplicability & {
+  /** id of the asset */
+  id?: string;
+
+  /** the asset type */
+  type: string;
+
+  /** Any other properties on the asset */
+  children?: React.ReactNode;
+
+  /** other things that we don't know about */
+  [key: string]: unknown;
+};
 
 export const SlotContext = React.createContext<
   | {
@@ -64,22 +80,7 @@ export const GeneratedIDProperty = (props: {
 };
 
 /** An asset */
-export const Asset = React.forwardRef<
-  ObjectNode,
-  {
-    /** id of the asset */
-    id?: string;
-
-    /** the asset type */
-    type: string;
-
-    /** Any other properties on the asset */
-    children?: React.ReactNode;
-
-    /** other things that we don't know about */
-    [key: string]: unknown;
-  } & PlayerApplicability
->((props, ref) => {
+export const Asset = React.forwardRef<ObjectNode, AssetProps>((props, ref) => {
   const { id, type, applicability, children, ...rest } = props;
   const slotContext = React.useContext(SlotContext);
   const localRef = React.useRef<ObjectNode>(null);
@@ -110,7 +111,7 @@ export const Asset = React.forwardRef<
                     value={
                       typeof applicability === 'boolean'
                         ? applicability
-                        : applicability.toRefString()
+                        : applicability.toValue()
                     }
                   />
                 </property>
@@ -126,6 +127,30 @@ export const Asset = React.forwardRef<
 });
 
 Asset.defaultProps = {
+  id: undefined,
+  children: undefined,
+};
+
+export const View = React.forwardRef<ObjectNode, AssetProps & ViewType>(
+  (props, ref) => {
+    const { validation, children, ...rest } = props;
+
+    return (
+      <Asset ref={ref} {...rest}>
+        {validation && (
+          <property key="validation" name="validation">
+            {toJsonElement(validation, 'validation', {
+              propertiesToSkip: ['ref'],
+            })}
+          </property>
+        )}
+        {children}
+      </Asset>
+    );
+  }
+);
+
+View.defaultProps = {
   id: undefined,
   children: undefined,
 };

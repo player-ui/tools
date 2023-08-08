@@ -215,7 +215,7 @@ describe('components', () => {
       expect(element.jsonValue).toStrictEqual({
         id: 'custom-id',
         type: 'input',
-        applicability: '{{foo.bar.baz}}',
+        applicability: 'foo.bar.baz',
         label: {
           asset: {
             type: 'text',

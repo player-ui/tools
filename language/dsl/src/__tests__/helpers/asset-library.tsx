@@ -4,6 +4,7 @@ import type {
   AssetWrapper,
   Binding,
   Expression,
+  Validation,
 } from '@player-ui/types';
 import type { JsonNode, ValueType } from 'react-json-reconciler';
 import {
@@ -12,7 +13,7 @@ import {
   PropertyNode,
   ValueNode,
 } from 'react-json-reconciler';
-import { Asset, createSlot } from '../../components';
+import { Asset, View, createSlot } from '../../components';
 import type { AssetPropsWithChildren, WithChildren } from '../../types';
 import type { BindingTemplateInstance } from '../../string-templates';
 
@@ -92,23 +93,6 @@ export interface InputAsset extends AssetType<'input'> {
 
   /** More stuff to show under the field */
   note?: AssetWrapper;
-}
-
-export interface InfoAsset extends AssetType<'info'> {
-  /** Top level title for the view. */
-  title?: AssetWrapper;
-
-  /** Displayed below the top level title, typically in smaller text with a different color. */
-  subtitle?: AssetWrapper;
-
-  /** Actions for navigating in between views. */
-  actions?: Array<AssetWrapper>;
-
-  /** Where the main content goes, this should be the body of the page. */
-  primaryInfo?: AssetWrapper;
-
-  /** Below the main content but above the actions, typically used for important links at the bottom of a view. */
-  additionalInfo?: AssetWrapper;
 }
 
 export interface ArrayProp {
@@ -294,4 +278,94 @@ Input.Label = createSlot<{
   CollectionComp,
 });
 
-// #endregion - Components
+export interface InfoAsset extends AssetType<'info'> {
+  /** Top level title for the view. */
+  title?: AssetWrapper;
+
+  /** Displayed below the top level title, typically in smaller text with a different color. */
+  subtitle?: AssetWrapper;
+
+  /** Actions for navigating in between views. */
+  actions?: Array<AssetWrapper>;
+
+  /** Where the main content goes, this should be the body of the page. */
+  primaryInfo?: AssetWrapper;
+
+  /** Below the main content but above the actions, typically used for important links at the bottom of a view. */
+  additionalInfo?: AssetWrapper;
+
+  /** The crossfield validations for this view */
+  validation?: Array<
+    Pick<
+      Validation.CrossfieldReference,
+      'type' | 'message' | 'severity' | 'ref'
+    > & {
+      /** When validations should start to be tracked */
+      trigger?: Validation.Trigger;
+
+      /** Additional props to send down to a Validator */
+      [key: string]: unknown;
+    }
+  >;
+}
+
+/** input asset */
+export const Info = (props: AssetPropsWithChildren<InfoAsset>) => {
+  const { children, ...rest } = props;
+
+  return (
+    <View type="info" {...rest}>
+      {children}
+    </View>
+  );
+};
+
+Info.Title = createSlot<{
+  /** Some thing not in the asset  */
+  customLabelProp?: string;
+}>({
+  name: 'title',
+  TextComp: Text,
+  wrapInAsset: true,
+  CollectionComp,
+});
+
+Info.Subtitle = createSlot<{
+  /** Some thing not in the asset  */
+  customLabelProp?: string;
+}>({
+  name: 'subtitle',
+  TextComp: Text,
+  wrapInAsset: true,
+  CollectionComp,
+});
+
+Info.Actions = createSlot<{
+  /** Some thing not in the asset  */
+  customLabelProp?: string;
+}>({
+  name: 'title',
+  isArray: true,
+  wrapInAsset: true,
+  CollectionComp,
+});
+
+Info.PrimaryInfo = createSlot<{
+  /** Some thing not in the asset  */
+  customLabelProp?: string;
+}>({
+  name: 'primaryInfo',
+  TextComp: Text,
+  wrapInAsset: true,
+  CollectionComp,
+});
+
+Info.AdditionalInfo = createSlot<{
+  /** Some thing not in the asset  */
+  customLabelProp?: string;
+}>({
+  name: 'additionalInfo',
+  TextComp: Text,
+  wrapInAsset: true,
+  CollectionComp,
+});
