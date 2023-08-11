@@ -152,9 +152,6 @@ export class SchemaGenerator {
         this.children.pop();
         this.children.push({ name: intermediateType.type, child: subType });
       }
-
-      // remove last added type since we don't need to reprocess it
-      this.children.pop();
     }
 
     this.generatedDataTypes.set(intermediateType.type, {

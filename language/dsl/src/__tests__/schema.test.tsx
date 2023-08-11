@@ -193,46 +193,46 @@ describe('Schema Bindings Generate Properly', () => {
       'WARNING: Generated two intermediate types with the name: subType that are of different shapes, using artificial type subType2'
     );
     expect(results).toMatchInlineSnapshot(`
-      Object {
-        "ROOT": Object {
-          "main": Object {
-            "type": "mainType",
-          },
+    Object {
+      "ROOT": Object {
+        "main": Object {
+          "type": "mainType",
         },
-        "mainType": Object {
-          "sub": Object {
-            "type": "subType",
-          },
-          "sub2": Object {
-            "type": "sub2Type",
-          },
+      },
+      "mainType": Object {
+        "sub": Object {
+          "type": "subType",
         },
-        "sub2Type": Object {
-          "sub": Object {
-            "type": "subType2",
-          },
+        "sub2": Object {
+          "type": "sub2Type",
         },
-        "subType": Object {
-          "a": Object {
-            "type": "FooType",
-          },
-          "b": Object {
-            "type": "BarType",
-          },
-          "c": Object {
-            "type": "BarType",
-          },
+      },
+      "sub2Type": Object {
+        "sub": Object {
+          "type": "subType2",
         },
-        "subType2": Object {
-          "a": Object {
-            "type": "FooType",
-          },
-          "b": Object {
-            "type": "BarType",
-          },
+      },
+      "subType": Object {
+        "a": Object {
+          "type": "FooType",
         },
-      }
-    `);
+        "b": Object {
+          "type": "BarType",
+        },
+        "c": Object {
+          "type": "BarType",
+        },
+      },
+      "subType2": Object {
+        "a": Object {
+          "type": "FooType",
+        },
+        "b": Object {
+          "type": "BarType",
+        },
+      },
+    }
+  `);
   });
 
   it('doesnt throw errors if two types have the same name and are the same', () => {
