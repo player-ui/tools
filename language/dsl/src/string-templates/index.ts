@@ -177,5 +177,9 @@ export const expression = (
 export const isTemplateStringInstance = (
   val: unknown
 ): val is ExpressionTemplateInstance | BindingTemplateInstance => {
-  return typeof val === 'object' && (val as any)[OpaqueIdentifier] === true;
+  return (
+    val !== null &&
+    typeof val === 'object' &&
+    (val as any)[OpaqueIdentifier] === true
+  );
 };

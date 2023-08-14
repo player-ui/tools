@@ -11,6 +11,7 @@ import {
 import { OptionalIDSuffixProvider } from './auto-id';
 import type { BindingTemplateInstance } from './string-templates';
 import type { WithChildren } from './types';
+import { toJsonElement } from './utils';
 
 export interface TemplateContextType {
   /** The number of nested templates */
@@ -30,6 +31,9 @@ export interface TemplateProps {
 
   /** The template value */
   children: React.ReactNode;
+
+  /** boolean that specifies whether template should recompute when data changes */
+  dynamic?: boolean;
 }
 
 /** Add a template instance to the object */
@@ -127,6 +131,7 @@ const getParentProperty = (node: JsonNode): PropertyNode | undefined => {
 /** A template allows users to dynamically map over an array of data */
 export const Template = (props: TemplateProps) => {
   const baseContext = React.useContext(TemplateContext);
+  const dynamicProp = props.dynamic ?? false;
   const [outputProp, setOutputProp] = React.useState<string | undefined>(
     props.output
   );
@@ -175,6 +180,9 @@ export const Template = (props: TemplateProps) => {
               <property name="data">{props.data.toValue()}</property>
               <property name="output">{outputProp}</property>
               <property name="value">{props.children}</property>
+              {dynamicProp && (
+                <property name="dynamic">{toJsonElement(dynamicProp)}</property>
+              )}
             </object>
           </TemplateProvider>
         </OptionalIDSuffixProvider>,

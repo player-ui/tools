@@ -3,6 +3,7 @@ import {
   isTemplateStringInstance,
   TemplateStringComponent,
 } from './string-templates';
+import type { toJsonOptions } from './types';
 
 /** Get an array version of the value */
 export function toArray<T>(val: T | Array<T>): Array<T> {
@@ -10,44 +11,60 @@ export function toArray<T>(val: T | Array<T>): Array<T> {
 }
 
 /** Create a component version  */
-export function toJsonElement(value: any, index?: number): React.ReactElement {
-  const keyProp = index === undefined ? null : { key: index };
+export function toJsonElement(
+  value: any,
+  indexOrKey?: number | string,
+  options?: toJsonOptions
+): React.ReactElement {
+  const indexProp = typeof indexOrKey === 'number' ? { key: indexOrKey } : null;
 
   if (Array.isArray(value)) {
     return (
-      <array {...keyProp}>
-        {value.map((item, idx) => toJsonElement(item, idx))}
+      <array {...indexProp}>
+        {value.map((item, idx) => toJsonElement(item, idx, options))}
       </array>
     );
   }
 
   /** Allow users to pass in BindingTemplateInstance and ExpressionTemplateInstance directly without turning them into strings first */
   if (isTemplateStringInstance(value)) {
-    return <value {...keyProp}>{value.toRefString()}</value>;
+    if (
+      typeof indexOrKey === 'string' &&
+      options?.propertiesToSkip?.includes(indexOrKey)
+    ) {
+      return <value {...indexProp}>{value.toValue()}</value>;
+    }
+
+    return <value {...indexProp}>{value.toRefString()}</value>;
   }
 
   if (typeof value === 'object' && value !== null) {
     return (
-      <obj {...keyProp}>
+      <obj {...indexProp}>
         {Object.keys(value).map((key) => (
           <property key={key} name={key}>
-            {toJsonElement(value[key])}
+            {toJsonElement(value[key], key, options)}
           </property>
         ))}
       </obj>
     );
   }
 
-  return <value {...keyProp} value={value} />;
+  return <value {...indexProp} value={value} />;
 }
 
 /** Create a fragment for the properties */
-export function toJsonProperties(value: Record<string, any>) {
-  return Object.keys(value).map((key) => (
-    <property key={key} name={key}>
-      {toJsonElement(value[key])}
-    </property>
-  ));
+export function toJsonProperties(
+  value: Record<string, any>,
+  options: toJsonOptions = { propertiesToSkip: ['applicability'] }
+) {
+  return Object.keys(value).map((key) => {
+    return (
+      <property key={key} name={key}>
+        {toJsonElement(value[key], key, options)}
+      </property>
+    );
+  });
 }
 
 /** Create a text asset if needed */

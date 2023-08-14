@@ -79,3 +79,11 @@ export type Navigation = DeepReplace<
   Expression,
   ExpressionTemplateInstance | ExpressionTemplateInstance[] | Expression
 >;
+
+export interface toJsonOptions {
+  /**
+   * List of string keys that should not be parsed in a special way
+   * default is 'applicability'
+   */
+  propertiesToSkip?: string[];
+}

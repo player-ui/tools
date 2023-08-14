@@ -105,3 +105,33 @@ test('flattens fragments', async () => {
     expectedBasicCollection
   );
 });
+
+test('can ignore json props', async () => {
+  const testObj = {
+    foo: b`test.foo`,
+    bar: true,
+    other: '',
+  };
+  const processedTestObj = {
+    foo: '{{test.foo}}',
+    bar: true,
+    other: '',
+  };
+  const unprocessedTestObj = {
+    foo: 'test.foo',
+    bar: true,
+    other: '',
+  };
+  expect(
+    (await render(<object>{toJsonProperties(testObj)}</object>)).jsonValue
+  ).toStrictEqual(processedTestObj);
+  expect(
+    (
+      await render(
+        <object>
+          {toJsonProperties(testObj, { propertiesToSkip: ['foo'] })}
+        </object>
+      )
+    ).jsonValue
+  ).toStrictEqual(unprocessedTestObj);
+});

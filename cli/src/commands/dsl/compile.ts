@@ -82,9 +82,10 @@ export default class DSLCompile extends BaseCommand {
       exitCode: 0,
     };
 
+    const compiler = await this.createDSLCompiler();
+
     /** Compile a file from the DSL format into JSON */
     const compileFile = async (file: string) => {
-      const compiler = await this.createDSLCompiler();
       const requiredModule = require(path.resolve(file));
       const defaultExport = requiredModule.default;
 
@@ -166,6 +167,8 @@ export default class DSLCompile extends BaseCommand {
         });
       }
     }
+
+    await compiler.hooks.onEnd.call({ output });
 
     if (!skipValidation) {
       console.log('');
