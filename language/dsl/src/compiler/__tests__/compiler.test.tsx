@@ -111,3 +111,80 @@ test('expressions in navigation', async () => {
     views: [],
   });
 });
+
+test('compiles schema when added to flow', async () => {
+  const compiler = new DSLCompiler();
+  const result = await compiler.serialize({
+    id: 'test-flow',
+    views: [],
+    navigation: {
+      BEGIN: 'FLOW_1',
+      FLOW_1: {
+        startState: 'VIEW_1',
+        VIEW_1: {
+          state_type: 'VIEW',
+          ref: 'test',
+          transitions: {
+            '*': 'END_Done',
+          },
+        },
+      },
+    },
+    schema: {
+      foo: {
+        bar: {
+          baz: {
+            type: 'StringType',
+            validation: [
+              {
+                type: 'required',
+              },
+            ],
+          },
+        },
+      },
+    },
+  });
+
+  expect(result.value).toMatchInlineSnapshot(`
+    Object {
+      "id": "test-flow",
+      "navigation": Object {
+        "BEGIN": "FLOW_1",
+        "FLOW_1": Object {
+          "VIEW_1": Object {
+            "ref": "test",
+            "state_type": "VIEW",
+            "transitions": Object {
+              "*": "END_Done",
+            },
+          },
+          "startState": "VIEW_1",
+        },
+      },
+      "schema": Object {
+        "ROOT": Object {
+          "foo": Object {
+            "type": "fooType",
+          },
+        },
+        "barType": Object {
+          "baz": Object {
+            "type": "StringType",
+            "validation": Array [
+              Object {
+                "type": "required",
+              },
+            ],
+          },
+        },
+        "fooType": Object {
+          "bar": Object {
+            "type": "barType",
+          },
+        },
+      },
+      "views": Array [],
+    }
+  `);
+});

@@ -137,6 +137,9 @@ export class DSLCompiler {
       throw new Error('Unable to serialize non-object');
     }
 
+    const schemaGenerator = new SchemaGenerator(this.logger);
+    this.hooks.schemaGenerator.call(schemaGenerator);
+
     if (React.isValidElement(value)) {
       const { jsonValue, sourceMap } = await render(value, {
         collectSourceMap: true,
@@ -220,6 +223,10 @@ export class DSLCompiler {
           }
         );
 
+        if ('schema' in preProcessedValue) {
+          copiedValue.schema = schemaGenerator.toSchema(copiedValue.schema);
+        }
+
         copiedValue.navigation = parseNavigationExpressions(
           copiedValue.navigation
         );
@@ -240,9 +247,6 @@ export class DSLCompiler {
         };
       }
     }
-
-    const schemaGenerator = new SchemaGenerator(this.logger);
-    this.hooks.schemaGenerator.call(schemaGenerator);
 
     return {
       value: schemaGenerator.toSchema(preProcessedValue) as JsonType,
