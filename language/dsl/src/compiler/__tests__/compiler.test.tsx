@@ -11,7 +11,8 @@ test('treats jsx as view', async () => {
       <property name="foo">bar</property>
     </object>
   );
-  expect(result.value).toStrictEqual({
+  expect(result).toBeDefined();
+  expect(result?.value).toStrictEqual({
     foo: 'bar',
   });
 });
@@ -22,7 +23,8 @@ test('should treat schema type  objects as schema', async () => {
     foo: { bar: { type: 'StringType' } },
   });
 
-  expect(result.value).toStrictEqual({
+  expect(result).toBeDefined();
+  expect(result?.value).toStrictEqual({
     ROOT: {
       foo: {
         type: 'fooType',
@@ -72,7 +74,8 @@ test('expressions in navigation', async () => {
     },
   };
   const result = await compiler.serialize({ navigation });
-  expect(result.value).toStrictEqual({
+  expect(result).toBeDefined();
+  expect(result?.value).toStrictEqual({
     navigation: {
       BEGIN: 'Flow',
       onStart: `foo`,
@@ -144,7 +147,8 @@ test('compiles schema when added to flow', async () => {
     },
   });
 
-  expect(result.value).toMatchInlineSnapshot(`
+  expect(result).toBeDefined();
+  expect(result?.value).toMatchInlineSnapshot(`
     Object {
       "id": "test-flow",
       "navigation": Object {
@@ -224,7 +228,8 @@ test('compiles mixed DSL and non-DSL views', async () => {
     },
   });
 
-  expect(result.value).toMatchInlineSnapshot(`
+  expect(result).toBeDefined();
+  expect(result?.value).toMatchInlineSnapshot(`
     Object {
       "id": "test-flow",
       "navigation": Object {
