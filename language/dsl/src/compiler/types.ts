@@ -8,6 +8,7 @@ import type {
   NavigationFlowState,
   NavigationFlowViewState,
 } from '@player-ui/types';
+import type { JsonType } from 'react-json-reconciler';
 import type { RemoveUnknownIndex, AddUnknownIndex } from '../types';
 
 export type NavigationFlowReactViewState = Omit<
@@ -63,3 +64,38 @@ export type SerializablePlayerExportTypes =
   | Navigation;
 
 export type LoggingInterface = Pick<Console, 'warn' | 'error' | 'log'>;
+
+export type CompilationResult = {
+  /** What type of file is generated */
+  contentType: string;
+  /** The output path */
+  outputFile: string;
+  /** the input file */
+  inputFile: string;
+};
+
+export type CompilerReturn = {
+  /** the JSON value of the source */
+  value: JsonType | undefined;
+
+  /** The sourcemap of the content */
+  sourceMap?: string;
+};
+
+/** The different type of default content items the compiler handles */
+const DefaultCompilerContentTypes = ['view', 'flow', 'schema'] as const;
+
+export type DefaultCompilerContentType =
+  typeof DefaultCompilerContentTypes[number];
+
+/** Helper function to determine whether a content type is compiler default */
+export function isDefaultCompilerContentType(
+  t: string
+): t is DefaultCompilerContentType {
+  return DefaultCompilerContentTypes.includes(t as DefaultCompilerContentType);
+}
+
+export interface SerializeContext {
+  /** The type of the content being compiled */
+  type: DefaultCompilerContentType;
+}

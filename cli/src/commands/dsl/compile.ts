@@ -10,12 +10,18 @@ import mkdirp from 'mkdirp';
 import logSymbols from 'log-symbols';
 import figures from 'figures';
 import chalk from 'chalk';
-import type { SerializeType } from '@player-tools/dsl';
+import type {
+  CompilationResult,
+  DefaultCompilerContentType,
+} from '@player-tools/dsl';
+import { fingerprintContent as fallbackFingerprint } from '@player-tools/dsl';
 import { BaseCommand } from '../../utils/base-command';
 import { convertToFileGlob, normalizePath } from '../../utils/fs';
 import type { CompletedTask } from '../../utils/task-runner';
 import { registerForPaths } from '../../utils/babel-register';
 import Validate from '../json/validate';
+
+type TaskResult = Array<Omit<CompletedTask<CompilationResult, any>, 'run'>>;
 
 /** A command to compile player DSL content into JSON */
 export default class DSLCompile extends BaseCommand {
@@ -82,16 +88,28 @@ export default class DSLCompile extends BaseCommand {
       exitCode: 0,
     };
 
-    const compiler = await this.createDSLCompiler();
+    const context = await this.createCompilerContext();
 
     /** Compile a file from the DSL format into JSON */
-    const compileFile = async (file: string) => {
+    const compileFile = async (
+      file: string
+    ): Promise<CompilationResult | undefined> => {
       const requiredModule = require(path.resolve(file));
       const defaultExport = requiredModule.default;
 
       if (!defaultExport) {
         return;
       }
+
+      const preProcessedValue =
+        await context.dslCompiler.hooks.preProcessFlow.call(defaultExport);
+      const contentType =
+        (await context.hooks.identifyContentType.call(
+          file,
+          preProcessedValue
+        )) ||
+        fallbackFingerprint(preProcessedValue, file) ||
+        'unknown';
 
       let relativePath = path.relative(input, file);
       if (!relativePath) {
@@ -108,41 +126,44 @@ export default class DSLCompile extends BaseCommand {
       );
 
       this.log(
-        `${logSymbols.info} Compiling %s ${figures.arrowRight} %s`,
+        `${logSymbols.info} Compiling %s ${figures.arrowRight} %s as type %s`,
         normalizePath(file),
-        normalizePath(outputFile)
+        normalizePath(outputFile),
+        contentType
       );
 
-      const { value, contentType } = await compiler.serialize(defaultExport);
+      const compileResult = await context.hooks.compileContent.call(
+        { type: contentType as DefaultCompilerContentType },
+        defaultExport,
+        file
+      );
 
-      const contentStr = JSON.stringify(value, null, 2);
+      if (compileResult) {
+        const contentStr = JSON.stringify(compileResult.value, null, 2);
 
-      await mkdirp(path.dirname(outputFile));
-      await fs.writeFile(outputFile, contentStr);
+        await mkdirp(path.dirname(outputFile));
+        await fs.writeFile(outputFile, contentStr);
+        if (compileResult.sourceMap) {
+          await fs.writeFile(`${outputFile}.map`, compileResult.sourceMap);
+        }
 
-      return {
-        contentType,
-        outputFile,
-        inputFile: file,
-      };
+        if (contentType) {
+          return {
+            contentType,
+            outputFile,
+            inputFile: file,
+          };
+        }
+
+        return {
+          contentType,
+          outputFile,
+          inputFile: file,
+        };
+      }
     };
 
-    const compilerResults: Array<
-      Omit<
-        CompletedTask<
-          {
-            /** What type of file is generated */
-            contentType: SerializeType;
-            /** The output path */
-            outputFile: string;
-            /** the input file */
-            inputFile: string;
-          },
-          any
-        >,
-        'run'
-      >
-    > = [];
+    const compilerResults: TaskResult = [];
 
     // This has to be done serially b/c of the way React logs messages to console.error
     // Otherwise the errors in console will be randomly interspersed between update messages
@@ -156,8 +177,8 @@ export default class DSLCompile extends BaseCommand {
         });
       } catch (e: any) {
         results.exitCode = 100;
-        console.log('');
-        console.log(
+        this.log('');
+        this.log(
           chalk.red(`${logSymbols.error} Error compiling ${file}: ${e.message}`)
         );
         this.debug(e);
@@ -168,7 +189,7 @@ export default class DSLCompile extends BaseCommand {
       }
     }
 
-    await compiler.hooks.onEnd.call({ output });
+    await context.dslCompiler.hooks.onEnd.call({ output });
 
     if (!skipValidation) {
       console.log('');

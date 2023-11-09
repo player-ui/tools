@@ -12,6 +12,7 @@ import type {
   PlayerConfigFileShape,
   PlayerConfigResolvedShape,
 } from '../config';
+import { CompilationContext } from './compilation-context';
 
 const configLoader = cosmiconfig('player');
 
@@ -180,6 +181,20 @@ export abstract class BaseCommand extends Command {
     }
 
     return transforms;
+  }
+
+  async createCompilerContext(): Promise<CompilationContext> {
+    const compilerContext = new CompilationContext(
+      await this.createDSLCompiler()
+    );
+    const { plugins } = await this.getPlayerConfig();
+
+    for (let i = 0; i < plugins.length; i++) {
+      // eslint-disable-next-line no-await-in-loop
+      await plugins[i].createCompilerContext?.(compilerContext);
+    }
+
+    return compilerContext;
   }
 
   exit(code?: number): void {

@@ -11,19 +11,17 @@ test('treats jsx as view', async () => {
       <property name="foo">bar</property>
     </object>
   );
-  expect(result.contentType).toBe('view');
   expect(result.value).toStrictEqual({
     foo: 'bar',
   });
 });
 
-test('treats unknown objects as schema', async () => {
+test('should treat schema type  objects as schema', async () => {
   const compiler = new DSLCompiler();
   const result = await compiler.serialize({
     foo: { bar: { type: 'StringType' } },
   });
 
-  expect(result.contentType).toBe('schema');
   expect(result.value).toStrictEqual({
     ROOT: {
       foo: {
@@ -185,6 +183,78 @@ test('compiles schema when added to flow', async () => {
         },
       },
       "views": Array [],
+    }
+  `);
+});
+
+test('compiles mixed DSL and non-DSL views', async () => {
+  const compiler = new DSLCompiler();
+  const dslView = (
+    <object>
+      <property name="foo">bar</property>
+    </object>
+  );
+  const result = await compiler.serialize({
+    id: 'test-flow',
+    views: [
+      {
+        id: 'foo',
+        type: 'bar',
+        info: {
+          asset: {
+            id: 'info',
+            type: 'baz',
+          },
+        },
+      },
+      dslView,
+    ],
+    navigation: {
+      BEGIN: 'FLOW_1',
+      FLOW_1: {
+        startState: 'VIEW_1',
+        VIEW_1: {
+          state_type: 'VIEW',
+          ref: 'test',
+          transitions: {
+            '*': 'END_Done',
+          },
+        },
+      },
+    },
+  });
+
+  expect(result.value).toMatchInlineSnapshot(`
+    Object {
+      "id": "test-flow",
+      "navigation": Object {
+        "BEGIN": "FLOW_1",
+        "FLOW_1": Object {
+          "VIEW_1": Object {
+            "ref": "test",
+            "state_type": "VIEW",
+            "transitions": Object {
+              "*": "END_Done",
+            },
+          },
+          "startState": "VIEW_1",
+        },
+      },
+      "views": Array [
+        Object {
+          "id": "foo",
+          "info": Object {
+            "asset": Object {
+              "id": "info",
+              "type": "baz",
+            },
+          },
+          "type": "bar",
+        },
+        Object {
+          "foo": "bar",
+        },
+      ],
     }
   `);
 });
