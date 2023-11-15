@@ -1,3 +1,62 @@
+# 0.4.0 (Wed Nov 15 2023)
+
+### Release Notes
+
+#### add missing resolve in cli ([#54](https://github.com/player-ui/tools/pull/54))
+
+Add missing `require.resolve` on resolution of `@babel/plugin-transform-react-jsx-source` in cli causing issues when compiling content
+
+### Change Type (required)
+- [x] `patch`
+- [ ] `minor`
+- [ ] `major`
+
+#### Sync/2fd68b7e55dbf6ee8019b6dc47aa84bae84985f1 ([#48](https://github.com/player-ui/tools/pull/48))
+
+Sync up to latest
+
+#### Language support for expressions ([#20](https://github.com/player-ui/tools/pull/20))
+
+- Adds support for validation/auto-completion for expressions defined within tagged templates when using the dsl.
+
+#### Bugfix/long lists ([#36](https://github.com/player-ui/tools/pull/36))
+
+Fixes issues when long constant lists were indexed to create a union.
+
+---
+
+#### 🚀 Enhancement
+
+- feat: adds support for @metatag [#38](https://github.com/player-ui/tools/pull/38) (neveena_ferrao@intuit.com)
+
+#### 🐛 Bug Fix
+
+- Release ${GITHUB_REF##*/} [#56](https://github.com/player-ui/tools/pull/56) ([@intuit-svc](https://github.com/intuit-svc))
+- Sync Up To Latest [#55](https://github.com/player-ui/tools/pull/55) ([@KetanReddy](https://github.com/KetanReddy))
+- add missing resolve in cli [#54](https://github.com/player-ui/tools/pull/54) ([@KetanReddy](https://github.com/KetanReddy))
+- Sync up to latest [#53](https://github.com/player-ui/tools/pull/53) ([@KetanReddy](https://github.com/KetanReddy))
+- Sync/2fd68b7e55dbf6ee8019b6dc47aa84bae84985f1 [#48](https://github.com/player-ui/tools/pull/48) ([@KetanReddy](https://github.com/KetanReddy))
+- added custom primitives to manifest [#45](https://github.com/player-ui/tools/pull/45) (marlon_ercillo@intuit.com [@mercillo](https://github.com/mercillo))
+- Language support for expressions [#20](https://github.com/player-ui/tools/pull/20) ([@adierkens](https://github.com/adierkens) [@KetanReddy](https://github.com/KetanReddy))
+- Bugfix/long lists [#36](https://github.com/player-ui/tools/pull/36) ([@KetanReddy](https://github.com/KetanReddy))
+- add forked pr workflow [#40](https://github.com/player-ui/tools/pull/40) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### 📝 Documentation
+
+- Add CONTRIBUTING.md [#52](https://github.com/player-ui/tools/pull/52) ([@hborawski](https://github.com/hborawski))
+
+#### Authors: 7
+
+- [@intuit-svc](https://github.com/intuit-svc)
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+- Marlon "Marky" Ercillo ([@mercillo](https://github.com/mercillo))
+- mercillo (marlon_ercillo@intuit.com)
+- Neveena ([@neveena](https://github.com/neveena))
+
+---
+
 # 0.3.0 (Thu Jan 26 2023)
 
 ### Release Notes
