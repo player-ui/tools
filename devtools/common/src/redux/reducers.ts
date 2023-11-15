@@ -52,7 +52,17 @@ const playersReducer = (
     });
 
     builder.addCase(playerRemoveAction, (state, action) => {
-      delete state.activePlayers[action.payload];
+      if (action.payload === state.selectedPlayerId) {
+        // keep the player instance in the store until the user selects another player instance
+        // and store the player instance id in pendingUnmount for latter cleanup
+        state.pendingUnmount = action.payload;
+      } else if (state.pendingUnmount) {
+        delete state.activePlayers[state.pendingUnmount];
+        delete state.activePlayers[action.payload];
+        state.pendingUnmount = undefined;
+      } else {
+        delete state.activePlayers[action.payload];
+      }
     });
 
     builder.addCase(selectedPlayerAction, (state, action) => {

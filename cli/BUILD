@@ -12,6 +12,8 @@ load("@npm//typescript:index.bzl", "tsc")
 
 BUILD_DATA = [
     "@npm//@babel/core",
+    "@npm//react",
+    "@npm//tapable-ts",
     "@npm//@babel/preset-env",
     "@npm//@babel/preset-react",
     "@npm//@babel/preset-typescript",

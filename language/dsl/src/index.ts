@@ -8,3 +8,4 @@ export * from './template';
 export * from 'react-json-reconciler';
 export * from './compiler/schema';
 export * from './compiler';
+export * from './compiler/types';

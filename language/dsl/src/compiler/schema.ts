@@ -188,8 +188,10 @@ export type MakeArrayIntoIndexRef<T extends any[]> = {
 } & BindingTemplateInstance;
 
 export type MakeBindingRefable<T> = {
-  [P in keyof T]: T[P] extends any[]
+  [P in keyof T]: T[P] extends object[]
     ? MakeArrayIntoIndexRef<T[P]>
+    : T[P] extends unknown[]
+    ? T[P]
     : MakeBindingRefable<T[P]>;
 } & BindingTemplateInstance;
 
@@ -211,6 +213,15 @@ export function makeBindingsForObject<Type>(
 
       get(target: any, key: any): any {
         const bindingKeys = Object.keys(target);
+
+        // If there is an array of primitives, just return a copy of that array
+        if (
+          Array.isArray(target[key]) &&
+          target[key].length > 0 &&
+          target[key].every((it: any) => typeof it !== 'object')
+        ) {
+          return [...target[key]];
+        }
 
         if (!bindingMap.has(target)) {
           bindingMap.set(target, b`${paths.join('.')}`);

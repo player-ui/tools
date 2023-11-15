@@ -49,6 +49,10 @@ export type PlayersState = {
    * Web Player version
    */
   version: string;
+  /**
+   * Player unmounted currently being displayed in the devtools
+   */
+  pendingUnmount?: string;
 };
 
 export type StoreState = {

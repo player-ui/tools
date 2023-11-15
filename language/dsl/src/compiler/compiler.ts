@@ -8,7 +8,12 @@ import {
   AsyncSeriesWaterfallHook,
   SyncHook,
 } from 'tapable-ts';
-import type { LoggingInterface, SerializeType } from './types';
+import { fingerprintContent } from './utils';
+import type {
+  LoggingInterface,
+  CompilerReturn,
+  SerializeContext,
+} from './types';
 import type { Navigation } from '../types';
 import { SchemaGenerator } from './schema';
 
@@ -123,24 +128,20 @@ export class DSLCompiler {
   }
 
   /** Convert an object (flow, view, schema, etc) into it's JSON representation */
-  async serialize(value: unknown): Promise<{
-    /** the JSON value of the source */
-    value: JsonType | undefined;
-
-    /** the fingerprinted content type of the source */
-    contentType: SerializeType;
-
-    /** The sourcemap of the content */
-    sourceMap?: string;
-  }> {
+  async serialize(
+    value: unknown,
+    context?: SerializeContext
+  ): Promise<CompilerReturn | undefined> {
     if (typeof value !== 'object' || value === null) {
       throw new Error('Unable to serialize non-object');
     }
 
+    const type = context?.type ? context.type : fingerprintContent(value);
+
     const schemaGenerator = new SchemaGenerator(this.logger);
     this.hooks.schemaGenerator.call(schemaGenerator);
 
-    if (React.isValidElement(value)) {
+    if (type === 'view') {
       const { jsonValue, sourceMap } = await render(value, {
         collectSourceMap: true,
       });
@@ -148,82 +149,81 @@ export class DSLCompiler {
       return {
         value: jsonValue,
         sourceMap,
-        contentType: 'view',
       };
     }
 
-    const preProcessedValue = await this.hooks.preProcessFlow.call(value);
-
-    if ('navigation' in preProcessedValue) {
+    if (type === 'flow') {
       // Source maps from all the nested views
       // Merge these together before returning
       const allSourceMaps: SourceMapList = [];
 
       // Assume this is a flow
       const copiedValue: Flow = {
-        ...(preProcessedValue as any),
+        ...(value as any),
       };
 
       copiedValue.views = (await Promise.all(
         copiedValue?.views?.map(async (node: any) => {
-          const { jsonValue, sourceMap, stringValue } = await render(node, {
-            collectSourceMap: true,
-          });
+          if (React.isValidElement(node)) {
+            const { jsonValue, sourceMap, stringValue } = await render(node, {
+              collectSourceMap: true,
+            });
 
-          if (sourceMap) {
-            // Find the line that is the id of the view
-            // Use that as the identifier for the sourcemap offset calc
-            const searchIdLine = stringValue
-              .split('\n')
-              .find((line) =>
-                line.includes(
-                  `"id": "${(jsonValue as Record<string, string>).id}"`
-                )
-              );
+            if (sourceMap) {
+              // Find the line that is the id of the view
+              // Use that as the identifier for the sourcemap offset calc
+              const searchIdLine = stringValue
+                .split('\n')
+                .find((line) =>
+                  line.includes(
+                    `"id": "${(jsonValue as Record<string, string>).id}"`
+                  )
+                );
 
-            if (searchIdLine) {
-              allSourceMaps.push({
-                sourceMap,
-                offsetIndexSearch: searchIdLine,
-                source: stringValue,
-              });
+              if (searchIdLine) {
+                allSourceMaps.push({
+                  sourceMap,
+                  offsetIndexSearch: searchIdLine,
+                  source: stringValue,
+                });
+              }
             }
+
+            return jsonValue;
           }
 
-          return jsonValue;
+          return node;
         }) ?? []
       )) as View[];
 
       // Go through the flow and sub out any view refs that are react elements w/ the right id
-      if ('navigation' in preProcessedValue) {
-        Object.entries((preProcessedValue as Flow).navigation).forEach(
-          ([navKey, node]) => {
-            if (typeof node === 'object') {
-              Object.entries(node).forEach(([nodeKey, flowNode]) => {
-                if (
-                  flowNode &&
-                  typeof flowNode === 'object' &&
-                  'state_type' in flowNode &&
-                  flowNode.state_type === 'VIEW' &&
-                  React.isValidElement(flowNode.ref)
-                ) {
-                  const actualViewIndex = (
-                    preProcessedValue as Flow
-                  ).views?.indexOf?.(flowNode.ref as any);
+      if ('navigation' in value) {
+        Object.entries((value as Flow).navigation).forEach(([navKey, node]) => {
+          if (typeof node === 'object') {
+            Object.entries(node).forEach(([nodeKey, flowNode]) => {
+              if (
+                flowNode &&
+                typeof flowNode === 'object' &&
+                'state_type' in flowNode &&
+                flowNode.state_type === 'VIEW' &&
+                React.isValidElement(flowNode.ref)
+              ) {
+                const actualViewIndex = (value as Flow).views?.indexOf?.(
+                  flowNode.ref as any
+                );
 
-                  if (actualViewIndex !== undefined && actualViewIndex > -1) {
-                    const actualId = copiedValue.views?.[actualViewIndex]?.id;
+                if (actualViewIndex !== undefined && actualViewIndex > -1) {
+                  const actualId = copiedValue.views?.[actualViewIndex]?.id;
 
-                    (copiedValue as any).navigation[navKey][nodeKey].ref =
-                      actualId;
-                  }
+                  (copiedValue as any).navigation[navKey][nodeKey].ref =
+                    actualId;
                 }
-              });
-            }
+              }
+            });
           }
-        );
+        });
 
-        if ('schema' in preProcessedValue) {
+        if ('schema' in copiedValue) {
           copiedValue.schema = schemaGenerator.toSchema(copiedValue.schema);
         }
 
@@ -239,7 +239,6 @@ export class DSLCompiler {
 
         return {
           value: postProcessFlow as JsonType,
-          contentType: 'flow',
           sourceMap: mergeSourceMaps(
             allSourceMaps,
             JSON.stringify(copiedValue, null, 2)
@@ -248,9 +247,12 @@ export class DSLCompiler {
       }
     }
 
-    return {
-      value: schemaGenerator.toSchema(preProcessedValue) as JsonType,
-      contentType: 'schema',
-    };
+    if (type === 'schema') {
+      return {
+        value: schemaGenerator.toSchema(value) as JsonType,
+      };
+    }
+
+    throw Error('DSL Compiler Error: Unable to determine type to compile as');
   }
 }

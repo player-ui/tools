@@ -300,6 +300,40 @@ describe('Schema Bindings Generate Properly', () => {
       }
     `);
   });
+
+  it('primitive arrays are not treated as bindings nor further proxied', () => {
+    const schema = makeBindingsForObject({
+      main: {
+        sub: {
+          a: FooTypeRef,
+          b: BarTypeRef,
+          c: {
+            type: 'enumtype',
+            enum: ['A', 'B', 'C'],
+          },
+        },
+        sub2: [
+          {
+            val: LocalBazType,
+          },
+        ],
+        sub4: {
+          [SchemaTypeName]: 'sub3',
+          c: FooTypeRef,
+        },
+      },
+    });
+
+    expect(schema.main.toRefString()).toStrictEqual('{{main}}');
+    expect(schema.main.sub.toRefString()).toStrictEqual('{{main.sub}}');
+    expect(schema.main.sub.a.toRefString()).toStrictEqual('{{main.sub.a}}');
+    expect(schema.main.sub.c.toRefString()).toStrictEqual('{{main.sub.c}}');
+    expect(schema.main.sub.c.enum).toStrictEqual(['A', 'B', 'C']);
+    // make sure iterable method is still there and works
+    expect(
+      schema.main.sub.c.enum.every((it: any) => typeof it === 'string')
+    ).toStrictEqual(true);
+  });
 });
 
 describe('schema plugins', () => {

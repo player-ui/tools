@@ -2,6 +2,7 @@ import type { PlayerLanguageService } from '@player-tools/json-language-service'
 import type { DSLCompiler } from '@player-tools/dsl';
 import type { ExportTypes } from '@player-tools/xlr-sdk';
 import type { TransformFunction } from '@player-tools/xlr';
+import type { CompilationContext } from '../utils/compilation-context';
 
 export * from './LSPAssetsPlugin';
 
@@ -29,6 +30,11 @@ export interface PlayerCLIPlugin {
     format: ExportTypes,
     transforms: Array<TransformFunction>
   ) => void | Promise<void>;
+
+  /**
+   * Handler to expose hooks that influence how content is compiled
+   */
+  createCompilerContext?: (context: CompilationContext) => void | Promise<void>;
 }
 
 export type PlayerCLIClass = {
