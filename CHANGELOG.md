@@ -1,3 +1,25 @@
+# 0.4.1 (Fri Nov 17 2023)
+
+### Release Notes
+
+#### Update Player version and workflow dependencies ([#57](https://github.com/player-ui/tools/pull/57))
+
+Bump Player version
+
+---
+
+#### 🐛 Bug Fix
+
+- Release main [#58](https://github.com/player-ui/tools/pull/58) ([@intuit-svc](https://github.com/intuit-svc))
+- Update Player version and workflow dependencies [#57](https://github.com/player-ui/tools/pull/57) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### Authors: 2
+
+- [@intuit-svc](https://github.com/intuit-svc)
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
 # 0.4.0 (Wed Nov 15 2023)
 
 ### Release Notes
