@@ -25,6 +25,7 @@ BUILD_DATA = [
     "@npm//chalk",
     "@npm//cosmiconfig",
     "@npm//cross-fetch",
+    "@npm//easy-table",
     "@npm//elegant-spinner",
     "@npm//figures",
     "@npm//globby",

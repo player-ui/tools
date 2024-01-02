@@ -80,6 +80,7 @@
     "dequal": "^2.0.2",
     "detect-indent": "^6.0.0",
     "duplicate-package-checker-webpack-plugin": "^3.0.0",
+    "easy-table": "1.2.0",
     "elegant-spinner": "^2.0.0",
     "esbuild": "^0.13.15",
     "eslint": "^8.0.1",
