@@ -3245,24 +3245,24 @@
   dependencies:
     "@octokit/openapi-types" "^12.11.0"
 
-"@player-ui/partial-match-registry@0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@player-ui/partial-match-registry/-/partial-match-registry-0.4.3.tgz#f1cd022e42df7683793bc682a2e1ebf9ab26e59e"
-  integrity sha512-je6q8SVlNcHHSO0DmtLJSOP0yhfTDa6Sz1Fb5pGFBVieZkb+7bTpE8Yq2n3rMm/oIDSymTesTNYlvCxC0MBANw==
+"@player-ui/partial-match-registry@0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@player-ui/partial-match-registry/-/partial-match-registry-0.5.1.tgz#db6b1a2a9e83b7d0ef8cb2219d2e1711a65721e9"
+  integrity sha512-RjIDQXTYkDOL3t6KNk600r05+x30SJGBrqKRfrw7cxA7I5J4K9QaGI+I9YvZOWaL8bF3YF8eRv9/rworcm5vFw==
   dependencies:
     "@babel/runtime" "7.15.4"
     "@types/dlv" "^1.1.2"
     dlv "^1.1.3"
     sorted-array "^2.0.4"
 
-"@player-ui/player@0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@player-ui/player/-/player-0.4.3.tgz#52d7e2334a7a5e577b4358b548d47cd4176e0781"
-  integrity sha512-2buPknL35gBlQCa+bSqrDeAUkfFwrmKULYcQtRNI+o/itLl0xGckLk8twyN3K20Xw+XrdJfSdwXO8wWUyrqsrA==
+"@player-ui/player@0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@player-ui/player/-/player-0.5.1.tgz#9f144cccf61f16f3956bcd106124ad3e2f90ddb6"
+  integrity sha512-rYoovPd+cAK7w7ZrSY9Pv5C9gxSKfvs7Srh7N+laOShh7b0bXkvU+mXDBS7TEv3ePQ40MmjDZPnBLtoXdPufJA==
   dependencies:
     "@babel/runtime" "7.15.4"
-    "@player-ui/partial-match-registry" "0.4.3"
-    "@player-ui/types" "0.4.3"
+    "@player-ui/partial-match-registry" "0.5.1"
+    "@player-ui/types" "0.5.1"
     "@types/parsimmon" "^1.10.0"
     arr-flatten "^1.1.0"
     dequal "^2.0.2"
@@ -3275,10 +3275,10 @@
     timm "^1.6.2"
     ts-nested-error "^1.2.1"
 
-"@player-ui/types@0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@player-ui/types/-/types-0.4.3.tgz#ef84977568547c930f26e715ec45e79eb10c1f92"
-  integrity sha512-oGiup9OvJLIgSFAEelhPKY1gst7a2UFX96x3OJechFI0YfkFm1zzt3DHVMgD0KTR+si6xdMhO2uce5J1Vnz/ew==
+"@player-ui/types@0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@player-ui/types/-/types-0.5.1.tgz#7f6a56331445f0e6e200958f28244f340adaed4c"
+  integrity sha512-siwYbpZ9Q7QiWD8yraOvbvzC4eSNwOMPeLpceyKe1ywad37XiRIDyrpBeC0HbO/yNT/i4oydRJvU4KawDnjQ+g==
   dependencies:
     "@babel/runtime" "7.15.4"
 
