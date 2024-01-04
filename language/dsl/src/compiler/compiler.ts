@@ -142,7 +142,7 @@ export class DSLCompiler {
     this.hooks.schemaGenerator.call(schemaGenerator);
 
     if (type === 'view') {
-      const { jsonValue, sourceMap } = await render(value, {
+      const { jsonValue, sourceMap } = await render(value as any, {
         collectSourceMap: true,
       });
 

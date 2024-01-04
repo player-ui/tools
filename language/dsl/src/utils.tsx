@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {
   isTemplateStringInstance,
   TemplateStringComponent,
@@ -73,7 +73,7 @@ export function normalizeText(options: {
   node: React.ReactNode;
 
   /** A component to render a text asset */
-  TextComp?: React.ComponentType;
+  TextComp?: React.ComponentType<any>;
 }): React.ReactNode {
   const { node, TextComp } = options;
 
@@ -105,7 +105,7 @@ export function normalizeToCollection(options: {
   TextComp?: React.ComponentType;
 
   /** A collection asset */
-  CollectionComp?: React.ComponentType;
+  CollectionComp?: React.ComponentType<any>;
 }) {
   const { node, CollectionComp } = options;
 

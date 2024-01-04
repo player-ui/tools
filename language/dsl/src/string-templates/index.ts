@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { parseExpression } from '@player-ui/player';
 
 export type TemplateInstanceRefStringContext = 'binding' | 'expression';
