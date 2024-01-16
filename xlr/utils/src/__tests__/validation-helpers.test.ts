@@ -69,4 +69,38 @@ describe('computeEffectiveObject tests', () => {
       `"Can't compute effective type for object literal and object literal because of conflicting properties foo"`
     );
   });
+
+  it('Merges equal additionalProperties', () => {
+    const type1: ObjectType = {
+      type: 'object',
+      properties: {
+        foo: {
+          required: true,
+          node: {
+            type: 'string',
+          },
+        },
+      },
+      additionalProperties: {
+        type: 'unknown',
+      },
+    };
+
+    const type2: ObjectType = {
+      type: 'object',
+      properties: {
+        bar: {
+          required: true,
+          node: {
+            type: 'number',
+          },
+        },
+      },
+      additionalProperties: {
+        type: 'unknown',
+      },
+    };
+
+    expect(computeEffectiveObject(type1, type2)).toMatchSnapshot();
+  });
 });

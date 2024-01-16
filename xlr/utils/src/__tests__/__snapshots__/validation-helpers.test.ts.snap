@@ -1,5 +1,31 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`computeEffectiveObject tests Merges equal additionalProperties 1`] = `
+Object {
+  "additionalProperties": Object {
+    "type": "unknown",
+  },
+  "description": "Effective type combining object literal and object literal",
+  "genericTokens": Array [],
+  "name": "object literal & object literal",
+  "properties": Object {
+    "bar": Object {
+      "node": Object {
+        "type": "number",
+      },
+      "required": true,
+    },
+    "foo": Object {
+      "node": Object {
+        "type": "string",
+      },
+      "required": true,
+    },
+  },
+  "type": "object",
+}
+`;
+
 exports[`computeEffectiveObject tests mixed test 1`] = `
 Object {
   "additionalProperties": Object {

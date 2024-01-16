@@ -190,10 +190,16 @@ export function computeEffectiveObject(
   }
 
   if (newObject.additionalProperties && operand.additionalProperties) {
-    newObject.additionalProperties = {
-      type: 'and',
-      and: [newObject.additionalProperties, operand.additionalProperties],
-    };
+    if (
+      !isPrimitiveTypeNode(newObject.additionalProperties) ||
+      !isPrimitiveTypeNode(operand.additionalProperties) ||
+      newObject.additionalProperties.type !== operand.additionalProperties.type
+    ) {
+      newObject.additionalProperties = {
+        type: 'and',
+        and: [newObject.additionalProperties, operand.additionalProperties],
+      };
+    }
   } else if (operand.additionalProperties) {
     newObject.additionalProperties = operand.additionalProperties;
   }
