@@ -32,8 +32,6 @@ export class LSPAssetsPlugin implements PlayerCLIPlugin {
   }
 
   async onCreateLanguageService(lsp: PlayerLanguageService, exp: boolean) {
-    if (exp === this.config.exp) {
-      await lsp.setAssetTypes([this.config.path]);
-    }
+    await lsp.setAssetTypes([this.config.path]);
   }
 }
