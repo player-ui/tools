@@ -166,11 +166,11 @@ export class XLRSDK {
       return this.computedNodeCache.get(id) as NamedType<NodeType> | undefined;
     }
 
-    type = this.resolveType(type);
+    type = fillInGenerics(this.resolveType(type)) as NamedType;
 
     this.computedNodeCache.set(id, type);
 
-    return fillInGenerics(type) as NamedType;
+    return type;
   }
 
   /**
@@ -297,7 +297,7 @@ export class XLRSDK {
       }
 
       return objectNode;
-    })(fillInGenerics(type), 'any') as NamedType;
+    })(type, 'any') as NamedType;
   }
 
   private exportToTypeScript(
