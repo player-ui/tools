@@ -1,4 +1,4 @@
-import type { NodeType, ObjectType } from '@player-tools/xlr';
+import type { NodeType } from '@player-tools/xlr';
 import type { XLRSDK } from '@player-tools/xlr-sdk';
 import type { CompletionItem } from 'vscode-languageserver-types';
 import {

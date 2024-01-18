@@ -36,11 +36,13 @@ export class XLRSDK {
   private registry: XLRRegistry;
   private validator: XLRValidator;
   private tsWriter: TSWriter;
+  private computedNodeCache: Map<string, NodeType>;
 
   constructor(customRegistry?: XLRRegistry) {
     this.registry = customRegistry ?? new BasicXLRRegistry();
     this.validator = new XLRValidator(this.getType.bind(this));
     this.tsWriter = new TSWriter();
+    this.computedNodeCache = new Map();
   }
 
   /**
@@ -55,6 +57,8 @@ export class XLRSDK {
     filters?: Omit<Filters, 'pluginFilter'>,
     transforms?: Array<TransformFunction>
   ) {
+    this.computedNodeCache.clear();
+
     const manifest = JSON.parse(
       fs.readFileSync(path.join(inputPath, 'xlr', 'manifest.json')).toString(),
       (key: unknown, value: unknown) => {
@@ -112,6 +116,8 @@ export class XLRSDK {
     filters?: Omit<Filters, 'pluginFilter'>,
     transforms?: Array<TransformFunction>
   ) {
+    this.computedNodeCache.clear();
+
     Object.keys(manifest.capabilities)?.forEach((capabilityName) => {
       if (
         filters?.capabilityFilter &&
@@ -156,7 +162,13 @@ export class XLRSDK {
       return type;
     }
 
+    if (this.computedNodeCache.has(id)) {
+      return this.computedNodeCache.get(id) as NamedType<NodeType> | undefined;
+    }
+
     type = this.resolveType(type);
+
+    this.computedNodeCache.set(id, type);
 
     return fillInGenerics(type) as NamedType;
   }
@@ -199,7 +211,7 @@ export class XLRSDK {
    * @returns `Array<ValidationErrors>`
    */
   public validateByName(typeName: string, rootNode: Node) {
-    const xlr = this.getType(typeName, { getRawType: true });
+    const xlr = this.getType(typeName);
     if (!xlr) {
       throw new Error(
         `Type ${typeName} does not exist in registry, can't validate`
@@ -258,7 +270,7 @@ export class XLRSDK {
     throw new Error(`Unknown export format ${exportType}`);
   }
 
-  private resolveType(type: NodeType) {
+  private resolveType(type: NodeType): NamedType {
     return simpleTransformGenerator('object', 'any', (objectNode) => {
       if (objectNode.extends) {
         const refName = objectNode.extends.ref.split('<')[0];
@@ -285,7 +297,7 @@ export class XLRSDK {
       }
 
       return objectNode;
-    })(type, 'any') as NamedType;
+    })(fillInGenerics(type), 'any') as NamedType;
   }
 
   private exportToTypeScript(
