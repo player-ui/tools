@@ -1040,7 +1040,7 @@ export class TsConverter {
           return applyExcludeToNodeType(
             baseObj as OrType,
             this.convertTsTypeNode(modifiers)
-          );
+          ) as ObjectType;
         }
 
         throw new ConversionError(
