@@ -190,8 +190,8 @@ export function computeEffectiveObject(
   operand: ObjectType,
   errorOnOverlap = true
 ): ObjectType {
-  const baseObjectName = base.name ?? 'object literal';
-  const operandObjectName = operand.name ?? 'object literal';
+  const baseObjectName = base.name ?? base.title ?? 'object literal';
+  const operandObjectName = operand.name ?? operand.title ?? 'object literal';
   const newObject = {
     ...base,
     name: `${baseObjectName} & ${operandObjectName}`,
