@@ -113,6 +113,7 @@ export class SchemaGenerator {
     }
 
     let intermediateType;
+    let child;
 
     if (Array.isArray(subType)) {
       if (subType.length > 1) {
@@ -123,11 +124,11 @@ export class SchemaGenerator {
 
       const subTypeName = subType[0][SchemaTypeName] ?? property;
       intermediateType = this.makePlaceholderArrayType(subTypeName);
-      this.children.push({ name: intermediateType.type, child: subType[0] });
+      [child] = subType;
     } else {
       const subTypeName = subType[SchemaTypeName] ?? property;
       intermediateType = this.makePlaceholderType(subTypeName);
-      this.children.push({ name: intermediateType.type, child: subType });
+      child = subType;
     }
 
     if (this.generatedDataTypes.has(intermediateType.type)) {
@@ -136,7 +137,7 @@ export class SchemaGenerator {
       ) as GeneratedDataType;
       if (
         !dequal(
-          subType,
+          child,
           this.generatedDataTypes.get(intermediateType.type)?.node as object
         )
       ) {
@@ -150,7 +151,7 @@ export class SchemaGenerator {
         );
         intermediateType = newIntermediateType;
         this.children.pop();
-        this.children.push({ name: intermediateType.type, child: subType });
+        this.children.push({ name: intermediateType.type, child });
       }
     }
 

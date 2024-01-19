@@ -123,6 +123,8 @@ export class DSLCompiler {
     onEnd: new AsyncSeriesHook<[OnEndArg]>(),
   };
 
+  private schemaGenerator?: SchemaGenerator;
+
   constructor(logger?: LoggingInterface) {
     this.logger = logger ?? console;
   }
@@ -137,6 +139,11 @@ export class DSLCompiler {
     }
 
     const type = context?.type ? context.type : fingerprintContent(value);
+
+    if (!this.schemaGenerator) {
+      this.schemaGenerator = new SchemaGenerator(this.logger);
+      this.hooks.schemaGenerator.call(this.schemaGenerator);
+    }
 
     const schemaGenerator = new SchemaGenerator(this.logger);
     this.hooks.schemaGenerator.call(schemaGenerator);
@@ -224,7 +231,7 @@ export class DSLCompiler {
         });
 
         if ('schema' in copiedValue) {
-          copiedValue.schema = schemaGenerator.toSchema(copiedValue.schema);
+          copiedValue.schema = this.schemaGenerator.toSchema(copiedValue.schema);
         }
 
         copiedValue.navigation = parseNavigationExpressions(
@@ -249,7 +256,7 @@ export class DSLCompiler {
 
     if (type === 'schema') {
       return {
-        value: schemaGenerator.toSchema(value) as JsonType,
+        value: this.schemaGenerator.toSchema(value) as JsonType,
       };
     }
 
