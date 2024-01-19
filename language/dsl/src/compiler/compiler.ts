@@ -231,7 +231,9 @@ export class DSLCompiler {
         });
 
         if ('schema' in copiedValue) {
-          copiedValue.schema = this.schemaGenerator.toSchema(copiedValue.schema);
+          copiedValue.schema = this.schemaGenerator.toSchema(
+            copiedValue.schema
+          );
         }
 
         copiedValue.navigation = parseNavigationExpressions(

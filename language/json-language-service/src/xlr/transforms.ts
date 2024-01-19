@@ -1,6 +1,6 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
-/* eslint-disable no-param-reassign */
+
 import type {
   ArrayType,
   NamedType,
