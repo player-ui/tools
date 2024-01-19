@@ -57,7 +57,10 @@ export class XLRValidator {
         });
       }
     } else if (xlrNode.type === 'template') {
-      this.validateTemplate(rootNode, xlrNode);
+      const error = this.validateTemplate(rootNode, xlrNode);
+      if (error) {
+        validationIssues.push(error);
+      }
     } else if (xlrNode.type === 'or') {
       // eslint-disable-next-line no-restricted-syntax
       for (const potentialType of xlrNode.or) {
