@@ -1,3 +1,4 @@
+import { test, expect, describe } from 'vitest';
 import React from 'react';
 import { render } from 'react-json-reconciler';
 import { expression as e } from '..';
@@ -5,7 +6,7 @@ import { Switch } from '../switch';
 import { Text, Collection, Input } from './helpers/asset-library';
 
 describe('staticSwitch', () => {
-  it('works for basic cases', async () => {
+  test('works for basic cases', async () => {
     const element = (
       <Collection>
         <Collection.Label>
@@ -47,7 +48,7 @@ describe('staticSwitch', () => {
     });
   });
 
-  it('works for dynamic switch', async () => {
+  test('works for dynamic switch', async () => {
     const element = (
       <Collection>
         <Collection.Label>
@@ -72,25 +73,25 @@ describe('staticSwitch', () => {
     );
 
     expect((await render(element)).jsonValue).toMatchInlineSnapshot(`
-      Object {
+      {
         "id": "root",
-        "label": Object {
-          "dynamicSwitch": Array [
-            Object {
-              "asset": Object {
+        "label": {
+          "dynamicSwitch": [
+            {
+              "asset": {
                 "id": "label-dynamicSwitch-0",
                 "type": "text",
                 "value": "Text 1",
               },
               "case": "foo() = bar()",
             },
-            Object {
-              "asset": Object {
+            {
+              "asset": {
                 "id": "label-dynamicSwitch-1",
-                "label": Object {
-                  "staticSwitch": Array [
-                    Object {
-                      "asset": Object {
+                "label": {
+                  "staticSwitch": [
+                    {
+                      "asset": {
                         "id": "label-dynamicSwitch-1-label-staticSwitch-0",
                         "type": "text",
                         "value": "Text 1",
@@ -110,7 +111,7 @@ describe('staticSwitch', () => {
     `);
   });
 
-  it('static switch with boolean exp', async () => {
+  test('static switch with boolean exp', async () => {
     const element = (
       <Collection>
         <Collection.Label>
@@ -152,7 +153,7 @@ describe('staticSwitch', () => {
     });
   });
 
-  it('dynamic switch with boolean exp', async () => {
+  test('dynamic switch with boolean exp', async () => {
     const element = (
       <Collection>
         <Collection.Label>
@@ -196,7 +197,7 @@ describe('staticSwitch', () => {
 });
 
 describe('generates ids', () => {
-  it('works for collection items', async () => {
+  test('works for collection items', async () => {
     const content = (
       <Collection>
         <Collection.Values>
@@ -215,14 +216,14 @@ describe('generates ids', () => {
     );
 
     expect((await render(content)).jsonValue).toMatchInlineSnapshot(`
-      Object {
+      {
         "id": "root",
         "type": "collection",
-        "values": Array [
-          Object {
-            "staticSwitch": Array [
-              Object {
-                "asset": Object {
+        "values": [
+          {
+            "staticSwitch": [
+              {
+                "asset": {
                   "id": "values-0-staticSwitch-0",
                   "type": "text",
                   "value": "Test 1",
@@ -231,10 +232,10 @@ describe('generates ids', () => {
               },
             ],
           },
-          Object {
-            "staticSwitch": Array [
-              Object {
-                "asset": Object {
+          {
+            "staticSwitch": [
+              {
+                "asset": {
                   "id": "values-1-staticSwitch-0",
                   "type": "text",
                   "value": "Test 2",

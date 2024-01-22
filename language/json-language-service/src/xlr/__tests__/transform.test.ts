@@ -1,3 +1,4 @@
+import { test, expect, describe, beforeEach } from 'vitest';
 import type { NamedTypeWithGenerics, ObjectType } from '@player-tools/xlr';
 import {
   applyCommonProps,
@@ -89,19 +90,19 @@ describe('Transform Tests', () => {
     };
   });
 
-  it('CommonProps Transform', () => {
+  test('CommonProps Transform', () => {
     expect(applyCommonProps(MockAsset, 'Assets')).toMatchSnapshot();
   });
 
-  it('AssetWrapperOrSwitch Transform', () => {
+  test('AssetWrapperOrSwitch Transform', () => {
     expect(applyAssetWrapperOrSwitch(MockAsset, 'Assets')).toMatchSnapshot();
   });
 
-  it('applyValueRefs Transform', () => {
+  test('applyValueRefs Transform', () => {
     expect(applyValueRefs(MockAsset, 'Assets')).toMatchSnapshot();
   });
 
-  it('applyTemplateProperty Transform', () => {
+  test('applyTemplateProperty Transform', () => {
     expect(applyTemplateProperty(MockAsset, 'Assets')).toMatchSnapshot();
   });
 });

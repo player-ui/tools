@@ -1,7 +1,8 @@
+import { test, expect } from 'vitest';
 import { setupTestEnv } from '@player-tools/xlr-utils';
 import { TsConverter } from '..';
 
-it('Player Types Export', () => {
+test('Player Types Export', () => {
   const customPrimitives = [
     'Expression',
     'Asset',
@@ -451,7 +452,7 @@ export interface Flow<T extends Asset = Asset> {
   expect(XLR).toMatchSnapshot();
 });
 
-it('Player Data Types Export', () => {
+test('Player Data Types Export', () => {
   const customPrimitives = [
     'Expression',
     'Asset',
@@ -606,7 +607,7 @@ it('Player Data Types Export', () => {
   expect(XLR).toMatchSnapshot();
 });
 
-it('Player Expression Types Export', () => {
+test('Player Expression Types Export', () => {
   const customPrimitives = [
     'Expression',
     'Asset',
@@ -843,7 +844,7 @@ it('Player Expression Types Export', () => {
   expect(XLR).toMatchSnapshot();
 });
 
-it('Player JSDoc @meta Export', () => {
+test('Player JSDoc @meta Export', () => {
   const sc = `
   /**
  * An asset is the smallest unit of user interaction in a player view

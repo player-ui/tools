@@ -1,4 +1,4 @@
-import * as ts from 'typescript';
+import ts from 'typescript';
 import type { Annotations } from '@player-tools/xlr';
 
 interface JSDocContainer {

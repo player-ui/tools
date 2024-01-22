@@ -1,3 +1,4 @@
+import { test, expect } from 'vitest';
 import React from 'react';
 import { render, expression as e } from '..';
 import { Collection, Input, Text } from './helpers/asset-library';

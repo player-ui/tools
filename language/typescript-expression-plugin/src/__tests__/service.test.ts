@@ -1,4 +1,5 @@
-import SampleExpression from '@player-tools/static-xlrs/static_xlrs/expression/xlr/manifest';
+import { test, expect, describe, beforeEach } from 'vitest';
+import { CommonExpressions } from '@player-tools/static-xlrs';
 import { symbolDisplayToString } from '@player-tools/xlr-utils';
 import { ExpressionLanguageService } from '../service';
 
@@ -6,10 +7,10 @@ describe('language-service', () => {
   let service: ExpressionLanguageService;
 
   beforeEach(() => {
-    service = new ExpressionLanguageService({ plugins: [SampleExpression] });
+    service = new ExpressionLanguageService({ plugins: [CommonExpressions] });
   });
 
-  it('should auto-complete expressions', () => {
+  test('should auto-complete expressions', () => {
     const completions = service.getCompletionsAtPosition(
       {
         text: 't',
@@ -21,16 +22,16 @@ describe('language-service', () => {
     );
 
     expect(completions).toMatchInlineSnapshot(`
-      Object {
-        "entries": Array [
-          Object {
+      {
+        "entries": [
+          {
             "insertText": "trim()",
             "isRecommended": true,
             "kind": "function",
             "name": "trim",
             "sortText": "trim",
           },
-          Object {
+          {
             "insertText": "titleCase()",
             "isRecommended": true,
             "kind": "function",
@@ -46,7 +47,7 @@ describe('language-service', () => {
   });
 
   describe('validations', () => {
-    it('ships expression validations when no plugins are registered', () => {
+    test('ships expression validations when no plugins are registered', () => {
       service.setConfig({
         plugins: [],
       });
@@ -58,10 +59,10 @@ describe('language-service', () => {
         },
       } as any);
 
-      expect(diagnostics).toMatchInlineSnapshot(`Array []`);
+      expect(diagnostics).toMatchInlineSnapshot(`[]`);
     });
 
-    it('should validate number of expression arguments', () => {
+    test('should validate number of expression arguments', () => {
       const diagnostics = service.getSemanticDiagnostics({
         text: 'trim()',
         node: {
@@ -70,8 +71,8 @@ describe('language-service', () => {
       } as any);
 
       expect(diagnostics).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "category": 1,
             "code": 1,
             "file": null,
@@ -83,7 +84,7 @@ describe('language-service', () => {
       `);
     });
 
-    it('validate basic args', () => {
+    test('validate basic args', () => {
       const diagnostics = service.getSemanticDiagnostics({
         text: 'containsAny({ "foo": "bar"}, "123")',
         node: {
@@ -92,8 +93,8 @@ describe('language-service', () => {
       } as any);
 
       expect(diagnostics).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "category": 1,
             "code": 1,
             "file": null,
@@ -105,7 +106,7 @@ describe('language-service', () => {
       `);
     });
 
-    it('validate nested args', () => {
+    test('validate nested args', () => {
       const diagnostics = service.getSemanticDiagnostics({
         text: 'containsAny("123", containsAny(123, "123"))',
         node: {
@@ -114,8 +115,8 @@ describe('language-service', () => {
       } as any);
 
       expect(diagnostics).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "category": 1,
             "code": 1,
             "file": null,
@@ -127,7 +128,7 @@ describe('language-service', () => {
       `);
     });
 
-    it('working args', () => {
+    test('working args', () => {
       const diagnostics = service.getSemanticDiagnostics({
         text: 'containsAny("123", "123")',
         node: {
@@ -135,10 +136,10 @@ describe('language-service', () => {
         },
       } as any);
 
-      expect(diagnostics).toMatchInlineSnapshot(`Array []`);
+      expect(diagnostics).toMatchInlineSnapshot(`[]`);
     });
 
-    it('should validate typos', () => {
+    test('should validate typos', () => {
       const diagnostics = service.getSyntacticDiagnostics({
         text: 'containsAny("123',
         node: {
@@ -147,8 +148,8 @@ describe('language-service', () => {
       } as any);
 
       expect(diagnostics).toMatchInlineSnapshot(`
-        Array [
-          Object {
+        [
+          {
             "category": 1,
             "code": 1,
             "file": null,
@@ -162,7 +163,7 @@ describe('language-service', () => {
   });
 
   describe('quick info', () => {
-    it('should get quick info for expression', () => {
+    test('should get quick info for expression', () => {
       const info = service.getQuickInfoAtPosition(
         {
           text: 'trim()',

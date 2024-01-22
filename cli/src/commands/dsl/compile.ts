@@ -1,7 +1,3 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable @typescript-eslint/no-var-requires */
-/* eslint-disable global-require */
-/* eslint-disable import/no-dynamic-require */
 import { Flags } from '@oclif/core';
 import glob from 'globby';
 import path from 'path';
@@ -94,6 +90,7 @@ export default class DSLCompile extends BaseCommand {
     const compileFile = async (
       file: string
     ): Promise<CompilationResult | undefined> => {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const requiredModule = require(path.resolve(file));
       const defaultExport = requiredModule.default;
 

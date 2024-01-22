@@ -1,3 +1,4 @@
+import { test, expect } from 'vitest';
 import React from 'react';
 import { render } from 'react-json-reconciler';
 import { binding as b, expression as e } from '..';

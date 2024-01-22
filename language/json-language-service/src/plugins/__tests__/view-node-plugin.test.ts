@@ -1,4 +1,9 @@
+import { test, expect, describe, beforeEach } from 'vitest';
 import { Position } from 'vscode-languageserver-types';
+import {
+  ReferenceAssetsWebPluginManifest,
+  Types,
+} from '@player-tools/static-xlrs';
 import { PlayerLanguageService } from '../..';
 import { toTextDocument } from '../../utils';
 
@@ -7,13 +12,13 @@ describe('duplicate-id-plugin', () => {
 
   beforeEach(async () => {
     service = new PlayerLanguageService();
-    await service.setAssetTypes([
-      './common/static_xlrs/core',
-      './common/static_xlrs/plugin',
-    ]);
+    await service.XLRService.XLRSDK.loadDefinitionsFromModule(Types);
+    await service.XLRService.XLRSDK.loadDefinitionsFromModule(
+      ReferenceAssetsWebPluginManifest
+    );
   });
 
-  it('validates view ids', async () => {
+  test('validates view ids', async () => {
     const textDocument = toTextDocument(
       JSON.stringify({
         id: 'test',
@@ -51,7 +56,7 @@ describe('duplicate-id-plugin', () => {
     const validations = await service.validateTextDocument(textDocument);
     expect(validations).toHaveLength(4);
     expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
-      Array [
+      [
         "Warning - View Type view was not loaded into Validator definitions",
         "View is not reachable",
         "Warning - View Type view was not loaded into Validator definitions",
@@ -60,7 +65,7 @@ describe('duplicate-id-plugin', () => {
     `);
   });
 
-  it('completes view ids in view obj', async () => {
+  test('completes view ids in view obj', async () => {
     const textDocument = toTextDocument(
       JSON.stringify(
         {
@@ -100,14 +105,14 @@ describe('duplicate-id-plugin', () => {
     expect(completions.items?.map((i) => i.label)).toContain('view-1');
     expect(completions.items?.map((i) => i.label)).toContain('other-view');
     expect(completions.items?.map((i) => i.label)).toMatchInlineSnapshot(`
-      Array [
+      [
         "view-1",
         "other-view",
       ]
     `);
   });
 
-  it('completes view ids in view nodes', async () => {
+  test('completes view ids in view nodes', async () => {
     const textDocument = toTextDocument(
       JSON.stringify(
         {
@@ -141,7 +146,7 @@ describe('duplicate-id-plugin', () => {
 
     expect(completions.items?.map((i) => i.label)).toContain('view-1');
     expect(completions.items?.map((i) => i.label)).toMatchInlineSnapshot(`
-      Array [
+      [
         "view-1",
       ]
     `);

@@ -1,0 +1,7 @@
+{
+  "name": "@player-tools/static-xlrs",
+  "version": "0.0.0-PLACEHOLDER",
+  "sideEffects": false,
+  "main": "src/index.js",
+  "types": "src/index.d.ts"
+}

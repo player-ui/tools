@@ -1,3 +1,4 @@
+import { test, expect } from 'vitest';
 import React from 'react';
 import { render } from 'react-json-reconciler';
 import { toJsonProperties } from '../utils';
@@ -31,7 +32,7 @@ const expectedTemplateInstanceObjects = {
   request_uuid: '{{foo.bar.UUID}}',
 };
 
-it('works with JSX', async () => {
+test('works with JSX', async () => {
   const element = (
     <Collection>
       <Collection.Label>
@@ -49,7 +50,7 @@ it('works with JSX', async () => {
   );
 });
 
-it('works for any json props', async () => {
+test('works for any json props', async () => {
   const testObj = {
     foo: false,
     bar: true,
@@ -60,7 +61,7 @@ it('works for any json props', async () => {
   ).toStrictEqual(testObj);
 });
 
-it('works for BindingTemplateInstances and ExpressionTemplateInstances', async () => {
+test('works for BindingTemplateInstances and ExpressionTemplateInstances', async () => {
   const testObj = {
     request_uuid: b`foo.bar.UUID`,
     page_experience: e`foo.bar.GetDataResult`,
@@ -70,7 +71,7 @@ it('works for BindingTemplateInstances and ExpressionTemplateInstances', async (
   ).toStrictEqual(expectedTemplateInstanceObjects);
 });
 
-it('handles array props', async () => {
+test('handles array props', async () => {
   const expected = {
     id: 'root',
     type: 'assetWithArray',

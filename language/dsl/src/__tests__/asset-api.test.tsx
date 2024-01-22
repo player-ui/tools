@@ -1,3 +1,4 @@
+import { test, expect, describe } from 'vitest';
 import React from 'react';
 import { render } from 'react-json-reconciler';
 import { binding as b } from '../string-templates';
@@ -5,7 +6,7 @@ import { Switch } from '../switch';
 import { Collection, Text, Input, ArrayProp } from './helpers/asset-library';
 
 describe('components', () => {
-  it('automatically creates collections', async () => {
+  test('automatically creates collections', async () => {
     const element = (
       <Collection>
         <Collection.Label>
@@ -39,7 +40,7 @@ describe('components', () => {
     });
   });
 
-  it('automatically creates text assets', async () => {
+  test('automatically creates text assets', async () => {
     const element = (
       <Collection>
         <Collection.Label>Foo {b`bar`.toString()}</Collection.Label>
@@ -67,7 +68,7 @@ describe('components', () => {
     });
   });
 
-  it('works with fragments', async () => {
+  test('works with fragments', async () => {
     const element = (
       <Collection>
         <Collection.Label>
@@ -132,7 +133,7 @@ describe('components', () => {
   });
 
   describe('custom text modifier component', () => {
-    it('works with refs and layout effects', async () => {
+    test('works with refs and layout effects', async () => {
       const element = await render(
         <Text>
           Foo{' '}
@@ -143,10 +144,10 @@ describe('components', () => {
       );
 
       expect(element.jsonValue).toMatchInlineSnapshot(`
-        Object {
+        {
           "id": "root",
-          "modifiers": Array [
-            Object {
+          "modifiers": [
+            {
               "name": "M0",
               "type": "tag",
               "value": "important",
@@ -160,7 +161,7 @@ describe('components', () => {
   });
 
   describe('bindings', () => {
-    it('converts just a binding node into a ref', async () => {
+    test('converts just a binding node into a ref', async () => {
       const element = await render(<Text>{b`foo.bar`.toString()}</Text>);
 
       expect(element.jsonValue).toStrictEqual({
@@ -170,7 +171,7 @@ describe('components', () => {
       });
     });
 
-    it('converts a text string into refs', async () => {
+    test('converts a text string into refs', async () => {
       const element = await render(
         <Text>Label {b`foo.bar`.toString()} End</Text>
       );
@@ -182,7 +183,7 @@ describe('components', () => {
       });
     });
 
-    it('leaves bindings for expected props', async () => {
+    test('leaves bindings for expected props', async () => {
       const element = await render(
         <Input binding={b`foo.bar.baz`}>
           <Input.Label>Input Label</Input.Label>
@@ -248,7 +249,7 @@ describe('components', () => {
     });
   });
 
-  it('auto-id', async () => {
+  test('auto-id', async () => {
     const element = (
       <Collection id="first-thing">
         <Collection.Label>Text</Collection.Label>
@@ -268,7 +269,7 @@ describe('components', () => {
     });
   });
 
-  it('should allow for a binding-ref on any leaf property', async () => {
+  test('should allow for a binding-ref on any leaf property', async () => {
     const element = (
       <ArrayProp
         stuff={[]}
@@ -296,7 +297,7 @@ describe('components', () => {
 });
 
 describe('allows other props to be added to a slot', () => {
-  it('works with asset children', async () => {
+  test('works with asset children', async () => {
     const element = await render(
       <Input id="custom-id">
         <Input.Label customLabelProp="custom label slot value">
@@ -319,7 +320,7 @@ describe('allows other props to be added to a slot', () => {
     });
   });
 
-  it('works with switch children', async () => {
+  test('works with switch children', async () => {
     const element = await render(
       <Input id="custom-id">
         <Input.Label customLabelProp="custom label slot value">

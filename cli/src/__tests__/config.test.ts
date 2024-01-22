@@ -1,13 +1,11 @@
-/**
- * @jest-environment node
- */
+import { vi, test, expect } from 'vitest';
 import path from 'path';
 import { BaseCommand } from '../utils/base-command';
 
 test('resolves config correctly', async () => {
-  jest.setTimeout(10000);
+  vi.setConfig({ testTimeout: 10000 });
 
-  const configCallback = jest.fn();
+  const configCallback = vi.fn();
 
   class ConfigLoader extends BaseCommand {
     async run() {
@@ -15,69 +13,57 @@ test('resolves config correctly', async () => {
     }
   }
 
-  jest.mock(
-    '@test-extension',
-    () => {
-      return {
+  vi.mock('@test-extension', () => {
+    return {
+      default: {
         dsl: {
           src: 'test-src',
           outDir: 'output-directory',
         },
-      };
-    },
-    { virtual: true }
-  );
+      },
+    };
+  });
 
-  jest.mock(
-    '@test-preset-1',
-    () => {
-      return {
+  vi.mock('@test-preset-1', () => {
+    return {
+      default: {
         presets: ['@test-preset-2'],
         plugins: ['@test-plugin-2'],
-      };
-    },
-    { virtual: true }
-  );
+      },
+    };
+  });
 
-  jest.mock(
-    '@test-preset-2',
-    () => {
-      return {
+  vi.mock('@test-preset-2', () => {
+    return {
+      default: {
         plugins: ['@test-plugin-3'],
-      };
-    },
-    { virtual: true }
-  );
+      },
+    };
+  });
 
-  jest.mock(
-    '@test-plugin-1',
-    () => {
-      return {
+  vi.mock('@test-plugin-1', () => {
+    return {
+      default: {
         name: 'test-plugin-1',
-      };
-    },
-    { virtual: true }
-  );
+      },
+    };
+  });
 
-  jest.mock(
-    '@test-plugin-2',
-    () => {
-      return {
+  vi.mock('@test-plugin-2', () => {
+    return {
+      default: {
         name: 'test-plugin-2',
-      };
-    },
-    { virtual: true }
-  );
+      },
+    };
+  });
 
-  jest.mock(
-    '@test-plugin-3',
-    () => {
-      return {
+  vi.mock('@test-plugin-3', () => {
+    return {
+      default: {
         name: 'test-plugin-3',
-      };
-    },
-    { virtual: true }
-  );
+      },
+    };
+  });
 
   await ConfigLoader.run([`-c`, `${path.join(__dirname, 'config.test.json')}`]);
 

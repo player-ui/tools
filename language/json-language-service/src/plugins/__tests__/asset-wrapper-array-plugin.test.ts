@@ -1,3 +1,8 @@
+import { test, expect, describe, beforeEach } from 'vitest';
+import {
+  ReferenceAssetsWebPluginManifest,
+  Types,
+} from '@player-tools/static-xlrs';
 import { PlayerLanguageService } from '../..';
 import { toTextDocument } from '../../utils';
 
@@ -6,10 +11,10 @@ describe('asset-wrapper-array-plugin', () => {
 
   beforeEach(async () => {
     service = new PlayerLanguageService();
-    await service.setAssetTypes([
-      './common/static_xlrs/core',
-      './common/static_xlrs/plugin',
-    ]);
+    await service.XLRService.XLRSDK.loadDefinitionsFromModule(Types);
+    await service.XLRService.XLRSDK.loadDefinitionsFromModule(
+      ReferenceAssetsWebPluginManifest
+    );
   });
 
   test('finds arrays that should be asset wrappers', async () => {
@@ -48,6 +53,7 @@ describe('asset-wrapper-array-plugin', () => {
     );
 
     const diags = await service.validateTextDocument(textDocument);
+    console.dir(diags, { depth: 10 });
 
     expect(diags).toHaveLength(2);
     expect(diags?.map((d) => d.message)).toContain(
@@ -55,29 +61,29 @@ describe('asset-wrapper-array-plugin', () => {
     );
 
     expect(diags).toMatchInlineSnapshot(`
-      Array [
-        Object {
+      [
+        {
           "message": "View Validation Error - value: Does not match any of the expected types for type: 'AssetWrapperOrSwitch'",
-          "range": Object {
-            "end": Object {
+          "range": {
+            "end": {
               "character": 7,
               "line": 23,
             },
-            "start": Object {
+            "start": {
               "character": 21,
               "line": 17,
             },
           },
           "severity": 1,
         },
-        Object {
+        {
           "message": "Implicit Array -> \\"collection\\" assets is not supported.",
-          "range": Object {
-            "end": Object {
+          "range": {
+            "end": {
               "character": 19,
               "line": 17,
             },
-            "start": Object {
+            "start": {
               "character": 6,
               "line": 17,
             },

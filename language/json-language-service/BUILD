@@ -1,23 +1,31 @@
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@rules_player//javascript:defs.bzl", "js_pipeline")
+load("//helpers:defs.bzl", "tsup_config", "vitest_config")
 
-load("//:index.bzl", "javascript_pipeline")
+npm_link_all_packages(name = "node_modules")
 
-javascript_pipeline(
-    name = "@player-tools/json-language-service",
-    dependencies = [
-        "//xlr/types:@player-tools/xlr",
-        "//xlr/sdk:@player-tools/xlr-sdk",
-        "//xlr/utils:@player-tools/xlr-utils",
-        "@npm//change-case",
-        "@npm//cross-fetch",
-        "@npm//detect-indent",
-        "@npm//jsonc-parser",
-        "@npm//tapable-ts",
-        "@npm//timm",
-        "@npm//typescript",
-        "@npm//vscode-languageserver-textdocument",
-        "@npm//vscode-languageserver-types"
+tsup_config(name = "tsup_config")
+
+vitest_config(name = "vitest_config")
+
+js_pipeline(
+    package_name = "@player-tools/json-language-service",
+    test_deps = [
+        "//:vitest_config",
     ],
-    test_data = [
-        "//common:static_xlrs"
-    ]
+    deps = [
+        ":node_modules/@player-tools/static-xlrs",
+        ":node_modules/@player-tools/xlr",
+        ":node_modules/@player-tools/xlr-sdk",
+        ":node_modules/@player-tools/xlr-utils",
+        "//:node_modules/change-case",
+        "//:node_modules/cross-fetch",
+        "//:node_modules/detect-indent",
+        "//:node_modules/jsonc-parser",
+        "//:node_modules/tapable-ts",
+        "//:node_modules/timm",
+        "//:node_modules/typescript",
+        "//:node_modules/vscode-languageserver-textdocument",
+        "//:node_modules/vscode-languageserver-types",
+    ],
 )

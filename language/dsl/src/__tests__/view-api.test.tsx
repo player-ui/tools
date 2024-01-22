@@ -1,10 +1,11 @@
+import { test, expect, describe } from 'vitest';
 import React from 'react';
 import { render } from 'react-json-reconciler';
 import { binding as b } from '../string-templates';
 import { Info } from './helpers/asset-library';
 
 describe('View', () => {
-  it('Does not convert ref property to template', async () => {
+  test('Does not convert ref property to template', async () => {
     const validationBinding = b`some.binding`;
     const element = (
       await render(

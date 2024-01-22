@@ -1,3 +1,4 @@
+import { test, expect } from 'vitest';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { parse } from '../document';
 

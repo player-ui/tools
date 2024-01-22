@@ -1,4 +1,4 @@
-import type * as ts from 'typescript/lib/tsserverlibrary';
+import ts from 'typescript/lib/tsserverlibrary';
 import { decorateWithTemplateLanguageService } from 'typescript-template-language-service-decorator';
 import { ExpressionLanguageService } from './service';
 import { LSPLogger } from './logger';

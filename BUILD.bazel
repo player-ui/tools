@@ -1,19 +1,80 @@
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@aspect_rules_js//js:defs.bzl", "js_library")
+
 package(default_visibility = ["//visibility:public"])
+
+npm_link_all_packages(
+    name = "node_modules",
+)
 
 exports_files([
     "VERSION",
-    "babel.config.js",
     "tsconfig.json",
-    "package.json",
-    "jest.config.js",
     ".eslintrc.js",
-    ".prettierrc",
-    "README.md",
+    ".prettierrc.js",
+    "package.json",
+    "vitest.config.ts",
+    ".editorconfig",
     ".all-contributorsrc",
-    "webpack.config.js",
+    "README.md",
 ])
 
-filegroup(
+js_library(
+    name = "vitest_config",
+    testonly = True,
+    srcs = [
+        "scripts/vitest.setup.ts",
+        "vitest.config.ts",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@testing-library/jest-dom",
+        "//:node_modules/@testing-library/react",
+        "//:node_modules/@testing-library/react-hooks",
+        "//:node_modules/@testing-library/user-event",
+        "//:node_modules/@vitest/coverage-v8",
+        "//:node_modules/happy-dom",
+        "//:node_modules/vitest",
+        "//helpers:vitest_coverage_mapper",
+    ],
+)
+
+js_library(
+    name = "eslint_config",
+    testonly = True,
+    srcs = [
+        ".eslintrc.js",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":node_modules/@typescript-eslint/eslint-plugin",
+        ":node_modules/@typescript-eslint/parser",
+        ":node_modules/eslint",
+        ":node_modules/eslint-plugin-prettier",
+        ":node_modules/eslint-plugin-react",
+    ],
+)
+
+js_library(
+    name = "tsup_config",
+    srcs = [
+        "tsup.config.ts",
+    ],
+    data = [":typings"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":node_modules/@types/node",
+        ":node_modules/tsup",
+        ":node_modules/typescript",
+        ":node_modules/vitest",
+    ],
+)
+
+js_library(
     name = "typings",
-    srcs = glob(["typings/*"]),
+    srcs = [
+        "tsconfig.build.json",
+        "tsconfig.json",
+    ] + glob(["typings/*"]),
+    visibility = ["//visibility:public"],
 )

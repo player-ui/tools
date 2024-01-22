@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`computeEffectiveObject tests Merges equal additionalProperties 1`] = `
 Object {
@@ -32,17 +32,17 @@ Object {
     "type": "unknown",
   },
   "description": "Effective type combining object literal and object literal",
-  "genericTokens": Array [],
+  "genericTokens": [],
   "name": "object literal & object literal",
-  "properties": Object {
-    "bar": Object {
-      "node": Object {
+  "properties": {
+    "bar": {
+      "node": {
         "type": "number",
       },
       "required": true,
     },
-    "foo": Object {
-      "node": Object {
+    "foo": {
+      "node": {
         "type": "string",
       },
       "required": true,

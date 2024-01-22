@@ -1,4 +1,9 @@
+import { test, expect, describe, beforeEach } from 'vitest';
 import { TextDocument } from 'vscode-languageserver-textdocument';
+import {
+  ReferenceAssetsWebPluginManifest,
+  Types,
+} from '@player-tools/static-xlrs';
 import { PlayerLanguageService } from '../..';
 import { toTextDocument } from '../../utils';
 
@@ -32,13 +37,13 @@ describe('duplicate-id-plugin', () => {
 
   beforeEach(async () => {
     service = new PlayerLanguageService();
-    await service.setAssetTypes([
-      './common/static_xlrs/core',
-      './common/static_xlrs/plugin',
-    ]);
+    await service.XLRService.XLRSDK.loadDefinitionsFromModule(Types);
+    await service.XLRService.XLRSDK.loadDefinitionsFromModule(
+      ReferenceAssetsWebPluginManifest
+    );
   });
 
-  it('finds dupe ids', async () => {
+  test('finds dupe ids', async () => {
     const validations = await service.validateTextDocument(simpleDupIDDocument);
 
     expect(validations).toHaveLength(10);
@@ -46,7 +51,7 @@ describe('duplicate-id-plugin', () => {
       "The id 'bar' is already in use in this view."
     );
     expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
-      Array [
+      [
         "Content Validation Error - missing: Property 'id' missing from type 'Flow'",
         "Content Validation Error - missing: Property 'navigation' missing from type 'Flow'",
         "View is not reachable",
@@ -61,7 +66,7 @@ describe('duplicate-id-plugin', () => {
     `);
   });
 
-  it('fixes dup ids', async () => {
+  test('fixes dup ids', async () => {
     const diags = await service.validateTextDocument(simpleDupIDDocument);
 
     const actions = await service.getCodeActionsInRange(simpleDupIDDocument, {

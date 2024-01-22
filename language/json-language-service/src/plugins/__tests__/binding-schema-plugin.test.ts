@@ -1,4 +1,9 @@
+import { test, expect, describe, beforeEach } from 'vitest';
 import { Position } from 'vscode-languageserver-types';
+import {
+  ReferenceAssetsWebPluginManifest,
+  Types,
+} from '@player-tools/static-xlrs';
 import { PlayerLanguageService } from '../..';
 import { toTextDocument } from '../../utils';
 
@@ -7,10 +12,10 @@ describe('binding-plugin', () => {
 
   beforeEach(async () => {
     service = new PlayerLanguageService();
-    await service.setAssetTypes([
-      './common/static_xlrs/core',
-      './common/static_xlrs/plugin',
-    ]);
+    await service.XLRService.XLRSDK.loadDefinitionsFromModule(Types);
+    await service.XLRService.XLRSDK.loadDefinitionsFromModule(
+      ReferenceAssetsWebPluginManifest
+    );
   });
 
   test('auto completes bindings', async () => {
@@ -48,7 +53,7 @@ describe('binding-plugin', () => {
 
     expect(completions.items).toHaveLength(2);
     expect(completions.items.map((c) => c.label)).toMatchInlineSnapshot(`
-      Array [
+      [
         "foo",
         "foo.bar",
       ]

@@ -30,18 +30,18 @@ commands:
           at: ~/tools
 
       - restore_cache:
-          keys: 
-            - v1-bazel-cache-core-{{ .Branch }}-{{ .Revision }} 
-            - v1-bazel-cache-core-{{ .Branch }} 
-            - v1-bazel-cache-core-main 
+          keys:
+            - v1-bazel-cache-core-{{ .Branch }}-{{ .Revision }}
+            - v1-bazel-cache-core-{{ .Branch }}
+            - v1-bazel-cache-core-main
 
-      - run: yarn
-      
+      - run: pnpm i
+
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
       - run: echo -e $GPG_KEY | gpg --import --batch
       - run: |
-            source ~/.bashrc
-            npx auto shipit --only-graduate-with-release-label -vv
+          source ~/.bashrc
+          npx auto shipit --only-graduate-with-release-label -vv
 
 jobs:
   setup:
@@ -57,7 +57,7 @@ jobs:
           root: .
           paths:
             - .
-  
+
   bazelrc:
     executor: base
     steps:
@@ -78,7 +78,7 @@ jobs:
       - attach_workspace:
           at: ~/tools
 
-      - run: yarn
+      - run: pnpm i
 
       - run: bazel build --config=ci -- //...
 
@@ -98,7 +98,7 @@ jobs:
       - attach_workspace:
           at: ~/tools
 
-      - run: yarn
+      - run: pnpm i
 
       - run: bazel test --config=ci -- //...
 
@@ -209,7 +209,7 @@ workflows:
 
   build_and_test_main:
     when:
-      equal: [ "", << pipeline.parameters.GHA_Action >> ]
+      equal: ["", << pipeline.parameters.GHA_Action >>]
     jobs:
       - setup:
           filters:
@@ -239,7 +239,7 @@ workflows:
 
   release:
     when:
-      equal: [ release, << pipeline.parameters.GHA_Action >> ]
+      equal: [release, << pipeline.parameters.GHA_Action >>]
     jobs:
       - setup
 

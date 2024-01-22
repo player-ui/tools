@@ -1,4 +1,4 @@
-import type * as ts from 'typescript/lib/tsserverlibrary';
+import ts from 'typescript/lib/tsserverlibrary';
 
 export default class VirtualServiceHost implements ts.LanguageServiceHost {
   private readonly files = new Map<string, string>();

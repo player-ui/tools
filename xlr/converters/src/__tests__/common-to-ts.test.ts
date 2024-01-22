@@ -1,9 +1,10 @@
+import { test, describe, expect } from 'vitest';
 import type { NamedType } from '@player-tools/xlr';
 import ts from 'typescript';
 import { TSWriter } from '../xlr-to-ts';
 
 describe('Type Exports', () => {
-  it('Basic Type Conversion', () => {
+  test('Basic Type Conversion', () => {
     const xlr = {
       name: 'ActionAsset',
       type: 'object',
@@ -160,7 +161,7 @@ describe('Type Exports', () => {
     `);
   });
 
-  it('Template Type Conversion', () => {
+  test('Template Type Conversion', () => {
     const xlr = {
       name: 'BindingRef',
       title: 'BindingRef',
@@ -192,7 +193,7 @@ describe('Type Exports', () => {
     expect(referencedImports).toBeUndefined();
   });
 
-  it('Static Type Conversion Objects', () => {
+  test('Static Type Conversion Objects', () => {
     const xlr = {
       name: 'test',
       source: 'test.ts',
@@ -247,7 +248,7 @@ describe('Type Exports', () => {
     expect(referencedImports).toBeUndefined();
   });
 
-  it('Static Type Conversion Arrays', () => {
+  test('Static Type Conversion Arrays', () => {
     const xlr = {
       name: 'test',
       source: 'test.ts',
@@ -295,7 +296,7 @@ describe('Type Exports', () => {
     expect(referencedImports).toBeUndefined();
   });
 
-  it('Dynamic results Conversion', () => {
+  test('Dynamic results Conversion', () => {
     const xlr = {
       source: 'test.ts',
       name: 'size',

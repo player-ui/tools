@@ -1,4 +1,9 @@
+import { test, expect, describe, beforeEach } from 'vitest';
 import { TextDocument } from 'vscode-languageserver-textdocument';
+import {
+  ReferenceAssetsWebPluginManifest,
+  Types,
+} from '@player-tools/static-xlrs';
 import { PlayerLanguageService } from '../..';
 import { toTextDocument } from '../../utils';
 
@@ -7,10 +12,10 @@ describe('action-plugin', () => {
 
   beforeEach(async () => {
     service = new PlayerLanguageService();
-    await service.setAssetTypes([
-      './common/static_xlrs/core',
-      './common/static_xlrs/plugin',
-    ]);
+    await service.XLRService.XLRSDK.loadDefinitionsFromModule(Types);
+    await service.XLRService.XLRSDK.loadDefinitionsFromModule(
+      ReferenceAssetsWebPluginManifest
+    );
   });
 
   test('fixes old actions', async () => {
@@ -50,7 +55,7 @@ describe('action-plugin', () => {
 
     expect(diags).toHaveLength(4);
     expect(diags?.map((m) => m.message)).toMatchInlineSnapshot(`
-      Array [
+      [
         "Content Validation Error - missing: Property 'navigation' missing from type 'Flow'",
         "View is not reachable",
         "Migrate to an action-asset",

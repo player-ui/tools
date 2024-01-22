@@ -10,8 +10,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from '../app.css';
 import { Config } from './Config';
 
-export const SUB_PANEL_IDS = ['plugins', 'schema', 'expressions'] as const;
-
 export const ConfigPanel = () => {
   const currentPlayerID = useSelector<StoreState, string | null>(
     selectSelectedPlayerId

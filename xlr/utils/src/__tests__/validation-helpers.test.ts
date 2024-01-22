@@ -1,8 +1,9 @@
+import { test, expect, describe } from 'vitest';
 import type { ObjectType } from '@player-tools/xlr';
 import { computeEffectiveObject } from '../validation-helpers';
 
 describe('computeEffectiveObject tests', () => {
-  it('mixed test', () => {
+  test('mixed test', () => {
     const type1: ObjectType = {
       type: 'object',
       properties: {
@@ -34,7 +35,7 @@ describe('computeEffectiveObject tests', () => {
     expect(computeEffectiveObject(type1, type2)).toMatchSnapshot();
   });
 
-  it('Error on property overlap', () => {
+  test('Error on property overlap', () => {
     const type1: ObjectType = {
       type: 'object',
       properties: {

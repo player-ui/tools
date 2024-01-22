@@ -1,3 +1,4 @@
+import { test, expect } from 'vitest';
 import React from 'react';
 import { expression as e } from '../../string-templates';
 import { DSLCompiler } from '../compiler';
@@ -149,44 +150,44 @@ test('compiles schema when added to flow', async () => {
 
   expect(result).toBeDefined();
   expect(result?.value).toMatchInlineSnapshot(`
-    Object {
+    {
       "id": "test-flow",
-      "navigation": Object {
+      "navigation": {
         "BEGIN": "FLOW_1",
-        "FLOW_1": Object {
-          "VIEW_1": Object {
+        "FLOW_1": {
+          "VIEW_1": {
             "ref": "test",
             "state_type": "VIEW",
-            "transitions": Object {
+            "transitions": {
               "*": "END_Done",
             },
           },
           "startState": "VIEW_1",
         },
       },
-      "schema": Object {
-        "ROOT": Object {
-          "foo": Object {
+      "schema": {
+        "ROOT": {
+          "foo": {
             "type": "fooType",
           },
         },
-        "barType": Object {
-          "baz": Object {
+        "barType": {
+          "baz": {
             "type": "StringType",
-            "validation": Array [
-              Object {
+            "validation": [
+              {
                 "type": "required",
               },
             ],
           },
         },
-        "fooType": Object {
-          "bar": Object {
+        "fooType": {
+          "bar": {
             "type": "barType",
           },
         },
       },
-      "views": Array [],
+      "views": [],
     }
   `);
 });
@@ -230,33 +231,33 @@ test('compiles mixed DSL and non-DSL views', async () => {
 
   expect(result).toBeDefined();
   expect(result?.value).toMatchInlineSnapshot(`
-    Object {
+    {
       "id": "test-flow",
-      "navigation": Object {
+      "navigation": {
         "BEGIN": "FLOW_1",
-        "FLOW_1": Object {
-          "VIEW_1": Object {
+        "FLOW_1": {
+          "VIEW_1": {
             "ref": "test",
             "state_type": "VIEW",
-            "transitions": Object {
+            "transitions": {
               "*": "END_Done",
             },
           },
           "startState": "VIEW_1",
         },
       },
-      "views": Array [
-        Object {
+      "views": [
+        {
           "id": "foo",
-          "info": Object {
-            "asset": Object {
+          "info": {
+            "asset": {
               "id": "info",
               "type": "baz",
             },
           },
           "type": "bar",
         },
-        Object {
+        {
           "foo": "bar",
         },
       ],

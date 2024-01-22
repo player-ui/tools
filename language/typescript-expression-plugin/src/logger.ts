@@ -1,5 +1,5 @@
 import type { Logger } from 'typescript-template-language-service-decorator';
-import type * as ts from 'typescript/lib/tsserverlibrary';
+import ts from 'typescript/lib/tsserverlibrary';
 
 export class LSPLogger implements Logger {
   private readonly info: ts.server.PluginCreateInfo;

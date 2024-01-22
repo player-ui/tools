@@ -1,4 +1,9 @@
+import { test, expect, describe, beforeEach } from 'vitest';
 import { TextDocument } from 'vscode-languageserver-textdocument';
+import {
+  ReferenceAssetsWebPluginManifest,
+  Types,
+} from '@player-tools/static-xlrs';
 import { PlayerLanguageService } from '../..';
 import { toTextDocument } from '../../utils';
 
@@ -40,26 +45,26 @@ describe('missing-asset-wrapper', () => {
 
   beforeEach(async () => {
     service = new PlayerLanguageService();
-    await service.setAssetTypes([
-      './common/static_xlrs/core',
-      './common/static_xlrs/plugin',
-    ]);
+    await service.XLRService.XLRSDK.loadDefinitionsFromModule(Types);
+    await service.XLRService.XLRSDK.loadDefinitionsFromModule(
+      ReferenceAssetsWebPluginManifest
+    );
   });
 
-  it('adds validation for the asset wrapper', async () => {
+  test('adds validation for the asset wrapper', async () => {
     const validations = await service.validateTextDocument(
       simpleAssetWrapperDocument
     );
 
     expect(validations).toHaveLength(1);
     expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
-      Array [
+      [
         "View Validation Error - value: Does not match any of the expected types for type: 'AssetWrapperOrSwitch'",
       ]
     `);
   });
 
-  it('fixes the violation', async () => {
+  test('fixes the violation', async () => {
     const diags = await service.validateTextDocument(
       simpleAssetWrapperDocument
     );

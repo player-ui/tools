@@ -1,3 +1,4 @@
+import { test, expect } from 'vitest';
 import { expression as e } from '..';
 
 test('works with nested expressions', () => {

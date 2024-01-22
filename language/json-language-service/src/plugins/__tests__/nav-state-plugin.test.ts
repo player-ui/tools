@@ -1,3 +1,8 @@
+import { test, expect, describe, beforeEach } from 'vitest';
+import {
+  ReferenceAssetsWebPluginManifest,
+  Types,
+} from '@player-tools/static-xlrs';
 import { PlayerLanguageService } from '../..';
 import { toTextDocument } from '../../utils';
 
@@ -6,10 +11,10 @@ describe('nav-state-plugin', () => {
 
   beforeEach(async () => {
     service = new PlayerLanguageService();
-    await service.setAssetTypes([
-      './common/static_xlrs/core',
-      './common/static_xlrs/plugin',
-    ]);
+    await service.XLRService.XLRSDK.loadDefinitionsFromModule(Types);
+    await service.XLRService.XLRSDK.loadDefinitionsFromModule(
+      ReferenceAssetsWebPluginManifest
+    );
   });
 
   test('validates node transitions', async () => {
@@ -41,7 +46,7 @@ describe('nav-state-plugin', () => {
 
     expect(diags).toHaveLength(2);
     expect(diags?.map((m) => m.message)).toMatchInlineSnapshot(`
-      Array [
+      [
         "Warning - View Type view was not loaded into Validator definitions",
         "Node 'ACTION_1' not found",
       ]

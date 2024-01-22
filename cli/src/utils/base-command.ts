@@ -1,6 +1,3 @@
-/* eslint-disable import/no-dynamic-require */
-/* eslint-disable global-require */
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { Command, Flags } from '@oclif/core';
 import path from 'path';
 import { cosmiconfig } from 'cosmiconfig';
@@ -57,7 +54,7 @@ export abstract class BaseCommand extends Command {
       let normalizedExtension: PlayerConfigFileShape;
 
       if (typeof conf.extends === 'string') {
-        const requiredExtendedConfig = require(conf.extends);
+        const requiredExtendedConfig = await import(conf.extends);
         normalizedExtension =
           requiredExtendedConfig.default ?? requiredExtendedConfig;
       } else {
@@ -72,7 +69,7 @@ export abstract class BaseCommand extends Command {
     await Promise.all(
       conf?.presets?.map(async (preset) => {
         if (typeof preset === 'string') {
-          const requiredExtendedConfig = require(preset);
+          const requiredExtendedConfig = await import(preset);
           const normalizedExtension =
             requiredExtendedConfig.default ?? requiredExtendedConfig;
 
@@ -90,39 +87,43 @@ export abstract class BaseCommand extends Command {
 
     // Go through each plugin and load/create it
 
-    conf?.plugins?.forEach((pluginInfo) => {
-      if (typeof pluginInfo === 'object' && !Array.isArray(pluginInfo)) {
-        config.plugins.push(pluginInfo);
-        return;
-      }
+    if (conf?.plugins) {
+      await Promise.all(
+        conf?.plugins?.map(async (pluginInfo) => {
+          if (typeof pluginInfo === 'object' && !Array.isArray(pluginInfo)) {
+            config.plugins.push(pluginInfo);
+            return;
+          }
 
-      const pluginName =
-        typeof pluginInfo === 'string' ? pluginInfo : pluginInfo[0];
-      const pluginArgs =
-        typeof pluginInfo === 'string' ? undefined : pluginInfo[1];
+          const pluginName =
+            typeof pluginInfo === 'string' ? pluginInfo : pluginInfo[0];
+          const pluginArgs =
+            typeof pluginInfo === 'string' ? undefined : pluginInfo[1];
 
-      let pluginLoadPath = pluginName;
+          let pluginLoadPath = pluginName;
 
-      if (pluginName.startsWith('.')) {
-        pluginLoadPath = path.resolve(relativePath ?? '', pluginName);
-      }
+          if (pluginName.startsWith('.')) {
+            pluginLoadPath = path.resolve(relativePath ?? '', pluginName);
+          }
 
-      this.debug('loading plugin from %s', pluginLoadPath);
-      // Get the instance for the plugin
-      const required = require(pluginLoadPath);
+          this.debug('loading plugin from %s', pluginLoadPath);
+          // Get the instance for the plugin
+          const required = await import(pluginLoadPath);
 
-      const PluginExport = required.default ?? required;
+          const PluginExport = required.default ?? required;
 
-      if (!PluginExport) {
-        return;
-      }
+          if (!PluginExport) {
+            return;
+          }
 
-      const pluginInstance =
-        typeof PluginExport === 'object'
-          ? PluginExport
-          : new PluginExport(pluginArgs);
-      config.plugins.push(pluginInstance);
-    });
+          const pluginInstance =
+            typeof PluginExport === 'object'
+              ? PluginExport
+              : new PluginExport(pluginArgs);
+          config.plugins.push(pluginInstance);
+        })
+      );
+    }
 
     return config;
   }

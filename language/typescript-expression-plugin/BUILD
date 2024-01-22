@@ -1,17 +1,27 @@
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@rules_player//javascript:defs.bzl", "js_pipeline")
+load("//helpers:defs.bzl", "tsup_config", "vitest_config")
 
-load("//:index.bzl", "javascript_pipeline")
+npm_link_all_packages(name = "node_modules")
 
-javascript_pipeline(
-    name = "@player-tools/typescript-expression-plugin",
-    dependencies = [
-      "//xlr/types:@player-tools/xlr",
-      "//xlr/sdk:@player-tools/xlr-sdk",
-      "//xlr/utils:@player-tools/xlr-utils",
-      "@npm//@player-ui/player",
-      "@npm//jsonc-parser",
-      "@npm//typescript-template-language-service-decorator",
+tsup_config(name = "tsup_config")
+
+vitest_config(name = "vitest_config")
+
+js_pipeline(
+    package_name = "@player-tools/typescript-expression-plugin",
+    test_deps = [
+        ":node_modules",
+        "//:vitest_config",
     ],
-    test_data = [
-        "//common:@player-tools/static-xlrs"
-    ]
+    deps = [
+        ":node_modules/@player-tools/xlr",
+        ":node_modules/@player-tools/xlr-sdk",
+        ":node_modules/@player-tools/xlr-utils",
+        "//:node_modules/@player-ui/player",
+        "//:node_modules/jsonc-parser",
+        "//:node_modules/typescript-template-language-service-decorator",
+        "//:node_modules/vscode-languageserver-types",
+        "//:node_modules/typescript",
+    ],
 )

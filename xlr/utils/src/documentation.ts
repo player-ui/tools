@@ -1,7 +1,9 @@
-import { SymbolDisplayPartKind, displayPartsToString } from 'typescript';
+import ts from 'typescript';
 import type { SymbolDisplayPart } from 'typescript';
 import type { NodeType } from '@player-tools/xlr';
 import { isPrimitiveTypeNode } from './type-checks';
+
+const { SymbolDisplayPartKind, displayPartsToString } = ts;
 
 /** Like `.join()` but for arrays */
 function insertBetweenElements<T>(array: Array<T>, separator: T): T[] {

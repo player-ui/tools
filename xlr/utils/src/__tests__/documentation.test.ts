@@ -1,8 +1,9 @@
+import { test, expect, describe } from 'vitest';
 import type { FunctionType, OrType, TupleType } from '@player-tools/xlr';
 import { createDocString } from '../documentation';
 
 describe('docs', () => {
-  it('or', () => {
+  test('or', () => {
     const type1: OrType = {
       type: 'or',
       or: [
@@ -23,7 +24,7 @@ describe('docs', () => {
     );
   });
 
-  it('function', () => {
+  test('function', () => {
     const type1: FunctionType = {
       type: 'function',
       name: 'testABC',
@@ -54,7 +55,7 @@ describe('docs', () => {
     );
   });
 
-  it('tuple', () => {
+  test('tuple', () => {
     const type1: TupleType = {
       type: 'tuple',
       name: 'testABC',
@@ -83,7 +84,7 @@ describe('docs', () => {
     );
   });
 
-  it('const', () => {
+  test('const', () => {
     const type1: OrType = {
       type: 'or',
       or: [

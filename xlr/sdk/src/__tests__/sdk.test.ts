@@ -1,17 +1,20 @@
+import { test, expect, describe } from 'vitest';
 import type { NamedType, TransformFunction } from '@player-tools/xlr';
 import { parseTree } from 'jsonc-parser';
-import typesManifest from '@player-tools/static-xlrs/static_xlrs/core/xlr/manifest';
-import pluginManifest from '@player-tools/static-xlrs/static_xlrs/plugin/xlr/manifest';
+import {
+  Types,
+  ReferenceAssetsWebPluginManifest,
+} from '@player-tools/static-xlrs';
 import type { Filters } from '../registry';
 import { XLRSDK } from '../sdk';
 
 const EXCLUDE: Filters = { typeFilter: 'Transformed' };
 
 describe('Loading XLRs', () => {
-  it('Loading from Disk', () => {
+  test('Loading from Disk', () => {
     const sdk = new XLRSDK();
-    sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
-    sdk.loadDefinitionsFromDisk('./common/static_xlrs/core');
+    sdk.loadDefinitionsFromModule(Types);
+    sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
 
     expect(sdk.hasType('Asset')).toStrictEqual(true);
     expect(sdk.hasType('AssetWrapper')).toStrictEqual(true);
@@ -24,10 +27,13 @@ describe('Loading XLRs', () => {
     expect(sdk.hasType('TransformedInput')).toStrictEqual(false);
   });
 
-  it('Loading from Module', async () => {
+  test('Loading from Module', async () => {
     const sdk = new XLRSDK();
-    await sdk.loadDefinitionsFromModule(pluginManifest, EXCLUDE);
-    await sdk.loadDefinitionsFromModule(typesManifest);
+    await sdk.loadDefinitionsFromModule(
+      ReferenceAssetsWebPluginManifest,
+      EXCLUDE
+    );
+    await sdk.loadDefinitionsFromModule(Types);
 
     expect(sdk.hasType('Asset')).toStrictEqual(true);
     expect(sdk.hasType('AssetWrapper')).toStrictEqual(true);
@@ -42,25 +48,25 @@ describe('Loading XLRs', () => {
 });
 
 describe('Object Recall', () => {
-  it('Processed', () => {
+  test('Processed', () => {
     const sdk = new XLRSDK();
-    sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
-    sdk.loadDefinitionsFromDisk('./common/static_xlrs/core');
+    sdk.loadDefinitionsFromModule(Types);
+    sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
 
     expect(sdk.getType('InputAsset')).toMatchSnapshot();
   });
 
-  it('Raw', () => {
+  test('Raw', () => {
     const sdk = new XLRSDK();
-    sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
-    sdk.loadDefinitionsFromDisk('./common/static_xlrs/core');
+    sdk.loadDefinitionsFromModule(Types);
+    sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
 
     expect(sdk.getType('InputAsset', { getRawType: true })).toMatchSnapshot();
   });
 });
 
 describe('Basic Validation', () => {
-  it('Basic Validation By Name', () => {
+  test('Basic Validation By Name', () => {
     const mockAsset = parseTree(`
     {
       "id": 1,
@@ -74,13 +80,13 @@ describe('Basic Validation', () => {
     `);
 
     const sdk = new XLRSDK();
-    sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
-    sdk.loadDefinitionsFromDisk('./common/static_xlrs/core');
+    sdk.loadDefinitionsFromModule(Types);
+    sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
 
     expect(sdk.validateByName('InputAsset', mockAsset)).toMatchSnapshot();
   });
 
-  it('Basic Validation By Type', () => {
+  test('Basic Validation By Type', () => {
     const mockAsset = parseTree(`
     {
       "id": 1,
@@ -94,8 +100,9 @@ describe('Basic Validation', () => {
     `);
 
     const sdk = new XLRSDK();
-    sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
-    sdk.loadDefinitionsFromDisk('./common/static_xlrs/core');
+    sdk.loadDefinitionsFromModule(Types);
+    sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
+
     const inputAsset = sdk.getType('InputAsset');
     expect(inputAsset).toBeDefined();
     expect(
@@ -105,7 +112,7 @@ describe('Basic Validation', () => {
 });
 
 describe('Export Test', () => {
-  it('Exports Typescript types', () => {
+  test('Exports Typescript types', () => {
     const importMap = new Map([
       [
         '@player-ui/types',
@@ -114,14 +121,14 @@ describe('Export Test', () => {
     ]);
 
     const sdk = new XLRSDK();
-    sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
-    sdk.loadDefinitionsFromDisk('./common/static_xlrs/core', EXCLUDE);
+    sdk.loadDefinitionsFromModule(Types);
+    sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
     const results = sdk.exportRegistry('TypeScript', importMap);
     expect(results[0][0]).toBe('out.d.ts');
     expect(results[0][1]).toMatchSnapshot();
   });
 
-  it('Exports Typescript Types With Filters', () => {
+  test('Exports Typescript Types With Filters', () => {
     const importMap = new Map([
       [
         '@player-ui/types',
@@ -130,8 +137,8 @@ describe('Export Test', () => {
     ]);
 
     const sdk = new XLRSDK();
-    sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin');
-    sdk.loadDefinitionsFromDisk('./common/static_xlrs/core', EXCLUDE);
+    sdk.loadDefinitionsFromModule(Types);
+    sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
     const results = sdk.exportRegistry('TypeScript', importMap, {
       typeFilter: 'Transformed',
       pluginFilter: 'Types',
@@ -140,7 +147,7 @@ describe('Export Test', () => {
     expect(results[0][1]).toMatchSnapshot();
   });
 
-  it('Exports Typescript Types With Transforms', () => {
+  test('Exports Typescript Types With Transforms', () => {
     const importMap = new Map([
       [
         '@player-ui/types',
@@ -168,8 +175,8 @@ describe('Export Test', () => {
     };
 
     const sdk = new XLRSDK();
-    sdk.loadDefinitionsFromDisk('./common/static_xlrs/plugin', EXCLUDE);
-    sdk.loadDefinitionsFromDisk('./common/static_xlrs/core', EXCLUDE);
+    sdk.loadDefinitionsFromModule(Types);
+    sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
     const results = sdk.exportRegistry(
       'TypeScript',
       importMap,

@@ -1,4 +1,4 @@
-import * as ts from 'typescript';
+import ts from 'typescript';
 import * as tsvfs from '@typescript/vfs';
 
 export interface SetupReturnType {

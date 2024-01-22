@@ -1,4 +1,9 @@
+import { test, expect, describe, beforeEach } from 'vitest';
 import { TextDocument } from 'vscode-languageserver-textdocument';
+import {
+  ReferenceAssetsWebPluginManifest,
+  Types,
+} from '@player-tools/static-xlrs';
 import { PlayerLanguageService } from '..';
 import { toTextDocument } from '../utils';
 
@@ -7,14 +12,14 @@ describe('player language service', () => {
 
   beforeEach(async () => {
     service = new PlayerLanguageService();
-    await service.setAssetTypes([
-      './common/static_xlrs/core',
-      './common/static_xlrs/plugin',
-    ]);
+    await service.XLRService.XLRSDK.loadDefinitionsFromModule(Types);
+    await service.XLRService.XLRSDK.loadDefinitionsFromModule(
+      ReferenceAssetsWebPluginManifest
+    );
   });
 
   describe('formatting', () => {
-    it('formats a document', async () => {
+    test('formats a document', async () => {
       const document = toTextDocument(
         `{
 "id": "foo",
@@ -46,7 +51,7 @@ describe('player language service', () => {
   });
 
   describe('validation', () => {
-    it('throws AssetWrapper errors', async () => {
+    test('throws AssetWrapper errors', async () => {
       const document = toTextDocument(
         `
         {
@@ -105,7 +110,7 @@ describe('player language service', () => {
   });
 
   describe('completion', () => {
-    it('basic object completions', async () => {
+    test('basic object completions', async () => {
       const document = toTextDocument(
         `
 {
@@ -144,7 +149,7 @@ describe('player language service', () => {
       expect(completions.items).toMatchSnapshot();
     });
 
-    it('basic value completions', async () => {
+    test('basic value completions', async () => {
       const document = toTextDocument(
         `
 {
@@ -179,7 +184,7 @@ describe('player language service', () => {
       expect(completions.items).toMatchSnapshot();
     });
 
-    it('schema completions', async () => {
+    test('schema completions', async () => {
       const document = toTextDocument(
         `
         {
@@ -243,7 +248,7 @@ describe('player language service', () => {
   });
 
   describe('hover', () => {
-    it('basic hover docs', async () => {
+    test('basic hover docs', async () => {
       const document = toTextDocument(
         `
 {

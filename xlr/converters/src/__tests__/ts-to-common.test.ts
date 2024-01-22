@@ -1,9 +1,10 @@
+import { test, expect, describe } from 'vitest';
 /* eslint-disable no-template-curly-in-string */
 import { setupTestEnv } from '@player-tools/xlr-utils';
 import { TsConverter } from '..';
 
 describe('Type Exports', () => {
-  it('Basic Array Type', () => {
+  test('Basic Array Type', () => {
     const sc = `
     export type Foo = Array<string>
     `;
@@ -15,7 +16,7 @@ describe('Type Exports', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Basic Union Type', () => {
+  test('Basic Union Type', () => {
     const sc = `
     export type Foo = number | string
     `;
@@ -29,7 +30,7 @@ describe('Type Exports', () => {
 });
 
 describe('Interface Exports', () => {
-  it('Basic Interface Type', () => {
+  test('Basic Interface Type', () => {
     const sc = `
     export interface Foo {
       bar: string
@@ -44,7 +45,7 @@ describe('Interface Exports', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Interface with Optional parameters', () => {
+  test('Interface with Optional parameters', () => {
     const sc = `
     export interface Foo {
       bar: string
@@ -59,7 +60,7 @@ describe('Interface Exports', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Interface with Inheritance', () => {
+  test('Interface with Inheritance', () => {
     const sc = `
 
     interface Base {
@@ -79,7 +80,7 @@ describe('Interface Exports', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Implementing more than one Interfaces', () => {
+  test('Implementing more than one Interfaces', () => {
     const sc = `
 
     interface Foo{
@@ -105,7 +106,7 @@ describe('Interface Exports', () => {
 });
 
 describe('Generic Declarations', () => {
-  it('Basic Generic Type', () => {
+  test('Basic Generic Type', () => {
     const sc = `
     export type Foo<T> = string | T
     `;
@@ -117,7 +118,7 @@ describe('Generic Declarations', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Generic with Constraints', () => {
+  test('Generic with Constraints', () => {
     const sc = `
     export type Foo<T extends string = string > = number | T
     `;
@@ -129,7 +130,7 @@ describe('Generic Declarations', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Implementing Generic Type', () => {
+  test('Implementing Generic Type', () => {
     const sc = `
     type Foo<T> = string | T
 
@@ -143,7 +144,7 @@ describe('Generic Declarations', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Interface with Generics', () => {
+  test('Interface with Generics', () => {
     const sc = `
 
     export interface Foo<T>{
@@ -158,7 +159,7 @@ describe('Generic Declarations', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Interface with Generics and Constraints', () => {
+  test('Interface with Generics and Constraints', () => {
     const sc = `
 
     export interface Foo<T extends string = string>{
@@ -173,7 +174,7 @@ describe('Generic Declarations', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Implementing Interface with Generics', () => {
+  test('Implementing Interface with Generics', () => {
     const sc = `
 
     interface Base<T extends string = string>{
@@ -193,7 +194,7 @@ describe('Generic Declarations', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Implementing an generic wrapped interface', () => {
+  test('Implementing an generic wrapped interface', () => {
     const sc = `
 
     interface base {
@@ -216,7 +217,7 @@ describe('Generic Declarations', () => {
 });
 
 describe('Complex Types', () => {
-  it('Pick', () => {
+  test('Pick', () => {
     const sc = `
     interface foo {
       bar: string
@@ -232,7 +233,7 @@ describe('Complex Types', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Pick with interface union', () => {
+  test('Pick with interface union', () => {
     const sc = `
     interface foo {
       far: string
@@ -256,7 +257,7 @@ describe('Complex Types', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Pick with interface intersection', () => {
+  test('Pick with interface intersection', () => {
     const sc = `
     interface foo {
       far: string
@@ -280,7 +281,7 @@ describe('Complex Types', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Omit', () => {
+  test('Omit', () => {
     const sc = `
     interface foo {
       bar: string
@@ -296,7 +297,7 @@ describe('Complex Types', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Omit with type union', () => {
+  test('Omit with type union', () => {
     const sc = `
     interface foo {
       far: string
@@ -320,7 +321,7 @@ describe('Complex Types', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Omit with type intersection', () => {
+  test('Omit with type intersection', () => {
     const sc = `
     interface foo {
       far: string
@@ -390,7 +391,7 @@ describe('Complex Types', () => {
 });
 
 describe('String Templates', () => {
-  it('Basic', () => {
+  test('Basic', () => {
     const sc =
       'export type Bar = `String is a ${string}, number is a ${number} and boolean is a ${boolean}`';
 
@@ -401,7 +402,7 @@ describe('String Templates', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Type References', () => {
+  test('Type References', () => {
     const sc =
       'type Foo = string; export type Bar = `String is a ${Foo}, number is a ${number} and boolean is a ${boolean}`';
 
@@ -414,7 +415,7 @@ describe('String Templates', () => {
 });
 
 describe('Index Types', () => {
-  it('Basic', () => {
+  test('Basic', () => {
     const sc = `
     interface base {
       foo: string;
@@ -434,7 +435,7 @@ describe('Index Types', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Complex Types', () => {
+  test('Complex Types', () => {
     const sc = `
 
     interface something {
@@ -462,7 +463,7 @@ describe('Index Types', () => {
 });
 
 describe('Type with typeof', () => {
-  it('Indexing', () => {
+  test('Indexing', () => {
     const sc = `
     const options = [ 
       "one",
@@ -481,7 +482,7 @@ describe('Type with typeof', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Indexing (long)', () => {
+  test('Indexing (long)', () => {
     const sc = `
     const options = [
       1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
@@ -502,7 +503,7 @@ describe('Type with typeof', () => {
 });
 
 describe('Edge Cases', () => {
-  it('Modifying Cache References', () => {
+  test('Modifying Cache References', () => {
     const sc = `
     interface foo {
       foo: string;
@@ -531,7 +532,7 @@ describe('Edge Cases', () => {
 });
 
 describe('Variable Exports', () => {
-  it('Primitive const exports', () => {
+  test('Primitive const exports', () => {
     const sc = `
       export const foo = 1;
 
@@ -547,7 +548,7 @@ describe('Variable Exports', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Object const exports', () => {
+  test('Object const exports', () => {
     const sc = `
       export const foo = {
         foo: 1,
@@ -563,7 +564,7 @@ describe('Variable Exports', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Object const exports with spread', () => {
+  test('Object const exports with spread', () => {
     const sc = `
       const foo = {
         foo: 1,
@@ -584,7 +585,7 @@ describe('Variable Exports', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Array const exports', () => {
+  test('Array const exports', () => {
     const sc = `
       export const foo = [1,2,3]
     `;
@@ -596,7 +597,7 @@ describe('Variable Exports', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Array const exports with spread', () => {
+  test('Array const exports with spread', () => {
     const sc = `
       const foo = [1,2,3]
       export const bar = [...foo, 4]
@@ -609,7 +610,7 @@ describe('Variable Exports', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Function with primitive return type', () => {
+  test('Function with primitive return type', () => {
     const sc = `
       function test(arg1: string): string {
         return ""
@@ -625,7 +626,7 @@ describe('Variable Exports', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Function with object return type', () => {
+  test('Function with object return type', () => {
     const sc = `
       interface Bar {
         foo: string
@@ -649,7 +650,7 @@ describe('Variable Exports', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Arrow function with object return type', () => {
+  test('Arrow function with object return type', () => {
     const sc = `
       interface Bar {
         foo: string;
@@ -672,7 +673,7 @@ describe('Variable Exports', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Aliased variable', () => {
+  test('Aliased variable', () => {
     const sc = `
       interface Bar {
         foo: string
@@ -698,7 +699,7 @@ describe('Variable Exports', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('gets named tuple members', () => {
+  test('gets named tuple members', () => {
     const sc = `
       export type Foo = [argName: string, argValue: string];
     `;
@@ -710,7 +711,7 @@ describe('Variable Exports', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Arrow function with parameters', () => {
+  test('Arrow function with parameters', () => {
     const sc = `
       interface Bar {
         foo: string
@@ -732,7 +733,7 @@ describe('Variable Exports', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('named tuples in generics', () => {
+  test('named tuples in generics', () => {
     const sc = `
       type Foo<T> = T;
       export type Bar = Foo<[argName: string, argValue: string]>;
@@ -745,7 +746,7 @@ describe('Variable Exports', () => {
     expect(XLR).toMatchSnapshot();
   });
 
-  it('Aliased Arrow function exports its own name', () => {
+  test('Aliased Arrow function exports its own name', () => {
     const sc = `
       interface Bar {
         foo: string
