@@ -1,13 +1,23 @@
-import fg from 'fast-glob';
 import chalk from 'chalk';
 import fse from 'fs-extra'; // fse rather than fs makes unit testing easier with mocking
 import Table from 'easy-table';
 import child_process from 'child_process';
 import { Flags } from '@oclif/core';
 import { BaseCommand } from '../../utils/base-command';
+import { globSync } from 'glob';
 
 interface DependencyMap {
   [dependencyVersion: string]: string[];
+}
+
+export function doSomething() {
+  // console.log("sync outside run")
+  // let packageJsons = globSync(
+  //   '**/node_modules/{@player-ui,@player-tools}/*/package.json'
+  // );
+  // console.log("sync outside run not throwing error")
+  // console.log(packageJsons)
+  // return packageJsons
 }
 
 /** A command to get @player/@web-player/@player-language dependency versions and issue warnings/recommendations based on them */
@@ -116,8 +126,8 @@ export default class DependencyVersionsCheck extends BaseCommand {
       'Inspecting the @player/@web-player/@player-language dependencies in the current repository...'
     );
 
-    let packageJsons = fg.sync(
-      '**/node_modules/{@player,@player-language,@web-player}/*/package.json'
+    let packageJsons = globSync(
+      '**/node_modules/{@player-ui,@player-tools}/*/package.json'
     );
 
     if (ignore) {

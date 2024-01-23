@@ -27,6 +27,7 @@ BUILD_DATA = [
     "@npm//cross-fetch",
     "@npm//easy-table",
     "@npm//elegant-spinner",
+    "@npm//glob",
     "@npm//figures",
     "@npm//globby",
     "@npm//log-symbols",
