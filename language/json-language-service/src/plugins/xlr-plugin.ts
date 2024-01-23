@@ -55,7 +55,7 @@ function createValidationVisitor(
         ctx.addViolation({
           node: assetNode,
           message: `Warning - Asset Type ${assetNode.assetType?.valueNode?.value} was not loaded into Validator definitions`,
-          severity: DiagnosticSeverity.Warning,
+          severity: DiagnosticSeverity.Error,
         });
         expectedType = 'Asset';
       }
@@ -82,7 +82,7 @@ function createValidationVisitor(
         ctx.addViolation({
           node: viewNode,
           message: `Warning - View Type ${viewNode.viewType?.valueNode?.value} was not loaded into Validator definitions`,
-          severity: DiagnosticSeverity.Warning,
+          severity: DiagnosticSeverity.Error,
         });
         expectedType = 'View';
       }

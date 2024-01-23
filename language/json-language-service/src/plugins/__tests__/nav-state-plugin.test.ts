@@ -95,6 +95,37 @@ describe('nav-state-plugin', () => {
     );
     const diags = await service.validateTextDocument(testDocument);
 
-    expect(diags?.filter((d) => d.severity !== 2)).toHaveLength(0);
+    expect(diags?.filter((d) => d.severity !== 2)).toMatchInlineSnapshot(`
+      Array [
+        Object {
+          "message": "Warning - View Type view was not loaded into Validator definitions",
+          "range": Object {
+            "end": Object {
+              "character": 5,
+              "line": 6,
+            },
+            "start": Object {
+              "character": 4,
+              "line": 3,
+            },
+          },
+          "severity": 1,
+        },
+        Object {
+          "message": "Warning - View Type view was not loaded into Validator definitions",
+          "range": Object {
+            "end": Object {
+              "character": 5,
+              "line": 10,
+            },
+            "start": Object {
+              "character": 4,
+              "line": 7,
+            },
+          },
+          "severity": 1,
+        },
+      ]
+    `);
   });
 });
