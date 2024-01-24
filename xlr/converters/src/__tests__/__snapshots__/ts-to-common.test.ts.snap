@@ -1,5 +1,115 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Complex Types Exclude with objects 1`] = `
+Array [
+  Object {
+    "genericTokens": undefined,
+    "name": "foo",
+    "or": Array [
+      Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "type": Object {
+            "node": Object {
+              "const": "b",
+              "title": "foo.type",
+              "type": "string",
+            },
+            "required": true,
+          },
+          "value": Object {
+            "node": Object {
+              "title": "foo.value",
+              "type": "number",
+            },
+            "required": true,
+          },
+        },
+        "title": "foo",
+        "type": "object",
+      },
+      Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "type": Object {
+            "node": Object {
+              "const": "c",
+              "title": "foo.type",
+              "type": "string",
+            },
+            "required": true,
+          },
+          "value": Object {
+            "node": Object {
+              "title": "foo.value",
+              "type": "boolean",
+            },
+            "required": true,
+          },
+        },
+        "title": "foo",
+        "type": "object",
+      },
+    ],
+    "source": "filename.ts",
+    "title": "bar",
+    "type": "or",
+  },
+]
+`;
+
+exports[`Complex Types Exclude with objects collapses single remaining element 1`] = `
+Array [
+  Object {
+    "additionalProperties": false,
+    "genericTokens": undefined,
+    "name": "bar",
+    "properties": Object {
+      "type": Object {
+        "node": Object {
+          "const": "b",
+          "title": "foo.type",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "value": Object {
+        "node": Object {
+          "title": "foo.value",
+          "type": "number",
+        },
+        "required": true,
+      },
+    },
+    "source": "filename.ts",
+    "title": "bar",
+    "type": "object",
+  },
+]
+`;
+
+exports[`Complex Types Exclude with primitives 1`] = `
+Array [
+  Object {
+    "genericTokens": undefined,
+    "name": "fooType",
+    "or": Array [
+      Object {
+        "const": "b",
+        "type": "string",
+      },
+      Object {
+        "const": "c",
+        "type": "string",
+      },
+    ],
+    "source": "filename.ts",
+    "title": "bar",
+    "type": "or",
+  },
+]
+`;
+
 exports[`Complex Types Omit 1`] = `
 Array [
   Object {

@@ -5,8 +5,9 @@ import type {
   NodeType,
   ObjectProperty,
   ObjectType,
+  OrType,
 } from '@player-tools/xlr';
-import { resolveConditional } from './validation-helpers';
+import { computeExtends, resolveConditional } from './validation-helpers';
 import { isGenericNodeType } from './type-checks';
 
 /**
@@ -358,4 +359,27 @@ export function applyPartialOrRequiredToNodeType(
       baseObject.type
     }`
   );
+}
+
+/** Applies the TS `Exclude` type to a union */
+export function applyExcludeToNodeType(
+  baseObject: OrType,
+  filters: NodeType | OrType
+): NodeType {
+  const remainingMembers = baseObject.or.filter((type) => {
+    if (filters.type === 'or') {
+      return !filters.or.some((filter) => !computeExtends(type, filter));
+    }
+
+    return !computeExtends(type, filters);
+  });
+
+  if (remainingMembers.length === 1) {
+    return remainingMembers[0];
+  }
+
+  return {
+    ...baseObject,
+    or: remainingMembers,
+  };
 }

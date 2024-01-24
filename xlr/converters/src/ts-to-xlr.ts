@@ -13,6 +13,7 @@ import type {
   ConditionalType,
   RefType,
   ArrayType,
+  OrType,
 } from '@player-tools/xlr';
 import type {
   TopLevelDeclaration,
@@ -37,16 +38,17 @@ import {
   isTopLevelNode,
   isTopLevelDeclaration,
   resolveConditional,
+  applyExcludeToNodeType,
 } from '@player-tools/xlr-utils';
 import { ConversionError } from './types';
+
+export type MappedType = 'Pick' | 'Omit' | 'Required' | 'Partial' | 'Exclude';
 
 /**
  * Returns if the string is one of TypeScript's MappedTypes
  */
-export function isMappedTypeNode(
-  x: string
-): x is 'Pick' | 'Omit' | 'Required' | 'Partial' {
-  return ['Pick', 'Omit', 'Required', 'Partial'].includes(x);
+export function isMappedTypeNode(x: string): x is MappedType {
+  return ['Pick', 'Omit', 'Required', 'Partial', 'Exclude'].includes(x);
 }
 
 export interface TSConverterContext {
@@ -1024,21 +1026,33 @@ export class TsConverter {
   }
 
   private makeMappedType(
-    refName: 'Pick' | 'Omit' | 'Partial' | 'Required',
+    refName: MappedType,
     node: ts.NodeWithTypeArguments
   ): ObjectType {
-    if (refName === 'Pick' || refName === 'Omit') {
+    if (refName === 'Pick' || refName === 'Omit' || refName === 'Exclude') {
       const baseType = node.typeArguments?.[0] as ts.TypeNode;
       const modifiers = node.typeArguments?.[1] as ts.TypeNode;
 
-      const baseObj = this.convertTsTypeNode(baseType) as NamedType<ObjectType>;
-      const modifierNames = getStringLiteralsFromUnion(modifiers);
+      const baseObj = this.convertTsTypeNode(baseType);
 
-      return applyPickOrOmitToNodeType(
-        baseObj,
-        refName,
-        modifierNames
-      ) as ObjectType;
+      if (refName === 'Exclude') {
+        if (baseObj.type === 'or') {
+          return applyExcludeToNodeType(
+            baseObj as OrType,
+            this.convertTsTypeNode(modifiers)
+          ) as ObjectType;
+        }
+
+        throw new ConversionError(
+          "Error: Can't solve Exclude type on non-union node"
+        );
+      } else {
+        return applyPickOrOmitToNodeType(
+          baseObj,
+          refName,
+          getStringLiteralsFromUnion(modifiers)
+        ) as ObjectType;
+      }
     }
 
     if (refName === 'Partial' || refName === 'Required') {

@@ -1,3 +1,5 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 import type { Node } from 'jsonc-parser';
 import type {
   ConditionalType,
@@ -55,34 +57,61 @@ export function isNode(obj: Node | string | number | boolean): obj is Node {
 }
 
 /**
+ * Computes if the first arg extends the second arg
+ */
+export function computeExtends(a: NodeType, b: NodeType): boolean {
+  // special case for any/unknown being functionally the same
+  if (
+    (a.type === 'any' || a.type === 'unknown') &&
+    (b.type === 'any' || b.type === 'unknown')
+  ) {
+    return true;
+  }
+
+  // special case for null/undefined being functionally the same
+  if (
+    (a.type === 'null' || a.type === 'undefined') &&
+    (b.type === 'null' || b.type === 'undefined')
+  ) {
+    return true;
+  }
+
+  if (a.type === b.type) {
+    if (isPrimitiveTypeNode(a) && isPrimitiveTypeNode(b)) {
+      if (a.const && b.const) {
+        if (a.const === b.const) {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    }
+
+    if (a.type === 'object' && b.type === 'object') {
+      for (const property in b.properties) {
+        const propertyNode = b.properties[property];
+        if (
+          !a.properties[property] ||
+          !computeExtends(a.properties[property].node, propertyNode.node)
+        ) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/**
  * Attempts to resolve a conditional type
  */
 export function resolveConditional(conditional: ConditionalType): NodeType {
   const { left, right } = conditional.check;
   if (isPrimitiveTypeNode(left) && isPrimitiveTypeNode(right)) {
-    let conditionalResult = conditional.value.false;
-
-    if (
-      (left.type === 'any' || left.type === 'unknown') &&
-      (right.type === 'any' || right.type === 'unknown')
-    ) {
-      // special case for any/unknown being functionally the same
-      conditionalResult = conditional.value.true;
-    } else if (
-      (left.type === 'null' || left.type === 'undefined') &&
-      (right.type === 'null' || right.type === 'undefined')
-    ) {
-      // special case for null/undefined being functionally the same
-      conditionalResult = conditional.value.true;
-    } else if (left.type === right.type) {
-      if (left.const && right.const) {
-        if (left.const === right.const) {
-          conditionalResult = conditional.value.true;
-        }
-      } else {
-        conditionalResult = conditional.value.true;
-      }
-    }
+    const conditionalResult = conditional.value.false;
 
     // Compose first level generics here since `conditionalResult` won't have them
     if (isGenericNodeType(conditional)) {
@@ -161,8 +190,8 @@ export function computeEffectiveObject(
   operand: ObjectType,
   errorOnOverlap = true
 ): ObjectType {
-  const baseObjectName = base.name ?? 'object literal';
-  const operandObjectName = operand.name ?? 'object literal';
+  const baseObjectName = base.name ?? base.title ?? 'object literal';
+  const operandObjectName = operand.name ?? operand.title ?? 'object literal';
   const newObject = {
     ...base,
     name: `${baseObjectName} & ${operandObjectName}`,
@@ -190,10 +219,16 @@ export function computeEffectiveObject(
   }
 
   if (newObject.additionalProperties && operand.additionalProperties) {
-    newObject.additionalProperties = {
-      type: 'and',
-      and: [newObject.additionalProperties, operand.additionalProperties],
-    };
+    if (
+      !isPrimitiveTypeNode(newObject.additionalProperties) ||
+      !isPrimitiveTypeNode(operand.additionalProperties) ||
+      newObject.additionalProperties.type !== operand.additionalProperties.type
+    ) {
+      newObject.additionalProperties = {
+        type: 'and',
+        and: [newObject.additionalProperties, operand.additionalProperties],
+      };
+    }
   } else if (operand.additionalProperties) {
     newObject.additionalProperties = operand.additionalProperties;
   }

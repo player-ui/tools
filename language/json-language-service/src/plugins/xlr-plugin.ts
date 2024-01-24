@@ -1,4 +1,4 @@
-import type { NodeType, ObjectType } from '@player-tools/xlr';
+import type { NodeType } from '@player-tools/xlr';
 import type { XLRSDK } from '@player-tools/xlr-sdk';
 import type { CompletionItem } from 'vscode-languageserver-types';
 import {
@@ -55,7 +55,7 @@ function createValidationVisitor(
         ctx.addViolation({
           node: assetNode,
           message: `Warning - Asset Type ${assetNode.assetType?.valueNode?.value} was not loaded into Validator definitions`,
-          severity: DiagnosticSeverity.Warning,
+          severity: DiagnosticSeverity.Error,
         });
         expectedType = 'Asset';
       }
@@ -82,7 +82,7 @@ function createValidationVisitor(
         ctx.addViolation({
           node: viewNode,
           message: `Warning - View Type ${viewNode.viewType?.valueNode?.value} was not loaded into Validator definitions`,
-          severity: DiagnosticSeverity.Warning,
+          severity: DiagnosticSeverity.Error,
         });
         expectedType = 'View';
       }

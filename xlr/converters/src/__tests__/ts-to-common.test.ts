@@ -343,6 +343,50 @@ describe('Complex Types', () => {
 
     expect(XLR).toMatchSnapshot();
   });
+
+  it('Exclude with primitives', () => {
+    const sc = `
+    const foo = ['a', 'b', 'c'] as const;
+
+    type fooType = typeof foo[number];
+    
+    export type bar = Exclude<fooType, 'a'>;
+    `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+
+  it('Exclude with objects', () => {
+    const sc = `
+    type foo = { type: 'a'; value: string } | { type: 'b'; value: number } | { type: 'c'; value: boolean };
+
+    export type bar = Exclude<foo, { type: 'a' }>;
+    `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
+
+  it('Exclude with objects collapses single remaining element', () => {
+    const sc = `
+    type foo = { type: 'a'; value: string } | { type: 'b'; value: number };
+
+    export type bar = Exclude<foo, { type: 'a' }>;
+    `;
+
+    const { sf, tc } = setupTestEnv(sc);
+    const converter = new TsConverter(tc);
+    const XLR = converter.convertSourceFile(sf).data.types;
+
+    expect(XLR).toMatchSnapshot();
+  });
 });
 
 describe('String Templates', () => {
