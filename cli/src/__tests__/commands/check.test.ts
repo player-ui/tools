@@ -298,206 +298,617 @@ test('should log for 0 top-level version, 0 nested version', async () => {
   `);
 });
 
+test('should log for 1 top-level version, 1 nested version, with mismatch', async () => {
+  jest
+    .spyOn(globApi, 'globSync')
+    .mockImplementation((_input: string | string[]) => {
+      return [
+        ...mocktopLevelDependencies.single,
+        ...mocknestedDependencies.single,
+      ];
+    });
+  jest
+    .spyOn(fse, 'readFileSync')
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]));
 
-// describe('invalid @player/@web-player/@player-language versioning', () => {
-// it('should log for 1 top-level version, 1 nested version, with mismatch', async () => {
-//   jest
-//     .spyOn(fg, 'sync')
-//     .mockReturnValueOnce([
-//       ...topLevelDependencies.single,
-//       ...nestedDependencies.single,
-//     ]);
-//   jest
-//     .spyOn(fse, 'readFileSync')
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]));
-//   const results = await runCommand([]);
-//   expect(results.stdout).toContain(
-//     '- Mismatch between the top-level and the nested @player/@web-player/@player-language dependency.'
-//   );
-// });
-// it('should log for multiple top-level versions, multiple nested versions', async () => {
-//   jest
-//     .spyOn(fg, 'sync')
-//     .mockReturnValueOnce([
-//       ...topLevelDependencies.many,
-//       ...nestedDependencies.many,
-//     ]);
-//   jest
-//     .spyOn(fse, 'readFileSync') // 14 mockReturnValues
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[3]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[4]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[3]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[4]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[3]));
-//   const results = await runCommand([]);
-//   expect(results.stdout).toContain(
-//     '- There are multiple top-level @player/@web-player/@player-language dependency versions.'
-//   );
-//   expect(results.stdout).toContain(
-//     '- There are multiple nested @player/@web-player/@player-language dependency versions.'
-//   );
-//   expect(results.stdout).toContain(
-//     '- Resolve all top-level @player/@web-player/@player-language dependencies to the same version.'
-//   );
-// });
-// it('should log for 0 top-level version, multiple nested versions', async () => {
-//   jest
-//     .spyOn(fg, 'sync')
-//     .mockReturnValueOnce([
-//       ...topLevelDependencies.zero,
-//       ...nestedDependencies.many,
-//     ]);
-//   jest
-//     .spyOn(fse, 'readFileSync') // 7 mockReturnValues
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[3]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[4]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]));
-//   const results = await runCommand([]);
-//   expect(results.stdout).toContain(
-//     '- There are multiple nested @player/@web-player/@player-language dependency versions.'
-//   );
-//   expect(results.stdout).toContain(
-//     `- The highest @player/@web-player/@player-language version is ${arbitraryPlayerVersions[4].version} at the nested level.`
-//   );
-// });
-// it('should log for 1 top-level version, multiple nested versions, top-level version is highest', async () => {
-//   jest
-//     .spyOn(fg, 'sync')
-//     .mockReturnValueOnce([
-//       ...topLevelDependencies.single,
-//       ...nestedDependencies.many,
-//     ]);
-//   jest
-//     .spyOn(fse, 'readFileSync') // 8 mockReturnValues
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[4])) // 1 top-level
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[3]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0])) // nested-level highest
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]));
-//   const results = await runCommand([]);
-//   expect(results.stdout).toContain(
-//     '- There are multiple nested @player/@web-player/@player-language dependency versions.'
-//   );
-//   expect(results.stdout).toContain(
-//     `- The highest @player/@web-player/@player-language version is ${arbitraryPlayerVersions[4].version} at the top level.`
-//   );
-// });
-// it('should log for 1 top-level version, multiple nested versions, nested-level version is highest', async () => {
-//   jest
-//     .spyOn(fg, 'sync')
-//     .mockReturnValueOnce([
-//       ...topLevelDependencies.single,
-//       ...nestedDependencies.many,
-//     ]);
-//   jest
-//     .spyOn(fse, 'readFileSync') // 8 mockReturnValues
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[3]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[4]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]));
-//   const results = await runCommand([]);
-//   expect(results.stdout).toContain(
-//     '- There are multiple nested @player/@web-player/@player-language dependency versions.'
-//   );
-//   expect(results.stdout).toContain(
-//     `- The highest @player/@web-player/@player-language version is ${arbitraryPlayerVersions[4].version} at the nested level.`
-//   );
-//   expect(results.stdout).toContain(
-//     '- Also, please add resolutions or bump the versions for nested @player/@web-player/@player-language dependencies'
-//   );
-// });
-// it('should log for multiple top-level versions, 0 nested version', async () => {
-//   jest
-//     .spyOn(fg, 'sync')
-//     .mockReturnValueOnce([
-//       ...topLevelDependencies.many,
-//       ...nestedDependencies.zero,
-//     ]);
-//   jest
-//     .spyOn(fse, 'readFileSync') // 7 mockReturnValues
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[3]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[4]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]));
-//   const results = await runCommand([]);
-//   expect(results.stdout).toContain(
-//     '- There are multiple top-level @player/@web-player/@player-language dependency versions.'
-//   );
-//   expect(results.stdout).toContain(
-//     `- Resolve all top-level @player/@web-player/@player-language dependencies to the same version.`
-//   );
-// });
-// it('should log for multiple top-level versions, 1 nested version, top-level version is highest', async () => {
-//   jest
-//     .spyOn(fg, 'sync')
-//     .mockReturnValueOnce([
-//       ...topLevelDependencies.many,
-//       ...nestedDependencies.single,
-//     ]);
-//   jest
-//     .spyOn(fse, 'readFileSync') // 8 mockReturnValues
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[3]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[4]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2])); // nested version
-//   const results = await runCommand([]);
-//   expect(results.stdout).toContain(
-//     '- There are multiple top-level @player/@web-player/@player-language dependency versions.'
-//   );
-//   expect(results.stdout).toContain(
-//     `- Resolve all top-level @player/@web-player/@player-language dependencies to the same version.`
-//   );
-// });
-// it('should log for multiple top-level versions, 1 nested version, nested-level version is highest', async () => {
-//   jest
-//     .spyOn(fg, 'sync')
-//     .mockReturnValueOnce([
-//       ...topLevelDependencies.many,
-//       ...nestedDependencies.single,
-//     ]);
-//   jest
-//     .spyOn(fse, 'readFileSync') // 8 mockReturnValues
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[3]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]))
-//     .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[4])); // nested version
-//   const results = await runCommand([]);
-//   expect(results.stdout).toContain(
-//     '- There are multiple top-level @player/@web-player/@player-language dependency versions.'
-//   );
-//   expect(results.stdout).toContain(
-//     `- Resolve all top-level @player/@web-player/@player-language dependencies to the same version.`
-//   );
-// });
+  await runCommand([]);
+  expect(logSpy.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        "Consider using the --help flag for more information about this command.",
+      ],
+      Array [
+        "For more comprehensive logging, consider adding the -v flag.",
+      ],
+      Array [
+        "For logging with full path to the dependency rather than with \\"➡\\", consider adding the -p flag.",
+      ],
+      Array [
+        "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
+      ],
+      Array [
+        "Inspecting the @player/@web-player/@player-language dependencies in the current repository...",
+      ],
+      Array [
+        "
+    TOP-LEVEL @player/@web-player/@player-language DEPENDENCIES:",
+      ],
+      Array [
+        "Version  How to find dependency       
+    -------  -----------------------------
+    3.11.0    ➡ @player-ui/binding-grammar
+    ",
+      ],
+      Array [
+        "
+    NESTED @player/@web-player/@player-language DEPENDENCIES:",
+      ],
+      Array [
+        "Version  How to find dependency                   
+    -------  -----------------------------------------
+    3.30.1    ➡ @player-ui/core/ ➡ @player/expressions
+    ",
+      ],
+      Array [
+        "[41m[37mWARNINGS:[39m[49m",
+      ],
+      Array [
+        "- Mismatch between the top-level and the nested @player/@web-player/@player-language dependency.",
+      ],
+      Array [
+        "[42mRECOMMENDATIONS:[49m",
+      ],
+      Array [
+        "- The highest @player/@web-player/@player-language version is 3.30.1 at the nested level. Please bump the top-level version, 3.11.0, to 3.30.1.",
+      ],
+    ]
+  `);
+});
+
+test('should log for multiple top-level versions, multiple nested versions', async () => {
+  jest
+    .spyOn(globApi, 'globSync')
+    .mockImplementation((_input: string | string[]) => {
+      return [...mocktopLevelDependencies.many, ...mocknestedDependencies.many];
+    });
+  jest
+    .spyOn(fse, 'readFileSync') // 14 mockReturnValues
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[3]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[4]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[3]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[4]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[3]));
+
+  await runCommand([]);
+  expect(logSpy.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        "Consider using the --help flag for more information about this command.",
+      ],
+      Array [
+        "For more comprehensive logging, consider adding the -v flag.",
+      ],
+      Array [
+        "For logging with full path to the dependency rather than with \\"➡\\", consider adding the -p flag.",
+      ],
+      Array [
+        "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
+      ],
+      Array [
+        "Inspecting the @player/@web-player/@player-language dependencies in the current repository...",
+      ],
+      Array [
+        "
+    TOP-LEVEL @player/@web-player/@player-language DEPENDENCIES:",
+      ],
+      Array [
+        "Version  How to find dependency         
+    -------  -------------------------------
+    3.9.6     ➡ @player/types               
+    3.11.0    ➡ @player/binding-grammar     
+              ➡ @web-player/asset-provider  
+    3.30.1    ➡ @web-player/metrics         
+              ➡ @web-player/shared-constants
+    4.20.5    ➡ @player/data                
+    4.37.3    ➡ @player/logger              
+    ",
+      ],
+      Array [
+        "
+    NESTED @player/@web-player/@player-language DEPENDENCIES:",
+      ],
+      Array [
+        "Version  How to find dependency                           
+    -------  -------------------------------------------------
+    3.9.6     ➡ @player/core/ ➡ @player/expressions           
+              ➡ @web-player/player/ ➡ @player/metrics-plugin  
+    3.11.0    ➡ @cg-player/point-of-need/ ➡ @web-player/link  
+    3.30.1    ➡ @web-player/base-assets/ ➡ @player/data       
+    4.20.5    ➡ @cg-player/image/ ➡ @web-player/link          
+              ➡ @web-player/text/ ➡ @web-player/utils         
+    4.37.3    ➡ @cg-player/image-capture/ ➡ @web-player/beacon
+    ",
+      ],
+      Array [
+        "[41m[37mWARNINGS:[39m[49m",
+      ],
+      Array [
+        "- There are multiple top-level @player/@web-player/@player-language dependency versions.",
+      ],
+      Array [
+        "- There are multiple nested @player/@web-player/@player-language dependency versions.",
+      ],
+      Array [
+        "[42mRECOMMENDATIONS:[49m",
+      ],
+      Array [
+        "- Resolve all top-level @player/@web-player/@player-language dependencies to the same version. Consider updating them to the latest player version you have, 4.37.3. When all top-level @player/@web-player/@player-language dependencies are resolved, run the current CLI again to obtain recommendations about nested @player/@web-player/@player-language dependencies.",
+      ],
+    ]
+  `);
+});
+
+test('should log for 0 top-level version, multiple nested versions', async () => {
+  jest
+    .spyOn(globApi, 'globSync')
+    .mockImplementation((_input: string | string[]) => {
+      return [...mocktopLevelDependencies.zero, ...mocknestedDependencies.many];
+    });
+  jest
+    .spyOn(fse, 'readFileSync') // 7 mockReturnValues
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[3]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[4]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]));
+
+  await runCommand([]);
+  expect(logSpy.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        "Consider using the --help flag for more information about this command.",
+      ],
+      Array [
+        "For more comprehensive logging, consider adding the -v flag.",
+      ],
+      Array [
+        "For logging with full path to the dependency rather than with \\"➡\\", consider adding the -p flag.",
+      ],
+      Array [
+        "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
+      ],
+      Array [
+        "Inspecting the @player/@web-player/@player-language dependencies in the current repository...",
+      ],
+      Array [
+        "
+    NESTED @player/@web-player/@player-language DEPENDENCIES:",
+      ],
+      Array [
+        "Version  How to find dependency                           
+    -------  -------------------------------------------------
+    3.9.6     ➡ @cg-player/image-capture/ ➡ @web-player/beacon
+    3.11.0    ➡ @player/core/ ➡ @player/expressions           
+              ➡ @web-player/player/ ➡ @player/metrics-plugin  
+    3.30.1    ➡ @cg-player/image/ ➡ @web-player/link          
+              ➡ @web-player/text/ ➡ @web-player/utils         
+    4.20.5    ➡ @cg-player/point-of-need/ ➡ @web-player/link  
+    4.37.3    ➡ @web-player/base-assets/ ➡ @player/data       
+    ",
+      ],
+      Array [
+        "[41m[37mWARNINGS:[39m[49m",
+      ],
+      Array [
+        "- There are multiple nested @player/@web-player/@player-language dependency versions.",
+      ],
+      Array [
+        "[42mRECOMMENDATIONS:[49m",
+      ],
+      Array [
+        "- The highest @player/@web-player/@player-language version is 4.37.3 at the nested level. Please add resolutions for all nested @player/@web-player/@player-language versions to this version or bump the nested versions to it.",
+      ],
+    ]
+  `);
+});
+
+test('should log for 1 top-level version, multiple nested versions, top-level version is highest', async () => {
+  jest
+    .spyOn(globApi, 'globSync')
+    .mockImplementation((_input: string | string[]) => {
+      return [
+        ...mocktopLevelDependencies.single,
+        ...mocknestedDependencies.many,
+      ];
+    });
+  jest
+    .spyOn(fse, 'readFileSync') // 8 mockReturnValues
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[4])) // 1 top-level
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[3]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0])) // nested-level highest
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]));
+  await runCommand([]);
+  expect(logSpy.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        "Consider using the --help flag for more information about this command.",
+      ],
+      Array [
+        "For more comprehensive logging, consider adding the -v flag.",
+      ],
+      Array [
+        "For logging with full path to the dependency rather than with \\"➡\\", consider adding the -p flag.",
+      ],
+      Array [
+        "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
+      ],
+      Array [
+        "Inspecting the @player/@web-player/@player-language dependencies in the current repository...",
+      ],
+      Array [
+        "
+    TOP-LEVEL @player/@web-player/@player-language DEPENDENCIES:",
+      ],
+      Array [
+        "Version  How to find dependency       
+    -------  -----------------------------
+    4.37.3    ➡ @player-ui/binding-grammar
+    ",
+      ],
+      Array [
+        "
+    NESTED @player/@web-player/@player-language DEPENDENCIES:",
+      ],
+      Array [
+        "Version  How to find dependency                           
+    -------  -------------------------------------------------
+    3.9.6     ➡ @cg-player/image-capture/ ➡ @web-player/beacon
+              ➡ @web-player/text/ ➡ @web-player/utils         
+    3.11.0    ➡ @player/core/ ➡ @player/expressions           
+              ➡ @web-player/base-assets/ ➡ @player/data       
+    3.30.1    ➡ @cg-player/image/ ➡ @web-player/link          
+              ➡ @web-player/player/ ➡ @player/metrics-plugin  
+    4.20.5    ➡ @cg-player/point-of-need/ ➡ @web-player/link  
+    ",
+      ],
+      Array [
+        "[41m[37mWARNINGS:[39m[49m",
+      ],
+      Array [
+        "- There are multiple nested @player/@web-player/@player-language dependency versions.",
+      ],
+      Array [
+        "[42mRECOMMENDATIONS:[49m",
+      ],
+      Array [
+        "- The highest @player/@web-player/@player-language version is 4.37.3 at the top level. Please add resolutions for all nested @player/@web-player/@player-language versions to this version or bump the nested versions to it.",
+      ],
+    ]
+  `);
+});
+
+test('should log for 1 top-level version, multiple nested versions, nested-level version is highest', async () => {
+  jest
+    .spyOn(globApi, 'globSync')
+    .mockImplementation((_input: string | string[]) => {
+      return [
+        ...mocktopLevelDependencies.single,
+        ...mocknestedDependencies.many,
+      ];
+    });
+  jest
+    .spyOn(fse, 'readFileSync') // 8 mockReturnValues
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[3]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[4]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]));
+
+  await runCommand([]);
+  expect(logSpy.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        "Consider using the --help flag for more information about this command.",
+      ],
+      Array [
+        "For more comprehensive logging, consider adding the -v flag.",
+      ],
+      Array [
+        "For logging with full path to the dependency rather than with \\"➡\\", consider adding the -p flag.",
+      ],
+      Array [
+        "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
+      ],
+      Array [
+        "Inspecting the @player/@web-player/@player-language dependencies in the current repository...",
+      ],
+      Array [
+        "
+    TOP-LEVEL @player/@web-player/@player-language DEPENDENCIES:",
+      ],
+      Array [
+        "Version  How to find dependency       
+    -------  -----------------------------
+    3.11.0    ➡ @player-ui/binding-grammar
+    ",
+      ],
+      Array [
+        "
+    NESTED @player/@web-player/@player-language DEPENDENCIES:",
+      ],
+      Array [
+        "Version  How to find dependency                           
+    -------  -------------------------------------------------
+    3.9.6     ➡ @cg-player/image/ ➡ @web-player/link          
+              ➡ @web-player/text/ ➡ @web-player/utils         
+    3.11.0    ➡ @web-player/base-assets/ ➡ @player/data       
+    3.30.1    ➡ @player/core/ ➡ @player/expressions           
+              ➡ @web-player/player/ ➡ @player/metrics-plugin  
+    4.20.5    ➡ @cg-player/image-capture/ ➡ @web-player/beacon
+    4.37.3    ➡ @cg-player/point-of-need/ ➡ @web-player/link  
+    ",
+      ],
+      Array [
+        "[41m[37mWARNINGS:[39m[49m",
+      ],
+      Array [
+        "- There are multiple nested @player/@web-player/@player-language dependency versions.",
+      ],
+      Array [
+        "[42mRECOMMENDATIONS:[49m",
+      ],
+      Array [
+        "- The highest @player/@web-player/@player-language version is 4.37.3 at the nested level. Please bump the top-level version, 3.11.0, to 4.37.3.",
+      ],
+      Array [
+        "- Also, please add resolutions or bump the versions for nested @player/@web-player/@player-language dependencies whose version is not 4.37.3.",
+      ],
+    ]
+  `);
+});
+
+test('should log for multiple top-level versions, 0 nested version', async () => {
+  jest
+    .spyOn(globApi, 'globSync')
+    .mockImplementation((_input: string | string[]) => {
+      return [...mocktopLevelDependencies.many, ...mocknestedDependencies.zero];
+    });
+  jest
+    .spyOn(fse, 'readFileSync') // 7 mockReturnValues
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[3]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[4]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]));
+
+  await runCommand([]);
+  expect(logSpy.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        "Consider using the --help flag for more information about this command.",
+      ],
+      Array [
+        "For more comprehensive logging, consider adding the -v flag.",
+      ],
+      Array [
+        "For logging with full path to the dependency rather than with \\"➡\\", consider adding the -p flag.",
+      ],
+      Array [
+        "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
+      ],
+      Array [
+        "Inspecting the @player/@web-player/@player-language dependencies in the current repository...",
+      ],
+      Array [
+        "
+    TOP-LEVEL @player/@web-player/@player-language DEPENDENCIES:",
+      ],
+      Array [
+        "Version  How to find dependency         
+    -------  -------------------------------
+    3.9.6     ➡ @player/types               
+    3.11.0    ➡ @player/binding-grammar     
+              ➡ @web-player/asset-provider  
+    3.30.1    ➡ @web-player/metrics         
+              ➡ @web-player/shared-constants
+    4.20.5    ➡ @player/data                
+    4.37.3    ➡ @player/logger              
+    ",
+      ],
+      Array [
+        "[41m[37mWARNINGS:[39m[49m",
+      ],
+      Array [
+        "- There are multiple top-level @player/@web-player/@player-language dependency versions.",
+      ],
+      Array [
+        "[42mRECOMMENDATIONS:[49m",
+      ],
+      Array [
+        "- Resolve all top-level @player/@web-player/@player-language dependencies to the same version. Consider updating them to the latest player version you have, 4.37.3. When all top-level @player/@web-player/@player-language dependencies are resolved, run the current CLI again to obtain recommendations about nested @player/@web-player/@player-language dependencies.",
+      ],
+    ]
+  `);
+});
+
+test('should log for multiple top-level versions, 1 nested version, top-level version is highest', async () => {
+  jest
+    .spyOn(globApi, 'globSync')
+    .mockImplementation((_input: string | string[]) => {
+      return [
+        ...mocktopLevelDependencies.many,
+        ...mocknestedDependencies.single,
+      ];
+    });
+  jest
+    .spyOn(fse, 'readFileSync') // 8 mockReturnValues
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[3]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[4]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2])); // nested version
+
+  await runCommand([]);
+  expect(logSpy.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        "Consider using the --help flag for more information about this command.",
+      ],
+      Array [
+        "For more comprehensive logging, consider adding the -v flag.",
+      ],
+      Array [
+        "For logging with full path to the dependency rather than with \\"➡\\", consider adding the -p flag.",
+      ],
+      Array [
+        "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
+      ],
+      Array [
+        "Inspecting the @player/@web-player/@player-language dependencies in the current repository...",
+      ],
+      Array [
+        "
+    TOP-LEVEL @player/@web-player/@player-language DEPENDENCIES:",
+      ],
+      Array [
+        "Version  How to find dependency         
+    -------  -------------------------------
+    3.9.6     ➡ @player/types               
+    3.11.0    ➡ @player/binding-grammar     
+              ➡ @web-player/asset-provider  
+    3.30.1    ➡ @web-player/metrics         
+              ➡ @web-player/shared-constants
+    4.20.5    ➡ @player/data                
+    4.37.3    ➡ @player/logger              
+    ",
+      ],
+      Array [
+        "
+    NESTED @player/@web-player/@player-language DEPENDENCIES:",
+      ],
+      Array [
+        "Version  How to find dependency                   
+    -------  -----------------------------------------
+    3.9.6     ➡ @player-ui/core/ ➡ @player/expressions
+    ",
+      ],
+      Array [
+        "[41m[37mWARNINGS:[39m[49m",
+      ],
+      Array [
+        "- There are multiple top-level @player/@web-player/@player-language dependency versions.",
+      ],
+      Array [
+        "[42mRECOMMENDATIONS:[49m",
+      ],
+      Array [
+        "- Resolve all top-level @player/@web-player/@player-language dependencies to the same version. Consider updating them to the latest player version you have, 4.37.3. When all top-level @player/@web-player/@player-language dependencies are resolved, run the current CLI again to obtain recommendations about nested @player/@web-player/@player-language dependencies.",
+      ],
+    ]
+  `);
+});
+
+test('should log for multiple top-level versions, 1 nested version, nested-level version is highest', async () => {
+  jest
+    .spyOn(globApi, 'globSync')
+    .mockImplementation((_input: string | string[]) => {
+      return [
+        ...mocktopLevelDependencies.many,
+        ...mocknestedDependencies.single,
+      ];
+    });
+  jest
+    .spyOn(fse, 'readFileSync') // 8 mockReturnValues
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[3]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]))
+    .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[4])); // nested version
+
+  await runCommand([]);
+  expect(logSpy.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        "Consider using the --help flag for more information about this command.",
+      ],
+      Array [
+        "For more comprehensive logging, consider adding the -v flag.",
+      ],
+      Array [
+        "For logging with full path to the dependency rather than with \\"➡\\", consider adding the -p flag.",
+      ],
+      Array [
+        "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
+      ],
+      Array [
+        "Inspecting the @player/@web-player/@player-language dependencies in the current repository...",
+      ],
+      Array [
+        "
+    TOP-LEVEL @player/@web-player/@player-language DEPENDENCIES:",
+      ],
+      Array [
+        "Version  How to find dependency         
+    -------  -------------------------------
+    3.9.6     ➡ @player/types               
+              ➡ @web-player/shared-constants
+    3.11.0    ➡ @player/binding-grammar     
+              ➡ @player/logger              
+    3.30.1    ➡ @web-player/metrics         
+              ➡ @web-player/asset-provider  
+    4.20.5    ➡ @player/data                
+    ",
+      ],
+      Array [
+        "
+    NESTED @player/@web-player/@player-language DEPENDENCIES:",
+      ],
+      Array [
+        "Version  How to find dependency                   
+    -------  -----------------------------------------
+    4.37.3    ➡ @player-ui/core/ ➡ @player/expressions
+    ",
+      ],
+      Array [
+        "[41m[37mWARNINGS:[39m[49m",
+      ],
+      Array [
+        "- There are multiple top-level @player/@web-player/@player-language dependency versions.",
+      ],
+      Array [
+        "[42mRECOMMENDATIONS:[49m",
+      ],
+      Array [
+        "- Resolve all top-level @player/@web-player/@player-language dependencies to the same version. Consider updating them to the latest player version you have, 4.20.5. When all top-level @player/@web-player/@player-language dependencies are resolved, run the current CLI again to obtain recommendations about nested @player/@web-player/@player-language dependencies.",
+      ],
+    ]
+  `);
+});
+
