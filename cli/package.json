@@ -17,8 +17,5 @@
   },
   "plugins": [
     "@oclif/plugin-plugins"
-  ],
-  "volta": {
-    "node": "16.15.0"
-  }
+  ]
 }
