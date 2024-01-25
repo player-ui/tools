@@ -7,14 +7,8 @@ import type { BindingTemplateInstance } from '../string-templates';
 
 const bindingSymbol = Symbol('binding');
 
+/** Symbol to indicate that a schema node should be generated with a different name */
 export const SchemaTypeName = Symbol('Schema Rename');
-
-interface GeneratedDataType {
-  /** The SchemaNode that was generated */
-  node: SchemaNode;
-  /** How many times it has been generated */
-  count: number;
-}
 
 interface SchemaChildren {
   /** Object property that will be used to create the intermediate type */
@@ -24,10 +18,14 @@ interface SchemaChildren {
   child: object;
 }
 
-type SchemaNode = (Schema.DataType | Language.DataTypeRef) & {
-  /** Overwrite the name of the generated type */
-  [SchemaTypeName]?: string;
-};
+type SchemaNode = Schema.DataType | Language.DataTypeRef | object;
+
+interface GeneratedDataType {
+  /** The SchemaNode that was generated */
+  node: SchemaNode;
+  /** How many times it has been generated */
+  count: number;
+}
 
 /**
  * Type Guard for the `Schema.DataType` and `Language.DataTypeRef` type
@@ -131,6 +129,8 @@ export class SchemaGenerator {
       child = subType;
     }
 
+    this.children.push({ name: intermediateType.type, child });
+
     if (this.generatedDataTypes.has(intermediateType.type)) {
       const generatedType = this.generatedDataTypes.get(
         intermediateType.type
@@ -165,16 +165,16 @@ export class SchemaGenerator {
   /**
    * Make an intermediate `Schema.DataType` object given a name
    */
-  private makePlaceholderType = (typeName: string): Schema.DataType => {
+  private makePlaceholderType = (typeName: String): Schema.DataType => {
     return {
       type: `${typeName}Type`,
     };
   };
 
   /**
-   * Make an intermediate `Schema.DataType` object with array support given a name
+   * Make an intermediate `Schema.DataType` object with multicopy suport given a name
    */
-  private makePlaceholderArrayType(typeName: string): Schema.DataType {
+  private makePlaceholderArrayType(typeName: String): Schema.DataType {
     return {
       type: `${typeName}Type`,
       isArray: true,
@@ -194,13 +194,15 @@ export type MakeBindingRefable<T> = {
     : T[P] extends unknown[]
     ? T[P]
     : MakeBindingRefable<T[P]>;
-} & BindingTemplateInstance;
+} &
+  BindingTemplateInstance;
 
 /**
  * Adds bindings to an object so that the object can be directly used in JSX
  */
 export function makeBindingsForObject<Type>(
   obj: Type,
+
   arrayAccessorKeys = ['_index_']
 ): MakeBindingRefable<Type> {
   /** Proxy to track binding callbacks */
@@ -243,7 +245,7 @@ export function makeBindingsForObject<Type>(
           return new Proxy(target[key], accessor(paths.concat([key])));
         }
 
-        const createdInstance = bindingMap.get(target) as any;
+        const createdInstance = bindingMap.get(target);
         return createdInstance?.[key];
       },
     };
