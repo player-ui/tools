@@ -11,20 +11,18 @@ test('treats jsx as view', async () => {
       <property name="foo">bar</property>
     </object>
   );
-  expect(result).toBeDefined();
-  expect(result?.value).toStrictEqual({
+  expect(result.value).toStrictEqual({
     foo: 'bar',
   });
 });
 
-test('should treat schema type  objects as schema', async () => {
+test('should treat schema type objects as schema', async () => {
   const compiler = new DSLCompiler();
   const result = await compiler.serialize({
     foo: { bar: { type: 'StringType' } },
   });
 
-  expect(result).toBeDefined();
-  expect(result?.value).toStrictEqual({
+  expect(result.value).toStrictEqual({
     ROOT: {
       foo: {
         type: 'fooType',
@@ -53,14 +51,14 @@ test('expressions in navigation', async () => {
         state_type: `VIEW`,
         ref: 'test',
         transitions: {
-          '*': 'ShowView1Or2',
+          '*': 'ShowGatewayOrMCUI',
         },
       },
-      ShowView1Or2: {
+      ShowGatewayOrMCUI: {
         state_type: 'ACTION',
         exp: e`foo`,
         transitions: {
-          '*': 'VIEW_Other',
+          '*': 'VIEW_Gateway',
         },
       },
       END_back: {
@@ -74,8 +72,7 @@ test('expressions in navigation', async () => {
     },
   };
   const result = await compiler.serialize({ navigation });
-  expect(result).toBeDefined();
-  expect(result?.value).toStrictEqual({
+  expect(result.value).toStrictEqual({
     navigation: {
       BEGIN: 'Flow',
       onStart: `foo`,
@@ -89,14 +86,14 @@ test('expressions in navigation', async () => {
           state_type: `VIEW`,
           ref: 'test',
           transitions: {
-            '*': 'ShowView1Or2',
+            '*': 'ShowGatewayOrMCUI',
           },
         },
-        ShowView1Or2: {
+        ShowGatewayOrMCUI: {
           state_type: 'ACTION',
           exp: `foo`,
           transitions: {
-            '*': 'VIEW_Other',
+            '*': 'VIEW_Gateway',
           },
         },
         END_back: {
@@ -147,8 +144,7 @@ test('compiles schema when added to flow', async () => {
     },
   });
 
-  expect(result).toBeDefined();
-  expect(result?.value).toMatchInlineSnapshot(`
+  expect(result.value).toMatchInlineSnapshot(`
     Object {
       "id": "test-flow",
       "navigation": Object {
@@ -228,8 +224,7 @@ test('compiles mixed DSL and non-DSL views', async () => {
     },
   });
 
-  expect(result).toBeDefined();
-  expect(result?.value).toMatchInlineSnapshot(`
+  expect(result.value).toMatchInlineSnapshot(`
     Object {
       "id": "test-flow",
       "navigation": Object {

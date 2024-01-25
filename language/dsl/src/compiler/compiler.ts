@@ -42,9 +42,12 @@ const parseNavigationExpressions = (nav: Navigation): PlayerNav => {
     }
 
     if (typeof obj === 'object') {
-      return Object.fromEntries(
-        Object.entries(obj).map(([key, value]) => [key, convExp(value)])
-      );
+      const copy = { ...obj };
+      for (const [key, value] of Object.entries(copy)) {
+        copy[key] = convExp(value);
+      }
+
+      return copy;
     }
 
     return obj;
@@ -133,7 +136,7 @@ export class DSLCompiler {
   async serialize(
     value: unknown,
     context?: SerializeContext
-  ): Promise<CompilerReturn | undefined> {
+  ): Promise<CompilerReturn> {
     if (typeof value !== 'object' || value === null) {
       throw new Error('Unable to serialize non-object');
     }
@@ -144,9 +147,6 @@ export class DSLCompiler {
       this.schemaGenerator = new SchemaGenerator(this.logger);
       this.hooks.schemaGenerator.call(this.schemaGenerator);
     }
-
-    const schemaGenerator = new SchemaGenerator(this.logger);
-    this.hooks.schemaGenerator.call(schemaGenerator);
 
     if (type === 'view') {
       const { jsonValue, sourceMap } = await render(value, {
@@ -229,17 +229,15 @@ export class DSLCompiler {
             });
           }
         });
-
-        if ('schema' in copiedValue) {
-          copiedValue.schema = this.schemaGenerator.toSchema(
-            copiedValue.schema
-          );
-        }
-
-        copiedValue.navigation = parseNavigationExpressions(
-          copiedValue.navigation
-        );
       }
+
+      if ('schema' in copiedValue) {
+        copiedValue.schema = this.schemaGenerator.toSchema(copiedValue.schema);
+      }
+
+      copiedValue.navigation = parseNavigationExpressions(
+        copiedValue.navigation
+      );
 
       if (value) {
         const postProcessFlow = await this.hooks.postProcessFlow.call(
@@ -256,12 +254,9 @@ export class DSLCompiler {
       }
     }
 
-    if (type === 'schema') {
-      return {
-        value: this.schemaGenerator.toSchema(value) as JsonType,
-      };
-    }
-
-    throw Error('DSL Compiler Error: Unable to determine type to compile as');
+    // Type has been set to "schema"
+    return {
+      value: this.schemaGenerator.toSchema(value) as JsonType,
+    };
   }
 }

@@ -18,7 +18,10 @@ interface SchemaChildren {
   child: object;
 }
 
-type SchemaNode = Schema.DataType | Language.DataTypeRef | object;
+type SchemaNode = (Schema.DataType | Language.DataTypeRef) & {
+  /** Overwrite the name of the generated type */
+  [SchemaTypeName]?: string;
+};
 
 interface GeneratedDataType {
   /** The SchemaNode that was generated */
@@ -165,16 +168,16 @@ export class SchemaGenerator {
   /**
    * Make an intermediate `Schema.DataType` object given a name
    */
-  private makePlaceholderType = (typeName: String): Schema.DataType => {
+  private makePlaceholderType = (typeName: string): Schema.DataType => {
     return {
       type: `${typeName}Type`,
     };
   };
 
   /**
-   * Make an intermediate `Schema.DataType` object with multicopy suport given a name
+   * Make an intermediate `Schema.DataType` object with array support given a name
    */
-  private makePlaceholderArrayType(typeName: String): Schema.DataType {
+  private makePlaceholderArrayType(typeName: string): Schema.DataType {
     return {
       type: `${typeName}Type`,
       isArray: true,
@@ -194,8 +197,7 @@ export type MakeBindingRefable<T> = {
     : T[P] extends unknown[]
     ? T[P]
     : MakeBindingRefable<T[P]>;
-} &
-  BindingTemplateInstance;
+} & BindingTemplateInstance;
 
 /**
  * Adds bindings to an object so that the object can be directly used in JSX
@@ -245,7 +247,7 @@ export function makeBindingsForObject<Type>(
           return new Proxy(target[key], accessor(paths.concat([key])));
         }
 
-        const createdInstance = bindingMap.get(target);
+        const createdInstance = bindingMap.get(target) as any;
         return createdInstance?.[key];
       },
     };
