@@ -3,8 +3,8 @@ import fse from 'fs-extra'; // fse rather than fs makes unit testing easier with
 import Table from 'easy-table';
 import child_process from 'child_process';
 import { Flags } from '@oclif/core';
-import { BaseCommand } from '../../utils/base-command';
 import { globSync } from 'glob';
+import { BaseCommand } from '../../utils/base-command';
 
 interface DependencyMap {
   [dependencyVersion: string]: string[];
@@ -266,9 +266,7 @@ export default class DependencyVersionsCheck extends BaseCommand {
     }
 
     if (topLevelVersionsExist) {
-      console.log(
-        '\nTOP-LEVEL @player-ui/@player-tools DEPENDENCIES:'
-      );
+      console.log('\nTOP-LEVEL @player-ui/@player-tools DEPENDENCIES:');
       printTable(
         versionToTopLevelDependencyMap,
         sortedTopLevelVersions,
@@ -277,9 +275,7 @@ export default class DependencyVersionsCheck extends BaseCommand {
     }
 
     if (nestedVersionsExist) {
-      console.log(
-        '\nNESTED @player-ui/@player-tools DEPENDENCIES:'
-      );
+      console.log('\nNESTED @player-ui/@player-tools DEPENDENCIES:');
       printTable(
         versionToNestedDependencyMap,
         sortedNestedVersions,
@@ -312,9 +308,7 @@ export default class DependencyVersionsCheck extends BaseCommand {
       }
 
       if (!nestedVersionsExist && !topLevelVersionsExist) {
-        console.log(
-          'No @player-ui/@player-tools dependencies exist.'
-        );
+        console.log('No @player-ui/@player-tools dependencies exist.');
       }
 
       console.log(
