@@ -163,7 +163,7 @@ export class XLRSDK {
     }
 
     if (this.computedNodeCache.has(id)) {
-      return JSON.parse(JSON.stringify(this.computedNodeCache.get(id))) as
+      return structuredClone(this.computedNodeCache.get(id)) as
         | NamedType<NodeType>
         | undefined;
     }

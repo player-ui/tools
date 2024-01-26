@@ -202,7 +202,7 @@ export function computeEffectiveObject(
   const baseObjectName = base.name ?? base.title ?? 'object literal';
   const operandObjectName = operand.name ?? operand.title ?? 'object literal';
   const newObject = {
-    ...JSON.parse(JSON.stringify(base)),
+    ...structuredClone(base),
     name: `${baseObjectName} & ${operandObjectName}`,
     description: `Effective type combining ${baseObjectName} and ${operandObjectName}`,
     genericTokens: [

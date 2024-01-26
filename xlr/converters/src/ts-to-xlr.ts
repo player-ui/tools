@@ -220,7 +220,7 @@ export class TsConverter {
         node
       ) as NodeType;
       // return deep copy of node so modifications don't effect referenced to the original
-      return JSON.parse(JSON.stringify(cachedType));
+      return structuredClone(cachedType);
     }
 
     const convertedNode = this.tsNodeToType(node);
