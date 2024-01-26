@@ -1,6 +1,6 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
-/* eslint-disable no-param-reassign */
+
 import type {
   ArrayType,
   NamedType,
@@ -130,39 +130,43 @@ export const applyValueRefs: TransformFunction = (node, capability) => {
  * Computes possible template keys and adds them to an Asset
  */
 export const applyTemplateProperty: TransformFunction = (node, capability) => {
-  const templateTypes: Array<RefType> = [];
-  return simpleTransformGenerator('object', 'Assets', (inputNode) => {
-    const xlrNode = { ...inputNode };
-    for (const key in xlrNode.properties) {
-      const value = xlrNode.properties[key];
-      if (value.node.type === 'array') {
-        value.required = false;
-        templateTypes.push({
-          type: 'ref',
-          ref: `Template<${
-            value.node.elementType.type === 'ref'
-              ? value.node.elementType.ref
-              : value.node.elementType.name
-          }, "${key}">`,
-        });
+  return simpleTransformGenerator(
+    'object',
+    ['Assets', 'Views'],
+    (inputNode) => {
+      const templateTypes: Array<RefType> = [];
+      const xlrNode = { ...inputNode };
+      for (const key in xlrNode.properties) {
+        const value = xlrNode.properties[key];
+        if (value.node.type === 'array') {
+          value.required = false;
+          templateTypes.push({
+            type: 'ref',
+            ref: `Template<${
+              value.node.elementType.type === 'ref'
+                ? value.node.elementType.ref
+                : value.node.elementType.name
+            }, "${key}">`,
+          });
+        }
       }
-    }
 
-    if (templateTypes.length > 0) {
-      const templateType: ArrayType = {
-        type: 'array',
-        elementType:
-          templateTypes.length > 1
-            ? { type: 'or', or: templateTypes }
-            : templateTypes[0],
-        description: 'A list of templates to process for this node',
-      };
-      xlrNode.properties.template = {
-        required: false,
-        node: templateType,
-      };
-    }
+      if (templateTypes.length > 0) {
+        const templateType: ArrayType = {
+          type: 'array',
+          elementType:
+            templateTypes.length > 1
+              ? { type: 'or', or: templateTypes }
+              : templateTypes[0],
+          description: 'A list of templates to process for this node',
+        };
+        xlrNode.properties.template = {
+          required: false,
+          node: templateType,
+        };
+      }
 
-    return xlrNode;
-  })(node, capability);
+      return xlrNode;
+    }
+  )(node, capability);
 };

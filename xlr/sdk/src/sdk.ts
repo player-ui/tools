@@ -163,7 +163,9 @@ export class XLRSDK {
     }
 
     if (this.computedNodeCache.has(id)) {
-      return this.computedNodeCache.get(id) as NamedType<NodeType> | undefined;
+      return JSON.parse(JSON.stringify(this.computedNodeCache.get(id))) as
+        | NamedType<NodeType>
+        | undefined;
     }
 
     type = fillInGenerics(this.resolveType(type)) as NamedType;
