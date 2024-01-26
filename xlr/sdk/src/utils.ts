@@ -10,6 +10,17 @@ import type {
   RefNode,
 } from '@player-tools/xlr';
 
+const isMatchingCapability = (
+  capability: string,
+  capabilitiesToMatch: string | Array<string>
+): boolean => {
+  if (Array.isArray(capabilitiesToMatch)) {
+    return capabilitiesToMatch.includes(capability)
+  }
+
+  return capability === capabilitiesToMatch
+}
+
 /**
  * Helper function for simple transforms
  * Walks an XLR tree looking for the specified node type calls the supplied function when called
@@ -18,7 +29,7 @@ export function simpleTransformGenerator<
   T extends NodeTypeStrings = NodeTypeStrings
 >(
   typeToTransform: T,
-  capabilityToTransform: string,
+  capabilityToTransform: string | Array<string>,
   functionToRun: (input: NodeTypeMap[T]) => NodeTypeMap[T]
 ): TransformFunction {
   /** walker for an XLR tree to touch every node */
@@ -27,7 +38,7 @@ export function simpleTransformGenerator<
     capability: string
   ) => {
     // Run transform on base node before running on children
-    if (capability === capabilityToTransform) {
+    if (isMatchingCapability(capability, capabilityToTransform)) {
       let node = { ...n };
       if (node.type === typeToTransform) {
         node = functionToRun(node as unknown as NodeTypeMap[T]);

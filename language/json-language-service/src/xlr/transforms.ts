@@ -69,7 +69,7 @@ export const applyAssetWrapperOrSwitch: TransformFunction = (
   node,
   capability
 ) => {
-  return simpleTransformGenerator('ref', 'Assets', (xlrNode) => {
+  return simpleTransformGenerator('ref', ['Assets', 'Views'], (xlrNode) => {
     if (xlrNode.ref.includes('AssetWrapper')) {
       return {
         ...xlrNode,
