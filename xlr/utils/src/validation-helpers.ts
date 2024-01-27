@@ -88,6 +88,10 @@ export function computeExtends(a: NodeType, b: NodeType): boolean {
       }
     }
 
+    if (a.type === 'ref' && b.type === 'ref') {
+      return a.ref === b.ref;
+    }
+
     if (a.type === 'object' && b.type === 'object') {
       for (const property in b.properties) {
         const propertyNode = b.properties[property];
@@ -109,6 +113,10 @@ export function computeExtends(a: NodeType, b: NodeType): boolean {
 
   if (isPrimitiveTypeNode(b) && a.type === 'or') {
     return a.or.every((member) => computeExtends(b, member));
+  }
+
+  if (a.type === 'or' && b.type === 'or') {
+    return a.or.every((x) => b.or.some((y) => computeExtends(x, y)));
   }
 
   return false;
