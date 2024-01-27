@@ -15,51 +15,44 @@ import { isPrimitiveTypeNode } from '@player-tools/xlr-utils';
 /**
  * Adds applicability and _comment properties to Assets
  */
-export const applyCommonProps: TransformFunction = (
-  inputNode: NamedType | NodeType,
-  capability: string
-) => {
-  const outputNode = { ...inputNode };
-  if (capability === 'Assets') {
-    if (outputNode.type === 'object') {
-      if (!outputNode.properties.applicability) {
-        outputNode.properties.applicability = {
-          required: false,
-          node: {
-            type: 'or',
-            name: 'Applicability',
-            description:
-              'Evaluate the given expression (or boolean) and if falsy, remove this node from the tree. This is re-computed for each change in the data-model',
-            or: [
-              {
-                type: 'boolean',
-              },
-              {
-                type: 'ref',
-                ref: 'Expression',
-              },
-            ],
-          },
-        };
-      }
+
+export const applyCommonProps: TransformFunction = (node, capability) => {
+  return simpleTransformGenerator('object', ['Assets', 'Views'], (xlrNode) => {
+    if (!xlrNode.properties.applicability) {
+      // eslint-disable-next-line no-param-reassign
+      xlrNode.properties.applicability = {
+        required: false,
+        node: {
+          type: 'or',
+          name: 'Applicability',
+          description:
+            'Evaluate the given expression (or boolean) and if falsy, remove this node from the tree. This is re-computed for each change in the data-model',
+          or: [
+            {
+              type: 'boolean',
+            },
+            {
+              type: 'ref',
+              ref: 'Expression',
+            },
+          ],
+        },
+      };
     }
-  }
 
-  if (outputNode.type === 'object' && !outputNode.properties._comment) {
-    outputNode.properties._comment = {
-      required: false,
-      node: {
-        description: 'Adds a comment for the given node',
-        type: 'string',
-      },
-    };
-  } else if (outputNode.type === 'and') {
-    outputNode.and.map((n) => applyCommonProps(n, capability));
-  } else if (outputNode.type === 'or') {
-    outputNode.or.map((n) => applyCommonProps(n, capability));
-  }
+    if (!xlrNode.properties._comment) {
+      // eslint-disable-next-line no-param-reassign
+      xlrNode.properties._comment = {
+        required: false,
+        node: {
+          description: 'Adds a comment for the given node',
+          type: 'string',
+        },
+      };
+    }
 
-  return outputNode;
+    return xlrNode;
+  })(node, capability);
 };
 
 /**
