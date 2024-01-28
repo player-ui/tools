@@ -2,6 +2,7 @@ import type {
   Manifest,
   NamedType,
   NodeType,
+  ObjectNode,
   ObjectType,
   TransformFunction,
   TSManifest,
@@ -287,15 +288,30 @@ export class XLRSDK {
           objectNode.extends,
           extendedType as NamedType<ObjectType>
         ) as NamedType;
+        if (extendedType.type === 'object') {
+          return {
+            ...computeEffectiveObject(
+              extendedType as ObjectType,
+              objectNode as ObjectType,
+              false
+            ),
+            name: objectNode.name,
+            description: objectNode.description,
+          };
+        }
+
+        // if the merge isn't straightforward, defer until validation time for now
         return {
-          ...computeEffectiveObject(
-            extendedType as ObjectType,
-            objectNode as ObjectType,
-            false
-          ),
           name: objectNode.name,
-          description: objectNode.description,
-        };
+          type: 'and',
+          and: [
+            {
+              ...objectNode,
+              extends: undefined,
+            },
+            extendedType,
+          ],
+        } as unknown as ObjectNode;
       }
 
       return objectNode;

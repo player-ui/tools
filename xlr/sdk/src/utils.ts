@@ -9,16 +9,17 @@ import type {
   ObjectProperty,
   RefNode,
 } from '@player-tools/xlr';
+import { isGenericNamedType } from '@player-tools/xlr-utils';
 
 const isMatchingCapability = (
   capability: string,
   capabilitiesToMatch: string | Array<string>
 ): boolean => {
   if (Array.isArray(capabilitiesToMatch)) {
-    return capabilitiesToMatch.includes(capability)
+    return capabilitiesToMatch.includes(capability);
   }
 
-  return capability === capabilitiesToMatch
+  return capability === capabilitiesToMatch;
 }
 
 /**
@@ -55,9 +56,23 @@ export function simpleTransformGenerator<
           };
         }
 
+        // need to walk generic tokens
         return {
           ...node,
           properties: { ...newObjectProperties },
+          genericTokens: isGenericNamedType(node)
+            ? node.genericTokens.map((token) => {
+                return {
+                  ...token,
+                  constraints: token.constraints
+                    ? walker(token.constraints, capability)
+                    : undefined,
+                  default: token.default
+                    ? walker(token.default, capability)
+                    : undefined,
+                };
+              })
+            : undefined,
           extends: node.extends
             ? (walker(node.extends, capability) as RefNode)
             : undefined,
