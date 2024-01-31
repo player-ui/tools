@@ -1,21 +1,21 @@
-import React from 'react';
-import type { JsonType } from 'react-json-reconciler';
-import { SourceMapGenerator, SourceMapConsumer } from 'source-map-js';
-import { render } from 'react-json-reconciler';
-import type { Flow, View, Navigation as PlayerNav } from '@player-ui/types';
+import React from "react";
+import type { JsonType } from "react-json-reconciler";
+import { SourceMapGenerator, SourceMapConsumer } from "source-map-js";
+import { render } from "react-json-reconciler";
+import type { Flow, View, Navigation as PlayerNav } from "@player-ui/types";
 import {
   AsyncSeriesHook,
   AsyncSeriesWaterfallHook,
   SyncHook,
-} from 'tapable-ts';
-import { fingerprintContent } from './utils';
+} from "tapable-ts";
+import { fingerprintContent } from "./utils";
 import type {
   LoggingInterface,
   CompilerReturn,
   SerializeContext,
-} from './types';
-import type { Navigation } from '../types';
-import { SchemaGenerator } from './schema';
+} from "./types";
+import type { Navigation } from "../types";
+import { SchemaGenerator } from "./schema";
 
 /**
  * Argument passed to the DSLCompiler onEnd hook
@@ -32,7 +32,7 @@ const parseNavigationExpressions = (nav: Navigation): PlayerNav => {
   function replaceExpWithStr(obj: any): any {
     /** call toValue if BindingTemplateInstance otherwise continue  */
     function convExp(value: any): any {
-      return value && typeof value === 'object' && value.__type === 'expression'
+      return value && typeof value === "object" && value.__type === "expression"
         ? value.toValue() // exp, onStart, and onEnd don't need to be wrapped in @[]@
         : replaceExpWithStr(value);
     }
@@ -41,7 +41,7 @@ const parseNavigationExpressions = (nav: Navigation): PlayerNav => {
       return obj.map(convExp);
     }
 
-    if (typeof obj === 'object') {
+    if (typeof obj === "object") {
       return Object.fromEntries(
         Object.entries(obj).map(([key, value]) => [key, convExp(value)])
       );
@@ -74,17 +74,17 @@ const mergeSourceMaps = (
   const generator = new SourceMapGenerator();
   sourceMaps.forEach(({ sourceMap, offsetIndexSearch, source }) => {
     const generatedLineOffset = generated
-      .split('\n')
+      .split("\n")
       .findIndex((line) => line.includes(offsetIndexSearch));
 
     const sourceLineOffset = source
-      .split('\n')
+      .split("\n")
       .findIndex((line) => line.includes(offsetIndexSearch));
 
     const lineOffset = generatedLineOffset - sourceLineOffset;
 
-    const generatedLine = generated.split('\n')[generatedLineOffset];
-    const sourceLine = source.split('\n')[sourceLineOffset];
+    const generatedLine = generated.split("\n")[generatedLineOffset];
+    const sourceLine = source.split("\n")[sourceLineOffset];
 
     const generatedColumn = generatedLine.indexOf(offsetIndexSearch);
     const sourceColumn = sourceLine.indexOf(offsetIndexSearch);
@@ -132,8 +132,8 @@ export class DSLCompiler {
     value: unknown,
     context?: SerializeContext
   ): Promise<CompilerReturn | undefined> {
-    if (typeof value !== 'object' || value === null) {
-      throw new Error('Unable to serialize non-object');
+    if (typeof value !== "object" || value === null) {
+      throw new Error("Unable to serialize non-object");
     }
 
     const type = context?.type ? context.type : fingerprintContent(value);
@@ -141,8 +141,8 @@ export class DSLCompiler {
     const schemaGenerator = new SchemaGenerator(this.logger);
     this.hooks.schemaGenerator.call(schemaGenerator);
 
-    if (type === 'view') {
-      const { jsonValue, sourceMap } = await render(value, {
+    if (type === "view") {
+      const { jsonValue, sourceMap } = await render(value as any, {
         collectSourceMap: true,
       });
 
@@ -152,7 +152,7 @@ export class DSLCompiler {
       };
     }
 
-    if (type === 'flow') {
+    if (type === "flow") {
       // Source maps from all the nested views
       // Merge these together before returning
       const allSourceMaps: SourceMapList = [];
@@ -173,7 +173,7 @@ export class DSLCompiler {
               // Find the line that is the id of the view
               // Use that as the identifier for the sourcemap offset calc
               const searchIdLine = stringValue
-                .split('\n')
+                .split("\n")
                 .find((line) =>
                   line.includes(
                     `"id": "${(jsonValue as Record<string, string>).id}"`
@@ -197,15 +197,15 @@ export class DSLCompiler {
       )) as View[];
 
       // Go through the flow and sub out any view refs that are react elements w/ the right id
-      if ('navigation' in value) {
+      if ("navigation" in value) {
         Object.entries((value as Flow).navigation).forEach(([navKey, node]) => {
-          if (typeof node === 'object') {
+          if (typeof node === "object") {
             Object.entries(node).forEach(([nodeKey, flowNode]) => {
               if (
                 flowNode &&
-                typeof flowNode === 'object' &&
-                'state_type' in flowNode &&
-                flowNode.state_type === 'VIEW' &&
+                typeof flowNode === "object" &&
+                "state_type" in flowNode &&
+                flowNode.state_type === "VIEW" &&
                 React.isValidElement(flowNode.ref)
               ) {
                 const actualViewIndex = (value as Flow).views?.indexOf?.(
@@ -223,7 +223,7 @@ export class DSLCompiler {
           }
         });
 
-        if ('schema' in copiedValue) {
+        if ("schema" in copiedValue) {
           copiedValue.schema = schemaGenerator.toSchema(copiedValue.schema);
         }
 
@@ -247,12 +247,12 @@ export class DSLCompiler {
       }
     }
 
-    if (type === 'schema') {
+    if (type === "schema") {
       return {
         value: schemaGenerator.toSchema(value) as JsonType,
       };
     }
 
-    throw Error('DSL Compiler Error: Unable to determine type to compile as');
+    throw Error("DSL Compiler Error: Unable to determine type to compile as");
   }
 }

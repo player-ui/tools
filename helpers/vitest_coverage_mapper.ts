@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
 
 /**
  * Setting the output file in vitest.config.ts doesn't actually write the file to the right location
@@ -13,8 +13,8 @@ class CustomReporter {
       return;
     }
 
-    const coverageDir = path.join(process.cwd(), 'coverage');
-    const testCov = path.join(coverageDir, 'lcov.info');
+    const coverageDir = path.join(process.cwd(), "coverage");
+    const testCov = path.join(coverageDir, "lcov.info");
 
     if (!fs.existsSync(coverageDir)) {
       fs.mkdirSync(coverageDir);
@@ -29,7 +29,7 @@ class CustomReporter {
     }
 
     const watcher = fs.watch(coverageDir, (event, filename) => {
-      if (event === 'rename' && filename === 'lcov.info') {
+      if (event === "rename" && filename === "lcov.info") {
         if (fs.statSync(testCov).size > 0) {
           fs.copyFileSync(testCov, COVERAGE_OUTPUT_FILE);
           watcher.close();

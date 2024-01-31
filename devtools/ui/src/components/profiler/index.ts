@@ -1,2 +1,2 @@
-export * from './Profiler';
-export * from './ProfilerPanel';
+export * from "./Profiler";
+export * from "./ProfilerPanel";

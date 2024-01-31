@@ -1,20 +1,20 @@
-import ts from 'typescript/lib/tsserverlibrary';
+import ts from "typescript/lib/tsserverlibrary";
 import type {
   TemplateLanguageService,
   TemplateContext,
   Logger,
-} from 'typescript-template-language-service-decorator';
-import type { FunctionType, TSManifest, NodeType } from '@player-tools/xlr';
-import { createTSDocString } from '@player-tools/xlr-utils';
-import { XLRSDK } from '@player-tools/xlr-sdk';
-import type { ExpressionNode } from '@player-ui/player';
-import { parseExpression } from '@player-ui/player';
+} from "typescript-template-language-service-decorator";
+import type { FunctionType, TSManifest, NodeType } from "@player-tools/xlr";
+import { createTSDocString } from "@player-tools/xlr-utils";
+import { XLRSDK } from "@player-tools/xlr-sdk";
+import type { ExpressionNode } from "@player-ui/player";
+import { parseExpression } from "@player-ui/player";
 import {
   getTokenAtPosition,
   toTSLocation,
   convertExprToJSONNode,
-} from './utils';
-import { toFunction } from './transforms';
+} from "./utils";
+import { toFunction } from "./transforms";
 
 interface ExpressionEntry {
   /**
@@ -86,8 +86,8 @@ export class ExpressionLanguageService implements TemplateLanguageService {
       );
 
       if (
-        type.type === 'function' &&
-        typeInfo?.capability === 'Expressions' &&
+        type.type === "function" &&
+        typeInfo?.capability === "Expressions" &&
         source
       ) {
         expressions.set(type.name, {
@@ -134,7 +134,7 @@ export class ExpressionLanguageService implements TemplateLanguageService {
     const parsed = parseExpression(line, { strict: false });
     const token = getTokenAtPosition(parsed, position);
 
-    if (token?.type === 'Compound' && token.error) {
+    if (token?.type === "Compound" && token.error) {
       // We hit the end of the expression, and it's expecting more
       // so provide all the completions
       this._expressions.forEach((exp) => {
@@ -150,7 +150,7 @@ export class ExpressionLanguageService implements TemplateLanguageService {
       return completionInfo;
     }
 
-    if (token?.type === 'Identifier') {
+    if (token?.type === "Identifier") {
       // get the relevant start of the identifier
       const start = token.location?.start ?? { character: 0 };
       const wordFromStart = line.slice(start.character, position.character);
@@ -186,8 +186,8 @@ export class ExpressionLanguageService implements TemplateLanguageService {
 
       documentation: [
         {
-          kind: 'text',
-          text: expression?.type.description ?? '',
+          kind: "text",
+          text: expression?.type.description ?? "",
         },
       ],
       displayParts: expression ? createTSDocString(expression.type) : [],
@@ -203,7 +203,7 @@ export class ExpressionLanguageService implements TemplateLanguageService {
     const parsed = parseExpression(context.text, { strict: false });
     const token = getTokenAtPosition(parsed, position);
 
-    if (token?.type === 'Identifier') {
+    if (token?.type === "Identifier") {
       const expression = this._expressions.get(token.name);
 
       if (expression) {
@@ -254,13 +254,13 @@ export class ExpressionLanguageService implements TemplateLanguageService {
   ): ts.Diagnostic[] {
     const diags: ts.Diagnostic[] = [];
 
-    if (node.type === 'Compound') {
+    if (node.type === "Compound") {
       node.body.forEach((n) => {
         diags.push(...this.getDiagnosticsForNode(context, n));
       });
     }
 
-    if (node.type === 'CallExpression') {
+    if (node.type === "CallExpression") {
       // Check that the expression is valid
       const exprName = node.callTarget.name;
       const expression = this._expressions.get(exprName);

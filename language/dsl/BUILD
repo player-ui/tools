@@ -12,13 +12,13 @@ js_pipeline(
     package_name = "@player-tools/dsl",
     peer_deps = [
         "//:node_modules/react",
+        "//:node_modules/@types/react",
     ],
     test_deps = [
-        "//:vitest_config",
         "//:node_modules",
+        "//:vitest_config",
     ],
     deps = [
-        "//:node_modules/@types/react",
         "//:node_modules/@player-ui/player",
         "//:node_modules/@player-ui/types",
         "//:node_modules/@types/mkdirp",

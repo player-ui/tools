@@ -1,11 +1,11 @@
-import { test, expect } from 'vitest';
-import { SchemaGenerator } from '../schema';
+import { test, expect } from "vitest";
+import { SchemaGenerator } from "../schema";
 
 const BasicDataType = {
-  type: 'StringType',
+  type: "StringType",
 };
 
-test('generates proper schema', () => {
+test("generates proper schema", () => {
   const schemaGenerator = new SchemaGenerator();
 
   expect(
@@ -24,26 +24,26 @@ test('generates proper schema', () => {
   ).toStrictEqual({
     ROOT: {
       foo: {
-        type: 'fooType',
+        type: "fooType",
       },
       other: {
-        type: 'otherType',
+        type: "otherType",
         isArray: true,
       },
     },
     fooType: {
       bar: {
-        type: 'barType',
+        type: "barType",
       },
     },
     barType: {
       baz: {
-        type: 'StringType',
+        type: "StringType",
       },
     },
     otherType: {
       item1: {
-        type: 'StringType',
+        type: "StringType",
       },
     },
   });

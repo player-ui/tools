@@ -1,11 +1,11 @@
-import { test, expect, describe } from 'vitest';
-import React from 'react';
-import { render } from 'react-json-reconciler';
-import { binding as b } from '..';
-import { Template } from '../template';
-import { Text, Collection } from './helpers/asset-library';
+import { test, expect, describe } from "vitest";
+import React from "react";
+import { render } from "react-json-reconciler";
+import { binding as b } from "..";
+import { Template } from "../template";
+import { Text, Collection } from "./helpers/asset-library";
 
-test('finds output property based on array context', async () => {
+test("finds output property based on array context", async () => {
   const element = (
     <obj>
       <property name="foo">
@@ -20,18 +20,18 @@ test('finds output property based on array context', async () => {
   );
 
   expect((await render(element)).jsonValue).toStrictEqual({
-    foo: ['Foo'],
+    foo: ["Foo"],
     template: [
       {
-        data: 'foo.output',
-        value: 'bar',
-        output: 'foo',
+        data: "foo.output",
+        value: "bar",
+        output: "foo",
       },
     ],
   });
 });
 
-test('finds dynamic property in a template', async () => {
+test("finds dynamic property in a template", async () => {
   const element = (
     <obj>
       <property name="foo">
@@ -46,19 +46,19 @@ test('finds dynamic property in a template', async () => {
   );
 
   expect((await render(element)).jsonValue).toStrictEqual({
-    foo: ['Foo'],
+    foo: ["Foo"],
     template: [
       {
-        data: 'foo.output',
+        data: "foo.output",
         dynamic: true,
-        value: 'bar',
-        output: 'foo',
+        value: "bar",
+        output: "foo",
       },
     ],
   });
 });
 
-test('works if already in a template array', async () => {
+test("works if already in a template array", async () => {
   const element = (
     <obj>
       <property name="template">
@@ -71,11 +71,11 @@ test('works if already in a template array', async () => {
     </obj>
   );
   expect((await render(element)).jsonValue).toStrictEqual({
-    template: [{ output: 'output', data: 'foo.output', value: 'bar' }],
+    template: [{ output: "output", data: "foo.output", value: "bar" }],
   });
 });
 
-test('template will delete empty arrays related to the template only', async () => {
+test("template will delete empty arrays related to the template only", async () => {
   const element = (
     <Collection>
       <Collection.Actions>
@@ -111,26 +111,26 @@ test('template will delete empty arrays related to the template only', async () 
     </Collection>
   );
   expect((await render(element)).jsonValue).toStrictEqual({
-    id: 'root',
-    type: 'collection',
+    id: "root",
+    type: "collection",
     template: [
       {
-        data: 'foo.bar',
-        output: 'actions',
+        data: "foo.bar",
+        output: "actions",
         value: {
-          id: 'actions-_index_',
-          type: 'text',
-          value: 'Template action',
+          id: "actions-_index_",
+          type: "text",
+          value: "Template action",
         },
       },
       {
-        data: 'foo.bar',
-        output: 'values',
+        data: "foo.bar",
+        output: "values",
         value: {
           asset: {
-            id: 'values-_index_',
-            type: 'text',
-            value: 'Template Value 1',
+            id: "values-_index_",
+            type: "text",
+            value: "Template Value 1",
           },
         },
       },
@@ -139,17 +139,17 @@ test('template will delete empty arrays related to the template only', async () 
       {
         asset: {
           actions: [],
-          id: 'values-1',
-          type: 'collection',
+          id: "values-1",
+          type: "collection",
           template: [
             {
-              data: 'foo.bar',
-              output: 'values',
+              data: "foo.bar",
+              output: "values",
               value: {
                 asset: {
-                  id: 'values-1-values-_index_',
-                  type: 'text',
-                  value: 'Template Value 2',
+                  id: "values-1-values-_index_",
+                  type: "text",
+                  value: "Template Value 2",
                 },
               },
             },
@@ -159,17 +159,17 @@ test('template will delete empty arrays related to the template only', async () 
       {
         asset: {
           actions: [],
-          id: 'values-2',
-          type: 'collection',
+          id: "values-2",
+          type: "collection",
           template: [
             {
-              data: 'foo.bar',
-              output: 'values',
+              data: "foo.bar",
+              output: "values",
               value: {
                 asset: {
-                  id: 'values-2-values-_index_',
-                  type: 'text',
-                  value: 'Template Value 3',
+                  id: "values-2-values-_index_",
+                  type: "text",
+                  value: "Template Value 3",
                 },
               },
             },
@@ -177,9 +177,9 @@ test('template will delete empty arrays related to the template only', async () 
           values: [
             {
               asset: {
-                id: 'values-2-values-0',
-                type: 'text',
-                value: 'This should not be deleted by template',
+                id: "values-2-values-0",
+                type: "text",
+                value: "This should not be deleted by template",
               },
             },
           ],
@@ -189,8 +189,8 @@ test('template will delete empty arrays related to the template only', async () 
   });
 });
 
-describe('template auto id', () => {
-  test('s1mple', async () => {
+describe("template auto id", () => {
+  test("s1mple", async () => {
     const element = (
       <Collection>
         <Collection.Values>
@@ -205,26 +205,26 @@ describe('template auto id', () => {
     const actual = (await render(element)).jsonValue;
 
     expect(actual).toStrictEqual({
-      id: 'root',
-      type: 'collection',
+      id: "root",
+      type: "collection",
       values: [
         {
           asset: {
-            id: 'static',
-            type: 'text',
-            value: 'Value 1',
+            id: "static",
+            type: "text",
+            value: "Value 1",
           },
         },
       ],
       template: [
         {
-          data: 'foo.bar',
-          output: 'values',
+          data: "foo.bar",
+          output: "values",
           value: {
             asset: {
-              id: 'values-_index_',
-              type: 'text',
-              value: 'Template Value',
+              id: "values-_index_",
+              type: "text",
+              value: "Template Value",
             },
           },
         },
@@ -232,7 +232,7 @@ describe('template auto id', () => {
     });
   });
 
-  test('nested', async () => {
+  test("nested", async () => {
     const element = (
       <Collection>
         <Collection.Values>
@@ -253,38 +253,38 @@ describe('template auto id', () => {
     const actual = (await render(element)).jsonValue;
 
     expect(actual).toStrictEqual({
-      id: 'root',
-      type: 'collection',
+      id: "root",
+      type: "collection",
       values: [
         {
           asset: {
-            id: 'static',
-            type: 'text',
-            value: 'Value 1',
+            id: "static",
+            type: "text",
+            value: "Value 1",
           },
         },
       ],
       template: [
         {
-          data: 'foo.bar',
-          output: 'values',
+          data: "foo.bar",
+          output: "values",
           value: {
             asset: {
-              id: 'values-_index_',
+              id: "values-_index_",
               template: [
                 {
-                  output: 'values',
-                  data: 'foo.baz',
+                  output: "values",
+                  data: "foo.baz",
                   value: {
                     asset: {
-                      id: 'values-_index_-values-_index1_',
-                      type: 'text',
-                      value: 'Nested Templates',
+                      id: "values-_index_-values-_index1_",
+                      type: "text",
+                      value: "Nested Templates",
                     },
                   },
                 },
               ],
-              type: 'collection',
+              type: "collection",
             },
           },
         },

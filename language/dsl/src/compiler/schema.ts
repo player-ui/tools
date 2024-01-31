@@ -1,13 +1,13 @@
-import type { Schema, Language } from '@player-ui/types';
-import { dequal } from 'dequal';
-import { SyncWaterfallHook } from 'tapable-ts';
-import type { LoggingInterface } from '..';
-import { binding as b } from '..';
-import type { BindingTemplateInstance } from '../string-templates';
+import type { Schema, Language } from "@player-ui/types";
+import { dequal } from "dequal";
+import { SyncWaterfallHook } from "tapable-ts";
+import type { LoggingInterface } from "..";
+import { binding as b } from "..";
+import type { BindingTemplateInstance } from "../string-templates";
 
-const bindingSymbol = Symbol('binding');
+const bindingSymbol = Symbol("binding");
 
-export const SchemaTypeName = Symbol('Schema Rename');
+export const SchemaTypeName = Symbol("Schema Rename");
 
 interface GeneratedDataType {
   /** The SchemaNode that was generated */
@@ -200,7 +200,7 @@ export type MakeBindingRefable<T> = {
  */
 export function makeBindingsForObject<Type>(
   obj: Type,
-  arrayAccessorKeys = ['_index_']
+  arrayAccessorKeys = ["_index_"]
 ): MakeBindingRefable<Type> {
   /** Proxy to track binding callbacks */
   const accessor = (paths: string[]) => {
@@ -218,13 +218,13 @@ export function makeBindingsForObject<Type>(
         if (
           Array.isArray(target[key]) &&
           target[key].length > 0 &&
-          target[key].every((it: any) => typeof it !== 'object')
+          target[key].every((it: any) => typeof it !== "object")
         ) {
           return [...target[key]];
         }
 
         if (!bindingMap.has(target)) {
-          bindingMap.set(target, b`${paths.join('.')}`);
+          bindingMap.set(target, b`${paths.join(".")}`);
         }
 
         if (key === bindingSymbol) {
@@ -233,12 +233,12 @@ export function makeBindingsForObject<Type>(
 
         if (
           Array.isArray(target) &&
-          (arrayAccessorKeys.includes(key) || typeof key === 'number')
+          (arrayAccessorKeys.includes(key) || typeof key === "number")
         ) {
           return new Proxy(target[0], accessor(paths.concat([key])));
         }
 
-        if (bindingKeys.includes(key) && typeof target[key] === 'object') {
+        if (bindingKeys.includes(key) && typeof target[key] === "object") {
           return new Proxy(target[key], accessor(paths.concat([key])));
         }
 
@@ -260,7 +260,7 @@ export const getBindingFromObject = (obj: any) => {
     throw new Error(`Unable to get binding for ${obj}`);
   }
 
-  return b`${baseBindings.join('.')}`;
+  return b`${baseBindings.join(".")}`;
 };
 
 /**

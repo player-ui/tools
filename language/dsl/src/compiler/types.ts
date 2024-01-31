@@ -7,13 +7,13 @@ import type {
   NavigationFlow,
   NavigationFlowState,
   NavigationFlowViewState,
-} from '@player-ui/types';
-import type { JsonType } from 'react-json-reconciler';
-import type { RemoveUnknownIndex, AddUnknownIndex } from '../types';
+} from "@player-ui/types";
+import type { JsonType } from "react-json-reconciler";
+import type { RemoveUnknownIndex, AddUnknownIndex } from "../types";
 
 export type NavigationFlowReactViewState = Omit<
   NavigationFlowViewState,
-  'ref'
+  "ref"
 > & {
   /** The view element */
   ref: React.ReactElement | string;
@@ -25,7 +25,7 @@ export type NavFlowState =
 
 export type NavigationFlowWithReactView = Pick<
   NavigationFlow,
-  'startState' | 'onStart' | 'onEnd'
+  "startState" | "onStart" | "onEnd"
 > & {
   [key: string]:
     | undefined
@@ -35,12 +35,12 @@ export type NavigationFlowWithReactView = Pick<
     | NavFlowState;
 };
 
-export type NavigationWithReactViews = Pick<Navigation, 'BEGIN'> &
+export type NavigationWithReactViews = Pick<Navigation, "BEGIN"> &
   Record<string, string | NavigationFlowWithReactView>;
 
 export type FlowWithoutUnknown = RemoveUnknownIndex<Flow>;
 export type FlowWithReactViews = AddUnknownIndex<
-  Omit<FlowWithoutUnknown, 'views' | 'navigation'> & {
+  Omit<FlowWithoutUnknown, "views" | "navigation"> & {
     /** An array of JSX view elements */
     views?: Array<React.ReactElement>;
 
@@ -55,7 +55,7 @@ export interface DSLSchema {
   [key: string]: Schema.DataType | DSLSchema;
 }
 
-export type SerializeType = 'view' | 'flow' | 'schema' | 'navigation';
+export type SerializeType = "view" | "flow" | "schema" | "navigation";
 
 export type SerializablePlayerExportTypes =
   | React.ReactElement
@@ -63,7 +63,7 @@ export type SerializablePlayerExportTypes =
   | Schema.Schema
   | Navigation;
 
-export type LoggingInterface = Pick<Console, 'warn' | 'error' | 'log'>;
+export type LoggingInterface = Pick<Console, "warn" | "error" | "log">;
 
 export type CompilationResult = {
   /** What type of file is generated */
@@ -83,10 +83,10 @@ export type CompilerReturn = {
 };
 
 /** The different type of default content items the compiler handles */
-const DefaultCompilerContentTypes = ['view', 'flow', 'schema'] as const;
+const DefaultCompilerContentTypes = ["view", "flow", "schema"] as const;
 
 export type DefaultCompilerContentType =
-  typeof DefaultCompilerContentTypes[number];
+  (typeof DefaultCompilerContentTypes)[number];
 
 /** Helper function to determine whether a content type is compiler default */
 export function isDefaultCompilerContentType(

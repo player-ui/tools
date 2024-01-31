@@ -1,41 +1,41 @@
-import React from 'react';
+import React from "react";
 import type {
   Asset as AssetType,
   AssetWrapper,
   Binding,
   Expression,
   Validation,
-} from '@player-ui/types';
-import type { JsonNode, ValueType } from 'react-json-reconciler';
+} from "@player-ui/types";
+import type { JsonNode, ValueType } from "react-json-reconciler";
 import {
   ArrayNode,
   ObjectNode,
   PropertyNode,
   ValueNode,
-} from 'react-json-reconciler';
-import { Asset, View, createSlot } from '../../components';
-import type { AssetPropsWithChildren, WithChildren } from '../../types';
-import type { BindingTemplateInstance } from '../../string-templates';
+} from "react-json-reconciler";
+import { Asset, View, createSlot } from "../../components";
+import type { AssetPropsWithChildren, WithChildren } from "../../types";
+import type { BindingTemplateInstance } from "../../string-templates";
 
 // #region - Asset Types
 
 const ActionRoles = [
-  'primary',
-  'secondary',
-  'tertiary',
-  'upsell',
-  'back',
-  'link',
+  "primary",
+  "secondary",
+  "tertiary",
+  "upsell",
+  "back",
+  "link",
 ] as const;
 
-export type ActionRole = typeof ActionRoles[number];
+export type ActionRole = (typeof ActionRoles)[number];
 
-export interface TextAsset extends AssetType<'text'> {
+export interface TextAsset extends AssetType<"text"> {
   /** value of the text asset */
   value?: string;
 }
 
-export interface CollectionAsset extends AssetType<'collection'> {
+export interface CollectionAsset extends AssetType<"collection"> {
   /** The collection items to show */
   values?: Array<AssetWrapper>;
 
@@ -52,7 +52,7 @@ export interface CollectionAsset extends AssetType<'collection'> {
   actions?: Array<AssetWrapper<ActionAsset>>;
 }
 
-export interface ActionAsset extends AssetType<'action'> {
+export interface ActionAsset extends AssetType<"action"> {
   /** The transition value of the action in the state machine */
   value?: string;
 
@@ -74,14 +74,14 @@ export interface ActionAsset extends AssetType<'action'> {
     skipValidation?: boolean;
 
     /** Size of the button */
-    size?: 'small' | 'medium' | 'large';
+    size?: "small" | "medium" | "large";
 
     /** true to indicate the button should be disabled */
     disabled?: boolean;
   };
 }
 
-export interface InputAsset extends AssetType<'input'> {
+export interface InputAsset extends AssetType<"input"> {
   /** The location in the data-model to store the data */
   binding: Binding;
 
@@ -99,7 +99,7 @@ export interface ArrayProp {
   /** A dummy id */
   id: string;
 }
-export interface AssetWithArrayProp extends AssetType<'assetWithArray'> {
+export interface AssetWithArrayProp extends AssetType<"assetWithArray"> {
   /** An array of stuff to mimic validations */
   stuff: ArrayProp[];
   /** Want to make sure this will accept a binding */
@@ -109,11 +109,11 @@ export interface AssetWithArrayProp extends AssetType<'assetWithArray'> {
   metaData?: {
     /** more complicated types */
     optionalUnion?:
-      | 'foo'
-      | 'bar'
+      | "foo"
+      | "bar"
       | {
           /** including unions */
-          other?: 'bar';
+          other?: "bar";
         };
   };
 }
@@ -133,7 +133,7 @@ export const Text = (props: AssetPropsWithChildren<TextAsset>) => {
 
 /** get the parent object of a node */
 const getParentObject = (node: JsonNode): ObjectNode | undefined => {
-  if (node.type === 'object') {
+  if (node.type === "object") {
     return node;
   }
 
@@ -157,7 +157,7 @@ const TextModifier = (props: {
 }) => {
   const ref = React.useRef<ValueNode<ValueType>>(null);
 
-  const [modifierName, setModifierName] = React.useState<string>('M0');
+  const [modifierName, setModifierName] = React.useState<string>("M0");
 
   React.useEffect(() => {
     if (!ref.current) {
@@ -166,9 +166,9 @@ const TextModifier = (props: {
 
     const objParent = getParentObject(ref.current);
 
-    if (objParent?.type === 'object') {
+    if (objParent?.type === "object") {
       const existingModifierArray = objParent.properties.find(
-        (p) => p.keyNode.value === 'modifiers' && p.valueNode?.type === 'array'
+        (p) => p.keyNode.value === "modifiers" && p.valueNode?.type === "array"
       );
 
       const newModifierLength = existingModifierArray
@@ -179,9 +179,9 @@ const TextModifier = (props: {
 
       const modifierObject = new ObjectNode();
       modifierObject.properties.push(
-        new PropertyNode(new ValueNode('value'), new ValueNode(props.value)),
-        new PropertyNode(new ValueNode('type'), new ValueNode(props.type)),
-        new PropertyNode(new ValueNode('name'), new ValueNode(newModifierName))
+        new PropertyNode(new ValueNode("value"), new ValueNode(props.value)),
+        new PropertyNode(new ValueNode("type"), new ValueNode(props.type)),
+        new PropertyNode(new ValueNode("name"), new ValueNode(newModifierName))
       );
 
       if (existingModifierArray) {
@@ -192,7 +192,7 @@ const TextModifier = (props: {
         const modifiers = new ArrayNode();
         modifiers.items.push(modifierObject);
         objParent.properties.push(
-          new PropertyNode(new ValueNode('modifiers'), modifiers)
+          new PropertyNode(new ValueNode("modifiers"), modifiers)
         );
       }
 
@@ -224,14 +224,14 @@ export const ArrayProp = (
 };
 
 Collection.Values = createSlot({
-  name: 'values',
+  name: "values",
   isArray: true,
   wrapInAsset: true,
   TextComp: Text,
 });
 
 Collection.Actions = createSlot({
-  name: 'actions',
+  name: "actions",
   isArray: true,
 });
 
@@ -245,7 +245,7 @@ const CollectionComp = (props: WithChildren) => {
 };
 
 Collection.Label = createSlot({
-  name: 'label',
+  name: "label",
   TextComp: Text,
   wrapInAsset: true,
   CollectionComp,
@@ -253,7 +253,7 @@ Collection.Label = createSlot({
 
 /** input asset */
 export const Input = (
-  props: Omit<AssetPropsWithChildren<InputAsset>, 'binding'> & {
+  props: Omit<AssetPropsWithChildren<InputAsset>, "binding"> & {
     /** A binding type */
     binding?: BindingTemplateInstance;
   }
@@ -272,13 +272,13 @@ Input.Label = createSlot<{
   /** Some thing not in the asset  */
   customLabelProp?: string;
 }>({
-  name: 'label',
+  name: "label",
   TextComp: Text,
   wrapInAsset: true,
   CollectionComp,
 });
 
-export interface InfoAsset extends AssetType<'info'> {
+export interface InfoAsset extends AssetType<"info"> {
   /** Top level title for the view. */
   title?: AssetWrapper;
 
@@ -298,7 +298,7 @@ export interface InfoAsset extends AssetType<'info'> {
   validation?: Array<
     Pick<
       Validation.CrossfieldReference,
-      'type' | 'message' | 'severity' | 'ref'
+      "type" | "message" | "severity" | "ref"
     > & {
       /** When validations should start to be tracked */
       trigger?: Validation.Trigger;
@@ -324,7 +324,7 @@ Info.Title = createSlot<{
   /** Some thing not in the asset  */
   customLabelProp?: string;
 }>({
-  name: 'title',
+  name: "title",
   TextComp: Text,
   wrapInAsset: true,
   CollectionComp,
@@ -334,7 +334,7 @@ Info.Subtitle = createSlot<{
   /** Some thing not in the asset  */
   customLabelProp?: string;
 }>({
-  name: 'subtitle',
+  name: "subtitle",
   TextComp: Text,
   wrapInAsset: true,
   CollectionComp,
@@ -344,7 +344,7 @@ Info.Actions = createSlot<{
   /** Some thing not in the asset  */
   customLabelProp?: string;
 }>({
-  name: 'title',
+  name: "title",
   isArray: true,
   wrapInAsset: true,
   CollectionComp,
@@ -354,7 +354,7 @@ Info.PrimaryInfo = createSlot<{
   /** Some thing not in the asset  */
   customLabelProp?: string;
 }>({
-  name: 'primaryInfo',
+  name: "primaryInfo",
   TextComp: Text,
   wrapInAsset: true,
   CollectionComp,
@@ -364,7 +364,7 @@ Info.AdditionalInfo = createSlot<{
   /** Some thing not in the asset  */
   customLabelProp?: string;
 }>({
-  name: 'additionalInfo',
+  name: "additionalInfo",
   TextComp: Text,
   wrapInAsset: true,
   CollectionComp,

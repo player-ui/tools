@@ -1,16 +1,3 @@
-import type { NamedType } from '@player-tools/xlr';
+import type { TSManifest } from "@player-tools/xlr";
 
-export interface Types {
-  pluginName: 'Types';
-  capabilities: {
-    Types: NamedType[];
-  };
-  customPrimitives: [
-    'Expression',
-    'Asset',
-    'Binding',
-    'AssetWrapper',
-    'Schema.DataType',
-    'ExpressionHandler'
-  ];
-}
+export type Types = TSManifest;

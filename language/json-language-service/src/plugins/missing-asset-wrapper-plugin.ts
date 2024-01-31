@@ -1,13 +1,13 @@
-import { DiagnosticSeverity } from 'vscode-languageserver-types';
-import type { PlayerLanguageService, PlayerLanguageServicePlugin } from '..';
-import type { ASTNode, ObjectASTNode } from '../parser';
+import { DiagnosticSeverity } from "vscode-languageserver-types";
+import type { PlayerLanguageService, PlayerLanguageServicePlugin } from "..";
+import type { ASTNode, ObjectASTNode } from "../parser";
 import {
   getNodeValue,
   isKeyNode,
   isObjectNode,
   isPropertyNode,
-} from '../parser';
-import { formatLikeNode } from '../utils';
+} from "../parser";
+import { formatLikeNode } from "../utils";
 
 /** Get the JSON object that the validation targets */
 const getObjectTarget = (node?: ASTNode): ObjectASTNode | undefined => {
@@ -28,7 +28,7 @@ const getObjectTarget = (node?: ASTNode): ObjectASTNode | undefined => {
  * A plugin to help identify and fix the issue of forgetting the "asset" wrapper object
  */
 export class MissingAssetWrapperPlugin implements PlayerLanguageServicePlugin {
-  name = 'missing-asset-wrapper';
+  name = "missing-asset-wrapper";
 
   apply(languageService: PlayerLanguageService): void {
     languageService.hooks.onValidateEnd.tap(
@@ -42,8 +42,8 @@ export class MissingAssetWrapperPlugin implements PlayerLanguageServicePlugin {
         const expectedAssetDiags = diagnostics.filter(
           (d) =>
             d.message.includes(
-              "Does not match any of the expected types for type: 'AssetWrapperOrSwitch'"
-            ) || d.message.startsWith('Expected property: asset')
+              `Does not match any of the expected types for type: "AssetWrapperOrSwitch"`
+            ) || d.message.startsWith("Expected property: asset")
         );
 
         expectedAssetDiags.forEach((d) => {
@@ -54,11 +54,11 @@ export class MissingAssetWrapperPlugin implements PlayerLanguageServicePlugin {
           const objectNode = getObjectTarget(originalNode);
 
           if (objectNode && originalNode) {
-            // This 'expected property' diag is for the key of a property, where the value is the stubbed out asset
+            // This "expected property" diag is for the key of a property, where the value is the stubbed out asset
             // Check for diags for keys in that nested object
 
             // Now group the other diagnostics that are for unexpected props underneath that object
-            // We'll suppress these for now since they are bound to be wrong until they're wrapped in an asset
+            // We"ll suppress these for now since they are bound to be wrong until they"re wrapped in an asset
             const associatedDiags = filteredDiags.filter((nestedDiag) => {
               const diagNode = documentContext.PlayerContent.getNodeFromOffset(
                 documentContext.document.offsetAt(nestedDiag.range.start)
@@ -74,7 +74,7 @@ export class MissingAssetWrapperPlugin implements PlayerLanguageServicePlugin {
               fix: () => ({
                 name: `Wrap in "asset"`,
                 edit: {
-                  type: 'replace',
+                  type: "replace",
                   node: objectNode,
                   value: formatLikeNode(documentContext.document, objectNode, {
                     asset: getNodeValue(objectNode),

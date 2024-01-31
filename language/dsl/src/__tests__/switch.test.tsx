@@ -1,12 +1,12 @@
-import { test, expect, describe } from 'vitest';
-import React from 'react';
-import { render } from 'react-json-reconciler';
-import { expression as e } from '..';
-import { Switch } from '../switch';
-import { Text, Collection, Input } from './helpers/asset-library';
+import { test, expect, describe } from "vitest";
+import React from "react";
+import { render } from "react-json-reconciler";
+import { expression as e } from "..";
+import { Switch } from "../switch";
+import { Text, Collection, Input } from "./helpers/asset-library";
 
-describe('staticSwitch', () => {
-  test('works for basic cases', async () => {
+describe("staticSwitch", () => {
+  test("works for basic cases", async () => {
     const element = (
       <Collection>
         <Collection.Label>
@@ -23,24 +23,24 @@ describe('staticSwitch', () => {
     );
 
     expect((await render(element)).jsonValue).toStrictEqual({
-      id: 'root',
-      type: 'collection',
+      id: "root",
+      type: "collection",
       label: {
         staticSwitch: [
           {
-            case: 'foo() = bar()',
+            case: "foo() = bar()",
             asset: {
-              id: 'label-staticSwitch-0',
-              type: 'text',
-              value: 'Text 1',
+              id: "label-staticSwitch-0",
+              type: "text",
+              value: "Text 1",
             },
           },
           {
             case: true,
             asset: {
-              id: 'label-staticSwitch-1',
-              type: 'text',
-              value: 'Text 1',
+              id: "label-staticSwitch-1",
+              type: "text",
+              value: "Text 1",
             },
           },
         ],
@@ -48,7 +48,7 @@ describe('staticSwitch', () => {
     });
   });
 
-  test('works for dynamic switch', async () => {
+  test("works for dynamic switch", async () => {
     const element = (
       <Collection>
         <Collection.Label>
@@ -111,7 +111,7 @@ describe('staticSwitch', () => {
     `);
   });
 
-  test('static switch with boolean exp', async () => {
+  test("static switch with boolean exp", async () => {
     const element = (
       <Collection>
         <Collection.Label>
@@ -128,24 +128,24 @@ describe('staticSwitch', () => {
     );
 
     expect((await render(element)).jsonValue).toStrictEqual({
-      id: 'root',
-      type: 'collection',
+      id: "root",
+      type: "collection",
       label: {
         staticSwitch: [
           {
             case: true,
             asset: {
-              id: 'label-staticSwitch-0',
-              type: 'text',
-              value: 'Text 1',
+              id: "label-staticSwitch-0",
+              type: "text",
+              value: "Text 1",
             },
           },
           {
             case: false,
             asset: {
-              id: 'label-staticSwitch-1',
-              type: 'text',
-              value: 'Text 1',
+              id: "label-staticSwitch-1",
+              type: "text",
+              value: "Text 1",
             },
           },
         ],
@@ -153,7 +153,7 @@ describe('staticSwitch', () => {
     });
   });
 
-  test('dynamic switch with boolean exp', async () => {
+  test("dynamic switch with boolean exp", async () => {
     const element = (
       <Collection>
         <Collection.Label>
@@ -170,24 +170,24 @@ describe('staticSwitch', () => {
     );
 
     expect((await render(element)).jsonValue).toStrictEqual({
-      id: 'root',
-      type: 'collection',
+      id: "root",
+      type: "collection",
       label: {
         dynamicSwitch: [
           {
             case: true,
             asset: {
-              id: 'label-dynamicSwitch-0',
-              type: 'text',
-              value: 'Text 1',
+              id: "label-dynamicSwitch-0",
+              type: "text",
+              value: "Text 1",
             },
           },
           {
             case: false,
             asset: {
-              id: 'label-dynamicSwitch-1',
-              type: 'text',
-              value: 'Text 1',
+              id: "label-dynamicSwitch-1",
+              type: "text",
+              value: "Text 1",
             },
           },
         ],
@@ -196,8 +196,8 @@ describe('staticSwitch', () => {
   });
 });
 
-describe('generates ids', () => {
-  test('works for collection items', async () => {
+describe("generates ids", () => {
+  test("works for collection items", async () => {
     const content = (
       <Collection>
         <Collection.Values>

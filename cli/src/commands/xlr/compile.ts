@@ -1,40 +1,40 @@
-import { Flags } from '@oclif/core';
-import ts from 'typescript';
-import fs from 'fs';
-import path from 'path';
-import globby from 'globby';
-import logSymbols from 'log-symbols';
-import { TsConverter } from '@player-tools/xlr-converters';
-import type { Manifest } from '@player-tools/xlr';
-import chalk from 'chalk';
-import { BaseCommand } from '../../utils/base-command';
-import { pluginVisitor, fileVisitor } from '../../utils/xlr/visitors';
-import { Mode, customPrimitives } from '../../utils/xlr/consts';
+import { Flags } from "@oclif/core";
+import ts from "typescript";
+import fs from "fs";
+import path from "path";
+import globby from "globby";
+import logSymbols from "log-symbols";
+import { TsConverter } from "@player-tools/xlr-converters";
+import type { Manifest } from "@player-tools/xlr";
+import chalk from "chalk";
+import { BaseCommand } from "../../utils/base-command";
+import { pluginVisitor, fileVisitor } from "../../utils/xlr/visitors";
+import { Mode, customPrimitives } from "../../utils/xlr/consts";
 
 /**
  * Exports TS Interfaces/Types to XLR format
  */
 export default class XLRCompile extends BaseCommand {
-  static description = 'Compiles typescript files to XLRs format';
+  static description = "Compiles typescript files to XLRs format";
 
   static flags = {
     ...BaseCommand.flags,
     input: Flags.string({
-      char: 'i',
-      description: 'An input directory to search for types to export',
-      default: './src',
+      char: "i",
+      description: "An input directory to search for types to export",
+      default: "./src",
     }),
     output: Flags.string({
-      char: 'o',
-      description: 'Output directory to write results to.',
-      default: './dist',
+      char: "o",
+      description: "Output directory to write results to.",
+      default: "./dist",
     }),
     mode: Flags.enum({
-      char: 'm',
+      char: "m",
       description:
-        'Search strategy for types to export: plugin (default, looks for exported EnchancedPlayerPlugin classes) or type (all exported types)',
-      options: ['plugin', 'types'],
-      default: 'plugin',
+        "Search strategy for types to export: plugin (default, looks for exported EnchancedPlayerPlugin classes) or type (all exported types)",
+      options: ["plugin", "types"],
+      default: "plugin",
     }),
   };
 
@@ -47,8 +47,8 @@ export default class XLRCompile extends BaseCommand {
     const modeValue = config.xlr?.mode ?? flags.mode;
     return {
       inputPath: input,
-      outputDir: path.join(output, 'xlr'),
-      mode: modeValue === 'plugin' ? Mode.PLUGIN : Mode.TYPES,
+      outputDir: path.join(output, "xlr"),
+      mode: modeValue === "plugin" ? Mode.PLUGIN : Mode.TYPES,
     };
   }
 
@@ -64,7 +64,7 @@ export default class XLRCompile extends BaseCommand {
     try {
       this.processTypes(inputFiles, outputDir, {}, mode);
     } catch (e: any) {
-      console.log('');
+      console.log("");
       console.log(
         chalk.red(`${logSymbols.error} Error compiling XLRs: ${e.message}`)
       );
@@ -147,35 +147,35 @@ export default class XLRCompile extends BaseCommand {
     });
 
     if (!capabilities) {
-      throw new Error('Error: Unable to parse any XLRs in package');
+      throw new Error("Error: Unable to parse any XLRs in package");
     }
 
     // print out the manifest files
     const jsonManifest = JSON.stringify(capabilities, this.replacer, 4);
-    fs.writeFileSync(path.join(outputDirectory, 'manifest.json'), jsonManifest);
+    fs.writeFileSync(path.join(outputDirectory, "manifest.json"), jsonManifest);
 
     const tsManifestFile = `${[...(capabilities.capabilities?.values() ?? [])]
       .flat(2)
       .map((capability) => {
-        return `const ${capability} = require('./${capability}.json')`;
+        return `const ${capability} = require("./${capability}.json")`;
       })
-      .join('\n')}
+      .join("\n")}
 
     module.exports = {
       "pluginName": "${capabilities.pluginName}",
       "capabilities": {
         ${[...(capabilities.capabilities?.entries() ?? [])]
           .map(([capabilityName, provides]) => {
-            return `"${capabilityName}":[${provides.join(',')}],`;
+            return `"${capabilityName}":[${provides.join(",")}],`;
           })
-          .join('\n\t\t')}
+          .join("\n\t\t")}
       },
       "customPrimitives": [
-        ${[capabilities.customPrimitives?.map((i) => `'${i}'`).join(',') ?? '']}
+        ${[capabilities.customPrimitives?.map((i) => `"${i}"`).join(",") ?? ""]}
       ]
     }
 `;
 
-    fs.writeFileSync(path.join(outputDirectory, 'manifest.js'), tsManifestFile);
+    fs.writeFileSync(path.join(outputDirectory, "manifest.js"), tsManifestFile);
   }
 }

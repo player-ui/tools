@@ -3,7 +3,7 @@
 exports[`Basic Validation > Basic Validation By Name 1`] = `
 [
   {
-    "message": "Expected type 'string' but got 'number'",
+    "message": "Expected type "string" but got "number"",
     "node": {
       "children": [
         {
@@ -154,7 +154,7 @@ exports[`Basic Validation > Basic Validation By Name 1`] = `
     "type": "type",
   },
   {
-    "message": "Property 'id' missing from type 'Asset'",
+    "message": "Property "id" missing from type "Asset"",
     "node": {
       "children": [
         {
@@ -305,7 +305,7 @@ exports[`Basic Validation > Basic Validation By Name 1`] = `
     "type": "missing",
   },
   {
-    "message": "Property 'type' missing from type 'Asset'",
+    "message": "Property "type" missing from type "Asset"",
     "node": {
       "children": [
         {
@@ -461,7 +461,7 @@ exports[`Basic Validation > Basic Validation By Name 1`] = `
 exports[`Basic Validation > Basic Validation By Type 1`] = `
 [
   {
-    "message": "Expected type 'string' but got 'number'",
+    "message": "Expected type "string" but got "number"",
     "node": {
       "children": [
         {
@@ -612,7 +612,7 @@ exports[`Basic Validation > Basic Validation By Type 1`] = `
     "type": "type",
   },
   {
-    "message": "Property 'id' missing from type 'Asset'",
+    "message": "Property "id" missing from type "Asset"",
     "node": {
       "children": [
         {
@@ -763,7 +763,7 @@ exports[`Basic Validation > Basic Validation By Type 1`] = `
     "type": "missing",
   },
   {
-    "message": "Property 'type' missing from type 'Asset'",
+    "message": "Property "type" missing from type "Asset"",
     "node": {
       "children": [
         {
@@ -917,7 +917,7 @@ exports[`Basic Validation > Basic Validation By Type 1`] = `
 `;
 
 exports[`Export Test > Exports Typescript Types With Filters 1`] = `
-"import { Expression, Asset, Binding, AssetWrapper } from \\"@player-ui/types\\";
+"import { Expression, Asset, Binding, AssetWrapper } from "@player-ui/types";
 
 /**
  * This is the most generic way of gathering data. The input is bound to a data model using the 'binding' property.
@@ -1026,7 +1026,7 @@ export interface CollectionAsset {
 `;
 
 exports[`Export Test > Exports Typescript Types With Transforms 1`] = `
-"import { Expression, Asset, Binding, AssetWrapper } from \\"@player-ui/types\\";
+"import { Expression, Asset, Binding, AssetWrapper } from "@player-ui/types";
 
 /**
  * This is the most generic way of gathering data. The input is bound to a data model using the 'binding' property.
@@ -1140,7 +1140,7 @@ export interface CollectionAsset {
 `;
 
 exports[`Export Test > Exports Typescript types 1`] = `
-"import { Expression, Asset, Binding, AssetWrapper } from \\"@player-ui/types\\";
+"import { Expression, Asset, Binding, AssetWrapper } from "@player-ui/types";
 
 /** An asset is the smallest unit of user interaction in a player view */
 export interface Asset<T extends string = string> {
@@ -1922,7 +1922,7 @@ export interface Flow<T extends Asset = Asset> {
                 isArray?: boolean;
                 /**
                  * Any additional validations that are associated with this property
-                 * These will add to any base validations associated with the \\"type\\"
+                 * These will add to any base validations associated with the "type"
                 */
                 validation?: Array<{
                     /**
@@ -1971,7 +1971,7 @@ export interface Flow<T extends Asset = Asset> {
                 isArray?: boolean;
                 /**
                  * Any additional validations that are associated with this property
-                 * These will add to any base validations associated with the \\"type\\"
+                 * These will add to any base validations associated with the "type"
                 */
                 validation?: Array<{
                     /**

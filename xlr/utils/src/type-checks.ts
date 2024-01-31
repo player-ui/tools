@@ -1,11 +1,11 @@
-import ts from 'typescript';
+import ts from "typescript";
 import type {
   NamedType,
   NamedTypeWithGenerics,
   NodeType,
   NodeTypeWithGenerics,
   PrimitiveTypes,
-} from '@player-tools/xlr';
+} from "@player-tools/xlr";
 
 /**
  * Returns if the Object Property is optional
@@ -101,15 +101,15 @@ export function isGenericNamedType<T extends NamedType = NamedType>(
  */
 export function isPrimitiveTypeNode(node: NodeType): node is PrimitiveTypes {
   return (
-    node.type === 'string' ||
-    node.type === 'number' ||
-    node.type === 'boolean' ||
-    node.type === 'null' ||
-    node.type === 'any' ||
-    node.type === 'never' ||
-    node.type === 'undefined' ||
-    node.type === 'unknown' ||
-    node.type === 'void'
+    node.type === "string" ||
+    node.type === "number" ||
+    node.type === "boolean" ||
+    node.type === "null" ||
+    node.type === "any" ||
+    node.type === "never" ||
+    node.type === "undefined" ||
+    node.type === "unknown" ||
+    node.type === "void"
   );
 }
 

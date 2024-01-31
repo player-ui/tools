@@ -1,9 +1,9 @@
-import { test, expect, describe } from 'vitest';
-import { setupTestEnv } from '../test-helpers';
-import { decorateNode } from '../annotations';
+import { test, expect, describe } from "vitest";
+import { setupTestEnv } from "../test-helpers";
+import { decorateNode } from "../annotations";
 
-describe('Annotations', () => {
-  test('JSDoc comments to strings', () => {
+describe("Annotations", () => {
+  test("JSDoc comments to strings", () => {
     const sc = `
     /**
    * An asset is the smallest unit of user interaction in a player view
@@ -21,7 +21,7 @@ describe('Annotations', () => {
     expect(decorateNode(sf.statements[0])).toMatchSnapshot();
   });
 
-  test('JSDoc @meta', () => {
+  test("JSDoc @meta", () => {
     const sc = `
     /**
    * An asset is the smallest unit of user interaction in a player view

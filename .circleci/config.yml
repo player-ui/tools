@@ -16,7 +16,7 @@ orbs:
 executors:
   base:
     docker:
-      - image: docker.io/playerui/bazel-docker
+      - image: docker.io/playerui/bazel-docker:6
     working_directory: ~/tools
     resource_class: large
     environment:
@@ -34,8 +34,6 @@ commands:
             - v1-bazel-cache-core-{{ .Branch }}-{{ .Revision }}
             - v1-bazel-cache-core-{{ .Branch }}
             - v1-bazel-cache-core-main
-
-      - run: pnpm i
 
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
       - run: echo -e $GPG_KEY | gpg --import --batch
@@ -78,8 +76,6 @@ jobs:
       - attach_workspace:
           at: ~/tools
 
-      - run: pnpm i
-
       - run: bazel build --config=ci -- //...
 
       - save_cache:
@@ -97,8 +93,6 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/tools
-
-      - run: pnpm i
 
       - run: bazel test --config=ci -- //...
 

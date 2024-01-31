@@ -1,7 +1,7 @@
-import ts from 'typescript';
-import type { SymbolDisplayPart } from 'typescript';
-import type { NodeType } from '@player-tools/xlr';
-import { isPrimitiveTypeNode } from './type-checks';
+import ts from "typescript";
+import type { SymbolDisplayPart } from "typescript";
+import type { NodeType } from "@player-tools/xlr";
+import { isPrimitiveTypeNode } from "./type-checks";
 
 const { SymbolDisplayPartKind, displayPartsToString } = ts;
 
@@ -23,7 +23,7 @@ function insertBetweenElements<T>(array: Array<T>, separator: T): T[] {
  * @returns - documentation string
  */
 export function createTSDocString(node: NodeType): Array<SymbolDisplayPart> {
-  if (node.type === 'ref') {
+  if (node.type === "ref") {
     return [
       {
         text: node.ref,
@@ -32,36 +32,36 @@ export function createTSDocString(node: NodeType): Array<SymbolDisplayPart> {
     ];
   }
 
-  if (node.type === 'or' || node.type === 'and') {
-    const items = node.type === 'and' ? node.and : node.or;
+  if (node.type === "or" || node.type === "and") {
+    const items = node.type === "and" ? node.and : node.or;
 
     return insertBetweenElements(
       items.map((subnode) => createTSDocString(subnode)),
       [
         {
           kind: SymbolDisplayPartKind.punctuation as any,
-          text: node.type === 'and' ? ' & ' : ' | ',
+          text: node.type === "and" ? " & " : " | ",
         },
       ]
     ).flat();
   }
 
-  if (node.type === 'function') {
+  if (node.type === "function") {
     return [
       {
         kind: SymbolDisplayPartKind.keyword as any,
-        text: 'function',
+        text: "function",
       },
       {
         kind: SymbolDisplayPartKind.space as any,
-        text: ' ',
+        text: " ",
       },
       ...(node.name
         ? [{ text: node.name, kind: SymbolDisplayPartKind.methodName }]
         : []),
       {
         kind: SymbolDisplayPartKind.punctuation as any,
-        text: '(',
+        text: "(",
       },
       ...insertBetweenElements(
         node.parameters.map((p) => {
@@ -73,11 +73,11 @@ export function createTSDocString(node: NodeType): Array<SymbolDisplayPart> {
               },
               {
                 kind: SymbolDisplayPartKind.punctuation as any,
-                text: p.optional ? '?' : '',
+                text: p.optional ? "?" : "",
               },
               {
                 kind: SymbolDisplayPartKind.punctuation as any,
-                text: ': ',
+                text: ": ",
               },
               ...createTSDocString(p.type),
             ];
@@ -88,19 +88,19 @@ export function createTSDocString(node: NodeType): Array<SymbolDisplayPart> {
         [
           {
             kind: SymbolDisplayPartKind.punctuation as any,
-            text: ', ',
+            text: ", ",
           },
         ]
       ).flat(),
       {
         kind: SymbolDisplayPartKind.punctuation as any,
-        text: ')',
+        text: ")",
       },
       ...(node.returnType
         ? [
             {
               kind: SymbolDisplayPartKind.punctuation as any,
-              text: ': ',
+              text: ": ",
             },
             ...createTSDocString(node.returnType),
           ]
@@ -108,11 +108,11 @@ export function createTSDocString(node: NodeType): Array<SymbolDisplayPart> {
     ];
   }
 
-  if (node.type === 'tuple') {
+  if (node.type === "tuple") {
     return [
       {
         kind: SymbolDisplayPartKind.punctuation as any,
-        text: '[',
+        text: "[",
       },
       ...insertBetweenElements(
         node.elementTypes.map((t) => {
@@ -124,7 +124,7 @@ export function createTSDocString(node: NodeType): Array<SymbolDisplayPart> {
               },
               {
                 kind: SymbolDisplayPartKind.punctuation as any,
-                text: ': ',
+                text: ": ",
               },
               ...createTSDocString(t.type),
             ];
@@ -135,76 +135,76 @@ export function createTSDocString(node: NodeType): Array<SymbolDisplayPart> {
         [
           {
             kind: SymbolDisplayPartKind.punctuation as any,
-            text: ', ',
+            text: ", ",
           },
         ]
       ).flat(),
       {
         kind: SymbolDisplayPartKind.punctuation as any,
-        text: ']',
+        text: "]",
       },
     ];
   }
 
-  if (node.type === 'array') {
+  if (node.type === "array") {
     return [
       {
         kind: SymbolDisplayPartKind.interfaceName as any,
-        text: 'Array',
+        text: "Array",
       },
       {
         kind: SymbolDisplayPartKind.punctuation as any,
-        text: '<',
+        text: "<",
       },
       ...createTSDocString(node.elementType),
       {
         kind: SymbolDisplayPartKind.punctuation as any,
-        text: '>',
+        text: ">",
       },
     ];
   }
 
-  if (node.type === 'record') {
+  if (node.type === "record") {
     return [
       {
         kind: SymbolDisplayPartKind.interfaceName as any,
-        text: 'Record',
+        text: "Record",
       },
       {
         kind: SymbolDisplayPartKind.punctuation as any,
-        text: '<',
+        text: "<",
       },
       ...createTSDocString(node.keyType),
       {
         kind: SymbolDisplayPartKind.punctuation as any,
-        text: ', ',
+        text: ", ",
       },
       ...createTSDocString(node.valueType),
       {
         kind: SymbolDisplayPartKind.punctuation as any,
-        text: '>',
+        text: ">",
       },
     ];
   }
 
   if (
-    (node.type === 'string' ||
-      node.type === 'boolean' ||
-      node.type === 'number') &&
+    (node.type === "string" ||
+      node.type === "boolean" ||
+      node.type === "number") &&
     node.const !== undefined
   ) {
     return [
       {
         kind: SymbolDisplayPartKind.keyword as any,
         text:
-          typeof node.const === 'string'
-            ? `'${node.const}'`
+          typeof node.const === "string"
+            ? `"${node.const}"`
             : String(node.const),
       },
     ];
   }
 
-  if (isPrimitiveTypeNode(node) && node.type !== 'null') {
+  if (isPrimitiveTypeNode(node) && node.type !== "null") {
     return [
       {
         kind: SymbolDisplayPartKind.keyword as any,
@@ -213,7 +213,7 @@ export function createTSDocString(node: NodeType): Array<SymbolDisplayPart> {
     ];
   }
 
-  if (node.type === 'object' && node.name) {
+  if (node.type === "object" && node.name) {
     return [
       {
         kind: SymbolDisplayPartKind.interfaceName as any,

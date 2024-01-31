@@ -1,5 +1,5 @@
-import type { PlayerLanguageService } from '@player-tools/json-language-service';
-import type { PlayerCLIPlugin } from './index';
+import type { PlayerLanguageService } from "@player-tools/json-language-service";
+import type { PlayerCLIPlugin } from "./index";
 
 export interface Config {
   /** the path to the asset library to load */

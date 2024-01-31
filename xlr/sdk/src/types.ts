@@ -1,4 +1,4 @@
-import type { Node } from 'jsonc-parser';
+import type { Node } from "jsonc-parser";
 
 export interface ValidationError {
   /** Error message text */
@@ -8,8 +8,8 @@ export interface ValidationError {
   node: Node;
 
   /** Rough categorization of the error type */
-  type: 'type' | 'missing' | 'unknown' | 'value' | 'unexpected';
+  type: "type" | "missing" | "unknown" | "value" | "unexpected";
 }
 
 /** Support Export Formats */
-export type ExportTypes = 'TypeScript';
+export type ExportTypes = "TypeScript";

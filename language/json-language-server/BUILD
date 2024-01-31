@@ -11,6 +11,7 @@ vitest_config(name = "vitest_config")
 js_pipeline(
     package_name = "@player-tools/json-language-server",
     test_deps = [
+        "//:node_modules",
         "//:vitest_config",
     ],
     deps = [

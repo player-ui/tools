@@ -1,26 +1,26 @@
-import { Flags } from '@oclif/core';
-import glob from 'globby';
-import { promises as fs } from 'fs';
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import { DiagnosticSeverity } from 'vscode-languageserver-types';
-import { BaseCommand } from '../../utils/base-command';
-import { validationRenderer } from '../../utils/diag-renderer';
-import { convertToFileGlob } from '../../utils/fs';
-import { createTaskRunner } from '../../utils/task-runner';
+import { Flags } from "@oclif/core";
+import glob from "globby";
+import { promises as fs } from "fs";
+import { TextDocument } from "vscode-languageserver-textdocument";
+import { DiagnosticSeverity } from "vscode-languageserver-types";
+import { BaseCommand } from "../../utils/base-command";
+import { validationRenderer } from "../../utils/diag-renderer";
+import { convertToFileGlob } from "../../utils/fs";
+import { createTaskRunner } from "../../utils/task-runner";
 
 /** A command to validate JSON content */
 export default class Validate extends BaseCommand {
-  static description = 'Validate Player JSON content';
+  static description = "Validate Player JSON content";
 
   static flags = {
     ...BaseCommand.flags,
     files: Flags.string({
-      char: 'f',
-      description: 'A list of files or globs to validate',
+      char: "f",
+      description: "A list of files or globs to validate",
       multiple: true,
     }),
     exp: Flags.boolean({
-      description: 'Use experimental language features',
+      description: "Use experimental language features",
       default: false,
     }),
   };
@@ -35,7 +35,7 @@ export default class Validate extends BaseCommand {
     const { exp } = flags;
 
     if (!files) {
-      throw new Error('JSON validation requires a file list');
+      throw new Error("JSON validation requires a file list");
     }
 
     return {
@@ -49,13 +49,13 @@ export default class Validate extends BaseCommand {
     exitCode: number;
   }> {
     const { files: inputFiles, exp } = await this.getOptions();
-    const expandedFilesList = convertToFileGlob(inputFiles, '**/*.json');
-    this.debug('Searching for files using: %o', expandedFilesList);
+    const expandedFilesList = convertToFileGlob(inputFiles, "**/*.json");
+    this.debug("Searching for files using: %o", expandedFilesList);
     const files = await glob(expandedFilesList, {
       expandDirectories: true,
     });
 
-    this.debug('Found %i files to process', files.length);
+    this.debug("Found %i files to process", files.length);
 
     const results = {
       exitCode: 0,
@@ -69,11 +69,12 @@ export default class Validate extends BaseCommand {
           file: f,
         },
         run: async () => {
-          const contents = await fs.readFile(f, 'utf-8');
+          const contents = await fs.readFile(f, "utf-8");
+          const lsp = await this.createLanguageService(exp);
 
           const validations =
             (await lsp.validateTextDocument(
-              TextDocument.create(`file://${f}`, 'json', 1, contents)
+              TextDocument.create(`file://${f}`, "json", 1, contents)
             )) ?? [];
 
           return validations;
@@ -92,7 +93,7 @@ export default class Validate extends BaseCommand {
       }
     });
 
-    this.debug('finished');
+    this.debug("finished");
     this.exit(results.exitCode);
 
     return results;

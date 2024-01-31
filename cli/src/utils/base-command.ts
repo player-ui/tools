@@ -1,25 +1,25 @@
-import { Command, Flags } from '@oclif/core';
-import path from 'path';
-import { cosmiconfig } from 'cosmiconfig';
-import { PlayerLanguageService } from '@player-tools/json-language-service';
-import { DSLCompiler } from '@player-tools/dsl';
-import type { ExportTypes } from '@player-tools/xlr-sdk';
-import type { TransformFunction } from '@player-tools/xlr';
+import { Command, Flags } from "@oclif/core";
+import path from "path";
+import { cosmiconfig } from "cosmiconfig";
+import { PlayerLanguageService } from "@player-tools/json-language-service";
+import { DSLCompiler } from "@player-tools/dsl";
+import type { ExportTypes } from "@player-tools/xlr-sdk";
+import type { TransformFunction } from "@player-tools/xlr";
 import type {
   PlayerConfigFileShape,
   PlayerConfigResolvedShape,
-} from '../config';
-import { CompilationContext } from './compilation-context';
+} from "../config";
+import { CompilationContext } from "./compilation-context";
 
-const configLoader = cosmiconfig('player');
+const configLoader = cosmiconfig("player");
 
 /** The common configs for all  */
 export abstract class BaseCommand extends Command {
   static flags = {
     config: Flags.string({
       description:
-        'Path to a specific config file to load.\nBy default, will automatically search for an rc or config file to load',
-      char: 'c',
+        "Path to a specific config file to load.\nBy default, will automatically search for an rc or config file to load",
+      char: "c",
     }),
   };
 
@@ -53,7 +53,7 @@ export abstract class BaseCommand extends Command {
     if (conf?.extends) {
       let normalizedExtension: PlayerConfigFileShape;
 
-      if (typeof conf.extends === 'string') {
+      if (typeof conf.extends === "string") {
         const requiredExtendedConfig = await import(conf.extends);
         normalizedExtension =
           requiredExtendedConfig.default ?? requiredExtendedConfig;
@@ -68,7 +68,7 @@ export abstract class BaseCommand extends Command {
 
     await Promise.all(
       conf?.presets?.map(async (preset) => {
-        if (typeof preset === 'string') {
+        if (typeof preset === "string") {
           const requiredExtendedConfig = await import(preset);
           const normalizedExtension =
             requiredExtendedConfig.default ?? requiredExtendedConfig;
@@ -90,23 +90,23 @@ export abstract class BaseCommand extends Command {
     if (conf?.plugins) {
       await Promise.all(
         conf?.plugins?.map(async (pluginInfo) => {
-          if (typeof pluginInfo === 'object' && !Array.isArray(pluginInfo)) {
+          if (typeof pluginInfo === "object" && !Array.isArray(pluginInfo)) {
             config.plugins.push(pluginInfo);
             return;
           }
 
           const pluginName =
-            typeof pluginInfo === 'string' ? pluginInfo : pluginInfo[0];
+            typeof pluginInfo === "string" ? pluginInfo : pluginInfo[0];
           const pluginArgs =
-            typeof pluginInfo === 'string' ? undefined : pluginInfo[1];
+            typeof pluginInfo === "string" ? undefined : pluginInfo[1];
 
           let pluginLoadPath = pluginName;
 
-          if (pluginName.startsWith('.')) {
-            pluginLoadPath = path.resolve(relativePath ?? '', pluginName);
+          if (pluginName.startsWith(".")) {
+            pluginLoadPath = path.resolve(relativePath ?? "", pluginName);
           }
 
-          this.debug('loading plugin from %s', pluginLoadPath);
+          this.debug("loading plugin from %s", pluginLoadPath);
           // Get the instance for the plugin
           const required = await import(pluginLoadPath);
 
@@ -117,7 +117,7 @@ export abstract class BaseCommand extends Command {
           }
 
           const pluginInstance =
-            typeof PluginExport === 'object'
+            typeof PluginExport === "object"
               ? PluginExport
               : new PluginExport(pluginArgs);
           config.plugins.push(pluginInstance);
@@ -199,7 +199,7 @@ export abstract class BaseCommand extends Command {
   }
 
   exit(code?: number): void {
-    if (process.env.NODE_ENV !== 'test') {
+    if (process.env.NODE_ENV !== "test") {
       super.exit(code);
     }
   }

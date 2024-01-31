@@ -1,43 +1,43 @@
-import { test, expect, describe, beforeEach } from 'vitest';
-import { Position } from 'vscode-languageserver-types';
+import { test, expect, describe, beforeEach } from "vitest";
+import { Position } from "vscode-languageserver-types";
 import {
   ReferenceAssetsWebPluginManifest,
   Types,
-} from '@player-tools/static-xlrs';
-import { PlayerLanguageService } from '../..';
-import { toTextDocument } from '../../utils';
+} from "@player-tools/static-xlrs";
+import { PlayerLanguageService } from "../..";
+import { toTextDocument } from "../../utils";
 
-describe('binding-plugin', () => {
+describe("binding-plugin", () => {
   let service: PlayerLanguageService;
 
   beforeEach(async () => {
     service = new PlayerLanguageService();
-    await service.XLRService.XLRSDK.loadDefinitionsFromModule(Types);
-    await service.XLRService.XLRSDK.loadDefinitionsFromModule(
-      ReferenceAssetsWebPluginManifest
-    );
+    await service.setAssetTypesFromModule([
+      Types,
+      ReferenceAssetsWebPluginManifest,
+    ]);
   });
 
-  test('auto completes bindings', async () => {
+  test("auto completes bindings", async () => {
     const testDocument = toTextDocument(
       JSON.stringify(
         {
           views: [
             {
-              id: 'bar',
-              type: 'input',
-              binding: '',
+              id: "bar",
+              type: "input",
+              binding: "",
             },
           ],
           schema: {
             ROOT: {
               foo: {
-                type: 'FooType',
+                type: "FooType",
               },
             },
             FooType: {
               bar: {
-                type: 'StringType',
+                type: "StringType",
               },
             },
           },

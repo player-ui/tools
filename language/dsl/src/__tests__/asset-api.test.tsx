@@ -1,12 +1,12 @@
-import { test, expect, describe } from 'vitest';
-import React from 'react';
-import { render } from 'react-json-reconciler';
-import { binding as b } from '../string-templates';
-import { Switch } from '../switch';
-import { Collection, Text, Input, ArrayProp } from './helpers/asset-library';
+import { test, expect, describe } from "vitest";
+import React from "react";
+import { render } from "react-json-reconciler";
+import { binding as b } from "../string-templates";
+import { Switch } from "../switch";
+import { Collection, Text, Input, ArrayProp } from "./helpers/asset-library";
 
-describe('components', () => {
-  test('automatically creates collections', async () => {
+describe("components", () => {
+  test("automatically creates collections", async () => {
     const element = (
       <Collection>
         <Collection.Label>
@@ -21,26 +21,26 @@ describe('components', () => {
     );
 
     expect((await render(element)).jsonValue).toStrictEqual({
-      id: 'root',
-      type: 'collection',
+      id: "root",
+      type: "collection",
       label: {
         asset: {
-          id: 'label',
-          type: 'collection',
+          id: "label",
+          type: "collection",
           values: [
-            { asset: { id: 'label-values-0', type: 'text', value: 'Foo' } },
-            { asset: { id: 'label-values-1', type: 'text', value: 'Bar' } },
+            { asset: { id: "label-values-0", type: "text", value: "Foo" } },
+            { asset: { id: "label-values-1", type: "text", value: "Bar" } },
           ],
         },
       },
       values: [
-        { asset: { id: 'values-0', type: 'text', value: 'Foo' } },
-        { asset: { id: 'values-1', type: 'text', value: 'Bar' } },
+        { asset: { id: "values-0", type: "text", value: "Foo" } },
+        { asset: { id: "values-1", type: "text", value: "Bar" } },
       ],
     });
   });
 
-  test('automatically creates text assets', async () => {
+  test("automatically creates text assets", async () => {
     const element = (
       <Collection>
         <Collection.Label>Foo {b`bar`.toString()}</Collection.Label>
@@ -52,23 +52,23 @@ describe('components', () => {
     );
 
     expect((await render(element)).jsonValue).toStrictEqual({
-      id: 'root',
-      type: 'collection',
+      id: "root",
+      type: "collection",
       label: {
         asset: {
-          id: 'label',
-          type: 'text',
-          value: 'Foo {{bar}}',
+          id: "label",
+          type: "text",
+          value: "Foo {{bar}}",
         },
       },
       values: [
-        { asset: { id: 'values-0', type: 'text', value: 'Foo' } },
-        { asset: { id: 'values-1', type: 'text', value: 'Bar' } },
+        { asset: { id: "values-0", type: "text", value: "Foo" } },
+        { asset: { id: "values-1", type: "text", value: "Bar" } },
       ],
     });
   });
 
-  test('works with fragments', async () => {
+  test("works with fragments", async () => {
     const element = (
       <Collection>
         <Collection.Label>
@@ -89,54 +89,54 @@ describe('components', () => {
     );
 
     expect((await render(element)).jsonValue).toStrictEqual({
-      id: 'root',
-      type: 'collection',
-      label: { asset: { id: 'label', type: 'text', value: 'Label' } },
+      id: "root",
+      type: "collection",
+      label: { asset: { id: "label", type: "text", value: "Label" } },
       values: [
         {
           asset: {
-            id: 'values-0',
-            type: 'text',
-            value: 'Foo',
+            id: "values-0",
+            type: "text",
+            value: "Foo",
           },
         },
         {
           asset: {
-            id: 'values-1',
-            type: 'text',
-            value: 'Bar',
+            id: "values-1",
+            type: "text",
+            value: "Bar",
           },
         },
         {
           asset: {
-            id: 'values-2',
-            type: 'text',
-            value: 'Foo',
+            id: "values-2",
+            type: "text",
+            value: "Foo",
           },
         },
         {
           asset: {
-            id: 'values-3',
-            type: 'text',
-            value: 'Bar',
+            id: "values-3",
+            type: "text",
+            value: "Bar",
           },
         },
         {
           asset: {
-            id: 'values-4',
-            type: 'text',
-            value: 'value-4',
+            id: "values-4",
+            type: "text",
+            value: "value-4",
           },
         },
       ],
     });
   });
 
-  describe('custom text modifier component', () => {
-    test('works with refs and layout effects', async () => {
+  describe("custom text modifier component", () => {
+    test("works with refs and layout effects", async () => {
       const element = await render(
         <Text>
-          Foo{' '}
+          Foo{" "}
           <Text.Modifier value="important" type="tag">
             Bar
           </Text.Modifier>
@@ -160,30 +160,30 @@ describe('components', () => {
     });
   });
 
-  describe('bindings', () => {
-    test('converts just a binding node into a ref', async () => {
+  describe("bindings", () => {
+    test("converts just a binding node into a ref", async () => {
       const element = await render(<Text>{b`foo.bar`.toString()}</Text>);
 
       expect(element.jsonValue).toStrictEqual({
-        id: 'root',
-        type: 'text',
-        value: '{{foo.bar}}',
+        id: "root",
+        type: "text",
+        value: "{{foo.bar}}",
       });
     });
 
-    test('converts a text string into refs', async () => {
+    test("converts a text string into refs", async () => {
       const element = await render(
         <Text>Label {b`foo.bar`.toString()} End</Text>
       );
 
       expect(element.jsonValue).toStrictEqual({
-        id: 'root',
-        type: 'text',
-        value: 'Label {{foo.bar}} End',
+        id: "root",
+        type: "text",
+        value: "Label {{foo.bar}} End",
       });
     });
 
-    test('leaves bindings for expected props', async () => {
+    test("leaves bindings for expected props", async () => {
       const element = await render(
         <Input binding={b`foo.bar.baz`}>
           <Input.Label>Input Label</Input.Label>
@@ -191,22 +191,22 @@ describe('components', () => {
       );
 
       expect(element.jsonValue).toStrictEqual({
-        id: 'root',
-        type: 'input',
-        binding: 'foo.bar.baz',
+        id: "root",
+        type: "input",
+        binding: "foo.bar.baz",
         label: {
           asset: {
-            type: 'text',
-            id: 'label',
-            value: 'Input Label',
+            type: "text",
+            id: "label",
+            value: "Input Label",
           },
         },
       });
     });
   });
 
-  describe('applicability', () => {
-    test('works with applicability prop', async () => {
+  describe("applicability", () => {
+    test("works with applicability prop", async () => {
       const element = await render(
         <Input id="custom-id" applicability={b`foo.bar.baz`}>
           <Input.Label>Input Label</Input.Label>
@@ -214,20 +214,20 @@ describe('components', () => {
       );
 
       expect(element.jsonValue).toStrictEqual({
-        id: 'custom-id',
-        type: 'input',
-        applicability: 'foo.bar.baz',
+        id: "custom-id",
+        type: "input",
+        applicability: "foo.bar.baz",
         label: {
           asset: {
-            type: 'text',
-            id: 'custom-id-label',
-            value: 'Input Label',
+            type: "text",
+            id: "custom-id-label",
+            value: "Input Label",
           },
         },
       });
     });
 
-    test('works for boolean literals', async () => {
+    test("works for boolean literals", async () => {
       const element = await render(
         <Input id="custom-id" applicability={false}>
           <Input.Label>Input Label</Input.Label>
@@ -235,21 +235,21 @@ describe('components', () => {
       );
 
       expect(element.jsonValue).toStrictEqual({
-        id: 'custom-id',
-        type: 'input',
+        id: "custom-id",
+        type: "input",
         applicability: false,
         label: {
           asset: {
-            type: 'text',
-            id: 'custom-id-label',
-            value: 'Input Label',
+            type: "text",
+            id: "custom-id-label",
+            value: "Input Label",
           },
         },
       });
     });
   });
 
-  test('auto-id', async () => {
+  test("auto-id", async () => {
     const element = (
       <Collection id="first-thing">
         <Collection.Label>Text</Collection.Label>
@@ -257,19 +257,19 @@ describe('components', () => {
     );
 
     expect((await render(element)).jsonValue).toStrictEqual({
-      id: 'first-thing',
-      type: 'collection',
+      id: "first-thing",
+      type: "collection",
       label: {
         asset: {
-          type: 'text',
-          id: 'first-thing-label',
-          value: 'Text',
+          type: "text",
+          id: "first-thing-label",
+          value: "Text",
         },
       },
     });
   });
 
-  test('should allow for a binding-ref on any leaf property', async () => {
+  test("should allow for a binding-ref on any leaf property", async () => {
     const element = (
       <ArrayProp
         stuff={[]}
@@ -283,21 +283,21 @@ describe('components', () => {
     );
 
     expect((await render(element)).jsonValue).toStrictEqual({
-      id: 'root',
+      id: "root",
       metaData: {
         optionalUnion: {
-          other: '{{foo}}',
+          other: "{{foo}}",
         },
       },
-      optionalNumber: '{{foo.bar}}',
+      optionalNumber: "{{foo.bar}}",
       stuff: [],
-      type: 'assetWithArray',
+      type: "assetWithArray",
     });
   });
 });
 
-describe('allows other props to be added to a slot', () => {
-  test('works with asset children', async () => {
+describe("allows other props to be added to a slot", () => {
+  test("works with asset children", async () => {
     const element = await render(
       <Input id="custom-id">
         <Input.Label customLabelProp="custom label slot value">
@@ -307,20 +307,20 @@ describe('allows other props to be added to a slot', () => {
     );
 
     expect(element.jsonValue).toStrictEqual({
-      id: 'custom-id',
-      type: 'input',
+      id: "custom-id",
+      type: "input",
       label: {
-        customLabelProp: 'custom label slot value',
+        customLabelProp: "custom label slot value",
         asset: {
-          type: 'text',
-          id: 'custom-id-label',
-          value: 'Input Label',
+          type: "text",
+          id: "custom-id-label",
+          value: "Input Label",
         },
       },
     });
   });
 
-  test('works with switch children', async () => {
+  test("works with switch children", async () => {
     const element = await render(
       <Input id="custom-id">
         <Input.Label customLabelProp="custom label slot value">
@@ -334,16 +334,16 @@ describe('allows other props to be added to a slot', () => {
     );
 
     expect(element.jsonValue).toStrictEqual({
-      id: 'custom-id',
-      type: 'input',
+      id: "custom-id",
+      type: "input",
       label: {
-        customLabelProp: 'custom label slot value',
+        customLabelProp: "custom label slot value",
         staticSwitch: [
           {
             asset: {
-              type: 'text',
-              id: 'custom-id-label-staticSwitch-0',
-              value: 'Test',
+              type: "text",
+              id: "custom-id-label-staticSwitch-0",
+              value: "Test",
             },
             case: true,
           },

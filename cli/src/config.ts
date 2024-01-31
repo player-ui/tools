@@ -1,4 +1,4 @@
-import type { PlayerCLIPlugin } from './plugins';
+import type { PlayerCLIPlugin } from "./plugins";
 
 export interface PlayerConfigFileShape {
   /** A base config to inherit defaults from */
@@ -39,7 +39,7 @@ export interface PlayerConfigResolvedShape {
     output?: string;
 
     /** When converting to XLR, what strategy to use */
-    mode?: 'plugin' | 'types';
+    mode?: "plugin" | "types";
   };
 
   /** Flattened list of plugins */

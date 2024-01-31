@@ -1,14 +1,14 @@
 /* eslint-disable no-bitwise */
-import ts from 'typescript';
+import ts from "typescript";
 import type {
   NamedType,
   NodeType,
   ObjectProperty,
   ObjectType,
   OrType,
-} from '@player-tools/xlr';
-import { computeExtends, resolveConditional } from './validation-helpers';
-import { isGenericNodeType } from './type-checks';
+} from "@player-tools/xlr";
+import { computeExtends, resolveConditional } from "./validation-helpers";
+import { isGenericNodeType } from "./type-checks";
 
 /**
  * Returns the required type or the optionally required type
@@ -79,7 +79,7 @@ export function getStringLiteralsFromUnion(node: ts.Node): Set<string> {
           return type.literal.text;
         }
 
-        return '';
+        return "";
       })
     );
   }
@@ -119,11 +119,11 @@ export function buildTemplateRegex(
     }
 
     if (type === ts.SyntaxKind.StringKeyword) {
-      regex += '.*';
+      regex += ".*";
     } else if (type === ts.SyntaxKind.NumberKeyword) {
-      regex += '[0-9]*';
+      regex += "[0-9]*";
     } else if (type === ts.SyntaxKind.BooleanKeyword) {
-      regex += 'true|false';
+      regex += "true|false";
     }
 
     // add non-tag element
@@ -157,7 +157,7 @@ export function fillInGenerics(
     }
   }
 
-  if (xlrNode.type === 'ref') {
+  if (xlrNode.type === "ref") {
     if (localGenerics.has(xlrNode.ref)) {
       return {
         ...(localGenerics.get(xlrNode.ref) as NodeType),
@@ -187,7 +187,7 @@ export function fillInGenerics(
     };
   }
 
-  if (xlrNode.type === 'object') {
+  if (xlrNode.type === "object") {
     const newProperties: { [name: string]: ObjectProperty } = {};
     Object.getOwnPropertyNames(xlrNode.properties).forEach((propName) => {
       const prop = xlrNode.properties[propName];
@@ -203,12 +203,12 @@ export function fillInGenerics(
     };
   }
 
-  if (xlrNode.type === 'array') {
+  if (xlrNode.type === "array") {
     // eslint-disable-next-line no-param-reassign
     xlrNode.elementType = fillInGenerics(xlrNode.elementType, localGenerics);
-  } else if (xlrNode.type === 'or' || xlrNode.type === 'and') {
+  } else if (xlrNode.type === "or" || xlrNode.type === "and") {
     let pointer;
-    if (xlrNode.type === 'or') {
+    if (xlrNode.type === "or") {
       pointer = xlrNode.or;
     } else {
       pointer = xlrNode.and;
@@ -220,13 +220,13 @@ export function fillInGenerics(
         return fillInGenerics(prop, localGenerics);
       }),
     };
-  } else if (xlrNode.type === 'record') {
+  } else if (xlrNode.type === "record") {
     return {
       ...xlrNode,
       keyType: fillInGenerics(xlrNode.keyType, localGenerics),
       valueType: fillInGenerics(xlrNode.valueType, localGenerics),
     };
-  } else if (xlrNode.type === 'conditional') {
+  } else if (xlrNode.type === "conditional") {
     const filledInConditional = {
       ...xlrNode,
       check: {
@@ -241,8 +241,8 @@ export function fillInGenerics(
 
     // Check to see if we have enough information to resolve this conditional
     if (
-      filledInConditional.check.left.type !== 'ref' &&
-      filledInConditional.check.right.type !== 'ref'
+      filledInConditional.check.left.type !== "ref" &&
+      filledInConditional.check.right.type !== "ref"
     ) {
       return {
         name: xlrNode.name,
@@ -260,15 +260,15 @@ export function fillInGenerics(
 /** Applies the TS `Pick` type to an interface/union/intersection */
 export function applyPickOrOmitToNodeType(
   baseObject: NodeType,
-  operation: 'Pick' | 'Omit',
+  operation: "Pick" | "Omit",
   properties: Set<string>
 ): NodeType | undefined {
-  if (baseObject.type === 'object') {
+  if (baseObject.type === "object") {
     const newObject = { ...baseObject };
     Object.keys(baseObject.properties).forEach((key) => {
       if (
-        (operation === 'Omit' && properties.has(key)) ||
-        (operation === 'Pick' && !properties.has(key))
+        (operation === "Omit" && properties.has(key)) ||
+        (operation === "Pick" && !properties.has(key))
       ) {
         delete newObject.properties[key];
       }
@@ -281,7 +281,7 @@ export function applyPickOrOmitToNodeType(
      */
     if (
       Object.keys(newObject.properties).length === 0 &&
-      (operation !== 'Omit' || newObject.additionalProperties === false)
+      (operation !== "Omit" || newObject.additionalProperties === false)
     ) {
       return undefined;
     }
@@ -290,9 +290,9 @@ export function applyPickOrOmitToNodeType(
   }
 
   let pointer;
-  if (baseObject.type === 'and') {
+  if (baseObject.type === "and") {
     pointer = baseObject.and;
-  } else if (baseObject.type === 'or') {
+  } else if (baseObject.type === "or") {
     pointer = baseObject.or;
   } else {
     throw new Error(
@@ -319,7 +319,7 @@ export function applyPickOrOmitToNodeType(
     return pickedTypes[0];
   }
 
-  if (baseObject.type === 'and') {
+  if (baseObject.type === "and") {
     return { ...baseObject, and: pickedTypes };
   }
 
@@ -331,7 +331,7 @@ export function applyPartialOrRequiredToNodeType(
   baseObject: NodeType,
   modifier: boolean
 ): NodeType {
-  if (baseObject.type === 'object') {
+  if (baseObject.type === "object") {
     const newObject = { ...baseObject };
     Object.keys(baseObject.properties).forEach((key) => {
       newObject.properties[key].required = modifier;
@@ -340,14 +340,14 @@ export function applyPartialOrRequiredToNodeType(
     return newObject;
   }
 
-  if (baseObject.type === 'and') {
+  if (baseObject.type === "and") {
     const pickedTypes = baseObject.and.map((type) =>
       applyPartialOrRequiredToNodeType(type, modifier)
     );
     return { ...baseObject, and: pickedTypes };
   }
 
-  if (baseObject.type === 'or') {
+  if (baseObject.type === "or") {
     const pickedTypes = baseObject.or.map((type) =>
       applyPartialOrRequiredToNodeType(type, modifier)
     );
@@ -355,7 +355,7 @@ export function applyPartialOrRequiredToNodeType(
   }
 
   throw new Error(
-    `Error: Can not apply ${modifier ? 'Required' : 'Partial'} to type ${
+    `Error: Can not apply ${modifier ? "Required" : "Partial"} to type ${
       baseObject.type
     }`
   );
@@ -367,7 +367,7 @@ export function applyExcludeToNodeType(
   filters: NodeType | OrType
 ): NodeType {
   const remainingMembers = baseObject.or.filter((type) => {
-    if (filters.type === 'or') {
+    if (filters.type === "or") {
       return !filters.or.some((filter) => !computeExtends(type, filter));
     }
 

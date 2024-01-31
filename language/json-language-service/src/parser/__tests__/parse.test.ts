@@ -1,18 +1,18 @@
-import { test, expect } from 'vitest';
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import { parse } from '../document';
+import { test, expect } from "vitest";
+import { TextDocument } from "vscode-languageserver-textdocument";
+import { parse } from "../document";
 
-test('parses simple content', () => {
+test("parses simple content", () => {
   const document = parse(
     TextDocument.create(
-      'foo.json',
-      'json',
+      "foo.json",
+      "json",
       1,
       JSON.stringify({
-        views: [{ id: 'foo' }],
+        views: [{ id: "foo" }],
       })
     )
   );
 
-  expect(document.root.type).toBe('content');
+  expect(document.root.type).toBe("content");
 });

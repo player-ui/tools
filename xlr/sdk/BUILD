@@ -14,7 +14,7 @@ js_pipeline(
         "//:node_modules/typescript",
     ],
     test_deps = [
-        ":node_modules/@player-tools/static-xlrs",
+        ":node_modules",
         "//:vitest_config",
     ],
     deps = [

@@ -1014,7 +1014,7 @@ exports[`Player Types Export 1`] = `
             "properties": {
               "dynamicSwitch": {
                 "node": {
-                  "description": "The dynamicSwitch property can't exist at the same time as 'asset'",
+                  "description": "The dynamicSwitch property can"t exist at the same time as "asset'",
                   "title": "dynamicSwitch",
                   "type": "never",
                 },
@@ -1022,7 +1022,7 @@ exports[`Player Types Export 1`] = `
               },
               "staticSwitch": {
                 "node": {
-                  "description": "The staticSwitch property can't exist at the same time as 'asset'",
+                  "description": "The staticSwitch property can"t exist at the same time as "asset'",
                   "title": "staticSwitch",
                   "type": "never",
                 },
@@ -1139,7 +1139,7 @@ exports[`Player Types Export 1`] = `
             "properties": {
               "asset": {
                 "node": {
-                  "description": "The staticSwitch property can't exist at the same time as 'asset'",
+                  "description": "The staticSwitch property can"t exist at the same time as "asset'",
                   "title": "asset",
                   "type": "never",
                 },
@@ -1147,7 +1147,7 @@ exports[`Player Types Export 1`] = `
               },
               "dynamicSwitch": {
                 "node": {
-                  "description": "The staticSwitch property can't exist at the same time as 'dynamicSwitch'",
+                  "description": "The staticSwitch property can"t exist at the same time as "dynamicSwitch'",
                   "title": "dynamicSwitch",
                   "type": "never",
                 },
@@ -1264,7 +1264,7 @@ exports[`Player Types Export 1`] = `
             "properties": {
               "asset": {
                 "node": {
-                  "description": "The dynamicSwitch property can't exist at the same time as 'asset'",
+                  "description": "The dynamicSwitch property can"t exist at the same time as "asset'",
                   "title": "asset",
                   "type": "never",
                 },
@@ -1272,7 +1272,7 @@ exports[`Player Types Export 1`] = `
               },
               "staticSwitch": {
                 "node": {
-                  "description": "The dynamicSwitch property can't exist at the same time as 'staticSwitch'",
+                  "description": "The dynamicSwitch property can"t exist at the same time as "staticSwitch'",
                   "title": "staticSwitch",
                   "type": "never",
                 },
@@ -1929,7 +1929,7 @@ If the expression is a composite, the last expression executed is the return val
                           },
                           "ref": {
                             "node": {
-                              "description": "An id corresponding to a view from the 'views' array",
+                              "description": "An id corresponding to a view from the "views" array",
                               "title": "NavigationFlowViewState.ref",
                               "type": "string",
                             },
@@ -2725,7 +2725,7 @@ The flow will wait for the embedded application to manage moving to the next sta
                 },
                 "ref": {
                   "node": {
-                    "description": "An id corresponding to a view from the 'views' array",
+                    "description": "An id corresponding to a view from the "views" array",
                     "title": "NavigationFlowViewState.ref",
                     "type": "string",
                   },
@@ -3388,7 +3388,7 @@ The flow will wait for the embedded application to manage moving to the next sta
             },
           },
           "description": "TS gets really confused with both the ActionState and the onStart state both declaring the \`exp\` property
-So this explicity says there should never be an exp prop on a state node that's not of type 'ACTION'",
+So this explicity says there should never be an exp prop on a state node that"s not of type "ACTION'",
           "title": "NavigationBaseState.exp",
           "type": "conditional",
           "value": {
@@ -3522,7 +3522,7 @@ So this explicity says there should never be an exp prop on a state node that's 
             },
           },
           "description": "TS gets really confused with both the ActionState and the onStart state both declaring the \`exp\` property
-So this explicity says there should never be an exp prop on a state node that's not of type 'ACTION'",
+So this explicity says there should never be an exp prop on a state node that"s not of type "ACTION'",
           "title": "NavigationBaseState.exp",
           "type": "conditional",
           "value": {
@@ -3739,7 +3739,7 @@ So this explicity says there should never be an exp prop on a state node that's 
       },
       "ref": {
         "node": {
-          "description": "An id corresponding to a view from the 'views' array",
+          "description": "An id corresponding to a view from the "views" array",
           "title": "NavigationFlowViewState.ref",
           "type": "string",
         },
@@ -4372,7 +4372,7 @@ The flow will wait for the embedded application to manage moving to the next sta
           },
           "ref": {
             "node": {
-              "description": "An id corresponding to a view from the 'views' array",
+              "description": "An id corresponding to a view from the "views" array",
               "title": "NavigationFlowViewState.ref",
               "type": "string",
             },
@@ -5575,7 +5575,7 @@ This will be used to lookup the proper handler",
                                 },
                                 "ref": {
                                   "node": {
-                                    "description": "An id corresponding to a view from the 'views' array",
+                                    "description": "An id corresponding to a view from the "views" array",
                                     "title": "NavigationFlowViewState.ref",
                                     "type": "string",
                                   },
@@ -6274,7 +6274,7 @@ If none is specified, will fallback to that of the base type",
                 "validation": {
                   "node": {
                     "description": "Any additional validations that are associated with this property
-These will add to any base validations associated with the \\"type\\"",
+These will add to any base validations associated with the "type"",
                     "elementType": {
                       "additionalProperties": {
                         "type": "unknown",
@@ -6484,7 +6484,7 @@ If none is specified, will fallback to that of the base type",
                     "validation": {
                       "node": {
                         "description": "Any additional validations that are associated with this property
-These will add to any base validations associated with the \\"type\\"",
+These will add to any base validations associated with the "type"",
                         "elementType": {
                           "additionalProperties": {
                             "type": "unknown",

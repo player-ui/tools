@@ -1,8 +1,3 @@
-import type { NamedType } from '@player-tools/xlr';
+import type { TSManifest } from "@player-tools/xlr";
 
-export interface ReferenceAssetsWebPluginManifest {
-  pluginName: 'reference-assets-web-plugin';
-  capabilities: {
-    Assets: NamedType[];
-  };
-}
+export type ReferenceAssetsWebPluginManifest = TSManifest;

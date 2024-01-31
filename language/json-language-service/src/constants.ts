@@ -1,20 +1,20 @@
-import type { Filters } from '@player-tools/xlr-sdk';
-import type { PlayerLanguageServicePlugin } from '.';
-import { AssetWrapperArrayPlugin } from './plugins/asset-wrapper-array-plugin';
-import { SchemaInfoPlugin } from './plugins/binding-schema-plugin';
-import { XLRPlugin } from './plugins/xlr-plugin';
-import { DuplicateIDPlugin } from './plugins/duplicate-id-plugin';
-import { LegacyActionPlugin } from './plugins/legacy-action-plugin';
-import { LegacyTemplatePlugin } from './plugins/legacy-template-plugin';
-import { MissingAssetWrapperPlugin } from './plugins/missing-asset-wrapper-plugin';
-import { NavStatePlugin } from './plugins/nav-state-plugin';
-import { ViewNodePlugin } from './plugins/view-node-plugin';
+import type { Filters } from "@player-tools/xlr-sdk";
+import type { PlayerLanguageServicePlugin } from ".";
+import { AssetWrapperArrayPlugin } from "./plugins/asset-wrapper-array-plugin";
+import { SchemaInfoPlugin } from "./plugins/binding-schema-plugin";
+import { XLRPlugin } from "./plugins/xlr-plugin";
+import { DuplicateIDPlugin } from "./plugins/duplicate-id-plugin";
+import { LegacyActionPlugin } from "./plugins/legacy-action-plugin";
+import { LegacyTemplatePlugin } from "./plugins/legacy-template-plugin";
+import { MissingAssetWrapperPlugin } from "./plugins/missing-asset-wrapper-plugin";
+import { NavStatePlugin } from "./plugins/nav-state-plugin";
+import { ViewNodePlugin } from "./plugins/view-node-plugin";
 import {
   applyAssetWrapperOrSwitch,
   applyCommonProps,
   applyTemplateProperty,
   applyValueRefs,
-} from './xlr/transforms';
+} from "./xlr/transforms";
 
 export const PLUGINS: Array<PlayerLanguageServicePlugin> = [
   new DuplicateIDPlugin(),
@@ -29,7 +29,7 @@ export const PLUGINS: Array<PlayerLanguageServicePlugin> = [
 ];
 
 export const DEFAULT_FILTERS: Filters = {
-  typeFilter: 'Transformed',
+  typeFilter: "Transformed",
 };
 
 export const TRANSFORM_FUNCTIONS = [

@@ -1,4 +1,3 @@
-load("@aspect_rules_js//npm:defs.bzl", "npm_package")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@rules_player//javascript:defs.bzl", "js_pipeline")
 load("//helpers:defs.bzl", "tsup_config", "vitest_config")
@@ -25,4 +24,3 @@ js_pipeline(
     package_name = "flipper-plugin-player-ui-devtools",
     deps = dependencies,
 )
-

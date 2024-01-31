@@ -1,11 +1,11 @@
-import React from 'react';
-import type { Runtime } from '@player-tools/devtools-common';
-import { Button } from '@chakra-ui/react';
-import copy from 'copy-to-clipboard';
-import styles from '../sidebar.css';
+import React from "react";
+import type { Runtime } from "@player-tools/devtools-common";
+import { Button } from "@chakra-ui/react";
+import copy from "copy-to-clipboard";
+import styles from "../sidebar.css";
 
 interface InfoProps {
-  info: Runtime.PlayerRuntimeInfoRPC['result'];
+  info: Runtime.PlayerRuntimeInfoRPC["result"];
 }
 
 /**

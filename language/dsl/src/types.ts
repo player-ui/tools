@@ -2,11 +2,11 @@ import type {
   Asset,
   Expression,
   Navigation as PlayerNav,
-} from '@player-ui/types';
+} from "@player-ui/types";
 import type {
   BindingTemplateInstance,
   ExpressionTemplateInstance,
-} from './string-templates';
+} from "./string-templates";
 
 export type WithChildren<T = Record<string, unknown>> = T & {
   /** child nodes */
@@ -40,7 +40,7 @@ export interface PlayerApplicability {
 
 export type AssetPropsWithChildren<T extends Asset> = WithChildren<
   WithTemplateTypes<
-    OmitProp<RemoveUnknownIndex<T>, 'id' | 'type'> & Partial<Pick<Asset, 'id'>>
+    OmitProp<RemoveUnknownIndex<T>, "id" | "type"> & Partial<Pick<Asset, "id">>
   > &
     PlayerApplicability
 >;
@@ -55,7 +55,7 @@ export type WithTemplateTypes<T> = T extends Record<any, any>
     }
   : T | BindingTemplateInstance | ExpressionTemplateInstance;
 
-type ValidKeys = 'exp' | 'onStart' | 'onEnd';
+type ValidKeys = "exp" | "onStart" | "onEnd";
 
 type DeepReplace<T, Old, New> = {
   [P in keyof T]: T[P] extends Old
@@ -83,7 +83,7 @@ export type Navigation = DeepReplace<
 export interface toJsonOptions {
   /**
    * List of string keys that should not be parsed in a special way
-   * default is 'applicability'
+   * default is "applicability"
    */
   propertiesToSkip?: string[];
 }

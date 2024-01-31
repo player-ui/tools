@@ -1,19 +1,19 @@
-import { test, expect, describe, beforeEach } from 'vitest';
-import { CommonExpressions } from '@player-tools/static-xlrs';
-import { symbolDisplayToString } from '@player-tools/xlr-utils';
-import { ExpressionLanguageService } from '../service';
+import { test, expect, describe, beforeEach } from "vitest";
+import { CommonExpressions } from "@player-tools/static-xlrs";
+import { symbolDisplayToString } from "@player-tools/xlr-utils";
+import { ExpressionLanguageService } from "../service";
 
-describe('language-service', () => {
+describe("language-service", () => {
   let service: ExpressionLanguageService;
 
   beforeEach(() => {
     service = new ExpressionLanguageService({ plugins: [CommonExpressions] });
   });
 
-  test('should auto-complete expressions', () => {
+  test("should auto-complete expressions", () => {
     const completions = service.getCompletionsAtPosition(
       {
-        text: 't',
+        text: "t",
       } as any,
       {
         line: 0,
@@ -46,14 +46,14 @@ describe('language-service', () => {
     `);
   });
 
-  describe('validations', () => {
-    test('ships expression validations when no plugins are registered', () => {
+  describe("validations", () => {
+    test("ships expression validations when no plugins are registered", () => {
       service.setConfig({
         plugins: [],
       });
 
       const diagnostics = service.getSemanticDiagnostics({
-        text: 'trim()',
+        text: "trim()",
         node: {
           getSourceFile: () => null,
         },
@@ -62,9 +62,9 @@ describe('language-service', () => {
       expect(diagnostics).toMatchInlineSnapshot(`[]`);
     });
 
-    test('should validate number of expression arguments', () => {
+    test("should validate number of expression arguments", () => {
       const diagnostics = service.getSemanticDiagnostics({
-        text: 'trim()',
+        text: "trim()",
         node: {
           getSourceFile: () => null,
         },
@@ -84,9 +84,9 @@ describe('language-service', () => {
       `);
     });
 
-    test('validate basic args', () => {
+    test("validate basic args", () => {
       const diagnostics = service.getSemanticDiagnostics({
-        text: 'containsAny({ "foo": "bar"}, "123")',
+        text: "containsAny({ 'foo': 'bar'}, '123')",
         node: {
           getSourceFile: () => null,
         },
@@ -99,16 +99,16 @@ describe('language-service', () => {
             "code": 1,
             "file": null,
             "length": 15,
-            "messageText": "Expected type 'string' but got 'object'",
+            "messageText": "Expected type "string" but got "object"",
             "start": 12,
           },
         ]
       `);
     });
 
-    test('validate nested args', () => {
+    test("validate nested args", () => {
       const diagnostics = service.getSemanticDiagnostics({
-        text: 'containsAny("123", containsAny(123, "123"))',
+        text: "containsAny('123', containsAny(123, '123'))",
         node: {
           getSourceFile: () => null,
         },
@@ -121,16 +121,16 @@ describe('language-service', () => {
             "code": 1,
             "file": null,
             "length": 3,
-            "messageText": "Expected type 'string' but got 'number'",
+            "messageText": "Expected type "string" but got "number"",
             "start": 31,
           },
         ]
       `);
     });
 
-    test('working args', () => {
+    test("working args", () => {
       const diagnostics = service.getSemanticDiagnostics({
-        text: 'containsAny("123", "123")',
+        text: "containsAny('123', '123')",
         node: {
           getSourceFile: () => null,
         },
@@ -139,9 +139,9 @@ describe('language-service', () => {
       expect(diagnostics).toMatchInlineSnapshot(`[]`);
     });
 
-    test('should validate typos', () => {
+    test("should validate typos", () => {
       const diagnostics = service.getSyntacticDiagnostics({
-        text: 'containsAny("123',
+        text: "containsAny('123",
         node: {
           getSourceFile: () => null,
         },
@@ -154,7 +154,7 @@ describe('language-service', () => {
             "code": 1,
             "file": null,
             "length": 16,
-            "messageText": "Unclosed quote after \\"123\\" at character 16",
+            "messageText": "Unclosed quote after "123" at character 16",
             "start": 0,
           },
         ]
@@ -162,11 +162,11 @@ describe('language-service', () => {
     });
   });
 
-  describe('quick info', () => {
-    test('should get quick info for expression', () => {
+  describe("quick info", () => {
+    test("should get quick info for expression", () => {
       const info = service.getQuickInfoAtPosition(
         {
-          text: 'trim()',
+          text: "trim()",
           node: {
             getSourceFile: () => null,
           },

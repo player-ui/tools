@@ -1,8 +1,8 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { type Runtime, selectEvents } from '@player-tools/devtools-common';
-import { Events } from './Events';
-import styles from '../app.css';
+import React from "react";
+import { useSelector } from "react-redux";
+import { type Runtime, selectEvents } from "@player-tools/devtools-common";
+import { Events } from "./Events";
+import styles from "../app.css";
 
 export const EventsPanel = () => {
   const events: Array<

@@ -1,22 +1,22 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`computeEffectiveObject tests Merges equal additionalProperties 1`] = `
-Object {
-  "additionalProperties": Object {
+exports[`computeEffectiveObject tests > Merges equal additionalProperties 1`] = `
+{
+  "additionalProperties": {
     "type": "unknown",
   },
   "description": "Effective type combining object literal and object literal",
-  "genericTokens": Array [],
+  "genericTokens": [],
   "name": "object literal & object literal",
-  "properties": Object {
-    "bar": Object {
-      "node": Object {
+  "properties": {
+    "bar": {
+      "node": {
         "type": "number",
       },
       "required": true,
     },
-    "foo": Object {
-      "node": Object {
+    "foo": {
+      "node": {
         "type": "string",
       },
       "required": true,
@@ -26,9 +26,9 @@ Object {
 }
 `;
 
-exports[`computeEffectiveObject tests mixed test 1`] = `
-Object {
-  "additionalProperties": Object {
+exports[`computeEffectiveObject tests > mixed test 1`] = `
+{
+  "additionalProperties": {
     "type": "unknown",
   },
   "description": "Effective type combining object literal and object literal",

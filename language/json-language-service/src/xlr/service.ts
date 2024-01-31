@@ -1,9 +1,9 @@
 /* eslint-disable no-restricted-syntax */
-import { XLRSDK } from '@player-tools/xlr-sdk';
-import type { ArrayType, NodeType, ObjectType } from '@player-tools/xlr';
-import type { ASTNode } from '../parser';
-import { mapFlowStateToType } from '../utils';
-import { PlayerXLRRegistry } from './registry';
+import { XLRSDK } from "@player-tools/xlr-sdk";
+import type { ArrayType, NodeType, ObjectType } from "@player-tools/xlr";
+import type { ASTNode } from "../parser";
+import { mapFlowStateToType } from "../utils";
+import { PlayerXLRRegistry } from "./registry";
 
 export interface XLRContext {
   /** The name of the XLR at the provided position */
@@ -21,12 +21,12 @@ export interface XLRContext {
  */
 export class XLRService {
   private baseTypes = [
-    'asset',
-    'view',
-    'flow',
-    'content',
-    'navigation',
-    'state',
+    "asset",
+    "view",
+    "flow",
+    "content",
+    "navigation",
+    "state",
   ];
 
   public XLRSDK: XLRSDK;
@@ -48,24 +48,24 @@ export class XLRService {
       }
     | undefined {
     if (this.baseTypes.indexOf(n.type) > -1) {
-      if (n.type === 'asset') {
-        const name = this.XLRSDK.hasType(n.assetType?.valueNode?.value ?? '')
+      if (n.type === "asset") {
+        const name = this.XLRSDK.hasType(n.assetType?.valueNode?.value ?? "")
           ? (n.assetType?.valueNode?.value as string)
-          : 'Asset';
+          : "Asset";
         return {
           name,
           path,
         };
       }
 
-      if (n.type === 'view') {
-        const name = this.XLRSDK.hasType(n.viewType?.valueNode?.value ?? '')
+      if (n.type === "view") {
+        const name = this.XLRSDK.hasType(n.viewType?.valueNode?.value ?? "")
           ? (n.viewType?.valueNode?.value as string)
-          : 'View';
+          : "View";
         return { name, path };
       }
 
-      if (n.type === 'state') {
+      if (n.type === "state") {
         if (n.stateType?.valueNode?.value) {
           const flowStateType = mapFlowStateToType(
             n.stateType?.valueNode?.value
@@ -76,16 +76,16 @@ export class XLRService {
         }
       }
 
-      if (n.type === 'content') {
-        return { name: 'Flow', path };
+      if (n.type === "content") {
+        return { name: "Flow", path };
       }
 
-      if (n.type === 'flow') {
-        return { name: 'NavigationFlow', path };
+      if (n.type === "flow") {
+        return { name: "NavigationFlow", path };
       }
 
-      if (n.type === 'navigation') {
-        return { name: 'Navigation', path };
+      if (n.type === "navigation") {
+        return { name: "Navigation", path };
       }
     }
 
@@ -105,7 +105,7 @@ export class XLRService {
     const pointer = node;
     const xlrInfo = this.walker(pointer, []);
 
-    // bail if we can't figure out the type or don't have it
+    // bail if we can"t figure out the type or don"t have it
     if (!xlrInfo) return;
 
     const activeNode = this.XLRSDK.getType(xlrInfo.name);
@@ -114,9 +114,9 @@ export class XLRService {
     let nearestObjectTypes = [activeNode as ObjectType];
     let pointers = [];
 
-    if (activeNode.type === 'and') {
+    if (activeNode.type === "and") {
       pointers = activeNode.and;
-    } else if (activeNode.type === 'or') {
+    } else if (activeNode.type === "or") {
       pointers = activeNode.or;
     } else {
       pointers = [activeNode];
@@ -128,7 +128,7 @@ export class XLRService {
       for (let nodePointer of pointers) {
         let newNode;
 
-        if (nodePointer.type === 'ref') {
+        if (nodePointer.type === "ref") {
           if (this.XLRSDK.hasType(nodePointer.ref)) {
             nodePointer = this.XLRSDK.getType(nodePointer.ref) as ObjectType;
           } else {
@@ -136,32 +136,32 @@ export class XLRService {
           }
         }
 
-        if (pathSegment.type === 'property' && nodePointer.type === 'object') {
+        if (pathSegment.type === "property" && nodePointer.type === "object") {
           if (nodePointer?.properties[pathSegment.keyNode.value]) {
             newNode = nodePointer?.properties[pathSegment.keyNode.value]?.node;
           } else if (nodePointer?.additionalProperties) {
             // search through additional properties types
             const adNode = nodePointer?.additionalProperties;
-            if (typeof adNode !== 'boolean') {
+            if (typeof adNode !== "boolean") {
               newNode = adNode;
             }
           }
         } else if (
-          pathSegment.type === 'object' ||
+          pathSegment.type === "object" ||
           this.baseTypes.indexOf(pathSegment.type) !== -1
         ) {
           newNode = nodePointer;
-        } else if (pathSegment.type === 'array') {
+        } else if (pathSegment.type === "array") {
           newNode = (nodePointer as ArrayType).elementType;
         }
 
         if (!newNode) {
           continue;
-        } else if (newNode.type === 'or') {
+        } else if (newNode.type === "or") {
           newPointers.push(...newNode.or);
-        } else if (newNode.type === 'and') {
+        } else if (newNode.type === "and") {
           newPointers.push(...newNode.and);
-        } else if (newNode.type === 'ref' && this.XLRSDK.hasType(newNode.ref)) {
+        } else if (newNode.type === "ref" && this.XLRSDK.hasType(newNode.ref)) {
           newPointers.push(this.XLRSDK.getType(newNode.ref) as ObjectType);
         } else {
           newPointers.push(newNode);
@@ -173,7 +173,7 @@ export class XLRService {
       }
 
       const newObjectTypes = newPointers.filter(
-        (n) => n.type === 'object'
+        (n) => n.type === "object"
       ) as ObjectType[];
       if (newObjectTypes.length > 0) {
         nearestObjectTypes = newObjectTypes;

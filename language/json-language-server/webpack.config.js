@@ -1,28 +1,28 @@
-const path = require('path');
+const path = require("path");
 
 module.exports = {
-  entry: '.',
+  entry: ".",
   devtool: false,
-  mode: 'development',
+  mode: "development",
   resolve: {
-    extensions: ['.ts', '.js', '.tsx'],
+    extensions: [".ts", ".js", ".tsx"],
   },
-  target: 'node',
+  target: "node",
   output: {
-    path: path.resolve(process.cwd(), 'dist'),
+    path: path.resolve(process.cwd(), "dist"),
     filename: process.env.ROOT_FILE_NAME,
-    globalObject: 'this',
+    globalObject: "this",
     library: process.env.LIBRARY_NAME,
     // libraryExport: process.env.LIBRARY_NAME,
-    libraryTarget: 'umd',
+    libraryTarget: "umd",
   },
   stats: {},
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        include: [path.resolve(__dirname, 'src')],
-        loader: 'ts-loader',
+        include: [path.resolve(__dirname, "src")],
+        loader: "ts-loader",
       },
     ],
   },

@@ -17,7 +17,7 @@ js_pipeline(
         "//:node_modules/@emotion/styled",
     ],
     test_deps = [
-        "//:node_modules/@testing-library/react",
+        "//:node_modules",
         "//:vitest_config",
     ],
     deps = [

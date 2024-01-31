@@ -26,8 +26,5 @@
     "@player-tools/xlr-converters": "workspace:*",
     "@player-tools/xlr-sdk": "workspace:*",
     "@player-tools/xlr-utils": "workspace:*"
-  },
-  "prettier": {
-    "singleQuote": true
   }
 }

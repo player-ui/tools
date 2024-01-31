@@ -1,13 +1,13 @@
-import type { NodeType } from '@player-tools/xlr';
-import { DiagnosticSeverity } from 'vscode-languageserver-types';
-import type { PlayerLanguageService, PlayerLanguageServicePlugin } from '..';
-import type { ASTNode, StringASTNode } from '../parser';
-import { getNodeValue } from '../parser';
-import { formatLikeNode } from '../utils';
+import type { NodeType } from "@player-tools/xlr";
+import { DiagnosticSeverity } from "vscode-languageserver-types";
+import type { PlayerLanguageService, PlayerLanguageServicePlugin } from "..";
+import type { ASTNode, StringASTNode } from "../parser";
+import { getNodeValue } from "../parser";
+import { formatLikeNode } from "../utils";
 
 /** Check if the node is defined within a view */
 const isInView = (node: ASTNode): boolean => {
-  if (node.type === 'view') {
+  if (node.type === "view") {
     return true;
   }
 
@@ -26,9 +26,9 @@ const isInView = (node: ASTNode): boolean => {
 const checkTypesForAssetWrapper = (nodes: Array<NodeType>): boolean => {
   for (let i = 0; i < nodes.length; i++) {
     const node = nodes[i];
-    if (node.type === 'ref' && node.ref.includes('AssetWrapper')) return true;
-    if (node.type === 'or') return checkTypesForAssetWrapper(node.or);
-    if (node.type === 'and') return checkTypesForAssetWrapper(node.and);
+    if (node.type === "ref" && node.ref.includes("AssetWrapper")) return true;
+    if (node.type === "or") return checkTypesForAssetWrapper(node.or);
+    if (node.type === "and") return checkTypesForAssetWrapper(node.and);
   }
 
   return false;
@@ -38,14 +38,14 @@ const checkTypesForAssetWrapper = (nodes: Array<NodeType>): boolean => {
  * Checks to see if the array's parent property is a switch statement
  */
 const checkSwitchCase = (node: StringASTNode): boolean => {
-  return node.value === 'staticSwitch' || node.value === 'dynamicSwitch';
+  return node.value === "staticSwitch" || node.value === "dynamicSwitch";
 };
 
 /**
  * Looks for an array where there _should_ be an AssetWrapper
  */
 export class AssetWrapperArrayPlugin implements PlayerLanguageServicePlugin {
-  name = 'asset-wrapper-to-array';
+  name = "asset-wrapper-to-array";
 
   apply(service: PlayerLanguageService) {
     service.hooks.validate.tap(
@@ -64,7 +64,7 @@ export class AssetWrapperArrayPlugin implements PlayerLanguageServicePlugin {
 
             const parentNode = arrayNode.parent;
 
-            if (parentNode?.type !== 'property') {
+            if (parentNode?.type !== "property") {
               return;
             }
 
@@ -79,8 +79,8 @@ export class AssetWrapperArrayPlugin implements PlayerLanguageServicePlugin {
 
               let newAsset = {
                 asset: {
-                  id: '',
-                  type: 'collection',
+                  id: "",
+                  type: "collection",
                   values: getNodeValue(arrayNode),
                 },
               };
@@ -96,10 +96,10 @@ export class AssetWrapperArrayPlugin implements PlayerLanguageServicePlugin {
                 fix: () => {
                   return {
                     name: `Convert to ${
-                      arrayNode.children.length > 0 ? 'collection' : 'asset'
+                      arrayNode.children.length > 0 ? "collection" : "asset"
                     }`,
                     edit: {
-                      type: 'replace',
+                      type: "replace",
                       node: arrayNode,
                       value: formatLikeNode(
                         documentInfo.document,

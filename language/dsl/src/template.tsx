@@ -1,5 +1,5 @@
-import React from 'react';
-import type { ObjectNode, JsonNode } from 'react-json-reconciler';
+import React from "react";
+import type { ObjectNode, JsonNode } from "react-json-reconciler";
 import {
   ArrayNode,
   PropertyNode,
@@ -7,11 +7,11 @@ import {
   createPortal,
   ProxyNode,
   toJSON,
-} from 'react-json-reconciler';
-import { OptionalIDSuffixProvider } from './auto-id';
-import type { BindingTemplateInstance } from './string-templates';
-import type { WithChildren } from './types';
-import { toJsonElement } from './utils';
+} from "react-json-reconciler";
+import { OptionalIDSuffixProvider } from "./auto-id";
+import type { BindingTemplateInstance } from "./string-templates";
+import type { WithChildren } from "./types";
+import { toJsonElement } from "./utils";
 
 export interface TemplateContextType {
   /** The number of nested templates */
@@ -46,11 +46,11 @@ function addTemplateToObject(
   // add one if none exists
 
   let templateProp = obj.properties.find(
-    (p) => p.keyNode.value === 'template' && p.valueNode?.type === 'array'
+    (p) => p.keyNode.value === "template" && p.valueNode?.type === "array"
   );
 
   if (!templateProp) {
-    templateProp = new PropertyNode(new ValueNode('template'), new ArrayNode());
+    templateProp = new PropertyNode(new ValueNode("template"), new ArrayNode());
     templateProp.parent = obj;
     obj.properties.push(templateProp);
   }
@@ -64,7 +64,7 @@ function addTemplateToObject(
   const templateParentProp = obj.properties.find(
     (p) =>
       p.keyNode.value === templateParentNodeType &&
-      p.valueNode?.type === 'array'
+      p.valueNode?.type === "array"
   );
 
   if (templateParentProp) {
@@ -108,7 +108,7 @@ const TemplateProvider = (props: WithChildren) => {
 
 /** Find the first object node in the tree */
 const getParentObject = (node: JsonNode): ObjectNode | undefined => {
-  if (node.type === 'object') {
+  if (node.type === "object") {
     return node;
   }
 
@@ -119,7 +119,7 @@ const getParentObject = (node: JsonNode): ObjectNode | undefined => {
 
 /** Find the property of the node on the parent */
 const getParentProperty = (node: JsonNode): PropertyNode | undefined => {
-  if (node.type === 'property') {
+  if (node.type === "property") {
     return node;
   }
 
@@ -154,7 +154,7 @@ export const Template = (props: TemplateProps) => {
       const parentObject = getParentObject(proxyRef.current);
 
       if (!parentObject) {
-        throw new Error('Unable to find parent to add template to');
+        throw new Error("Unable to find parent to add template to");
       }
 
       if (!outputProp) {
@@ -168,27 +168,31 @@ export const Template = (props: TemplateProps) => {
 
   return (
     <proxy ref={proxyRef}>
-      {createPortal(
-        <OptionalIDSuffixProvider
-          wrapperRef={valueRef}
-          templateIndex={`_index${
-            baseContext.depth === 0 ? '' : baseContext.depth
-          }_`}
-        >
-          <TemplateProvider>
-            <object>
-              <property name="data">{props.data.toValue()}</property>
-              <property name="output">{outputProp}</property>
-              <property name="value">{props.children}</property>
-              {dynamicProp && (
-                <property name="dynamic">{toJsonElement(dynamicProp)}</property>
-              )}
-            </object>
-          </TemplateProvider>
-        </OptionalIDSuffixProvider>,
-        outputElement
-      )}
-      <value ref={valueRef} value={undefined} />
+      <>
+        {createPortal(
+          <OptionalIDSuffixProvider
+            wrapperRef={valueRef}
+            templateIndex={`_index${
+              baseContext.depth === 0 ? "" : baseContext.depth
+            }_`}
+          >
+            <TemplateProvider>
+              <object>
+                <property name="data">{props.data.toValue()}</property>
+                <property name="output">{outputProp}</property>
+                <property name="value">{props.children}</property>
+                {dynamicProp && (
+                  <property name="dynamic">
+                    {toJsonElement(dynamicProp)}
+                  </property>
+                )}
+              </object>
+            </TemplateProvider>
+          </OptionalIDSuffixProvider>,
+          outputElement
+        )}
+        <value ref={valueRef} value={undefined} />
+      </>
     </proxy>
   );
 };

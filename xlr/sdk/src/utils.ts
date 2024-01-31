@@ -8,7 +8,7 @@ import type {
   NodeType,
   ObjectProperty,
   RefNode,
-} from '@player-tools/xlr';
+} from "@player-tools/xlr";
 
 /**
  * Helper function for simple transforms
@@ -33,7 +33,7 @@ export function simpleTransformGenerator<
         node = functionToRun(node as unknown as NodeTypeMap[T]);
       }
 
-      if (node.type === 'object') {
+      if (node.type === "object") {
         const newObjectProperties: Record<string, ObjectProperty> = {};
 
         for (const key in node.properties) {
@@ -56,28 +56,28 @@ export function simpleTransformGenerator<
         };
       }
 
-      if (node.type === 'array') {
+      if (node.type === "array") {
         return {
           ...node,
           elementType: walker(node.elementType, capability),
         };
       }
 
-      if (node.type === 'and') {
+      if (node.type === "and") {
         return {
           ...node,
           and: node.and.map((element) => walker(element, capability)),
         };
       }
 
-      if (node.type === 'or') {
+      if (node.type === "or") {
         return {
           ...node,
           or: node.or.map((element) => walker(element, capability)),
         };
       }
 
-      if (node.type === 'ref') {
+      if (node.type === "ref") {
         return {
           ...node,
           genericArguments: node.genericArguments?.map((arg) =>
@@ -86,7 +86,7 @@ export function simpleTransformGenerator<
         };
       }
 
-      if (node.type === 'tuple') {
+      if (node.type === "tuple") {
         return {
           ...node,
           elementTypes: node.elementTypes.map((element) => {
@@ -102,7 +102,7 @@ export function simpleTransformGenerator<
         };
       }
 
-      if (node.type === 'function') {
+      if (node.type === "function") {
         return {
           ...node,
           parameters: node.parameters.map((param) => {
@@ -120,7 +120,7 @@ export function simpleTransformGenerator<
         };
       }
 
-      if (node.type === 'record') {
+      if (node.type === "record") {
         return {
           ...node,
           keyType: walker(node.keyType, capability),
@@ -128,7 +128,7 @@ export function simpleTransformGenerator<
         };
       }
 
-      if (node.type === 'conditional') {
+      if (node.type === "conditional") {
         return {
           ...node,
           check: {

@@ -1,11 +1,11 @@
-import { test, expect } from 'vitest';
-import React from 'react';
-import { render } from 'react-json-reconciler';
-import { binding as b, expression as e } from '..';
-import { Switch } from '../../switch';
-import { Collection } from '../../__tests__/helpers/asset-library';
+import { test, expect } from "vitest";
+import React from "react";
+import { render } from "react-json-reconciler";
+import { binding as b, expression as e } from "..";
+import { Switch } from "../../switch";
+import { Collection } from "../../__tests__/helpers/asset-library";
 
-test('can be used as a react child element', async () => {
+test("can be used as a react child element", async () => {
   const content = (
     await render(
       <object>
@@ -16,12 +16,12 @@ test('can be used as a react child element', async () => {
   ).jsonValue;
 
   expect(content).toStrictEqual({
-    expression: '@[test()]@',
-    binding: '{{foo.bar}}',
+    expression: "@[test()]@",
+    binding: "{{foo.bar}}",
   });
 });
 
-test('Works when used as a child asset', async () => {
+test("Works when used as a child asset", async () => {
   const content = (
     await render(
       <Collection>
@@ -31,19 +31,19 @@ test('Works when used as a child asset', async () => {
   ).jsonValue;
 
   expect(content).toStrictEqual({
-    id: 'root',
-    type: 'collection',
+    id: "root",
+    type: "collection",
     label: {
       asset: {
-        id: 'label',
-        type: 'text',
-        value: '{{foo.bar}}',
+        id: "label",
+        type: "text",
+        value: "{{foo.bar}}",
       },
     },
   });
 });
 
-test('Works as a switch child', async () => {
+test("Works as a switch child", async () => {
   const content = (
     await render(
       <Collection>
@@ -57,16 +57,16 @@ test('Works as a switch child', async () => {
   ).jsonValue;
 
   expect(content).toStrictEqual({
-    id: 'root',
-    type: 'collection',
+    id: "root",
+    type: "collection",
     label: {
       staticSwitch: [
         {
           case: true,
           asset: {
-            id: 'label-staticSwitch-0',
-            type: 'text',
-            value: 'Testing 123 {{foo.bar}}',
+            id: "label-staticSwitch-0",
+            type: "text",
+            value: "Testing 123 {{foo.bar}}",
           },
         },
       ],

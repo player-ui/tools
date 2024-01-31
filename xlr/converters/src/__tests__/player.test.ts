@@ -1,14 +1,14 @@
-import { test, expect } from 'vitest';
-import { setupTestEnv } from '@player-tools/xlr-utils';
-import { TsConverter } from '..';
+import { test, expect } from "vitest";
+import { setupTestEnv } from "@player-tools/xlr-utils";
+import { TsConverter } from "..";
 
-test('Player Types Export', () => {
+test("Player Types Export", () => {
   const customPrimitives = [
-    'Expression',
-    'Asset',
-    'Binding',
-    'AssetWrapper',
-    'Schema.DataType',
+    "Expression",
+    "Asset",
+    "Binding",
+    "AssetWrapper",
+    "Schema.DataType",
   ];
 
   const sc = `
@@ -55,24 +55,24 @@ export type AssetWrapper<T extends Asset = Asset> = {
 
 export type AssetWrapperOrSwitch<T extends Asset = Asset> =
   | (AssetWrapper<T> & {
-      /** The dynamicSwitch property can't exist at the same time as 'asset' */
+      /** The dynamicSwitch property can"t exist at the same time as "asset' */
       dynamicSwitch?: never;
 
-      /** The staticSwitch property can't exist at the same time as 'asset' */
+      /** The staticSwitch property can"t exist at the same time as "asset' */
       staticSwitch?: never;
     })
   | (StaticSwitch<T> & {
-      /** The staticSwitch property can't exist at the same time as 'asset' */
+      /** The staticSwitch property can"t exist at the same time as "asset' */
       asset?: never;
 
-      /** The staticSwitch property can't exist at the same time as 'dynamicSwitch' */
+      /** The staticSwitch property can"t exist at the same time as "dynamicSwitch' */
       dynamicSwitch?: never;
     })
   | (DynamicSwitch<T> & {
-      /** The dynamicSwitch property can't exist at the same time as 'asset' */
+      /** The dynamicSwitch property can"t exist at the same time as "asset' */
       asset?: never;
 
-      /** The dynamicSwitch property can't exist at the same time as 'staticSwitch' */
+      /** The dynamicSwitch property can"t exist at the same time as "staticSwitch' */
       staticSwitch?: never;
     });
 
@@ -159,9 +159,9 @@ export interface NavigationBaseState<T extends string> extends CommentBase {
 
   /**
    * TS gets really confused with both the ActionState and the onStart state both declaring the \`exp\` property
-   * So this explicity says there should never be an exp prop on a state node that's not of type 'ACTION'
+   * So this explicity says there should never be an exp prop on a state node that"s not of type "ACTION'
    */
-  exp?: T extends 'ACTION' ? Expression : never;
+  exp?: T extends "ACTION" ? Expression : never;
 }
 
 /** A generic state that can transition to another state */
@@ -173,8 +173,8 @@ export interface NavigationFlowTransitionableState<T extends string>
 
 /** A state representing a view  */
 export interface NavigationFlowViewState
-  extends NavigationFlowTransitionableState<'VIEW'> {
-  /** An id corresponding to a view from the 'views' array */
+  extends NavigationFlowTransitionableState<"VIEW"> {
+  /** An id corresponding to a view from the "views" array */
   ref: string;
 
   /** View meta-properties */
@@ -189,7 +189,7 @@ export interface NavigationFlowViewState
 /**
  * An END state of the flow.
  */
-export interface NavigationFlowEndState extends NavigationBaseState<'END'> {
+export interface NavigationFlowEndState extends NavigationBaseState<"END"> {
   /**
    * A description of _how_ the flow ended.
    * If this is a flow started from another flow, the outcome determines the flow transition
@@ -202,7 +202,7 @@ export interface NavigationFlowEndState extends NavigationBaseState<'END'> {
 
 /** Action states execute an expression to determine the next state to transition to */
 export interface NavigationFlowActionState
-  extends NavigationFlowTransitionableState<'ACTION'> {
+  extends NavigationFlowTransitionableState<"ACTION"> {
   /**
    * An expression to execute.
    * The return value determines the transition to take
@@ -215,7 +215,7 @@ export interface NavigationFlowActionState
  * The flow will wait for the embedded application to manage moving to the next state via a transition
  */
 export interface NavigationFlowExternalState
-  extends NavigationFlowTransitionableState<'EXTERNAL'> {
+  extends NavigationFlowTransitionableState<"EXTERNAL"> {
   /** A reference for this external state */
   ref: string;
   /** Any additional properties are forwarded as options */
@@ -223,7 +223,7 @@ export interface NavigationFlowExternalState
 }
 
 export interface NavigationFlowFlowState
-  extends NavigationFlowTransitionableState<'FLOW'> {
+  extends NavigationFlowTransitionableState<"FLOW"> {
   /** A reference to a FLOW id state to run */
   ref: string;
 }
@@ -351,7 +351,7 @@ export declare namespace Validation {
    * Warning validations are reserved for errors that could be ignored by the user without consequence
    * Errors must be fixed before proceeding
    */
-  export type Severity = 'error' | 'warning';
+  export type Severity = "error" | "warning";
 
   /**
    * When to _first_ start caring about a validation of a data-val.
@@ -360,7 +360,7 @@ export declare namespace Validation {
    * change - check anytime the data changes
    * navigation - check once the user attempts to navigate away from a view
    */
-  export type Trigger = 'navigation' | 'change' | 'load';
+  export type Trigger = "navigation" | "change" | "load";
 
   /**
    * Where the error/warning should be displayed.
@@ -368,7 +368,7 @@ export declare namespace Validation {
    * - \`section\` is used to display a message at a parent node that is designated as a "section"
    * - \`page\` a special section used to display a message at the top of the page.
    */
-  export type DisplayTarget = 'page' | 'section' | 'field';
+  export type DisplayTarget = "page" | "section" | "field";
 
   /** A reference to a validation object */
   export interface Reference {
@@ -392,7 +392,7 @@ export declare namespace Validation {
      * By default, this is the value stored in the data-model (deformatted).
      * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
      */
-    dataTarget?: 'formatted' | 'deformatted';
+    dataTarget?: "formatted" | "deformatted";
 
     /** Where the error should be displayed */
     displayTarget?: DisplayTarget;
@@ -410,7 +410,7 @@ export declare namespace Validation {
   }
 }
 
-export type View<T extends Asset = Asset> = unknown extends T['validation']
+export type View<T extends Asset = Asset> = unknown extends T["validation"]
   ? T & {
       /** Each view can optionally supply a list of validations to run against a particular view */
       validation?: Array<Validation.CrossfieldReference>;
@@ -452,47 +452,47 @@ export interface Flow<T extends Asset = Asset> {
   expect(XLR).toMatchSnapshot();
 });
 
-test('Player Data Types Export', () => {
+test("Player Data Types Export", () => {
   const customPrimitives = [
-    'Expression',
-    'Asset',
-    'Binding',
-    'AssetWrapper',
-    'Schema.DataType',
+    "Expression",
+    "Asset",
+    "Binding",
+    "AssetWrapper",
+    "Schema.DataType",
   ];
 
   const sc = `
 
   export const BooleanTypeRef: Language.DataTypeRef = {
-    type: 'BooleanType',
+    type: "BooleanType",
   };
   
   export const IntegerTypeRef: Language.DataTypeRef = {
-    type: 'IntegerType',
+    type: "IntegerType",
   };
   
   export const IntegerPosTypeRef: Language.DataTypeRef = {
-    type: 'IntegerPosType',
+    type: "IntegerPosType",
   };
   
   export const IntegerNNTypeRef: Language.DataTypeRef = {
-    type: 'IntegerNNType',
+    type: "IntegerNNType",
   };
   
   export const StringTypeRef: Language.DataTypeRef = {
-    type: 'StringType',
+    type: "StringType",
   };
   
   export const CollectionTypeRef: Language.DataTypeRef = {
-    type: 'CollectionType',
+    type: "CollectionType",
   };
   
   export const DateTypeRef: Language.DataTypeRef = {
-    type: 'DateType',
+    type: "DateType",
   };
   
   export const PhoneTypeRef: Language.DataTypeRef = {
-    type: 'PhoneType',
+    type: "PhoneType",
   };
 
   export const BooleanType: Schema.DataType<boolean> = {
@@ -500,8 +500,8 @@ test('Player Data Types Export', () => {
     default: false,
     validation: [
       {
-        type: 'oneOf',
-        message: 'Value must be true or false',
+        type: "oneOf",
+        message: "Value must be true or false",
         options: [true, false],
       },
     ],
@@ -511,11 +511,11 @@ test('Player Data Types Export', () => {
     ...IntegerTypeRef,
     validation: [
       {
-        type: 'integer',
+        type: "integer",
       },
     ],
     format: {
-      type: 'integer',
+      type: "integer",
     },
   };
   
@@ -523,15 +523,15 @@ test('Player Data Types Export', () => {
     ...IntegerPosTypeRef,
     validation: [
       {
-        type: 'integer',
+        type: "integer",
       },
       {
-        type: 'min',
+        type: "min",
         value: 1,
       },
     ],
     format: {
-      type: 'integer',
+      type: "integer",
     },
   };
   
@@ -539,28 +539,28 @@ test('Player Data Types Export', () => {
     ...IntegerNNTypeRef,
     validation: [
       {
-        type: 'integer',
+        type: "integer",
       },
       {
-        type: 'min',
+        type: "min",
         value: 0,
       },
     ],
     format: {
-      type: 'integer',
+      type: "integer",
     },
   };
   
   export const StringType: Schema.DataType<string> = {
     ...StringTypeRef,
-    default: '',
+    default: "",
     validation: [
       {
-        type: 'string',
+        type: "string",
       },
     ],
     format: {
-      type: 'string',
+      type: "string",
     },
   };
   
@@ -568,7 +568,7 @@ test('Player Data Types Export', () => {
     ...CollectionTypeRef,
     validation: [
       {
-        type: 'collection',
+        type: "collection",
       },
     ],
   };
@@ -577,11 +577,11 @@ test('Player Data Types Export', () => {
     ...DateTypeRef,
     validation: [
       {
-        type: 'string',
+        type: "string",
       },
     ],
     format: {
-      type: 'date',
+      type: "date",
     },
   };
   
@@ -589,11 +589,11 @@ test('Player Data Types Export', () => {
     ...PhoneTypeRef,
     validation: [
       {
-        type: 'phone',
+        type: "phone",
       },
     ],
     format: {
-      type: 'phone',
+      type: "phone",
     },
   };
   
@@ -607,19 +607,19 @@ test('Player Data Types Export', () => {
   expect(XLR).toMatchSnapshot();
 });
 
-test('Player Expression Types Export', () => {
+test("Player Expression Types Export", () => {
   const customPrimitives = [
-    'Expression',
-    'Asset',
-    'Binding',
-    'AssetWrapper',
-    'Schema.DataType',
-    'ExpressionHandler',
+    "Expression",
+    "Asset",
+    "Binding",
+    "AssetWrapper",
+    "Schema.DataType",
+    "ExpressionHandler",
   ];
 
   const sc = `
 
-  const ExpNodeOpaqueIdentifier = Symbol('Expression Node ID');
+  const ExpNodeOpaqueIdentifier = Symbol("Expression Node ID");
 
   interface NodePosition {
     /** The character location */
@@ -657,7 +657,7 @@ test('Player Expression Types Export', () => {
     right: ExpressionNode;
   }
 
-  interface LiteralNode extends BaseNode<'Literal'> {
+  interface LiteralNode extends BaseNode<"Literal"> {
     /** A node that holds a literal value */
     value: string | number;
 
@@ -665,17 +665,17 @@ test('Player Expression Types Export', () => {
     raw?: any;
   }
 
-  interface BinaryNode extends BaseNode<'BinaryExpression'>, DirectionalNode {
+  interface BinaryNode extends BaseNode<"BinaryExpression">, DirectionalNode {
     /** The operation to perform on the nodes */
     operator: string;
   }
 
-  interface LogicalNode extends BaseNode<'LogicalExpression'>, DirectionalNode {
+  interface LogicalNode extends BaseNode<"LogicalExpression">, DirectionalNode {
     /** The logical operation to perform on the nodes */
     operator: string;
   }
 
-  interface UnaryNode extends BaseNode<'UnaryExpression'> {
+  interface UnaryNode extends BaseNode<"UnaryExpression"> {
     /** The operation to perform on the node */
     operator: string;
 
@@ -683,14 +683,14 @@ test('Player Expression Types Export', () => {
     argument: ExpressionNode;
   }
 
-  type ThisNode = BaseNode<'ThisExpression'>;
+  type ThisNode = BaseNode<"ThisExpression">;
 
-  interface ModelRefNode extends BaseNode<'ModelRef'> {
+  interface ModelRefNode extends BaseNode<"ModelRef"> {
     /** The binding that the model reference points to */
     ref: string;
   }
 
-  interface ObjectNode extends BaseNode<'Object'> {
+  interface ObjectNode extends BaseNode<"Object"> {
     /**  */
     attributes: Array<{
       /** The property name of the object */
@@ -701,7 +701,7 @@ test('Player Expression Types Export', () => {
     }>;
   }
 
-  interface MemberExpressionNode extends BaseNode<'MemberExpression'> {
+  interface MemberExpressionNode extends BaseNode<"MemberExpression"> {
     /** The object to be introspected */
     object: ExpressionNode;
 
@@ -712,7 +712,7 @@ test('Player Expression Types Export', () => {
     property: ExpressionNode;
   }
 
-  interface ConditionalExpressionNode extends BaseNode<'ConditionalExpression'> {
+  interface ConditionalExpressionNode extends BaseNode<"ConditionalExpression"> {
     /** The test for the ternary */
     test: ExpressionNode;
 
@@ -723,12 +723,12 @@ test('Player Expression Types Export', () => {
     alternate: ExpressionNode;
   }
 
-  interface CompoundNode extends BaseNode<'Compound'> {
+  interface CompoundNode extends BaseNode<"Compound"> {
     /** The contents of the compound expression */
     body: ExpressionNode[];
   }
 
-  interface CallExpressionNode extends BaseNode<'CallExpression'> {
+  interface CallExpressionNode extends BaseNode<"CallExpression"> {
     /** The arguments to the function */
     args: ExpressionNode[];
 
@@ -736,19 +736,19 @@ test('Player Expression Types Export', () => {
     callTarget: IdentifierNode;
   }
 
-  interface ArrayExpressionNode extends BaseNode<'ArrayExpression'> {
+  interface ArrayExpressionNode extends BaseNode<"ArrayExpression"> {
     /** The items in an array */
     elements: ExpressionNode[];
   }
 
-  interface IdentifierNode extends BaseNode<'Identifier'> {
+  interface IdentifierNode extends BaseNode<"Identifier"> {
     /** The variable name */
     name: string;
   }
 
-  type AssignmentNode = BaseNode<'Assignment'> & DirectionalNode;
+  type AssignmentNode = BaseNode<"Assignment"> & DirectionalNode;
 
-  interface ModificationNode extends BaseNode<'Modification'>, DirectionalNode {
+  interface ModificationNode extends BaseNode<"Modification">, DirectionalNode {
     /** The operator for the modification */
     operator: string;
   }
@@ -805,13 +805,13 @@ test('Player Expression Types Export', () => {
   }
 
   export const replace = withoutContext(
-    (str: unknown, pattern: unknown, replacement: unknown = '') => {
+    (str: unknown, pattern: unknown, replacement: unknown = "") => {
       if (
-        typeof str === 'string' &&
-        typeof pattern === 'string' &&
-        typeof replacement === 'string'
+        typeof str === "string" &&
+        typeof pattern === "string" &&
+        typeof replacement === "string"
       ) {
-        const replacementRegex = new RegExp(pattern, 'g');
+        const replacementRegex = new RegExp(pattern, "g");
 
         return str.replace(replacementRegex, replacement);
       }
@@ -825,7 +825,7 @@ test('Player Expression Types Export', () => {
       return true;
     }
   
-    if (typeof val === 'object' || typeof val === 'string') {
+    if (typeof val === "object" || typeof val === "string") {
       return size(ctx, val) === 0;
     }
   
@@ -844,7 +844,7 @@ test('Player Expression Types Export', () => {
   expect(XLR).toMatchSnapshot();
 });
 
-test('Player JSDoc @meta Export', () => {
+test("Player JSDoc @meta Export", () => {
   const sc = `
   /**
  * An asset is the smallest unit of user interaction in a player view

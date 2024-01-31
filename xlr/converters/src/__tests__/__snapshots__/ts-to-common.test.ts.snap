@@ -1,24 +1,24 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Complex Types Exclude with objects 1`] = `
-Array [
-  Object {
+exports[`Complex Types > Exclude with objects 1`] = `
+[
+  {
     "genericTokens": undefined,
     "name": "foo",
-    "or": Array [
-      Object {
+    "or": [
+      {
         "additionalProperties": false,
-        "properties": Object {
-          "type": Object {
-            "node": Object {
+        "properties": {
+          "type": {
+            "node": {
               "const": "b",
               "title": "foo.type",
               "type": "string",
             },
             "required": true,
           },
-          "value": Object {
-            "node": Object {
+          "value": {
+            "node": {
               "title": "foo.value",
               "type": "number",
             },
@@ -28,19 +28,19 @@ Array [
         "title": "foo",
         "type": "object",
       },
-      Object {
+      {
         "additionalProperties": false,
-        "properties": Object {
-          "type": Object {
-            "node": Object {
+        "properties": {
+          "type": {
+            "node": {
               "const": "c",
               "title": "foo.type",
               "type": "string",
             },
             "required": true,
           },
-          "value": Object {
-            "node": Object {
+          "value": {
+            "node": {
               "title": "foo.value",
               "type": "boolean",
             },
@@ -58,23 +58,23 @@ Array [
 ]
 `;
 
-exports[`Complex Types Exclude with objects collapses single remaining element 1`] = `
-Array [
-  Object {
+exports[`Complex Types > Exclude with objects collapses single remaining element 1`] = `
+[
+  {
     "additionalProperties": false,
     "genericTokens": undefined,
     "name": "bar",
-    "properties": Object {
-      "type": Object {
-        "node": Object {
+    "properties": {
+      "type": {
+        "node": {
           "const": "b",
           "title": "foo.type",
           "type": "string",
         },
         "required": true,
       },
-      "value": Object {
-        "node": Object {
+      "value": {
+        "node": {
           "title": "foo.value",
           "type": "number",
         },
@@ -88,17 +88,17 @@ Array [
 ]
 `;
 
-exports[`Complex Types Exclude with primitives 1`] = `
-Array [
-  Object {
+exports[`Complex Types > Exclude with primitives 1`] = `
+[
+  {
     "genericTokens": undefined,
     "name": "fooType",
-    "or": Array [
-      Object {
+    "or": [
+      {
         "const": "b",
         "type": "string",
       },
-      Object {
+      {
         "const": "c",
         "type": "string",
       },
@@ -110,9 +110,9 @@ Array [
 ]
 `;
 
-exports[`Complex Types Omit 1`] = `
-Array [
-  Object {
+exports[`Complex Types > Omit 1`] = `
+[
+  {
     "additionalProperties": false,
     "genericTokens": undefined,
     "name": "foo",

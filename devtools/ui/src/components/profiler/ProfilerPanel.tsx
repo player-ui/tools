@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   type ProfilerNode,
   type StoreState,
@@ -6,10 +6,10 @@ import {
   selectSelectedPlayerId,
   START_PROFILER,
   STOP_PROFILER,
-} from '@player-tools/devtools-client';
-import { useDispatch, useSelector } from 'react-redux';
-import { Profiler } from './Profiler';
-import styles from '../app.css';
+} from "@player-tools/devtools-client";
+import { useDispatch, useSelector } from "react-redux";
+import { Profiler } from "./Profiler";
+import styles from "../app.css";
 
 /**
  * displays the profiler panel for a player instance

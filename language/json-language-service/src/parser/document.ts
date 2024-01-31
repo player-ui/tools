@@ -1,7 +1,7 @@
-import { parseTree, findNodeAtOffset } from 'jsonc-parser';
-import type { Node, ParseError } from 'jsonc-parser';
-import type { Diagnostic } from 'vscode-languageserver-types';
-import type { TextDocument } from 'vscode-languageserver-textdocument';
+import { parseTree, findNodeAtOffset } from "jsonc-parser";
+import type { Node, ParseError } from "jsonc-parser";
+import type { Diagnostic } from "vscode-languageserver-types";
+import type { TextDocument } from "vscode-languageserver-textdocument";
 import type {
   ASTNode,
   ContentASTNode,
@@ -13,7 +13,7 @@ import type {
   NavigationASTNode,
   FlowASTNode,
   FlowStateASTNode,
-} from './types';
+} from "./types";
 import {
   ViewASTNodeImpl,
   StringASTNodeImpl,
@@ -28,14 +28,14 @@ import {
   NavigationASTNodeImpl,
   FlowASTNodeImpl,
   FlowStateASTNodeImpl,
-} from './types';
-import { convertErrorsToDiags } from './jsonParseErrors';
+} from "./types";
+import { convertErrorsToDiags } from "./jsonParseErrors";
 
 /** Check if the property is a string */
 function isStringProperty(
   node: PropertyASTNode
 ): node is PropertyASTNode<StringASTNode> {
-  return node.valueNode?.type === 'string';
+  return node.valueNode?.type === "string";
 }
 
 /**
@@ -95,12 +95,12 @@ export enum ObjType {
 
 /** Try to identify any object as an Asset or Flow  */
 export default function identify(node: Node): ObjType {
-  if (node === undefined || node.type !== 'object') {
+  if (node === undefined || node.type !== "object") {
     return ObjType.UNKNOWN;
   }
 
   const knownProps = node.children?.reduce((props, childNode) => {
-    if (childNode.type === 'property' && childNode.children) {
+    if (childNode.type === "property" && childNode.children) {
       const [key] = childNode.children;
       props.add(key.value);
     }
@@ -108,7 +108,7 @@ export default function identify(node: Node): ObjType {
     return props;
   }, new Set<string>());
 
-  if (knownProps?.has('type')) {
+  if (knownProps?.has("type")) {
     return ObjType.ASSET;
   }
 
@@ -130,7 +130,7 @@ export function parse(document: TextDocument): PlayerContent {
   function parseAsset(node: Node, parent?: ASTNode): AssetASTNode {
     const assetNode = new AssetASTNodeImpl(node, parent);
     node.children?.forEach((prop) => {
-      if (prop.type === 'property' && prop.children?.length) {
+      if (prop.type === "property" && prop.children?.length) {
         const [key, val] = prop.children;
 
         const keyNode = new StringASTNodeImpl(key);
@@ -139,9 +139,9 @@ export function parse(document: TextDocument): PlayerContent {
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
         property.valueNode = parseUnknownNode(val, property);
 
-        if (key.value === 'id' && isStringProperty(property)) {
+        if (key.value === "id" && isStringProperty(property)) {
           assetNode.id = property;
-        } else if (key.value === 'type' && isStringProperty(property)) {
+        } else if (key.value === "type" && isStringProperty(property)) {
           assetNode.assetType = property;
         }
 
@@ -163,31 +163,31 @@ export function parse(document: TextDocument): PlayerContent {
     parent?: ASTNode
   ): ASTNode | undefined {
     switch (node?.type) {
-      case 'string': {
+      case "string": {
         const newNode = new StringASTNodeImpl(node, parent);
         jsonToNode.set(node, newNode);
         return newNode;
       }
 
-      case 'null': {
+      case "null": {
         const newNode = new NullASTNodeImpl(node, parent);
         jsonToNode.set(node, newNode);
         return newNode;
       }
 
-      case 'boolean': {
+      case "boolean": {
         const newNode = new BooleanASTNodeImpl(node, parent);
         jsonToNode.set(node, newNode);
         return newNode;
       }
 
-      case 'number': {
+      case "number": {
         const newNode = new NumberASTNodeImpl(node, parent);
         jsonToNode.set(node, newNode);
         return newNode;
       }
 
-      case 'array': {
+      case "array": {
         const arr = new ArrayASTNodeImpl(node, parent);
         node.children?.forEach((arrChild) => {
           const child = parseUnknownNode(arrChild, arr);
@@ -200,18 +200,18 @@ export function parse(document: TextDocument): PlayerContent {
         return arr;
       }
 
-      case 'object': {
+      case "object": {
         const obj = new ObjectASTNodeImpl(node, parent);
         jsonToNode.set(node, obj);
         node.children?.forEach((prop) => {
-          if (prop.type === 'property' && prop.children?.length) {
+          if (prop.type === "property" && prop.children?.length) {
             const [key, val] = prop.children;
             const keyNode = new StringASTNodeImpl(key);
             const propNode = new PropertyASTNodeImpl(prop, obj, keyNode);
             propNode.keyNode = new StringASTNodeImpl(key, propNode);
 
             if (val) {
-              if (keyNode.value === 'asset') {
+              if (keyNode.value === "asset") {
                 propNode.valueNode = parseAsset(val, propNode);
               } else {
                 propNode.valueNode = parseUnknownNode(val, propNode);
@@ -239,7 +239,7 @@ export function parse(document: TextDocument): PlayerContent {
     const viewNode = new ViewASTNodeImpl(node, parent);
 
     node.children?.forEach((prop) => {
-      if (prop.type === 'property' && (prop.children?.length ?? 0) > 0) {
+      if (prop.type === "property" && (prop.children?.length ?? 0) > 0) {
         const [key, val] = prop.children ?? [];
 
         const keyNode = new StringASTNodeImpl(key);
@@ -248,9 +248,9 @@ export function parse(document: TextDocument): PlayerContent {
 
         if (val) {
           property.valueNode = parseUnknownNode(val, property);
-          if (key.value === 'id' && isStringProperty(property)) {
+          if (key.value === "id" && isStringProperty(property)) {
             viewNode.id = property;
-          } else if (key.value === 'type' && isStringProperty(property)) {
+          } else if (key.value === "type" && isStringProperty(property)) {
             viewNode.viewType = property;
           }
         }
@@ -274,16 +274,16 @@ export function parse(document: TextDocument): PlayerContent {
     const state = new FlowStateASTNodeImpl(node, parent);
     jsonToNode.set(node, state);
 
-    if (node.type === 'object') {
+    if (node.type === "object") {
       node.children?.forEach((prop) => {
-        if (prop.type === 'property' && prop.children?.length) {
+        if (prop.type === "property" && prop.children?.length) {
           const [key, val] = prop.children;
 
           const keyNode = new StringASTNodeImpl(key);
           const property = new PropertyASTNodeImpl(prop, state, keyNode);
           property.keyNode = new StringASTNodeImpl(key, property);
 
-          if (key.value === 'state_type' && val?.type === 'string') {
+          if (key.value === "state_type" && val?.type === "string") {
             property.valueNode = parseUnknownNode(val, property);
             state.stateType = property as PropertyASTNode<StringASTNode>;
           } else {
@@ -309,22 +309,22 @@ export function parse(document: TextDocument): PlayerContent {
     const flow = new FlowASTNodeImpl(node, parent);
     jsonToNode.set(node, flow);
 
-    if (node.type === 'object') {
+    if (node.type === "object") {
       node.children?.forEach((prop) => {
-        if (prop.type === 'property' && prop.children?.length) {
+        if (prop.type === "property" && prop.children?.length) {
           const [key, val] = prop.children;
 
           const keyNode = new StringASTNodeImpl(key);
           const property = new PropertyASTNodeImpl(prop, flow, keyNode);
           property.keyNode = new StringASTNodeImpl(key, property);
 
-          if (key.value === 'startState' && val?.type === 'string') {
+          if (key.value === "startState" && val?.type === "string") {
             property.valueNode = parseUnknownNode(val, property);
             flow.start = property as PropertyASTNode<StringASTNode>;
           } else if (
-            val?.type === 'object' &&
-            property.keyNode.value !== 'onStart' &&
-            property.keyNode.value !== 'onEnd'
+            val?.type === "object" &&
+            property.keyNode.value !== "onStart" &&
+            property.keyNode.value !== "onEnd"
           ) {
             // Anything else in here is a state-type
             property.valueNode = parseFlowState(val, property);
@@ -351,19 +351,19 @@ export function parse(document: TextDocument): PlayerContent {
   function parseNavigation(node: Node, parent?: ASTNode): NavigationASTNode {
     const navNode = new NavigationASTNodeImpl(node, parent);
     jsonToNode.set(node, navNode);
-    if (node.type === 'object') {
+    if (node.type === "object") {
       node.children?.forEach((prop) => {
-        if (prop.type === 'property' && prop.children?.length) {
+        if (prop.type === "property" && prop.children?.length) {
           const [key, val] = prop.children;
 
           const keyNode = new StringASTNodeImpl(key);
           const property = new PropertyASTNodeImpl(prop, navNode, keyNode);
           property.keyNode = new StringASTNodeImpl(key, property);
 
-          if (key.value === 'BEGIN' && val?.type === 'string') {
+          if (key.value === "BEGIN" && val?.type === "string") {
             property.valueNode = parseUnknownNode(val, property);
             navNode.begin = property as PropertyASTNode<StringASTNode>;
-          } else if (val?.type === 'object') {
+          } else if (val?.type === "object") {
             // Anything else in here is a state-type
             property.valueNode = parseFlow(val, property);
             navNode.flows.push(property as PropertyASTNode<FlowASTNode>);
@@ -387,9 +387,9 @@ export function parse(document: TextDocument): PlayerContent {
   function parseContent(node: Node): ContentASTNode {
     const contentNode = new ContentASTNodeImpl(node, undefined);
 
-    if (node.type === 'object') {
+    if (node.type === "object") {
       node.children?.forEach((childProp) => {
-        if (childProp.type === 'property' && childProp.children?.length) {
+        if (childProp.type === "property" && childProp.children?.length) {
           const [key, val] = childProp.children;
 
           const keyNode = new StringASTNodeImpl(key);
@@ -400,7 +400,7 @@ export function parse(document: TextDocument): PlayerContent {
           );
           property.keyNode = new StringASTNodeImpl(key, property);
 
-          if (key.value === 'views' && val?.type === 'array') {
+          if (key.value === "views" && val?.type === "array") {
             const views = new ArrayASTNodeImpl(val, property);
             val.children?.forEach((view) => {
               const parsedV = parseView(view, views);
@@ -409,7 +409,7 @@ export function parse(document: TextDocument): PlayerContent {
             });
             property.valueNode = views;
             contentNode.views = property as PropertyASTNode<ArrayASTNode>;
-          } else if (key.value === 'navigation' && val) {
+          } else if (key.value === "navigation" && val) {
             const nav = parseNavigation(val, property);
             contentNode.navigation =
               property as PropertyASTNode<NavigationASTNode>;
@@ -434,7 +434,7 @@ export function parse(document: TextDocument): PlayerContent {
   }
 
   let rootASTNode: ASTNode = {
-    type: 'empty',
+    type: "empty",
     value: undefined,
     jsonNode: root,
   };

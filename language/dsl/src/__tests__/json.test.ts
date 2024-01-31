@@ -1,9 +1,9 @@
-import { test, expect } from 'vitest';
-import { fromJSON, toJSON } from '..';
+import { test, expect } from "vitest";
+import { fromJSON, toJSON } from "..";
 
-test('converts back and forth', () => {
+test("converts back and forth", () => {
   const testObj = {
-    foo: [true, 'bar', { key: 'val' }],
+    foo: [true, "bar", { key: "val" }],
     bar: null,
     other: 2,
   };

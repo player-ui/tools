@@ -1,9 +1,9 @@
-import { test, expect } from 'vitest';
-import React from 'react';
-import { render, expression as e } from '..';
-import { Collection, Input, Text } from './helpers/asset-library';
+import { test, expect } from "vitest";
+import React from "react";
+import { render, expression as e } from "..";
+import { Collection, Input, Text } from "./helpers/asset-library";
 
-test('works with a Component that returns a Fragment of items', async () => {
+test("works with a Component that returns a Fragment of items", async () => {
   const NestedItems = () => {
     return (
       <>
@@ -15,27 +15,27 @@ test('works with a Component that returns a Fragment of items', async () => {
   };
 
   const expected = {
-    id: 'root',
-    type: 'collection',
+    id: "root",
+    type: "collection",
     values: [
       {
         asset: {
-          id: 'values-0',
-          type: 'text',
-          value: 'Before Input',
+          id: "values-0",
+          type: "text",
+          value: "Before Input",
         },
       },
       {
         asset: {
-          id: 'values-1',
-          type: 'input',
+          id: "values-1",
+          type: "input",
         },
       },
       {
         asset: {
-          id: 'values-2',
-          type: 'text',
-          value: 'After Input',
+          id: "values-2",
+          type: "text",
+          value: "After Input",
         },
       },
     ],
@@ -64,7 +64,7 @@ test('works with a Component that returns a Fragment of items', async () => {
   expect(contentWithoutFragment.jsonValue).toStrictEqual(expected);
 });
 
-test('handles invalid expressions', async () => {
+test("handles invalid expressions", async () => {
   const App = () => {
     return (
       <Collection>

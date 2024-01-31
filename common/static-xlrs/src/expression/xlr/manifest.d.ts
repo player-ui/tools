@@ -1,8 +1,3 @@
-import type { RefNode } from '@player-tools/xlr';
+import type { TSManifest } from "@player-tools/xlr";
 
-export interface CommonExpressions {
-  pluginName: 'CommonExpressions';
-  capabilities: {
-    Expressions: RefNode[];
-  };
-}
+export type CommonExpressions = TSManifest;

@@ -1,2 +1,2 @@
-export * from './Config';
-export * from './ConfigPanel';
+export * from "./Config";
+export * from "./ConfigPanel";

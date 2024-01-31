@@ -1,44 +1,44 @@
-import { Flags } from '@oclif/core';
-import glob from 'globby';
-import path from 'path';
-import { promises as fs } from 'fs';
-import mkdirp from 'mkdirp';
-import logSymbols from 'log-symbols';
-import figures from 'figures';
-import chalk from 'chalk';
+import { Flags } from "@oclif/core";
+import glob from "globby";
+import path from "path";
+import { promises as fs } from "fs";
+import mkdirp from "mkdirp";
+import logSymbols from "log-symbols";
+import figures from "figures";
+import chalk from "chalk";
 import type {
   CompilationResult,
   DefaultCompilerContentType,
-} from '@player-tools/dsl';
-import { fingerprintContent as fallbackFingerprint } from '@player-tools/dsl';
-import { BaseCommand } from '../../utils/base-command';
-import { convertToFileGlob, normalizePath } from '../../utils/fs';
-import type { CompletedTask } from '../../utils/task-runner';
-import { registerForPaths } from '../../utils/babel-register';
-import Validate from '../json/validate';
+} from "@player-tools/dsl";
+import { fingerprintContent as fallbackFingerprint } from "@player-tools/dsl";
+import { BaseCommand } from "../../utils/base-command";
+import { convertToFileGlob, normalizePath } from "../../utils/fs";
+import type { CompletedTask } from "../../utils/task-runner";
+import { registerForPaths } from "../../utils/babel-register";
+import Validate from "../json/validate";
 
-type TaskResult = Array<Omit<CompletedTask<CompilationResult, any>, 'run'>>;
+type TaskResult = Array<Omit<CompletedTask<CompilationResult, any>, "run">>;
 
 /** A command to compile player DSL content into JSON */
 export default class DSLCompile extends BaseCommand {
-  static description = 'Compile Player DSL files into JSON';
+  static description = "Compile Player DSL files into JSON";
 
   static flags = {
     ...BaseCommand.flags,
     input: Flags.string({
-      char: 'i',
+      char: "i",
       description:
-        'An input directory to compile.\nAny jsx/ts/tsx files will be loaded via babel-require automatically.',
+        "An input directory to compile.\nAny jsx/ts/tsx files will be loaded via babel-require automatically.",
     }),
     output: Flags.string({
-      char: 'o',
-      description: 'Output directory to write results to.',
+      char: "o",
+      description: "Output directory to write results to.",
     }),
-    'skip-validation': Flags.boolean({
-      description: 'Option to skip validating the generated JSON',
+    "skip-validation": Flags.boolean({
+      description: "Option to skip validating the generated JSON",
     }),
     exp: Flags.boolean({
-      description: 'Use experimental language features',
+      description: "Use experimental language features",
       default: false,
     }),
   };
@@ -56,9 +56,9 @@ export default class DSLCompile extends BaseCommand {
 
     return {
       input,
-      output: flags.output ?? config.dsl?.outDir ?? '_out',
+      output: flags.output ?? config.dsl?.outDir ?? "_out",
       skipValidation:
-        flags['skip-validation'] ?? config.dsl?.skipValidation ?? false,
+        flags["skip-validation"] ?? config.dsl?.skipValidation ?? false,
       exp,
     };
   }
@@ -70,7 +70,7 @@ export default class DSLCompile extends BaseCommand {
     const { input, output, skipValidation, exp } = await this.getOptions();
 
     const files = await glob(
-      convertToFileGlob([input], '**/*.(tsx|jsx|js|ts)'),
+      convertToFileGlob([input], "**/*.(tsx|jsx|js|ts)"),
       {
         expandDirectories: true,
       }
@@ -78,7 +78,7 @@ export default class DSLCompile extends BaseCommand {
 
     registerForPaths();
 
-    this.debug('Found %i files to process', files.length);
+    this.debug("Found %i files to process", files.length);
 
     const results = {
       exitCode: 0,
@@ -106,7 +106,7 @@ export default class DSLCompile extends BaseCommand {
           preProcessedValue
         )) ||
         fallbackFingerprint(preProcessedValue, file) ||
-        'unknown';
+        "unknown";
 
       let relativePath = path.relative(input, file);
       if (!relativePath) {
@@ -118,7 +118,7 @@ export default class DSLCompile extends BaseCommand {
         path.format({
           ...path.parse(relativePath),
           base: undefined,
-          ext: '.json',
+          ext: ".json",
         })
       );
 
@@ -170,17 +170,17 @@ export default class DSLCompile extends BaseCommand {
         const result = await compileFile(file);
         compilerResults.push({
           output: result,
-          state: 'completed',
+          state: "completed",
         });
       } catch (e: any) {
         results.exitCode = 100;
-        this.log('');
+        this.log("");
         this.log(
           chalk.red(`${logSymbols.error} Error compiling ${file}: ${e.message}`)
         );
         this.debug(e);
         compilerResults.push({
-          state: 'completed',
+          state: "completed",
           error: e,
         });
       }
@@ -189,22 +189,22 @@ export default class DSLCompile extends BaseCommand {
     await context.dslCompiler.hooks.onEnd.call({ output });
 
     if (!skipValidation) {
-      console.log('');
+      console.log("");
       const hasOutput = compilerResults.some(
-        (r) => r.output?.contentType === 'flow'
+        (r) => r.output?.contentType === "flow"
       );
       if (hasOutput) {
         await Validate.run([
-          '-f',
+          "-f",
           ...compilerResults
-            .filter((r) => r.output?.contentType === 'flow')
+            .filter((r) => r.output?.contentType === "flow")
             .map((result) => {
-              return result.output?.outputFile ?? '';
+              return result.output?.outputFile ?? "";
             }),
-          ...(exp ? ['--exp'] : []),
+          ...(exp ? ["--exp"] : []),
         ]);
       } else {
-        console.log('No output to validate');
+        console.log("No output to validate");
       }
     }
 

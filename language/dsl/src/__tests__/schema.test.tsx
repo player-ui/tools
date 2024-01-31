@@ -1,14 +1,14 @@
-import { test, expect, describe, vi } from 'vitest';
-import React from 'react';
-import { render } from 'react-json-reconciler';
+import { test, expect, describe, vi } from "vitest";
+import React from "react";
+import { render } from "react-json-reconciler";
 import {
   makeBindingsForObject,
   SchemaGenerator,
   SchemaTypeName,
-} from '../compiler/schema';
-import { FooTypeRef, BarTypeRef, LocalBazType } from './helpers/mock-data-refs';
+} from "../compiler/schema";
+import { FooTypeRef, BarTypeRef, LocalBazType } from "./helpers/mock-data-refs";
 
-describe('Schema Bindings Generate Properly', () => {
+describe("Schema Bindings Generate Properly", () => {
   const testObj = {
     main: {
       sub: {
@@ -17,43 +17,43 @@ describe('Schema Bindings Generate Properly', () => {
       },
       sub2: [
         {
-          [SchemaTypeName]: 'sub2a',
+          [SchemaTypeName]: "sub2a",
           val: LocalBazType,
         },
       ],
       sub4: {
-        [SchemaTypeName]: 'sub3',
+        [SchemaTypeName]: "sub3",
         c: FooTypeRef,
       },
     },
   };
 
-  test('is able to get bindings for all paths', () => {
+  test("is able to get bindings for all paths", () => {
     const schema = makeBindingsForObject(testObj);
-    expect(schema.main.toRefString()).toStrictEqual('{{main}}');
-    expect(schema.main.sub.toRefString()).toStrictEqual('{{main.sub}}');
-    expect(schema.main.sub.a.toRefString()).toStrictEqual('{{main.sub.a}}');
-    expect(schema.main.sub.b.toRefString()).toStrictEqual('{{main.sub.b}}');
-    expect(schema.main.sub2.toRefString()).toStrictEqual('{{main.sub2}}');
-    expect(schema.main.sub2[0].toRefString()).toStrictEqual('{{main.sub2.0}}');
+    expect(schema.main.toRefString()).toStrictEqual("{{main}}");
+    expect(schema.main.sub.toRefString()).toStrictEqual("{{main.sub}}");
+    expect(schema.main.sub.a.toRefString()).toStrictEqual("{{main.sub.a}}");
+    expect(schema.main.sub.b.toRefString()).toStrictEqual("{{main.sub.b}}");
+    expect(schema.main.sub2.toRefString()).toStrictEqual("{{main.sub2}}");
+    expect(schema.main.sub2[0].toRefString()).toStrictEqual("{{main.sub2.0}}");
     expect(schema.main.sub2._index_.toRefString()).toStrictEqual(
-      '{{main.sub2._index_}}'
+      "{{main.sub2._index_}}"
     );
 
     expect(schema.main.sub2[0].val.toRefString()).toStrictEqual(
-      '{{main.sub2.0.val}}'
+      "{{main.sub2.0.val}}"
     );
     expect(
       // eslint-disable-next-line dot-notation
-      schema.main.sub2['_index_'].toRefString()
-    ).toStrictEqual('{{main.sub2._index_}}');
+      schema.main.sub2["_index_"].toRefString()
+    ).toStrictEqual("{{main.sub2._index_}}");
     expect(
       // eslint-disable-next-line dot-notation
-      schema.main.sub2['_index_'].val.toRefString()
-    ).toStrictEqual('{{main.sub2._index_.val}}');
+      schema.main.sub2["_index_"].val.toRefString()
+    ).toStrictEqual("{{main.sub2._index_.val}}");
   });
 
-  test('is able to serialize to a schema object', () => {
+  test("is able to serialize to a schema object", () => {
     const g = new SchemaGenerator();
     const schema = g.toSchema(testObj);
     expect(schema).toMatchInlineSnapshot(`
@@ -108,7 +108,7 @@ describe('Schema Bindings Generate Properly', () => {
     `);
   });
 
-  test('is able to serialize to a schema object with a custom array indicator', () => {
+  test("is able to serialize to a schema object with a custom array indicator", () => {
     const g = new SchemaGenerator();
     const schema = g.toSchema(testObj);
     expect(schema).toMatchInlineSnapshot(`
@@ -163,7 +163,7 @@ describe('Schema Bindings Generate Properly', () => {
     `);
   });
 
-  test('logs warning if two types have the same name but are different', () => {
+  test("logs warning if two types have the same name but are different", () => {
     const mockLogger = {
       error: vi.fn(),
       warn: vi.fn(),
@@ -191,7 +191,7 @@ describe('Schema Bindings Generate Properly', () => {
     const results = g.toSchema(badObj);
     expect(mockLogger.warn).toHaveBeenCalledTimes(1);
     expect(mockLogger.warn).toHaveBeenCalledWith(
-      'WARNING: Generated two intermediate types with the name: subType that are of different shapes, using artificial type subType2'
+      "WARNING: Generated two intermediate types with the name: subType that are of different shapes, using artificial type subType2"
     );
     expect(results).toMatchInlineSnapshot(`
     {
@@ -236,7 +236,7 @@ describe('Schema Bindings Generate Properly', () => {
   `);
   });
 
-  test('doesnt throw errors if two types have the same name and are the same', () => {
+  test("doesnt throw errors if two types have the same name and are the same", () => {
     const g = new SchemaGenerator();
 
     const badObj = {
@@ -286,7 +286,7 @@ describe('Schema Bindings Generate Properly', () => {
     `);
   });
 
-  test('works when used as a jsx element', async () => {
+  test("works when used as a jsx element", async () => {
     const schema = makeBindingsForObject(testObj);
 
     const content = await render(
@@ -302,15 +302,15 @@ describe('Schema Bindings Generate Properly', () => {
     `);
   });
 
-  test('primitive arrays are not treated as bindings nor further proxied', () => {
+  test("primitive arrays are not treated as bindings nor further proxied", () => {
     const schema = makeBindingsForObject({
       main: {
         sub: {
           a: FooTypeRef,
           b: BarTypeRef,
           c: {
-            type: 'enumtype',
-            enum: ['A', 'B', 'C'],
+            type: "enumtype",
+            enum: ["A", "B", "C"],
           },
         },
         sub2: [
@@ -319,26 +319,26 @@ describe('Schema Bindings Generate Properly', () => {
           },
         ],
         sub4: {
-          [SchemaTypeName]: 'sub3',
+          [SchemaTypeName]: "sub3",
           c: FooTypeRef,
         },
       },
     });
 
-    expect(schema.main.toRefString()).toStrictEqual('{{main}}');
-    expect(schema.main.sub.toRefString()).toStrictEqual('{{main.sub}}');
-    expect(schema.main.sub.a.toRefString()).toStrictEqual('{{main.sub.a}}');
-    expect(schema.main.sub.c.toRefString()).toStrictEqual('{{main.sub.c}}');
-    expect(schema.main.sub.c.enum).toStrictEqual(['A', 'B', 'C']);
+    expect(schema.main.toRefString()).toStrictEqual("{{main}}");
+    expect(schema.main.sub.toRefString()).toStrictEqual("{{main.sub}}");
+    expect(schema.main.sub.a.toRefString()).toStrictEqual("{{main.sub.a}}");
+    expect(schema.main.sub.c.toRefString()).toStrictEqual("{{main.sub.c}}");
+    expect(schema.main.sub.c.enum).toStrictEqual(["A", "B", "C"]);
     // make sure iterable method is still there and works
     expect(
-      schema.main.sub.c.enum.every((it: any) => typeof it === 'string')
+      schema.main.sub.c.enum.every((it: any) => typeof it === "string")
     ).toStrictEqual(true);
   });
 });
 
-describe('schema plugins', () => {
-  const MetaData = Symbol('Meta Data');
+describe("schema plugins", () => {
+  const MetaData = Symbol("Meta Data");
   const testObj = {
     foo: {
       [MetaData]: {
@@ -347,10 +347,10 @@ describe('schema plugins', () => {
     },
   };
 
-  test('enables node modification', () => {
+  test("enables node modification", () => {
     const schemaGenerator = new SchemaGenerator();
 
-    schemaGenerator.hooks.createSchemaNode.tap('test', (node, prop) => {
+    schemaGenerator.hooks.createSchemaNode.tap("test", (node, prop) => {
       if (prop[MetaData]) {
         return {
           ...node,

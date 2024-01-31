@@ -15,6 +15,7 @@ js_pipeline(
         "//:node_modules/jsonc-parser",
     ],
     test_deps = [
+        "//:node_modules",
         "//:vitest_config",
     ],
     deps = [

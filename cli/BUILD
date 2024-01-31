@@ -52,6 +52,7 @@ js_pipeline(
     srcs = glob(["src/**/*"]) + [":_manifest"],
     test_deps = [
         "//:node_modules",
+        "//:vitest_config",
     ],
     deps = dependencies,
 )

@@ -1,11 +1,11 @@
-import React from 'react';
-import { PluginClient, usePlugin } from 'flipper-plugin';
+import React from "react";
+import { PluginClient, usePlugin } from "flipper-plugin";
 import {
   createStore,
   Runtime,
   RPCRequestMessageEvent,
   RPCResponseMessageEvent,
-} from '@player-tools/devtools-common';
+} from "@player-tools/devtools-common";
 import {
   handleMessage,
   buildAliases,
@@ -13,8 +13,8 @@ import {
   buildRPCActions,
   buildRPCRequests,
   RuntimeRPCRequestHandlers,
-} from '@player-tools/devtools-client';
-import { App } from '@player-tools/devtools-ui';
+} from "@player-tools/devtools-client";
+import { App } from "@player-tools/devtools-ui";
 
 type Events = {
   [key in Runtime.RuntimeEventTypes]: Extract<
@@ -22,7 +22,7 @@ type Events = {
     { type: key }
   >;
 } & {
-  'rpc-response': RPCResponseMessageEvent<Runtime.RuntimeRPC>;
+  "rpc-response": RPCResponseMessageEvent<Runtime.RuntimeRPC>;
 };
 
 type Methods = {
@@ -52,7 +52,7 @@ export function plugin(client: PluginClient<Events, Methods>): {
     });
   });
 
-  client.onMessage('rpc-response', (params) => {
+  client.onMessage("rpc-response", (params) => {
     rpcHandlers[params.rpcType].onMessage(params);
   });
 

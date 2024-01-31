@@ -1,5 +1,5 @@
-import ts from 'typescript';
-import type { Annotations } from '@player-tools/xlr';
+import ts from "typescript";
+import type { Annotations } from "@player-tools/xlr";
 
 interface JSDocContainer {
   /** */
@@ -71,7 +71,7 @@ function recurseTypeChain(
   }
 
   if (ts.isArrayTypeNode(node)) {
-    return ['[]', ...recurseTypeChain(node.parent, node)];
+    return ["[]", ...recurseTypeChain(node.parent, node)];
   }
 
   if (ts.isTupleTypeNode(node)) {
@@ -101,7 +101,7 @@ function recurseTypeChain(
  * Builds the `Title` property by traversing up and noting the named types in the tree
  */
 function extractTitle(node: ts.Node): Annotations {
-  const typeNames = recurseTypeChain(node, undefined).reverse().join('.');
+  const typeNames = recurseTypeChain(node, undefined).reverse().join(".");
 
   if (!typeNames.length) {
     return {};
@@ -116,11 +116,11 @@ function extractTitle(node: ts.Node): Annotations {
 function stringifyDoc(
   docString: undefined | string | ts.NodeArray<ts.JSDocComment>
 ): string | undefined {
-  if (typeof docString === 'undefined' || typeof docString === 'string') {
+  if (typeof docString === "undefined" || typeof docString === "string") {
     return docString;
   }
 
-  return docString.map(({ text }) => text).join(' ');
+  return docString.map(({ text }) => text).join(" ");
 }
 
 /**
@@ -137,8 +137,8 @@ function extractTags(tags: ReadonlyArray<ts.JSDocTag>): Annotations {
    *
    */
   const extractSee = (tag: ts.JSDocSeeTag) => {
-    return `${tag.tagName ? `${tag.tagName?.getText()} ` : ''}${
-      stringifyDoc(tag.comment)?.trim() ?? ''
+    return `${tag.tagName ? `${tag.tagName?.getText()} ` : ""}${
+      stringifyDoc(tag.comment)?.trim() ?? ""
     }`;
   };
 
@@ -147,17 +147,17 @@ function extractTags(tags: ReadonlyArray<ts.JSDocTag>): Annotations {
       return;
     }
 
-    if (tag.tagName.text === 'example') {
-      examples.push(stringifyDoc(tag.comment)?.trim() ?? '');
-    } else if (tag.tagName.text === 'default') {
-      _default.push(stringifyDoc(tag.comment)?.trim() ?? '');
-    } else if (tag.tagName.text === 'see') {
+    if (tag.tagName.text === "example") {
+      examples.push(stringifyDoc(tag.comment)?.trim() ?? "");
+    } else if (tag.tagName.text === "default") {
+      _default.push(stringifyDoc(tag.comment)?.trim() ?? "");
+    } else if (tag.tagName.text === "see") {
       see.push(extractSee(tag as ts.JSDocSeeTag));
-    } else if (tag.tagName.text === 'meta') {
+    } else if (tag.tagName.text === "meta") {
       const [key, value] = tag.comment.toString().split(/:(.*)/);
-      meta[key] = value?.trim() ?? '';
+      meta[key] = value?.trim() ?? "";
     } else {
-      const text = stringifyDoc(tag.comment)?.trim() ?? '';
+      const text = stringifyDoc(tag.comment)?.trim() ?? "";
       descriptions.push(`@${tag.tagName.text} ${text}`);
     }
   });
@@ -165,9 +165,9 @@ function extractTags(tags: ReadonlyArray<ts.JSDocTag>): Annotations {
   return {
     ...(descriptions.length === 0
       ? {}
-      : { description: descriptions.join('\n') }),
+      : { description: descriptions.join("\n") }),
     ...(examples.length === 0 ? {} : { examples }),
-    ...(_default.length === 0 ? {} : { default: _default.join('\n') }),
+    ...(_default.length === 0 ? {} : { default: _default.join("\n") }),
     ...(see.length === 0 ? {} : { see }),
     ...(meta && Object.keys(meta).length === 0 ? {} : { meta }),
   };
@@ -176,7 +176,7 @@ function extractTags(tags: ReadonlyArray<ts.JSDocTag>): Annotations {
 /**
  * Joins Arrays of maybe strings with a given separator
  */
-function join(t: Array<string | undefined>, separator = '\n') {
+function join(t: Array<string | undefined>, separator = "\n") {
   const unique = new Set(t).values();
   return Array.from(unique)
     .filter((s) => s !== undefined)
@@ -191,7 +191,7 @@ function mergeAnnotations(nodes: Array<Annotations>): Annotations {
   const name = nodes.find((n) => n.name)?.name;
   const title = join(
     nodes.map((n) => n.title),
-    ', '
+    ", "
   );
   const description = join(nodes.map((n) => n.description));
   const _default = join(nodes.map((n) => n.default));

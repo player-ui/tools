@@ -8,7 +8,7 @@ import {
   type EnhancedStore,
   configureStore,
   createReducer,
-} from '@reduxjs/toolkit';
+} from "@reduxjs/toolkit";
 import {
   clearSelectedDataDetails,
   clearStore,
@@ -20,8 +20,8 @@ import {
   playerTimelineAction,
   playerViewUpdateAction,
   selectedPlayerAction,
-} from './actions';
-import type { PlayersState, StoreState } from '../types/state';
+} from "./actions";
+import type { PlayersState, StoreState } from "../types/state";
 
 const initialState = {
   selectedPlayerId: null,
