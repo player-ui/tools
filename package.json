@@ -162,7 +162,10 @@
     "zip-folder": "^1.0.0"
   },
   "volta": {
-    "node": "16.15.0",
-    "yarn": "1.22.19"
+    "node": "16.15.0"
+  },
+  "resolutions": {
+    "@types/react": "17.0.75",
+    "react": "17.0.2"
   }
 }

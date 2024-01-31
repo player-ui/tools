@@ -168,7 +168,7 @@ export const Template = (props: TemplateProps) => {
 
   return (
     <proxy ref={proxyRef}>
-      {createPortal(
+      <>{createPortal(
         <OptionalIDSuffixProvider
           wrapperRef={valueRef}
           templateIndex={`_index${
@@ -187,7 +187,7 @@ export const Template = (props: TemplateProps) => {
           </TemplateProvider>
         </OptionalIDSuffixProvider>,
         outputElement
-      )}
+      )}</>
       <value ref={valueRef} value={undefined} />
     </proxy>
   );

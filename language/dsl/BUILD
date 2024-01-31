@@ -6,6 +6,7 @@ javascript_pipeline(
       "@npm//@player-ui/types",
       "@npm//@player-ui/player",
       "@npm//@types/mkdirp",
+      "@npm//@types/react",
       "@npm//chalk",
       "@npm//command-line-application",
       "@npm//fs-extra",
@@ -23,8 +24,5 @@ javascript_pipeline(
     ],
     peer_dependencies = [
       "@npm//react"
-    ],
-    test_data = [
-      "@npm//@types/react"
     ],   
 )
