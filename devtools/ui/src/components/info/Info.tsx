@@ -5,7 +5,7 @@ import copy from 'copy-to-clipboard';
 import styles from '../sidebar.css';
 
 interface InfoProps {
-  info: Runtime.PlayerRuntimeInfoRPC['result'];
+  readonly info: Runtime.PlayerRuntimeInfoRPC['result'];
 }
 
 /**

@@ -4,7 +4,7 @@ import { headerCase } from 'change-case';
 import { PANEL_IDS, type PanelID, Content } from './panels';
 
 interface PanelNavigationProps {
-  onSelectTab?: (tabID: PanelID) => void;
+  readonly onSelectTab?: (tabID: PanelID) => void;
 }
 
 export const PanelNavigation = (props: PanelNavigationProps) => {

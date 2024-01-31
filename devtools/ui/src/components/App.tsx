@@ -9,7 +9,7 @@ import styles from './app.css';
 
 // TODO: I would love to just use a provider for this, but it wasn't working with the bundle :(
 interface AppProps {
-  store: Store;
+  readonly store: Store;
 }
 
 /**

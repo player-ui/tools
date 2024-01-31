@@ -7,7 +7,7 @@ import { headerCase } from 'change-case';
 export const SUB_PANEL_IDS = ['plugins', 'schema', 'expressions'] as const;
 
 interface ConfigProps {
-  configState: Runtime.PlayerConfigRPC['result'];
+  readonly configState: Runtime.PlayerConfigRPC['result'];
 }
 
 export const Config = ({ configState }: ConfigProps) => {

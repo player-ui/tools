@@ -7,7 +7,7 @@ import styles from './data.css';
 import commonStyles from '../app.css';
 
 interface DataDetailsPanelProps {
-  details?: Runtime.PlayerDataBindingRPC['result'];
+  readonly details?: Runtime.PlayerDataBindingRPC['result'];
 }
 
 export const DataDetailsPanel = (props: DataDetailsPanelProps) => {
@@ -96,9 +96,11 @@ export const DataDetailsPanel = (props: DataDetailsPanelProps) => {
 };
 
 interface DataProps {
-  allBindings: Runtime.PlayerDataBindingRPC['result'];
-  selectedBinding: Runtime.PlayerDataBindingRPC['result'];
-  onSelect: (astNode: ASTNode | ResolvedASTNode | undefined) => Promise<void>;
+  readonly allBindings: Runtime.PlayerDataBindingRPC['result'];
+  readonly selectedBinding: Runtime.PlayerDataBindingRPC['result'];
+  readonly onSelect: (
+    astNode: ASTNode | ResolvedASTNode | undefined
+  ) => Promise<void>;
 }
 
 export const Data = ({ allBindings, selectedBinding, onSelect }: DataProps) => (

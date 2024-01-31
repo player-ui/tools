@@ -28,7 +28,7 @@ import type { XLRContext } from './xlr';
 
 export type LogFn = (msg: string) => void;
 export const LOG_TYPES = ['debug', 'info', 'warn', 'error'] as const;
-export type LogType = typeof LOG_TYPES[number];
+export type LogType = (typeof LOG_TYPES)[number];
 export type Logger = Record<LogType, LogFn>;
 
 export interface DocumentContext {

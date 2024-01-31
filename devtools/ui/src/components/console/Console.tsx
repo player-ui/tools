@@ -40,9 +40,9 @@ export const ConsoleHeader = () => {
 };
 
 interface ConsoleProps {
-  consoleState: ConsoleState;
-  onClear: () => void;
-  onExecute: (expression: string) => string;
+  readonly consoleState: ConsoleState;
+  readonly onClear: () => void;
+  readonly onExecute: (expression: string) => string;
 }
 
 export const Console = ({ consoleState, onClear, onExecute }: ConsoleProps) => (

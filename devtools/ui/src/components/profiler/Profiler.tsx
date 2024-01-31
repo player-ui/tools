@@ -5,9 +5,9 @@ import type { ProfilerNode } from '@player-tools/devtools-common';
 import styles from '../app.css';
 
 interface ProfilerProps {
-  profiler?: ProfilerNode;
-  onStart: () => void;
-  onStop: () => void;
+  readonly profiler?: ProfilerNode;
+  readonly onStart: () => void;
+  readonly onStop: () => void;
 }
 
 /**

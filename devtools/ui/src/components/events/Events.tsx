@@ -29,7 +29,7 @@ function createEmptyCells(
 }
 
 interface EventsProps {
-  events: Array<
+  readonly events: Array<
     | Runtime.PlayerDataChangeEvent
     | Runtime.PlayerLogEvent
     | Runtime.PlayerFlowStartEvent

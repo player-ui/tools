@@ -16,7 +16,7 @@ export const PANEL_IDS = [
   'console',
   // 'profiler',
 ] as const;
-export type PanelID = typeof PANEL_IDS[number];
+export type PanelID = (typeof PANEL_IDS)[number];
 
 const ContentPage: Record<PanelID, React.ComponentType> = {
   // config: ConfigPanel,
@@ -29,7 +29,7 @@ const ContentPage: Record<PanelID, React.ComponentType> = {
 };
 
 interface ContentProps {
-  panelId: PanelID;
+  readonly panelId: PanelID;
 }
 
 export const Content = (props: ContentProps) => {
