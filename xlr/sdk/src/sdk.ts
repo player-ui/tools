@@ -38,12 +38,14 @@ export class XLRSDK {
   private validator: XLRValidator;
   private tsWriter: TSWriter;
   private computedNodeCache: Map<string, NodeType>;
+  private externalTransformFunctions: Map<string, TransformFunction>;
 
   constructor(customRegistry?: XLRRegistry) {
     this.registry = customRegistry ?? new BasicXLRRegistry();
     this.validator = new XLRValidator(this.getType.bind(this));
     this.tsWriter = new TSWriter();
     this.computedNodeCache = new Map();
+    this.externalTransformFunctions = new Map();
   }
 
   /**
@@ -59,6 +61,11 @@ export class XLRSDK {
     transforms?: Array<TransformFunction>
   ) {
     this.computedNodeCache.clear();
+
+    const transformsToRun = [
+      ...this.externalTransformFunctions.values(),
+      ...(transforms ?? []),
+    ];
 
     const manifest = JSON.parse(
       fs.readFileSync(path.join(inputPath, 'xlr', 'manifest.json')).toString(),
@@ -90,7 +97,7 @@ export class XLRSDK {
               .toString()
           );
           const effectiveType =
-            transforms?.reduce(
+            transformsToRun?.reduce(
               (typeAccumulator: NamedType<NodeType>, transformFn) =>
                 transformFn(
                   typeAccumulator,
@@ -119,6 +126,11 @@ export class XLRSDK {
   ) {
     this.computedNodeCache.clear();
 
+    const transformsToRun = [
+      ...this.externalTransformFunctions.values(),
+      ...(transforms ?? []),
+    ];
+
     Object.keys(manifest.capabilities)?.forEach((capabilityName) => {
       if (
         filters?.capabilityFilter &&
@@ -132,7 +144,7 @@ export class XLRSDK {
           !extension.name.match(filters?.typeFilter)
         ) {
           const effectiveType =
-            transforms?.reduce(
+            transformsToRun?.reduce(
               (typeAccumulator: NamedType<NodeType>, transformFn) =>
                 transformFn(
                   typeAccumulator,
@@ -145,6 +157,20 @@ export class XLRSDK {
         }
       });
     });
+  }
+
+  /**
+   * Statically load transform function that should be applied to every XLR bundle that is imported
+   */
+  public addTransformFunction(name: string, fn: TransformFunction): void {
+    this.externalTransformFunctions.set(name, fn);
+  }
+
+  /**
+   * Remove any transform function loaded via the `addTransformFunction` method by name
+   */
+  public removeTransformFunction(name: string): void {
+    this.externalTransformFunctions.delete(name);
   }
 
   /**
