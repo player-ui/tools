@@ -83,11 +83,11 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
     );
     await runCommand([]);
     expect(logSpy.mock.calls).toMatchInlineSnapshot(`
-      Array [
-        Array [
-          "[41m[37mERROR:[39m[49m cannot run the CLI in /Users/username/player/utilities/cli/src/__tests__",
+      [
+        [
+          "ERROR: cannot run the CLI in /Users/username/player/utilities/cli/src/__tests__",
         ],
-        Array [
+        [
           "Please run the CLI in the root of the repository, /Users/username/Desktop/Projects/player",
         ],
       ]
@@ -111,46 +111,46 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
 
       await runCommand([]);
       expect(logSpy.mock.calls).toMatchInlineSnapshot(`
-        Array [
-          Array [
+        [
+          [
             "Consider using the --help flag for more information about this command.",
           ],
-          Array [
+          [
             "For more comprehensive logging, consider adding the -v flag.",
           ],
-          Array [
-            "For logging with full path to the dependency rather than with \\"➡\\", consider adding the -p flag.",
+          [
+            "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
           ],
-          Array [
+          [
             "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
           ],
-          Array [
+          [
             "Inspecting the @player-ui/@player-tools dependencies in the current repository...",
           ],
-          Array [
+          [
             "
         TOP-LEVEL @player-ui/@player-tools DEPENDENCIES:",
           ],
-          Array [
+          [
             "Version  How to find dependency       
         -------  -----------------------------
         3.11.0    ➡ @player-ui/binding-grammar
         ",
           ],
-          Array [
+          [
             "
         NESTED @player-ui/@player-tools DEPENDENCIES:",
           ],
-          Array [
+          [
             "Version  How to find dependency                      
         -------  --------------------------------------------
         3.11.0    ➡ @player-ui/core/ ➡ @player-ui/expressions
         ",
           ],
-          Array [
+          [
             "Unique top-level and nested @player-ui/@player-tools versions match. ",
           ],
-          Array [
+          [
             "There are no issues related to @player-ui/@player-tools dependency versioning. You are good to go! ",
           ],
         ]
@@ -171,36 +171,36 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
         .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]));
       await runCommand([]);
       expect(logSpy.mock.calls).toMatchInlineSnapshot(`
-        Array [
-          Array [
+        [
+          [
             "Consider using the --help flag for more information about this command.",
           ],
-          Array [
+          [
             "For more comprehensive logging, consider adding the -v flag.",
           ],
-          Array [
-            "For logging with full path to the dependency rather than with \\"➡\\", consider adding the -p flag.",
+          [
+            "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
           ],
-          Array [
+          [
             "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
           ],
-          Array [
+          [
             "Inspecting the @player-ui/@player-tools dependencies in the current repository...",
           ],
-          Array [
+          [
             "
         TOP-LEVEL @player-ui/@player-tools DEPENDENCIES:",
           ],
-          Array [
+          [
             "Version  How to find dependency       
         -------  -----------------------------
         3.11.0    ➡ @player-ui/binding-grammar
         ",
           ],
-          Array [
+          [
             "No nested @player-ui/@player-tools dependencies exist. Only a single top-level @player-ui/@player-tools version exists, 3.11.0",
           ],
-          Array [
+          [
             "There are no issues related to @player-ui/@player-tools dependency versioning. You are good to go! ",
           ],
         ]
@@ -221,36 +221,36 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
         .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]));
       await runCommand([]);
       expect(logSpy.mock.calls).toMatchInlineSnapshot(`
-        Array [
-          Array [
+        [
+          [
             "Consider using the --help flag for more information about this command.",
           ],
-          Array [
+          [
             "For more comprehensive logging, consider adding the -v flag.",
           ],
-          Array [
-            "For logging with full path to the dependency rather than with \\"➡\\", consider adding the -p flag.",
+          [
+            "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
           ],
-          Array [
+          [
             "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
           ],
-          Array [
+          [
             "Inspecting the @player-ui/@player-tools dependencies in the current repository...",
           ],
-          Array [
+          [
             "
         NESTED @player-ui/@player-tools DEPENDENCIES:",
           ],
-          Array [
+          [
             "Version  How to find dependency                      
         -------  --------------------------------------------
         3.11.0    ➡ @player-ui/core/ ➡ @player-ui/expressions
         ",
           ],
-          Array [
+          [
             "No top-level @player-ui/@player-tools dependencies exist. Only a single nested @player-ui/@player-tools version exists, 3.11.0",
           ],
-          Array [
+          [
             "There are no issues related to @player-ui/@player-tools dependency versioning. You are good to go! ",
           ],
         ]
@@ -265,26 +265,26 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
         });
       await runCommand([]);
       expect(logSpy.mock.calls).toMatchInlineSnapshot(`
-        Array [
-          Array [
+        [
+          [
             "Consider using the --help flag for more information about this command.",
           ],
-          Array [
+          [
             "For more comprehensive logging, consider adding the -v flag.",
           ],
-          Array [
-            "For logging with full path to the dependency rather than with \\"➡\\", consider adding the -p flag.",
+          [
+            "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
           ],
-          Array [
+          [
             "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
           ],
-          Array [
+          [
             "Inspecting the @player-ui/@player-tools dependencies in the current repository...",
           ],
-          Array [
+          [
             "No @player-ui/@player-tools dependencies exist.",
           ],
-          Array [
+          [
             "There are no issues related to @player-ui/@player-tools dependency versioning. You are good to go! ",
           ],
         ]
@@ -299,11 +299,11 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
       );
       await runCommand([]);
       expect(logSpy.mock.calls).toMatchInlineSnapshot(`
-        Array [
-          Array [
-            "[41m[37mERROR:[39m[49m cannot run the CLI in /Users/username/player/utilities/cli/src/__tests__",
+        [
+          [
+            "ERROR: cannot run the CLI in /Users/username/player/utilities/cli/src/__tests__",
           ],
-          Array [
+          [
             "Please run the CLI in the root of the repository, /Users/username/Desktop/Projects/player",
           ],
         ]
@@ -326,52 +326,52 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
 
       await runCommand([]);
       expect(logSpy.mock.calls).toMatchInlineSnapshot(`
-        Array [
-          Array [
+        [
+          [
             "Consider using the --help flag for more information about this command.",
           ],
-          Array [
+          [
             "For more comprehensive logging, consider adding the -v flag.",
           ],
-          Array [
-            "For logging with full path to the dependency rather than with \\"➡\\", consider adding the -p flag.",
+          [
+            "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
           ],
-          Array [
+          [
             "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
           ],
-          Array [
+          [
             "Inspecting the @player-ui/@player-tools dependencies in the current repository...",
           ],
-          Array [
+          [
             "
         TOP-LEVEL @player-ui/@player-tools DEPENDENCIES:",
           ],
-          Array [
+          [
             "Version  How to find dependency       
         -------  -----------------------------
         3.11.0    ➡ @player-ui/binding-grammar
         ",
           ],
-          Array [
+          [
             "
         NESTED @player-ui/@player-tools DEPENDENCIES:",
           ],
-          Array [
+          [
             "Version  How to find dependency                      
         -------  --------------------------------------------
         3.30.1    ➡ @player-ui/core/ ➡ @player-ui/expressions
         ",
           ],
-          Array [
-            "[41m[37mWARNINGS:[39m[49m",
+          [
+            "WARNINGS:",
           ],
-          Array [
+          [
             "- Mismatch between the top-level and the nested @player-ui/@player-tools dependency.",
           ],
-          Array [
-            "[42mRECOMMENDATIONS:[49m",
+          [
+            "RECOMMENDATIONS:",
           ],
-          Array [
+          [
             "- The highest @player-ui/@player-tools version is 3.30.1 at the nested level. Please bump the top-level version, 3.11.0, to 3.30.1.",
           ],
         ]
@@ -406,27 +406,27 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
 
       await runCommand([]);
       expect(logSpy.mock.calls).toMatchInlineSnapshot(`
-        Array [
-          Array [
+        [
+          [
             "Consider using the --help flag for more information about this command.",
           ],
-          Array [
+          [
             "For more comprehensive logging, consider adding the -v flag.",
           ],
-          Array [
-            "For logging with full path to the dependency rather than with \\"➡\\", consider adding the -p flag.",
+          [
+            "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
           ],
-          Array [
+          [
             "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
           ],
-          Array [
+          [
             "Inspecting the @player-ui/@player-tools dependencies in the current repository...",
           ],
-          Array [
+          [
             "
         TOP-LEVEL @player-ui/@player-tools DEPENDENCIES:",
           ],
-          Array [
+          [
             "Version  How to find dependency        
         -------  ------------------------------
         3.9.6     ➡ @player-ui/types           
@@ -438,11 +438,11 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
         4.37.3    ➡ @player-ui/logger          
         ",
           ],
-          Array [
+          [
             "
         NESTED @player-ui/@player-tools DEPENDENCIES:",
           ],
-          Array [
+          [
             "Version  How to find dependency                           
         -------  -------------------------------------------------
         3.9.6     ➡ @player-ui/core/ ➡ @player-ui/expressions     
@@ -454,19 +454,19 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
         4.37.3    ➡ @cg-player/image-capture/ ➡ @player-ui/beacon 
         ",
           ],
-          Array [
-            "[41m[37mWARNINGS:[39m[49m",
+          [
+            "WARNINGS:",
           ],
-          Array [
+          [
             "- There are multiple top-level @player-ui/@player-tools dependency versions.",
           ],
-          Array [
+          [
             "- There are multiple nested @player-ui/@player-tools dependency versions.",
           ],
-          Array [
-            "[42mRECOMMENDATIONS:[49m",
+          [
+            "RECOMMENDATIONS:",
           ],
-          Array [
+          [
             "- Resolve all top-level @player-ui/@player-tools dependencies to the same version. Consider updating them to the latest player version you have, 4.37.3. When all top-level @player-ui/@player-tools dependencies are resolved, run the current CLI again to obtain recommendations about nested @player-ui/@player-tools dependencies.",
           ],
         ]
@@ -494,27 +494,27 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
 
       await runCommand([]);
       expect(logSpy.mock.calls).toMatchInlineSnapshot(`
-        Array [
-          Array [
+        [
+          [
             "Consider using the --help flag for more information about this command.",
           ],
-          Array [
+          [
             "For more comprehensive logging, consider adding the -v flag.",
           ],
-          Array [
-            "For logging with full path to the dependency rather than with \\"➡\\", consider adding the -p flag.",
+          [
+            "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
           ],
-          Array [
+          [
             "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
           ],
-          Array [
+          [
             "Inspecting the @player-ui/@player-tools dependencies in the current repository...",
           ],
-          Array [
+          [
             "
         NESTED @player-ui/@player-tools DEPENDENCIES:",
           ],
-          Array [
+          [
             "Version  How to find dependency                           
         -------  -------------------------------------------------
         3.9.6     ➡ @cg-player/image-capture/ ➡ @player-ui/beacon 
@@ -526,16 +526,16 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
         4.37.3    ➡ @player-ui/base-assets/ ➡ @player-ui/data     
         ",
           ],
-          Array [
-            "[41m[37mWARNINGS:[39m[49m",
+          [
+            "WARNINGS:",
           ],
-          Array [
+          [
             "- There are multiple nested @player-ui/@player-tools dependency versions.",
           ],
-          Array [
-            "[42mRECOMMENDATIONS:[49m",
+          [
+            "RECOMMENDATIONS:",
           ],
-          Array [
+          [
             "- The highest @player-ui/@player-tools version is 4.37.3 at the nested level. Please add resolutions for all nested @player-ui/@player-tools versions to this version or bump the nested versions to it.",
           ],
         ]
@@ -563,37 +563,37 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
         .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[2]));
       await runCommand([]);
       expect(logSpy.mock.calls).toMatchInlineSnapshot(`
-        Array [
-          Array [
+        [
+          [
             "Consider using the --help flag for more information about this command.",
           ],
-          Array [
+          [
             "For more comprehensive logging, consider adding the -v flag.",
           ],
-          Array [
-            "For logging with full path to the dependency rather than with \\"➡\\", consider adding the -p flag.",
+          [
+            "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
           ],
-          Array [
+          [
             "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
           ],
-          Array [
+          [
             "Inspecting the @player-ui/@player-tools dependencies in the current repository...",
           ],
-          Array [
+          [
             "
         TOP-LEVEL @player-ui/@player-tools DEPENDENCIES:",
           ],
-          Array [
+          [
             "Version  How to find dependency       
         -------  -----------------------------
         4.37.3    ➡ @player-ui/binding-grammar
         ",
           ],
-          Array [
+          [
             "
         NESTED @player-ui/@player-tools DEPENDENCIES:",
           ],
-          Array [
+          [
             "Version  How to find dependency                           
         -------  -------------------------------------------------
         3.9.6     ➡ @cg-player/image-capture/ ➡ @player-ui/beacon 
@@ -605,16 +605,16 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
         4.20.5    ➡ @cg-player/point-of-need/ ➡ @player-ui/link   
         ",
           ],
-          Array [
-            "[41m[37mWARNINGS:[39m[49m",
+          [
+            "WARNINGS:",
           ],
-          Array [
+          [
             "- There are multiple nested @player-ui/@player-tools dependency versions.",
           ],
-          Array [
-            "[42mRECOMMENDATIONS:[49m",
+          [
+            "RECOMMENDATIONS:",
           ],
-          Array [
+          [
             "- The highest @player-ui/@player-tools version is 4.37.3 at the top level. Please add resolutions for all nested @player-ui/@player-tools versions to this version or bump the nested versions to it.",
           ],
         ]
@@ -643,37 +643,37 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
 
       await runCommand([]);
       expect(logSpy.mock.calls).toMatchInlineSnapshot(`
-        Array [
-          Array [
+        [
+          [
             "Consider using the --help flag for more information about this command.",
           ],
-          Array [
+          [
             "For more comprehensive logging, consider adding the -v flag.",
           ],
-          Array [
-            "For logging with full path to the dependency rather than with \\"➡\\", consider adding the -p flag.",
+          [
+            "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
           ],
-          Array [
+          [
             "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
           ],
-          Array [
+          [
             "Inspecting the @player-ui/@player-tools dependencies in the current repository...",
           ],
-          Array [
+          [
             "
         TOP-LEVEL @player-ui/@player-tools DEPENDENCIES:",
           ],
-          Array [
+          [
             "Version  How to find dependency       
         -------  -----------------------------
         3.11.0    ➡ @player-ui/binding-grammar
         ",
           ],
-          Array [
+          [
             "
         NESTED @player-ui/@player-tools DEPENDENCIES:",
           ],
-          Array [
+          [
             "Version  How to find dependency                           
         -------  -------------------------------------------------
         3.9.6     ➡ @cg-player/image/ ➡ @player-ui/link           
@@ -685,19 +685,19 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
         4.37.3    ➡ @cg-player/point-of-need/ ➡ @player-ui/link   
         ",
           ],
-          Array [
-            "[41m[37mWARNINGS:[39m[49m",
+          [
+            "WARNINGS:",
           ],
-          Array [
+          [
             "- There are multiple nested @player-ui/@player-tools dependency versions.",
           ],
-          Array [
-            "[42mRECOMMENDATIONS:[49m",
+          [
+            "RECOMMENDATIONS:",
           ],
-          Array [
+          [
             "- The highest @player-ui/@player-tools version is 4.37.3 at the nested level. Please bump the top-level version, 3.11.0, to 4.37.3.",
           ],
-          Array [
+          [
             "- Also, please add resolutions or bump the versions for nested @player-ui/@player-tools dependencies whose version is not 4.37.3.",
           ],
         ]
@@ -725,27 +725,27 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
 
       await runCommand([]);
       expect(logSpy.mock.calls).toMatchInlineSnapshot(`
-        Array [
-          Array [
+        [
+          [
             "Consider using the --help flag for more information about this command.",
           ],
-          Array [
+          [
             "For more comprehensive logging, consider adding the -v flag.",
           ],
-          Array [
-            "For logging with full path to the dependency rather than with \\"➡\\", consider adding the -p flag.",
+          [
+            "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
           ],
-          Array [
+          [
             "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
           ],
-          Array [
+          [
             "Inspecting the @player-ui/@player-tools dependencies in the current repository...",
           ],
-          Array [
+          [
             "
         TOP-LEVEL @player-ui/@player-tools DEPENDENCIES:",
           ],
-          Array [
+          [
             "Version  How to find dependency        
         -------  ------------------------------
         3.9.6     ➡ @player-ui/types           
@@ -757,16 +757,16 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
         4.37.3    ➡ @player-ui/logger          
         ",
           ],
-          Array [
-            "[41m[37mWARNINGS:[39m[49m",
+          [
+            "WARNINGS:",
           ],
-          Array [
+          [
             "- There are multiple top-level @player-ui/@player-tools dependency versions.",
           ],
-          Array [
-            "[42mRECOMMENDATIONS:[49m",
+          [
+            "RECOMMENDATIONS:",
           ],
-          Array [
+          [
             "- Resolve all top-level @player-ui/@player-tools dependencies to the same version. Consider updating them to the latest player version you have, 4.37.3. When all top-level @player-ui/@player-tools dependencies are resolved, run the current CLI again to obtain recommendations about nested @player-ui/@player-tools dependencies.",
           ],
         ]
@@ -795,27 +795,27 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
 
       await runCommand([]);
       expect(logSpy.mock.calls).toMatchInlineSnapshot(`
-        Array [
-          Array [
+        [
+          [
             "Consider using the --help flag for more information about this command.",
           ],
-          Array [
+          [
             "For more comprehensive logging, consider adding the -v flag.",
           ],
-          Array [
-            "For logging with full path to the dependency rather than with \\"➡\\", consider adding the -p flag.",
+          [
+            "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
           ],
-          Array [
+          [
             "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
           ],
-          Array [
+          [
             "Inspecting the @player-ui/@player-tools dependencies in the current repository...",
           ],
-          Array [
+          [
             "
         TOP-LEVEL @player-ui/@player-tools DEPENDENCIES:",
           ],
-          Array [
+          [
             "Version  How to find dependency        
         -------  ------------------------------
         3.9.6     ➡ @player-ui/types           
@@ -827,26 +827,26 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
         4.37.3    ➡ @player-ui/logger          
         ",
           ],
-          Array [
+          [
             "
         NESTED @player-ui/@player-tools DEPENDENCIES:",
           ],
-          Array [
+          [
             "Version  How to find dependency                      
         -------  --------------------------------------------
         3.9.6     ➡ @player-ui/core/ ➡ @player-ui/expressions
         ",
           ],
-          Array [
-            "[41m[37mWARNINGS:[39m[49m",
+          [
+            "WARNINGS:",
           ],
-          Array [
+          [
             "- There are multiple top-level @player-ui/@player-tools dependency versions.",
           ],
-          Array [
-            "[42mRECOMMENDATIONS:[49m",
+          [
+            "RECOMMENDATIONS:",
           ],
-          Array [
+          [
             "- Resolve all top-level @player-ui/@player-tools dependencies to the same version. Consider updating them to the latest player version you have, 4.37.3. When all top-level @player-ui/@player-tools dependencies are resolved, run the current CLI again to obtain recommendations about nested @player-ui/@player-tools dependencies.",
           ],
         ]
@@ -875,27 +875,27 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
 
       await runCommand([]);
       expect(logSpy.mock.calls).toMatchInlineSnapshot(`
-        Array [
-          Array [
+        [
+          [
             "Consider using the --help flag for more information about this command.",
           ],
-          Array [
+          [
             "For more comprehensive logging, consider adding the -v flag.",
           ],
-          Array [
-            "For logging with full path to the dependency rather than with \\"➡\\", consider adding the -p flag.",
+          [
+            "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
           ],
-          Array [
+          [
             "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
           ],
-          Array [
+          [
             "Inspecting the @player-ui/@player-tools dependencies in the current repository...",
           ],
-          Array [
+          [
             "
         TOP-LEVEL @player-ui/@player-tools DEPENDENCIES:",
           ],
-          Array [
+          [
             "Version  How to find dependency        
         -------  ------------------------------
         3.9.6     ➡ @player-ui/types           
@@ -907,26 +907,26 @@ describe('checks @player-ui/@player-tools versions and outputs warnings/recommen
         4.20.5    ➡ @player-ui/data            
         ",
           ],
-          Array [
+          [
             "
         NESTED @player-ui/@player-tools DEPENDENCIES:",
           ],
-          Array [
+          [
             "Version  How to find dependency                      
         -------  --------------------------------------------
         4.37.3    ➡ @player-ui/core/ ➡ @player-ui/expressions
         ",
           ],
-          Array [
-            "[41m[37mWARNINGS:[39m[49m",
+          [
+            "WARNINGS:",
           ],
-          Array [
+          [
             "- There are multiple top-level @player-ui/@player-tools dependency versions.",
           ],
-          Array [
-            "[42mRECOMMENDATIONS:[49m",
+          [
+            "RECOMMENDATIONS:",
           ],
-          Array [
+          [
             "- Resolve all top-level @player-ui/@player-tools dependencies to the same version. Consider updating them to the latest player version you have, 4.20.5. When all top-level @player-ui/@player-tools dependencies are resolved, run the current CLI again to obtain recommendations about nested @player-ui/@player-tools dependencies.",
           ],
         ]
