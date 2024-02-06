@@ -119,7 +119,7 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
                   "For more comprehensive logging, consider adding the -v flag.",
                 ],
                 [
-                  "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
+                  "For logging with full path to the dependency rather than with '➡', consider adding the -p flag.",
                 ],
                 [
                   "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
@@ -205,7 +205,7 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
                       "For more comprehensive logging, consider adding the -v flag.",
                     ],
                     [
-                      "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
+                      "For logging with full path to the dependency rather than with '➡', consider adding the -p flag.",
                     ],
                     [
                       "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
@@ -265,7 +265,7 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
           "For more comprehensive logging, consider adding the -v flag.",
         ],
         [
-          "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
+          "For logging with full path to the dependency rather than with '➡', consider adding the -p flag.",
         ],
         [
           "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
@@ -331,7 +331,7 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
               "For more comprehensive logging, consider adding the -v flag.",
             ],
             [
-              "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
+              "For logging with full path to the dependency rather than with '➡', consider adding the -p flag.",
             ],
             [
               "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
@@ -404,7 +404,7 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
                             "For more comprehensive logging, consider adding the -v flag.",
                           ],
                           [
-                            "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
+                            "For logging with full path to the dependency rather than with '➡', consider adding the -p flag.",
                           ],
                           [
                             "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
@@ -489,7 +489,7 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
               "For more comprehensive logging, consider adding the -v flag.",
             ],
             [
-              "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
+              "For logging with full path to the dependency rather than with '➡', consider adding the -p flag.",
             ],
             [
               "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
@@ -567,7 +567,7 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
             "For more comprehensive logging, consider adding the -v flag.",
           ],
           [
-            "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
+            "For logging with full path to the dependency rather than with '➡', consider adding the -p flag.",
           ],
           [
             "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
@@ -635,7 +635,7 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
             "For more comprehensive logging, consider adding the -v flag.",
           ],
           [
-            "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
+            "For logging with full path to the dependency rather than with '➡', consider adding the -p flag.",
           ],
           [
             "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
@@ -714,7 +714,7 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
             "For more comprehensive logging, consider adding the -v flag.",
           ],
           [
-            "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
+            "For logging with full path to the dependency rather than with '➡', consider adding the -p flag.",
           ],
           [
             "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
@@ -795,7 +795,7 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
             "For more comprehensive logging, consider adding the -v flag.",
           ],
           [
-            "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
+            "For logging with full path to the dependency rather than with '➡', consider adding the -p flag.",
           ],
           [
             "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
@@ -864,7 +864,7 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
             "For more comprehensive logging, consider adding the -v flag.",
           ],
           [
-            "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
+            "For logging with full path to the dependency rather than with '➡', consider adding the -p flag.",
           ],
           [
             "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
@@ -943,7 +943,7 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
             "For more comprehensive logging, consider adding the -v flag.",
           ],
           [
-            "For logging with full path to the dependency rather than with "➡", consider adding the -p flag.",
+            "For logging with full path to the dependency rather than with '➡', consider adding the -p flag.",
           ],
           [
             "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",

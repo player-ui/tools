@@ -77,47 +77,47 @@ test("Edge Case - two artificial array nodes", () => {
       },
     })
   ).toMatchInlineSnapshot(`
-    Object {
-      "ROOT": Object {
-        "another": Object {
+    {
+      "ROOT": {
+        "another": {
           "type": "anotherType",
         },
-        "foo": Object {
+        "foo": {
           "type": "fooType",
         },
-        "other": Object {
+        "other": {
           "type": "otherType",
         },
       },
-      "anotherType": Object {
-        "bar": Object {
+      "anotherType": {
+        "bar": {
           "isArray": true,
           "type": "barType",
         },
       },
-      "barType": Object {
-        "bac": Object {
+      "barType": {
+        "bac": {
           "type": "StringType",
         },
       },
-      "barType2": Object {
-        "bab": Object {
+      "barType2": {
+        "bab": {
           "type": "StringType",
         },
       },
-      "barType3": Object {
-        "baa": Object {
+      "barType3": {
+        "baa": {
           "type": "StringType",
         },
       },
-      "fooType": Object {
-        "bar": Object {
+      "fooType": {
+        "bar": {
           "isArray": true,
           "type": "barType3",
         },
       },
-      "otherType": Object {
-        "bar": Object {
+      "otherType": {
+        "bar": {
           "isArray": true,
           "type": "barType2",
         },

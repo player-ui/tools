@@ -42,9 +42,12 @@ const parseNavigationExpressions = (nav: Navigation): PlayerNav => {
     }
 
     if (typeof obj === "object") {
-      return Object.fromEntries(
-        Object.entries(obj).map(([key, value]) => [key, convExp(value)])
-      );
+      const copy = { ...obj };
+      for (const [key, value] of Object.entries(copy)) {
+        copy[key] = convExp(value);
+      }
+
+      return copy;
     }
 
     return obj;
@@ -133,7 +136,7 @@ export class DSLCompiler {
   async serialize(
     value: unknown,
     context?: SerializeContext
-  ): Promise<CompilerReturn | undefined> {
+  ): Promise<CompilerReturn> {
     if (typeof value !== "object" || value === null) {
       throw new Error("Unable to serialize non-object");
     }
@@ -226,16 +229,6 @@ export class DSLCompiler {
             });
           }
         });
-
-        if ("schema" in copiedValue) {
-          copiedValue.schema = this.schemaGenerator.toSchema(
-            copiedValue.schema
-          );
-        }
-
-        copiedValue.navigation = parseNavigationExpressions(
-          copiedValue.navigation
-        );
       }
 
       if ("schema" in copiedValue) {
