@@ -5,7 +5,7 @@ import { TSWriter } from "../xlr-to-ts";
 
 describe("Type Exports", () => {
   vi.setConfig({
-    testTimeout: 120 * 10000,
+    testTimeout: 60 * 10000,
   });
 
   test("Basic Type Conversion", () => {
