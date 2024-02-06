@@ -422,7 +422,7 @@ export class PlayerLanguageService {
     );
   }
 
-  public addLSPPlugin(plugin: PlayerLanguageServicePlugin){
+  public addLSPPlugin(plugin: PlayerLanguageServicePlugin) {
     plugin.apply(this);
   }
 

@@ -10,10 +10,12 @@ Object {
   "genericTokens": Array [
     Object {
       "constraints": Object {
+        "genericArguments": undefined,
         "ref": "Asset",
         "type": "ref",
       },
       "default": Object {
+        "genericArguments": undefined,
         "ref": "Asset",
         "type": "ref",
       },
@@ -87,13 +89,16 @@ Object {
     "type": "unknown",
   },
   "description": "Mock Asset for test",
+  "extends": undefined,
   "genericTokens": Array [
     Object {
       "constraints": Object {
+        "genericArguments": undefined,
         "ref": "Asset",
         "type": "ref",
       },
       "default": Object {
+        "genericArguments": undefined,
         "ref": "Asset",
         "type": "ref",
       },
@@ -118,6 +123,7 @@ Object {
             "type": "boolean",
           },
           Object {
+            "genericArguments": undefined,
             "ref": "Expression",
             "type": "ref",
           },
@@ -139,6 +145,7 @@ Object {
         "description": "A text-like asset for the action's label",
         "genericArguments": Array [
           Object {
+            "genericArguments": undefined,
             "ref": "AnyAsset",
             "type": "ref",
           },
@@ -152,6 +159,7 @@ Object {
     "secondaryChildren": Object {
       "node": Object {
         "elementType": Object {
+          "genericArguments": undefined,
           "ref": "Asset",
           "type": "ref",
         },
@@ -193,10 +201,12 @@ Object {
   "genericTokens": Array [
     Object {
       "constraints": Object {
+        "genericArguments": undefined,
         "ref": "Asset",
         "type": "ref",
       },
       "default": Object {
+        "genericArguments": undefined,
         "ref": "Asset",
         "type": "ref",
       },
@@ -286,10 +296,12 @@ Object {
   "genericTokens": Array [
     Object {
       "constraints": Object {
+        "genericArguments": undefined,
         "ref": "Asset",
         "type": "ref",
       },
       "default": Object {
+        "genericArguments": undefined,
         "ref": "Asset",
         "type": "ref",
       },

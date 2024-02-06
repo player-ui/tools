@@ -21,6 +21,6 @@ export class LSPAssetsPlugin implements PlayerCLIPlugin {
   }
 
   async onCreateLanguageService(lsp: PlayerLanguageService, exp: boolean) {
-    await lsp.addXLRTransforms([this.functionsToLoad]);
+    lsp.addXLRTransforms(this.functionsToLoad);
   }
 }

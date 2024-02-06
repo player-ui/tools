@@ -225,7 +225,7 @@ export function computeEffectiveObject(
       if (
         !computeExtends(
           newObject.properties[property].node,
-          operand.properties[property].node,
+          operand.properties[property].node
         )
       ) {
         throw new Error(

@@ -20,7 +20,7 @@ const isMatchingCapability = (
   }
 
   return capability === capabilitiesToMatch;
-}
+};
 
 /**
  * Helper function for simple transforms

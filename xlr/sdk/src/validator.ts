@@ -74,7 +74,7 @@ export class XLRValidator {
 
       if (xlrNode.name) {
         message = `Does not match any of the expected types for type: '${xlrNode.name}'`;
-      } else if (xlrNode.title){
+      } else if (xlrNode.title) {
         message = `Does not match any of the expected types for property: '${xlrNode.title}'`;
       } else {
         message = `Does not match any of the types ${xlrNode.or
