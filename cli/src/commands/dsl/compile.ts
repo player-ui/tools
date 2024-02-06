@@ -9,14 +9,14 @@ import chalk from "chalk";
 import type {
   CompilationResult,
   DefaultCompilerContentType,
-} from '@player-tools/dsl';
-import { fingerprintContent as fallbackFingerprint } from '@player-tools/dsl';
-import { BaseCommand } from '../../utils/base-command';
-import { convertToFileGlob, normalizePath } from '../../utils/fs';
-import type { CompletedTask } from '../../utils/task-runner';
-import { registerForPaths } from '../../utils/babel-register';
-import Validate from '../json/validate';
-import ValidateTSTypes from './validate';
+} from "@player-tools/dsl";
+import { fingerprintContent as fallbackFingerprint } from "@player-tools/dsl";
+import { BaseCommand } from "../../utils/base-command";
+import { convertToFileGlob, normalizePath } from "../../utils/fs";
+import type { CompletedTask } from "../../utils/task-runner";
+import { registerForPaths } from "../../utils/babel-register";
+import Validate from "../json/validate";
+import ValidateTSTypes from "./validate";
 
 type TaskResult = Array<Omit<CompletedTask<CompilationResult, any>, "run">>;
 
@@ -86,7 +86,7 @@ export default class DSLCompile extends BaseCommand {
     this.debug("Found %i files to process", files.length);
 
     if (!skipValidation) {
-      await ValidateTSTypes.run(['-f', input]);
+      await ValidateTSTypes.run(["-f", input]);
     }
 
     const context = await this.createCompilerContext();

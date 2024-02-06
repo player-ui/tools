@@ -49,7 +49,7 @@ test("generates proper schema", () => {
   });
 });
 
-test('Edge Case - two artificial array nodes', () => {
+test("Edge Case - two artificial array nodes", () => {
   const schemaGenerator = new SchemaGenerator();
 
   expect(

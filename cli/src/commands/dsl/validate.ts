@@ -1,19 +1,19 @@
-import glob from 'globby';
-import logSymbols from 'log-symbols';
-import * as ts from 'typescript';
-import { Flags } from '@oclif/core';
-import { BaseCommand } from '../../utils/base-command';
-import { convertToFileGlob } from '../../utils/fs';
-import { DEFAULT_COMPILER_OPTIONS } from '../../utils/compiler-options';
+import glob from "globby";
+import logSymbols from "log-symbols";
+import * as ts from "typescript";
+import { Flags } from "@oclif/core";
+import { BaseCommand } from "../../utils/base-command";
+import { convertToFileGlob } from "../../utils/fs";
+import { DEFAULT_COMPILER_OPTIONS } from "../../utils/compiler-options";
 /** A command thay runs TS typechecker against source ts and tsx files */
 export default class Validate extends BaseCommand {
-  static description = 'Validate TSX files before they get compiled';
+  static description = "Validate TSX files before they get compiled";
 
   static flags = {
     ...BaseCommand.flags,
     files: Flags.string({
-      char: 'f',
-      description: 'A list of files or globs to validate',
+      char: "f",
+      description: "A list of files or globs to validate",
       multiple: true,
     }),
   };
@@ -26,7 +26,7 @@ export default class Validate extends BaseCommand {
       flags.files && flags.files.length > 0 ? flags.files : config.dsl?.src;
 
     if (!files) {
-      throw new Error('DSL TSC typechecking requires a file list');
+      throw new Error("DSL TSC typechecking requires a file list");
     }
 
     return {
@@ -38,7 +38,7 @@ export default class Validate extends BaseCommand {
     const { inputFiles } = await this.getOptions();
 
     const files = await glob(
-      convertToFileGlob(inputFiles, '**/*.(tsx|jsx|js|ts)'),
+      convertToFileGlob(inputFiles, "**/*.(tsx|jsx|js|ts)"),
       {
         expandDirectories: true,
       }
@@ -83,7 +83,7 @@ export default class Validate extends BaseCommand {
           );
           const message = ts.flattenDiagnosticMessageText(
             diagnostic.messageText,
-            '\n'
+            "\n"
           );
 
           this.log(
@@ -91,7 +91,7 @@ export default class Validate extends BaseCommand {
           );
         } else {
           this.log(
-            ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')
+            ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n")
           );
         }
       });
@@ -101,7 +101,7 @@ export default class Validate extends BaseCommand {
       this.log(
         `${diagnosticsCount} type or syntax errors found in ${
           fileNameList.length
-        } file${fileNameList.length > 1 ? 's' : ''}, exiting program`
+        } file${fileNameList.length > 1 ? "s" : ""}, exiting program`
       );
       this.exit(1);
     } else {

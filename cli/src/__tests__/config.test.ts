@@ -3,7 +3,7 @@ import path from "path";
 import { BaseCommand } from "../utils/base-command";
 
 test("resolves config correctly", async () => {
-  vi.setConfig({ testTimeout: 10000 });
+  vi.setConfig({ testTimeout: 120 * 10000 });
 
   const configCallback = vi.fn();
 

@@ -1,4 +1,4 @@
-import ts from 'typescript';
+import ts from "typescript";
 
 export const DEFAULT_COMPILER_OPTIONS: ts.CompilerOptions = {
   strict: true,

@@ -115,7 +115,7 @@ const addBindingIndexes = (binding: string): string => {
   let currentIndex = 0;
 
   return binding.replace(/_index_/g, () => {
-    const result = `_index${currentIndex > 0 ? currentIndex : ''}_`;
+    const result = `_index${currentIndex > 0 ? currentIndex : ""}_`;
     currentIndex += 1;
 
     return result;
@@ -132,7 +132,7 @@ const createBindingTemplateInstance = (
       addBindingIndexes(element)
     ),
     other: options.other.map((element) =>
-      typeof element === 'string' ? addBindingIndexes(element) : element
+      typeof element === "string" ? addBindingIndexes(element) : element
     ),
     toRefString: (context, value) => {
       return `{{${value}}}`;

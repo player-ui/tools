@@ -8,7 +8,7 @@ import type { BindingTemplateInstance } from "../string-templates";
 const bindingSymbol = Symbol("binding");
 
 /** Symbol to indicate that a schema node should be generated with a different name */
-export const SchemaTypeName = Symbol('Schema Rename');
+export const SchemaTypeName = Symbol("Schema Rename");
 
 interface SchemaChildren {
   /** Object property that will be used to create the intermediate type */
@@ -204,7 +204,7 @@ export type MakeBindingRefable<T> = {
  */
 export function makeBindingsForObject<Type>(
   obj: Type,
-  arrayAccessorKeys = ['_index_']
+  arrayAccessorKeys = ["_index_"]
 ): MakeBindingRefable<Type> {
   /** Proxy to track binding callbacks */
   const accessor = (paths: string[]) => {
