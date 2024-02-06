@@ -24,8 +24,7 @@ test("should treat schema type  objects as schema", async () => {
     foo: { bar: { type: "StringType" } },
   });
 
-  expect(result).toBeDefined();
-  expect(result?.value).toStrictEqual({
+  expect(result.value).toStrictEqual({
     ROOT: {
       foo: {
         type: "fooType",
@@ -75,8 +74,7 @@ test("expressions in navigation", async () => {
     },
   };
   const result = await compiler.serialize({ navigation });
-  expect(result).toBeDefined();
-  expect(result?.value).toStrictEqual({
+  expect(result.value).toStrictEqual({
     navigation: {
       BEGIN: "Flow",
       onStart: `foo`,

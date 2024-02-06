@@ -123,6 +123,8 @@ export class DSLCompiler {
     onEnd: new AsyncSeriesHook<[OnEndArg]>(),
   };
 
+  private schemaGenerator?: SchemaGenerator;
+
   constructor(logger?: LoggingInterface) {
     this.logger = logger ?? console;
   }
@@ -138,8 +140,10 @@ export class DSLCompiler {
 
     const type = context?.type ? context.type : fingerprintContent(value);
 
-    const schemaGenerator = new SchemaGenerator(this.logger);
-    this.hooks.schemaGenerator.call(schemaGenerator);
+    if (!this.schemaGenerator) {
+      this.schemaGenerator = new SchemaGenerator(this.logger);
+      this.hooks.schemaGenerator.call(this.schemaGenerator);
+    }
 
     if (type === "view") {
       const { jsonValue, sourceMap } = await render(value as any, {
@@ -224,13 +228,21 @@ export class DSLCompiler {
         });
 
         if ("schema" in copiedValue) {
-          copiedValue.schema = schemaGenerator.toSchema(copiedValue.schema);
+          copiedValue.schema = this.schemaGenerator.toSchema(copiedValue.schema);
         }
 
         copiedValue.navigation = parseNavigationExpressions(
           copiedValue.navigation
         );
       }
+
+      if ('schema' in copiedValue) {
+        copiedValue.schema = this.schemaGenerator.toSchema(copiedValue.schema);
+      }
+
+      copiedValue.navigation = parseNavigationExpressions(
+        copiedValue.navigation
+      );
 
       if (value) {
         const postProcessFlow = await this.hooks.postProcessFlow.call(
@@ -247,12 +259,9 @@ export class DSLCompiler {
       }
     }
 
-    if (type === "schema") {
-      return {
-        value: schemaGenerator.toSchema(value) as JsonType,
-      };
-    }
-
-    throw Error("DSL Compiler Error: Unable to determine type to compile as");
+    // Type has been set to "schema"
+    return {
+      value: this.schemaGenerator.toSchema(value) as JsonType,
+    };
   }
 }

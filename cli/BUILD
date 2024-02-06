@@ -4,9 +4,7 @@ load("@rules_player//javascript:defs.bzl", "js_pipeline")
 load("//helpers:defs.bzl", "tsup_config", "vitest_config")
 
 npm_link_all_packages(name = "node_modules")
-
 tsup_config(name = "tsup_config")
-
 vitest_config(name = "vitest_config")
 
 dependencies = [
@@ -14,14 +12,18 @@ dependencies = [
     "//:node_modules/tapable-ts",
     "//:node_modules/@babel/register",
     "//:node_modules/@types/babel__register",
+    "//:node_modules/@types/fs-extra",
     "//:node_modules/@types/mkdirp",
     "//:node_modules/@oclif/core",
     "//:node_modules/@oclif/plugin-legacy",
     "//:node_modules/chalk",
     "//:node_modules/cosmiconfig",
     "//:node_modules/cross-fetch",
+    "//:node_modules/easy-table",
     "//:node_modules/elegant-spinner",
     "//:node_modules/figures",
+    "//:node_modules/fs-extra",
+    "//:node_modules/glob",
     "//:node_modules/globby",
     "//:node_modules/log-symbols",
     "//:node_modules/log-update",

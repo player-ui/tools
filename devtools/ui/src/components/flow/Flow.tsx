@@ -4,7 +4,7 @@ import type { Flow as FlowType } from "@player-ui/types";
 import styles from "./flow.css";
 
 interface FlowProps {
-  flow: FlowType;
+  readonly flow: FlowType;
 }
 
 export const Flow = ({ flow }: FlowProps) => {

@@ -7,14 +7,8 @@ import type { BindingTemplateInstance } from "../string-templates";
 
 const bindingSymbol = Symbol("binding");
 
-export const SchemaTypeName = Symbol("Schema Rename");
-
-interface GeneratedDataType {
-  /** The SchemaNode that was generated */
-  node: SchemaNode;
-  /** How many times it has been generated */
-  count: number;
-}
+/** Symbol to indicate that a schema node should be generated with a different name */
+export const SchemaTypeName = Symbol('Schema Rename');
 
 interface SchemaChildren {
   /** Object property that will be used to create the intermediate type */
@@ -28,6 +22,13 @@ type SchemaNode = (Schema.DataType | Language.DataTypeRef) & {
   /** Overwrite the name of the generated type */
   [SchemaTypeName]?: string;
 };
+
+interface GeneratedDataType {
+  /** The SchemaNode that was generated */
+  node: SchemaNode;
+  /** How many times it has been generated */
+  count: number;
+}
 
 /**
  * Type Guard for the `Schema.DataType` and `Language.DataTypeRef` type
@@ -113,6 +114,7 @@ export class SchemaGenerator {
     }
 
     let intermediateType;
+    let child;
 
     if (Array.isArray(subType)) {
       if (subType.length > 1) {
@@ -123,12 +125,14 @@ export class SchemaGenerator {
 
       const subTypeName = subType[0][SchemaTypeName] ?? property;
       intermediateType = this.makePlaceholderArrayType(subTypeName);
-      this.children.push({ name: intermediateType.type, child: subType[0] });
+      [child] = subType;
     } else {
       const subTypeName = subType[SchemaTypeName] ?? property;
       intermediateType = this.makePlaceholderType(subTypeName);
-      this.children.push({ name: intermediateType.type, child: subType });
+      child = subType;
     }
+
+    this.children.push({ name: intermediateType.type, child });
 
     if (this.generatedDataTypes.has(intermediateType.type)) {
       const generatedType = this.generatedDataTypes.get(
@@ -136,7 +140,7 @@ export class SchemaGenerator {
       ) as GeneratedDataType;
       if (
         !dequal(
-          subType,
+          child,
           this.generatedDataTypes.get(intermediateType.type)?.node as object
         )
       ) {
@@ -150,7 +154,7 @@ export class SchemaGenerator {
         );
         intermediateType = newIntermediateType;
         this.children.pop();
-        this.children.push({ name: intermediateType.type, child: subType });
+        this.children.push({ name: intermediateType.type, child });
       }
     }
 
@@ -200,7 +204,7 @@ export type MakeBindingRefable<T> = {
  */
 export function makeBindingsForObject<Type>(
   obj: Type,
-  arrayAccessorKeys = ["_index_"]
+  arrayAccessorKeys = ['_index_']
 ): MakeBindingRefable<Type> {
   /** Proxy to track binding callbacks */
   const accessor = (paths: string[]) => {

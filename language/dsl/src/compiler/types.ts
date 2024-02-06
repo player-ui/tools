@@ -49,7 +49,10 @@ export type FlowWithReactViews = AddUnknownIndex<
   }
 >;
 
-export type DSLFlow = FlowWithReactViews;
+export type DSLFlow = Omit<FlowWithReactViews, 'schema'> & {
+  /** A DSL compliant schema */
+  schema?: DSLSchema;
+};
 
 export interface DSLSchema {
   [key: string]: Schema.DataType | DSLSchema;
