@@ -23,7 +23,6 @@ dependencies = [
     "//:node_modules/elegant-spinner",
     "//:node_modules/figures",
     "//:node_modules/fs-extra",
-    "//:node_modules/glob",
     "//:node_modules/globby",
     "//:node_modules/log-symbols",
     "//:node_modules/log-update",

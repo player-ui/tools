@@ -1,13 +1,13 @@
 import process from "process";
 import fse from "fs-extra";
-import * as globApi from "glob";
 import child_process from "child_process";
+import glob from "globby";
 import stdMocks from "std-mocks";
 import { vi, test, expect, describe, beforeEach } from "vitest";
 import type { MockInstance } from "vitest";
 import DependencyVersionsCheck from "../../commands/dependency-versions/check";
 
-const mocktopLevelDependencies = {
+const mockTopLevelDependencies = {
   many: [
     "node_modules/@player-ui/binding-grammar/package.json",
     "node_modules/@player-ui/metrics/package.json",
@@ -21,7 +21,7 @@ const mocktopLevelDependencies = {
   zero: [],
 };
 
-const mocknestedDependencies = {
+const mockNestedDependencies = {
   many: [
     "node_modules/@player-ui/core/node_modules/@player-ui/expressions/package.json",
     "node_modules/@cg-player/image/node_modules/@player-ui/link/package.json",
@@ -96,14 +96,10 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
 
   describe("valid versions", () => {
     test("should log for 1 nested version and 1 top-level version that match", async () => {
-      vi.spyOn(globApi, "globSync").mockImplementation(
-        (_input: string | string[]) => {
-          return [
-            "node_modules/@player-ui/binding-grammar/package.json",
-            "node_modules/@player-ui/core/node_modules/@player-ui/expressions/package.json",
-          ];
-        }
-      );
+      vi.spyOn(glob, "sync").mockReturnValueOnce([
+        ...mockTopLevelDependencies.single,
+        ...mockNestedDependencies.single,
+      ]);
 
       vi.spyOn(fse, "readFileSync")
         .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
@@ -158,14 +154,10 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
     });
 
     test("should log for 1 top-level version, 0 nested version", async () => {
-      vi.spyOn(globApi, "globSync").mockImplementation(
-        (_input: string | string[]) => {
-          return [
-            ...mocktopLevelDependencies.single,
-            ...mocknestedDependencies.zero,
-          ];
-        }
-      );
+      vi.spyOn(glob, "sync").mockReturnValueOnce([
+        ...mockTopLevelDependencies.single,
+        ...mockNestedDependencies.zero,
+      ]);
 
       vi.spyOn(fse, "readFileSync").mockReturnValueOnce(
         JSON.stringify(arbitraryPlayerVersions[0])
@@ -209,14 +201,10 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
     });
 
     test("should log for 0 top-level version, 1 nested version", async () => {
-      vi.spyOn(globApi, "globSync").mockImplementation(
-        (_input: string | string[]) => {
-          return [
-            ...mocktopLevelDependencies.zero,
-            ...mocknestedDependencies.single,
-          ];
-        }
-      );
+      vi.spyOn(glob, "sync").mockReturnValueOnce([
+        ...mockTopLevelDependencies.zero,
+        ...mockNestedDependencies.single,
+      ]);
       vi.spyOn(fse, "readFileSync").mockReturnValueOnce(
         JSON.stringify(arbitraryPlayerVersions[0])
       );
@@ -259,11 +247,7 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
     });
 
     test("should log for 0 top-level version, 0 nested version", async () => {
-      vi.spyOn(globApi, "globSync").mockImplementation(
-        (_input: string | string[]) => {
-          return [];
-        }
-      );
+      vi.spyOn(glob, "sync").mockReturnValueOnce([]);
       await runCommand([]);
       expect(logSpy.mock.calls).toMatchInlineSnapshot(`
         [
@@ -312,14 +296,10 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
     });
 
     test("should log for 1 top-level version, 1 nested version, with mismatch", async () => {
-      vi.spyOn(globApi, "globSync").mockImplementation(
-        (_input: string | string[]) => {
-          return [
-            ...mocktopLevelDependencies.single,
-            ...mocknestedDependencies.single,
-          ];
-        }
-      );
+      vi.spyOn(glob, "sync").mockReturnValueOnce([
+        ...mockTopLevelDependencies.single,
+        ...mockNestedDependencies.single,
+      ]);
       vi.spyOn(fse, "readFileSync")
         .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
         .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]));
@@ -379,14 +359,10 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
     });
 
     test("should log for multiple top-level versions, multiple nested versions", async () => {
-      vi.spyOn(globApi, "globSync").mockImplementation(
-        (_input: string | string[]) => {
-          return [
-            ...mocktopLevelDependencies.many,
-            ...mocknestedDependencies.many,
-          ];
-        }
-      );
+      vi.spyOn(glob, "sync").mockReturnValueOnce([
+        ...mockTopLevelDependencies.many,
+        ...mockNestedDependencies.many,
+      ]);
       vi.spyOn(fse, "readFileSync") // 14 mockReturnValues
         .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
         .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
@@ -473,14 +449,10 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
     });
 
     test("should log for 0 top-level version, multiple nested versions", async () => {
-      vi.spyOn(globApi, "globSync").mockImplementation(
-        (_input: string | string[]) => {
-          return [
-            ...mocktopLevelDependencies.zero,
-            ...mocknestedDependencies.many,
-          ];
-        }
-      );
+      vi.spyOn(glob, "sync").mockReturnValueOnce([
+        ...mockTopLevelDependencies.zero,
+        ...mockNestedDependencies.many,
+      ]);
       vi.spyOn(fse, "readFileSync") // 7 mockReturnValues
         .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
         .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
@@ -541,14 +513,10 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
     });
 
     test("should log for 1 top-level version, multiple nested versions, top-level version is highest", async () => {
-      vi.spyOn(globApi, "globSync").mockImplementation(
-        (_input: string | string[]) => {
-          return [
-            ...mocktopLevelDependencies.single,
-            ...mocknestedDependencies.many,
-          ];
-        }
-      );
+      vi.spyOn(glob, "sync").mockReturnValueOnce([
+        ...mockTopLevelDependencies.single,
+        ...mockNestedDependencies.many,
+      ]);
       vi.spyOn(fse, "readFileSync") // 8 mockReturnValues
         .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[4])) // 1 top-level
         .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
@@ -619,14 +587,10 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
     });
 
     test("should log for 1 top-level version, multiple nested versions, nested-level version is highest", async () => {
-      vi.spyOn(globApi, "globSync").mockImplementation(
-        (_input: string | string[]) => {
-          return [
-            ...mocktopLevelDependencies.single,
-            ...mocknestedDependencies.many,
-          ];
-        }
-      );
+      vi.spyOn(glob, "sync").mockReturnValueOnce([
+        ...mockTopLevelDependencies.single,
+        ...mockNestedDependencies.many,
+      ]);
       vi.spyOn(fse, "readFileSync") // 8 mockReturnValues
         .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
         .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
@@ -701,14 +665,10 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
     });
 
     test("should log for multiple top-level versions, 0 nested version", async () => {
-      vi.spyOn(globApi, "globSync").mockImplementation(
-        (_input: string | string[]) => {
-          return [
-            ...mocktopLevelDependencies.many,
-            ...mocknestedDependencies.zero,
-          ];
-        }
-      );
+      vi.spyOn(glob, "sync").mockReturnValueOnce([
+        ...mockTopLevelDependencies.many,
+        ...mockNestedDependencies.zero,
+      ]);
       vi.spyOn(fse, "readFileSync") // 7 mockReturnValues
         .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
         .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
@@ -769,14 +729,10 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
     });
 
     test("should log for multiple top-level versions, 1 nested version, top-level version is highest", async () => {
-      vi.spyOn(globApi, "globSync").mockImplementation(
-        (_input: string | string[]) => {
-          return [
-            ...mocktopLevelDependencies.many,
-            ...mocknestedDependencies.single,
-          ];
-        }
-      );
+      vi.spyOn(glob, "sync").mockReturnValueOnce([
+        ...mockTopLevelDependencies.many,
+        ...mockNestedDependencies.single,
+      ]);
       vi.spyOn(fse, "readFileSync") // 8 mockReturnValues
         .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
         .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))
@@ -848,14 +804,10 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
     });
 
     test("should log for multiple top-level versions, 1 nested version, nested-level version is highest", async () => {
-      vi.spyOn(globApi, "globSync").mockImplementation(
-        (_input: string | string[]) => {
-          return [
-            ...mocktopLevelDependencies.many,
-            ...mocknestedDependencies.single,
-          ];
-        }
-      );
+      vi.spyOn(glob, "sync").mockReturnValueOnce([
+        ...mockTopLevelDependencies.many,
+        ...mockNestedDependencies.single,
+      ]);
       vi.spyOn(fse, "readFileSync") // 8 mockReturnValues
         .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[0]))
         .mockReturnValueOnce(JSON.stringify(arbitraryPlayerVersions[1]))

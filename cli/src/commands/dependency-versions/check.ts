@@ -1,9 +1,9 @@
+import glob from "globby";
 import chalk from "chalk";
 import fse from "fs-extra"; // fse rather than fs makes unit testing easier with mocking
 import Table from "easy-table";
 import child_process from "child_process";
 import { Flags } from "@oclif/core";
-import { globSync } from "glob";
 import { BaseCommand } from "../../utils/base-command";
 
 interface DependencyMap {
@@ -116,8 +116,8 @@ export default class DependencyVersionsCheck extends BaseCommand {
       "Inspecting the @player-ui/@player-tools dependencies in the current repository..."
     );
 
-    let packageJsons = globSync(
-      "**/node_modules/{@player-ui,@player-tools}/*/package.json"
+    let packageJsons = glob.sync(
+      "**/node_modules/{@player,@player-language,@web-player}/*/package.json"
     );
 
     if (ignore) {
