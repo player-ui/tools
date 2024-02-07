@@ -26,5 +26,9 @@
     "@player-tools/xlr-converters": "workspace:*",
     "@player-tools/xlr-sdk": "workspace:*",
     "@player-tools/xlr-utils": "workspace:*"
+  },
+  "scripts": {
+    "prepack": "oclif manifest && oclif readme",
+    "version": "oclif readme && git add README.md"
   }
 }
