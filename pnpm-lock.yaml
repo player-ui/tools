@@ -70,11 +70,11 @@ importers:
         specifier: ^1.9.0
         version: 1.10.11(@oclif/config@1.18.17)
       '@player-ui/player':
-        specifier: 0.4.3
-        version: 0.4.3
+        specifier: 0.5.1
+        version: 0.5.1
       '@player-ui/types':
-        specifier: 0.4.3
-        version: 0.4.3
+        specifier: 0.5.1
+        version: 0.5.1
       '@reduxjs/toolkit':
         specifier: ^1.6.1
         version: 1.9.7(react-redux@7.2.9)(react@18.2.0)
@@ -201,6 +201,9 @@ importers:
       duplicate-package-checker-webpack-plugin:
         specifier: ^3.0.0
         version: 3.0.0
+      easy-table:
+        specifier: 1.2.0
+        version: 1.2.0
       elegant-spinner:
         specifier: ^2.0.0
         version: 2.0.0
@@ -4833,8 +4836,8 @@ packages:
     dev: false
     optional: true
 
-  /@player-ui/partial-match-registry@0.4.3:
-    resolution: {integrity: sha512-je6q8SVlNcHHSO0DmtLJSOP0yhfTDa6Sz1Fb5pGFBVieZkb+7bTpE8Yq2n3rMm/oIDSymTesTNYlvCxC0MBANw==, tarball: https://registry.npmjs.org/@player-ui/partial-match-registry/-/partial-match-registry-0.4.3.tgz}
+  /@player-ui/partial-match-registry@0.5.1:
+    resolution: {integrity: sha512-RjIDQXTYkDOL3t6KNk600r05+x30SJGBrqKRfrw7cxA7I5J4K9QaGI+I9YvZOWaL8bF3YF8eRv9/rworcm5vFw==, tarball: https://registry.npmjs.org/@player-ui/partial-match-registry/-/partial-match-registry-0.5.1.tgz}
     dependencies:
       '@babel/runtime': 7.15.4
       '@types/dlv': 1.1.4
@@ -4842,12 +4845,12 @@ packages:
       sorted-array: 2.0.4
     dev: false
 
-  /@player-ui/player@0.4.3:
-    resolution: {integrity: sha512-2buPknL35gBlQCa+bSqrDeAUkfFwrmKULYcQtRNI+o/itLl0xGckLk8twyN3K20Xw+XrdJfSdwXO8wWUyrqsrA==, tarball: https://registry.npmjs.org/@player-ui/player/-/player-0.4.3.tgz}
+  /@player-ui/player@0.5.1:
+    resolution: {integrity: sha512-rYoovPd+cAK7w7ZrSY9Pv5C9gxSKfvs7Srh7N+laOShh7b0bXkvU+mXDBS7TEv3ePQ40MmjDZPnBLtoXdPufJA==, tarball: https://registry.npmjs.org/@player-ui/player/-/player-0.5.1.tgz}
     dependencies:
       '@babel/runtime': 7.15.4
-      '@player-ui/partial-match-registry': 0.4.3
-      '@player-ui/types': 0.4.3
+      '@player-ui/partial-match-registry': 0.5.1
+      '@player-ui/types': 0.5.1
       '@types/parsimmon': 1.10.9
       arr-flatten: 1.1.0
       dequal: 2.0.3
@@ -4861,8 +4864,8 @@ packages:
       ts-nested-error: 1.2.1
     dev: false
 
-  /@player-ui/types@0.4.3:
-    resolution: {integrity: sha512-oGiup9OvJLIgSFAEelhPKY1gst7a2UFX96x3OJechFI0YfkFm1zzt3DHVMgD0KTR+si6xdMhO2uce5J1Vnz/ew==, tarball: https://registry.npmjs.org/@player-ui/types/-/types-0.4.3.tgz}
+  /@player-ui/types@0.5.1:
+    resolution: {integrity: sha512-siwYbpZ9Q7QiWD8yraOvbvzC4eSNwOMPeLpceyKe1ywad37XiRIDyrpBeC0HbO/yNT/i4oydRJvU4KawDnjQ+g==, tarball: https://registry.npmjs.org/@player-ui/types/-/types-0.5.1.tgz}
     dependencies:
       '@babel/runtime': 7.15.4
     dev: false
@@ -7793,6 +7796,7 @@ packages:
   /clone@1.0.4:
     resolution: {integrity: sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==, tarball: https://registry.npmjs.org/clone/-/clone-1.0.4.tgz}
     engines: {node: '>=0.8'}
+    requiresBuild: true
     dev: false
 
   /clone@2.1.2:
@@ -8563,6 +8567,7 @@ packages:
 
   /defaults@1.0.4:
     resolution: {integrity: sha512-eFuaLoy/Rxalv2kr+lqMlUnrDWV+3j4pljOIJgLIhI058IQfWJ7vXhyEIHu+HtC738klGALYxOKDO0bQP3tg8A==, tarball: https://registry.npmjs.org/defaults/-/defaults-1.0.4.tgz}
+    requiresBuild: true
     dependencies:
       clone: 1.0.4
     dev: false
@@ -8841,6 +8846,14 @@ packages:
 
   /eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==, tarball: https://registry.npmjs.org/eastasianwidth/-/eastasianwidth-0.2.0.tgz}
+    dev: false
+
+  /easy-table@1.2.0:
+    resolution: {integrity: sha512-OFzVOv03YpvtcWGe5AayU5G2hgybsg3iqA6drU8UaoZyB9jLGMTrz9+asnLp/E+6qPh88yEI1gvyZFZ41dmgww==, tarball: https://registry.npmjs.org/easy-table/-/easy-table-1.2.0.tgz}
+    dependencies:
+      ansi-regex: 5.0.1
+    optionalDependencies:
+      wcwidth: 1.0.1
     dev: false
 
   /ebnf@1.9.1:
@@ -13476,6 +13489,7 @@ packages:
 
   /mkdirp-classic@0.5.3:
     resolution: {integrity: sha512-gKLcREMhtuZRwRAfqP3RFW+TK4JqApVBtOIftVgjuABpAtpxhPGaDcfvbhNvD0B8iD1oUr/txX35NjcaY6Ns/A==, tarball: https://registry.npmjs.org/mkdirp-classic/-/mkdirp-classic-0.5.3.tgz}
+    requiresBuild: true
     dev: false
 
   /mkdirp-infer-owner@2.0.0:
@@ -18090,6 +18104,7 @@ packages:
   /tar-stream@2.2.0:
     resolution: {integrity: sha512-ujeqbceABgwMZxEJnk2HDY2DlnUZ+9oEcb1KzTVfYHio0UE6dG71n60d8D2I4qNvleWrrXpmjpt7vZeF1LnMZQ==, tarball: https://registry.npmjs.org/tar-stream/-/tar-stream-2.2.0.tgz}
     engines: {node: '>=6'}
+    requiresBuild: true
     dependencies:
       bl: 4.1.0
       end-of-stream: 1.4.4

@@ -42,9 +42,12 @@ const parseNavigationExpressions = (nav: Navigation): PlayerNav => {
     }
 
     if (typeof obj === "object") {
-      return Object.fromEntries(
-        Object.entries(obj).map(([key, value]) => [key, convExp(value)])
-      );
+      const copy = { ...obj };
+      for (const [key, value] of Object.entries(copy)) {
+        copy[key] = convExp(value);
+      }
+
+      return copy;
     }
 
     return obj;
@@ -123,6 +126,8 @@ export class DSLCompiler {
     onEnd: new AsyncSeriesHook<[OnEndArg]>(),
   };
 
+  private schemaGenerator?: SchemaGenerator;
+
   constructor(logger?: LoggingInterface) {
     this.logger = logger ?? console;
   }
@@ -131,15 +136,17 @@ export class DSLCompiler {
   async serialize(
     value: unknown,
     context?: SerializeContext
-  ): Promise<CompilerReturn | undefined> {
+  ): Promise<CompilerReturn> {
     if (typeof value !== "object" || value === null) {
       throw new Error("Unable to serialize non-object");
     }
 
     const type = context?.type ? context.type : fingerprintContent(value);
 
-    const schemaGenerator = new SchemaGenerator(this.logger);
-    this.hooks.schemaGenerator.call(schemaGenerator);
+    if (!this.schemaGenerator) {
+      this.schemaGenerator = new SchemaGenerator(this.logger);
+      this.hooks.schemaGenerator.call(this.schemaGenerator);
+    }
 
     if (type === "view") {
       const { jsonValue, sourceMap } = await render(value as any, {
@@ -222,15 +229,15 @@ export class DSLCompiler {
             });
           }
         });
-
-        if ("schema" in copiedValue) {
-          copiedValue.schema = schemaGenerator.toSchema(copiedValue.schema);
-        }
-
-        copiedValue.navigation = parseNavigationExpressions(
-          copiedValue.navigation
-        );
       }
+
+      if ("schema" in copiedValue) {
+        copiedValue.schema = this.schemaGenerator.toSchema(copiedValue.schema);
+      }
+
+      copiedValue.navigation = parseNavigationExpressions(
+        copiedValue.navigation
+      );
 
       if (value) {
         const postProcessFlow = await this.hooks.postProcessFlow.call(
@@ -247,12 +254,9 @@ export class DSLCompiler {
       }
     }
 
-    if (type === "schema") {
-      return {
-        value: schemaGenerator.toSchema(value) as JsonType,
-      };
-    }
-
-    throw Error("DSL Compiler Error: Unable to determine type to compile as");
+    // Type has been set to "schema"
+    return {
+      value: this.schemaGenerator.toSchema(value) as JsonType,
+    };
   }
 }

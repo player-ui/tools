@@ -16,6 +16,7 @@ import { convertToFileGlob, normalizePath } from "../../utils/fs";
 import type { CompletedTask } from "../../utils/task-runner";
 import { registerForPaths } from "../../utils/babel-register";
 import Validate from "../json/validate";
+import ValidateTSTypes from "./validate";
 
 type TaskResult = Array<Omit<CompletedTask<CompilationResult, any>, "run">>;
 
@@ -76,13 +77,17 @@ export default class DSLCompile extends BaseCommand {
       }
     );
 
+    const results = {
+      exitCode: 0,
+    };
+
     registerForPaths();
 
     this.debug("Found %i files to process", files.length);
 
-    const results = {
-      exitCode: 0,
-    };
+    if (!skipValidation) {
+      await ValidateTSTypes.run(["-f", input]);
+    }
 
     const context = await this.createCompilerContext();
 
@@ -131,7 +136,7 @@ export default class DSLCompile extends BaseCommand {
 
       const compileResult = await context.hooks.compileContent.call(
         { type: contentType as DefaultCompilerContentType },
-        defaultExport,
+        preProcessedValue,
         file
       );
 

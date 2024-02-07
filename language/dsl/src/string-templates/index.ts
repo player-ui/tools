@@ -8,7 +8,7 @@ export interface TemplateRefStringOptions {
 }
 export interface TemplateInstanceRefStringOptions {
   /** The array of strings for the template */
-  strings: TemplateStringsArray;
+  strings: ReadonlyArray<string>;
   /** the other data that's present in the template */
   other: Array<string | TemplateStringType>;
 
@@ -110,12 +110,30 @@ const createTemplateInstance = (
   };
 };
 
+/** Helper for Iterating the binding to add a dynamic numeric value to each index found */
+const addBindingIndexes = (binding: string): string => {
+  let currentIndex = 0;
+
+  return binding.replace(/_index_/g, () => {
+    const result = `_index${currentIndex > 0 ? currentIndex : ""}_`;
+    currentIndex += 1;
+
+    return result;
+  });
+};
+
 /** Creating an instance of a handler for bindings */
 const createBindingTemplateInstance = (
   options: Omit<TemplateInstanceRefStringOptions, "toRefString">
 ): BindingTemplateInstance => {
   const templateInstance = createTemplateInstance({
     ...options,
+    strings: options.strings.map((element: string) =>
+      addBindingIndexes(element)
+    ),
+    other: options.other.map((element) =>
+      typeof element === "string" ? addBindingIndexes(element) : element
+    ),
     toRefString: (context, value) => {
       return `{{${value}}}`;
     },
