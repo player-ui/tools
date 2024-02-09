@@ -1,7 +1,7 @@
 load("@aspect_rules_js//js:defs.bzl", "js_library")
 load("@aspect_rules_js//npm:defs.bzl", "npm_package")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
-load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project", "ts_config")
 load("@bazel_skylib//lib:partial.bzl", "partial")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@npm//:oclif/package_json.bzl", oclif_bin = "bin")
@@ -9,10 +9,7 @@ load("@rules_player//javascript:defs.bzl", "create_package_json", "eslint_test",
 load("//helpers:defs.bzl", "vitest_config")
 load(":gen_package_json.bzl", "gen_package_json")
 
-name = "cli"
-
 npm_link_all_packages(name = "node_modules")
-
 vitest_config(name = "vitest_config")
 
 dependencies = [
@@ -27,6 +24,7 @@ dependencies = [
     "//:node_modules/chalk",
     "//:node_modules/cosmiconfig",
     "//:node_modules/cross-fetch",
+    "//:node_modules/dlv",
     "//:node_modules/easy-table",
     "//:node_modules/elegant-spinner",
     "//:node_modules/figures",
@@ -50,12 +48,16 @@ dependencies = [
     ":node_modules/@player-tools/xlr-converters",
 ]
 
-ts_project_name = name + "_compile"
-
-ts_project_target = ":{}".format(ts_project_name)
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+    deps = [
+        "//:tsconfig",
+    ],
+)
 
 ts_project(
-    name = ts_project_name,
+    name = "player-cli-build",
     srcs = glob(
         [
             "bin/**/*",
@@ -65,79 +67,60 @@ ts_project(
             "__tests__",
         ],
     ),
+    out_dir = "dist",
+    root_dir = "src",
     declaration = True,
-    transpiler = partial.make(
-        swc,
-        swcrc = "//:.swcrc",
-    ),
-    tsconfig = "//:tsconfig",
+    transpiler = "tsc",
+    tsconfig = ":tsconfig",
     validate = False,
     deps = dependencies,
 )
 
-create_package_json_name = name + "_package_json"
-
-create_package_json_target = ":{}".format(create_package_json_name)
-
 gen_package_json(
-    name = create_package_json_name,
+    name = "player-cli-package_json",
     base_package = "package.json",
     dependencies = dependencies,
 )
 
-# create_package_json(
-#     name = create_package_json_name,
-#     base_package_json = "package.json",
-#     dependencies = dependencies,
-#     root_package_json = "//:package.json",
-# )
-
-manifest_name = name + "_manifest"
-
-manifest_target = ":{}".format(manifest_name)
 
 oclif_bin.oclif(
-    name = manifest_name,
+    name = "player-cli-manifest",
     srcs = [
-        ts_project_target,
-        create_package_json_target,
+        ":player-cli-build",
+        ":player-cli-package_json",
     ],
     outs = ["oclif.manifest.json"],
     args = ["manifest"],
     chdir = package_name(),
 )
 
-js_library_name = name + "_lib"
-
-js_library_target = ":{}".format(js_library_name)
-
 js_library(
-    name = js_library_name,
+    name = "player-cli-bundle",
     srcs = [
-        ts_project_target,
-        create_package_json_target,
-        manifest_target,
+        ":player-cli-build",
+        ":player-cli-package_json",
+        ":player-cli-manifest",
     ],
     deps = dependencies,
 )
 
 vitest_test(
-    name = name + "_vitest",
+    name = "player-cli-unit",
     config = ":vitest_config",
     data = glob(["src/**/*"]) + dependencies + ["//:vitest_config"],
     node_modules = "//:node_modules",
 )
 
 eslint_test(
-    name = name + "_eslint",
+    name = "player-cli-lint",
     srcs = glob(["src/**/*"]),
     data = glob(["src/**/*"]) + dependencies + ["//:eslint_config"],
     node_modules = "//:node_modules",
 )
 
 npm_package(
-    name = name,
-    srcs = [js_library_target],
-    package = "@player-tools/" + name,
+    name = "player-cli-publish",
+    srcs = [":player-cli-bundle"],
+    package = "@player-tools/cli",
     visibility = ["//visibility:public"],
 )
