@@ -123,4 +123,9 @@ npm_package(
     srcs = [":player-cli-bundle"],
     package = "@player-tools/cli",
     visibility = ["//visibility:public"],
+    substitutions = {
+        "__VERSION__": "{STABLE_VERSION}",
+        "0.0.0-PLACEHOLDER": "{STABLE_VERSION}",
+        "__GIT_COMMIT__": "{STABLE_GIT_COMMIT}",
+    },
 )
