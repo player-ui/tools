@@ -2,6 +2,8 @@ import type {
   Asset,
   Expression,
   Navigation as PlayerNav,
+  Schema,
+  Validation,
 } from '@player-ui/types';
 import type {
   BindingTemplateInstance,
@@ -86,4 +88,26 @@ export interface toJsonOptions {
    * default is 'applicability'
    */
   propertiesToSkip?: string[];
+}
+
+export type DataTypeReference<
+  DataTypeProp = string,
+  ValidationRef = Validation.Reference,
+  SymbolType = void
+> =
+  | (Omit<Schema.DataType, 'type' | 'validation'> & {
+      /** Handled data type */
+      type: DataTypeProp;
+      /** Data type validation refs */
+      validation?: ValidationRef[];
+    })
+  | SymbolType
+  | [SymbolType];
+
+export interface DSLSchema<DataTypeRef = DataTypeReference> {
+  [key: string]:
+    | [DataTypeRef]
+    | DataTypeRef
+    | [DSLSchema<DataTypeRef>]
+    | DSLSchema<DataTypeRef>;
 }
