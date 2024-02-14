@@ -8,6 +8,7 @@ load("@npm//:oclif/package_json.bzl", oclif_bin = "bin")
 load("@rules_player//javascript:defs.bzl", "create_package_json", "eslint_test", "vitest_test")
 load("//helpers:defs.bzl", "vitest_config")
 load(":gen_package_json.bzl", "gen_package_json")
+load("@aspect_bazel_lib//lib:expand_template.bzl", "expand_template")
 
 npm_link_all_packages(name = "node_modules")
 vitest_config(name = "vitest_config")
@@ -83,11 +84,23 @@ gen_package_json(
 )
 
 
+expand_template(
+    name = "player-cli-package-json-stamped",
+    out = "package.json",
+    stamp_substitutions = {
+        "__VERSION__": "{STABLE_VERSION}",
+        "0.0.0-PLACEHOLDER": "{STABLE_VERSION}",
+        "__GIT_COMMIT__": "{STABLE_GIT_COMMIT}",
+    },
+    template = ":player-cli-package_json"
+)
+
+
 oclif_bin.oclif(
     name = "player-cli-manifest",
     srcs = [
         ":player-cli-build",
-        ":player-cli-package_json",
+        ":player-cli-package-json-stamped",
     ],
     outs = ["oclif.manifest.json"],
     args = ["manifest"],
@@ -98,7 +111,7 @@ js_library(
     name = "player-cli-bundle",
     srcs = [
         ":player-cli-build",
-        ":player-cli-package_json",
+        ":player-cli-package-json-stamped",
         ":player-cli-manifest",
     ],
     deps = dependencies,

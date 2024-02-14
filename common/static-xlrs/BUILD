@@ -3,13 +3,10 @@ load("//helpers:defs.bzl", "tsup_config")
 
 tsup_config(name = "tsup_config")
 
-name = "static-xlrs"
-
-package_name = "{}/{}".format("@player-tools", name)
-
 npm_package(
-    name = name,
-    package = package_name,
+    tags = ["do-not-publish"],
+    name = "static-xlrs",
+    package = "@player-tools/static-xlrs",
     srcs = glob(["src/**/*"]) + ["package.json"],
     visibility = ["//visibility:public"],
 )

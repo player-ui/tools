@@ -1,5 +1,5 @@
 def _gen_package_json_impl(ctx):
-    output = ctx.actions.declare_file("package.json")
+    output = ctx.actions.declare_file("base.package.json")
 
     command = "node {script} {base_package} {dependencies} {output}".format(
         script = ctx.file._script.short_path,
