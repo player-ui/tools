@@ -5,6 +5,8 @@ import type { TransformFunction } from '@player-tools/xlr';
 import type { CompilationContext } from '../utils/compilation-context';
 
 export * from './LSPAssetsPlugin';
+export * from './LSPPluginPlugin';
+export * from './LSPTransformsPlugin';
 
 export interface PlayerCLIPlugin {
   /**

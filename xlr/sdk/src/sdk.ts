@@ -2,6 +2,7 @@ import type {
   Manifest,
   NamedType,
   NodeType,
+  ObjectNode,
   ObjectType,
   TransformFunction,
   TSManifest,
@@ -37,12 +38,14 @@ export class XLRSDK {
   private validator: XLRValidator;
   private tsWriter: TSWriter;
   private computedNodeCache: Map<string, NodeType>;
+  private externalTransformFunctions: Map<string, TransformFunction>;
 
   constructor(customRegistry?: XLRRegistry) {
     this.registry = customRegistry ?? new BasicXLRRegistry();
     this.validator = new XLRValidator(this.getType.bind(this));
     this.tsWriter = new TSWriter();
     this.computedNodeCache = new Map();
+    this.externalTransformFunctions = new Map();
   }
 
   /**
@@ -58,6 +61,11 @@ export class XLRSDK {
     transforms?: Array<TransformFunction>
   ) {
     this.computedNodeCache.clear();
+
+    const transformsToRun = [
+      ...this.externalTransformFunctions.values(),
+      ...(transforms ?? []),
+    ];
 
     const manifest = JSON.parse(
       fs.readFileSync(path.join(inputPath, 'xlr', 'manifest.json')).toString(),
@@ -89,7 +97,7 @@ export class XLRSDK {
               .toString()
           );
           const effectiveType =
-            transforms?.reduce(
+            transformsToRun?.reduce(
               (typeAccumulator: NamedType<NodeType>, transformFn) =>
                 transformFn(
                   typeAccumulator,
@@ -118,6 +126,11 @@ export class XLRSDK {
   ) {
     this.computedNodeCache.clear();
 
+    const transformsToRun = [
+      ...this.externalTransformFunctions.values(),
+      ...(transforms ?? []),
+    ];
+
     Object.keys(manifest.capabilities)?.forEach((capabilityName) => {
       if (
         filters?.capabilityFilter &&
@@ -131,7 +144,7 @@ export class XLRSDK {
           !extension.name.match(filters?.typeFilter)
         ) {
           const effectiveType =
-            transforms?.reduce(
+            transformsToRun?.reduce(
               (typeAccumulator: NamedType<NodeType>, transformFn) =>
                 transformFn(
                   typeAccumulator,
@@ -144,6 +157,20 @@ export class XLRSDK {
         }
       });
     });
+  }
+
+  /**
+   * Statically load transform function that should be applied to every XLR bundle that is imported
+   */
+  public addTransformFunction(name: string, fn: TransformFunction): void {
+    this.externalTransformFunctions.set(name, fn);
+  }
+
+  /**
+   * Remove any transform function loaded via the `addTransformFunction` method by name
+   */
+  public removeTransformFunction(name: string): void {
+    this.externalTransformFunctions.delete(name);
   }
 
   /**
@@ -163,7 +190,9 @@ export class XLRSDK {
     }
 
     if (this.computedNodeCache.has(id)) {
-      return this.computedNodeCache.get(id) as NamedType<NodeType> | undefined;
+      return JSON.parse(JSON.stringify(this.computedNodeCache.get(id))) as
+        | NamedType<NodeType>
+        | undefined;
     }
 
     type = fillInGenerics(this.resolveType(type)) as NamedType;
@@ -285,15 +314,30 @@ export class XLRSDK {
           objectNode.extends,
           extendedType as NamedType<ObjectType>
         ) as NamedType;
+        if (extendedType.type === 'object') {
+          return {
+            ...computeEffectiveObject(
+              extendedType as ObjectType,
+              objectNode as ObjectType,
+              false
+            ),
+            name: objectNode.name,
+            description: objectNode.description,
+          };
+        }
+
+        // if the merge isn't straightforward, defer until validation time for now
         return {
-          ...computeEffectiveObject(
-            extendedType as ObjectType,
-            objectNode as ObjectType,
-            false
-          ),
           name: objectNode.name,
-          description: objectNode.description,
-        };
+          type: 'and',
+          and: [
+            {
+              ...objectNode,
+              extends: undefined,
+            },
+            extendedType,
+          ],
+        } as unknown as ObjectNode;
       }
 
       return objectNode;

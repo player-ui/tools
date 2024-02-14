@@ -70,10 +70,22 @@ export class XLRValidator {
         }
       }
 
+      let message: string;
+
+      if (xlrNode.name) {
+        message = `Does not match any of the expected types for type: '${xlrNode.name}'`;
+      } else if (xlrNode.title) {
+        message = `Does not match any of the expected types for property: '${xlrNode.title}'`;
+      } else {
+        message = `Does not match any of the types ${xlrNode.or
+          .map((node) => node.name ?? node.title ?? '<unnamed type>')
+          .join(' | ')}`;
+      }
+
       validationIssues.push({
         type: 'value',
         node: rootNode,
-        message: `Does not match any of the expected types for type: '${xlrNode.name}'`,
+        message,
       });
     } else if (xlrNode.type === 'and') {
       const effectiveType = {

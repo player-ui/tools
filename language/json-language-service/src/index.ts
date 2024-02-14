@@ -27,6 +27,7 @@ import {
   CodeActionKind,
 } from 'vscode-languageserver-types';
 
+import type { TransformFunction } from '@player-tools/xlr';
 import type {
   DocumentContext,
   ValidationContext,
@@ -413,6 +414,16 @@ export class PlayerLanguageService {
     }
 
     return this.hooks.definition.call(context);
+  }
+
+  public addXLRTransforms(transforms: Record<string, TransformFunction>): void {
+    Object.entries(transforms).forEach(([name, fn]) =>
+      this.XLRService.XLRSDK.addTransformFunction(name, fn)
+    );
+  }
+
+  public addLSPPlugin(plugin: PlayerLanguageServicePlugin) {
+    plugin.apply(this);
   }
 
   async setAssetTypes(typeFiles: Array<string>) {
