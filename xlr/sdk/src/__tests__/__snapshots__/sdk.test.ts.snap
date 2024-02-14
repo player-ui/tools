@@ -2263,12 +2263,10 @@ Players can get field type information from the 'schema' definition, thus to dec
   "genericTokens": Array [
     Object {
       "constraints": Object {
-        "genericArguments": undefined,
         "ref": "Asset",
         "type": "ref",
       },
       "default": Object {
-        "genericArguments": undefined,
         "ref": "Asset",
         "type": "ref",
       },
@@ -2280,7 +2278,6 @@ Players can get field type information from the 'schema' definition, thus to dec
     "binding": Object {
       "node": Object {
         "description": "The location in the data-model to store the data",
-        "genericArguments": undefined,
         "ref": "Binding",
         "title": "InputAsset.binding",
         "type": "ref",
@@ -2300,7 +2297,6 @@ Players can get field type information from the 'schema' definition, thus to dec
         "description": "Asset container for a field label.",
         "genericArguments": Array [
           Object {
-            "genericArguments": undefined,
             "ref": "Asset",
             "type": "ref",
           },
@@ -2316,7 +2312,6 @@ Players can get field type information from the 'schema' definition, thus to dec
         "additionalProperties": false,
         "description": "Optional additional data",
         "extends": undefined,
-        "genericTokens": undefined,
         "properties": Object {
           "beacon": Object {
             "node": Object {
@@ -2355,7 +2350,6 @@ Players can get field type information from the 'schema' definition, thus to dec
         "description": "Asset container for a note.",
         "genericArguments": Array [
           Object {
-            "genericArguments": undefined,
             "ref": "Asset",
             "type": "ref",
           },

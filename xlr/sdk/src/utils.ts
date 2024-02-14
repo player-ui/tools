@@ -60,19 +60,21 @@ export function simpleTransformGenerator<
         return {
           ...node,
           properties: { ...newObjectProperties },
-          genericTokens: isGenericNamedType(node)
-            ? node.genericTokens.map((token) => {
-                return {
-                  ...token,
-                  constraints: token.constraints
-                    ? walker(token.constraints, capability)
-                    : undefined,
-                  default: token.default
-                    ? walker(token.default, capability)
-                    : undefined,
-                };
-              })
-            : undefined,
+          ...(isGenericNamedType(node)
+            ? {
+                genericTokens: node.genericTokens.map((token) => {
+                  return {
+                    ...token,
+                    constraints: token.constraints
+                      ? walker(token.constraints, capability)
+                      : undefined,
+                    default: token.default
+                      ? walker(token.default, capability)
+                      : undefined,
+                  };
+                }),
+              }
+            : {}),
           extends: node.extends
             ? (walker(node.extends, capability) as RefNode)
             : undefined,
@@ -106,9 +108,13 @@ export function simpleTransformGenerator<
       if (node.type === 'ref') {
         return {
           ...node,
-          genericArguments: node.genericArguments?.map((arg) =>
-            walker(arg, capability)
-          ),
+          ...(node.genericArguments
+            ? {
+                genericArguments: node.genericArguments?.map((arg) =>
+                  walker(arg, capability)
+                ),
+              }
+            : {}),
         };
       }
 
