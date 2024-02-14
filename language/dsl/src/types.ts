@@ -93,7 +93,7 @@ export interface toJsonOptions {
 export type DataTypeReference<
   DataTypeProp = string,
   ValidationRef = Validation.Reference,
-  SymbolType = void
+  SymbolType = never
 > =
   | (Omit<Schema.DataType, 'type' | 'validation'> & {
       /** Handled data type */
@@ -101,8 +101,7 @@ export type DataTypeReference<
       /** Data type validation refs */
       validation?: ValidationRef[];
     })
-  | SymbolType
-  | [SymbolType];
+  | SymbolType;
 
 export interface DSLSchema<DataTypeRef = DataTypeReference> {
   [key: string]:
