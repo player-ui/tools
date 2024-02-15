@@ -1,16 +1,13 @@
 load("@aspect_rules_js//js:defs.bzl", "js_library")
 load("@aspect_rules_js//npm:defs.bzl", "npm_package")
-load("@aspect_rules_swc//swc:defs.bzl", "swc")
-load("@aspect_rules_ts//ts:defs.bzl", "ts_project", "ts_config")
-load("@bazel_skylib//lib:partial.bzl", "partial")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config", "ts_project")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@npm//:oclif/package_json.bzl", oclif_bin = "bin")
 load("@rules_player//javascript:defs.bzl", "create_package_json", "eslint_test", "vitest_test")
 load("//helpers:defs.bzl", "vitest_config")
-load(":gen_package_json.bzl", "gen_package_json")
-load("@aspect_bazel_lib//lib:expand_template.bzl", "expand_template")
 
 npm_link_all_packages(name = "node_modules")
+
 vitest_config(name = "vitest_config")
 
 dependencies = [
@@ -68,39 +65,31 @@ ts_project(
             "__tests__",
         ],
     ),
+    declaration = True,
     out_dir = "dist",
     root_dir = "src",
-    declaration = True,
     transpiler = "tsc",
     tsconfig = ":tsconfig",
     validate = False,
     deps = dependencies,
 )
 
-gen_package_json(
+create_package_json(
     name = "player-cli-package_json",
-    base_package = "package.json",
+    base_package_json = "package.json",
     dependencies = dependencies,
-)
-
-
-expand_template(
-    name = "player-cli-package-json-stamped",
-    out = "package.json",
-    stamp_substitutions = {
-        "__VERSION__": "{STABLE_VERSION}",
+    root_package_json = "//:package.json",
+    substitutions = {
         "0.0.0-PLACEHOLDER": "{STABLE_VERSION}",
-        "__GIT_COMMIT__": "{STABLE_GIT_COMMIT}",
     },
-    template = ":player-cli-package_json"
 )
-
 
 oclif_bin.oclif(
     name = "player-cli-manifest",
     srcs = [
+        "package.json",
         ":player-cli-build",
-        ":player-cli-package-json-stamped",
+        ":player-cli-package_json",
     ],
     outs = ["oclif.manifest.json"],
     args = ["manifest"],
@@ -111,8 +100,8 @@ js_library(
     name = "player-cli-bundle",
     srcs = [
         ":player-cli-build",
-        ":player-cli-package-json-stamped",
         ":player-cli-manifest",
+        ":player-cli-package_json",
     ],
     deps = dependencies,
 )
@@ -135,5 +124,8 @@ npm_package(
     name = "player-cli-publish",
     srcs = [":player-cli-bundle"],
     package = "@player-tools/cli",
+    replace_prefixes = {
+        "player-cli-package_json": "package",
+    },
     visibility = ["//visibility:public"],
 )
