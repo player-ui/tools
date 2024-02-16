@@ -1,15 +1,13 @@
 load("@aspect_rules_js//js:defs.bzl", "js_library")
 load("@aspect_rules_js//npm:defs.bzl", "npm_package")
-load("@aspect_rules_swc//swc:defs.bzl", "swc")
-load("@aspect_rules_ts//ts:defs.bzl", "ts_project", "ts_config")
-load("@bazel_skylib//lib:partial.bzl", "partial")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config", "ts_project")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@npm//:oclif/package_json.bzl", oclif_bin = "bin")
 load("@rules_player//javascript:defs.bzl", "create_package_json", "eslint_test", "vitest_test")
 load("//helpers:defs.bzl", "vitest_config")
-load(":gen_package_json.bzl", "gen_package_json")
 
 npm_link_all_packages(name = "node_modules")
+
 vitest_config(name = "vitest_config")
 
 dependencies = [
@@ -67,25 +65,29 @@ ts_project(
             "__tests__",
         ],
     ),
+    declaration = True,
     out_dir = "dist",
     root_dir = "src",
-    declaration = True,
     transpiler = "tsc",
     tsconfig = ":tsconfig",
     validate = False,
     deps = dependencies,
 )
 
-gen_package_json(
+create_package_json(
     name = "player-cli-package_json",
-    base_package = "package.json",
+    base_package_json = "package.json",
     dependencies = dependencies,
+    root_package_json = "//:package.json",
+    substitutions = {
+        "0.0.0-PLACEHOLDER": "{STABLE_VERSION}",
+    },
 )
-
 
 oclif_bin.oclif(
     name = "player-cli-manifest",
     srcs = [
+        "package.json",
         ":player-cli-build",
         ":player-cli-package_json",
     ],
@@ -98,8 +100,8 @@ js_library(
     name = "player-cli-bundle",
     srcs = [
         ":player-cli-build",
-        ":player-cli-package_json",
         ":player-cli-manifest",
+        ":player-cli-package_json",
     ],
     deps = dependencies,
 )
@@ -122,10 +124,8 @@ npm_package(
     name = "player-cli-publish",
     srcs = [":player-cli-bundle"],
     package = "@player-tools/cli",
-    visibility = ["//visibility:public"],
-    substitutions = {
-        "__VERSION__": "{STABLE_VERSION}",
-        "0.0.0-PLACEHOLDER": "{STABLE_VERSION}",
-        "__GIT_COMMIT__": "{STABLE_GIT_COMMIT}",
+    replace_prefixes = {
+        "player-cli-package_json": "package",
     },
+    visibility = ["//visibility:public"],
 )
