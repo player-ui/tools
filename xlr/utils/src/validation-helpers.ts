@@ -74,6 +74,7 @@ export function computeExtends(a: NodeType, b: NodeType): boolean {
     return true;
   }
 
+  // check simple case of equal types
   if (a.type === b.type) {
     if (isPrimitiveTypeNode(a) && isPrimitiveTypeNode(b)) {
       if (a.const && b.const) {
@@ -83,6 +84,10 @@ export function computeExtends(a: NodeType, b: NodeType): boolean {
       } else {
         return true;
       }
+    }
+
+    if (a.type === "ref" && b.type === "ref") {
+      return a.ref === b.ref;
     }
 
     if (a.type === "object" && b.type === "object") {
@@ -98,6 +103,18 @@ export function computeExtends(a: NodeType, b: NodeType): boolean {
 
       return true;
     }
+  }
+
+  if (isPrimitiveTypeNode(a) && b.type === "or") {
+    return b.or.every((member) => computeExtends(a, member));
+  }
+
+  if (isPrimitiveTypeNode(b) && a.type === "or") {
+    return a.or.every((member) => computeExtends(b, member));
+  }
+
+  if (a.type === "or" && b.type === "or") {
+    return a.or.every((x) => b.or.some((y) => computeExtends(x, y)));
   }
 
   return false;
@@ -191,7 +208,7 @@ export function computeEffectiveObject(
   const baseObjectName = base.name ?? base.title ?? "object literal";
   const operandObjectName = operand.name ?? operand.title ?? "object literal";
   const newObject = {
-    ...base,
+    ...JSON.parse(JSON.stringify(base)),
     name: `${baseObjectName} & ${operandObjectName}`,
     description: `Effective type combining ${baseObjectName} and ${operandObjectName}`,
     genericTokens: [
@@ -199,18 +216,20 @@ export function computeEffectiveObject(
       ...(isGenericNodeType(operand) ? operand.genericTokens : []),
     ],
   };
+  // TODO this check needs to account for primitive -> primitive generic overlap
 
-  // eslint-disable-next-line no-restricted-syntax, guard-for-in
   for (const property in operand.properties) {
-    if (
-      newObject.properties[property] !== undefined &&
-      newObject.properties[property].node.type !==
-        operand.properties[property].node.type &&
-      errorOnOverlap
-    ) {
-      throw new Error(
-        `Can't compute effective type for ${baseObjectName} and ${operandObjectName} because of conflicting properties ${property}`
-      );
+    if (newObject.properties[property] !== undefined && errorOnOverlap) {
+      if (
+        !computeExtends(
+          newObject.properties[property].node,
+          operand.properties[property].node
+        )
+      ) {
+        throw new Error(
+          `Can't compute effective type for ${baseObjectName} and ${operandObjectName} because of conflicting properties ${property}`
+        );
+      }
     }
 
     newObject.properties[property] = operand.properties[property];

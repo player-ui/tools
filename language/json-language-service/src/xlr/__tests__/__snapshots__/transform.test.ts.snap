@@ -33,9 +33,8 @@ exports[`Transform Tests > AssetWrapperOrSwitch Transform 1`] = `
     "primaryChild": {
       "node": {
         "description": "A text-like asset for the action's label",
-        "genericArguments": [
-          {
-            "genericArguments": undefined,
+        "genericArguments": Array [
+          Object {
             "ref": "AnyAsset",
             "type": "ref",
           },
@@ -46,10 +45,9 @@ exports[`Transform Tests > AssetWrapperOrSwitch Transform 1`] = `
       },
       "required": true,
     },
-    "secondaryChildren": {
-      "node": {
-        "elementType": {
-          "genericArguments": undefined,
+    "secondaryChildren": Object {
+      "node": Object {
+        "elementType": Object {
           "ref": "Asset",
           "type": "ref",
         },
@@ -87,9 +85,10 @@ exports[`Transform Tests > CommonProps Transform 1`] = `
     "type": "unknown",
   },
   "description": "Mock Asset for test",
-  "genericTokens": [
-    {
-      "constraints": {
+  "extends": undefined,
+  "genericTokens": Array [
+    Object {
+      "constraints": Object {
         "ref": "Asset",
         "type": "ref",
       },
@@ -216,9 +215,8 @@ exports[`Transform Tests > applyTemplateProperty Transform 1`] = `
     "primaryChild": {
       "node": {
         "description": "A text-like asset for the action's label",
-        "genericArguments": [
-          {
-            "genericArguments": undefined,
+        "genericArguments": Array [
+          Object {
             "ref": "AnyAsset",
             "type": "ref",
           },
@@ -229,10 +227,9 @@ exports[`Transform Tests > applyTemplateProperty Transform 1`] = `
       },
       "required": true,
     },
-    "secondaryChildren": {
-      "node": {
-        "elementType": {
-          "genericArguments": undefined,
+    "secondaryChildren": Object {
+      "node": Object {
+        "elementType": Object {
           "ref": "Asset",
           "type": "ref",
         },
@@ -243,9 +240,8 @@ exports[`Transform Tests > applyTemplateProperty Transform 1`] = `
     "template": {
       "node": {
         "description": "A list of templates to process for this node",
-        "elementType": {
-          "genericArguments": undefined,
-          "ref": "Template<Asset, "secondaryChildren">",
+        "elementType": Object {
+          "ref": "Template<Asset, \\"secondaryChildren\\">",
           "type": "ref",
         },
         "type": "array",
@@ -309,9 +305,8 @@ exports[`Transform Tests > applyValueRefs Transform 1`] = `
     "primaryChild": {
       "node": {
         "description": "A text-like asset for the action's label",
-        "genericArguments": [
-          {
-            "genericArguments": undefined,
+        "genericArguments": Array [
+          Object {
             "ref": "AnyAsset",
             "type": "ref",
           },
@@ -322,10 +317,9 @@ exports[`Transform Tests > applyValueRefs Transform 1`] = `
       },
       "required": true,
     },
-    "secondaryChildren": {
-      "node": {
-        "elementType": {
-          "genericArguments": undefined,
+    "secondaryChildren": Object {
+      "node": Object {
+        "elementType": Object {
           "ref": "Asset",
           "type": "ref",
         },
@@ -351,13 +345,11 @@ exports[`Transform Tests > applyValueRefs Transform 1`] = `
             "title": "MockAsset.value",
             "type": "string",
           },
-          {
-            "genericArguments": undefined,
+          Object {
             "ref": "ExpressionRef",
             "type": "ref",
           },
-          {
-            "genericArguments": undefined,
+          Object {
             "ref": "BindingRef",
             "type": "ref",
           },

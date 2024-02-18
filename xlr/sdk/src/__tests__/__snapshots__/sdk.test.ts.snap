@@ -2278,7 +2278,6 @@ Players can get field type information from the 'schema' definition, thus to dec
     "binding": {
       "node": {
         "description": "The location in the data-model to store the data",
-        "genericArguments": undefined,
         "ref": "Binding",
         "title": "InputAsset.binding",
         "type": "ref",
