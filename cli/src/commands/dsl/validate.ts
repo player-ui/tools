@@ -1,5 +1,6 @@
 import glob from "globby";
 import logSymbols from "log-symbols";
+import { promises as fs } from 'fs';
 import * as ts from "typescript";
 import { Flags } from "@oclif/core";
 import { BaseCommand } from "../../utils/base-command";
@@ -34,6 +35,34 @@ export default class Validate extends BaseCommand {
     };
   }
 
+  private async getTSConfig() {
+    let TSEnvConfig, configFile
+
+    const EnvTSConfig = glob.sync(
+      '**/tsconfig.json'
+    )[0];
+
+    this.log(`ENV TS file ${EnvTSConfig}`)
+    try {
+      configFile = await fs.readFile(EnvTSConfig);
+    } catch (e) {
+      this.log(
+        'Error reading the TypeScript configuration file.'
+      );
+    }
+
+    const compilerConfigObject = configFile && JSON.parse(configFile.toString())
+    this.log(`ENV TS object ${compilerConfigObject}`)
+
+    if (compilerConfigObject.CompilerOptions) {
+      TSEnvConfig = compilerConfigObject.CompilerOptions
+
+      return TSEnvConfig
+    } else {
+      this.log('No compiler configuration found on tsconfig.json file')
+    }
+  }
+
   async run(): Promise<void> {
     const { inputFiles } = await this.getOptions();
 
@@ -44,11 +73,14 @@ export default class Validate extends BaseCommand {
       }
     );
 
-    const program = ts.createProgram(files, DEFAULT_COMPILER_OPTIONS);
+    const TSConfig = await this.getTSConfig() || DEFAULT_COMPILER_OPTIONS
+
+    const program = ts.createProgram(files, TSConfig);
 
     const allDiagnostics = ts.getPreEmitDiagnostics(program);
 
-    let diagnosticsCount = 0;
+    let diagnosticsCount = 0
+
     const groupedDiagnostics = allDiagnostics.reduce(
       (
         acc: {
@@ -99,8 +131,7 @@ export default class Validate extends BaseCommand {
 
     if (fileNameList.length) {
       this.log(
-        `${diagnosticsCount} type or syntax errors found in ${
-          fileNameList.length
+        `${diagnosticsCount} type or syntax errors found in ${fileNameList.length
         } file${fileNameList.length > 1 ? "s" : ""}, exiting program`
       );
       this.exit(1);
