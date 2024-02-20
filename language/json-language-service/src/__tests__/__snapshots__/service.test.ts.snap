@@ -1,8 +1,8 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`player language service > completion > basic object completions 1`] = `
-[
-  {
+exports[`player language service completion basic object completions 1`] = `
+Array [
+  Object {
     "documentation": "The text to display",
     "kind": 10,
     "label": "value",
@@ -17,12 +17,12 @@ exports[`player language service > completion > basic object completions 1`] = `
     "kind": 10,
     "label": "applicability",
   },
-  {
+  Object {
     "documentation": "Adds a comment for the given node",
     "kind": 10,
     "label": "_comment",
   },
-  {
+  Object {
     "documentation": "A list of templates to process for this node",
     "kind": 10,
     "label": "template",

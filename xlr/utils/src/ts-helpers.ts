@@ -368,7 +368,7 @@ export function applyExcludeToNodeType(
 ): NodeType {
   const remainingMembers = baseObject.or.filter((type) => {
     if (filters.type === "or") {
-      return !filters.or.some((filter) => !computeExtends(type, filter));
+      return !filters.or.some((filter) => computeExtends(type, filter));
     }
 
     return !computeExtends(type, filters);
