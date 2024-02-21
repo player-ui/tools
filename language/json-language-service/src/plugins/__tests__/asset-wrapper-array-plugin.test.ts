@@ -56,7 +56,7 @@ describe("asset-wrapper-array-plugin", () => {
 
     expect(diags?.map((d) => d.message)).toMatchInlineSnapshot(`
       [
-        "View Validation Error - value: Does not match any of the expected types for type: "AssetWrapperOrSwitch"",
+        "View Validation Error - value: Does not match any of the expected types for type: 'AssetWrapperOrSwitch'",
         "Implicit Array -> "collection" assets is not supported.",
       ]
     `);
@@ -64,7 +64,7 @@ describe("asset-wrapper-array-plugin", () => {
     expect(diags).toMatchInlineSnapshot(`
       [
         {
-          "message": "View Validation Error - value: Does not match any of the expected types for type: "AssetWrapperOrSwitch"",
+          "message": "View Validation Error - value: Does not match any of the expected types for type: 'AssetWrapperOrSwitch'",
           "range": {
             "end": {
               "character": 7,

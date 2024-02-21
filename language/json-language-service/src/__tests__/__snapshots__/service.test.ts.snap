@@ -1,8 +1,8 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`player language service completion basic object completions 1`] = `
-Array [
-  Object {
+exports[`player language service > completion > basic object completions 1`] = `
+[
+  {
     "documentation": "The text to display",
     "kind": 10,
     "label": "value",
@@ -17,12 +17,12 @@ Array [
     "kind": 10,
     "label": "applicability",
   },
-  Object {
+  {
     "documentation": "Adds a comment for the given node",
     "kind": 10,
     "label": "_comment",
   },
-  Object {
+  {
     "documentation": "A list of templates to process for this node",
     "kind": 10,
     "label": "template",
@@ -168,7 +168,7 @@ exports[`player language service > validation > throws AssetWrapper errors 1`] =
     "severity": 2,
   },
   {
-    "message": "View Validation Error - value: Does not match any of the expected types for type: "AssetWrapperOrSwitch"",
+    "message": "View Validation Error - value: Does not match any of the expected types for type: 'AssetWrapperOrSwitch'",
     "range": {
       "end": {
         "character": 16,
@@ -194,6 +194,36 @@ exports[`player language service > validation > throws AssetWrapper errors 1`] =
       },
     },
     "severity": 1,
+  },
+]
+`;
+
+exports[`player language service completion basic object completions 1`] = `
+Array [
+  Object {
+    "documentation": "The text to display",
+    "kind": 10,
+    "label": "value",
+  },
+  {
+    "documentation": "Any modifiers on the text",
+    "kind": 10,
+    "label": "modifiers",
+  },
+  {
+    "documentation": "Evaluate the given expression (or boolean) and if falsy, remove this node from the tree. This is re-computed for each change in the data-model",
+    "kind": 10,
+    "label": "applicability",
+  },
+  Object {
+    "documentation": "Adds a comment for the given node",
+    "kind": 10,
+    "label": "_comment",
+  },
+  Object {
+    "documentation": "A list of templates to process for this node",
+    "kind": 10,
+    "label": "template",
   },
 ]
 `;
