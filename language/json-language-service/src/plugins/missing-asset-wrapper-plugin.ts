@@ -42,7 +42,7 @@ export class MissingAssetWrapperPlugin implements PlayerLanguageServicePlugin {
         const expectedAssetDiags = diagnostics.filter(
           (d) =>
             d.message.includes(
-              `Does not match any of the expected types for type: "AssetWrapperOrSwitch"`
+              `Does not match any of the expected types for type: 'AssetWrapperOrSwitch'`
             ) || d.message.startsWith("Expected property: asset")
         );
 
