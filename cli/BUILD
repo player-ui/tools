@@ -121,7 +121,7 @@ eslint_test(
 )
 
 npm_package(
-    name = "player-cli-publish",
+    name = "cli",
     srcs = [":player-cli-bundle"],
     package = "@player-tools/cli",
     replace_prefixes = {
