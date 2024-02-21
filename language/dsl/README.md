@@ -81,7 +81,31 @@ type CoreValidatorRefType = CoreValidatorRefs[keyof CoreValidatorRefs];
 The final step is to put our generated data type properties union, and our validator function references union as generics for the `DataTypeReference` type which is the sole type we pass into the `DSLSchema` type instance:
 
 ```typescript
-export type DSLSchema = PlayerDSLSchema<
+export type MyWorkspaceDSLSchema = DSLSchema<
   DataTypeReference<DataTypeProp, ValidatorRef>
 >;
+```
+
+Finally this is how to use the schema: By adding the statement `satisfies` followed by your `DSLSchema` generated type, Typescript will show if there is anything not compliant with the data types and validation functions we defined in the schema:
+
+```typescript
+import { MyWorkspaceDSLSchema, dataRefs } from './MyTypes'
+
+const { BooleanTypeRef } = dataRefs
+
+const exampleSchema = {
+  myDataSet = {
+    firstPath: BooleanTypeRef
+    secondPath: {
+      /** To be able to define validator functions we need to elaborate the data reference object */
+      type: 'TextType',
+      validation: [
+        {
+          type: 'required',
+          message: 'This field is required'
+        }
+      ]
+    }
+  }
+} satisfies MyWorkspaceDSLSchema
 ```
