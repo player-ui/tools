@@ -1,4 +1,4 @@
-load("@aspect_rules_js//js:defs.bzl", "js_library")
+load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_library")
 load("@aspect_rules_js//npm:defs.bzl", "npm_package")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_config", "ts_project")
 load("@npm//:defs.bzl", "npm_link_all_packages")
@@ -131,4 +131,13 @@ npm_package(
     },
     verbose = True,
     visibility = ["//visibility:public"],
+)
+
+js_binary(
+    name = "cli.publish-2",
+    chdir = package_name() + "/cli",
+    data = [":cli"],
+    entry_point = "@aspect_rules_js//npm/private:npm_publish_mjs",
+    # required to make npm to be available in PATH
+    include_npm = True,
 )
