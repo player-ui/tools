@@ -123,14 +123,15 @@ eslint_test(
 
 npm_package(
     name = "cli",
-    srcs = [":player-cli-bundle"],
+    srcs = [
+        "README.md",
+        ":player-cli-bundle",
+    ],
     allow_overwrites = True,
-    hardlink = "off",
     package = "@player-tools/cli",
     replace_prefixes = {
         "player-cli-package_json": "package",
     },
-    verbose = True,
     visibility = ["//visibility:public"],
 )
 
