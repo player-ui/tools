@@ -62,7 +62,8 @@ ts_project(
             "src/**/*",
         ],
         exclude = [
-            "__tests__",
+            "**/__tests__/*",
+            "**/*.test.*",
         ],
     ),
     declaration = True,
@@ -102,7 +103,7 @@ js_library(
         ":player-cli-build",
         ":player-cli-manifest",
         ":player-cli-package_json",
-    ],
+    ] + glob(["bin/*"]),
     deps = dependencies,
 )
 
@@ -134,7 +135,7 @@ npm_package(
 )
 
 js_binary(
-    name = "cli.publish-2",
+    name = "cli.npm-publish",
     chdir = package_name() + "/cli",
     data = [":cli"],
     entry_point = "@aspect_rules_js//npm/private:npm_publish_mjs",

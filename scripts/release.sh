@@ -20,5 +20,5 @@ elif [ "$RELEASE_TYPE" == "release" ] && [ "$CURRENT_BRANCH" == "main" ]; then
 fi
 
 for pkg in $PKG_NPM_LABELS ; do
-  bazel run --config=release -- ${pkg}.publish --access public --tag ${NPM_TAG}
+  bazel run --config=release -- ${pkg}.npm-publish --access public --tag ${NPM_TAG}
 done
