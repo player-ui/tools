@@ -1,4 +1,4 @@
-load("@aspect_rules_js//js:defs.bzl", "js_library")
+load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_library")
 load("@aspect_rules_js//npm:defs.bzl", "npm_package")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_config", "ts_project")
 load("@npm//:defs.bzl", "npm_link_all_packages")
@@ -62,7 +62,8 @@ ts_project(
             "src/**/*",
         ],
         exclude = [
-            "__tests__",
+            "**/__tests__/*",
+            "**/*.test.*",
         ],
     ),
     declaration = True,
@@ -102,7 +103,7 @@ js_library(
         ":player-cli-build",
         ":player-cli-manifest",
         ":player-cli-package_json",
-    ],
+    ] + glob(["bin/*"]),
     deps = dependencies,
 )
 
@@ -121,11 +122,24 @@ eslint_test(
 )
 
 npm_package(
-    name = "player-cli-publish",
-    srcs = [":player-cli-bundle"],
+    name = "cli",
+    srcs = [
+        "README.md",
+        ":player-cli-bundle",
+    ],
+    allow_overwrites = True,
     package = "@player-tools/cli",
     replace_prefixes = {
         "player-cli-package_json": "package",
     },
     visibility = ["//visibility:public"],
+)
+
+js_binary(
+    name = "cli.npm-publish",
+    chdir = package_name() + "/cli",
+    data = [":cli"],
+    entry_point = "@aspect_rules_js//npm/private:npm_publish_mjs",
+    # required to make npm to be available in PATH
+    include_npm = True,
 )
