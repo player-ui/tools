@@ -1,13 +1,13 @@
-import React from 'react';
-import { FlameGraph } from 'react-flame-graph';
-import { ObjectInspector } from '@devtools-ds/object-inspector';
-import type { ProfilerNode } from '@player-tools/devtools-common';
-import styles from '../app.css';
+import React from "react";
+import { FlameGraph } from "react-flame-graph";
+import { ObjectInspector } from "@devtools-ds/object-inspector";
+import type { ProfilerNode } from "@player-tools/devtools-common";
+import styles from "../app.css";
 
 interface ProfilerProps {
-  profiler?: ProfilerNode;
-  onStart: () => void;
-  onStop: () => void;
+  readonly profiler?: ProfilerNode;
+  readonly onStart: () => void;
+  readonly onStop: () => void;
 }
 
 /**
@@ -17,12 +17,12 @@ interface ProfilerProps {
 export const Profiler = ({ profiler, onStart, onStop }: ProfilerProps) => (
   <div>
     <button type="button" onClick={onStart}>
-      {' '}
-      Start Profiler{' '}
+      {" "}
+      Start Profiler{" "}
     </button>
     <button type="button" onClick={onStop}>
-      {' '}
-      Stop Profiler{' '}
+      {" "}
+      Stop Profiler{" "}
     </button>
 
     {profiler?.value ? (

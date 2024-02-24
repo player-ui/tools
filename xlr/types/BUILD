@@ -1,6 +1,13 @@
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@rules_player//javascript:defs.bzl", "js_pipeline")
+load("//helpers:defs.bzl", "tsup_config", "vitest_config")
 
-load("//:index.bzl", "javascript_pipeline")
+npm_link_all_packages(name = "node_modules")
 
-javascript_pipeline(
-    name = "@player-tools/xlr"
+vitest_config(name = "vitest_config")
+
+tsup_config(name = "tsup_config")
+
+js_pipeline(
+    package_name = "@player-tools/xlr",
 )

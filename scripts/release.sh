@@ -3,7 +3,7 @@
 
 set -u -o pipefail
 
-readonly PKG_NPM_LABELS=`bazel query --output=label 'kind("pkg_npm rule", //...) - attr("tags", "\[.*do-not-publish.*\]", //...)'`
+readonly PKG_NPM_LABELS=`bazel query --output=label 'kind("npm_package rule", //...) - attr("tags", "\[.*do-not-publish.*\]", //...)'`
 NPM_TAG=canary
 
 # Called by auto -- `release` for normal releases or `snapshot` for canary/next.
@@ -20,5 +20,5 @@ elif [ "$RELEASE_TYPE" == "release" ] && [ "$CURRENT_BRANCH" == "main" ]; then
 fi
 
 for pkg in $PKG_NPM_LABELS ; do
-  bazel run --config=release -- ${pkg}.publish --access public --tag ${NPM_TAG}
+  bazel run --config=release -- ${pkg}.npm-publish --access public --tag ${NPM_TAG}
 done

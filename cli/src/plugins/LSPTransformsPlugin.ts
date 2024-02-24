@@ -1,6 +1,6 @@
-import type { PlayerLanguageService } from '@player-tools/json-language-service';
-import type { TransformFunction } from '@player-tools/xlr';
-import type { PlayerCLIPlugin } from './index';
+import type { PlayerLanguageService } from "@player-tools/json-language-service";
+import type { TransformFunction } from "@player-tools/xlr";
+import type { PlayerCLIPlugin } from "./index";
 
 /**
  * Handles adding XLR transforms to the LSP's XLR SDK

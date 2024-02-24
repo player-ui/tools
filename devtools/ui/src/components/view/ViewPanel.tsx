@@ -1,14 +1,14 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import type { View } from '@player-ui/types';
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import type { View } from "@player-ui/types";
 import {
   type StoreState,
   selectSelectedPlayerId,
   selectView,
   GET_VIEW_DETAILS,
-} from '@player-tools/devtools-client';
-import { ViewInspector } from './ViewInspector';
-import styles from '../app.css';
+} from "@player-tools/devtools-client";
+import { ViewInspector } from "./ViewInspector";
+import styles from "../app.css";
 
 /**
  * Displays the view panel for a player instance.

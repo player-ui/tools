@@ -1,22 +1,22 @@
-import React from 'react';
-import type { ObjectNode, PropertyNode } from 'react-json-reconciler';
-import mergeRefs from 'react-merge-refs';
-import type { View as ViewType } from '@player-ui/types';
-import type { PlayerApplicability, WithChildren } from './types';
+import React from "react";
+import type { ObjectNode, PropertyNode } from "react-json-reconciler";
+import mergeRefs from "react-merge-refs";
+import type { View as ViewType } from "@player-ui/types";
+import type { PlayerApplicability, WithChildren } from "./types";
 import {
   IDProvider,
   IDSuffixProvider,
   IndexSuffixStopContext,
   OptionalIDSuffixProvider,
   useGetIdPrefix,
-} from './auto-id';
+} from "./auto-id";
 import {
   normalizeText,
   normalizeToCollection,
   toJsonElement,
   toJsonProperties,
   flattenChildren,
-} from './utils';
+} from "./utils";
 
 export type AssetProps = PlayerApplicability & {
   /** id of the asset */
@@ -58,8 +58,8 @@ export const SlotContext = React.createContext<
  */
 export const AssetWrapper = React.forwardRef<
   ObjectNode,
-  WithChildren<{ [key: string]: any }>
->((props, ref) => {
+  WithChildren<{ [key: string]: unknown }>
+>(function AssetWrapper(props, ref) {
   const { children, ...rest } = props;
 
   return (
@@ -109,7 +109,7 @@ export const Asset = React.forwardRef<ObjectNode, AssetProps>((props, ref) => {
                 <property name="applicability">
                   <value
                     value={
-                      typeof applicability === 'boolean'
+                      typeof applicability === "boolean"
                         ? applicability
                         : applicability.toValue()
                     }
@@ -126,6 +126,8 @@ export const Asset = React.forwardRef<ObjectNode, AssetProps>((props, ref) => {
   );
 });
 
+Asset.displayName = "Asset";
+
 Asset.defaultProps = {
   id: undefined,
   children: undefined,
@@ -139,8 +141,8 @@ export const View = React.forwardRef<ObjectNode, AssetProps & ViewType>(
       <Asset ref={ref} {...rest}>
         {validation && (
           <property key="validation" name="validation">
-            {toJsonElement(validation, 'validation', {
-              propertiesToSkip: ['ref'],
+            {toJsonElement(validation, "validation", {
+              propertiesToSkip: ["ref"],
             })}
           </property>
         )}
@@ -149,6 +151,8 @@ export const View = React.forwardRef<ObjectNode, AssetProps & ViewType>(
     );
   }
 );
+
+View.displayName = "View";
 
 View.defaultProps = {
   id: undefined,
@@ -243,6 +247,7 @@ export function createSlot<SlotProps = unknown>(options: {
   /** A component to create a collection asset is we get an array but need a single element */
   CollectionComp?: React.ComponentType;
 }) {
+  // eslint-disable-next-line react/display-name
   return (
     props: {
       /** An object to include in this property */

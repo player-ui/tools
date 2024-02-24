@@ -1,24 +1,24 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Complex Types Exclude with objects 1`] = `
-Array [
-  Object {
+exports[`Complex Types > Exclude with objects 1`] = `
+[
+  {
     "genericTokens": undefined,
     "name": "foo",
-    "or": Array [
-      Object {
+    "or": [
+      {
         "additionalProperties": false,
-        "properties": Object {
-          "type": Object {
-            "node": Object {
+        "properties": {
+          "type": {
+            "node": {
               "const": "b",
               "title": "foo.type",
               "type": "string",
             },
             "required": true,
           },
-          "value": Object {
-            "node": Object {
+          "value": {
+            "node": {
               "title": "foo.value",
               "type": "number",
             },
@@ -28,19 +28,19 @@ Array [
         "title": "foo",
         "type": "object",
       },
-      Object {
+      {
         "additionalProperties": false,
-        "properties": Object {
-          "type": Object {
-            "node": Object {
+        "properties": {
+          "type": {
+            "node": {
               "const": "c",
               "title": "foo.type",
               "type": "string",
             },
             "required": true,
           },
-          "value": Object {
-            "node": Object {
+          "value": {
+            "node": {
               "title": "foo.value",
               "type": "boolean",
             },
@@ -58,23 +58,23 @@ Array [
 ]
 `;
 
-exports[`Complex Types Exclude with objects collapses single remaining element 1`] = `
-Array [
-  Object {
+exports[`Complex Types > Exclude with objects collapses single remaining element 1`] = `
+[
+  {
     "additionalProperties": false,
     "genericTokens": undefined,
     "name": "bar",
-    "properties": Object {
-      "type": Object {
-        "node": Object {
+    "properties": {
+      "type": {
+        "node": {
           "const": "b",
           "title": "foo.type",
           "type": "string",
         },
         "required": true,
       },
-      "value": Object {
-        "node": Object {
+      "value": {
+        "node": {
           "title": "foo.value",
           "type": "number",
         },
@@ -88,17 +88,17 @@ Array [
 ]
 `;
 
-exports[`Complex Types Exclude with primitives 1`] = `
-Array [
-  Object {
+exports[`Complex Types > Exclude with primitives 1`] = `
+[
+  {
     "genericTokens": undefined,
     "name": "fooType",
-    "or": Array [
-      Object {
+    "or": [
+      {
         "const": "b",
         "type": "string",
       },
-      Object {
+      {
         "const": "c",
         "type": "string",
       },
@@ -110,15 +110,15 @@ Array [
 ]
 `;
 
-exports[`Complex Types Omit 1`] = `
-Array [
-  Object {
+exports[`Complex Types > Omit 1`] = `
+[
+  {
     "additionalProperties": false,
     "genericTokens": undefined,
     "name": "foo",
-    "properties": Object {
-      "bax": Object {
-        "node": Object {
+    "properties": {
+      "bax": {
+        "node": {
           "title": "foo.bax",
           "type": "number",
         },
@@ -132,17 +132,17 @@ Array [
 ]
 `;
 
-exports[`Complex Types Omit with type intersection 1`] = `
-Array [
-  Object {
-    "and": Array [
-      Object {
+exports[`Complex Types > Omit with type intersection 1`] = `
+[
+  {
+    "and": [
+      {
         "additionalProperties": false,
         "genericTokens": undefined,
         "name": "foo",
-        "properties": Object {
-          "fax": Object {
-            "node": Object {
+        "properties": {
+          "fax": {
+            "node": {
               "title": "foo.fax",
               "type": "number",
             },
@@ -153,13 +153,13 @@ Array [
         "title": "foo",
         "type": "object",
       },
-      Object {
+      {
         "additionalProperties": false,
         "genericTokens": undefined,
         "name": "boo",
-        "properties": Object {
-          "bax": Object {
-            "node": Object {
+        "properties": {
+          "bax": {
+            "node": {
               "title": "boo.bax",
               "type": "boolean",
             },
@@ -180,26 +180,26 @@ Array [
 ]
 `;
 
-exports[`Complex Types Omit with type union 1`] = `
-Array [
-  Object {
+exports[`Complex Types > Omit with type union 1`] = `
+[
+  {
     "genericTokens": undefined,
     "name": "test",
-    "or": Array [
-      Object {
+    "or": [
+      {
         "additionalProperties": false,
         "genericTokens": undefined,
         "name": "foo",
-        "properties": Object {
-          "far": Object {
-            "node": Object {
+        "properties": {
+          "far": {
+            "node": {
               "title": "foo.far",
               "type": "string",
             },
             "required": true,
           },
-          "fax": Object {
-            "node": Object {
+          "fax": {
+            "node": {
               "title": "foo.fax",
               "type": "number",
             },
@@ -210,13 +210,13 @@ Array [
         "title": "foo",
         "type": "object",
       },
-      Object {
+      {
         "additionalProperties": false,
         "genericTokens": undefined,
         "name": "boo",
-        "properties": Object {
-          "far": Object {
-            "node": Object {
+        "properties": {
+          "far": {
+            "node": {
               "title": "boo.far",
               "type": "string",
             },
@@ -235,15 +235,15 @@ Array [
 ]
 `;
 
-exports[`Complex Types Pick 1`] = `
-Array [
-  Object {
+exports[`Complex Types > Pick 1`] = `
+[
+  {
     "additionalProperties": false,
     "genericTokens": undefined,
     "name": "foo",
-    "properties": Object {
-      "bar": Object {
-        "node": Object {
+    "properties": {
+      "bar": {
+        "node": {
           "title": "foo.bar",
           "type": "string",
         },
@@ -257,19 +257,19 @@ Array [
 ]
 `;
 
-exports[`Complex Types Pick with interface intersection 1`] = `
-Array [
-  Object {
+exports[`Complex Types > Pick with interface intersection 1`] = `
+[
+  {
     "genericTokens": undefined,
     "name": "test",
-    "or": Array [
-      Object {
+    "or": [
+      {
         "additionalProperties": false,
         "genericTokens": undefined,
         "name": "foo",
-        "properties": Object {
-          "far": Object {
-            "node": Object {
+        "properties": {
+          "far": {
+            "node": {
               "title": "foo.far",
               "type": "string",
             },
@@ -280,13 +280,13 @@ Array [
         "title": "foo",
         "type": "object",
       },
-      Object {
+      {
         "additionalProperties": false,
         "genericTokens": undefined,
         "name": "boo",
-        "properties": Object {
-          "far": Object {
-            "node": Object {
+        "properties": {
+          "far": {
+            "node": {
               "title": "boo.far",
               "type": "string",
             },
@@ -305,19 +305,19 @@ Array [
 ]
 `;
 
-exports[`Complex Types Pick with interface union 1`] = `
-Array [
-  Object {
+exports[`Complex Types > Pick with interface union 1`] = `
+[
+  {
     "genericTokens": undefined,
     "name": "test",
-    "or": Array [
-      Object {
+    "or": [
+      {
         "additionalProperties": false,
         "genericTokens": undefined,
         "name": "foo",
-        "properties": Object {
-          "far": Object {
-            "node": Object {
+        "properties": {
+          "far": {
+            "node": {
               "title": "foo.far",
               "type": "string",
             },
@@ -328,13 +328,13 @@ Array [
         "title": "foo",
         "type": "object",
       },
-      Object {
+      {
         "additionalProperties": false,
         "genericTokens": undefined,
         "name": "boo",
-        "properties": Object {
-          "far": Object {
-            "node": Object {
+        "properties": {
+          "far": {
+            "node": {
               "title": "boo.far",
               "type": "number",
             },
@@ -353,23 +353,23 @@ Array [
 ]
 `;
 
-exports[`Edge Cases Modifying Cache References 1`] = `
-Array [
-  Object {
-    "and": Array [
-      Object {
-        "and": Array [
-          Object {
+exports[`Edge Cases > Modifying Cache References 1`] = `
+[
+  {
+    "and": [
+      {
+        "and": [
+          {
             "genericTokens": undefined,
             "name": "types",
-            "or": Array [
-              Object {
+            "or": [
+              {
                 "additionalProperties": false,
                 "genericTokens": undefined,
                 "name": "foo",
-                "properties": Object {
-                  "foo": Object {
-                    "node": Object {
+                "properties": {
+                  "foo": {
+                    "node": {
                       "title": "foo.foo",
                       "type": "string",
                     },
@@ -380,13 +380,13 @@ Array [
                 "title": "foo",
                 "type": "object",
               },
-              Object {
+              {
                 "additionalProperties": false,
                 "genericTokens": undefined,
                 "name": "bar",
-                "properties": Object {
-                  "bar": Object {
-                    "node": Object {
+                "properties": {
+                  "bar": {
+                    "node": {
                       "title": "bar.bar",
                       "type": "number",
                     },
@@ -402,11 +402,11 @@ Array [
             "title": "types",
             "type": "or",
           },
-          Object {
+          {
             "additionalProperties": false,
-            "properties": Object {
-              "baz": Object {
-                "node": Object {
+            "properties": {
+              "baz": {
+                "node": {
                   "title": "baz",
                   "type": "number",
                 },
@@ -422,11 +422,11 @@ Array [
         "title": "requiredTypes",
         "type": "and",
       },
-      Object {
+      {
         "additionalProperties": false,
-        "properties": Object {
-          "baz": Object {
-            "node": Object {
+        "properties": {
+          "baz": {
+            "node": {
               "title": "baz",
               "type": "number",
             },
@@ -445,27 +445,27 @@ Array [
 ]
 `;
 
-exports[`Generic Declarations Basic Generic Type 1`] = `
-Array [
-  Object {
-    "genericTokens": Array [
-      Object {
-        "constraints": Object {
+exports[`Generic Declarations > Basic Generic Type 1`] = `
+[
+  {
+    "genericTokens": [
+      {
+        "constraints": {
           "type": "any",
         },
-        "default": Object {
+        "default": {
           "type": "any",
         },
         "symbol": "T",
       },
     ],
     "name": "Foo",
-    "or": Array [
-      Object {
+    "or": [
+      {
         "title": "Foo",
         "type": "string",
       },
-      Object {
+      {
         "ref": "T",
         "title": "Foo",
         "type": "ref",
@@ -478,27 +478,27 @@ Array [
 ]
 `;
 
-exports[`Generic Declarations Generic with Constraints 1`] = `
-Array [
-  Object {
-    "genericTokens": Array [
-      Object {
-        "constraints": Object {
+exports[`Generic Declarations > Generic with Constraints 1`] = `
+[
+  {
+    "genericTokens": [
+      {
+        "constraints": {
           "type": "string",
         },
-        "default": Object {
+        "default": {
           "type": "string",
         },
         "symbol": "T",
       },
     ],
     "name": "Foo",
-    "or": Array [
-      Object {
+    "or": [
+      {
         "title": "Foo",
         "type": "number",
       },
-      Object {
+      {
         "ref": "T",
         "title": "Foo",
         "type": "ref",
@@ -511,35 +511,35 @@ Array [
 ]
 `;
 
-exports[`Generic Declarations Implementing Generic Type 1`] = `
-Array [
-  Object {
+exports[`Generic Declarations > Implementing Generic Type 1`] = `
+[
+  {
     "genericTokens": undefined,
     "name": "Bar",
-    "or": Array [
-      Object {
+    "or": [
+      {
         "title": "Bar",
         "type": "boolean",
       },
-      Object {
-        "genericTokens": Array [
-          Object {
-            "constraints": Object {
+      {
+        "genericTokens": [
+          {
+            "constraints": {
               "type": "any",
             },
-            "default": Object {
+            "default": {
               "type": "any",
             },
             "symbol": "T",
           },
         ],
         "name": "Foo",
-        "or": Array [
-          Object {
+        "or": [
+          {
             "title": "Foo",
             "type": "string",
           },
-          Object {
+          {
             "title": "Foo",
             "type": "number",
           },
@@ -556,24 +556,24 @@ Array [
 ]
 `;
 
-exports[`Generic Declarations Implementing Interface with Generics 1`] = `Array []`;
+exports[`Generic Declarations > Implementing Interface with Generics 1`] = `[]`;
 
-exports[`Generic Declarations Implementing an generic wrapped interface 1`] = `
-Array [
-  Object {
+exports[`Generic Declarations > Implementing an generic wrapped interface 1`] = `
+[
+  {
     "additionalProperties": false,
     "genericTokens": undefined,
     "name": "Test",
-    "properties": Object {
-      "bar": Object {
-        "node": Object {
+    "properties": {
+      "bar": {
+        "node": {
           "title": "base.bar",
           "type": "string",
         },
         "required": true,
       },
-      "test": Object {
-        "node": Object {
+      "test": {
+        "node": {
           "title": "Test.test",
           "type": "any",
         },
@@ -587,25 +587,25 @@ Array [
 ]
 `;
 
-exports[`Generic Declarations Interface with Generics 1`] = `
-Array [
-  Object {
+exports[`Generic Declarations > Interface with Generics 1`] = `
+[
+  {
     "additionalProperties": false,
-    "genericTokens": Array [
-      Object {
-        "constraints": Object {
+    "genericTokens": [
+      {
+        "constraints": {
           "type": "any",
         },
-        "default": Object {
+        "default": {
           "type": "any",
         },
         "symbol": "T",
       },
     ],
     "name": "Foo",
-    "properties": Object {
-      "bar": Object {
-        "node": Object {
+    "properties": {
+      "bar": {
+        "node": {
           "ref": "T",
           "title": "Foo.bar",
           "type": "ref",
@@ -620,25 +620,25 @@ Array [
 ]
 `;
 
-exports[`Generic Declarations Interface with Generics and Constraints 1`] = `
-Array [
-  Object {
+exports[`Generic Declarations > Interface with Generics and Constraints 1`] = `
+[
+  {
     "additionalProperties": false,
-    "genericTokens": Array [
-      Object {
-        "constraints": Object {
+    "genericTokens": [
+      {
+        "constraints": {
           "type": "string",
         },
-        "default": Object {
+        "default": {
           "type": "string",
         },
         "symbol": "T",
       },
     ],
     "name": "Foo",
-    "properties": Object {
-      "bar": Object {
-        "node": Object {
+    "properties": {
+      "bar": {
+        "node": {
           "ref": "T",
           "title": "Foo.bar",
           "type": "ref",
@@ -653,15 +653,15 @@ Array [
 ]
 `;
 
-exports[`Index Types Basic 1`] = `
-Array [
-  Object {
+exports[`Index Types > Basic 1`] = `
+[
+  {
     "additionalProperties": false,
     "genericTokens": undefined,
     "name": "test",
-    "properties": Object {
-      "key": Object {
-        "node": Object {
+    "properties": {
+      "key": {
+        "node": {
           "title": "test.key",
           "type": "string",
         },
@@ -675,28 +675,28 @@ Array [
 ]
 `;
 
-exports[`Index Types Complex Types 1`] = `
-Array [
-  Object {
+exports[`Index Types > Complex Types 1`] = `
+[
+  {
     "additionalProperties": false,
     "genericTokens": undefined,
     "name": "test",
-    "properties": Object {
-      "key": Object {
-        "node": Object {
+    "properties": {
+      "key": {
+        "node": {
           "additionalProperties": false,
           "genericTokens": undefined,
           "name": "something",
-          "properties": Object {
-            "prop1": Object {
-              "node": Object {
+          "properties": {
+            "prop1": {
+              "node": {
                 "title": "something.prop1",
                 "type": "string",
               },
               "required": true,
             },
-            "prop2": Object {
-              "node": Object {
+            "prop2": {
+              "node": {
                 "title": "something.prop2",
                 "type": "number",
               },
@@ -717,22 +717,22 @@ Array [
 ]
 `;
 
-exports[`Interface Exports Basic Interface Type 1`] = `
-Array [
-  Object {
+exports[`Interface Exports > Basic Interface Type 1`] = `
+[
+  {
     "additionalProperties": false,
     "genericTokens": undefined,
     "name": "Foo",
-    "properties": Object {
-      "bar": Object {
-        "node": Object {
+    "properties": {
+      "bar": {
+        "node": {
           "title": "Foo.bar",
           "type": "string",
         },
         "required": true,
       },
-      "bax": Object {
-        "node": Object {
+      "bax": {
+        "node": {
           "title": "Foo.bax",
           "type": "number",
         },
@@ -746,29 +746,29 @@ Array [
 ]
 `;
 
-exports[`Interface Exports Implementing more than one Interfaces 1`] = `
-Array [
-  Object {
+exports[`Interface Exports > Implementing more than one Interfaces 1`] = `
+[
+  {
     "additionalProperties": false,
     "genericTokens": undefined,
     "name": "Test",
-    "properties": Object {
-      "bar": Object {
-        "node": Object {
+    "properties": {
+      "bar": {
+        "node": {
           "title": "Bar.bar",
           "type": "string",
         },
         "required": true,
       },
-      "foo": Object {
-        "node": Object {
+      "foo": {
+        "node": {
           "title": "Foo.foo",
           "type": "number",
         },
         "required": true,
       },
-      "test": Object {
-        "node": Object {
+      "test": {
+        "node": {
           "title": "Test.test",
           "type": "any",
         },
@@ -782,29 +782,29 @@ Array [
 ]
 `;
 
-exports[`Interface Exports Interface with Inheritance 1`] = `
-Array [
-  Object {
+exports[`Interface Exports > Interface with Inheritance 1`] = `
+[
+  {
     "additionalProperties": false,
     "genericTokens": undefined,
     "name": "Foo",
-    "properties": Object {
-      "bar": Object {
-        "node": Object {
+    "properties": {
+      "bar": {
+        "node": {
           "title": "Foo.bar",
           "type": "string",
         },
         "required": true,
       },
-      "baw": Object {
-        "node": Object {
+      "baw": {
+        "node": {
           "title": "Base.baw",
           "type": "any",
         },
         "required": true,
       },
-      "bax": Object {
-        "node": Object {
+      "bax": {
+        "node": {
           "title": "Foo.bax",
           "type": "number",
         },
@@ -818,22 +818,22 @@ Array [
 ]
 `;
 
-exports[`Interface Exports Interface with Optional parameters 1`] = `
-Array [
-  Object {
+exports[`Interface Exports > Interface with Optional parameters 1`] = `
+[
+  {
     "additionalProperties": false,
     "genericTokens": undefined,
     "name": "Foo",
-    "properties": Object {
-      "bar": Object {
-        "node": Object {
+    "properties": {
+      "bar": {
+        "node": {
           "title": "Foo.bar",
           "type": "string",
         },
         "required": true,
       },
-      "bax": Object {
-        "node": Object {
+      "bax": {
+        "node": {
           "title": "Foo.bax",
           "type": "number",
         },
@@ -847,9 +847,9 @@ Array [
 ]
 `;
 
-exports[`String Templates Basic 1`] = `
-Array [
-  Object {
+exports[`String Templates > Basic 1`] = `
+[
+  {
     "format": "String is a .*, number is a [0-9]* and boolean is a true|false",
     "genericTokens": undefined,
     "name": "Bar",
@@ -860,9 +860,9 @@ Array [
 ]
 `;
 
-exports[`String Templates Type References 1`] = `
-Array [
-  Object {
+exports[`String Templates > Type References 1`] = `
+[
+  {
     "format": "String is a .*, number is a [0-9]* and boolean is a true|false",
     "genericTokens": undefined,
     "name": "Bar",
@@ -873,10 +873,10 @@ Array [
 ]
 `;
 
-exports[`Type Exports Basic Array Type 1`] = `
-Array [
-  Object {
-    "elementType": Object {
+exports[`Type Exports > Basic Array Type 1`] = `
+[
+  {
+    "elementType": {
       "type": "string",
     },
     "genericTokens": undefined,
@@ -888,17 +888,17 @@ Array [
 ]
 `;
 
-exports[`Type Exports Basic Union Type 1`] = `
-Array [
-  Object {
+exports[`Type Exports > Basic Union Type 1`] = `
+[
+  {
     "genericTokens": undefined,
     "name": "Foo",
-    "or": Array [
-      Object {
+    "or": [
+      {
         "title": "Foo",
         "type": "number",
       },
-      Object {
+      {
         "title": "Foo",
         "type": "string",
       },
@@ -910,241 +910,241 @@ Array [
 ]
 `;
 
-exports[`Type with typeof Indexing (long) 1`] = `
-Array [
-  Object {
+exports[`Type with typeof > Indexing (long) 1`] = `
+[
+  {
     "genericTokens": undefined,
     "name": "options",
-    "or": Array [
-      Object {
+    "or": [
+      {
         "const": 1,
         "type": "number",
       },
-      Object {
+      {
         "const": 2,
         "type": "number",
       },
-      Object {
+      {
         "const": 3,
         "type": "number",
       },
-      Object {
+      {
         "const": 4,
         "type": "number",
       },
-      Object {
+      {
         "const": 5,
         "type": "number",
       },
-      Object {
+      {
         "const": 6,
         "type": "number",
       },
-      Object {
+      {
         "const": 7,
         "type": "number",
       },
-      Object {
+      {
         "const": 8,
         "type": "number",
       },
-      Object {
+      {
         "const": 9,
         "type": "number",
       },
-      Object {
+      {
         "const": 10,
         "type": "number",
       },
-      Object {
+      {
         "const": 11,
         "type": "number",
       },
-      Object {
+      {
         "const": 12,
         "type": "number",
       },
-      Object {
+      {
         "const": 13,
         "type": "number",
       },
-      Object {
+      {
         "const": 14,
         "type": "number",
       },
-      Object {
+      {
         "const": 15,
         "type": "number",
       },
-      Object {
+      {
         "const": 16,
         "type": "number",
       },
-      Object {
+      {
         "const": 17,
         "type": "number",
       },
-      Object {
+      {
         "const": 18,
         "type": "number",
       },
-      Object {
+      {
         "const": 19,
         "type": "number",
       },
-      Object {
+      {
         "const": 20,
         "type": "number",
       },
-      Object {
+      {
         "const": 21,
         "type": "number",
       },
-      Object {
+      {
         "const": 22,
         "type": "number",
       },
-      Object {
+      {
         "const": 23,
         "type": "number",
       },
-      Object {
+      {
         "const": 24,
         "type": "number",
       },
-      Object {
+      {
         "const": 25,
         "type": "number",
       },
-      Object {
+      {
         "const": 26,
         "type": "number",
       },
-      Object {
+      {
         "const": 27,
         "type": "number",
       },
-      Object {
+      {
         "const": 28,
         "type": "number",
       },
-      Object {
+      {
         "const": 29,
         "type": "number",
       },
-      Object {
+      {
         "const": 30,
         "type": "number",
       },
-      Object {
+      {
         "const": 31,
         "type": "number",
       },
-      Object {
+      {
         "const": 32,
         "type": "number",
       },
-      Object {
+      {
         "const": 33,
         "type": "number",
       },
-      Object {
+      {
         "const": 34,
         "type": "number",
       },
-      Object {
+      {
         "const": 35,
         "type": "number",
       },
-      Object {
+      {
         "const": 36,
         "type": "number",
       },
-      Object {
+      {
         "const": 37,
         "type": "number",
       },
-      Object {
+      {
         "const": 38,
         "type": "number",
       },
-      Object {
+      {
         "const": 39,
         "type": "number",
       },
-      Object {
+      {
         "const": 40,
         "type": "number",
       },
-      Object {
+      {
         "const": 41,
         "type": "number",
       },
-      Object {
+      {
         "const": 42,
         "type": "number",
       },
-      Object {
+      {
         "const": 43,
         "type": "number",
       },
-      Object {
+      {
         "const": 44,
         "type": "number",
       },
-      Object {
+      {
         "const": 45,
         "type": "number",
       },
-      Object {
+      {
         "const": 46,
         "type": "number",
       },
-      Object {
+      {
         "const": 47,
         "type": "number",
       },
-      Object {
+      {
         "const": 48,
         "type": "number",
       },
-      Object {
+      {
         "const": 49,
         "type": "number",
       },
-      Object {
+      {
         "const": 50,
         "type": "number",
       },
-      Object {
+      {
         "const": 51,
         "type": "number",
       },
-      Object {
+      {
         "const": 52,
         "type": "number",
       },
-      Object {
+      {
         "const": 53,
         "type": "number",
       },
-      Object {
+      {
         "const": 54,
         "type": "number",
       },
-      Object {
+      {
         "const": 55,
         "type": "number",
       },
-      Object {
+      {
         "const": 56,
         "type": "number",
       },
-      Object {
+      {
         "const": 57,
         "type": "number",
       },
-      Object {
+      {
         "const": 58,
         "type": "number",
       },
@@ -1156,21 +1156,21 @@ Array [
 ]
 `;
 
-exports[`Type with typeof Indexing 1`] = `
-Array [
-  Object {
+exports[`Type with typeof > Indexing 1`] = `
+[
+  {
     "genericTokens": undefined,
     "name": "options",
-    "or": Array [
-      Object {
+    "or": [
+      {
         "const": "one",
         "type": "string",
       },
-      Object {
+      {
         "const": "two",
         "type": "string",
       },
-      Object {
+      {
         "const": "three",
         "type": "string",
       },
@@ -1182,34 +1182,34 @@ Array [
 ]
 `;
 
-exports[`Variable Exports Aliased Arrow function exports its own name 1`] = `
-Array [
-  Object {
+exports[`Variable Exports > Aliased Arrow function exports its own name 1`] = `
+[
+  {
     "name": "foo",
-    "parameters": Array [
-      Object {
+    "parameters": [
+      {
         "default": undefined,
         "name": "input",
         "optional": undefined,
-        "type": Object {
+        "type": {
           "type": "number",
         },
       },
     ],
-    "returnType": Object {
+    "returnType": {
       "additionalProperties": false,
       "genericTokens": undefined,
       "name": "Bar",
-      "properties": Object {
-        "foo": Object {
-          "node": Object {
+      "properties": {
+        "foo": {
+          "node": {
             "title": "Bar.foo",
             "type": "string",
           },
           "required": true,
         },
-        "fuz": Object {
-          "node": Object {
+        "fuz": {
+          "node": {
             "title": "Bar.fuz",
             "type": "number",
           },
@@ -1223,32 +1223,32 @@ Array [
     "source": "filename.ts",
     "type": "function",
   },
-  Object {
+  {
     "name": "baz",
-    "parameters": Array [
-      Object {
+    "parameters": [
+      {
         "default": undefined,
         "name": "input",
         "optional": undefined,
-        "type": Object {
+        "type": {
           "type": "number",
         },
       },
     ],
-    "returnType": Object {
+    "returnType": {
       "additionalProperties": false,
       "genericTokens": undefined,
       "name": "Bar",
-      "properties": Object {
-        "foo": Object {
-          "node": Object {
+      "properties": {
+        "foo": {
+          "node": {
             "title": "Bar.foo",
             "type": "string",
           },
           "required": true,
         },
-        "fuz": Object {
-          "node": Object {
+        "fuz": {
+          "node": {
             "title": "Bar.fuz",
             "type": "number",
           },
@@ -1265,22 +1265,22 @@ Array [
 ]
 `;
 
-exports[`Variable Exports Aliased variable 1`] = `
-Array [
-  Object {
+exports[`Variable Exports > Aliased variable 1`] = `
+[
+  {
     "additionalProperties": false,
     "genericTokens": undefined,
     "name": "Bar",
-    "properties": Object {
-      "foo": Object {
-        "node": Object {
+    "properties": {
+      "foo": {
+        "node": {
           "title": "Bar.foo",
           "type": "string",
         },
         "required": true,
       },
-      "fuz": Object {
-        "node": Object {
+      "fuz": {
+        "node": {
           "title": "Bar.fuz",
           "type": "number",
         },
@@ -1294,24 +1294,24 @@ Array [
 ]
 `;
 
-exports[`Variable Exports Array const exports 1`] = `
-Array [
-  Object {
-    "const": Array [
-      Object {
+exports[`Variable Exports > Array const exports 1`] = `
+[
+  {
+    "const": [
+      {
         "const": 1,
         "type": "number",
       },
-      Object {
+      {
         "const": 2,
         "type": "number",
       },
-      Object {
+      {
         "const": 3,
         "type": "number",
       },
     ],
-    "elementType": Object {
+    "elementType": {
       "type": "any",
     },
     "name": "foo",
@@ -1321,28 +1321,28 @@ Array [
 ]
 `;
 
-exports[`Variable Exports Array const exports with spread 1`] = `
-Array [
-  Object {
-    "const": Array [
-      Object {
+exports[`Variable Exports > Array const exports with spread 1`] = `
+[
+  {
+    "const": [
+      {
         "const": 1,
         "type": "number",
       },
-      Object {
+      {
         "const": 2,
         "type": "number",
       },
-      Object {
+      {
         "const": 3,
         "type": "number",
       },
-      Object {
+      {
         "const": 4,
         "type": "number",
       },
     ],
-    "elementType": Object {
+    "elementType": {
       "type": "any",
     },
     "name": "bar",
@@ -1352,25 +1352,25 @@ Array [
 ]
 `;
 
-exports[`Variable Exports Arrow function with object return type 1`] = `
-Array [
-  Object {
+exports[`Variable Exports > Arrow function with object return type 1`] = `
+[
+  {
     "name": "foo",
-    "parameters": Array [],
-    "returnType": Object {
+    "parameters": [],
+    "returnType": {
       "additionalProperties": false,
       "genericTokens": undefined,
       "name": "Bar",
-      "properties": Object {
-        "foo": Object {
-          "node": Object {
+      "properties": {
+        "foo": {
+          "node": {
             "title": "Bar.foo",
             "type": "string",
           },
           "required": true,
         },
-        "fuz": Object {
-          "node": Object {
+        "fuz": {
+          "node": {
             "title": "Bar.fuz",
             "type": "number",
           },
@@ -1387,34 +1387,34 @@ Array [
 ]
 `;
 
-exports[`Variable Exports Arrow function with parameters 1`] = `
-Array [
-  Object {
+exports[`Variable Exports > Arrow function with parameters 1`] = `
+[
+  {
     "name": "foo",
-    "parameters": Array [
-      Object {
+    "parameters": [
+      {
         "default": undefined,
         "name": "input",
         "optional": undefined,
-        "type": Object {
+        "type": {
           "type": "number",
         },
       },
     ],
-    "returnType": Object {
+    "returnType": {
       "additionalProperties": false,
       "genericTokens": undefined,
       "name": "Bar",
-      "properties": Object {
-        "foo": Object {
-          "node": Object {
+      "properties": {
+        "foo": {
+          "node": {
             "title": "Bar.foo",
             "type": "string",
           },
           "required": true,
         },
-        "fuz": Object {
-          "node": Object {
+        "fuz": {
+          "node": {
             "title": "Bar.fuz",
             "type": "number",
           },
@@ -1431,22 +1431,22 @@ Array [
 ]
 `;
 
-exports[`Variable Exports Function with object return type 1`] = `
-Array [
-  Object {
+exports[`Variable Exports > Function with object return type 1`] = `
+[
+  {
     "additionalProperties": false,
     "genericTokens": undefined,
     "name": "Bar",
-    "properties": Object {
-      "foo": Object {
-        "node": Object {
+    "properties": {
+      "foo": {
+        "node": {
           "title": "Bar.foo",
           "type": "string",
         },
         "required": true,
       },
-      "fuz": Object {
-        "node": Object {
+      "fuz": {
+        "node": {
           "title": "Bar.fuz",
           "type": "number",
         },
@@ -1460,9 +1460,9 @@ Array [
 ]
 `;
 
-exports[`Variable Exports Function with primitive return type 1`] = `
-Array [
-  Object {
+exports[`Variable Exports > Function with primitive return type 1`] = `
+[
+  {
     "name": "foo",
     "source": "filename.ts",
     "type": "string",
@@ -1470,28 +1470,28 @@ Array [
 ]
 `;
 
-exports[`Variable Exports Object const exports 1`] = `
-Array [
-  Object {
+exports[`Variable Exports > Object const exports 1`] = `
+[
+  {
     "additionalProperties": false,
     "name": "foo",
-    "properties": Object {
-      "bar": Object {
-        "node": Object {
+    "properties": {
+      "bar": {
+        "node": {
           "const": "test",
           "type": "string",
         },
         "required": true,
       },
-      "far": Object {
-        "node": Object {
+      "far": {
+        "node": {
           "const": false,
           "type": "boolean",
         },
         "required": true,
       },
-      "foo": Object {
-        "node": Object {
+      "foo": {
+        "node": {
           "const": 1,
           "type": "number",
         },
@@ -1504,35 +1504,35 @@ Array [
 ]
 `;
 
-exports[`Variable Exports Object const exports with spread 1`] = `
-Array [
-  Object {
+exports[`Variable Exports > Object const exports with spread 1`] = `
+[
+  {
     "additionalProperties": false,
     "name": "far",
-    "properties": Object {
-      "bar": Object {
-        "node": Object {
+    "properties": {
+      "bar": {
+        "node": {
           "const": "test",
           "type": "string",
         },
         "required": true,
       },
-      "far": Object {
-        "node": Object {
+      "far": {
+        "node": {
           "const": false,
           "type": "boolean",
         },
         "required": true,
       },
-      "foo": Object {
-        "node": Object {
+      "foo": {
+        "node": {
           "const": 1,
           "type": "number",
         },
         "required": true,
       },
-      "mar": Object {
-        "node": Object {
+      "mar": {
+        "node": {
           "const": 2,
           "type": "number",
         },
@@ -1545,21 +1545,21 @@ Array [
 ]
 `;
 
-exports[`Variable Exports Primitive const exports 1`] = `
-Array [
-  Object {
+exports[`Variable Exports > Primitive const exports 1`] = `
+[
+  {
     "const": 1,
     "name": "foo",
     "source": "filename.ts",
     "type": "number",
   },
-  Object {
+  {
     "const": "test",
     "name": "bar",
     "source": "filename.ts",
     "type": "string",
   },
-  Object {
+  {
     "const": true,
     "name": "far",
     "source": "filename.ts",
@@ -1568,22 +1568,22 @@ Array [
 ]
 `;
 
-exports[`Variable Exports gets named tuple members 1`] = `
-Array [
-  Object {
+exports[`Variable Exports > gets named tuple members 1`] = `
+[
+  {
     "additionalItems": false,
-    "elementTypes": Array [
-      Object {
+    "elementTypes": [
+      {
         "name": "argName",
         "optional": undefined,
-        "type": Object {
+        "type": {
           "type": "string",
         },
       },
-      Object {
+      {
         "name": "argValue",
         "optional": undefined,
-        "type": Object {
+        "type": {
           "type": "string",
         },
       },
@@ -1598,22 +1598,22 @@ Array [
 ]
 `;
 
-exports[`Variable Exports named tuples in generics 1`] = `
-Array [
-  Object {
+exports[`Variable Exports > named tuples in generics 1`] = `
+[
+  {
     "additionalItems": false,
-    "elementTypes": Array [
-      Object {
+    "elementTypes": [
+      {
         "name": "argName",
         "optional": undefined,
-        "type": Object {
+        "type": {
           "type": "string",
         },
       },
-      Object {
+      {
         "name": "argValue",
         "optional": undefined,
-        "type": Object {
+        "type": {
           "type": "string",
         },
       },

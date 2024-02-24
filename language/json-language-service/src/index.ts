@@ -1,15 +1,15 @@
 import type {
   Range as JSONRange,
   FormattingOptions as JSONFormattingOptions,
-} from 'jsonc-parser';
-import { format as formatJSON } from 'jsonc-parser';
-import type { TextDocument } from 'vscode-languageserver-textdocument';
+} from "jsonc-parser";
+import { format as formatJSON } from "jsonc-parser";
+import type { TextDocument } from "vscode-languageserver-textdocument";
 import {
   AsyncParallelHook,
   SyncBailHook,
   SyncHook,
   SyncWaterfallHook,
-} from 'tapable-ts';
+} from "tapable-ts";
 import type {
   CodeAction,
   CodeActionContext,
@@ -19,15 +19,15 @@ import type {
   Hover,
   Position,
   Location,
-} from 'vscode-languageserver-types';
+} from "vscode-languageserver-types";
 import {
   CompletionList,
   Range,
   TextEdit,
   CodeActionKind,
-} from 'vscode-languageserver-types';
+} from "vscode-languageserver-types";
 
-import type { TransformFunction } from '@player-tools/xlr';
+import type { TransformFunction } from "@player-tools/xlr";
 import type {
   DocumentContext,
   ValidationContext,
@@ -35,20 +35,21 @@ import type {
   EnhancedDocumentContextWithPosition,
   Violation,
   ASTVisitor,
-} from './types';
-import { DEFAULT_FILTERS, PLUGINS, TRANSFORM_FUNCTIONS } from './constants';
+} from "./types";
+import { DEFAULT_FILTERS, PLUGINS, TRANSFORM_FUNCTIONS } from "./constants";
 
-import type { ASTNode, PlayerContent } from './parser';
-import { parse, toRange, toTextEdit, walk } from './parser';
+import type { ASTNode, PlayerContent } from "./parser";
+import { parse, toRange, toTextEdit, walk } from "./parser";
 
-import { containsRange, isKnownRootType, typeToVisitorMap } from './utils';
-import { XLRService } from './xlr';
+import { containsRange, isKnownRootType, typeToVisitorMap } from "./utils";
+import { XLRService } from "./xlr";
+import { TSManifest } from "@player-tools/xlr";
 
-export * from './utils';
-export * from './constants';
-export * from './types';
-export * from './parser';
-export * from './xlr/index';
+export * from "./utils";
+export * from "./constants";
+export * from "./types";
+export * from "./parser";
+export * from "./xlr/index";
 
 export interface PlayerLanguageServicePlugin {
   /** The name of the plugin */
@@ -430,11 +431,25 @@ export class PlayerLanguageService {
     // await this.typescriptService.setAssetTypes(typeFiles);
     typeFiles.forEach((file) => {
       // Find a better way of loading default types
-      if (file.includes('types')) {
+      if (file.includes("types")) {
         this.XLRService.XLRSDK.loadDefinitionsFromDisk(file, {});
       } else {
         this.XLRService.XLRSDK.loadDefinitionsFromDisk(
           file,
+          DEFAULT_FILTERS,
+          TRANSFORM_FUNCTIONS
+        );
+      }
+    });
+  }
+
+  async setAssetTypesFromModule(manifest: Array<TSManifest>) {
+    manifest.forEach((m) => {
+      if (m.capabilities["Types"]?.length) {
+        this.XLRService.XLRSDK.loadDefinitionsFromModule(m);
+      } else {
+        this.XLRService.XLRSDK.loadDefinitionsFromModule(
+          m,
           DEFAULT_FILTERS,
           TRANSFORM_FUNCTIONS
         );

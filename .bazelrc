@@ -1,15 +1,10 @@
+common --enable_bzlmod
 test --test_output=errors
 coverage --combined_report=lcov
 
 build:ci --experimental_remote_cache_compression --experimental_remote_cache_async
 test:ci --experimental_remote_cache_compression --experimental_remote_cache_async
 coverage:ci --experimental_remote_cache_compression --experimental_remote_cache_async
-
-# TODO: Migrate away from managed directories (https://github.com/bazelbuild/bazel/issues/15463)
-# TODO: Re-upgrade to Bazel 6.+
-# sync --noincompatible_disable_managed_directories
-# query --noincompatible_disable_managed_directories
-# build --noincompatible_disable_managed_directories
 
 build --bes_results_url=https://app.buildbuddy.io/invocation/
 build --bes_backend=grpcs://remote.buildbuddy.io
@@ -77,5 +72,9 @@ run:debug --define=VERBOSE_LOGS=1 -- --node_options=--inspect-brk
 # The following option will change the build output of certain rules such as terser and may not be desirable in all cases
 build:debug --compilation_mode=dbg
 
+# honor the setting of `skipLibCheck` in the tsconfig.json file
+build --@aspect_rules_ts//ts:skipLibCheck=honor_tsconfig
+fetch --@aspect_rules_ts//ts:skipLibCheck=honor_tsconfig
+query --@aspect_rules_ts//ts:skipLibCheck=honor_tsconfig
 
 try-import %workspace%/.bazelrc.local

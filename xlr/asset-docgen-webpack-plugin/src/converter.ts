@@ -1,8 +1,8 @@
-import type { PropItem, PropItemType } from 'react-docgen-typescript';
-import type { NamedType, NodeType, ObjectType } from '@player-tools/xlr';
-import { isPrimitiveTypeNode } from '@player-tools/xlr-utils';
+import type { PropItem, PropItemType } from "react-docgen-typescript";
+import type { NamedType, NodeType, ObjectType } from "@player-tools/xlr";
+import { isPrimitiveTypeNode } from "@player-tools/xlr-utils";
 
-export type Props = Record<string, Omit<PropItem, 'defaultValue' | 'parent'>>;
+export type Props = Record<string, Omit<PropItem, "defaultValue" | "parent">>;
 
 export interface AssetDoc {
   /** name of the asset */
@@ -19,31 +19,31 @@ export interface AssetDoc {
  * Converts a `NodeType` object to a descriptive `PropItemType` object
  */
 function determinePropertyType(node: NodeType): PropItemType {
-  if (node.type === 'ref') {
+  if (node.type === "ref") {
     return { name: node.ref };
   }
 
-  if (node.type === 'or') {
+  if (node.type === "or") {
     return {
       name: node.or
         .map((subnode) => determinePropertyType(subnode).name)
-        .join(' | '),
+        .join(" | "),
     };
   }
 
-  if (node.type === 'and') {
+  if (node.type === "and") {
     return {
       name: node.and
         .map((subnode) => determinePropertyType(subnode).name)
-        .join(' & '),
+        .join(" & "),
     };
   }
 
-  if (node.type === 'array') {
+  if (node.type === "array") {
     return { name: `Array<${determinePropertyType(node.elementType).name}>` };
   }
 
-  if (node.type === 'record') {
+  if (node.type === "record") {
     return {
       name: `Record<${determinePropertyType(node.keyType).name}, ${
         determinePropertyType(node.valueType).name
@@ -51,11 +51,11 @@ function determinePropertyType(node: NodeType): PropItemType {
     };
   }
 
-  if (isPrimitiveTypeNode(node) && node.type !== 'null') {
+  if (isPrimitiveTypeNode(node) && node.type !== "null") {
     return { name: node.type, value: node.const };
   }
 
-  if (node.type === 'object' && node.name) {
+  if (node.type === "object" && node.name) {
     return { name: node.name };
   }
 
@@ -67,16 +67,16 @@ function processObject(object: ObjectType, path: string[] = []): Props {
   let properties: Props = {};
 
   Object.getOwnPropertyNames(object.properties).forEach((propertyName) => {
-    const propertyPath = [...path, propertyName].join('.');
+    const propertyPath = [...path, propertyName].join(".");
     const propertyObject = object.properties[propertyName];
     properties[propertyPath] = {
       name: propertyName,
       required: propertyObject.required,
       type: determinePropertyType(propertyObject.node),
-      description: propertyObject.node.description ?? '',
+      description: propertyObject.node.description ?? "",
     };
 
-    if (propertyObject.node.type === 'object') {
+    if (propertyObject.node.type === "object") {
       const subObjectProperties = processObject(propertyObject.node, [
         ...path,
         propertyName,
@@ -96,7 +96,7 @@ function processObject(object: ObjectType, path: string[] = []): Props {
 export function covertXLRtoAssetDoc(type: NamedType<ObjectType>): AssetDoc {
   return {
     name: type.title ?? type.name,
-    description: type.description ?? type.comment ?? '',
+    description: type.description ?? type.comment ?? "",
     props: processObject(type),
   };
 }

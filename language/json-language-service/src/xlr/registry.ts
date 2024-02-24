@@ -1,6 +1,6 @@
-import type { Filters, TypeMetadata } from '@player-tools/xlr-sdk';
-import { BasicXLRRegistry } from '@player-tools/xlr-sdk';
-import type { NamedType, NodeType } from '@player-tools/xlr';
+import type { Filters, TypeMetadata } from "@player-tools/xlr-sdk";
+import { BasicXLRRegistry } from "@player-tools/xlr-sdk";
+import type { NamedType, NodeType } from "@player-tools/xlr";
 
 /**
  * Player specific implementation of a XLRs Registry
@@ -23,8 +23,8 @@ export class PlayerXLRRegistry extends BasicXLRRegistry {
     if (Array.isArray(realNames)) {
       return {
         name: `${id}PartialMatchType`,
-        source: 'registry.ts',
-        type: 'or',
+        source: "registry.ts",
+        type: "or",
         or: realNames.map(
           (partialMatchID) => super.get(partialMatchID) as NamedType
         ),
@@ -38,9 +38,9 @@ export class PlayerXLRRegistry extends BasicXLRRegistry {
     let registeredName = type.name;
     // Figure out how the Asset/View will be referenced from the type argument that will fill in Asset
     if (
-      (capability === 'Assets' || capability === 'Views') &&
-      type.type === 'object' &&
-      type.extends?.genericArguments?.[0]?.type === 'string' &&
+      (capability === "Assets" || capability === "Views") &&
+      type.type === "object" &&
+      type.extends?.genericArguments?.[0]?.type === "string" &&
       type.extends?.genericArguments?.[0]?.const
     ) {
       this.registrationMap.set(registeredName, type.name);

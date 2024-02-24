@@ -1,5 +1,5 @@
-import type { NamedType, NodeType } from '@player-tools/xlr';
-import type { XLRRegistry, Filters, TypeMetadata } from './types';
+import type { NamedType, NodeType } from "@player-tools/xlr";
+import type { XLRRegistry, Filters, TypeMetadata } from "./types";
 
 /**
  * Basic example of a XLRs Registry

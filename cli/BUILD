@@ -1,123 +1,145 @@
-load("@rules_player//javascript:js_library_pipeline.bzl", "PLACEHOLDER_VERSION")
-load("@rules_player//javascript/package_json:package_json.bzl", "create_package_json")
-load("@rules_player//javascript:utils.bzl", "filter_empty", "without_tests", "remove_duplicates", "include_exts")
-load("@build_bazel_rules_nodejs//:index.bzl", "js_library", "pkg_npm")
-load("@npm//jest-cli:index.bzl", "jest_test")
-load("@npm//eslint:index.bzl", "eslint_test")
-load("//:index.bzl", "expand_ts_outputs", "TEST_DATA", "LINT_DATA", "lint_exts")
-load("@npm//oclif:index.bzl", "oclif")
-load("@npm//typescript:index.bzl", "tsc")
+load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_library")
+load("@aspect_rules_js//npm:defs.bzl", "npm_package")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config", "ts_project")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@npm//:oclif/package_json.bzl", oclif_bin = "bin")
+load("@rules_player//javascript:defs.bzl", "create_package_json", "eslint_test", "vitest_test")
+load("//helpers:defs.bzl", "vitest_config")
 
-## TODO Update BUILD_DATA with local DSL path after OS
+npm_link_all_packages(name = "node_modules")
 
-BUILD_DATA = [
-    "@npm//@babel/core",
-    "@npm//react",
-    "@npm//tapable-ts",
-    "@npm//@babel/preset-env",
-    "@npm//@babel/preset-react",
-    "@npm//@babel/preset-typescript",
-    "@npm//@babel/plugin-transform-react-jsx-source",
-    "@npm//@babel/register",
-    "@npm//@types/babel__register",
-    "@npm//@oclif/core",
-    "@npm//@oclif/plugin-legacy",
-    "@npm//chalk",
-    "@npm//cosmiconfig",
-    "@npm//cross-fetch",
-    "@npm//elegant-spinner",
-    "@npm//figures",
-    "@npm//globby",
-    "@npm//log-symbols",
-    "@npm//log-update",
-    "@npm//mkdirp",
-    "@npm//vscode-languageserver-textdocument",
-    "@npm//vscode-languageserver-types",
-    "@npm//typescript",
-    "//language/dsl:@player-tools/dsl",
-    "//language/json-language-service:@player-tools/json-language-service",
-    "//xlr/sdk:@player-tools/xlr-sdk",
-    "//xlr/utils:@player-tools/xlr-utils",
-    "//xlr/converters:@player-tools/xlr-converters"
-] 
+vitest_config(name = "vitest_config")
 
-CLI_TEST_DATA = TEST_DATA + [
-    "@npm//std-mocks"
+dependencies = [
+    "//:node_modules/react",
+    "//:node_modules/tapable-ts",
+    "//:node_modules/@babel/register",
+    "//:node_modules/@types/babel__register",
+    "//:node_modules/@types/fs-extra",
+    "//:node_modules/@types/mkdirp",
+    "//:node_modules/@oclif/core",
+    "//:node_modules/@oclif/plugin-legacy",
+    "//:node_modules/chalk",
+    "//:node_modules/cosmiconfig",
+    "//:node_modules/cross-fetch",
+    "//:node_modules/dlv",
+    "//:node_modules/easy-table",
+    "//:node_modules/elegant-spinner",
+    "//:node_modules/figures",
+    "//:node_modules/fs-extra",
+    "//:node_modules/globby",
+    "//:node_modules/log-symbols",
+    "//:node_modules/log-update",
+    "//:node_modules/mkdirp",
+    "//:node_modules/vscode-languageserver-textdocument",
+    "//:node_modules/vscode-languageserver-types",
+    "//:node_modules/typescript",
+    "//:node_modules/vitest",
+    "//:node_modules/tslib",
+    "//:node_modules/std-mocks",
+    "//:node_modules/@types/std-mocks",
+    ":node_modules/@player-tools/dsl",
+    ":node_modules/@player-tools/json-language-service",
+    ":node_modules/@player-tools/xlr",
+    ":node_modules/@player-tools/xlr-sdk",
+    ":node_modules/@player-tools/xlr-utils",
+    ":node_modules/@player-tools/xlr-converters",
 ]
 
-SRCS = glob(include = ["src/**/*"], exclude=["**/__tests__/**", "**/*.test.*"])
-ALL_SRCS = glob(include = ["src/**/*"])
-
-tsc(
-    name = "player-cli-build",
-    outs = expand_ts_outputs(SRCS),
-    args = [
-        "-p",
-        "$(execpath tsconfig.json)",
-        "--outDir",
-        "$(RULEDIR)/dist",
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+    deps = [
+        "//:tsconfig",
     ],
-    data = SRCS + [
-        "tsconfig.json",
-        "//:tsconfig.json",
-    ] + BUILD_DATA
+)
+
+ts_project(
+    name = "player-cli-build",
+    srcs = glob(
+        [
+            "bin/**/*",
+            "src/**/*",
+        ],
+        exclude = [
+            "**/__tests__/*",
+            "**/*.test.*",
+        ],
+    ),
+    declaration = True,
+    out_dir = "dist",
+    root_dir = "src",
+    transpiler = "tsc",
+    tsconfig = ":tsconfig",
+    validate = False,
+    deps = dependencies,
 )
 
 create_package_json(
     name = "player-cli-package_json",
-    package_name = "@player-tools/cli",
-    entry = "./src/index.ts",
-    out_dir = "dist",
-    registry = "https://registry.npmjs.org",
-    placeholder_version = PLACEHOLDER_VERSION,
-    dependencies = BUILD_DATA,
-    peer_dependencies = None,
-    root_package_json = "//:package.json",
     base_package_json = "package.json",
+    dependencies = dependencies,
+    root_package_json = "//:package.json",
+    substitutions = {
+        "0.0.0-PLACEHOLDER": "{STABLE_VERSION}",
+    },
 )
 
-oclif(
-    name="player-cli-manifest",
-    chdir = "$(RULEDIR)",
-    args=["manifest"],
-    data = [
+oclif_bin.oclif(
+    name = "player-cli-manifest",
+    srcs = [
+        "package.json",
+        ":player-cli-build",
         ":player-cli-package_json",
-        ":player-cli-build"
-    ] + BUILD_DATA,
-    outs = ["oclif.manifest.json"]
+    ],
+    outs = ["oclif.manifest.json"],
+    args = ["manifest"],
+    chdir = package_name(),
+)
+
+js_library(
+    name = "player-cli-bundle",
+    srcs = [
+        ":player-cli-build",
+        ":player-cli-manifest",
+        ":player-cli-package_json",
+    ] + glob(["bin/*"]),
+    deps = dependencies,
+)
+
+vitest_test(
+    name = "player-cli-unit",
+    config = ":vitest_config",
+    data = glob(["src/**/*"]) + dependencies + ["//:vitest_config"],
+    node_modules = "//:node_modules",
 )
 
 eslint_test(
     name = "player-cli-lint",
-    data = remove_duplicates(filter_empty(["//:.eslintrc.js"] + BUILD_DATA + LINT_DATA + CLI_TEST_DATA + ALL_SRCS)),
-    args = [
-        "--ext",
-        ",".join(lint_exts),
-    ] + ["$(execpath %s)" % (f) for f in include_exts(ALL_SRCS, lint_exts)],
+    srcs = glob(["src/**/*"]),
+    data = glob(["src/**/*"]) + dependencies + ["//:eslint_config"],
+    node_modules = "//:node_modules",
 )
 
-jest_test(
-    name = "player-cli-unit",
-    env = {
-        "JEST_JUNIT_OUTPUT_FILE": "$XML_OUTPUT_FILE",
-        # Unset the coverage_dir so the default rules don't try to gather coverage
-        "COVERAGE_DIR": "",
-    },
-    args = [
-        "--no-cache",
-        "--ci",
-        "--colors",
+npm_package(
+    name = "cli",
+    srcs = [
+        "README.md",
+        ":player-cli-bundle",
     ],
-    data = remove_duplicates(filter_empty(["//:jest.config.js", "package.json"] + BUILD_DATA + CLI_TEST_DATA + ALL_SRCS)),
+    allow_overwrites = True,
+    package = "@player-tools/cli",
+    replace_prefixes = {
+        "player-cli-package_json": "package",
+    },
+    visibility = ["//visibility:public"],
 )
 
-pkg_npm(
-    name = "player-cli-publish",
-    deps = [":player-cli-build", ":player-cli-manifest", ":player-cli-package_json", ":README.md", "bin/run"],
-    substitutions = {
-        "__VERSION__": "{STABLE_VERSION}",
-        "0.0.0-PLACEHOLDER": "{STABLE_VERSION}",
-        "__GIT_COMMIT__": "{STABLE_GIT_COMMIT}",
-    },
-    validate = False,
+js_binary(
+    name = "cli.npm-publish",
+    chdir = package_name() + "/cli",
+    data = [":cli"],
+    entry_point = "@aspect_rules_js//npm/private:npm_publish_mjs",
+    # required to make npm to be available in PATH
+    include_npm = True,
 )

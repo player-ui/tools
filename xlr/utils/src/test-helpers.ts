@@ -1,5 +1,5 @@
-import * as ts from 'typescript';
-import * as tsvfs from '@typescript/vfs';
+import ts from "typescript";
+import * as tsvfs from "@typescript/vfs";
 
 export interface SetupReturnType {
   /**
@@ -15,7 +15,7 @@ export interface SetupReturnType {
 /**
  * Setups a virtual TS environment for tests
  */
-export function setupTestEnv(sourceCode: string, mockFileName = 'filename.ts') {
+export function setupTestEnv(sourceCode: string, mockFileName = "filename.ts") {
   const fsMap = tsvfs.createDefaultMapFromNodeModules({}, ts);
   fsMap.set(mockFileName, sourceCode);
 

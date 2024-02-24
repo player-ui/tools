@@ -1,20 +1,20 @@
-load("//:index.bzl", "javascript_pipeline")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@rules_player//javascript:defs.bzl", "js_pipeline")
+load("//helpers:defs.bzl", "tsup_config", "vitest_config")
 
-javascript_pipeline(
-    name = "@player-tools/devtools-common",
-    dependencies = [
-        "@npm//@player-ui/player",
-        "@npm//@player-ui/types",
-        "@npm//@reduxjs/toolkit",
-        "@npm//@types/uuid",
-        "@npm//uuid",
+npm_link_all_packages(name = "node_modules")
+
+tsup_config(name = "tsup_config")
+
+vitest_config(name = "vitest_config")
+
+js_pipeline(
+    package_name = "@player-tools/devtools-common",
+    deps = [
+        "//:node_modules/@player-ui/player",
+        "//:node_modules/@player-ui/types",
+        "//:node_modules/@reduxjs/toolkit",
+        "//:node_modules/@types/uuid",
+        "//:node_modules/uuid",
     ],
-    peer_dependencies = [],
-    test_data = [],
-)
-
-alias(
-    name = "common",
-    actual = ":@player-tools/devtools-common",
-    visibility = ["//devtools:__subpackages__"],
 )

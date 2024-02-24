@@ -1,4 +1,4 @@
-import type { NamedType, NodeType } from '.';
+import type { NamedType, NodeType } from ".";
 
 export type TransformFunction = (
   input: NamedType<NodeType> | NodeType,

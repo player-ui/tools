@@ -1,14 +1,14 @@
-import React from 'react';
-import { parseExpression } from '@player-ui/player';
+import * as React from "react";
+import { parseExpression } from "@player-ui/player";
 
-export type TemplateInstanceRefStringContext = 'binding' | 'expression';
+export type TemplateInstanceRefStringContext = "binding" | "expression";
 export interface TemplateRefStringOptions {
   /** If this template string is inside of another binding or expression */
   nestedContext?: TemplateInstanceRefStringContext;
 }
 export interface TemplateInstanceRefStringOptions {
   /** The array of strings for the template */
-  strings: TemplateStringsArray;
+  strings: ReadonlyArray<string>;
   /** the other data that's present in the template */
   other: Array<string | TemplateStringType>;
 
@@ -22,7 +22,7 @@ export interface TemplateInstanceRefStringOptions {
   ) => string;
 }
 
-const OpaqueIdentifier = Symbol('TemplateStringType');
+const OpaqueIdentifier = Symbol("TemplateStringType");
 
 export type TemplateStringType = React.ReactElement & {
   /** An identifier to show that this is a template type */
@@ -37,12 +37,12 @@ export type TemplateStringType = React.ReactElement & {
 
 export type BindingTemplateInstance = TemplateStringType & {
   /** An identifier for a binding instance */
-  __type: 'binding';
+  __type: "binding";
 };
 
 export type ExpressionTemplateInstance = TemplateStringType & {
   /** The identifier for an expression instance */
-  __type: 'expression';
+  __type: "expression";
 };
 
 /** A react component for rendering a template string type */
@@ -51,7 +51,7 @@ export const TemplateStringComponent = (props: {
   value: string;
 }) => {
   return React.createElement(
-    'value',
+    "value",
     {
       value: props.value,
     },
@@ -65,15 +65,15 @@ const createTemplateInstance = (
 ): TemplateStringType => {
   const value = options.strings.reduce((sum, next, i) => {
     const element = options.other[i];
-    if (typeof element === 'string') {
+    if (typeof element === "string") {
       return sum + next + element;
     }
 
-    return sum + next + (element?.toRefString(options) ?? '');
-  }, '');
+    return sum + next + (element?.toRefString(options) ?? "");
+  }, "");
 
   /** Try to parse the expression as valid */
-  if (options.nestedContext === 'expression') {
+  if (options.nestedContext === "expression") {
     const parsedExpression = parseExpression(value, { strict: false });
     if (parsedExpression.error) {
       throw parsedExpression.error;
@@ -110,39 +110,57 @@ const createTemplateInstance = (
   };
 };
 
+/** Helper for Iterating the binding to add a dynamic numeric value to each index found */
+const addBindingIndexes = (binding: string): string => {
+  let currentIndex = 0;
+
+  return binding.replace(/_index_/g, () => {
+    const result = `_index${currentIndex > 0 ? currentIndex : ""}_`;
+    currentIndex += 1;
+
+    return result;
+  });
+};
+
 /** Creating an instance of a handler for bindings */
 const createBindingTemplateInstance = (
-  options: Omit<TemplateInstanceRefStringOptions, 'toRefString'>
+  options: Omit<TemplateInstanceRefStringOptions, "toRefString">
 ): BindingTemplateInstance => {
   const templateInstance = createTemplateInstance({
     ...options,
+    strings: options.strings.map((element: string) =>
+      addBindingIndexes(element)
+    ),
+    other: options.other.map((element) =>
+      typeof element === "string" ? addBindingIndexes(element) : element
+    ),
     toRefString: (context, value) => {
       return `{{${value}}}`;
     },
   }) as BindingTemplateInstance;
 
-  templateInstance.__type = 'binding';
+  templateInstance.__type = "binding";
 
   return templateInstance;
 };
 
 /** Creating an instance of a handler for bindings */
 const createExpressionTemplateInstance = (
-  options: Omit<TemplateInstanceRefStringOptions, 'toRefString'>
+  options: Omit<TemplateInstanceRefStringOptions, "toRefString">
 ) => {
   const templateInstance = createTemplateInstance({
     ...options,
     toRefString: (contextOptions, value) => {
-      if (contextOptions?.nestedContext === 'expression') {
+      if (contextOptions?.nestedContext === "expression") {
         return value;
       }
 
-      const inBinding = contextOptions?.nestedContext === 'binding';
-      return `${inBinding ? '`' : '@['}${value}${inBinding ? '`' : ']@'}`;
+      const inBinding = contextOptions?.nestedContext === "binding";
+      return `${inBinding ? "`" : "@["}${value}${inBinding ? "`" : "]@"}`;
     },
   }) as ExpressionTemplateInstance;
 
-  templateInstance.__type = 'expression';
+  templateInstance.__type = "expression";
 
   return templateInstance;
 };
@@ -155,7 +173,7 @@ export const binding = (
   return createBindingTemplateInstance({
     strings,
     other: nested,
-    nestedContext: 'binding',
+    nestedContext: "binding",
   });
 };
 
@@ -169,7 +187,7 @@ export const expression = (
   return createExpressionTemplateInstance({
     strings,
     other: nested,
-    nestedContext: 'expression',
+    nestedContext: "expression",
   });
 };
 
@@ -179,7 +197,7 @@ export const isTemplateStringInstance = (
 ): val is ExpressionTemplateInstance | BindingTemplateInstance => {
   return (
     val !== null &&
-    typeof val === 'object' &&
+    typeof val === "object" &&
     (val as any)[OpaqueIdentifier] === true
   );
 };

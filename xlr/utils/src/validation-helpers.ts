@@ -1,14 +1,12 @@
-/* eslint-disable guard-for-in */
-/* eslint-disable no-restricted-syntax */
-import type { Node } from 'jsonc-parser';
+import type { Node } from "jsonc-parser";
 import type {
   ConditionalType,
   NodeType,
   ObjectType,
   RefNode,
-} from '@player-tools/xlr';
-import { isGenericNodeType, isPrimitiveTypeNode } from './type-checks';
-import { fillInGenerics } from './ts-helpers';
+} from "@player-tools/xlr";
+import { isGenericNodeType, isPrimitiveTypeNode } from "./type-checks";
+import { fillInGenerics } from "./ts-helpers";
 
 export interface PropertyNode {
   /** Equivalent Property Name */
@@ -23,8 +21,8 @@ export interface PropertyNode {
  */
 export function propertyToTuple(node: Node): PropertyNode {
   let key = node.children?.[0].value as string;
-  if (key.includes('-')) {
-    key = `'${key}'`;
+  if (key.includes("-")) {
+    key = `"${key}"`;
   }
 
   return {
@@ -50,9 +48,9 @@ export function makePropertyMap(node: Node): Map<string, Node> {
  */
 export function isNode(obj: Node | string | number | boolean): obj is Node {
   return (
-    typeof obj !== 'string' ||
-    typeof obj !== 'number' ||
-    typeof obj !== 'boolean'
+    typeof obj !== "string" ||
+    typeof obj !== "number" ||
+    typeof obj !== "boolean"
   );
 }
 
@@ -62,16 +60,16 @@ export function isNode(obj: Node | string | number | boolean): obj is Node {
 export function computeExtends(a: NodeType, b: NodeType): boolean {
   // special case for any/unknown being functionally the same
   if (
-    (a.type === 'any' || a.type === 'unknown') &&
-    (b.type === 'any' || b.type === 'unknown')
+    (a.type === "any" || a.type === "unknown") &&
+    (b.type === "any" || b.type === "unknown")
   ) {
     return true;
   }
 
   // special case for null/undefined being functionally the same
   if (
-    (a.type === 'null' || a.type === 'undefined') &&
-    (b.type === 'null' || b.type === 'undefined')
+    (a.type === "null" || a.type === "undefined") &&
+    (b.type === "null" || b.type === "undefined")
   ) {
     return true;
   }
@@ -88,11 +86,11 @@ export function computeExtends(a: NodeType, b: NodeType): boolean {
       }
     }
 
-    if (a.type === 'ref' && b.type === 'ref') {
+    if (a.type === "ref" && b.type === "ref") {
       return a.ref === b.ref;
     }
 
-    if (a.type === 'object' && b.type === 'object') {
+    if (a.type === "object" && b.type === "object") {
       for (const property in b.properties) {
         const propertyNode = b.properties[property];
         if (
@@ -107,15 +105,15 @@ export function computeExtends(a: NodeType, b: NodeType): boolean {
     }
   }
 
-  if (isPrimitiveTypeNode(a) && b.type === 'or') {
+  if (isPrimitiveTypeNode(a) && b.type === "or") {
     return b.or.every((member) => computeExtends(a, member));
   }
 
-  if (isPrimitiveTypeNode(b) && a.type === 'or') {
+  if (isPrimitiveTypeNode(b) && a.type === "or") {
     return a.or.every((member) => computeExtends(b, member));
   }
 
-  if (a.type === 'or' && b.type === 'or') {
+  if (a.type === "or" && b.type === "or") {
     return a.or.every((x) => b.or.some((y) => computeExtends(x, y)));
   }
 
@@ -136,7 +134,7 @@ export function resolveConditional(conditional: ConditionalType): NodeType {
       conditional.genericTokens.forEach((token) => {
         genericMap.set(
           token.symbol,
-          token.default ?? token.constraints ?? { type: 'any' }
+          token.default ?? token.constraints ?? { type: "any" }
         );
       });
 
@@ -185,10 +183,10 @@ export function resolveReferenceNode(
   }
 
   // Resolve index access
-  if (genericReference.property && filledInNode.type === 'object') {
+  if (genericReference.property && filledInNode.type === "object") {
     return (
       filledInNode.properties[genericReference.property]?.node ??
-      filledInNode.additionalProperties ?? { type: 'undefined' }
+      filledInNode.additionalProperties ?? { type: "undefined" }
     );
   }
 
@@ -207,8 +205,8 @@ export function computeEffectiveObject(
   operand: ObjectType,
   errorOnOverlap = true
 ): ObjectType {
-  const baseObjectName = base.name ?? base.title ?? 'object literal';
-  const operandObjectName = operand.name ?? operand.title ?? 'object literal';
+  const baseObjectName = base.name ?? base.title ?? "object literal";
+  const operandObjectName = operand.name ?? operand.title ?? "object literal";
   const newObject = {
     ...JSON.parse(JSON.stringify(base)),
     name: `${baseObjectName} & ${operandObjectName}`,
@@ -244,7 +242,7 @@ export function computeEffectiveObject(
       newObject.additionalProperties.type !== operand.additionalProperties.type
     ) {
       newObject.additionalProperties = {
-        type: 'and',
+        type: "and",
         and: [newObject.additionalProperties, operand.additionalProperties],
       };
     }

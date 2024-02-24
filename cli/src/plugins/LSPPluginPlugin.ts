@@ -1,8 +1,8 @@
 import type {
   PlayerLanguageService,
   PlayerLanguageServicePlugin,
-} from '@player-tools/json-language-service';
-import type { PlayerCLIPlugin } from './index';
+} from "@player-tools/json-language-service";
+import type { PlayerCLIPlugin } from "./index";
 
 /**
  * Handles adding a LSP Plugin to the LSP

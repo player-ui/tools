@@ -1,12 +1,12 @@
-import { printParseErrorCode } from 'jsonc-parser';
+import { printParseErrorCode } from "jsonc-parser";
 import {
   Diagnostic,
   Range,
   DiagnosticSeverity,
-} from 'vscode-languageserver-types';
+} from "vscode-languageserver-types";
 
-import type { ParseError } from 'jsonc-parser';
-import type { TextDocument } from 'vscode-languageserver-textdocument';
+import type { ParseError } from "jsonc-parser";
+import type { TextDocument } from "vscode-languageserver-textdocument";
 
 enum ParseErrorCode {
   InvalidSymbol = 1,

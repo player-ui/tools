@@ -1,15 +1,16 @@
-import type { ObjectType } from '@player-tools/xlr';
-import { computeEffectiveObject } from '../validation-helpers';
+import { test, expect, describe } from "vitest";
+import type { ObjectType } from "@player-tools/xlr";
+import { computeEffectiveObject } from "../validation-helpers";
 
-describe('computeEffectiveObject tests', () => {
-  it('mixed test', () => {
+describe("computeEffectiveObject tests", () => {
+  test("mixed test", () => {
     const type1: ObjectType = {
-      type: 'object',
+      type: "object",
       properties: {
         foo: {
           required: true,
           node: {
-            type: 'string',
+            type: "string",
           },
         },
       },
@@ -17,31 +18,31 @@ describe('computeEffectiveObject tests', () => {
     };
 
     const type2: ObjectType = {
-      type: 'object',
+      type: "object",
       properties: {
         bar: {
           required: true,
           node: {
-            type: 'number',
+            type: "number",
           },
         },
       },
       additionalProperties: {
-        type: 'unknown',
+        type: "unknown",
       },
     };
 
     expect(computeEffectiveObject(type1, type2)).toMatchSnapshot();
   });
 
-  it('Error on property overlap', () => {
+  test("Error on property overlap", () => {
     const type1: ObjectType = {
-      type: 'object',
+      type: "object",
       properties: {
         foo: {
           required: true,
           node: {
-            type: 'string',
+            type: "string",
           },
         },
       },
@@ -49,55 +50,55 @@ describe('computeEffectiveObject tests', () => {
     };
 
     const type2: ObjectType = {
-      type: 'object',
+      type: "object",
       properties: {
         foo: {
           required: true,
           node: {
-            type: 'number',
+            type: "number",
           },
         },
       },
       additionalProperties: {
-        type: 'unknown',
+        type: "unknown",
       },
     };
 
     expect(() =>
       computeEffectiveObject(type1, type2, true)
     ).toThrowErrorMatchingInlineSnapshot(
-      `"Can't compute effective type for object literal and object literal because of conflicting properties foo"`
+      `[Error: Can't compute effective type for object literal and object literal because of conflicting properties foo]`
     );
   });
 
-  it('Merges equal additionalProperties', () => {
+  test("Merges equal additionalProperties", () => {
     const type1: ObjectType = {
-      type: 'object',
+      type: "object",
       properties: {
         foo: {
           required: true,
           node: {
-            type: 'string',
+            type: "string",
           },
         },
       },
       additionalProperties: {
-        type: 'unknown',
+        type: "unknown",
       },
     };
 
     const type2: ObjectType = {
-      type: 'object',
+      type: "object",
       properties: {
         bar: {
           required: true,
           node: {
-            type: 'number',
+            type: "number",
           },
         },
       },
       additionalProperties: {
-        type: 'unknown',
+        type: "unknown",
       },
     };
 

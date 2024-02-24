@@ -1,6 +1,7 @@
 {
   "name": "@player-tools/cli",
-  "main": "./dist/index.js",
+  "version": "0.0.0-PLACEHOLDER",
+  "main": "src/index.ts",
   "files": [
     "bin",
     "dist",
@@ -10,12 +11,20 @@
     "bin": "player",
     "dirname": "player",
     "topicSeparator": " ",
-    "commands": "./dist/commands"
+    "commands": "dist/commands"
   },
   "bin": {
     "player": "bin/run"
   },
   "plugins": [
     "@oclif/plugin-plugins"
-  ]
+  ],
+  "dependencies": {
+    "@player-tools/dsl": "workspace:*",
+    "@player-tools/json-language-service": "workspace:*",
+    "@player-tools/xlr": "workspace:*",
+    "@player-tools/xlr-converters": "workspace:*",
+    "@player-tools/xlr-sdk": "workspace:*",
+    "@player-tools/xlr-utils": "workspace:*"
+  }
 }

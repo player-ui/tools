@@ -1,19 +1,19 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Transform Tests AssetWrapperOrSwitch Transform 1`] = `
-Object {
-  "additionalProperties": Object {
+exports[`Transform Tests > AssetWrapperOrSwitch Transform 1`] = `
+{
+  "additionalProperties": {
     "type": "unknown",
   },
   "description": "Mock Asset for test",
   "extends": undefined,
-  "genericTokens": Array [
-    Object {
-      "constraints": Object {
+  "genericTokens": [
+    {
+      "constraints": {
         "ref": "Asset",
         "type": "ref",
       },
-      "default": Object {
+      "default": {
         "ref": "Asset",
         "type": "ref",
       },
@@ -21,20 +21,20 @@ Object {
     },
   ],
   "name": "MockAsset",
-  "properties": Object {
-    "id": Object {
-      "node": Object {
+  "properties": {
+    "id": {
+      "node": {
         "description": "Each asset requires a unique id per view",
         "title": "Asset.id",
         "type": "string",
       },
       "required": true,
     },
-    "primaryChild": Object {
-      "node": Object {
+    "primaryChild": {
+      "node": {
         "description": "A text-like asset for the action's label",
-        "genericArguments": Array [
-          Object {
+        "genericArguments": [
+          {
             "ref": "AnyAsset",
             "type": "ref",
           },
@@ -45,9 +45,9 @@ Object {
       },
       "required": true,
     },
-    "secondaryChildren": Object {
-      "node": Object {
-        "elementType": Object {
+    "secondaryChildren": {
+      "node": {
+        "elementType": {
           "ref": "Asset",
           "type": "ref",
         },
@@ -55,8 +55,8 @@ Object {
       },
       "required": false,
     },
-    "type": Object {
-      "node": Object {
+    "type": {
+      "node": {
         "const": "mock",
         "description": "The asset type determines the semantics of how a user interacts with a page",
         "title": "Asset.type",
@@ -64,8 +64,8 @@ Object {
       },
       "required": true,
     },
-    "value": Object {
-      "node": Object {
+    "value": {
+      "node": {
         "description": "The transition value of the action in the state machine",
         "title": "MockAsset.value",
         "type": "string",
@@ -79,20 +79,20 @@ Object {
 }
 `;
 
-exports[`Transform Tests CommonProps Transform 1`] = `
-Object {
-  "additionalProperties": Object {
+exports[`Transform Tests > CommonProps Transform 1`] = `
+{
+  "additionalProperties": {
     "type": "unknown",
   },
   "description": "Mock Asset for test",
   "extends": undefined,
-  "genericTokens": Array [
-    Object {
-      "constraints": Object {
+  "genericTokens": [
+    {
+      "constraints": {
         "ref": "Asset",
         "type": "ref",
       },
-      "default": Object {
+      "default": {
         "ref": "Asset",
         "type": "ref",
       },
@@ -100,23 +100,23 @@ Object {
     },
   ],
   "name": "MockAsset",
-  "properties": Object {
-    "_comment": Object {
-      "node": Object {
+  "properties": {
+    "_comment": {
+      "node": {
         "description": "Adds a comment for the given node",
         "type": "string",
       },
       "required": false,
     },
-    "applicability": Object {
-      "node": Object {
+    "applicability": {
+      "node": {
         "description": "Evaluate the given expression (or boolean) and if falsy, remove this node from the tree. This is re-computed for each change in the data-model",
         "name": "Applicability",
-        "or": Array [
-          Object {
+        "or": [
+          {
             "type": "boolean",
           },
-          Object {
+          {
             "ref": "Expression",
             "type": "ref",
           },
@@ -125,19 +125,19 @@ Object {
       },
       "required": false,
     },
-    "id": Object {
-      "node": Object {
+    "id": {
+      "node": {
         "description": "Each asset requires a unique id per view",
         "title": "Asset.id",
         "type": "string",
       },
       "required": true,
     },
-    "primaryChild": Object {
-      "node": Object {
+    "primaryChild": {
+      "node": {
         "description": "A text-like asset for the action's label",
-        "genericArguments": Array [
-          Object {
+        "genericArguments": [
+          {
             "ref": "AnyAsset",
             "type": "ref",
           },
@@ -148,9 +148,9 @@ Object {
       },
       "required": true,
     },
-    "secondaryChildren": Object {
-      "node": Object {
-        "elementType": Object {
+    "secondaryChildren": {
+      "node": {
+        "elementType": {
           "ref": "Asset",
           "type": "ref",
         },
@@ -158,8 +158,8 @@ Object {
       },
       "required": false,
     },
-    "type": Object {
-      "node": Object {
+    "type": {
+      "node": {
         "const": "mock",
         "description": "The asset type determines the semantics of how a user interacts with a page",
         "title": "Asset.type",
@@ -167,8 +167,8 @@ Object {
       },
       "required": true,
     },
-    "value": Object {
-      "node": Object {
+    "value": {
+      "node": {
         "description": "The transition value of the action in the state machine",
         "title": "MockAsset.value",
         "type": "string",
@@ -182,20 +182,20 @@ Object {
 }
 `;
 
-exports[`Transform Tests applyTemplateProperty Transform 1`] = `
-Object {
-  "additionalProperties": Object {
+exports[`Transform Tests > applyTemplateProperty Transform 1`] = `
+{
+  "additionalProperties": {
     "type": "unknown",
   },
   "description": "Mock Asset for test",
   "extends": undefined,
-  "genericTokens": Array [
-    Object {
-      "constraints": Object {
+  "genericTokens": [
+    {
+      "constraints": {
         "ref": "Asset",
         "type": "ref",
       },
-      "default": Object {
+      "default": {
         "ref": "Asset",
         "type": "ref",
       },
@@ -203,20 +203,20 @@ Object {
     },
   ],
   "name": "MockAsset",
-  "properties": Object {
-    "id": Object {
-      "node": Object {
+  "properties": {
+    "id": {
+      "node": {
         "description": "Each asset requires a unique id per view",
         "title": "Asset.id",
         "type": "string",
       },
       "required": true,
     },
-    "primaryChild": Object {
-      "node": Object {
+    "primaryChild": {
+      "node": {
         "description": "A text-like asset for the action's label",
-        "genericArguments": Array [
-          Object {
+        "genericArguments": [
+          {
             "ref": "AnyAsset",
             "type": "ref",
           },
@@ -227,9 +227,9 @@ Object {
       },
       "required": true,
     },
-    "secondaryChildren": Object {
-      "node": Object {
-        "elementType": Object {
+    "secondaryChildren": {
+      "node": {
+        "elementType": {
           "ref": "Asset",
           "type": "ref",
         },
@@ -237,19 +237,19 @@ Object {
       },
       "required": false,
     },
-    "template": Object {
-      "node": Object {
+    "template": {
+      "node": {
         "description": "A list of templates to process for this node",
-        "elementType": Object {
-          "ref": "Template<Asset, \\"secondaryChildren\\">",
+        "elementType": {
+          "ref": "Template<Asset, "secondaryChildren">",
           "type": "ref",
         },
         "type": "array",
       },
       "required": false,
     },
-    "type": Object {
-      "node": Object {
+    "type": {
+      "node": {
         "const": "mock",
         "description": "The asset type determines the semantics of how a user interacts with a page",
         "title": "Asset.type",
@@ -257,8 +257,8 @@ Object {
       },
       "required": true,
     },
-    "value": Object {
-      "node": Object {
+    "value": {
+      "node": {
         "description": "The transition value of the action in the state machine",
         "title": "MockAsset.value",
         "type": "string",
@@ -272,20 +272,20 @@ Object {
 }
 `;
 
-exports[`Transform Tests applyValueRefs Transform 1`] = `
-Object {
-  "additionalProperties": Object {
+exports[`Transform Tests > applyValueRefs Transform 1`] = `
+{
+  "additionalProperties": {
     "type": "unknown",
   },
   "description": "Mock Asset for test",
   "extends": undefined,
-  "genericTokens": Array [
-    Object {
-      "constraints": Object {
+  "genericTokens": [
+    {
+      "constraints": {
         "ref": "Asset",
         "type": "ref",
       },
-      "default": Object {
+      "default": {
         "ref": "Asset",
         "type": "ref",
       },
@@ -293,20 +293,20 @@ Object {
     },
   ],
   "name": "MockAsset",
-  "properties": Object {
-    "id": Object {
-      "node": Object {
+  "properties": {
+    "id": {
+      "node": {
         "description": "Each asset requires a unique id per view",
         "title": "Asset.id",
         "type": "string",
       },
       "required": true,
     },
-    "primaryChild": Object {
-      "node": Object {
+    "primaryChild": {
+      "node": {
         "description": "A text-like asset for the action's label",
-        "genericArguments": Array [
-          Object {
+        "genericArguments": [
+          {
             "ref": "AnyAsset",
             "type": "ref",
           },
@@ -317,9 +317,9 @@ Object {
       },
       "required": true,
     },
-    "secondaryChildren": Object {
-      "node": Object {
-        "elementType": Object {
+    "secondaryChildren": {
+      "node": {
+        "elementType": {
           "ref": "Asset",
           "type": "ref",
         },
@@ -327,8 +327,8 @@ Object {
       },
       "required": false,
     },
-    "type": Object {
-      "node": Object {
+    "type": {
+      "node": {
         "const": "mock",
         "description": "The asset type determines the semantics of how a user interacts with a page",
         "title": "Asset.type",
@@ -336,20 +336,20 @@ Object {
       },
       "required": true,
     },
-    "value": Object {
-      "node": Object {
+    "value": {
+      "node": {
         "description": "The transition value of the action in the state machine",
-        "or": Array [
-          Object {
+        "or": [
+          {
             "description": "The transition value of the action in the state machine",
             "title": "MockAsset.value",
             "type": "string",
           },
-          Object {
+          {
             "ref": "ExpressionRef",
             "type": "ref",
           },
-          Object {
+          {
             "ref": "BindingRef",
             "type": "ref",
           },

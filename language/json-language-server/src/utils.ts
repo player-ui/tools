@@ -1,11 +1,11 @@
-import type { CancellationToken } from 'vscode-languageserver';
-import { ResponseError } from 'vscode-languageserver';
+import type { CancellationToken } from "vscode-languageserver";
+import { ResponseError } from "vscode-languageserver";
 
 /** Get a cancellation error   */
 function cancel() {
   return new ResponseError(
     -32800 /* ErrorCodes.RequestCancelled */,
-    'Request cancelled'
+    "Request cancelled"
   );
 }
 

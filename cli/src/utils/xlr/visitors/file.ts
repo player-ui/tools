@@ -1,7 +1,7 @@
-import type { Manifest } from '@player-tools/xlr';
-import path from 'path';
-import fs from 'fs';
-import type { VisitorProps } from './types';
+import type { Manifest } from "@player-tools/xlr";
+import path from "path";
+import fs from "fs";
+import type { VisitorProps } from "./types";
 /** export all exported types in the file */
 export function fileVisitor(args: VisitorProps): Manifest | undefined {
   const { sourceFile, converter, outputDirectory } = args;
@@ -12,7 +12,7 @@ export function fileVisitor(args: VisitorProps): Manifest | undefined {
   }
 
   const capabilities: Manifest = {
-    pluginName: 'Types',
+    pluginName: "Types",
   };
 
   convertedTypes.data.types.forEach((type) => {
@@ -22,7 +22,7 @@ export function fileVisitor(args: VisitorProps): Manifest | undefined {
     );
   });
   capabilities.capabilities = new Map([
-    ['Types', convertedTypes.convertedTypes],
+    ["Types", convertedTypes.convertedTypes],
   ]);
 
   return capabilities;

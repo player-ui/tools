@@ -1,20 +1,25 @@
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import { PlayerLanguageService } from '..';
-import { toTextDocument } from '../utils';
+import { test, expect, describe, beforeEach } from "vitest";
+import { TextDocument } from "vscode-languageserver-textdocument";
+import {
+  ReferenceAssetsWebPluginManifest,
+  Types,
+} from "@player-tools/static-xlrs";
+import { PlayerLanguageService } from "..";
+import { toTextDocument } from "../utils";
 
-describe('player language service', () => {
+describe("player language service", () => {
   let service: PlayerLanguageService;
 
   beforeEach(async () => {
     service = new PlayerLanguageService();
-    await service.setAssetTypes([
-      './common/static_xlrs/core',
-      './common/static_xlrs/plugin',
+    await service.setAssetTypesFromModule([
+      Types,
+      ReferenceAssetsWebPluginManifest,
     ]);
   });
 
-  describe('formatting', () => {
-    it('formats a document', async () => {
+  describe("formatting", () => {
+    test("formats a document", async () => {
       const document = toTextDocument(
         `{
 "id": "foo",
@@ -34,10 +39,10 @@ describe('player language service', () => {
       );
       expect(updatedDocument).toMatchInlineSnapshot(`
         "{
-          \\"id\\": \\"foo\\",
-          \\"views\\": [
+          "id": "foo",
+          "views": [
             {
-              \\"id\\": \\"view1\\"
+              "id": "view1"
             }
           ]
         }"
@@ -45,8 +50,8 @@ describe('player language service', () => {
     });
   });
 
-  describe('validation', () => {
-    it('throws AssetWrapper errors', async () => {
+  describe("validation", () => {
+    test("throws AssetWrapper errors", async () => {
       const document = toTextDocument(
         `
         {
@@ -104,8 +109,8 @@ describe('player language service', () => {
     });
   });
 
-  describe('completion', () => {
-    it('basic object completions', async () => {
+  describe("completion", () => {
+    test("basic object completions", async () => {
       const document = toTextDocument(
         `
 {
@@ -144,7 +149,7 @@ describe('player language service', () => {
       expect(completions.items).toMatchSnapshot();
     });
 
-    it('basic value completions', async () => {
+    test("basic value completions", async () => {
       const document = toTextDocument(
         `
 {
@@ -179,7 +184,7 @@ describe('player language service', () => {
       expect(completions.items).toMatchSnapshot();
     });
 
-    it('schema completions', async () => {
+    test("schema completions", async () => {
       const document = toTextDocument(
         `
         {
@@ -242,8 +247,8 @@ describe('player language service', () => {
     });
   });
 
-  describe('hover', () => {
-    it('basic hover docs', async () => {
+  describe("hover", () => {
+    test("basic hover docs", async () => {
       const document = toTextDocument(
         `
 {

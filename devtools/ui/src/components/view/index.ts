@@ -1,2 +1,2 @@
-export * from './ViewPanel';
-export * from './ViewInspector';
+export * from "./ViewPanel";
+export * from "./ViewInspector";

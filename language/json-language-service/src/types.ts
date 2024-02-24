@@ -1,10 +1,10 @@
-import type { TextDocument } from 'vscode-languageserver-textdocument';
+import type { TextDocument } from "vscode-languageserver-textdocument";
 import type {
   Position,
   DiagnosticSeverity,
   Diagnostic,
   CompletionItem,
-} from 'vscode-languageserver-types';
+} from "vscode-languageserver-types";
 import type {
   ASTNode,
   PlayerContent,
@@ -23,12 +23,12 @@ import type {
   FlowASTNode,
   NodeEdit,
   EmptyASTNode,
-} from './parser';
-import type { XLRContext } from './xlr';
+} from "./parser";
+import type { XLRContext } from "./xlr";
 
 export type LogFn = (msg: string) => void;
-export const LOG_TYPES = ['debug', 'info', 'warn', 'error'] as const;
-export type LogType = typeof LOG_TYPES[number];
+export const LOG_TYPES = ["debug", "info", "warn", "error"] as const;
+export type LogType = (typeof LOG_TYPES)[number];
 export type Logger = Record<LogType, LogFn>;
 
 export interface DocumentContext {

@@ -1,8 +1,8 @@
-import chalk from 'chalk';
-import figureSet from 'figures';
-import type { SerializeType } from '@player-tools/dsl';
-import type { TaskProgressRenderer } from './task-runner';
-import { getTaskSymbol } from './diag-renderer';
+import chalk from "chalk";
+import figureSet from "figures";
+import type { SerializeType } from "@player-tools/dsl";
+import type { TaskProgressRenderer } from "./task-runner";
+import { getTaskSymbol } from "./diag-renderer";
 
 export interface DSLCompileFileData {
   /** the file name */
@@ -21,11 +21,11 @@ export const compileRenderer: TaskProgressRenderer<
   DSLCompileFileData
 > = {
   onUpdate: (ctx) => {
-    const output: string[] = [''];
+    const output: string[] = [""];
 
     ctx.tasks.forEach((task) => {
       const outputType =
-        task.state === 'completed' && task.output?.contentType
+        task.state === "completed" && task.output?.contentType
           ? task.output.contentType
           : undefined;
 
@@ -35,28 +35,28 @@ export const compileRenderer: TaskProgressRenderer<
         task.data?.file,
       ]
         .filter(Boolean)
-        .join(' ');
+        .join(" ");
 
       if (task.data?.outputFile) {
         titleLine = [
           titleLine,
           figureSet.arrowRight,
           task.data.outputFile,
-        ].join(' ');
+        ].join(" ");
       }
 
       output.push(titleLine);
 
-      if (task.state === 'completed') {
+      if (task.state === "completed") {
         if (task.error) {
-          output.push(`  ${figureSet.arrowRight} ${chalk.red('bad')}`);
+          output.push(`  ${figureSet.arrowRight} ${chalk.red("bad")}`);
         }
       }
     });
 
-    return output.join('\n');
+    return output.join("\n");
   },
   onEnd: (ctx) => {
-    return [compileRenderer.onUpdate(ctx)].join('\n');
+    return [compileRenderer.onUpdate(ctx)].join("\n");
   },
 };

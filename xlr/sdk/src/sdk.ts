@@ -6,24 +6,24 @@ import type {
   ObjectType,
   TransformFunction,
   TSManifest,
-} from '@player-tools/xlr';
-import type { TopLevelDeclaration } from '@player-tools/xlr-utils';
+} from "@player-tools/xlr";
+import type { TopLevelDeclaration } from "@player-tools/xlr-utils";
 import {
   computeEffectiveObject,
   resolveReferenceNode,
-} from '@player-tools/xlr-utils';
-import { fillInGenerics } from '@player-tools/xlr-utils';
-import type { Node } from 'jsonc-parser';
-import { TSWriter } from '@player-tools/xlr-converters';
-import fs from 'fs';
-import path from 'path';
-import ts from 'typescript';
+} from "@player-tools/xlr-utils";
+import { fillInGenerics } from "@player-tools/xlr-utils";
+import type { Node } from "jsonc-parser";
+import { TSWriter } from "@player-tools/xlr-converters";
+import fs from "fs";
+import path from "path";
+import ts from "typescript";
 
-import type { XLRRegistry, Filters } from './registry';
-import { BasicXLRRegistry } from './registry';
-import type { ExportTypes } from './types';
-import { XLRValidator } from './validator';
-import { simpleTransformGenerator } from './utils';
+import type { XLRRegistry, Filters } from "./registry";
+import { BasicXLRRegistry } from "./registry";
+import type { ExportTypes } from "./types";
+import { XLRValidator } from "./validator";
+import { simpleTransformGenerator } from "./utils";
 
 export interface GetTypeOptions {
   /** Resolves `extends` fields in objects */
@@ -57,7 +57,7 @@ export class XLRSDK {
    */
   public loadDefinitionsFromDisk(
     inputPath: string,
-    filters?: Omit<Filters, 'pluginFilter'>,
+    filters?: Omit<Filters, "pluginFilter">,
     transforms?: Array<TransformFunction>
   ) {
     this.computedNodeCache.clear();
@@ -68,11 +68,11 @@ export class XLRSDK {
     ];
 
     const manifest = JSON.parse(
-      fs.readFileSync(path.join(inputPath, 'xlr', 'manifest.json')).toString(),
+      fs.readFileSync(path.join(inputPath, "xlr", "manifest.json")).toString(),
       (key: unknown, value: unknown) => {
         // Custom parser because JSON objects -> JS Objects, not maps
-        if (typeof value === 'object' && value !== null) {
-          if (key === 'capabilities') {
+        if (typeof value === "object" && value !== null) {
+          if (key === "capabilities") {
             return new Map(Object.entries(value));
           }
         }
@@ -92,7 +92,7 @@ export class XLRSDK {
           const cType: NamedType<NodeType> = JSON.parse(
             fs
               .readFileSync(
-                path.join(inputPath, 'xlr', `${extensionName}.json`)
+                path.join(inputPath, "xlr", `${extensionName}.json`)
               )
               .toString()
           );
@@ -121,7 +121,7 @@ export class XLRSDK {
    */
   public async loadDefinitionsFromModule(
     manifest: TSManifest,
-    filters?: Omit<Filters, 'pluginFilter'>,
+    filters?: Omit<Filters, "pluginFilter">,
     transforms?: Array<TransformFunction>
   ) {
     this.computedNodeCache.clear();
@@ -291,18 +291,18 @@ export class XLRSDK {
       return effectiveType;
     });
 
-    if (exportType === 'TypeScript') {
+    if (exportType === "TypeScript") {
       const outputString = this.exportToTypeScript(typesToExport, importMap);
-      return [['out.d.ts', outputString]];
+      return [["out.d.ts", outputString]];
     }
 
     throw new Error(`Unknown export format ${exportType}`);
   }
 
   private resolveType(type: NodeType): NamedType {
-    return simpleTransformGenerator('object', 'any', (objectNode) => {
+    return simpleTransformGenerator("object", "any", (objectNode) => {
       if (objectNode.extends) {
-        const refName = objectNode.extends.ref.split('<')[0];
+        const refName = objectNode.extends.ref.split("<")[0];
         let extendedType = this.getType(refName, { getRawType: true });
         if (!extendedType) {
           throw new Error(
@@ -314,7 +314,7 @@ export class XLRSDK {
           objectNode.extends,
           extendedType as NamedType<ObjectType>
         ) as NamedType;
-        if (extendedType.type === 'object') {
+        if (extendedType.type === "object") {
           return {
             ...computeEffectiveObject(
               extendedType as ObjectType,
@@ -329,7 +329,7 @@ export class XLRSDK {
         // if the merge isn't straightforward, defer until validation time for now
         return {
           name: objectNode.name,
-          type: 'and',
+          type: "and",
           and: [
             {
               ...objectNode,
@@ -341,7 +341,7 @@ export class XLRSDK {
       }
 
       return objectNode;
-    })(type, 'any') as NamedType;
+    })(type, "any") as NamedType;
   }
 
   private exportToTypeScript(
@@ -353,8 +353,8 @@ export class XLRSDK {
     const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
 
     let resultFile = ts.createSourceFile(
-      'output.d.ts',
-      '',
+      "output.d.ts",
+      "",
       ts.ScriptTarget.ES2017,
       false, // setParentNodes
       ts.ScriptKind.TS
@@ -405,7 +405,7 @@ export class XLRSDK {
     });
 
     const headerText = printer.printFile(resultFile);
-    const nodeText = typesToPrint.join('\n');
+    const nodeText = typesToPrint.join("\n");
     return `${headerText}\n${nodeText}`;
   }
 }

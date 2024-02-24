@@ -1,12 +1,12 @@
-import type { PlayerLanguageService } from '@player-tools/json-language-service';
-import type { DSLCompiler } from '@player-tools/dsl';
-import type { ExportTypes } from '@player-tools/xlr-sdk';
-import type { TransformFunction } from '@player-tools/xlr';
-import type { CompilationContext } from '../utils/compilation-context';
+import type { PlayerLanguageService } from "@player-tools/json-language-service";
+import type { DSLCompiler } from "@player-tools/dsl";
+import type { ExportTypes } from "@player-tools/xlr-sdk";
+import type { TransformFunction } from "@player-tools/xlr";
+import type { CompilationContext } from "../utils/compilation-context";
 
-export * from './LSPAssetsPlugin';
-export * from './LSPPluginPlugin';
-export * from './LSPTransformsPlugin';
+export * from "./LSPAssetsPlugin";
+export * from "./LSPPluginPlugin";
+export * from "./LSPTransformsPlugin";
 
 export interface PlayerCLIPlugin {
   /**

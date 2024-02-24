@@ -1,9 +1,10 @@
-import React from 'react';
-import { expression as e } from '../../string-templates';
-import { DSLCompiler } from '../compiler';
-import type { Navigation } from '../../types';
+import { test, expect } from "vitest";
+import React from "react";
+import { expression as e } from "../../string-templates";
+import { DSLCompiler } from "../compiler";
+import type { Navigation } from "../../types";
 
-test('treats jsx as view', async () => {
+test("treats jsx as view", async () => {
   const compiler = new DSLCompiler();
 
   const result = await compiler.serialize(
@@ -13,99 +14,97 @@ test('treats jsx as view', async () => {
   );
   expect(result).toBeDefined();
   expect(result?.value).toStrictEqual({
-    foo: 'bar',
+    foo: "bar",
   });
 });
 
-test('should treat schema type  objects as schema', async () => {
+test("should treat schema type  objects as schema", async () => {
   const compiler = new DSLCompiler();
   const result = await compiler.serialize({
-    foo: { bar: { type: 'StringType' } },
+    foo: { bar: { type: "StringType" } },
   });
 
-  expect(result).toBeDefined();
-  expect(result?.value).toStrictEqual({
+  expect(result.value).toStrictEqual({
     ROOT: {
       foo: {
-        type: 'fooType',
+        type: "fooType",
       },
     },
     fooType: {
       bar: {
-        type: 'StringType',
+        type: "StringType",
       },
     },
   });
 });
 
-test('expressions in navigation', async () => {
+test("expressions in navigation", async () => {
   const compiler = new DSLCompiler();
   const navigation: Navigation = {
-    BEGIN: 'Flow',
+    BEGIN: "Flow",
     onStart: e`foo`,
     Flow: {
-      startState: 'VIEW_page',
+      startState: "VIEW_page",
       onStart: [e`foo`, e`foo`],
       VIEW_page: {
         onStart: {
           exp: e`foo`,
         },
         state_type: `VIEW`,
-        ref: 'test',
+        ref: "test",
         transitions: {
-          '*': 'ShowView1Or2',
+          "*": "ShowView1Or2",
         },
       },
       ShowView1Or2: {
-        state_type: 'ACTION',
+        state_type: "ACTION",
         exp: e`foo`,
         transitions: {
-          '*': 'VIEW_Other',
+          "*": "VIEW_Other",
         },
       },
       END_back: {
-        state_type: 'END',
-        outcome: 'BACK',
+        state_type: "END",
+        outcome: "BACK",
       },
       END_done: {
-        state_type: 'END',
-        outcome: 'doneWithFlow',
+        state_type: "END",
+        outcome: "doneWithFlow",
       },
     },
   };
   const result = await compiler.serialize({ navigation });
-  expect(result).toBeDefined();
-  expect(result?.value).toStrictEqual({
+  expect(result.value).toStrictEqual({
     navigation: {
-      BEGIN: 'Flow',
+      BEGIN: "Flow",
       onStart: `foo`,
       Flow: {
-        startState: 'VIEW_page',
+        startState: "VIEW_page",
         onStart: [`foo`, `foo`],
         VIEW_page: {
           onStart: {
             exp: `foo`,
           },
           state_type: `VIEW`,
-          ref: 'test',
+          ref: "test",
           transitions: {
-            '*': 'ShowView1Or2',
+            "*": "ShowView1Or2",
           },
         },
         ShowView1Or2: {
-          state_type: 'ACTION',
+          state_type: "ACTION",
           exp: `foo`,
           transitions: {
-            '*': 'VIEW_Other',
+            "*": "VIEW_Other",
           },
         },
         END_back: {
-          state_type: 'END',
-          outcome: 'BACK',
+          state_type: "END",
+          outcome: "BACK",
         },
         END_done: {
-          state_type: 'END',
-          outcome: 'doneWithFlow',
+          state_type: "END",
+          outcome: "doneWithFlow",
         },
       },
     },
@@ -113,20 +112,20 @@ test('expressions in navigation', async () => {
   });
 });
 
-test('compiles schema when added to flow', async () => {
+test("compiles schema when added to flow", async () => {
   const compiler = new DSLCompiler();
   const result = await compiler.serialize({
-    id: 'test-flow',
+    id: "test-flow",
     views: [],
     navigation: {
-      BEGIN: 'FLOW_1',
+      BEGIN: "FLOW_1",
       FLOW_1: {
-        startState: 'VIEW_1',
+        startState: "VIEW_1",
         VIEW_1: {
-          state_type: 'VIEW',
-          ref: 'test',
+          state_type: "VIEW",
+          ref: "test",
           transitions: {
-            '*': 'END_Done',
+            "*": "END_Done",
           },
         },
       },
@@ -135,10 +134,10 @@ test('compiles schema when added to flow', async () => {
       foo: {
         bar: {
           baz: {
-            type: 'StringType',
+            type: "StringType",
             validation: [
               {
-                type: 'required',
+                type: "required",
               },
             ],
           },
@@ -149,49 +148,49 @@ test('compiles schema when added to flow', async () => {
 
   expect(result).toBeDefined();
   expect(result?.value).toMatchInlineSnapshot(`
-    Object {
+    {
       "id": "test-flow",
-      "navigation": Object {
+      "navigation": {
         "BEGIN": "FLOW_1",
-        "FLOW_1": Object {
-          "VIEW_1": Object {
+        "FLOW_1": {
+          "VIEW_1": {
             "ref": "test",
             "state_type": "VIEW",
-            "transitions": Object {
+            "transitions": {
               "*": "END_Done",
             },
           },
           "startState": "VIEW_1",
         },
       },
-      "schema": Object {
-        "ROOT": Object {
-          "foo": Object {
+      "schema": {
+        "ROOT": {
+          "foo": {
             "type": "fooType",
           },
         },
-        "barType": Object {
-          "baz": Object {
+        "barType": {
+          "baz": {
             "type": "StringType",
-            "validation": Array [
-              Object {
+            "validation": [
+              {
                 "type": "required",
               },
             ],
           },
         },
-        "fooType": Object {
-          "bar": Object {
+        "fooType": {
+          "bar": {
             "type": "barType",
           },
         },
       },
-      "views": Array [],
+      "views": [],
     }
   `);
 });
 
-test('compiles mixed DSL and non-DSL views', async () => {
+test("compiles mixed DSL and non-DSL views", async () => {
   const compiler = new DSLCompiler();
   const dslView = (
     <object>
@@ -199,29 +198,29 @@ test('compiles mixed DSL and non-DSL views', async () => {
     </object>
   );
   const result = await compiler.serialize({
-    id: 'test-flow',
+    id: "test-flow",
     views: [
       {
-        id: 'foo',
-        type: 'bar',
+        id: "foo",
+        type: "bar",
         info: {
           asset: {
-            id: 'info',
-            type: 'baz',
+            id: "info",
+            type: "baz",
           },
         },
       },
       dslView,
     ],
     navigation: {
-      BEGIN: 'FLOW_1',
+      BEGIN: "FLOW_1",
       FLOW_1: {
-        startState: 'VIEW_1',
+        startState: "VIEW_1",
         VIEW_1: {
-          state_type: 'VIEW',
-          ref: 'test',
+          state_type: "VIEW",
+          ref: "test",
           transitions: {
-            '*': 'END_Done',
+            "*": "END_Done",
           },
         },
       },
@@ -230,33 +229,33 @@ test('compiles mixed DSL and non-DSL views', async () => {
 
   expect(result).toBeDefined();
   expect(result?.value).toMatchInlineSnapshot(`
-    Object {
+    {
       "id": "test-flow",
-      "navigation": Object {
+      "navigation": {
         "BEGIN": "FLOW_1",
-        "FLOW_1": Object {
-          "VIEW_1": Object {
+        "FLOW_1": {
+          "VIEW_1": {
             "ref": "test",
             "state_type": "VIEW",
-            "transitions": Object {
+            "transitions": {
               "*": "END_Done",
             },
           },
           "startState": "VIEW_1",
         },
       },
-      "views": Array [
-        Object {
+      "views": [
+        {
           "id": "foo",
-          "info": Object {
-            "asset": Object {
+          "info": {
+            "asset": {
               "id": "info",
               "type": "baz",
             },
           },
           "type": "bar",
         },
-        Object {
+        {
           "foo": "bar",
         },
       ],

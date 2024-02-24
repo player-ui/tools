@@ -1,11 +1,11 @@
-import React from 'react';
-import { PluginClient, usePlugin } from 'flipper-plugin';
+import React from "react";
+import { PluginClient, usePlugin } from "flipper-plugin";
 import {
   createStore,
   Runtime,
   RPCRequestMessageEvent,
   RPCResponseMessageEvent,
-} from '@player-tools/devtools-common';
+} from "@player-tools/devtools-common";
 import {
   handleMessage,
   buildAliases,
@@ -13,9 +13,8 @@ import {
   buildRPCActions,
   buildRPCRequests,
   RuntimeRPCRequestHandlers,
-} from '@player-tools/devtools-client';
-// TODO: Fix import lol -- maybe try to bundle this package _before_ it hits flipper-pkg? i'm so tired of monkeying with this
-import { App } from '@player-tools/devtools-ui/dist/devtools-ui.prod';
+} from "@player-tools/devtools-client";
+import { App } from "@player-tools/devtools-ui";
 
 type Events = {
   [key in Runtime.RuntimeEventTypes]: Extract<
@@ -23,7 +22,7 @@ type Events = {
     { type: key }
   >;
 } & {
-  'rpc-response': RPCResponseMessageEvent<Runtime.RuntimeRPC>;
+  "rpc-response": RPCResponseMessageEvent<Runtime.RuntimeRPC>;
 };
 
 type Methods = {
@@ -32,7 +31,9 @@ type Methods = {
   ) => Promise<void>;
 };
 
-export function plugin(client: PluginClient<Events, Methods>) {
+export function plugin(client: PluginClient<Events, Methods>): {
+  store: ReturnType<typeof createStore>;
+} {
   const rpcHandlers: RuntimeRPCRequestHandlers = buildRPCRequests(
     (message: RPCRequestMessageEvent<Runtime.RuntimeRPC>) => {
       // TODO: Do `send('rpc-request', message)`
@@ -51,7 +52,7 @@ export function plugin(client: PluginClient<Events, Methods>) {
     });
   });
 
-  client.onMessage('rpc-response', (params) => {
+  client.onMessage("rpc-response", (params) => {
     rpcHandlers[params.rpcType].onMessage(params);
   });
 

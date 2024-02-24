@@ -1,9 +1,9 @@
-import React from 'react';
+import * as React from "react";
 import {
   isTemplateStringInstance,
   TemplateStringComponent,
-} from './string-templates';
-import type { toJsonOptions } from './types';
+} from "./string-templates";
+import type { toJsonOptions } from "./types";
 
 /** Get an array version of the value */
 export function toArray<T>(val: T | Array<T>): Array<T> {
@@ -16,7 +16,7 @@ export function toJsonElement(
   indexOrKey?: number | string,
   options?: toJsonOptions
 ): React.ReactElement {
-  const indexProp = typeof indexOrKey === 'number' ? { key: indexOrKey } : null;
+  const indexProp = typeof indexOrKey === "number" ? { key: indexOrKey } : null;
 
   if (Array.isArray(value)) {
     return (
@@ -29,7 +29,7 @@ export function toJsonElement(
   /** Allow users to pass in BindingTemplateInstance and ExpressionTemplateInstance directly without turning them into strings first */
   if (isTemplateStringInstance(value)) {
     if (
-      typeof indexOrKey === 'string' &&
+      typeof indexOrKey === "string" &&
       options?.propertiesToSkip?.includes(indexOrKey)
     ) {
       return <value {...indexProp}>{value.toValue()}</value>;
@@ -38,7 +38,7 @@ export function toJsonElement(
     return <value {...indexProp}>{value.toRefString()}</value>;
   }
 
-  if (typeof value === 'object' && value !== null) {
+  if (typeof value === "object" && value !== null) {
     return (
       <obj {...indexProp}>
         {Object.keys(value).map((key) => (
@@ -56,7 +56,7 @@ export function toJsonElement(
 /** Create a fragment for the properties */
 export function toJsonProperties(
   value: Record<string, any>,
-  options: toJsonOptions = { propertiesToSkip: ['applicability'] }
+  options: toJsonOptions = { propertiesToSkip: ["applicability"] }
 ) {
   return Object.keys(value).map((key) => {
     return (
@@ -73,7 +73,7 @@ export function normalizeText(options: {
   node: React.ReactNode;
 
   /** A component to render a text asset */
-  TextComp?: React.ComponentType;
+  TextComp?: React.ComponentType<any>;
 }): React.ReactNode {
   const { node, TextComp } = options;
 
@@ -105,13 +105,13 @@ export function normalizeToCollection(options: {
   TextComp?: React.ComponentType;
 
   /** A collection asset */
-  CollectionComp?: React.ComponentType;
+  CollectionComp?: React.ComponentType<any>;
 }) {
   const { node, CollectionComp } = options;
 
   if (
     React.Children.count(node) > 1 &&
-    React.Children.toArray(node).every((n) => typeof n !== 'string')
+    React.Children.toArray(node).every((n) => typeof n !== "string")
   ) {
     if (!CollectionComp) {
       throw new Error(

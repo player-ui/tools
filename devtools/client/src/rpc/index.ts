@@ -4,7 +4,7 @@ import {
   createRPCRequest,
   Runtime,
   PANEL_SOURCE,
-} from '@player-tools/devtools-common';
+} from "@player-tools/devtools-common";
 
 export type RuntimeRPCRequestHandlers = {
   [key in Runtime.RuntimeRPCTypes]: RPCRequestHandler<any>;

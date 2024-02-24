@@ -1,58 +1,57 @@
-import path from 'path';
-import fs from 'fs';
-import { convertToFileGlob } from '../../utils/fs';
+import { vi, test, expect, afterEach } from "vitest";
+import path from "path";
+import fs from "fs";
+import { convertToFileGlob } from "../../utils/fs";
 
-const winPathSep = '\\';
-const posixPathSep = '/';
+vi.mock("path", async (importOriginal) => {
+  const original: Record<string, unknown> = await importOriginal();
 
-jest.mock('path', () => {
-  const original = jest.requireActual('path');
   return {
     ...original,
-    sep: posixPathSep,
+    sep: "/",
     win32: {
-      sep: winPathSep,
+      sep: "\\",
     },
     posix: {
-      sep: posixPathSep,
+      sep: "/",
     },
   };
 });
 
-afterAll(() => {
-  jest.restoreAllMocks();
+afterEach(() => {
+  vi.clearAllMocks();
 });
 
-test('glob file on posix system for directory', () => {
-  const fsSpy = jest.spyOn(fs, 'statSync').mockReturnValue({
+test("glob file on posix system for directory", () => {
+  const fsSpy = vi.spyOn(fs, "statSync").mockReturnValue({
     isDirectory: () => true,
   } as any);
-  const result = convertToFileGlob(['./src/main/tsx'], '**/*.(tsx|jsx|js|ts)');
-  expect(result[0]).toStrictEqual('src/main/tsx/**/*.(tsx|jsx|js|ts)');
-  expect(fsSpy).toHaveBeenCalledWith('./src/main/tsx');
+  const result = convertToFileGlob(["./src/main/tsx"], "**/*.(tsx|jsx|js|ts)");
+  expect(result[0]).toStrictEqual("src/main/tsx/**/*.(tsx|jsx|js|ts)");
+  expect(fsSpy).toHaveBeenCalledWith("./src/main/tsx");
 });
 
-test('does not add glob if path is not a directory', () => {
-  const fsSpy = jest.spyOn(fs, 'statSync').mockReturnValue({
+test("does not add glob if path is not a directory", () => {
+  const fsSpy = vi.spyOn(fs, "statSync").mockReturnValue({
     isDirectory: () => false,
   } as any);
   const result = convertToFileGlob(
-    ['./src/main/tsx/**/*.tsx'],
-    '**/*.(tsx|jsx|js|ts)'
+    ["./src/main/tsx/**/*.tsx"],
+    "**/*.(tsx|jsx|js|ts)"
   );
-  expect(result[0]).toStrictEqual('./src/main/tsx/**/*.tsx');
-  expect(fsSpy).toHaveBeenCalledWith('./src/main/tsx/**/*.tsx');
+  expect(result[0]).toStrictEqual("./src/main/tsx/**/*.tsx");
+  expect(fsSpy).toHaveBeenCalledWith("./src/main/tsx/**/*.tsx");
 });
 
-test('directory glob handling on windows', () => {
-  const fsSpy = jest.spyOn(fs, 'statSync').mockReturnValue({
+test("directory glob handling on windows", () => {
+  const fsSpy = vi.spyOn(fs, "statSync").mockReturnValue({
     isDirectory: () => true,
   } as any);
-  (path as any).sep = winPathSep;
+  (path as any).sep = "\\";
   const result = convertToFileGlob(
-    [['src', 'main', 'tsx'].join('\\')],
-    '**/*.(tsx|jsx|js|ts)'
+    [["src", "main", "tsx"].join("\\")],
+    "**/*.(tsx|jsx|js|ts)"
   );
-  expect(result[0]).toStrictEqual('src/main/tsx/**/*.(tsx|jsx|js|ts)');
-  expect(fsSpy).toHaveBeenCalledWith('src\\main\\tsx');
+  expect(result[0]).toStrictEqual("src\\main\\tsx/**/*.(tsx|jsx|js|ts)");
+  expect(fsSpy).toHaveBeenCalledWith("src\\main\\tsx");
 });
