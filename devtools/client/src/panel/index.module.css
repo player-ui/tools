@@ -1,0 +1,73 @@
+:root {
+  --surface: #1a1b27;
+  --surface-container: #24283b;
+  --text-color: #a9b1d6;
+  --border-radius: 4px;
+  --base-spacing: 4px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--surface);
+  color: var(--text-color);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin: calc(var(--base-spacing) * 2);
+}
+
+.dropdown-container {
+  display: flex;
+  align-items: center;
+  margin-right: calc(var(--base-spacing) * 2);
+  background-color: var(--surface-container);
+  padding: 0 calc(var(--base-spacing) * 2);
+  border-radius: var(--border-radius);
+}
+
+.dropdown {
+  padding: calc(var(--base-spacing) * 2);
+  background-color: var(--surface-container);
+  color: var(--text-color);
+  border-radius: var(--border-radius);
+}
+
+.main {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  margin: calc(var(--base-spacing) * 2);
+  margin-top: 0;
+  padding: calc(var(--base-spacing) * 2);
+  background-color: var(--surface-container);
+  border-radius: var(--border-radius);
+}
+
+.no-player-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--surface);
+  color: var(--text-color);
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--surface);
+  color: var(--text-color);
+  pre {
+    background-color: var(--surface-container);
+  }
+}

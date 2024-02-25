@@ -15,6 +15,10 @@ dependencies = [
     "//:node_modules/tapable-ts",
     "//:node_modules/@babel/register",
     "//:node_modules/@types/babel__register",
+    "//:node_modules/@babel/preset-env",
+    "//:node_modules/@babel/preset-typescript",
+    "//:node_modules/@babel/preset-react",
+    "//:node_modules/@babel/plugin-transform-react-jsx-source",
     "//:node_modules/@types/fs-extra",
     "//:node_modules/@types/mkdirp",
     "//:node_modules/@oclif/core",
@@ -142,4 +146,11 @@ js_binary(
     entry_point = "@aspect_rules_js//npm/private:npm_publish_mjs",
     # required to make npm to be available in PATH
     include_npm = True,
+)
+
+js_binary(
+  name = "dsl_bin",
+  entry_point = "bin/run",
+  data = [":player-cli-bundle", "package.json"] + dependencies,
+  visibility = ["//visibility:public"],
 )

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://fbflipper.com/schemas/plugin-package/v2.json",
+  "name": "flipper-plugin-player-ui-devtools",
+  "id": "player-ui-devtools",
+  "version": "0.0.0-PLACEHOLDER",
+  "pluginType": "client",
+  "main": "src/index.tsx",
+  "scripts": {
+    "prepack": "flipper-pkg lint && flipper-pkg bundle"
+  },
+  "dependencies": {
+    "@player-tools/devtools-client": "workspace:*",
+    "@player-tools/devtools-types": "workspace:*"
+  },
+  "flipperBundlerEntry": "src",
+  "keywords": [
+    "flipper-plugin",
+    "@flipper-plugin/player-ui",
+    "player-ui-devtools"
+  ],
+  "icon": "icon",
+  "title": "Player UI Devtools",
+  "description": "A Flipper plugin able to interact with an active Player instance"
+}
