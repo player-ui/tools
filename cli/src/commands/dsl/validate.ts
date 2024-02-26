@@ -52,7 +52,9 @@ export default class Validate extends BaseCommand {
     const compilerConfigObject =
       configFile && JSON.parse(configFile.toString());
 
-    this.log(`Enviroment Typescript compiler configurations found: ${compilerConfigObject}`);
+    this.log(
+      `Enviroment Typescript compiler configurations found: ${compilerConfigObject}`
+    );
 
     if (compilerConfigObject.CompilerOptions) {
       TSEnvConfig = compilerConfigObject.CompilerOptions;
