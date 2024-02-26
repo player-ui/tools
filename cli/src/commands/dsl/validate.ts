@@ -38,20 +38,21 @@ export default class Validate extends BaseCommand {
   private async getTSConfig() {
     let TSEnvConfig, configFile;
 
-    const EnvTSConfig = glob.sync("**/tsconfig.json")[0];
+    const EnvTSConfig = glob.sync("./tsconfig.json")[0];
 
-    this.log(`ENV TS file ${EnvTSConfig}`);
+    this.log(`Local Typesscript file found ${EnvTSConfig}`);
 
     try {
       configFile = await fs.readFile(EnvTSConfig);
     } catch (e) {
       this.log("Error reading the TypeScript configuration file.");
+      return;
     }
 
     const compilerConfigObject =
       configFile && JSON.parse(configFile.toString());
 
-    this.log(`ENV TS object ${compilerConfigObject}`);
+    this.log(`Enviroment Typescript compiler configurations found: ${compilerConfigObject}`);
 
     if (compilerConfigObject.CompilerOptions) {
       TSEnvConfig = compilerConfigObject.CompilerOptions;
