@@ -70,11 +70,11 @@ importers:
         specifier: ^1.9.0
         version: 1.10.11(@oclif/config@1.18.17)
       '@player-ui/player':
-        specifier: 0.5.1
-        version: 0.5.1
+        specifier: 0.7.1-next.0
+        version: 0.7.1-next.0
       '@player-ui/types':
-        specifier: 0.5.1
-        version: 0.5.1
+        specifier: 0.7.1-next.0
+        version: 0.7.1-next.0
       '@reduxjs/toolkit':
         specifier: ^1.6.1
         version: 1.9.7(react-redux@7.2.9)(react@18.2.0)
@@ -5573,8 +5573,8 @@ packages:
     dev: false
     optional: true
 
-  /@player-ui/partial-match-registry@0.5.1:
-    resolution: {integrity: sha512-RjIDQXTYkDOL3t6KNk600r05+x30SJGBrqKRfrw7cxA7I5J4K9QaGI+I9YvZOWaL8bF3YF8eRv9/rworcm5vFw==, tarball: https://registry.npmjs.org/@player-ui/partial-match-registry/-/partial-match-registry-0.5.1.tgz}
+  /@player-ui/partial-match-registry@0.7.1-next.0:
+    resolution: {integrity: sha512-itn2yvGG6GnBkgqGfmcTSGc08q/t/7wHhYFiCxTrUb1+DdSKUvNcpy0QOl+U98GFwuVKr+xFW/6E0f/Y08MSlg==, tarball: https://registry.npmjs.org/@player-ui/partial-match-registry/-/partial-match-registry-0.7.1-next.0.tgz}
     dependencies:
       '@babel/runtime': 7.15.4
       '@types/dlv': 1.1.4
@@ -5582,12 +5582,12 @@ packages:
       sorted-array: 2.0.4
     dev: false
 
-  /@player-ui/player@0.5.1:
-    resolution: {integrity: sha512-rYoovPd+cAK7w7ZrSY9Pv5C9gxSKfvs7Srh7N+laOShh7b0bXkvU+mXDBS7TEv3ePQ40MmjDZPnBLtoXdPufJA==, tarball: https://registry.npmjs.org/@player-ui/player/-/player-0.5.1.tgz}
+  /@player-ui/player@0.7.1-next.0:
+    resolution: {integrity: sha512-Jk/MZ/zi8676ogsB3n0rx/tQiZcaXv97WQbwVhrztduzfDTeIp/5EGjUSNeGlOt7R/yxwYUKCNzIwbrJa99H3w==, tarball: https://registry.npmjs.org/@player-ui/player/-/player-0.7.1-next.0.tgz}
     dependencies:
       '@babel/runtime': 7.15.4
-      '@player-ui/partial-match-registry': 0.5.1
-      '@player-ui/types': 0.5.1
+      '@player-ui/partial-match-registry': 0.7.1-next.0
+      '@player-ui/types': 0.7.1-next.0
       '@types/parsimmon': 1.10.9
       arr-flatten: 1.1.0
       dequal: 2.0.3
@@ -5601,8 +5601,8 @@ packages:
       ts-nested-error: 1.2.1
     dev: false
 
-  /@player-ui/types@0.5.1:
-    resolution: {integrity: sha512-siwYbpZ9Q7QiWD8yraOvbvzC4eSNwOMPeLpceyKe1ywad37XiRIDyrpBeC0HbO/yNT/i4oydRJvU4KawDnjQ+g==, tarball: https://registry.npmjs.org/@player-ui/types/-/types-0.5.1.tgz}
+  /@player-ui/types@0.7.1-next.0:
+    resolution: {integrity: sha512-JNv02IZjcUeSNduqKKSa1mIEVlm8uB3m1SQCqjupK6ViP7qtOv2OQcya6LXVNA/Pd1MBELbAzoTX3PkhUuMloQ==, tarball: https://registry.npmjs.org/@player-ui/types/-/types-0.7.1-next.0.tgz}
     dependencies:
       '@babel/runtime': 7.15.4
     dev: false
