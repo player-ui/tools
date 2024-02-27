@@ -42,10 +42,12 @@ export default class AssetDocgenPlugin {
     // Glob all XLRs manifests available in repo
     const manifests = globby.sync(["**/dist/xlr/manifest.json"]);
     // load manifests into sdk
-    manifests.forEach((manifest) => {
-      const packageName = manifest.split("/dist/")[0];
-      sdk.loadDefinitionsFromDisk(path.join(".", packageName, "dist"));
-    });
+    manifests
+      .filter((manifest) => !manifest.includes("node_modules"))
+      .forEach((manifest) => {
+        const packageName = manifest.split("/dist/")[0];
+        sdk.loadDefinitionsFromDisk(path.join(".", packageName, "dist"));
+      });
     const assetSources = sdk.listTypes().map((asset) => {
       return [
         asset.name,
