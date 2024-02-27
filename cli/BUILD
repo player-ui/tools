@@ -88,6 +88,7 @@ create_package_json(
     substitutions = {
         "0.0.0-PLACEHOLDER": "{STABLE_VERSION}",
     },
+    custom_entrypoints = True,
 )
 
 oclif_bin.oclif(
