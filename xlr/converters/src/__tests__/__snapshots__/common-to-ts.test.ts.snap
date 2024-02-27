@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Type Exports Basic Type Conversion 1`] = `
+exports[`Type Exports > Basic Type Conversion 1`] = `
 "/**
  * User actions can be represented in several places.
  * Each view typically has one or more actions that allow the user to navigate away from that view.
@@ -25,13 +25,13 @@ export interface ActionAsset<AnyTextAsset extends Asset = Asset> extends Asset<'
 }"
 `;
 
-exports[`Type Exports Dynamic results Conversion 1`] = `
+exports[`Type Exports > Dynamic results Conversion 1`] = `
 "export type size = ExpressionHandler<[
     val: unknown
 ], number>;"
 `;
 
-exports[`Type Exports Static Type Conversion Arrays 1`] = `
+exports[`Type Exports > Static Type Conversion Arrays 1`] = `
 "export type test = [
     'foo',
     1,
@@ -39,7 +39,7 @@ exports[`Type Exports Static Type Conversion Arrays 1`] = `
 ];"
 `;
 
-exports[`Type Exports Static Type Conversion Objects 1`] = `
+exports[`Type Exports > Static Type Conversion Objects 1`] = `
 "export interface test {
     foo: 'foo';
     bar: 1;
@@ -47,4 +47,4 @@ exports[`Type Exports Static Type Conversion Objects 1`] = `
 }"
 `;
 
-exports[`Type Exports Template Type Conversion 1`] = `"export type BindingRef = \`{{\${string}}}\`;"`;
+exports[`Type Exports > Template Type Conversion 1`] = `"export type BindingRef = \`{{\${string}}}\`;"`;

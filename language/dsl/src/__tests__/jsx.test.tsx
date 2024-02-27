@@ -1,37 +1,38 @@
-import React from 'react';
-import { render } from 'react-json-reconciler';
-import { toJsonProperties } from '../utils';
-import { ArrayProp, Collection, Text } from './helpers/asset-library';
-import { binding as b, expression as e } from '..';
+import { test, expect } from "vitest";
+import React from "react";
+import { render } from "react-json-reconciler";
+import { toJsonProperties } from "../utils";
+import { ArrayProp, Collection, Text } from "./helpers/asset-library";
+import { binding as b, expression as e } from "..";
 
 const expectedBasicCollection = {
-  id: 'root',
-  type: 'collection',
-  label: { asset: { id: 'label', type: 'text', value: 'Label' } },
+  id: "root",
+  type: "collection",
+  label: { asset: { id: "label", type: "text", value: "Label" } },
   values: [
     {
       asset: {
-        id: 'values-0',
-        type: 'text',
-        value: 'value-1',
+        id: "values-0",
+        type: "text",
+        value: "value-1",
       },
     },
     {
       asset: {
-        id: 'values-1',
-        type: 'text',
-        value: 'value-2',
+        id: "values-1",
+        type: "text",
+        value: "value-2",
       },
     },
   ],
 };
 
 const expectedTemplateInstanceObjects = {
-  page_experience: '@[foo.bar.GetDataResult]@',
-  request_uuid: '{{foo.bar.UUID}}',
+  page_experience: "@[foo.bar.GetDataResult]@",
+  request_uuid: "{{foo.bar.UUID}}",
 };
 
-it('works with JSX', async () => {
+test("works with JSX", async () => {
   const element = (
     <Collection>
       <Collection.Label>
@@ -49,18 +50,18 @@ it('works with JSX', async () => {
   );
 });
 
-it('works for any json props', async () => {
+test("works for any json props", async () => {
   const testObj = {
     foo: false,
     bar: true,
-    other: '',
+    other: "",
   };
   expect(
     (await render(<object>{toJsonProperties(testObj)}</object>)).jsonValue
   ).toStrictEqual(testObj);
 });
 
-it('works for BindingTemplateInstances and ExpressionTemplateInstances', async () => {
+test("works for BindingTemplateInstances and ExpressionTemplateInstances", async () => {
   const testObj = {
     request_uuid: b`foo.bar.UUID`,
     page_experience: e`foo.bar.GetDataResult`,
@@ -70,21 +71,21 @@ it('works for BindingTemplateInstances and ExpressionTemplateInstances', async (
   ).toStrictEqual(expectedTemplateInstanceObjects);
 });
 
-it('handles array props', async () => {
+test("handles array props", async () => {
   const expected = {
-    id: 'root',
-    type: 'assetWithArray',
-    stuff: [{ id: '1' }, { id: '2' }],
+    id: "root",
+    type: "assetWithArray",
+    stuff: [{ id: "1" }, { id: "2" }],
   };
 
-  const things = [{ id: '1' }, { id: '2' }];
+  const things = [{ id: "1" }, { id: "2" }];
 
   const element = <ArrayProp stuff={things} />;
 
   expect((await render(element)).jsonValue).toStrictEqual(expected);
 });
 
-test('flattens fragments', async () => {
+test("flattens fragments", async () => {
   const element = (
     <Collection>
       <>
@@ -106,21 +107,21 @@ test('flattens fragments', async () => {
   );
 });
 
-test('can ignore json props', async () => {
+test("can ignore json props", async () => {
   const testObj = {
     foo: b`test.foo`,
     bar: true,
-    other: '',
+    other: "",
   };
   const processedTestObj = {
-    foo: '{{test.foo}}',
+    foo: "{{test.foo}}",
     bar: true,
-    other: '',
+    other: "",
   };
   const unprocessedTestObj = {
-    foo: 'test.foo',
+    foo: "test.foo",
     bar: true,
-    other: '',
+    other: "",
   };
   expect(
     (await render(<object>{toJsonProperties(testObj)}</object>)).jsonValue
@@ -129,7 +130,7 @@ test('can ignore json props', async () => {
     (
       await render(
         <object>
-          {toJsonProperties(testObj, { propertiesToSkip: ['foo'] })}
+          {toJsonProperties(testObj, { propertiesToSkip: ["foo"] })}
         </object>
       )
     ).jsonValue

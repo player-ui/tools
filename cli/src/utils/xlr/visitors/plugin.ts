@@ -1,12 +1,12 @@
-import type { TopLevelNode } from '@player-tools/xlr-utils';
-import { isNodeExported, isTopLevelNode } from '@player-tools/xlr-utils';
-import path from 'path';
-import ts from 'typescript';
-import fs from 'fs';
-import type { Manifest, NamedType, RefNode } from '@player-tools/xlr';
-import type { TsConverter } from '@player-tools/xlr-converters';
-import type { VisitorProps } from './types';
-import { PLAYER_PLUGIN_INTERFACE_NAME } from '../consts';
+import type { TopLevelNode } from "@player-tools/xlr-utils";
+import { isNodeExported, isTopLevelNode } from "@player-tools/xlr-utils";
+import path from "path";
+import ts from "typescript";
+import fs from "fs";
+import type { Manifest, NamedType, RefNode } from "@player-tools/xlr";
+import type { TsConverter } from "@player-tools/xlr-converters";
+import type { VisitorProps } from "./types";
+import { PLAYER_PLUGIN_INTERFACE_NAME } from "../consts";
 
 /**
  * Follows references to get the actual underlying declaration
@@ -70,12 +70,12 @@ function fixExpressionArgNames(
 
   const paramsNode = typeRefCopy.genericArguments?.[0];
 
-  if (paramsNode && paramsNode.type === 'array') {
+  if (paramsNode && paramsNode.type === "array") {
     const functionArg = arrowFunction.parameters?.[offset];
     if (!paramsNode.name && functionArg) {
       paramsNode.name = functionArg.name.getText();
     }
-  } else if (paramsNode && paramsNode.type === 'tuple') {
+  } else if (paramsNode && paramsNode.type === "tuple") {
     paramsNode.elementTypes?.forEach((gArg, index) => {
       const functionArg = arrowFunction.parameters?.[index + offset];
       if (!gArg.name && functionArg) {
@@ -98,8 +98,8 @@ function runPlayerPostProcessing(
   checker: ts.TypeChecker
 ): NamedType {
   if (
-    xlr.type === 'ref' &&
-    xlr.ref.includes('ExpressionHandler') &&
+    xlr.type === "ref" &&
+    xlr.ref.includes("ExpressionHandler") &&
     ts.isVariableStatement(node)
   ) {
     return fixExpressionArgNames(node, xlr, checker);
@@ -127,7 +127,7 @@ function generateXLR(
         capabilityDescription,
         checker
       );
-      const capabilityName = capabilityDescription?.name ?? 'error';
+      const capabilityName = capabilityDescription?.name ?? "error";
       fs.writeFileSync(
         path.join(outputDirectory, `${capabilityName}.json`),
         JSON.stringify(capabilityDescription, undefined, 4)
@@ -166,19 +166,19 @@ export function pluginVisitor(args: VisitorProps): Manifest | undefined {
             }
 
             capabilities = {
-              pluginName: 'Unknown Plugin',
+              pluginName: "Unknown Plugin",
             };
 
             // Get registration name of plugin
             const nameProperty = node.members.find(
               (member) =>
                 ts.isPropertyDeclaration(member) &&
-                member.name?.getText() === 'name'
+                member.name?.getText() === "name"
             ) as ts.PropertyDeclaration | undefined;
             if (nameProperty && nameProperty.initializer) {
               capabilities.pluginName = nameProperty.initializer
                 ?.getText()
-                .replace(/['"]+/g, '');
+                .replace(/[""]+/g, "");
             }
 
             const provides: Map<string, Array<string>> = new Map();

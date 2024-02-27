@@ -2,9 +2,9 @@ import type {
   DSLCompiler,
   CompilerReturn,
   SerializeContext,
-} from '@player-tools/dsl';
-import { isDefaultCompilerContentType } from '@player-tools/dsl';
-import { AsyncSeriesBailHook } from 'tapable-ts';
+} from "@player-tools/dsl";
+import { isDefaultCompilerContentType } from "@player-tools/dsl";
+import { AsyncSeriesBailHook } from "tapable-ts";
 
 /**
  *
@@ -41,7 +41,7 @@ export class CompilationContext {
   constructor(dslCompiler: DSLCompiler) {
     this.dslCompiler = dslCompiler;
 
-    this.hooks.compileContent.tap('default', async ({ type }, content) => {
+    this.hooks.compileContent.tap("default", async ({ type }, content) => {
       if (isDefaultCompilerContentType(type)) {
         return this.dslCompiler.serialize(content, { type });
       }

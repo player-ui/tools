@@ -1,14 +1,14 @@
-import type { RPCFunctionCallback } from '../rpc';
-import type { Runtime } from '../types';
+import type { RPCFunctionCallback } from "../rpc";
+import type { Runtime } from "../types";
 
 export type RuntimeEventWithoutSource =
-  | Omit<Runtime.PlayerDataChangeEvent, 'source'>
-  | Omit<Runtime.PlayerLogEvent, 'source'>
-  | Omit<Runtime.PlayerInitEvent, 'source'>
-  | Omit<Runtime.PlayerViewUpdateEvent, 'source'>
-  | Omit<Runtime.RuntimeInitEvent, 'source'>
-  | Omit<Runtime.PlayerFlowStartEvent, 'source'>
-  | Omit<Runtime.PlayerRemovedEvent, 'source'>;
+  | Omit<Runtime.PlayerDataChangeEvent, "source">
+  | Omit<Runtime.PlayerLogEvent, "source">
+  | Omit<Runtime.PlayerInitEvent, "source">
+  | Omit<Runtime.PlayerViewUpdateEvent, "source">
+  | Omit<Runtime.RuntimeInitEvent, "source">
+  | Omit<Runtime.PlayerFlowStartEvent, "source">
+  | Omit<Runtime.PlayerRemovedEvent, "source">;
 
 export type RuntimeEventPublisher = (
   message: RuntimeEventWithoutSource

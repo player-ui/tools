@@ -1,4 +1,4 @@
-import type * as ts from 'typescript/lib/tsserverlibrary';
+import ts from "typescript/lib/tsserverlibrary";
 
 export default class VirtualServiceHost implements ts.LanguageServiceHost {
   private readonly files = new Map<string, string>();
@@ -36,7 +36,7 @@ export default class VirtualServiceHost implements ts.LanguageServiceHost {
   }
 
   getScriptVersion() {
-    return '0';
+    return "0";
   }
 
   getScriptSnapshot(fileName: string) {
@@ -55,13 +55,13 @@ export default class VirtualServiceHost implements ts.LanguageServiceHost {
   }
 
   fileExists(path: string): boolean {
-    return path.includes('node_modules')
+    return path.includes("node_modules")
       ? this.typescript.sys.fileExists(path)
       : this.files.has(path);
   }
 
   readFile(path: string, encoding?: string | undefined): string | undefined {
-    return path.includes('node_modules')
+    return path.includes("node_modules")
       ? this.typescript.sys.readFile(path, encoding)
       : this.files.get(path);
   }

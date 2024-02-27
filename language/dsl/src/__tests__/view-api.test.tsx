@@ -1,10 +1,11 @@
-import React from 'react';
-import { render } from 'react-json-reconciler';
-import { binding as b } from '../string-templates';
-import { Info } from './helpers/asset-library';
+import { test, expect, describe } from "vitest";
+import React from "react";
+import { render } from "react-json-reconciler";
+import { binding as b } from "../string-templates";
+import { Info } from "./helpers/asset-library";
 
-describe('View', () => {
-  it('Does not convert ref property to template', async () => {
+describe("View", () => {
+  test("Does not convert ref property to template", async () => {
     const validationBinding = b`some.binding`;
     const element = (
       await render(
@@ -12,9 +13,9 @@ describe('View', () => {
           id="custom-id"
           validation={[
             {
-              type: 'expression',
+              type: "expression",
               ref: validationBinding,
-              message: 'some validation message',
+              message: "some validation message",
             },
           ]}
         >
@@ -24,20 +25,20 @@ describe('View', () => {
     ).jsonValue;
 
     expect(element).toStrictEqual({
-      id: 'custom-id',
+      id: "custom-id",
       title: {
         asset: {
-          id: 'custom-id-title',
-          type: 'text',
-          value: 'Cool Title',
+          id: "custom-id-title",
+          type: "text",
+          value: "Cool Title",
         },
       },
-      type: 'info',
+      type: "info",
       validation: [
         {
-          message: 'some validation message',
-          ref: 'some.binding',
-          type: 'expression',
+          message: "some validation message",
+          ref: "some.binding",
+          type: "expression",
         },
       ],
     });

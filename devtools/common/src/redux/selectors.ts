@@ -1,5 +1,5 @@
-import { createSelector } from '@reduxjs/toolkit';
-import type { StoreState, PlayersState } from '../types/state';
+import { createSelector } from "@reduxjs/toolkit";
+import type { StoreState, PlayersState } from "../types/state";
 
 /**
  * Selects the player state

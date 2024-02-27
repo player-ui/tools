@@ -1,18 +1,18 @@
-import type { FunctionType, FunctionTypeParameters } from '@player-tools/xlr';
-import { simpleTransformGenerator } from '@player-tools/xlr-sdk';
+import type { FunctionType, FunctionTypeParameters } from "@player-tools/xlr";
+import { simpleTransformGenerator } from "@player-tools/xlr-sdk";
 
 export const toFunction = simpleTransformGenerator(
-  'ref',
-  'Expressions',
+  "ref",
+  "Expressions",
   (exp) => {
-    if (!exp.genericArguments || exp.ref !== 'ExpressionHandler') {
+    if (!exp.genericArguments || exp.ref !== "ExpressionHandler") {
       return exp;
     }
 
     const [args, returnType] = exp.genericArguments;
 
     const parameters: Array<FunctionTypeParameters> = (
-      args.type === 'tuple' ? args.elementTypes : []
+      args.type === "tuple" ? args.elementTypes : []
     ).map((elementType, index) => {
       return {
         name:
@@ -36,7 +36,7 @@ export const toFunction = simpleTransformGenerator(
 
     return {
       ...exp,
-      type: 'function',
+      type: "function",
       parameters,
       returnType,
     } as FunctionType as any;

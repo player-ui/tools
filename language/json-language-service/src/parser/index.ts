@@ -1,12 +1,12 @@
-import type { TextDocument } from 'vscode-languageserver-textdocument';
-import { getNodeValue as getJSONNodeValue } from 'jsonc-parser';
-import type { PlayerContent } from './document';
-import type { ASTNode } from './types';
+import type { TextDocument } from "vscode-languageserver-textdocument";
+import { getNodeValue as getJSONNodeValue } from "jsonc-parser";
+import type { PlayerContent } from "./document";
+import type { ASTNode } from "./types";
 
-export * from './utils';
-export { parse } from './document';
-export * from './types';
-export * from './document';
+export * from "./utils";
+export { parse } from "./document";
+export * from "./types";
+export * from "./document";
 
 export interface PlayerContentProvider {
   parse(document: TextDocument): PlayerContent;
@@ -36,4 +36,4 @@ export function getNodeValue(node: ASTNode): any {
   return getJSONNodeValue(node.jsonNode);
 }
 
-export * from './edits';
+export * from "./edits";

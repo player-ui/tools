@@ -1,68 +1,68 @@
-import React from 'react';
-import { ObjectInspector } from '@devtools-ds/object-inspector';
-import Split from 'react-split';
-import type { ResolvedASTNode, ASTNode } from '@devtools-ds/object-parser';
-import type { Runtime } from '@player-tools/devtools-common';
-import styles from './data.css';
-import commonStyles from '../app.css';
+import React from "react";
+import { ObjectInspector } from "@devtools-ds/object-inspector";
+import Split from "react-split";
+import type { ResolvedASTNode, ASTNode } from "@devtools-ds/object-parser";
+import type { Runtime } from "@player-tools/devtools-common";
+import styles from "./data.css";
+import commonStyles from "../app.css";
 
 interface DataDetailsPanelProps {
-  details?: Runtime.PlayerDataBindingRPC['result'];
+  readonly details?: Runtime.PlayerDataBindingRPC["result"];
 }
 
 export const DataDetailsPanel = (props: DataDetailsPanelProps) => {
   const { details } = props;
 
   return (
-    <div key={props.details?.binding} className={styles['data-details']}>
+    <div key={props.details?.binding} className={styles["data-details"]}>
       <h3>Details</h3>
       {details ? (
         <div>
-          <div className={styles['data-details-section']}>
-            <div className={styles['data-details-pair']}>
+          <div className={styles["data-details-section"]}>
+            <div className={styles["data-details-pair"]}>
               <h5>Binding:</h5>
-              <span className={styles['data-details-string-value']}>
+              <span className={styles["data-details-string-value"]}>
                 {`"${details.binding}"`}
               </span>
             </div>
-            <div className={styles['data-details-pair']}>
+            <div className={styles["data-details-pair"]}>
               <h5>Current Value:</h5>
               <ObjectInspector
-                className={styles['data-details-obj-inspector']}
+                className={styles["data-details-obj-inspector"]}
                 includePrototypes={false}
                 data={details.value?.currentValue}
               />
             </div>
-            <div className={styles['data-details-pair']}>
+            <div className={styles["data-details-pair"]}>
               <h5>Formatted Value:</h5>
               <ObjectInspector
-                className={styles['data-details-obj-inspector']}
+                className={styles["data-details-obj-inspector"]}
                 includePrototypes={false}
                 data={details.value?.formattedValue}
               />
             </div>
-            <div className={styles['data-details-pair']}>
+            <div className={styles["data-details-pair"]}>
               <h5>Model Value:</h5>
               <ObjectInspector
-                className={styles['data-details-obj-inspector']}
+                className={styles["data-details-obj-inspector"]}
                 includePrototypes={false}
                 data={details.value?.modelValue}
               />
             </div>
           </div>
-          <div className={styles['data-details-section']}>
+          <div className={styles["data-details-section"]}>
             <h4>Schema</h4>
-            <div className={styles['data-details-pair']}>
+            <div className={styles["data-details-pair"]}>
               <h5>Type:</h5>
-              <span className={styles['data-details-string-value']}>
+              <span className={styles["data-details-string-value"]}>
                 {`"${details.type?.type}"`}
               </span>
             </div>
             {details.type?.validation && (
-              <div className={styles['data-details-pair']}>
+              <div className={styles["data-details-pair"]}>
                 <h5>Validation:</h5>
                 <ObjectInspector
-                  className={styles['data-details-obj-inspector']}
+                  className={styles["data-details-obj-inspector"]}
                   includePrototypes={false}
                   data={details.type?.validation}
                 />
@@ -71,17 +71,17 @@ export const DataDetailsPanel = (props: DataDetailsPanelProps) => {
           </div>
 
           {details.validation && (
-            <div className={styles['data-details-section']}>
+            <div className={styles["data-details-section"]}>
               <h4>Validation</h4>
-              <div className={styles['data-details-pair']}>
+              <div className={styles["data-details-pair"]}>
                 <h5>Severity:</h5>
-                <span className={styles['data-details-string-value']}>
+                <span className={styles["data-details-string-value"]}>
                   {details.validation.severity}
                 </span>
               </div>
-              <div className={styles['data-details-pair']}>
+              <div className={styles["data-details-pair"]}>
                 <h5>Message:</h5>
-                <span className={styles['data-details-string-value']}>
+                <span className={styles["data-details-string-value"]}>
                   {`"${details.validation.message}"`}
                 </span>
               </div>
@@ -96,9 +96,11 @@ export const DataDetailsPanel = (props: DataDetailsPanelProps) => {
 };
 
 interface DataProps {
-  allBindings: Runtime.PlayerDataBindingRPC['result'];
-  selectedBinding: Runtime.PlayerDataBindingRPC['result'];
-  onSelect: (astNode: ASTNode | ResolvedASTNode | undefined) => Promise<void>;
+  readonly allBindings: Runtime.PlayerDataBindingRPC["result"];
+  readonly selectedBinding: Runtime.PlayerDataBindingRPC["result"];
+  readonly onSelect: (
+    astNode: ASTNode | ResolvedASTNode | undefined
+  ) => Promise<void>;
 }
 
 export const Data = ({ allBindings, selectedBinding, onSelect }: DataProps) => (
@@ -108,7 +110,7 @@ export const Data = ({ allBindings, selectedBinding, onSelect }: DataProps) => (
     className={styles.split}
     gutterSize={1}
   >
-    <div className={styles['data-panel-wrapper']}>
+    <div className={styles["data-panel-wrapper"]}>
       {allBindings?.value.currentValue ? (
         <ObjectInspector
           includePrototypes={false}
@@ -120,7 +122,7 @@ export const Data = ({ allBindings, selectedBinding, onSelect }: DataProps) => (
         <div className={commonStyles.noData}>No data available</div>
       )}
     </div>
-    <div className={styles['data-panel-wrapper']}>
+    <div className={styles["data-panel-wrapper"]}>
       <DataDetailsPanel details={selectedBinding} />
     </div>
   </Split>

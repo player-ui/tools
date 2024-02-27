@@ -1,21 +1,21 @@
-import type { NodeType } from '@player-tools/xlr';
-import type { XLRSDK } from '@player-tools/xlr-sdk';
-import type { CompletionItem } from 'vscode-languageserver-types';
+import type { NodeType } from "@player-tools/xlr";
+import type { XLRSDK } from "@player-tools/xlr-sdk";
+import type { CompletionItem } from "vscode-languageserver-types";
 import {
   CompletionItemKind,
   DiagnosticSeverity,
   MarkupKind,
-} from 'vscode-languageserver-types';
-import type { Node } from 'jsonc-parser';
+} from "vscode-languageserver-types";
+import type { Node } from "jsonc-parser";
 import type {
   ASTVisitor,
   PlayerLanguageService,
   PlayerLanguageServicePlugin,
   ValidationContext,
-} from '..';
-import { mapFlowStateToType } from '../utils';
-import type { ASTNode, ObjectASTNode, ViewASTNode } from '../parser';
-import type { EnhancedDocumentContextWithPosition } from '../types';
+} from "..";
+import { mapFlowStateToType } from "../utils";
+import type { ASTNode, ObjectASTNode } from "../parser";
+import type { EnhancedDocumentContextWithPosition } from "../types";
 
 /** BFS search to find a JSONC node in children of some AST Node */
 const findErrorNode = (rootNode: ASTNode, nodeToFind: Node): ASTNode => {
@@ -57,7 +57,7 @@ function createValidationVisitor(
           message: `Warning - Asset Type ${assetNode.assetType?.valueNode?.value} was not loaded into Validator definitions`,
           severity: DiagnosticSeverity.Error,
         });
-        expectedType = 'Asset';
+        expectedType = "Asset";
       }
 
       const validationIssues = sdk.validateByName(
@@ -65,7 +65,7 @@ function createValidationVisitor(
         assetNode.jsonNode
       );
       validationIssues.forEach((issue) => {
-        if (!nodesWithErrors.has(issue.node) || issue.type === 'missing') {
+        if (!nodesWithErrors.has(issue.node) || issue.type === "missing") {
           nodesWithErrors.add(issue.node);
           ctx.addViolation({
             node: findErrorNode(assetNode, issue.node),
@@ -84,7 +84,7 @@ function createValidationVisitor(
           message: `Warning - View Type ${viewNode.viewType?.valueNode?.value} was not loaded into Validator definitions`,
           severity: DiagnosticSeverity.Error,
         });
-        expectedType = 'View';
+        expectedType = "View";
       }
 
       const validationIssues = sdk.validateByName(
@@ -92,7 +92,7 @@ function createValidationVisitor(
         viewNode.jsonNode
       );
       validationIssues.forEach((issue) => {
-        if (!nodesWithErrors.has(issue.node) || issue.type === 'missing') {
+        if (!nodesWithErrors.has(issue.node) || issue.type === "missing") {
           nodesWithErrors.add(issue.node);
           ctx.addViolation({
             node: findErrorNode(viewNode, issue.node),
@@ -103,7 +103,7 @@ function createValidationVisitor(
       });
     },
     ContentNode: (contentNode) => {
-      const flowType = sdk.getType('Flow');
+      const flowType = sdk.getType("Flow");
 
       if (!flowType) {
         throw new Error(
@@ -117,7 +117,7 @@ function createValidationVisitor(
        * for every view present
        */
 
-      const assetType = sdk.getType('Asset');
+      const assetType = sdk.getType("Asset");
       if (!assetType) {
         throw new Error(
           "Asset is not a registered type, can't validate content. Did you load a version of the base Player types?"
@@ -125,8 +125,8 @@ function createValidationVisitor(
       }
 
       if (
-        flowType.type === 'object' &&
-        flowType.properties.views?.node.type === 'array'
+        flowType.type === "object" &&
+        flowType.properties.views?.node.type === "array"
       ) {
         flowType.properties.views.node.elementType = assetType;
       }
@@ -137,7 +137,7 @@ function createValidationVisitor(
       );
 
       validationIssues.forEach((issue) => {
-        if (!nodesWithErrors.has(issue.node) || issue.type === 'missing') {
+        if (!nodesWithErrors.has(issue.node) || issue.type === "missing") {
           nodesWithErrors.add(issue.node);
           ctx.addViolation({
             node: findErrorNode(contentNode, issue.node),
@@ -148,13 +148,13 @@ function createValidationVisitor(
       });
     },
     NavigationNode: (navigationNode) => {
-      const expectedType = 'Navigation';
+      const expectedType = "Navigation";
       const validationIssues = sdk.validateByName(
         expectedType,
         navigationNode.jsonNode
       );
       validationIssues.forEach((issue) => {
-        if (!nodesWithErrors.has(issue.node) || issue.type === 'missing') {
+        if (!nodesWithErrors.has(issue.node) || issue.type === "missing") {
           nodesWithErrors.add(issue.node);
           ctx.addViolation({
             node: findErrorNode(navigationNode, issue.node),
@@ -165,13 +165,13 @@ function createValidationVisitor(
       });
     },
     FlowNode: (flowNode) => {
-      const expectedType = 'NavigationFlow';
+      const expectedType = "NavigationFlow";
       const validationIssues = sdk.validateByName(
         expectedType,
         flowNode.jsonNode
       );
       validationIssues.forEach((issue) => {
-        if (!nodesWithErrors.has(issue.node) || issue.type === 'missing') {
+        if (!nodesWithErrors.has(issue.node) || issue.type === "missing") {
           nodesWithErrors.add(issue.node);
           ctx.addViolation({
             node: findErrorNode(flowNode, issue.node),
@@ -192,7 +192,7 @@ function createValidationVisitor(
           flowStateNode.jsonNode
         );
         validationIssues.forEach((issue) => {
-          if (!nodesWithErrors.has(issue.node) || issue.type === 'missing') {
+          if (!nodesWithErrors.has(issue.node) || issue.type === "missing") {
             nodesWithErrors.add(issue.node);
             ctx.addViolation({
               node: findErrorNode(flowStateNode, issue.node),
@@ -205,7 +205,7 @@ function createValidationVisitor(
         ctx.addViolation({
           node: flowStateNode,
           message:
-            'Unknown Flow Type, valid options are: VIEW, END, ACTION, EXTERNAL, FLOW',
+            "Unknown Flow Type, valid options are: VIEW, END, ACTION, EXTERNAL, FLOW",
           severity: DiagnosticSeverity.Error,
         });
       }
@@ -228,7 +228,7 @@ function getObjectCompletions(
   }
 
   potentialTypes.forEach((node) => {
-    if (node.type === 'object') {
+    if (node.type === "object") {
       Object.keys(node.properties).forEach((prop) => {
         if (!presentKeys.has(prop)) {
           completions.push({
@@ -240,9 +240,9 @@ function getObjectCompletions(
           });
         }
       });
-    } else if (node.type === 'and') {
+    } else if (node.type === "and") {
       completions.push(...getObjectCompletions(authoredNode, node.and));
-    } else if (node.type === 'or') {
+    } else if (node.type === "or") {
       completions.push(...getObjectCompletions(authoredNode, node.or));
     }
   });
@@ -257,11 +257,11 @@ function getPropertyCompletions(
 ) {
   const completions: Array<CompletionItem> = [];
   potentialTypes.forEach((nodeType) => {
-    if (nodeType.type === 'object') {
+    if (nodeType.type === "object") {
       const propertyNode = nodeType.properties[propertyName]?.node;
       if (
         propertyNode &&
-        propertyNode.type === 'string' &&
+        propertyNode.type === "string" &&
         propertyNode.const
       ) {
         completions.push({
@@ -280,7 +280,7 @@ function complete(
   ctx: EnhancedDocumentContextWithPosition
 ): Array<CompletionItem> {
   if (ctx.XLR?.nearestObjects) {
-    if (ctx.node.type === 'string' && ctx.node?.parent?.type === 'property') {
+    if (ctx.node.type === "string" && ctx.node?.parent?.type === "property") {
       return getPropertyCompletions(
         ctx.node.parent.keyNode.value,
         ctx.XLR.nearestObjects
@@ -295,7 +295,7 @@ function complete(
 
 /** gets hover docs */
 function hover(ctx: EnhancedDocumentContextWithPosition) {
-  if (ctx.XLR && ctx.node.type === 'string') {
+  if (ctx.XLR && ctx.node.type === "string") {
     const docStrings: Array<string> = [];
     const prop = ctx.node.value;
 
@@ -314,7 +314,7 @@ function hover(ctx: EnhancedDocumentContextWithPosition) {
         contents: {
           kind: MarkupKind.PlainText,
           value:
-            'Docs unavailable - More than one type could exist at this location',
+            "Docs unavailable - More than one type could exist at this location",
         },
       };
     }
@@ -322,7 +322,7 @@ function hover(ctx: EnhancedDocumentContextWithPosition) {
     return {
       contents: {
         kind: MarkupKind.PlainText,
-        value: docStrings[0] ?? 'Error getting docs',
+        value: docStrings[0] ?? "Error getting docs",
       },
     };
   }
@@ -330,7 +330,7 @@ function hover(ctx: EnhancedDocumentContextWithPosition) {
 
 /** The plugin to enable duplicate id checking/fixing */
 export class XLRPlugin implements PlayerLanguageServicePlugin {
-  name = 'xlr-plugin';
+  name = "xlr-plugin";
 
   apply(service: PlayerLanguageService) {
     service.hooks.validate.tap(this.name, async (ctx, validation) => {

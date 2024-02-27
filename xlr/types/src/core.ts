@@ -32,28 +32,28 @@ export interface TypeNode<Name = string> {
   type: Name;
 }
 
-export type AnyType = TypeNode<'any'> & CommonTypeInfo<any> & Annotations;
+export type AnyType = TypeNode<"any"> & CommonTypeInfo<any> & Annotations;
 
-export type UnknownType = TypeNode<'unknown'> &
+export type UnknownType = TypeNode<"unknown"> &
   CommonTypeInfo<unknown> &
   Annotations;
-export type UndefinedType = TypeNode<'undefined'> &
+export type UndefinedType = TypeNode<"undefined"> &
   CommonTypeInfo<undefined> &
   Annotations;
-export type NullType = TypeNode<'null'> & CommonTypeInfo<null> & Annotations;
-export type VoidType = TypeNode<'void'> & CommonTypeInfo<void> & Annotations;
-export type StringType = TypeNode<'string'> &
+export type NullType = TypeNode<"null"> & CommonTypeInfo<null> & Annotations;
+export type VoidType = TypeNode<"void"> & CommonTypeInfo<void> & Annotations;
+export type StringType = TypeNode<"string"> &
   CommonTypeInfo<string> &
   Annotations;
-export type NumberType = TypeNode<'number'> &
+export type NumberType = TypeNode<"number"> &
   CommonTypeInfo<number> &
   Annotations;
-export type BooleanType = TypeNode<'boolean'> &
+export type BooleanType = TypeNode<"boolean"> &
   CommonTypeInfo<boolean> &
   Annotations;
-export type NeverType = TypeNode<'never'> & CommonTypeInfo<never> & Annotations;
+export type NeverType = TypeNode<"never"> & CommonTypeInfo<never> & Annotations;
 
-export interface RefNode extends TypeNode<'ref'> {
+export interface RefNode extends TypeNode<"ref"> {
   /** Name of the referenced Type */
   ref: string;
   /** Parameters to potentially fill in a generic when it is resolved. Position is preserved */
@@ -69,7 +69,7 @@ export interface ObjectProperty {
   /** The type of the property */
   node: NodeType;
 }
-export interface ObjectNode extends TypeNode<'object'> {
+export interface ObjectNode extends TypeNode<"object"> {
   /** The properties associated with an object */
   properties: {
     [name: string]: ObjectProperty;
@@ -81,7 +81,7 @@ export interface ObjectNode extends TypeNode<'object'> {
 }
 export type ObjectType = ObjectNode & CommonTypeInfo<object> & Annotations;
 
-export interface ArrayNode extends TypeNode<'array'> {
+export interface ArrayNode extends TypeNode<"array"> {
   /** What types are allowed in the array */
   elementType: NodeType;
 }
@@ -89,7 +89,7 @@ export type ArrayType<T = unknown> = ArrayNode &
   CommonTypeInfo<Array<T>> &
   Annotations;
 
-export interface ConditionalNode extends TypeNode<'conditional'> {
+export interface ConditionalNode extends TypeNode<"conditional"> {
   /** The check arguments */
   check: {
     /** operator */
@@ -117,7 +117,7 @@ export interface TupleMember {
   optional?: boolean;
 }
 
-export interface TupleNode extends TypeNode<'tuple'> {
+export interface TupleNode extends TypeNode<"tuple"> {
   /** The types in the tuple */
   elementTypes: Array<TupleMember>;
   /** The minimum number of items */
@@ -129,24 +129,24 @@ export type TupleType<T extends unknown[] = unknown[]> = TupleNode &
   CommonTypeInfo<T> &
   Annotations;
 
-export type AndType = TypeNode<'and'> &
+export type AndType = TypeNode<"and"> &
   Annotations & {
     /** Nodes in intersection */
     and: NodeType[];
   };
-export type OrType = TypeNode<'or'> &
+export type OrType = TypeNode<"or"> &
   Annotations & {
     /** Nodes in the union */
     or: NodeType[];
   };
 
-export type TemplateLiteralType = TypeNode<'template'> &
+export type TemplateLiteralType = TypeNode<"template"> &
   Annotations & {
     /** String version of regex used to validate template */
     format: string;
   };
 
-export type RecordType = TypeNode<'record'> &
+export type RecordType = TypeNode<"record"> &
   Annotations & {
     /** Key types for the Record */
     keyType: NodeType;
@@ -165,7 +165,7 @@ export type FunctionTypeParameters = {
   default?: NodeType;
 };
 
-export type FunctionType = TypeNode<'function'> &
+export type FunctionType = TypeNode<"function"> &
   Annotations & {
     /** Types for the parameters, in order, for the function */
     parameters: Array<FunctionTypeParameters>;
@@ -207,10 +207,9 @@ export type NodeType =
   | ConditionalType
   | VoidType;
 
-export type NodeTypeStrings = Pick<NodeType, 'type'>['type'];
+export type NodeTypeStrings = Pick<NodeType, "type">["type"];
 
 export type NodeTypeMap = {
-  // eslint-disable-next-line jsdoc/require-jsdoc
   [K in NodeTypeStrings]: Extract<NodeType, { type: K }>;
 };
 

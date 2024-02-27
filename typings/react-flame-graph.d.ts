@@ -1,1 +1,1 @@
-declare module 'react-flame-graph';
+declare module "react-flame-graph";

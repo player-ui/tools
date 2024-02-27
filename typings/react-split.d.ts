@@ -1,1 +1,1 @@
-declare module 'react-split';
+declare module "react-split";

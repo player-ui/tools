@@ -1,4 +1,4 @@
-import ts from 'typescript';
+import ts from "typescript";
 import type {
   NodeType,
   FunctionTypeParameters,
@@ -14,11 +14,11 @@ import type {
   RefType,
   ArrayType,
   OrType,
-} from '@player-tools/xlr';
+} from "@player-tools/xlr";
 import type {
   TopLevelDeclaration,
   TopLevelNode,
-} from '@player-tools/xlr-utils';
+} from "@player-tools/xlr-utils";
 import {
   buildTemplateRegex,
   decorateNode,
@@ -39,16 +39,16 @@ import {
   isTopLevelDeclaration,
   resolveConditional,
   applyExcludeToNodeType,
-} from '@player-tools/xlr-utils';
-import { ConversionError } from './types';
+} from "@player-tools/xlr-utils";
+import { ConversionError } from "./types";
 
-export type MappedType = 'Pick' | 'Omit' | 'Required' | 'Partial' | 'Exclude';
+export type MappedType = "Pick" | "Omit" | "Required" | "Partial" | "Exclude";
 
 /**
- * Returns if the string is one of TypeScript's MappedTypes
+ * Returns if the string is one of TypeScript"s MappedTypes
  */
 export function isMappedTypeNode(x: string): x is MappedType {
-  return ['Pick', 'Omit', 'Required', 'Partial', 'Exclude'].includes(x);
+  return ["Pick", "Omit", "Required", "Partial", "Exclude"].includes(x);
 }
 
 export interface TSConverterContext {
@@ -72,7 +72,7 @@ export interface TSConverterContext {
 }
 
 const AnyTypeNode: AnyType = {
-  type: 'any',
+  type: "any",
 };
 
 /** Converts TS Nodes/Files to XLRs */
@@ -153,7 +153,7 @@ export class TsConverter {
 
       const baseObject = {
         name: node.name.getText(),
-        type: 'object',
+        type: "object",
         ...this.tsObjectMembersToProperties(node),
         ...decorateNode(node),
         genericTokens,
@@ -197,7 +197,7 @@ export class TsConverter {
         // If resultingNode is a reference to a function or custom primitive and not a concrete value
         // we need to update the name to be the name of the exporting variable
         // not the name of the identifier its aliasing
-        if (resultingNode.type === 'function' || resultingNode.type === 'ref') {
+        if (resultingNode.type === "function" || resultingNode.type === "ref") {
           resultingNode = { ...resultingNode, name: variable.name.getText() };
         }
 
@@ -232,7 +232,7 @@ export class TsConverter {
   private tsNodeToType(node: ts.TypeNode): NodeType {
     if (ts.isUnionTypeNode(node)) {
       return {
-        type: 'or',
+        type: "or",
         or: node.types
           .map((child) => this.convertTsTypeNode(child))
           .filter(isNonNullable),
@@ -242,7 +242,7 @@ export class TsConverter {
 
     if (ts.isIntersectionTypeNode(node)) {
       return {
-        type: 'and',
+        type: "and",
         and: node.types
           .map((child) => this.convertTsTypeNode(child))
           .filter(isNonNullable),
@@ -280,36 +280,36 @@ export class TsConverter {
     }
 
     if (node.kind === ts.SyntaxKind.AnyKeyword) {
-      return { type: 'any', ...decorateNode(node) };
+      return { type: "any", ...decorateNode(node) };
     }
 
     if (node.kind === ts.SyntaxKind.UnknownKeyword) {
-      return { type: 'unknown', ...decorateNode(node) };
+      return { type: "unknown", ...decorateNode(node) };
     }
 
     if (node.kind === ts.SyntaxKind.StringKeyword) {
-      return { type: 'string', ...decorateNode(node) };
+      return { type: "string", ...decorateNode(node) };
     }
 
     if (node.kind === ts.SyntaxKind.NumberKeyword) {
-      return { type: 'number', ...decorateNode(node) };
+      return { type: "number", ...decorateNode(node) };
     }
 
     if (node.kind === ts.SyntaxKind.BooleanKeyword) {
-      return { type: 'boolean', ...decorateNode(node) };
+      return { type: "boolean", ...decorateNode(node) };
     }
 
     if (node.kind === ts.SyntaxKind.UndefinedKeyword) {
-      return { type: 'undefined', ...decorateNode(node) };
+      return { type: "undefined", ...decorateNode(node) };
     }
 
     if (node.kind === ts.SyntaxKind.NeverKeyword) {
-      return { type: 'never', ...decorateNode(node) };
+      return { type: "never", ...decorateNode(node) };
     }
 
     if (node.kind === ts.SyntaxKind.ObjectKeyword) {
       return {
-        type: 'object',
+        type: "object",
         properties: {},
         additionalProperties: AnyTypeNode,
         ...decorateNode(node),
@@ -318,7 +318,7 @@ export class TsConverter {
 
     if (node.kind === ts.SyntaxKind.VoidKeyword) {
       return {
-        type: 'void',
+        type: "void",
         ...decorateNode(node),
       };
     }
@@ -334,14 +334,14 @@ export class TsConverter {
       }
 
       return {
-        type: 'template',
+        type: "template",
         format,
       };
     }
 
     if (ts.isArrayTypeNode(node)) {
       return {
-        type: 'array',
+        type: "array",
         elementType: this.convertTsTypeNode(node.elementType) ?? AnyTypeNode,
         ...decorateNode(node),
       };
@@ -349,7 +349,7 @@ export class TsConverter {
 
     if (ts.isConditionalTypeNode(node)) {
       const xlrNode = {
-        type: 'conditional',
+        type: "conditional",
         check: {
           left: this.convertTsTypeNode(node.checkType) as NodeType,
           right: this.convertTsTypeNode(node.extendsType) as NodeType,
@@ -368,7 +368,7 @@ export class TsConverter {
 
     if (ts.isTupleTypeNode(node)) {
       return {
-        type: 'tuple',
+        type: "tuple",
         ...this.tsTupleToType(node),
         ...decorateNode(node),
       };
@@ -380,7 +380,7 @@ export class TsConverter {
 
     if (ts.isTypeLiteralNode(node)) {
       return {
-        type: 'object',
+        type: "object",
         ...this.tsObjectMembersToProperties(node),
         ...decorateNode(node),
       };
@@ -417,7 +417,7 @@ export class TsConverter {
       }
 
       return {
-        type: 'function',
+        type: "function",
         parameters,
         returnType,
         ...decorateNode(node),
@@ -431,12 +431,12 @@ export class TsConverter {
         ts.isLiteralTypeNode(node.indexType)
       ) {
         const baseObject = this.convertTsTypeNode(node.objectType);
-        const accessor = node.indexType.literal.getText().replace(/["']/g, '');
+        const accessor = node.indexType.literal.getText().replace(/[""]/g, "");
         if (!baseObject) {
           this.context.throwError(
             `Error: Couldn't resolve index access on property ${accessor} on type ${node.objectType.typeName.getText()}`
           );
-        } else if (baseObject.type === 'object') {
+        } else if (baseObject.type === "object") {
           if (Object.keys(baseObject.properties ?? {}).includes(accessor)) {
             return baseObject.properties[accessor].node;
           }
@@ -444,7 +444,7 @@ export class TsConverter {
           if (baseObject.additionalProperties) {
             return baseObject.additionalProperties;
           }
-        } else if (baseObject.type === 'ref') {
+        } else if (baseObject.type === "ref") {
           return { ...baseObject, property: accessor };
         } else {
           this.context.throwError(
@@ -456,7 +456,7 @@ export class TsConverter {
       if (ts.isTypeQueryNode(node.objectType)) {
         const elements = this.tsNodeToType(node.objectType) as TupleType;
         return {
-          type: 'or',
+          type: "or",
           or: [...elements.elementTypes.map((element) => element.type)],
         };
       }
@@ -494,7 +494,7 @@ export class TsConverter {
   private tsLiteralToType(node: ts.Expression): NodeType {
     if (ts.isNumericLiteral(node)) {
       return {
-        type: 'number',
+        type: "number",
         const: Number(node.text),
         ...decorateNode(node),
       };
@@ -502,7 +502,7 @@ export class TsConverter {
 
     if (ts.isStringLiteral(node)) {
       return {
-        type: 'string',
+        type: "string",
         const: node.text,
         ...decorateNode(node),
       };
@@ -510,7 +510,7 @@ export class TsConverter {
 
     if (node.kind === ts.SyntaxKind.TrueKeyword) {
       return {
-        type: 'boolean',
+        type: "boolean",
         const: true,
         ...decorateNode(node),
       };
@@ -518,18 +518,18 @@ export class TsConverter {
 
     if (node.kind === ts.SyntaxKind.FalseKeyword) {
       return {
-        type: 'boolean',
+        type: "boolean",
         const: false,
         ...decorateNode(node),
       };
     }
 
     if (node.kind === ts.SyntaxKind.NullKeyword) {
-      return { type: 'null', ...decorateNode(node) };
+      return { type: "null", ...decorateNode(node) };
     }
 
     if (ts.isPrefixUnaryExpression(node)) {
-      this.context.throwError('Prefix unary expressions not supported');
+      this.context.throwError("Prefix unary expressions not supported");
     }
 
     if (ts.isArrayLiteralExpression(node)) {
@@ -545,15 +545,15 @@ export class TsConverter {
         }
       });
       return {
-        type: 'array',
-        elementType: { type: 'any' },
+        type: "array",
+        elementType: { type: "any" },
         const: arrayElements,
       };
     }
 
     if (ts.isObjectLiteralExpression(node)) {
       const ret = {
-        type: 'object',
+        type: "object",
         properties: {},
         additionalProperties: false,
       } as ObjectType;
@@ -694,8 +694,8 @@ export class TsConverter {
 
   private tsObjectMembersToProperties(
     node: ts.InterfaceDeclaration | ts.TypeLiteralNode
-  ): Pick<ObjectType, 'properties' | 'additionalProperties'> {
-    const ret: Pick<ObjectType, 'properties' | 'additionalProperties'> = {
+  ): Pick<ObjectType, "properties" | "additionalProperties"> {
+    const ret: Pick<ObjectType, "properties" | "additionalProperties"> = {
       properties: {},
       additionalProperties: false,
     };
@@ -714,7 +714,7 @@ export class TsConverter {
         const param = member.parameters[0];
         if (param.type?.kind !== ts.SyntaxKind.StringKeyword) {
           this.context.throwError(
-            'Will not convert non-string index signature'
+            "Will not convert non-string index signature"
           );
         }
 
@@ -728,7 +728,7 @@ export class TsConverter {
 
   private tsTupleToType(
     node: ts.TupleTypeNode
-  ): Pick<TupleType, 'elementTypes' | 'additionalItems' | 'minItems'> {
+  ): Pick<TupleType, "elementTypes" | "additionalItems" | "minItems"> {
     if (node.elements.length === 0) {
       return { elementTypes: [], additionalItems: false, minItems: 0 };
     }
@@ -774,7 +774,7 @@ export class TsConverter {
 
     return {
       elementTypes,
-      ...(additionalItems && additionalItems.type === 'any'
+      ...(additionalItems && additionalItems.type === "any"
         ? { additionalItems: AnyTypeNode }
         : { additionalItems }),
       minItems,
@@ -863,7 +863,7 @@ export class TsConverter {
         additionalProperties = additionalPropertiesCollector[0];
       } else if (additionalPropertiesCollector.length >= 1) {
         additionalProperties = {
-          type: 'or',
+          type: "or",
           or: additionalPropertiesCollector,
         };
       }
@@ -968,13 +968,13 @@ export class TsConverter {
         return AnyTypeNode;
       }
 
-      return { type: 'ref', ref: node.getText(), ...decorateNode(node) };
+      return { type: "ref", ref: node.getText(), ...decorateNode(node) };
     }
 
-    if (refName === 'Array') {
+    if (refName === "Array") {
       const typeArgs = node.typeArguments as ts.NodeArray<ts.TypeNode>;
       return {
-        type: 'array',
+        type: "array",
         elementType: typeArgs
           ? this.convertTsTypeNode(typeArgs[0]) ?? AnyTypeNode
           : AnyTypeNode,
@@ -982,11 +982,11 @@ export class TsConverter {
       };
     }
 
-    if (refName === 'Record') {
+    if (refName === "Record") {
       const indexType = node.typeArguments?.[0] as ts.TypeNode;
       const valueType = node.typeArguments?.[1] as ts.TypeNode;
       return {
-        type: 'record',
+        type: "record",
         keyType: this.convertTsTypeNode(indexType) ?? AnyTypeNode,
         valueType: this.convertTsTypeNode(valueType) ?? AnyTypeNode,
         ...decorateNode(node),
@@ -1029,14 +1029,14 @@ export class TsConverter {
     refName: MappedType,
     node: ts.NodeWithTypeArguments
   ): ObjectType {
-    if (refName === 'Pick' || refName === 'Omit' || refName === 'Exclude') {
+    if (refName === "Pick" || refName === "Omit" || refName === "Exclude") {
       const baseType = node.typeArguments?.[0] as ts.TypeNode;
       const modifiers = node.typeArguments?.[1] as ts.TypeNode;
 
       const baseObj = this.convertTsTypeNode(baseType);
 
-      if (refName === 'Exclude') {
-        if (baseObj.type === 'or') {
+      if (refName === "Exclude") {
+        if (baseObj.type === "or") {
           return applyExcludeToNodeType(
             baseObj as OrType,
             this.convertTsTypeNode(modifiers)
@@ -1055,10 +1055,10 @@ export class TsConverter {
       }
     }
 
-    if (refName === 'Partial' || refName === 'Required') {
+    if (refName === "Partial" || refName === "Required") {
       const baseType = node.typeArguments?.[0] as ts.TypeNode;
       const baseObj = this.convertTsTypeNode(baseType) as NodeType;
-      const modifier = refName !== 'Partial';
+      const modifier = refName !== "Partial";
 
       return applyPartialOrRequiredToNodeType(baseObj, modifier) as ObjectType;
     }
@@ -1099,7 +1099,7 @@ export class TsConverter {
     }
 
     return {
-      type: 'ref',
+      type: "ref",
       ref,
       ...decorateNode(node),
       genericArguments: genericArgs.length > 0 ? genericArgs : undefined,

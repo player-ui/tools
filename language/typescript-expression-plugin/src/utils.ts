@@ -1,7 +1,7 @@
-import type { Position } from 'vscode-languageserver-types';
-import type { ExpressionNode, NodeLocation } from '@player-ui/player';
-import { parseTree } from 'jsonc-parser';
-import type { Node } from 'jsonc-parser';
+import type { Position } from "vscode-languageserver-types";
+import type { ExpressionNode, NodeLocation } from "@player-ui/player";
+import { parseTree } from "jsonc-parser";
+import type { Node } from "jsonc-parser";
 
 /** Check if the vscode position overlaps with the expression location */
 export function isInRange(position: Position, location: NodeLocation) {
@@ -16,7 +16,7 @@ export function getTokenAtPosition(
   node: ExpressionNode,
   position: Position
 ): ExpressionNode | undefined {
-  if (node.type === 'CallExpression') {
+  if (node.type === "CallExpression") {
     const anyArgs = node.args.find((arg) => {
       return getTokenAtPosition(arg, position);
     });
@@ -31,7 +31,7 @@ export function getTokenAtPosition(
     }
   }
 
-  if (node.type === 'Assignment') {
+  if (node.type === "Assignment") {
     const asTarget =
       getTokenAtPosition(node.left, position) ??
       getTokenAtPosition(node.right, position);
@@ -67,14 +67,14 @@ export function toTSLocation(node: ExpressionNode): ts.TextSpan {
 export function convertExprToValue(exprNode: ExpressionNode): any {
   let val;
 
-  if (exprNode.type === 'Literal') {
+  if (exprNode.type === "Literal") {
     val = exprNode.value;
-  } else if (exprNode.type === 'Object') {
+  } else if (exprNode.type === "Object") {
     val = {};
     exprNode.attributes.forEach((prop) => {
       val[convertExprToValue(prop.key)] = convertExprToValue(prop.value);
     });
-  } else if (exprNode.type === 'ArrayExpression') {
+  } else if (exprNode.type === "ArrayExpression") {
     val = exprNode.elements.map(convertExprToValue);
   }
 

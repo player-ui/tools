@@ -1,2 +1,2 @@
-export * from './Info';
-export * from './InfoPanel';
+export * from "./Info";
+export * from "./InfoPanel";

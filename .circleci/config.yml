@@ -16,9 +16,9 @@ orbs:
 executors:
   base:
     docker:
-      - image: docker.io/playerui/bazel-docker
+      - image: docker.io/playerui/bazel-docker:6
     working_directory: ~/tools
-    resource_class: large
+    resource_class: xlarge
     environment:
       TZ: "/usr/share/zoneinfo/America/Los_Angeles"
 
@@ -30,18 +30,16 @@ commands:
           at: ~/tools
 
       - restore_cache:
-          keys: 
-            - v1-bazel-cache-core-{{ .Branch }}-{{ .Revision }} 
-            - v1-bazel-cache-core-{{ .Branch }} 
-            - v1-bazel-cache-core-main 
+          keys:
+            - v1-bazel-cache-core-{{ .Branch }}-{{ .Revision }}
+            - v1-bazel-cache-core-{{ .Branch }}
+            - v1-bazel-cache-core-main
 
-      - run: yarn
-      
-      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+      - run: echo "//registry.npmjs.com/:_authToken=$NPM_TOKEN" >> ~/.npmrc
       - run: echo -e $GPG_KEY | gpg --import --batch
       - run: |
-            source ~/.bashrc
-            npx auto shipit --only-graduate-with-release-label -vv
+          source ~/.bashrc
+          npx auto shipit --only-graduate-with-release-label -vv
 
 jobs:
   setup:
@@ -57,7 +55,7 @@ jobs:
           root: .
           paths:
             - .
-  
+
   bazelrc:
     executor: base
     steps:
@@ -78,8 +76,6 @@ jobs:
       - attach_workspace:
           at: ~/tools
 
-      - run: yarn
-
       - run: bazel build --config=ci -- //...
 
       - save_cache:
@@ -97,8 +93,6 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/tools
-
-      - run: yarn
 
       - run: bazel test --config=ci -- //...
 
@@ -128,7 +122,7 @@ jobs:
             - v1-bazel-cache-core-main
 
       - run: |
-          BUNDLE_TARGETS=$(bazel query "kind(nodejs_test, //...)" --output label 2>/dev/null | tr '\n' ' ')
+          BUNDLE_TARGETS=$(bazel query 'attr("name", "_eslint$|_vitest$", //...)' --output label 2>/dev/null | tr '\n' ' ')
           bazel coverage --config=ci -- $BUNDLE_TARGETS
 
       - codecov/upload:
@@ -209,7 +203,7 @@ workflows:
 
   build_and_test_main:
     when:
-      equal: [ "", << pipeline.parameters.GHA_Action >> ]
+      equal: ["", << pipeline.parameters.GHA_Action >>]
     jobs:
       - setup:
           filters:
@@ -239,7 +233,7 @@ workflows:
 
   release:
     when:
-      equal: [ release, << pipeline.parameters.GHA_Action >> ]
+      equal: [release, << pipeline.parameters.GHA_Action >>]
     jobs:
       - setup
 

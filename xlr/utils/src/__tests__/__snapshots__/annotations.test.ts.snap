@@ -1,9 +1,9 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Annotations JSDoc @meta 1`] = `
-Object {
+exports[`Annotations > JSDoc @meta 1`] = `
+{
   "description": "An asset is the smallest unit of user interaction in a player view",
-  "meta": Object {
+  "meta": {
     "category": "views",
     "screenshot": "/path/image.png",
   },
@@ -11,8 +11,8 @@ Object {
 }
 `;
 
-exports[`Annotations JSDoc comments to strings 1`] = `
-Object {
+exports[`Annotations > JSDoc comments to strings 1`] = `
+{
   "default": "default value",
   "description": "An asset is the smallest unit of user interaction in a player view",
   "examples": "Example usage of interface Asset",

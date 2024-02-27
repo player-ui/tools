@@ -1,10 +1,10 @@
-import React from 'react';
-import type { JsonNode } from 'react-json-reconciler';
-import { flattenNodes } from 'react-json-reconciler';
-import { SlotContext } from './components';
-import type { WithChildren } from './types';
+import React from "react";
+import type { JsonNode } from "react-json-reconciler";
+import { flattenNodes } from "react-json-reconciler";
+import { SlotContext } from "./components";
+import type { WithChildren } from "./types";
 
-const IDSuffixContext = React.createContext<string>('root');
+const IDSuffixContext = React.createContext<string>("root");
 
 export const IndexSuffixStopContext = React.createContext<boolean>(false);
 
@@ -25,11 +25,11 @@ export const IDSuffixProvider = (
   return (
     <IDSuffixContext.Provider
       value={[
-        currentPrefix === 'root' ? undefined : currentPrefix,
+        currentPrefix === "root" ? undefined : currentPrefix,
         props.suffix,
       ]
         .filter(Boolean)
-        .join('-')}
+        .join("-")}
     >
       {props.children}
     </IDSuffixContext.Provider>
@@ -62,10 +62,10 @@ export const useIndexInSlot = (ref: React.RefObject<JsonNode>) => {
 
   React.useEffect(() => {
     if (!slotContext?.isArray) {
-      throw new Error('Cannot get index in non-array slot');
+      throw new Error("Cannot get index in non-array slot");
     }
 
-    if (ref.current && slotContext?.ref.current?.valueNode?.type === 'array') {
+    if (ref.current && slotContext?.ref.current?.valueNode?.type === "array") {
       const allChildren = flattenNodes(
         slotContext.ref.current.valueNode.children
       );

@@ -1,18 +1,15 @@
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-await-in-loop */
-const { execSync } = require('child_process');
+const { execSync } = require("child_process");
 
 const getTags = () => {
-  const tags = execSync('git tag --sort=-creatordate', { encoding: 'utf8' });
+  const tags = execSync("git tag --sort=-creatordate", { encoding: "utf8" });
   return tags
-    .split('\n')
+    .split("\n")
     .map((t) => t.trim())
-    .filter((tag) => tag.includes('-next.'));
+    .filter((tag) => tag.includes("-next."));
 };
 
 class DeleteOldPrereleasePlugin {
-  name = 'delete-old-prerelease';
+  name = "delete-old-prerelease";
 
   apply(auto) {
     auto.hooks.next.tapPromise(this.name, async ({ dryRun }) => {

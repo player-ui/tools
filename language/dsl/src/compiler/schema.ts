@@ -1,20 +1,14 @@
-import type { Schema, Language } from '@player-ui/types';
-import { dequal } from 'dequal';
-import { SyncWaterfallHook } from 'tapable-ts';
-import type { LoggingInterface } from '..';
-import { binding as b } from '..';
-import type { BindingTemplateInstance } from '../string-templates';
+import type { Schema, Language } from "@player-ui/types";
+import { dequal } from "dequal";
+import { SyncWaterfallHook } from "tapable-ts";
+import type { LoggingInterface } from "..";
+import { binding as b } from "..";
+import type { BindingTemplateInstance } from "../string-templates";
 
-const bindingSymbol = Symbol('binding');
+const bindingSymbol = Symbol("binding");
 
-export const SchemaTypeName = Symbol('Schema Rename');
-
-interface GeneratedDataType {
-  /** The SchemaNode that was generated */
-  node: SchemaNode;
-  /** How many times it has been generated */
-  count: number;
-}
+/** Symbol to indicate that a schema node should be generated with a different name */
+export const SchemaTypeName = Symbol("Schema Rename");
 
 interface SchemaChildren {
   /** Object property that will be used to create the intermediate type */
@@ -28,6 +22,13 @@ type SchemaNode = (Schema.DataType | Language.DataTypeRef) & {
   /** Overwrite the name of the generated type */
   [SchemaTypeName]?: string;
 };
+
+interface GeneratedDataType {
+  /** The SchemaNode that was generated */
+  node: SchemaNode;
+  /** How many times it has been generated */
+  count: number;
+}
 
 /**
  * Type Guard for the `Schema.DataType` and `Language.DataTypeRef` type
@@ -113,6 +114,7 @@ export class SchemaGenerator {
     }
 
     let intermediateType;
+    let child;
 
     if (Array.isArray(subType)) {
       if (subType.length > 1) {
@@ -123,12 +125,14 @@ export class SchemaGenerator {
 
       const subTypeName = subType[0][SchemaTypeName] ?? property;
       intermediateType = this.makePlaceholderArrayType(subTypeName);
-      this.children.push({ name: intermediateType.type, child: subType[0] });
+      [child] = subType;
     } else {
       const subTypeName = subType[SchemaTypeName] ?? property;
       intermediateType = this.makePlaceholderType(subTypeName);
-      this.children.push({ name: intermediateType.type, child: subType });
+      child = subType;
     }
+
+    this.children.push({ name: intermediateType.type, child });
 
     if (this.generatedDataTypes.has(intermediateType.type)) {
       const generatedType = this.generatedDataTypes.get(
@@ -136,7 +140,7 @@ export class SchemaGenerator {
       ) as GeneratedDataType;
       if (
         !dequal(
-          subType,
+          child,
           this.generatedDataTypes.get(intermediateType.type)?.node as object
         )
       ) {
@@ -150,7 +154,7 @@ export class SchemaGenerator {
         );
         intermediateType = newIntermediateType;
         this.children.pop();
-        this.children.push({ name: intermediateType.type, child: subType });
+        this.children.push({ name: intermediateType.type, child });
       }
     }
 
@@ -200,7 +204,7 @@ export type MakeBindingRefable<T> = {
  */
 export function makeBindingsForObject<Type>(
   obj: Type,
-  arrayAccessorKeys = ['_index_']
+  arrayAccessorKeys = ["_index_"]
 ): MakeBindingRefable<Type> {
   /** Proxy to track binding callbacks */
   const accessor = (paths: string[]) => {
@@ -218,13 +222,13 @@ export function makeBindingsForObject<Type>(
         if (
           Array.isArray(target[key]) &&
           target[key].length > 0 &&
-          target[key].every((it: any) => typeof it !== 'object')
+          target[key].every((it: any) => typeof it !== "object")
         ) {
           return [...target[key]];
         }
 
         if (!bindingMap.has(target)) {
-          bindingMap.set(target, b`${paths.join('.')}`);
+          bindingMap.set(target, b`${paths.join(".")}`);
         }
 
         if (key === bindingSymbol) {
@@ -233,12 +237,12 @@ export function makeBindingsForObject<Type>(
 
         if (
           Array.isArray(target) &&
-          (arrayAccessorKeys.includes(key) || typeof key === 'number')
+          (arrayAccessorKeys.includes(key) || typeof key === "number")
         ) {
           return new Proxy(target[0], accessor(paths.concat([key])));
         }
 
-        if (bindingKeys.includes(key) && typeof target[key] === 'object') {
+        if (bindingKeys.includes(key) && typeof target[key] === "object") {
           return new Proxy(target[key], accessor(paths.concat([key])));
         }
 
@@ -260,7 +264,7 @@ export const getBindingFromObject = (obj: any) => {
     throw new Error(`Unable to get binding for ${obj}`);
   }
 
-  return b`${baseBindings.join('.')}`;
+  return b`${baseBindings.join(".")}`;
 };
 
 /**

@@ -1,5 +1,5 @@
-import type { NamedType, NodeType } from '@player-tools/xlr';
-import type { XLRRegistry, Filters, TypeMetadata } from './types';
+import type { NamedType, NodeType } from "@player-tools/xlr";
+import type { XLRRegistry, Filters, TypeMetadata } from "./types";
 
 /**
  * Basic example of a XLRs Registry
@@ -18,7 +18,7 @@ export class BasicXLRRegistry implements XLRRegistry {
   /** Returns a copy of the XLR to guard against unexpected type modification */
   get(id: string): NamedType<NodeType> | undefined {
     const value = this.typeMap.get(id);
-    return value ? { ...value } : undefined;
+    return value ? JSON.parse(JSON.stringify(value)) : undefined;
   }
 
   add(type: NamedType<NodeType>, plugin: string, capability: string): void {

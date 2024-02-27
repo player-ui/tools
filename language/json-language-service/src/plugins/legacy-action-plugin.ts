@@ -1,42 +1,42 @@
-import { DiagnosticSeverity } from 'vscode-languageserver-types';
-import type { PlayerLanguageService, PlayerLanguageServicePlugin } from '..';
-import type { ASTNode } from '../parser';
-import { getNodeValue } from '../parser';
-import type { ASTVisitor, ValidationContext } from '../types';
+import { DiagnosticSeverity } from "vscode-languageserver-types";
+import type { PlayerLanguageService, PlayerLanguageServicePlugin } from "..";
+import type { ASTNode } from "../parser";
+import { getNodeValue } from "../parser";
+import type { ASTVisitor, ValidationContext } from "../types";
 
 /** Create an AST visitor for checking the legacy action */
 function createRuleVisitor(context: ValidationContext): ASTVisitor {
   /** Check if a node is using the action asset or not */
   const checkForLegacyAction = (node: ASTNode) => {
-    if (node.type === 'asset') {
+    if (node.type === "asset") {
       return;
     }
 
     if (
-      node.type === 'object' &&
+      node.type === "object" &&
       !node.properties.some(
         (p) =>
-          p.keyNode.value === 'asset' ||
-          p.keyNode.value === 'dynamicSwitch' ||
-          p.keyNode.value === 'staticSwitch'
+          p.keyNode.value === "asset" ||
+          p.keyNode.value === "dynamicSwitch" ||
+          p.keyNode.value === "staticSwitch"
       )
     ) {
       context.addViolation({
-        message: 'Migrate to an action-asset',
+        message: "Migrate to an action-asset",
         node,
         severity: DiagnosticSeverity.Warning,
         fix: () => {
           const newActionAsset = {
             asset: {
-              type: 'action',
+              type: "action",
               ...getNodeValue(node),
             },
           };
 
           return {
-            name: 'Convert to Asset',
+            name: "Convert to Asset",
             edit: {
-              type: 'replace',
+              type: "replace",
               node,
               value: JSON.stringify(newActionAsset, null, 2),
             },
@@ -51,10 +51,10 @@ function createRuleVisitor(context: ValidationContext): ASTVisitor {
       // Check for an `actions` array of non-assets
 
       const actionsProp = viewNode.properties.find(
-        (p) => p.keyNode.value === 'actions'
+        (p) => p.keyNode.value === "actions"
       );
 
-      if (!actionsProp || actionsProp.valueNode?.type !== 'array') {
+      if (!actionsProp || actionsProp.valueNode?.type !== "array") {
         return;
       }
 
@@ -69,7 +69,7 @@ function createRuleVisitor(context: ValidationContext): ASTVisitor {
 
 /** A plugin that validates and corrects the usage of non-asset actions in a view */
 export class LegacyActionPlugin implements PlayerLanguageServicePlugin {
-  name = 'legacy-action';
+  name = "legacy-action";
 
   apply(service: PlayerLanguageService) {
     service.hooks.validate.tap(this.name, async (ctx, validationContext) => {

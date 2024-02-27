@@ -1,39 +1,44 @@
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import { PlayerLanguageService } from '../..';
-import { toTextDocument } from '../../utils';
+import { test, expect, describe, beforeEach } from "vitest";
+import { TextDocument } from "vscode-languageserver-textdocument";
+import {
+  ReferenceAssetsWebPluginManifest,
+  Types,
+} from "@player-tools/static-xlrs";
+import { PlayerLanguageService } from "../..";
+import { toTextDocument } from "../../utils";
 
-describe('action-plugin', () => {
+describe("action-plugin", () => {
   let service: PlayerLanguageService;
 
   beforeEach(async () => {
     service = new PlayerLanguageService();
-    await service.setAssetTypes([
-      './common/static_xlrs/core',
-      './common/static_xlrs/plugin',
+    await service.setAssetTypesFromModule([
+      Types,
+      ReferenceAssetsWebPluginManifest,
     ]);
   });
 
-  test('fixes old actions', async () => {
+  test("fixes old actions", async () => {
     let testDocument = toTextDocument(
       JSON.stringify(
         {
-          id: 'foo',
+          id: "foo",
           views: [
             {
-              id: 'bar',
-              type: 'collection',
+              id: "bar",
+              type: "collection",
               actions: [
                 {
-                  id: 'action-1',
-                  value: 'Next',
+                  id: "action-1",
+                  value: "Next",
                 },
                 {
-                  value: 'other',
+                  value: "other",
                   label: {
                     asset: {
-                      id: 'other-label',
-                      type: 'text',
-                      value: 'Other',
+                      id: "other-label",
+                      type: "text",
+                      value: "Other",
                     },
                   },
                 },
@@ -50,8 +55,8 @@ describe('action-plugin', () => {
 
     expect(diags).toHaveLength(4);
     expect(diags?.map((m) => m.message)).toMatchInlineSnapshot(`
-      Array [
-        "Content Validation Error - missing: Property 'navigation' missing from type 'Flow'",
+      [
+        "Content Validation Error - missing: Property "navigation" missing from type "Flow"",
         "View is not reachable",
         "Migrate to an action-asset",
         "Migrate to an action-asset",
@@ -73,26 +78,26 @@ describe('action-plugin', () => {
 
     expect(appliedAction).toMatchInlineSnapshot(`
       "{
-        \\"id\\": \\"foo\\",
-        \\"views\\": [
+        "id": "foo",
+        "views": [
           {
-            \\"id\\": \\"bar\\",
-            \\"type\\": \\"collection\\",
-            \\"actions\\": [
+            "id": "bar",
+            "type": "collection",
+            "actions": [
               {
-        \\"asset\\": {
-          \\"type\\": \\"action\\",
-          \\"id\\": \\"action-1\\",
-          \\"value\\": \\"Next\\"
+        "asset": {
+          "type": "action",
+          "id": "action-1",
+          "value": "Next"
         }
       },
               {
-                \\"value\\": \\"other\\",
-                \\"label\\": {
-                  \\"asset\\": {
-                    \\"id\\": \\"other-label\\",
-                    \\"type\\": \\"text\\",
-                    \\"value\\": \\"Other\\"
+                "value": "other",
+                "label": {
+                  "asset": {
+                    "id": "other-label",
+                    "type": "text",
+                    "value": "Other"
                   }
                 }
               }
@@ -128,28 +133,28 @@ describe('action-plugin', () => {
 
     expect(nextAppliedAction).toMatchInlineSnapshot(`
       "{
-        \\"id\\": \\"foo\\",
-        \\"views\\": [
+        "id": "foo",
+        "views": [
           {
-            \\"id\\": \\"bar\\",
-            \\"type\\": \\"collection\\",
-            \\"actions\\": [
+            "id": "bar",
+            "type": "collection",
+            "actions": [
               {
-        \\"asset\\": {
-          \\"type\\": \\"action\\",
-          \\"id\\": \\"action-1\\",
-          \\"value\\": \\"Next\\"
+        "asset": {
+          "type": "action",
+          "id": "action-1",
+          "value": "Next"
         }
       },
               {
-        \\"asset\\": {
-          \\"type\\": \\"action\\",
-          \\"value\\": \\"other\\",
-          \\"label\\": {
-            \\"asset\\": {
-              \\"id\\": \\"other-label\\",
-              \\"type\\": \\"text\\",
-              \\"value\\": \\"Other\\"
+        "asset": {
+          "type": "action",
+          "value": "other",
+          "label": {
+            "asset": {
+              "id": "other-label",
+              "type": "text",
+              "value": "Other"
             }
           }
         }

@@ -1,10 +1,10 @@
-import type { Severity } from '@player-ui/player';
-import type { Binding, Flow, Schema, View } from '@player-ui/types';
-import type { RUNTIME_SOURCE } from '../constants';
-import type { ProfilerNode } from './state';
+import type { Severity } from "@player-ui/player";
+import type { Binding, Flow, Schema, View } from "@player-ui/types";
+import type { RUNTIME_SOURCE } from "../constants";
+import type { ProfilerNode } from "./state";
 
 export interface BaseEventMessage<
-  T extends Runtime.RuntimeEventTypes | 'rpc-request' | 'rpc-response'
+  T extends Runtime.RuntimeEventTypes | "rpc-request" | "rpc-response"
 > {
   /**
    * Source of the Message
@@ -44,7 +44,7 @@ export interface BaseMessageWithPlayerID<T extends Runtime.RuntimeEventTypes>
 }
 
 export interface RPCRequestMessageEvent<T extends BaseRPCType<any>>
-  extends BaseEventMessage<'rpc-request'> {
+  extends BaseEventMessage<"rpc-request"> {
   /**
    * Unique Player Id associated with the RPC Request message.
    */
@@ -52,15 +52,15 @@ export interface RPCRequestMessageEvent<T extends BaseRPCType<any>>
   /**
    * RPC type associated with the RPC Request message.
    */
-  rpcType: T['type'];
+  rpcType: T["type"];
   /**
    * Parameters associated with the RPC Request message.
    */
-  params: T['params'];
+  params: T["params"];
 }
 
 export interface RPCResponseMessageEvent<T extends BaseRPCType<any>>
-  extends BaseEventMessage<'rpc-response'> {
+  extends BaseEventMessage<"rpc-response"> {
   /**
    * Unique Id associated with the RPC Response message.
    */
@@ -68,15 +68,15 @@ export interface RPCResponseMessageEvent<T extends BaseRPCType<any>>
   /**
    *  RPC type associated with the RPC Response message.
    */
-  rpcType: T['type'];
+  rpcType: T["type"];
   /**
    *  Result associated with the RPC Response message.
    */
-  result: T['result'];
+  result: T["result"];
   /**
    *  Parameters associated with the RPC Response message.
    */
-  params: T['params'];
+  params: T["params"];
 }
 export namespace Runtime {
   interface PlayerTimelineEvent<T extends Runtime.RuntimeEventTypes>
@@ -87,7 +87,7 @@ export namespace Runtime {
     timestamp: number;
   }
 
-  export interface RuntimeInitEvent extends BaseEventMessage<'runtime-init'> {
+  export interface RuntimeInitEvent extends BaseEventMessage<"runtime-init"> {
     /**
      * Source of the event.
      */
@@ -95,7 +95,7 @@ export namespace Runtime {
   }
 
   export interface PlayerInitEvent
-    extends BaseMessageWithPlayerID<'player-init'> {
+    extends BaseMessageWithPlayerID<"player-init"> {
     /**
      * Source of the event.
      */
@@ -107,7 +107,7 @@ export namespace Runtime {
   }
 
   export interface PlayerRemovedEvent
-    extends BaseMessageWithPlayerID<'player-removed'> {
+    extends BaseMessageWithPlayerID<"player-removed"> {
     /**
      * Source of the event.
      */
@@ -115,7 +115,7 @@ export namespace Runtime {
   }
 
   export interface PlayerLogEvent
-    extends PlayerTimelineEvent<'player-log-event'> {
+    extends PlayerTimelineEvent<"player-log-event"> {
     /**
      * Source of the event.
      */
@@ -131,7 +131,7 @@ export namespace Runtime {
   }
 
   export interface PlayerDataChangeEvent
-    extends PlayerTimelineEvent<'player-data-change-event'> {
+    extends PlayerTimelineEvent<"player-data-change-event"> {
     /**
      * Source of the event.
      */
@@ -151,7 +151,7 @@ export namespace Runtime {
   }
 
   export interface PlayerViewUpdateEvent
-    extends PlayerTimelineEvent<'player-view-update-event'> {
+    extends PlayerTimelineEvent<"player-view-update-event"> {
     /**
      * Source of the event.
      */
@@ -163,7 +163,7 @@ export namespace Runtime {
   }
 
   export interface PlayerFlowTransitionEvent
-    extends PlayerTimelineEvent<'player-flow-transition-event'> {
+    extends PlayerTimelineEvent<"player-flow-transition-event"> {
     /**
      * The state from which the transition has taken place.
      */
@@ -175,7 +175,7 @@ export namespace Runtime {
   }
 
   export interface PlayerFlowStartEvent
-    extends PlayerTimelineEvent<'player-flow-start'> {
+    extends PlayerTimelineEvent<"player-flow-start"> {
     /**
      * Flow information that has been started.
      */
@@ -183,7 +183,7 @@ export namespace Runtime {
   }
 
   export interface PlayerFlowEndEvent
-    extends PlayerTimelineEvent<'player-flow-end'> {
+    extends PlayerTimelineEvent<"player-flow-end"> {
     /**
      * Flow information that has been ended.
      */
@@ -191,7 +191,7 @@ export namespace Runtime {
   }
 
   export interface PlayerConfigRPC
-    extends BaseRPCType<'player-config-request'> {
+    extends BaseRPCType<"player-config-request"> {
     /**
      * Parameters associated with the Runtime Info RPC.
      */
@@ -221,7 +221,7 @@ export namespace Runtime {
   }
 
   export interface PlayerDataBindingRPC
-    extends BaseRPCType<'player-data-binding-details'> {
+    extends BaseRPCType<"player-data-binding-details"> {
     /**
      * Parameters associated with the Data Binding RPC.
      */
@@ -277,7 +277,7 @@ export namespace Runtime {
   }
 
   export interface PlayerViewDetailsRPC
-    extends BaseRPCType<'player-view-details-request'> {
+    extends BaseRPCType<"player-view-details-request"> {
     /**
      * Parameters associated with the View Details RPC.
      */
@@ -299,7 +299,7 @@ export namespace Runtime {
   }
 
   export interface PlayerRuntimeInfoRPC
-    extends BaseRPCType<'player-runtime-info-request'> {
+    extends BaseRPCType<"player-runtime-info-request"> {
     /**
      * Parameters associated with the Runtime Info RPC.
      */
@@ -333,7 +333,7 @@ export namespace Runtime {
   }
 
   export interface PlayerExpressionRPC
-    extends BaseRPCType<'player-execute-expression'> {
+    extends BaseRPCType<"player-execute-expression"> {
     /**
      * Parameters associated with the Expression RPC.
      */
@@ -355,7 +355,7 @@ export namespace Runtime {
           /**
            * Error Status of the evaluation
            */
-          status: 'error';
+          status: "error";
           /**
            * Message associated with the evaluation.
            */
@@ -369,7 +369,7 @@ export namespace Runtime {
           /**
            * Sucess Status of the evaluation
            */
-          status: 'success';
+          status: "success";
           /**
            * Data associated with the evaluation
            */
@@ -382,7 +382,7 @@ export namespace Runtime {
   }
 
   export interface PlayerStartProfilerRPC
-    extends BaseRPCType<'player-start-profiler-request'> {
+    extends BaseRPCType<"player-start-profiler-request"> {
     /**
      * Parameters associated with the Profiler Details RPC.
      */
@@ -404,7 +404,7 @@ export namespace Runtime {
   }
 
   export interface PlayerStopProfilerRPC
-    extends BaseRPCType<'player-stop-profiler-request'> {
+    extends BaseRPCType<"player-stop-profiler-request"> {
     /**
      * Parameters associated with the Profiler Details RPC.
      */
@@ -435,18 +435,18 @@ export namespace Runtime {
     | RuntimeInitEvent;
 
   export const RuntimeEventTypes = [
-    'runtime-init',
-    'player-init',
-    'player-removed',
-    'player-log-event',
-    'player-data-change-event',
-    'player-view-update-event',
-    'player-flow-transition-event',
-    'player-flow-start',
-    'player-flow-end',
+    "runtime-init",
+    "player-init",
+    "player-removed",
+    "player-log-event",
+    "player-data-change-event",
+    "player-view-update-event",
+    "player-flow-transition-event",
+    "player-flow-start",
+    "player-flow-end",
   ] as const;
 
-  export type RuntimeEventTypes = typeof RuntimeEventTypes[number];
+  export type RuntimeEventTypes = (typeof RuntimeEventTypes)[number];
 
   export type RuntimeRPC =
     | PlayerConfigRPC
@@ -457,18 +457,18 @@ export namespace Runtime {
     | PlayerStartProfilerRPC
     | PlayerStopProfilerRPC;
 
-  // TODO: Generate this from `RuntimeRPC['type']` if I ever can
+  // TODO: Generate this from `RuntimeRPC["type"]` if I ever can
   export const RuntimeRPCTypes = [
-    'player-config-request',
-    'player-data-binding-details',
-    'player-view-details-request',
-    'player-runtime-info-request',
-    'player-execute-expression',
-    'player-start-profiler-request',
-    'player-stop-profiler-request',
+    "player-config-request",
+    "player-data-binding-details",
+    "player-view-details-request",
+    "player-runtime-info-request",
+    "player-execute-expression",
+    "player-start-profiler-request",
+    "player-stop-profiler-request",
   ] as const;
 
-  export type RuntimeRPCTypes = typeof RuntimeRPCTypes[number];
+  export type RuntimeRPCTypes = (typeof RuntimeRPCTypes)[number];
 }
 
 // TODO: Convert to RPC

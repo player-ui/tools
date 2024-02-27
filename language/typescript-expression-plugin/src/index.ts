@@ -1,7 +1,7 @@
-import type * as ts from 'typescript/lib/tsserverlibrary';
-import { decorateWithTemplateLanguageService } from 'typescript-template-language-service-decorator';
-import { ExpressionLanguageService } from './service';
-import { LSPLogger } from './logger';
+import ts from "typescript/lib/tsserverlibrary";
+import { decorateWithTemplateLanguageService } from "typescript-template-language-service-decorator";
+import { ExpressionLanguageService } from "./service";
+import { LSPLogger } from "./logger";
 
 interface InitParams {
   typescript: typeof ts;
@@ -28,7 +28,7 @@ class Plugin implements ts.server.PluginModule {
       info.project,
       templateService,
       {
-        tags: ['e', 'expr', 'expression'],
+        tags: ["e", "expr", "expression"],
         enableForStringWithSubstitutions: true,
       },
       { logger }

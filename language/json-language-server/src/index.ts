@@ -1,27 +1,27 @@
 /* eslint-disable no-console */
-import type { InitializeParams } from 'vscode-languageserver';
+import type { InitializeParams } from "vscode-languageserver";
 import {
   createConnection,
   ProposedFeatures,
   TextDocuments,
   DidChangeConfigurationNotification,
   TextDocumentSyncKind,
-} from 'vscode-languageserver';
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import { PlayerLanguageService } from '@player-tools/json-language-service';
-import fs from 'fs';
-import { runAndCatch } from './utils';
+} from "vscode-languageserver";
+import { TextDocument } from "vscode-languageserver-textdocument";
+import { PlayerLanguageService } from "@player-tools/json-language-service";
+import fs from "fs";
+import { runAndCatch } from "./utils";
 
-export * from './utils';
+export * from "./utils";
 
-const dateFormat = new Intl.DateTimeFormat('en', {
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
+const dateFormat = new Intl.DateTimeFormat("en", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
   hour12: false,
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
 });
 
 const logFilePath =
@@ -31,7 +31,7 @@ const logFilePath =
 
 /** Format a log message to work in the console */
 const formatLog = (a: unknown): string => {
-  const msg = typeof a === 'string' ? a : JSON.stringify(a);
+  const msg = typeof a === "string" ? a : JSON.stringify(a);
   const date = new Date();
   return `${dateFormat.format(date)},$${date.getMilliseconds()} | ${msg} \n`;
 };
@@ -52,10 +52,10 @@ const documents = new TextDocuments(TextDocument);
 
 let hasConfigurationCapability = false;
 
-process.on('unhandledRejection', (e: Error) => {
+process.on("unhandledRejection", (e: Error) => {
   console.error(e.message);
 });
-process.on('uncaughtException', (e: Error) => {
+process.on("uncaughtException", (e: Error) => {
   console.error(e.message);
 });
 
@@ -87,7 +87,7 @@ connection.onInitialize((params: InitializeParams) => {
     capabilities.workspace && Boolean(capabilities.workspace.configuration)
   );
 
-  fileLog('Initialized Player LSP Server');
+  fileLog("Initialized Player LSP Server");
   return {
     capabilities: {
       textDocumentSync: TextDocumentSyncKind.Full,
@@ -95,7 +95,7 @@ connection.onInitialize((params: InitializeParams) => {
       definitionProvider: true,
       completionProvider: {
         resolveProvider: false,
-        triggerCharacters: ['"', ':'],
+        triggerCharacters: ['"', ":"],
       },
       documentFormattingProvider: true,
       documentRangeFormattingProvider: true,
@@ -224,17 +224,17 @@ documents.onDidChangeContent((change) => {
 });
 
 connection.onNotification(
-  'player/setAssetBundles',
+  "player/setAssetBundles",
   (assetBundles: Array<string>) => {
     // Don't trust data over the wire
     if (Array.isArray(assetBundles)) {
-      console.log('Updating asset type bundles');
+      console.log("Updating asset type bundles");
       service.setAssetTypes(assetBundles);
     }
   }
 );
 
-fileLog('Starting Player LSP Server');
+fileLog("Starting Player LSP Server");
 
 documents.listen(connection);
 connection.listen();

@@ -1,13 +1,13 @@
 import {
   CompletionItemKind,
   DiagnosticSeverity,
-} from 'vscode-languageserver-types';
-import type { PlayerLanguageService, PlayerLanguageServicePlugin } from '..';
-import type { ASTNode, FlowASTNode } from '../parser';
-import { isFlowNode, isPropertyNode, isStateNode } from '../parser';
-import type { ASTVisitor, ValidationContext } from '../types';
-import type { PropertyASTNode } from '..';
-import { getLSLocationOfNode, isValueCompletion } from '../utils';
+} from "vscode-languageserver-types";
+import type { PlayerLanguageService, PlayerLanguageServicePlugin } from "..";
+import type { ASTNode, FlowASTNode } from "../parser";
+import { isFlowNode, isPropertyNode, isStateNode } from "../parser";
+import type { ASTVisitor, ValidationContext } from "../types";
+import type { PropertyASTNode } from "..";
+import { getLSLocationOfNode, isValueCompletion } from "../utils";
 
 /** Create a validation visitor for dealing with transition states */
 const createValidationVisitor = (ctx: ValidationContext): ASTVisitor => {
@@ -28,7 +28,7 @@ const createValidationVisitor = (ctx: ValidationContext): ASTVisitor => {
 
     FlowStateNode: (flowState) => {
       const transitions = flowState.properties.find(
-        (p) => p.keyNode.value === 'transitions'
+        (p) => p.keyNode.value === "transitions"
       );
 
       let flowNode = flowState.parent;
@@ -40,8 +40,8 @@ const createValidationVisitor = (ctx: ValidationContext): ASTVisitor => {
 
       transitions?.valueNode?.children?.forEach((transitionObjects) => {
         if (
-          transitionObjects.type === 'property' &&
-          transitionObjects.valueNode?.type === 'string'
+          transitionObjects.type === "property" &&
+          transitionObjects.valueNode?.type === "string"
         ) {
           // Validate that the target is valid
 
@@ -53,7 +53,7 @@ const createValidationVisitor = (ctx: ValidationContext): ASTVisitor => {
             ctx.addViolation({
               node: transitionObjects.valueNode,
               severity: DiagnosticSeverity.Error,
-              message: `Node '${transitionObjects.valueNode.value}' not found`,
+              message: `Node "${transitionObjects.valueNode.value}" not found`,
             });
           }
         }
@@ -65,11 +65,11 @@ const createValidationVisitor = (ctx: ValidationContext): ASTVisitor => {
 /** Check that the node is a string completion of a transition state */
 const isTransitionValue = (node: ASTNode): boolean => {
   return (
-    node.type === 'string' &&
+    node.type === "string" &&
     isPropertyNode(node.parent) &&
-    node.parent.parent?.type === 'object' &&
+    node.parent.parent?.type === "object" &&
     isPropertyNode(node.parent.parent.parent) &&
-    node.parent.parent.parent.keyNode.value === 'transitions' &&
+    node.parent.parent.parent.keyNode.value === "transitions" &&
     isStateNode(node.parent.parent.parent.parent) &&
     isPropertyNode(node.parent.parent.parent.parent.parent) &&
     isFlowNode(node.parent.parent.parent.parent.parent.parent)
@@ -91,7 +91,7 @@ const getFlowNode = (node: ASTNode): FlowASTNode | undefined => {
  * Handles everything associated with navigation nodes (transitions, jump-to-def, reachability)
  */
 export class NavStatePlugin implements PlayerLanguageServicePlugin {
-  name = 'nav-state';
+  name = "nav-state";
 
   apply(service: PlayerLanguageService) {
     service.hooks.validate.tap(this.name, async (ctx, validation) => {
@@ -122,7 +122,7 @@ export class NavStatePlugin implements PlayerLanguageServicePlugin {
         return;
       }
 
-      if (ctx.node.type === 'string' && isTransitionValue(ctx.node)) {
+      if (ctx.node.type === "string" && isTransitionValue(ctx.node)) {
         const flowNode = getFlowNode(ctx.node);
         const { value } = ctx.node;
 
