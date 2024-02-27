@@ -1,16 +1,17 @@
-import { getObjectReferences } from '../utils';
+import { test, expect, describe } from "vitest";
+import { getObjectReferences } from "../utils";
 
-describe('Testing the "getObjectReferences" helper that creates same property references into a new object', () => {
-  it('should return the object properties in referenced format', () => {
+describe("Testing the 'getObjectReferences' helper that creates same property references into a new object", () => {
+  test("should return the object properties in referenced format", () => {
     const dataTypes = {
       BooleanType: {
-        type: 'BooleanType',
+        type: "BooleanType",
       },
     };
 
     const validators = {
       required: {
-        type: 'required',
+        type: "required",
       },
     };
 
@@ -18,8 +19,8 @@ describe('Testing the "getObjectReferences" helper that creates same property re
     const validatorReferences = getObjectReferences(validators);
 
     expect(dataReferences.BooleanTypeRef).toStrictEqual({
-      type: 'BooleanType',
+      type: "BooleanType",
     });
-    expect(validatorReferences.requiredRef).toStrictEqual({ type: 'required' });
+    expect(validatorReferences.requiredRef).toStrictEqual({ type: "required" });
   });
 });

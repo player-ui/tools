@@ -7,11 +7,10 @@ import type {
   NavigationFlow,
   NavigationFlowState,
   NavigationFlowViewState,
-} from '@player-ui/types';
-import type { JsonType } from 'react-json-reconciler';
-import type { RemoveUnknownIndex, AddUnknownIndex } from '../types';
-import type { DSLSchema } from '../types';
-
+} from "@player-ui/types";
+import type { JsonType } from "react-json-reconciler";
+import type { RemoveUnknownIndex, AddUnknownIndex } from "../types";
+import type { DSLSchema } from "../types";
 
 export type NavigationFlowReactViewState = Omit<
   NavigationFlowViewState,
@@ -51,11 +50,10 @@ export type FlowWithReactViews = AddUnknownIndex<
   }
 >;
 
-export type DSLFlow = Omit<FlowWithReactViews, 'schema'> & {
+export type DSLFlow = Omit<FlowWithReactViews, "schema"> & {
   /** A DSL compliant schema */
   schema?: DSLSchema;
 };
-
 
 export type SerializeType = "view" | "flow" | "schema" | "navigation";
 

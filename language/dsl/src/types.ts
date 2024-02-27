@@ -4,7 +4,7 @@ import type {
   Navigation as PlayerNav,
   Schema,
   Validation,
-} from '@player-ui/types';
+} from "@player-ui/types";
 import type {
   BindingTemplateInstance,
   ExpressionTemplateInstance,
@@ -102,7 +102,9 @@ type RemoveIndexSignature<T> = {
 
 export type ValidationRefProps = RemoveIndexSignature<Validation.Reference>;
 
-export type DataTypeRefs<DataTypeObjects extends Record<string, Schema.DataType>> = {
+export type DataTypeRefs<
+  DataTypeObjects extends Record<string, Schema.DataType>
+> = {
   /** Property name with DataType object */
   [Property in Extract<keyof DataTypeObjects, string> as `${Property}Ref`]: {
     /** DataType name */
@@ -110,21 +112,23 @@ export type DataTypeRefs<DataTypeObjects extends Record<string, Schema.DataType>
   };
 };
 
-export type ValidatorFunctionRefs<ValidatorObjects extends { [key: string]: (...args: any[]) => any }> = {
+export type ValidatorFunctionRefs<
+  ValidatorObjects extends { [key: string]: (...args: any[]) => any }
+> = {
   /** Property name with validator ref object */
   [Property in Extract<keyof ValidatorObjects, string> as `${Property}Ref`]: {
     /** Validator name */
     type: Property;
   } & Parameters<ValidatorObjects[Property]>[2] &
-  ValidationRefProps;
+    ValidationRefProps;
 };
 
 export type DataTypeReference<
-  DataTypeProp = {[key: string]: Schema.DataType},
-  ValidationRef = {[key: string]: Validation.Reference},
+  DataTypeProp = { [key: string]: Schema.DataType },
+  ValidationRef = { [key: string]: Validation.Reference },
   SymbolType = never
 > =
-  | (Omit<Schema.DataType, 'type' | 'validation'> & {
+  | (Omit<Schema.DataType, "type" | "validation"> & {
       /** Handled data type */
       type: keyof DataTypeProp;
       /** Data type validation refs */
