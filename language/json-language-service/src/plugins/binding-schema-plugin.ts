@@ -1,14 +1,14 @@
-import type { Location } from 'vscode-languageserver-types';
-import { CompletionItemKind } from 'vscode-languageserver-types';
-import type { NodeType } from '@player-tools/xlr';
-import type { PlayerLanguageService, PlayerLanguageServicePlugin } from '..';
+import type { Location } from "vscode-languageserver-types";
+import { CompletionItemKind } from "vscode-languageserver-types";
+import type { NodeType } from "@player-tools/xlr";
+import type { PlayerLanguageService, PlayerLanguageServicePlugin } from "..";
 import type {
   DocumentContext,
   EnhancedDocumentContextWithPosition,
-} from '../types';
-import { getLSLocationOfNode, getProperty, isValueCompletion } from '../utils';
-import type { PropertyASTNode, StringASTNode } from '../parser';
-import { getContentNode } from '../parser';
+} from "../types";
+import { getLSLocationOfNode, getProperty, isValueCompletion } from "../utils";
+import type { PropertyASTNode, StringASTNode } from "../parser";
+import { getContentNode } from "../parser";
 
 interface SchemaInfo {
   /** mapping of binding to schema path */
@@ -46,15 +46,15 @@ function getBindingInfo(ctx: DocumentContext): SchemaInfo {
     typeToNode: new Map(),
   };
 
-  if (ctx.PlayerContent.root.type !== 'content') {
+  if (ctx.PlayerContent.root.type !== "content") {
     return info;
   }
 
   const schemaRoot = ctx.PlayerContent.root.properties?.find(
-    (child) => child.keyNode.value === 'schema'
+    (child) => child.keyNode.value === "schema"
   );
 
-  if (!schemaRoot || schemaRoot.valueNode?.type !== 'object') {
+  if (!schemaRoot || schemaRoot.valueNode?.type !== "object") {
     return info;
   }
 
@@ -69,8 +69,8 @@ function getBindingInfo(ctx: DocumentContext): SchemaInfo {
     visited: Set<string>;
   }> = [
     {
-      currentPath: '',
-      typeToVisit: 'ROOT',
+      currentPath: "",
+      typeToVisit: "ROOT",
       visited: new Set(),
     },
   ];
@@ -92,7 +92,7 @@ function getBindingInfo(ctx: DocumentContext): SchemaInfo {
       (child) => child.keyNode.value === typeToVisit
     );
 
-    if (!typeNode || typeNode.valueNode?.type !== 'object') {
+    if (!typeNode || typeNode.valueNode?.type !== "object") {
       continue;
     }
 
@@ -103,7 +103,7 @@ function getBindingInfo(ctx: DocumentContext): SchemaInfo {
       // { type: TYPE } is the next nested type
 
       const nextPath = [currentPath, prop.keyNode.value].join(
-        currentPath === '' ? '' : '.'
+        currentPath === "" ? "" : "."
       );
 
       info.bindingToSchemaType.set(nextPath, {
@@ -112,12 +112,12 @@ function getBindingInfo(ctx: DocumentContext): SchemaInfo {
         key: prop.keyNode.value,
       });
 
-      if (prop.valueNode?.type === 'object') {
+      if (prop.valueNode?.type === "object") {
         const nestedTypeName = prop.valueNode.properties.find(
-          (c) => c.keyNode.value === 'type'
+          (c) => c.keyNode.value === "type"
         );
 
-        if (nestedTypeName && nestedTypeName.valueNode?.type === 'string') {
+        if (nestedTypeName && nestedTypeName.valueNode?.type === "string") {
           schemaTypeQueue.push({
             currentPath: nextPath,
             typeToVisit: nestedTypeName.valueNode.value,
@@ -139,9 +139,9 @@ function getBindingInfo(ctx: DocumentContext): SchemaInfo {
 const checkTypesForBinding = (nodes: Array<NodeType>): boolean => {
   for (let i = 0; i < nodes.length; i++) {
     const node = nodes[i];
-    if (node.type === 'string' && node.name === 'Binding') return true;
-    if (node.type === 'or') return checkTypesForBinding(node.or);
-    if (node.type === 'and') return checkTypesForBinding(node.and);
+    if (node.type === "string" && node.name === "Binding") return true;
+    if (node.type === "or") return checkTypesForBinding(node.or);
+    if (node.type === "and") return checkTypesForBinding(node.and);
   }
 
   return false;
@@ -151,7 +151,7 @@ const checkTypesForBinding = (nodes: Array<NodeType>): boolean => {
 function isBindingPropertyAssignment(
   ctx: EnhancedDocumentContextWithPosition
 ): boolean {
-  if (ctx.node.type !== 'string' || ctx.node.parent?.type !== 'property') {
+  if (ctx.node.type !== "string" || ctx.node.parent?.type !== "property") {
     return false;
   }
 
@@ -180,7 +180,7 @@ function getLocationForBindingTypeDefinition(
 
   const nodeLocation = schemaInfo.typeToNode.get(info.typeName);
 
-  if (!nodeLocation || nodeLocation.typeNode.valueNode?.type !== 'object') {
+  if (!nodeLocation || nodeLocation.typeNode.valueNode?.type !== "object") {
     return;
   }
 
@@ -202,9 +202,9 @@ function getLocationForSchemaType(
     // See if we're the "type" prop of a schema lookup
 
     if (
-      ctx.node.parent?.type === 'property' &&
-      ctx.node.type === 'string' &&
-      ctx.node.parent.keyNode.value === 'type'
+      ctx.node.parent?.type === "property" &&
+      ctx.node.type === "string" &&
+      ctx.node.parent.keyNode.value === "type"
     ) {
       const typeName = ctx.node.value;
       const node = schemaInfo.typeToNode.get(typeName);
@@ -214,10 +214,10 @@ function getLocationForSchemaType(
       }
 
       const schemaPropNode = getContentNode(ctx.node)?.properties.find(
-        (p) => p.keyNode.value === 'schema'
+        (p) => p.keyNode.value === "schema"
       );
 
-      if (schemaPropNode?.valueNode?.type !== 'object') {
+      if (schemaPropNode?.valueNode?.type !== "object") {
         return;
       }
 
@@ -244,7 +244,7 @@ function getLocationForSchemaType(
  * - any `Binding` reference to the schema def
  */
 export class SchemaInfoPlugin implements PlayerLanguageServicePlugin {
-  name = 'view-node';
+  name = "view-node";
 
   apply(service: PlayerLanguageService) {
     let schemaInfo: SchemaInfo | undefined;

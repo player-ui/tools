@@ -1,15 +1,15 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   type StoreState,
   selectedPlayerAction,
   selectPlayerIds,
   selectSelectedPlayerId,
   selectPlayerVersion,
-} from '@player-tools/devtools-common';
-import logo from '../media/player-logo.png';
-import { InfoPanel } from './info';
-import styles from './sidebar.css';
+} from "@player-tools/devtools-common";
+import logo from "../media/player-logo.png";
+import { InfoPanel } from "./info";
+import styles from "./sidebar.css";
 
 /**
  * Sidebar component for showing running player instances and flow information.
@@ -27,7 +27,6 @@ export const Sidebar = () => {
 
   const details = selectedPlayerID ? (
     <section>
-      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
       <label className={styles.selectPlayerLabel} htmlFor="player-select">
         Select a player instance
       </label>

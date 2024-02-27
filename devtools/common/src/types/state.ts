@@ -1,15 +1,15 @@
-import type { Flow, View } from '@player-ui/types';
-import type { Runtime } from '.';
+import type { Flow, View } from "@player-ui/types";
+import type { Runtime } from ".";
 
 export type ActivePlayerState = {
   /**
    * state associated with player config
    */
-  configState?: Runtime.PlayerConfigRPC['result'] | null;
+  configState?: Runtime.PlayerConfigRPC["result"] | null;
   /**
    * Flow related Information of the player.
    */
-  flowInfo?: Runtime.PlayerRuntimeInfoRPC['result'] | null;
+  flowInfo?: Runtime.PlayerRuntimeInfoRPC["result"] | null;
   /**
    * A collection of all the events associated with the running player instance.
    */
@@ -85,11 +85,11 @@ export type DataState = {
   /**
    * The binding selected on the Data panel.
    */
-  selectedBinding?: Runtime.PlayerDataBindingRPC['result'];
+  selectedBinding?: Runtime.PlayerDataBindingRPC["result"];
   /**
    * All the bindings in the data state.
    */
-  allBindings?: Runtime.PlayerDataBindingRPC['result'];
+  allBindings?: Runtime.PlayerDataBindingRPC["result"];
 };
 
 export interface ConsoleState {
@@ -108,7 +108,7 @@ export interface ConsoleState {
     /**
      * Result of the console evaluation.
      */
-    result: Runtime.PlayerExpressionRPC['result'];
+    result: Runtime.PlayerExpressionRPC["result"];
   }>;
 }
 

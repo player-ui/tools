@@ -1,15 +1,15 @@
-import type { PropsWithChildren } from 'react';
-import React from 'react';
-import type { ArrayNode, JsonNode, ObjectNode } from 'react-json-reconciler';
-import { flattenNodes, PropertyNode } from 'react-json-reconciler';
-import { SlotContext } from '.';
-import { IDSuffixProvider, OptionalIDSuffixProvider } from './auto-id';
+import type { PropsWithChildren } from "react";
+import React from "react";
+import type { ArrayNode, JsonNode, ObjectNode } from "react-json-reconciler";
+import { flattenNodes, PropertyNode } from "react-json-reconciler";
+import { SlotContext } from ".";
+import { IDSuffixProvider, OptionalIDSuffixProvider } from "./auto-id";
 import type {
   BindingTemplateInstance,
   ExpressionTemplateInstance,
-} from './string-templates';
-import { isTemplateStringInstance } from './string-templates';
-import { normalizeToCollection, toJsonProperties } from './utils';
+} from "./string-templates";
+import { isTemplateStringInstance } from "./string-templates";
+import { normalizeToCollection, toJsonProperties } from "./utils";
 
 export interface SwitchProps {
   /** defaults to a staticSwitch */
@@ -43,7 +43,7 @@ export const Switch = (props: PropsWithChildren<SwitchProps>) => {
         }}
       >
         <OptionalIDSuffixProvider wrapperRef={propertyNode}>
-          <property name={props.isDynamic ? 'dynamicSwitch' : 'staticSwitch'}>
+          <property name={props.isDynamic ? "dynamicSwitch" : "staticSwitch"}>
             <SlotContext.Provider value={undefined}>
               <array>{props.children}</array>
             </SlotContext.Provider>
@@ -63,7 +63,7 @@ export interface CaseProps {
 
 /** Find the first parent array */
 const findParentArray = (node: JsonNode): ArrayNode => {
-  if (node.type === 'array') {
+  if (node.type === "array") {
     return node;
   }
 
@@ -112,7 +112,7 @@ const Case = (props: PropsWithChildren<CaseProps>) => {
       </property>
       <IDSuffixProvider
         suffix={`${
-          switchContext.isDynamic ? 'dynamicSwitch' : 'staticSwitch'
+          switchContext.isDynamic ? "dynamicSwitch" : "staticSwitch"
         }-${caseIndex}`}
       >
         <SlotContext.Provider

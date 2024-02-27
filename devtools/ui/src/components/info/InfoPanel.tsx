@@ -1,6 +1,6 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import type { Flow } from '@player-ui/types';
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import type { Flow } from "@player-ui/types";
 import {
   type Runtime,
   type StoreState,
@@ -8,9 +8,9 @@ import {
   selectFlowInfo,
   selectSelectedPlayerId,
   GET_INFO_DETAILS,
-} from '@player-tools/devtools-client';
-import { Info } from './Info';
-import styles from '../app.css';
+} from "@player-tools/devtools-client";
+import { Info } from "./Info";
+import styles from "../app.css";
 
 /**
  * Displays Current flow information
@@ -25,7 +25,7 @@ export const InfoPanel = () => {
 
   const info = useSelector<
     StoreState,
-    Runtime.PlayerRuntimeInfoRPC['result'] | null
+    Runtime.PlayerRuntimeInfoRPC["result"] | null
   >(selectFlowInfo);
 
   const flow = useSelector<StoreState, Flow | undefined>(selectCurrentFlow);

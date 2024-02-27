@@ -1,26 +1,16 @@
-import type webpack from 'webpack';
-import match from 'micromatch';
-import globby from 'globby';
-import path from 'path';
-import { ModifySourcePlugin } from 'modify-source-webpack-plugin';
-import type { NamedType, ObjectType } from '@player-tools/xlr';
-import { XLRSDK } from '@player-tools/xlr-sdk';
-import { covertXLRtoAssetDoc } from './converter';
+import type webpack from "webpack";
+import match from "micromatch";
+import globby from "globby";
+import path from "path";
+import {
+  ConcatOperation,
+  ModifySourcePlugin,
+} from "modify-source-webpack-plugin";
+import type { NamedType, ObjectType } from "@player-tools/xlr";
+import { XLRSDK } from "@player-tools/xlr-sdk";
+import { covertXLRtoAssetDoc } from "./converter";
 
-export * from './converter';
-
-/** adds the asset info to a module */
-function addAssetDocExport(
-  source: string,
-  xlrNode: NamedType<ObjectType>
-): string {
-  const assetDoc = covertXLRtoAssetDoc(xlrNode);
-  const exp = [
-    source,
-    `export const __asset__docs = ${JSON.stringify(assetDoc)}`,
-  ].join('\n');
-  return exp;
-}
+export * from "./converter";
 
 /** Function to create a match for a glob */
 const matchGlob = (globs: string[]) => (filename: string) =>
@@ -43,47 +33,47 @@ export default class AssetDocgenPlugin {
   }
 
   apply(compiler: webpack.Compiler) {
-    const { exclude = [], include = ['**/**.ts'] } = this.options;
+    const { exclude = [], include = ["**/**.ts"] } = this.options;
 
     const isExcluded = matchGlob(exclude);
     const isIncluded = matchGlob(include);
     const sdk = new XLRSDK();
 
     // Glob all XLRs manifests available in repo
-    const manifests = globby.sync(['**/dist/xlr/manifest.json']);
+    const manifests = globby.sync(["**/dist/xlr/manifest.json"]);
     // load manifests into sdk
     manifests.forEach((manifest) => {
-      const packageName = manifest.split('/dist/')[0];
-      sdk.loadDefinitionsFromDisk(path.join('.', packageName, 'dist'));
+      const packageName = manifest.split("/dist/")[0];
+      sdk.loadDefinitionsFromDisk(path.join(".", packageName, "dist"));
     });
     const assetSources = sdk.listTypes().map((asset) => {
       return [
         asset.name,
-        asset.source.replace('dist', 'src').replace('types.d.ts', 'types.ts'),
+        asset.source.replace("dist", "src").replace("types.d.ts", "types.ts"),
       ];
     });
-    const modSourcePlugin = new ModifySourcePlugin({
-      rules: [
-        {
-          test: (mod) => {
-            return isIncluded(mod.userRequest) && !isExcluded(mod.userRequest);
-          },
-          modify: (source, filePath) => {
-            // eslint-disable-next-line no-restricted-syntax
-            for (const [assetName, assetSource] of assetSources) {
-              if (filePath === assetSource) {
-                const xlr = sdk.getType(assetName) as NamedType<ObjectType>;
-                if (xlr) {
-                  return addAssetDocExport(source, xlr);
-                }
-              }
-            }
-
-            return source;
-          },
+    const rules: ModifySourcePlugin["options"]["rules"] = assetSources.map(
+      ([assetName, assetSource]) => ({
+        test: (mod) => {
+          return (
+            isIncluded(mod.userRequest) &&
+            !isExcluded(mod.userRequest) &&
+            mod.userRequest === assetSource
+          );
         },
-      ],
-    });
+        operations: [
+          new ConcatOperation(
+            "end",
+            `export const __asset__docs = ${JSON.stringify(
+              covertXLRtoAssetDoc(
+                sdk.getType(assetName) as NamedType<ObjectType>
+              )
+            )}`
+          ),
+        ],
+      })
+    );
+    const modSourcePlugin = new ModifySourcePlugin({ rules });
 
     modSourcePlugin.apply(compiler);
   }

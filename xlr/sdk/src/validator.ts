@@ -1,4 +1,4 @@
-import type { Node } from 'jsonc-parser';
+import type { Node } from "jsonc-parser";
 import type {
   ArrayType,
   NamedType,
@@ -8,15 +8,15 @@ import type {
   PrimitiveTypes,
   RefType,
   TemplateLiteralType,
-} from '@player-tools/xlr';
+} from "@player-tools/xlr";
 import {
   makePropertyMap,
   resolveConditional,
   isPrimitiveTypeNode,
   resolveReferenceNode,
   computeEffectiveObject,
-} from '@player-tools/xlr-utils';
-import type { ValidationError } from './types';
+} from "@player-tools/xlr-utils";
+import type { ValidationError } from "./types";
 
 /**
  * Validator for XLRs on JSON Nodes
@@ -36,32 +36,32 @@ export class XLRValidator {
     xlrNode: NodeType
   ): Array<ValidationError> {
     const validationIssues = new Array<ValidationError>();
-    if (xlrNode.type === 'object') {
-      if (rootNode.type === 'object') {
+    if (xlrNode.type === "object") {
+      if (rootNode.type === "object") {
         validationIssues.push(...this.validateObject(xlrNode, rootNode));
       } else {
         validationIssues.push({
-          type: 'type',
+          type: "type",
           node: rootNode,
-          message: `Expected an object but got an '${rootNode.type}'`,
+          message: `Expected an object but got an "${rootNode.type}"`,
         });
       }
-    } else if (xlrNode.type === 'array') {
-      if (rootNode.type === 'array') {
+    } else if (xlrNode.type === "array") {
+      if (rootNode.type === "array") {
         validationIssues.push(...this.validateArray(rootNode, xlrNode));
       } else {
         validationIssues.push({
-          type: 'type',
+          type: "type",
           node: rootNode,
-          message: `Expected an array but got an '${rootNode.type}'`,
+          message: `Expected an array but got an "${rootNode.type}"`,
         });
       }
-    } else if (xlrNode.type === 'template') {
+    } else if (xlrNode.type === "template") {
       const error = this.validateTemplate(rootNode, xlrNode);
       if (error) {
         validationIssues.push(error);
       }
-    } else if (xlrNode.type === 'or') {
+    } else if (xlrNode.type === "or") {
       // eslint-disable-next-line no-restricted-syntax
       for (const potentialType of xlrNode.or) {
         const potentialErrors = this.validateType(rootNode, potentialType);
@@ -70,18 +70,30 @@ export class XLRValidator {
         }
       }
 
+      let message: string;
+
+      if (xlrNode.name) {
+        message = `Does not match any of the expected types for type: '${xlrNode.name}'`;
+      } else if (xlrNode.title) {
+        message = `Does not match any of the expected types for property: '${xlrNode.title}'`;
+      } else {
+        message = `Does not match any of the types ${xlrNode.or
+          .map((node) => node.name ?? node.title ?? "<unnamed type>")
+          .join(" | ")}`;
+      }
+
       validationIssues.push({
-        type: 'value',
+        type: "value",
         node: rootNode,
-        message: `Does not match any of the expected types for type: '${xlrNode.name}'`,
+        message,
       });
-    } else if (xlrNode.type === 'and') {
+    } else if (xlrNode.type === "and") {
       const effectiveType = {
         ...this.computeIntersectionType(xlrNode.and),
         ...(xlrNode.name ? { name: xlrNode.name } : {}),
       };
       validationIssues.push(...this.validateType(rootNode, effectiveType));
-    } else if (xlrNode.type === 'record') {
+    } else if (xlrNode.type === "record") {
       rootNode.children?.forEach((child) => {
         validationIssues.push(
           ...this.validateType(child.children?.[0] as Node, xlrNode.keyType)
@@ -90,13 +102,13 @@ export class XLRValidator {
           ...this.validateType(child.children?.[1] as Node, xlrNode.valueType)
         );
       });
-    } else if (xlrNode.type === 'ref') {
+    } else if (xlrNode.type === "ref") {
       const refType = this.getRefType(xlrNode);
       if (refType === undefined) {
         validationIssues.push({
-          type: 'unknown',
+          type: "unknown",
           node: rootNode,
-          message: `Type '${xlrNode.ref}' is not defined in provided bundles`,
+          message: `Type "${xlrNode.ref}" is not defined in provided bundles`,
         });
       } else {
         validationIssues.push(
@@ -106,33 +118,33 @@ export class XLRValidator {
     } else if (isPrimitiveTypeNode(xlrNode)) {
       if (!this.validateLiteralType(xlrNode, rootNode)) {
         if (
-          (xlrNode.type === 'string' ||
-            xlrNode.type === 'number' ||
-            xlrNode.type === 'boolean') &&
+          (xlrNode.type === "string" ||
+            xlrNode.type === "number" ||
+            xlrNode.type === "boolean") &&
           xlrNode.const
         ) {
           validationIssues.push({
-            type: 'type',
+            type: "type",
             node: rootNode.parent as Node,
-            message: `Expected '${xlrNode.const}' but got '${rootNode.value}'`,
+            message: `Expected "${xlrNode.const}" but got "${rootNode.value}"`,
           });
         } else {
           validationIssues.push({
-            type: 'type',
+            type: "type",
             node: rootNode.parent as Node,
-            message: `Expected type '${xlrNode.type}' but got '${rootNode.type}'`,
+            message: `Expected type "${xlrNode.type}" but got "${rootNode.type}"`,
           });
         }
       }
-    } else if (xlrNode.type === 'conditional') {
+    } else if (xlrNode.type === "conditional") {
       // Resolve RefNodes in check conditions if needed
       let { right, left } = xlrNode.check;
 
-      if (right.type === 'ref') {
+      if (right.type === "ref") {
         right = this.getRefType(right);
       }
 
-      if (left.type === 'ref') {
+      if (left.type === "ref") {
         left = this.getRefType(left);
       }
 
@@ -165,11 +177,11 @@ export class XLRValidator {
     node: Node,
     xlrNode: TemplateLiteralType
   ): ValidationError | undefined {
-    if (node.type !== 'string') {
+    if (node.type !== "string") {
       return {
-        type: 'type',
+        type: "type",
         node: node.parent as Node,
-        message: `Expected type '${xlrNode.type}' but got '${typeof node}'`,
+        message: `Expected type "${xlrNode.type}" but got "${typeof node}"`,
       };
     }
 
@@ -177,7 +189,7 @@ export class XLRValidator {
     const valid = regex.exec(node.value);
     if (!valid) {
       return {
-        type: 'value',
+        type: "value",
         node: node.parent as Node,
         message: `Does not match expected format: ${xlrNode.format}`,
       };
@@ -202,9 +214,9 @@ export class XLRValidator {
       const valueNode = objectProps.get(prop);
       if (expectedType.required && valueNode === undefined) {
         issues.push({
-          type: 'missing',
+          type: "missing",
           node,
-          message: `Property '${prop}' missing from type '${xlrNode.name}'`,
+          message: `Property "${prop}" missing from type "${xlrNode.name}"`,
         });
       }
 
@@ -221,10 +233,10 @@ export class XLRValidator {
     );
     if (xlrNode.additionalProperties === false && extraKeys.length > 0) {
       issues.push({
-        type: 'value',
+        type: "value",
         node,
-        message: `Unexpected properties on '${xlrNode.name}': ${extraKeys.join(
-          ', '
+        message: `Unexpected properties on "${xlrNode.name}": ${extraKeys.join(
+          ", "
         )}`,
       });
     } else {
@@ -243,33 +255,33 @@ export class XLRValidator {
 
   private validateLiteralType(expectedType: PrimitiveTypes, literalType: Node) {
     switch (expectedType.type) {
-      case 'boolean':
+      case "boolean":
         if (expectedType.const) {
           return expectedType.const === literalType.value;
         }
 
-        return typeof literalType.value === 'boolean';
-      case 'number':
+        return typeof literalType.value === "boolean";
+      case "number":
         if (expectedType.const) {
           return expectedType.const === literalType.value;
         }
 
-        return typeof literalType.value === 'number';
-      case 'string':
+        return typeof literalType.value === "number";
+      case "string":
         if (expectedType.const) {
           return expectedType.const === literalType.value;
         }
 
-        return typeof literalType.value === 'string';
-      case 'null':
-        return literalType.value === 'null';
-      case 'never':
+        return typeof literalType.value === "string";
+      case "null":
+        return literalType.value === "null";
+      case "never":
         return literalType === undefined;
-      case 'any':
+      case "any":
         return literalType !== undefined;
-      case 'unknown':
+      case "unknown":
         return literalType !== undefined;
-      case 'undefined':
+      case "undefined":
         return true;
       default:
         return false;
@@ -278,8 +290,8 @@ export class XLRValidator {
 
   private getRefType(ref: RefType): NodeType {
     let refName = ref.ref;
-    if (refName.indexOf('<') > 0) {
-      [refName] = refName.split('<');
+    if (refName.indexOf("<") > 0) {
+      [refName] = refName.split("<");
     }
 
     const actualType = this.resolveType(refName);
@@ -304,19 +316,19 @@ export class XLRValidator {
     let firstElement = types[0];
     let effectiveType: ObjectType | OrType;
 
-    if (firstElement.type === 'ref') {
+    if (firstElement.type === "ref") {
       firstElement = this.getRefType(firstElement);
     }
 
-    if (firstElement.type === 'and') {
+    if (firstElement.type === "and") {
       effectiveType = this.computeIntersectionType(firstElement.and);
-    } else if (firstElement.type === 'record') {
+    } else if (firstElement.type === "record") {
       effectiveType = {
-        type: 'object',
+        type: "object",
         properties: {},
         additionalProperties: firstElement.valueType,
       };
-    } else if (firstElement.type !== 'or' && firstElement.type !== 'object') {
+    } else if (firstElement.type !== "or" && firstElement.type !== "object") {
       throw new Error(
         `Can't compute a union with a non-object type ${firstElement.type} (${firstElement.name})`
       );
@@ -327,24 +339,24 @@ export class XLRValidator {
     types.slice(1).forEach((type) => {
       let typeToApply = type;
 
-      if (typeToApply.type === 'record') {
+      if (typeToApply.type === "record") {
         typeToApply = {
-          type: 'object',
+          type: "object",
           properties: {},
           additionalProperties: typeToApply.valueType,
         };
       }
 
-      if (type.type === 'ref') {
+      if (type.type === "ref") {
         typeToApply = this.getRefType(type);
       }
 
-      if (typeToApply.type === 'and') {
+      if (typeToApply.type === "and") {
         typeToApply = this.computeIntersectionType([type, effectiveType]);
       }
 
-      if (typeToApply.type === 'object') {
-        if (effectiveType.type === 'object') {
+      if (typeToApply.type === "object") {
+        if (effectiveType.type === "object") {
           effectiveType = computeEffectiveObject(effectiveType, typeToApply);
         } else {
           effectiveType = {
@@ -354,8 +366,8 @@ export class XLRValidator {
             ),
           };
         }
-      } else if (typeToApply.type === 'or') {
-        if (effectiveType.type === 'object') {
+      } else if (typeToApply.type === "or") {
+        if (effectiveType.type === "object") {
           effectiveType = {
             ...typeToApply,
             or: typeToApply.or.map((y) =>
@@ -363,7 +375,7 @@ export class XLRValidator {
             ),
           };
         } else {
-          throw new Error('unimplemented operation or x or projection');
+          throw new Error("unimplemented operation or x or projection");
         }
       } else {
         throw new Error(

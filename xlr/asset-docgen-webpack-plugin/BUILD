@@ -1,18 +1,29 @@
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@rules_player//javascript:defs.bzl", "js_pipeline")
+load("//helpers:defs.bzl", "tsup_config", "vitest_config")
 
-load("//:index.bzl", "javascript_pipeline")
+npm_link_all_packages(name = "node_modules")
 
-javascript_pipeline(
-    name = "@player-tools/xlr-asset-docgen-webpack-plugin",
-    dependencies = [
-        "//xlr/types:@player-tools/xlr",
-        "//xlr/sdk:@player-tools/xlr-sdk",
-        "//xlr/utils:@player-tools/xlr-utils",
-        "@npm//react-docgen-typescript",
-        "@npm//@types/micromatch",
-        "@npm//micromatch",
-        "@npm//globby",
-        "@npm//webpack",
-        "@npm//@types/webpack",
-        "@npm//modify-source-webpack-plugin"
-    ]
+tsup_config(name = "tsup_config")
+
+vitest_config(name = "vitest_config")
+
+js_pipeline(
+    package_name = "@player-tools/xlr-asset-docgen-webpack-plugin",
+    test_deps = [
+        "//:node_modules",
+        "//:vitest_config",
+    ],
+    deps = [
+        ":node_modules/@player-tools/xlr",
+        ":node_modules/@player-tools/xlr-sdk",
+        ":node_modules/@player-tools/xlr-utils",
+        "//:node_modules/@types/micromatch",
+        "//:node_modules/@types/webpack",
+        "//:node_modules/globby",
+        "//:node_modules/micromatch",
+        "//:node_modules/modify-source-webpack-plugin",
+        "//:node_modules/react-docgen-typescript",
+        "//:node_modules/webpack",
+    ],
 )

@@ -11,14 +11,14 @@ import type {
   RefType,
   TemplateLiteralType,
   TupleType,
-} from '@player-tools/xlr';
-import type { TopLevelDeclaration } from '@player-tools/xlr-utils';
+} from "@player-tools/xlr";
+import type { TopLevelDeclaration } from "@player-tools/xlr-utils";
 import {
   isGenericNamedType,
   isPrimitiveTypeNode,
-} from '@player-tools/xlr-utils';
-import ts from 'typescript';
-import { ConversionError } from './types';
+} from "@player-tools/xlr-utils";
+import ts from "typescript";
+import { ConversionError } from "./types";
 
 const templateTokenize = /(?=true\|false|\.\*|\[0-9]\*)/gm;
 const tokenSplit = /(?<=true\|false|\.\*|\[0-9]\*)/gm;
@@ -82,8 +82,8 @@ export class TSWriter {
     const tsNode = this.convertTypeNode(type);
 
     let customPrimitiveHeritageClass;
-    if (type.type === 'object' && type.extends) {
-      const refName = type.extends.ref.split('<')[0];
+    if (type.type === "object" && type.extends) {
+      const refName = type.extends.ref.split("<")[0];
       customPrimitiveHeritageClass = [
         this.context.factory.createHeritageClause(
           ts.SyntaxKind.ExtendsKeyword,
@@ -128,11 +128,11 @@ export class TSWriter {
   }
 
   private convertTypeNode(type: NodeType): ts.TypeNode {
-    if (type.type === 'object') {
+    if (type.type === "object") {
       return this.createObjectNode(type);
     }
 
-    if (type.type === 'and') {
+    if (type.type === "and") {
       return this.context.factory.createIntersectionTypeNode(
         type.and.map((element) => {
           return this.convertTypeNode(element);
@@ -140,7 +140,7 @@ export class TSWriter {
       );
     }
 
-    if (type.type === 'or') {
+    if (type.type === "or") {
       return this.context.factory.createUnionTypeNode(
         type.or.map((element) => {
           return this.convertTypeNode(element);
@@ -148,7 +148,7 @@ export class TSWriter {
       );
     }
 
-    if (type.type === 'array') {
+    if (type.type === "array") {
       if (type.const) {
         return this.context.factory.createTupleTypeNode(
           type.const.map((element) => this.convertTypeNode(element as NodeType))
@@ -156,7 +156,7 @@ export class TSWriter {
       }
 
       return this.context.factory.createTypeReferenceNode(
-        this.context.factory.createIdentifier('Array'),
+        this.context.factory.createIdentifier("Array"),
         [this.convertTypeNode(type.elementType)]
       );
     }
@@ -165,27 +165,27 @@ export class TSWriter {
       return this.createPrimitiveNode(type);
     }
 
-    if (type.type === 'conditional') {
+    if (type.type === "conditional") {
       return this.createConditionalTypeNode(type);
     }
 
-    if (type.type === 'function') {
+    if (type.type === "function") {
       return this.createFunctionDeclarationNode(type);
     }
 
-    if (type.type === 'record') {
+    if (type.type === "record") {
       return this.createRecordNode(type);
     }
 
-    if (type.type === 'ref') {
+    if (type.type === "ref") {
       return this.createRefNode(type);
     }
 
-    if (type.type === 'template') {
+    if (type.type === "template") {
       return this.createTemplateLiteral(type);
     }
 
-    if (type.type === 'tuple') {
+    if (type.type === "tuple") {
       return this.createTupleNode(type);
     }
 
@@ -203,7 +203,7 @@ export class TSWriter {
             genericArg as NamedType
           );
           this.additionalTypes.set(genericArg.name, additionalType);
-        } else if (genericArg.type === 'and') {
+        } else if (genericArg.type === "and") {
           genericArg.and.forEach((type) => {
             if (type.name) {
               const additionalType = this.convertNamedTypeNode(
@@ -212,7 +212,7 @@ export class TSWriter {
               this.additionalTypes.set(type.name, additionalType);
             }
           });
-        } else if (genericArg.type === 'or') {
+        } else if (genericArg.type === "or") {
           genericArg.or.forEach((type) => {
             if (type.name) {
               const additionalType = this.convertNamedTypeNode(
@@ -227,18 +227,18 @@ export class TSWriter {
       });
     }
 
-    const importName = xlrNode.ref.split('<')[0];
+    const importName = xlrNode.ref.split("<")[0];
     this.importSet.add(importName);
     return this.context.factory.createTypeReferenceNode(importName, typeArgs);
   }
 
   private createPrimitiveNode(xlrNode: PrimitiveTypes): ts.TypeNode {
     if (
-      ((xlrNode.type === 'string' ||
-        xlrNode.type === 'boolean' ||
-        xlrNode.type === 'number') &&
+      ((xlrNode.type === "string" ||
+        xlrNode.type === "boolean" ||
+        xlrNode.type === "number") &&
         xlrNode.const) ||
-      xlrNode.type === 'null'
+      xlrNode.type === "null"
     ) {
       return this.context.factory.createLiteralTypeNode(
         this.createLiteralTypeNode(xlrNode)
@@ -246,35 +246,35 @@ export class TSWriter {
     }
 
     switch (xlrNode.type) {
-      case 'string':
+      case "string":
         return this.context.factory.createKeywordTypeNode(
           ts.SyntaxKind.StringKeyword
         );
-      case 'number':
+      case "number":
         return this.context.factory.createKeywordTypeNode(
           ts.SyntaxKind.NumberKeyword
         );
-      case 'boolean':
+      case "boolean":
         return this.context.factory.createKeywordTypeNode(
           ts.SyntaxKind.BooleanKeyword
         );
-      case 'any':
+      case "any":
         return this.context.factory.createKeywordTypeNode(
           ts.SyntaxKind.AnyKeyword
         );
-      case 'unknown':
+      case "unknown":
         return this.context.factory.createKeywordTypeNode(
           ts.SyntaxKind.UnknownKeyword
         );
-      case 'never':
+      case "never":
         return this.context.factory.createKeywordTypeNode(
           ts.SyntaxKind.NeverKeyword
         );
-      case 'undefined':
+      case "undefined":
         return this.context.factory.createKeywordTypeNode(
           ts.SyntaxKind.UndefinedKeyword
         );
-      case 'void':
+      case "void":
         return this.context.factory.createKeywordTypeNode(
           ts.SyntaxKind.VoidKeyword
         );
@@ -288,13 +288,13 @@ export class TSWriter {
   private createLiteralTypeNode(
     xlrNode: NodeType
   ): ts.NullLiteral | ts.BooleanLiteral | ts.LiteralExpression {
-    if (xlrNode.type === 'boolean') {
+    if (xlrNode.type === "boolean") {
       return xlrNode.const
         ? this.context.factory.createTrue()
         : this.context.factory.createFalse();
     }
 
-    if (xlrNode.type === 'number') {
+    if (xlrNode.type === "number") {
       return xlrNode.const
         ? this.context.factory.createNumericLiteral(xlrNode.const)
         : this.context.throwError(
@@ -302,7 +302,7 @@ export class TSWriter {
           );
     }
 
-    if (xlrNode.type === 'string') {
+    if (xlrNode.type === "string") {
       return xlrNode.const
         ? this.context.factory.createStringLiteral(xlrNode.const, true)
         : this.context.throwError(
@@ -310,7 +310,7 @@ export class TSWriter {
           );
     }
 
-    if (xlrNode.type === 'null') {
+    if (xlrNode.type === "null") {
       return this.context.factory.createNull();
     }
 
@@ -361,7 +361,7 @@ export class TSWriter {
     const keyType = this.convertTypeNode(xlrNode.keyType);
     const valueType = this.convertTypeNode(xlrNode.valueType);
     return this.context.factory.createTypeReferenceNode(
-      this.context.factory.createIdentifier('Record'),
+      this.context.factory.createIdentifier("Record"),
       [keyType, valueType]
     );
   }
@@ -409,7 +409,7 @@ export class TSWriter {
             this.context.factory.createParameterDeclaration(
               undefined, // modifiers
               undefined, // dotdotdot token
-              'key',
+              "key",
               undefined, // question token
               this.context.factory.createKeywordTypeNode(
                 ts.SyntaxKind.StringKeyword
@@ -434,20 +434,20 @@ export class TSWriter {
       );
       templateSegments.splice(0, 1);
     } else {
-      templateHead = this.context.factory.createTemplateHead('');
+      templateHead = this.context.factory.createTemplateHead("");
     }
 
     return this.context.factory.createTemplateLiteralType(
       templateHead,
       templateSegments.map((segments, i) => {
-        const [regexSegment, stringSegment = ''] = segments.split(tokenSplit);
+        const [regexSegment, stringSegment = ""] = segments.split(tokenSplit);
 
         let regexTemplateType: ts.KeywordSyntaxKind;
-        if (regexSegment === '.*') {
+        if (regexSegment === ".*") {
           regexTemplateType = ts.SyntaxKind.StringKeyword;
-        } else if (regexSegment === '[0-9]*') {
+        } else if (regexSegment === "[0-9]*") {
           regexTemplateType = ts.SyntaxKind.NumberKeyword;
-        } else if (regexSegment === 'true|false') {
+        } else if (regexSegment === "true|false") {
           regexTemplateType = ts.SyntaxKind.BooleanKeyword;
         } else {
           this.context.throwError(
@@ -475,7 +475,7 @@ export class TSWriter {
 
   private createGenericArgumentNode(node?: NodeType): ts.TypeNode | undefined {
     if (node) {
-      if (node.type === 'object' && node.name) {
+      if (node.type === "object" && node.name) {
         const additionalType = this.convertNamedTypeNode(
           node as NamedType<ObjectType>
         );
@@ -498,11 +498,11 @@ export class TSWriter {
       return tsNode;
     }
 
-    if (comment.includes('\n')) {
+    if (comment.includes("\n")) {
       comment = `*\n${comment
-        .split('\n')
+        .split("\n")
         .map((s) => ` * ${s}`)
-        .join('\n')}\n`;
+        .join("\n")}\n`;
     } else {
       comment = `* ${comment} `;
     }

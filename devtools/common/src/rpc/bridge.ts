@@ -1,4 +1,4 @@
-import type { RPCController } from '.';
+import type { RPCController } from ".";
 
 // This only makes sense from a window context, which would only be relevant for a web player -- thus, this _should_ come from the web player?
 // TODO: Should this actually come from the web player?

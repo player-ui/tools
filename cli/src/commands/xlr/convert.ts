@@ -1,16 +1,16 @@
-import { Flags } from '@oclif/core';
-import path from 'path';
-import fs from 'fs';
-import chalk from 'chalk';
-import type { ExportTypes } from '@player-tools/xlr-sdk';
-import { XLRSDK } from '@player-tools/xlr-sdk';
-import logSymbols from 'log-symbols';
-import { BaseCommand } from '../../utils/base-command';
+import { Flags } from "@oclif/core";
+import path from "path";
+import fs from "fs";
+import chalk from "chalk";
+import type { ExportTypes } from "@player-tools/xlr-sdk";
+import { XLRSDK } from "@player-tools/xlr-sdk";
+import logSymbols from "log-symbols";
+import { BaseCommand } from "../../utils/base-command";
 
 const PlayerImportMap = new Map([
   [
-    '@player-ui/types',
-    ['Expression', 'Asset', 'Binding', 'AssetWrapper', 'Schema.DataType'],
+    "@player-ui/types",
+    ["Expression", "Asset", "Binding", "AssetWrapper", "Schema.DataType"],
   ],
 ]);
 
@@ -18,24 +18,24 @@ const PlayerImportMap = new Map([
  * Converts XLRs into a specific language
  */
 export default class XLRConvert extends BaseCommand {
-  static description = 'Exports XLRs files to a specific language';
+  static description = "Exports XLRs files to a specific language";
 
   static flags = {
     ...BaseCommand.flags,
     input: Flags.string({
-      char: 'i',
-      description: 'An input directory to search for types to export',
-      default: './dist',
+      char: "i",
+      description: "An input directory to search for types to export",
+      default: "./dist",
     }),
     output: Flags.string({
-      char: 'o',
-      description: 'Output directory to write results to.',
+      char: "o",
+      description: "Output directory to write results to.",
     }),
     lang: Flags.enum({
-      char: 'l',
+      char: "l",
       description:
-        'Search strategy for types to export: plugin (default, looks for exported EnchancedPlayerPlugin classes) or type (all exported types)',
-      options: ['TypeScript'],
+        "Search strategy for types to export: plugin (default, looks for exported EnchancedPlayerPlugin classes) or type (all exported types)",
+      options: ["TypeScript"],
     }),
   };
 
@@ -78,7 +78,7 @@ export default class XLRConvert extends BaseCommand {
         fs.writeFileSync(path.join(outputDir, filename), fileContents, {});
       });
     } catch (e: any) {
-      console.log('');
+      console.log("");
       console.log(
         chalk.red(`${logSymbols.error} Error exporting XLRs: ${e.message}`)
       );

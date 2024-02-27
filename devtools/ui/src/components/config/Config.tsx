@@ -1,19 +1,19 @@
-import React from 'react';
-import type { Runtime } from '@player-tools/devtools-client';
-import { ObjectInspector } from '@devtools-ds/object-inspector';
-import { Controls, Navigation, Tab, TabList } from '@devtools-ds/navigation';
-import { headerCase } from 'change-case';
+import React from "react";
+import type { Runtime } from "@player-tools/devtools-client";
+import { ObjectInspector } from "@devtools-ds/object-inspector";
+import { Controls, Navigation, Tab, TabList } from "@devtools-ds/navigation";
+import { headerCase } from "change-case";
 
-export const SUB_PANEL_IDS = ['plugins', 'schema', 'expressions'] as const;
+const SUB_PANEL_IDS = ["plugins", "schema", "expressions"] as const;
 
 interface ConfigProps {
-  configState: Runtime.PlayerConfigRPC['result'];
+  configState: Runtime.PlayerConfigRPC["result"];
 }
 
 export const Config = ({ configState }: ConfigProps) => {
   const renderSubPanel = (param: string) => {
     switch (param) {
-      case 'schema':
+      case "schema":
         return (
           <div>
             <ObjectInspector
@@ -23,7 +23,7 @@ export const Config = ({ configState }: ConfigProps) => {
             />
           </div>
         );
-      case 'expressions':
+      case "expressions":
         return (
           <div>
             <ObjectInspector
@@ -47,7 +47,7 @@ export const Config = ({ configState }: ConfigProps) => {
   };
 
   return (
-    <div style={{ width: '100%' }}>
+    <div style={{ width: "100%" }}>
       <Navigation defaultIndex={0}>
         <Controls>
           <TabList>

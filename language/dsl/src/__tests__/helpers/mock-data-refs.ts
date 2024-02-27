@@ -1,21 +1,21 @@
-import type { Language, Schema } from '@player-ui/types';
+import type { Language, Schema } from "@player-ui/types";
 
 export const FooTypeRef: Language.DataTypeRef = {
-  type: 'FooType',
+  type: "FooType",
 };
 
 export const BarTypeRef: Language.DataTypeRef = {
-  type: 'BarType',
+  type: "BarType",
 };
 
 export const LocalBazType: Schema.DataType = {
-  type: 'BazType',
+  type: "BazType",
   default: false,
   validation: [
     {
-      type: 'someValidation',
-      message: 'some message',
-      options: ['1', '2'],
+      type: "someValidation",
+      message: "some message",
+      options: ["1", "2"],
     },
   ],
 };

@@ -1,9 +1,9 @@
-import logUpdate from 'log-update';
+import logUpdate from "log-update";
 
 /* eslint-disable no-param-reassign */
 interface BaseTask<Results, Data> {
   /** The state of the task */
-  state: 'idle' | 'pending';
+  state: "idle" | "pending";
 
   /** A function to run */
   run: () => Promise<Results>;
@@ -14,10 +14,10 @@ interface BaseTask<Results, Data> {
 
 export type CompletedTask<Results, Data> = Omit<
   BaseTask<Results, Data>,
-  'state'
+  "state"
 > & {
   /** The state of the task */
-  state: 'completed';
+  state: "completed";
 } & (
     | {
         /** The results */
@@ -70,7 +70,7 @@ export const createTaskRunner = <R, D>({
   renderer,
 }: {
   /** A list of tasks to run */
-  tasks: Array<Pick<BaseTask<R, D>, 'data' | 'run'>>;
+  tasks: Array<Pick<BaseTask<R, D>, "data" | "run">>;
 
   /** How to report progress */
   renderer: TaskProgressRenderer<R, D>;
@@ -78,7 +78,7 @@ export const createTaskRunner = <R, D>({
   const statefulTasks: Array<Task<R, D>> = tasks.map((t) => {
     return {
       ...t,
-      state: 'idle',
+      state: "idle",
     };
   });
 
@@ -101,14 +101,14 @@ export const createTaskRunner = <R, D>({
 
     await Promise.all(
       statefulTasks.map(async (t) => {
-        t.state = 'pending';
+        t.state = "pending";
         try {
           const r = await t.run();
-          t.state = 'completed';
+          t.state = "completed";
           (t as CompletedTask<R, D>).output = r;
         } catch (e: unknown) {
           if (e instanceof Error) {
-            t.state = 'completed';
+            t.state = "completed";
             (t as CompletedTask<R, D>).error = e;
           }
         }

@@ -1,9 +1,9 @@
-import React from 'react';
-import type { View } from '@player-ui/types';
-import { ObjectInspector } from '@devtools-ds/object-inspector';
+import React from "react";
+import type { View } from "@player-ui/types";
+import { ObjectInspector } from "@devtools-ds/object-inspector";
 
 interface ViewInspectorProps {
-  currentView: View;
+  readonly currentView: View;
 }
 
 /**

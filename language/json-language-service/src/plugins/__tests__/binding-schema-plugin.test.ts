@@ -1,38 +1,43 @@
-import { Position } from 'vscode-languageserver-types';
-import { PlayerLanguageService } from '../..';
-import { toTextDocument } from '../../utils';
+import { test, expect, describe, beforeEach } from "vitest";
+import { Position } from "vscode-languageserver-types";
+import {
+  ReferenceAssetsWebPluginManifest,
+  Types,
+} from "@player-tools/static-xlrs";
+import { PlayerLanguageService } from "../..";
+import { toTextDocument } from "../../utils";
 
-describe('binding-plugin', () => {
+describe("binding-plugin", () => {
   let service: PlayerLanguageService;
 
   beforeEach(async () => {
     service = new PlayerLanguageService();
-    await service.setAssetTypes([
-      './common/static_xlrs/core',
-      './common/static_xlrs/plugin',
+    await service.setAssetTypesFromModule([
+      Types,
+      ReferenceAssetsWebPluginManifest,
     ]);
   });
 
-  test('auto completes bindings', async () => {
+  test("auto completes bindings", async () => {
     const testDocument = toTextDocument(
       JSON.stringify(
         {
           views: [
             {
-              id: 'bar',
-              type: 'input',
-              binding: '',
+              id: "bar",
+              type: "input",
+              binding: "",
             },
           ],
           schema: {
             ROOT: {
               foo: {
-                type: 'FooType',
+                type: "FooType",
               },
             },
             FooType: {
               bar: {
-                type: 'StringType',
+                type: "StringType",
               },
             },
           },
@@ -48,7 +53,7 @@ describe('binding-plugin', () => {
 
     expect(completions.items).toHaveLength(2);
     expect(completions.items.map((c) => c.label)).toMatchInlineSnapshot(`
-      Array [
+      [
         "foo",
         "foo.bar",
       ]

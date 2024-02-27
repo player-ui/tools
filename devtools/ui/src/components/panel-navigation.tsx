@@ -1,15 +1,15 @@
-import React from 'react';
-import { Navigation, Controls, TabList, Tab } from '@devtools-ds/navigation';
-import { headerCase } from 'change-case';
-import { PANEL_IDS, type PanelID, Content } from './panels';
+import React from "react";
+import { Navigation, Controls, TabList, Tab } from "@devtools-ds/navigation";
+import { headerCase } from "change-case";
+import { PANEL_IDS, type PanelID, Content } from "./panels";
 
 interface PanelNavigationProps {
-  onSelectTab?: (tabID: PanelID) => void;
+  readonly onSelectTab?: (tabID: PanelID) => void;
 }
 
 export const PanelNavigation = (props: PanelNavigationProps) => {
   return (
-    <div style={{ width: '100%' }}>
+    <div style={{ width: "100%" }}>
       <Navigation defaultIndex={0}>
         <Controls>
           <TabList>

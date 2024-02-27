@@ -1,6 +1,7 @@
-import { expression as e } from '..';
+import { test, expect } from "vitest";
+import { expression as e } from "..";
 
-test('works with nested expressions', () => {
+test("works with nested expressions", () => {
   const exp1 = e`foo() == bar()`;
   const exp2 = e`conditional(${exp1})`;
 

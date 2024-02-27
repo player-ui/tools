@@ -1,21 +1,21 @@
-import React from 'react';
+import React from "react";
 import {
   type ConsoleExpression,
   Console as ConsoleComp,
   ConsoleResultInspector,
-} from '@devtools-ds/console';
-import { Navigation } from '@devtools-ds/navigation';
-import { DeleteIcon } from '@devtools-ds/icon';
-import type { ConsoleState } from '@player-tools/devtools-client';
-import styles from './console.css';
+} from "@devtools-ds/console";
+import { Navigation } from "@devtools-ds/navigation";
+import { DeleteIcon } from "@devtools-ds/icon";
+import type { ConsoleState } from "@player-tools/devtools-client";
+import styles from "./console.css";
 
-const mapHistory = (history: ConsoleState['history']): ConsoleExpression[] => {
+const mapHistory = (history: ConsoleState["history"]): ConsoleExpression[] => {
   return history.map((h: any) => {
     return {
       id: h.id,
-      expression: h.result?.exp ?? '',
-      result: h.result?.status === 'error' ? h.result.message : h.result?.data,
-      severity: h.result?.status === 'error' ? 'error' : undefined,
+      expression: h.result?.exp ?? "",
+      result: h.result?.status === "error" ? h.result.message : h.result?.data,
+      severity: h.result?.status === "error" ? "error" : undefined,
     };
   });
 };
@@ -25,14 +25,14 @@ export const ConsoleHeader = () => {
     <div style={{ margin: 10 }}>
       <p>
         The console allows you to evaluate any Player expression <br />
-        Check out the{' '}
+        Check out the{" "}
         <a
           href="https://player-ui.github.io/latest/content/data-expressions"
           target="_blank"
           rel="noreferrer"
         >
           docs
-        </a>{' '}
+        </a>{" "}
         for the available expressions
       </p>
     </div>
@@ -40,9 +40,9 @@ export const ConsoleHeader = () => {
 };
 
 interface ConsoleProps {
-  consoleState: ConsoleState;
-  onClear: () => void;
-  onExecute: (expression: string) => string;
+  readonly consoleState: ConsoleState;
+  readonly onClear: () => void;
+  readonly onExecute: (expression: string) => string;
 }
 
 export const Console = ({ consoleState, onClear, onExecute }: ConsoleProps) => (

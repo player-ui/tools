@@ -1,5 +1,5 @@
 // https://github.com/microsoft/vscode-json-languageservice/blob/master/src/jsonLanguageTypes.ts
-import type { Node } from 'jsonc-parser';
+import type { Node } from "jsonc-parser";
 
 export type ASTNode =
   | StringASTNode
@@ -32,38 +32,38 @@ export interface BaseASTNode<T extends string> {
 }
 
 // Base JSON types
-export interface StringASTNode extends BaseASTNode<'string'> {
+export interface StringASTNode extends BaseASTNode<"string"> {
   /** the raw value */
   readonly value: string;
 }
 
-export interface NumberASTNode extends BaseASTNode<'number'> {
+export interface NumberASTNode extends BaseASTNode<"number"> {
   /** the raw value */
   readonly value: number;
 }
 
-export interface BooleanASTNode extends BaseASTNode<'boolean'> {
+export interface BooleanASTNode extends BaseASTNode<"boolean"> {
   /** the raw value */
   readonly value: boolean;
 }
 
-export interface ArrayASTNode extends BaseASTNode<'array'> {
+export interface ArrayASTNode extends BaseASTNode<"array"> {
   /** the array items */
   readonly children: Array<ASTNode>;
 }
 
-export interface NullASTNode extends BaseASTNode<'null'> {
+export interface NullASTNode extends BaseASTNode<"null"> {
   /** the raw value */
   readonly value: null;
 }
 
-export interface EmptyASTNode extends BaseASTNode<'empty'> {
+export interface EmptyASTNode extends BaseASTNode<"empty"> {
   /** the raw value */
   readonly value: undefined;
 }
 
 export interface PropertyASTNode<T extends ASTNode = ASTNode>
-  extends BaseASTNode<'property'> {
+  extends BaseASTNode<"property"> {
   /** the key of the property */
   readonly keyNode: StringASTNode;
 
@@ -72,14 +72,14 @@ export interface PropertyASTNode<T extends ASTNode = ASTNode>
 }
 
 // Object like things
-export interface ObjectASTNode<T extends string = 'object'>
+export interface ObjectASTNode<T extends string = "object">
   extends BaseASTNode<T> {
   /** an array of properties of this object */
   properties: Array<PropertyASTNode>;
 }
 
 // Player Semantic Nodes
-export interface AssetASTNode extends ObjectASTNode<'asset'> {
+export interface AssetASTNode extends ObjectASTNode<"asset"> {
   /** The id property for this asset */
   readonly id?: PropertyASTNode<StringASTNode>;
 
@@ -87,7 +87,7 @@ export interface AssetASTNode extends ObjectASTNode<'asset'> {
   readonly assetType?: PropertyASTNode<StringASTNode>;
 }
 
-export interface ViewASTNode extends ObjectASTNode<'view'> {
+export interface ViewASTNode extends ObjectASTNode<"view"> {
   /** the id property for this view */
   readonly id?: PropertyASTNode<StringASTNode>;
 
@@ -95,7 +95,7 @@ export interface ViewASTNode extends ObjectASTNode<'view'> {
   readonly viewType?: PropertyASTNode<StringASTNode>;
 }
 
-export interface ContentASTNode extends ObjectASTNode<'content'> {
+export interface ContentASTNode extends ObjectASTNode<"content"> {
   /** the views prop of the flow */
   readonly views?: PropertyASTNode<ArrayASTNode>;
 
@@ -103,7 +103,7 @@ export interface ContentASTNode extends ObjectASTNode<'content'> {
   readonly navigation?: PropertyASTNode<NavigationASTNode>;
 }
 
-export interface NavigationASTNode extends ObjectASTNode<'navigation'> {
+export interface NavigationASTNode extends ObjectASTNode<"navigation"> {
   /** the begin prop of the navigation node */
   readonly begin?: PropertyASTNode;
 
@@ -111,7 +111,7 @@ export interface NavigationASTNode extends ObjectASTNode<'navigation'> {
   readonly flows: Array<PropertyASTNode<FlowASTNode>>;
 }
 
-export interface FlowASTNode extends ObjectASTNode<'flow'> {
+export interface FlowASTNode extends ObjectASTNode<"flow"> {
   /** the start prop of the node */
   readonly start?: PropertyASTNode<StringASTNode>;
 
@@ -119,7 +119,7 @@ export interface FlowASTNode extends ObjectASTNode<'flow'> {
   readonly states: Array<PropertyASTNode<FlowStateASTNode>>;
 }
 
-export interface FlowStateASTNode extends ObjectASTNode<'state'> {
+export interface FlowStateASTNode extends ObjectASTNode<"state"> {
   /** the type of the flow state */
   readonly stateType?: PropertyASTNode<StringASTNode>;
 }
@@ -137,7 +137,7 @@ export abstract class ASTNodeImpl {
 
 /** An implementation of a string node */
 export class StringASTNodeImpl extends ASTNodeImpl implements StringASTNode {
-  public type = 'string' as const;
+  public type = "string" as const;
   public value: string;
 
   constructor(jsonNode: Node, parent?: ASTNode) {
@@ -148,7 +148,7 @@ export class StringASTNodeImpl extends ASTNodeImpl implements StringASTNode {
 
 /** An implementation of the number node */
 export class NumberASTNodeImpl extends ASTNodeImpl implements NumberASTNode {
-  public type = 'number' as const;
+  public type = "number" as const;
   public value: number;
 
   constructor(jsonNode: Node, parent?: ASTNode) {
@@ -159,7 +159,7 @@ export class NumberASTNodeImpl extends ASTNodeImpl implements NumberASTNode {
 
 /** An implementation of a boolean node */
 export class BooleanASTNodeImpl extends ASTNodeImpl implements BooleanASTNode {
-  public type = 'boolean' as const;
+  public type = "boolean" as const;
   public value: boolean;
 
   constructor(jsonNode: Node, parent?: ASTNode) {
@@ -170,7 +170,7 @@ export class BooleanASTNodeImpl extends ASTNodeImpl implements BooleanASTNode {
 
 /** An implementation of a null node */
 export class NullASTNodeImpl extends ASTNodeImpl implements NullASTNode {
-  public type = 'null' as const;
+  public type = "null" as const;
   public value = null;
 }
 
@@ -179,7 +179,7 @@ export class PropertyASTNodeImpl
   extends ASTNodeImpl
   implements PropertyASTNode
 {
-  public type = 'property' as const;
+  public type = "property" as const;
   public keyNode: StringASTNode;
   public valueNode?: ASTNode;
 
@@ -199,7 +199,7 @@ export class PropertyASTNodeImpl
 
 /** An implementation of a view node */
 export class ViewASTNodeImpl extends ASTNodeImpl implements ViewASTNode {
-  public type = 'view' as const;
+  public type = "view" as const;
   public properties: PropertyASTNode[] = [];
   public id?: PropertyASTNode<StringASTNode> = undefined;
   public viewType?: PropertyASTNode<StringASTNode> = undefined;
@@ -211,7 +211,7 @@ export class ViewASTNodeImpl extends ASTNodeImpl implements ViewASTNode {
 
 /** An implementation of a top flow node */
 export class ContentASTNodeImpl extends ASTNodeImpl implements ContentASTNode {
-  public type = 'content' as const;
+  public type = "content" as const;
   public properties: PropertyASTNode[] = [];
   public views?: PropertyASTNode<ArrayASTNode> = undefined;
   public navigation?: PropertyASTNode<NavigationASTNode> = undefined;
@@ -226,7 +226,7 @@ export class NavigationASTNodeImpl
   extends ASTNodeImpl
   implements NavigationASTNode
 {
-  public type = 'navigation' as const;
+  public type = "navigation" as const;
   public properties: PropertyASTNode[] = [];
   public begin?: PropertyASTNode<StringASTNode> = undefined;
   public flows: Array<PropertyASTNode<FlowASTNode>> = [];
@@ -238,7 +238,7 @@ export class NavigationASTNodeImpl
 
 /** An implementation of a flow node */
 export class FlowASTNodeImpl extends ASTNodeImpl implements FlowASTNode {
-  public type = 'flow' as const;
+  public type = "flow" as const;
   public properties: PropertyASTNode[] = [];
   public start?: PropertyASTNode<StringASTNode> = undefined;
   public states: Array<PropertyASTNode<FlowStateASTNode>> = [];
@@ -253,7 +253,7 @@ export class FlowStateASTNodeImpl
   extends ASTNodeImpl
   implements FlowStateASTNode
 {
-  public type = 'state' as const;
+  public type = "state" as const;
   public properties: PropertyASTNode[] = [];
   public stateType?: PropertyASTNode<StringASTNode> = undefined;
 
@@ -264,7 +264,7 @@ export class FlowStateASTNodeImpl
 
 /** An implementation of an asset node */
 export class AssetASTNodeImpl extends ASTNodeImpl implements AssetASTNode {
-  public type = 'asset' as const;
+  public type = "asset" as const;
   public properties: PropertyASTNode[] = [];
   public id?: PropertyASTNode<StringASTNode> = undefined;
   public assetType?: PropertyASTNode<StringASTNode> = undefined;
@@ -276,7 +276,7 @@ export class AssetASTNodeImpl extends ASTNodeImpl implements AssetASTNode {
 
 /** An implementation of a array node */
 export class ArrayASTNodeImpl extends ASTNodeImpl implements ArrayASTNode {
-  public type = 'array' as const;
+  public type = "array" as const;
   public items: ASTNode[] = [];
 
   public get children() {
@@ -286,7 +286,7 @@ export class ArrayASTNodeImpl extends ASTNodeImpl implements ArrayASTNode {
 
 /** An implementation of an object node */
 export class ObjectASTNodeImpl extends ASTNodeImpl implements ObjectASTNode {
-  public type = 'object' as const;
+  public type = "object" as const;
   public properties: PropertyASTNode[] = [];
 
   public get children() {
@@ -306,7 +306,7 @@ export interface BaseNodeEdit<T extends string> {
   node: ASTNode;
 }
 
-export interface ReplaceEdit extends BaseNodeEdit<'replace'> {
+export interface ReplaceEdit extends BaseNodeEdit<"replace"> {
   /** the new value to replace with */
   value: any;
 }

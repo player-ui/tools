@@ -1,21 +1,30 @@
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@rules_player//javascript:defs.bzl", "js_pipeline")
+load("//helpers:defs.bzl", "tsup_config", "vitest_config")
 
-load("//:index.bzl", "javascript_pipeline")
+npm_link_all_packages(name = "node_modules")
 
-javascript_pipeline(
-    name = "@player-tools/xlr-sdk",
-    dependencies = [
-        "//xlr/types:@player-tools/xlr",
-        "//xlr/utils:@player-tools/xlr-utils",
-        "//xlr/converters:@player-tools/xlr-converters",
-        "@npm//jsonc-parser",
-        "@npm//@types/node",
-        "@npm//@types/fs-extra",
-        "@npm//fs-extra",
+tsup_config(name = "tsup_config")
+
+vitest_config(name = "vitest_config")
+
+js_pipeline(
+    package_name = "@player-tools/xlr-sdk",
+    peer_deps = [
+        "//:node_modules/typescript",
     ],
-    peer_dependencies = [
-        "@npm//typescript"
+    test_deps = [
+        ":node_modules",
+        "//:vitest_config",
+        ":node_modules/@player-tools/static-xlrs",
     ],
-    test_data = [
-        "//common:@player-tools/static-xlrs",
-    ]
+    deps = [
+        ":node_modules/@player-tools/xlr",
+        ":node_modules/@player-tools/xlr-converters",
+        ":node_modules/@player-tools/xlr-utils",
+        "//:node_modules/@types/fs-extra",
+        "//:node_modules/@types/node",
+        "//:node_modules/fs-extra",
+        "//:node_modules/jsonc-parser",
+    ],
 )

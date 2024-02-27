@@ -1,15 +1,15 @@
-import React from 'react';
-import type { Store } from 'redux';
-import { Provider } from 'react-redux';
-import { AutoThemeProvider } from '@devtools-ds/themes';
-import { ChakraProvider } from '@chakra-ui/react';
-import { Sidebar } from './sidebar';
-import { PanelNavigation } from './panel-navigation';
-import styles from './app.css';
+import React from "react";
+import type { Store } from "redux";
+import { Provider } from "react-redux";
+import { AutoThemeProvider } from "@devtools-ds/themes";
+import { ChakraProvider } from "@chakra-ui/react";
+import { Sidebar } from "./sidebar";
+import { PanelNavigation } from "./panel-navigation";
+import styles from "./app.css";
 
 // TODO: I would love to just use a provider for this, but it wasn't working with the bundle :(
 interface AppProps {
-  store: Store;
+  readonly store: Store;
 }
 
 /**

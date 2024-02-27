@@ -1,18 +1,19 @@
-import type { FunctionType, OrType, TupleType } from '@player-tools/xlr';
-import { createDocString } from '../documentation';
+import { test, expect, describe } from "vitest";
+import type { FunctionType, OrType, TupleType } from "@player-tools/xlr";
+import { createDocString } from "../documentation";
 
-describe('docs', () => {
-  it('or', () => {
+describe("docs", () => {
+  test("or", () => {
     const type1: OrType = {
-      type: 'or',
+      type: "or",
       or: [
         {
-          type: 'string',
+          type: "string",
         },
         {
-          type: 'array',
+          type: "array",
           elementType: {
-            type: 'string',
+            type: "string",
           },
         },
       ],
@@ -23,29 +24,29 @@ describe('docs', () => {
     );
   });
 
-  it('function', () => {
+  test("function", () => {
     const type1: FunctionType = {
-      type: 'function',
-      name: 'testABC',
+      type: "function",
+      name: "testABC",
       parameters: [
         {
-          name: 'a',
+          name: "a",
           type: {
-            type: 'string',
+            type: "string",
           },
         },
         {
-          name: 'b',
+          name: "b",
           type: {
-            type: 'array',
+            type: "array",
             elementType: {
-              type: 'string',
+              type: "string",
             },
           },
         },
       ],
       returnType: {
-        type: 'string',
+        type: "string",
       },
     };
 
@@ -54,22 +55,22 @@ describe('docs', () => {
     );
   });
 
-  it('tuple', () => {
+  test("tuple", () => {
     const type1: TupleType = {
-      type: 'tuple',
-      name: 'testABC',
+      type: "tuple",
+      name: "testABC",
       elementTypes: [
         {
-          name: 'a',
+          name: "a",
           type: {
-            type: 'string',
+            type: "string",
           },
         },
         {
           type: {
-            type: 'array',
+            type: "array",
             elementType: {
-              type: 'string',
+              type: "string",
             },
           },
         },
@@ -83,33 +84,33 @@ describe('docs', () => {
     );
   });
 
-  it('const', () => {
+  test("const", () => {
     const type1: OrType = {
-      type: 'or',
+      type: "or",
       or: [
         {
-          type: 'string',
-          const: 'abc',
+          type: "string",
+          const: "abc",
         },
         {
-          type: 'number',
+          type: "number",
           const: 123,
         },
         {
-          type: 'boolean',
+          type: "boolean",
           const: true,
         },
         {
-          type: 'array',
+          type: "array",
           elementType: {
-            type: 'string',
+            type: "string",
           },
         },
       ],
     };
 
     expect(createDocString(type1)).toMatchInlineSnapshot(
-      `"'abc' | 123 | true | Array<string>"`
+      `""abc" | 123 | true | Array<string>"`
     );
   });
 });

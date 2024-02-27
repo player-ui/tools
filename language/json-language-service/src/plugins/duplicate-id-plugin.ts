@@ -1,25 +1,25 @@
-import { DiagnosticSeverity } from 'vscode-languageserver-types';
-import type { AssetASTNode, ASTNode, ViewASTNode } from '../parser';
-import { getViewNode, replaceString } from '../parser';
-import type { PlayerLanguageService, PlayerLanguageServicePlugin } from '..';
-import type { Violation, ValidationContext, ASTVisitor } from '../types';
+import { DiagnosticSeverity } from "vscode-languageserver-types";
+import type { AssetASTNode, ASTNode, ViewASTNode } from "../parser";
+import { getViewNode, replaceString } from "../parser";
+import type { PlayerLanguageService, PlayerLanguageServicePlugin } from "..";
+import type { Violation, ValidationContext, ASTVisitor } from "../types";
 
 /** Create an id for the node given it's path */
 const generateID = (node?: ASTNode): string => {
-  if (!node || node.type === 'view') {
-    return '';
+  if (!node || node.type === "view") {
+    return "";
   }
 
   const prefix = generateID(node.parent);
-  let current = '';
+  let current = "";
 
-  if (node.type === 'property') {
+  if (node.type === "property") {
     current = node.keyNode.value;
-  } else if (node.type === 'asset' && node.assetType?.valueNode?.value) {
+  } else if (node.type === "asset" && node.assetType?.valueNode?.value) {
     current = node.assetType.valueNode?.value;
   }
 
-  return [prefix, current].filter(Boolean).join('-');
+  return [prefix, current].filter(Boolean).join("-");
 };
 
 /** Create a duplicate id violation for the given node */
@@ -33,10 +33,10 @@ const createViolation = (node: AssetASTNode): Violation | undefined => {
   return {
     node: valueNode,
     severity: DiagnosticSeverity.Error,
-    message: `The id '${node.id?.valueNode?.value}' is already in use in this view.`,
+    message: `The id "${node.id?.valueNode?.value}" is already in use in this view.`,
     fix: () => {
       return {
-        name: 'Generate new ID',
+        name: "Generate new ID",
         edit: replaceString(valueNode, `"${generateID(node)}"`),
       };
     },
@@ -65,14 +65,14 @@ const createValidationVisitor = (ctx: ValidationContext): ASTVisitor => {
       if (!view) {
         // not sure how you can get here
         throw new Error(
-          'Asset found but not within a view. Something is wrong'
+          "Asset found but not within a view. Something is wrong"
         );
       }
 
       const assetID = assetNode.id;
 
       if (!assetID || !assetID.valueNode?.value) {
-        // Can't check for dupe ids if the asset doesn't have one
+        // Can"t check for dupe ids if the asset doesn"t have one
         return;
       }
 
@@ -108,7 +108,7 @@ const createValidationVisitor = (ctx: ValidationContext): ASTVisitor => {
 
 /** The plugin to enable duplicate id checking/fixing */
 export class DuplicateIDPlugin implements PlayerLanguageServicePlugin {
-  name = 'duplicate-id';
+  name = "duplicate-id";
 
   apply(service: PlayerLanguageService) {
     service.hooks.validate.tap(this.name, async (ctx, validation) => {

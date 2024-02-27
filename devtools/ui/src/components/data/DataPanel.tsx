@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   type Runtime,
   selectAllBindings,
@@ -7,9 +7,9 @@ import {
   selectSelectedPlayerId,
   clearSelectedDataDetails,
   GET_DATA_BINDING_DETAILS,
-} from '@player-tools/devtools-client';
-import type { ASTNode, ResolvedASTNode } from '@devtools-ds/object-parser';
-import { Data } from './Data';
+} from "@player-tools/devtools-client";
+import type { ASTNode, ResolvedASTNode } from "@devtools-ds/object-parser";
+import { Data } from "./Data";
 
 const getBindingFromSelectedNode = (
   node: ASTNode | ResolvedASTNode
@@ -22,13 +22,13 @@ const getBindingFromSelectedNode = (
     currentNode = currentNode.parent as ASTNode;
   }
 
-  return bindingSegments.reverse().join('.');
+  return bindingSegments.reverse().join(".");
 };
 
 export const DataPanel = () => {
-  const allBindings: Runtime.PlayerDataBindingRPC['result'] =
+  const allBindings: Runtime.PlayerDataBindingRPC["result"] =
     useSelector(selectAllBindings);
-  const selectedBinding: Runtime.PlayerDataBindingRPC['result'] = useSelector(
+  const selectedBinding: Runtime.PlayerDataBindingRPC["result"] = useSelector(
     selectSelectedBinding
   );
   const currentPlayerID = useSelector(selectSelectedPlayerId);
@@ -41,7 +41,7 @@ export const DataPanel = () => {
 
     dispatch({
       type: GET_DATA_BINDING_DETAILS,
-      payload: { playerID: currentPlayerID, binding: '' },
+      payload: { playerID: currentPlayerID, binding: "" },
     });
   }, [currentPlayerID, dispatch]);
 

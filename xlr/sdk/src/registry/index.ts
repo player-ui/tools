@@ -1,2 +1,2 @@
-export * from './basic-registry';
-export * from './types';
+export * from "./basic-registry";
+export * from "./types";

@@ -1,12 +1,12 @@
 import {
   CompletionItemKind,
   DiagnosticSeverity,
-} from 'vscode-languageserver-types';
-import type { PlayerLanguageService, PlayerLanguageServicePlugin } from '..';
-import type { PropertyASTNode, StringASTNode } from '../parser';
-import { isPropertyNode, isStateNode, isViewNode } from '../parser';
-import type { ASTVisitor, DocumentContext, ValidationContext } from '../types';
-import { getLSLocationOfNode, getProperty, isValueCompletion } from '../utils';
+} from "vscode-languageserver-types";
+import type { PlayerLanguageService, PlayerLanguageServicePlugin } from "..";
+import type { PropertyASTNode, StringASTNode } from "../parser";
+import { isPropertyNode, isStateNode, isViewNode } from "../parser";
+import type { ASTVisitor, DocumentContext, ValidationContext } from "../types";
+import { getLSLocationOfNode, getProperty, isValueCompletion } from "../utils";
 
 interface DocumentViewInfo {
   /** list of views */
@@ -41,9 +41,9 @@ const createValidationVisitor = (
 ): ASTVisitor => {
   return {
     FlowStateNode: (flowState) => {
-      if (flowState.stateType?.valueNode?.value === 'VIEW') {
-        const refNode = getProperty(flowState, 'ref');
-        if (!refNode || refNode.valueNode?.type !== 'string') {
+      if (flowState.stateType?.valueNode?.value === "VIEW") {
+        const refNode = getProperty(flowState, "ref");
+        if (!refNode || refNode.valueNode?.type !== "string") {
           return;
         }
 
@@ -102,7 +102,7 @@ const getViewInfo = (ctx: DocumentContext): DocumentViewInfo => {
 
   const { root } = ctx.PlayerContent;
 
-  if (root.type === 'content') {
+  if (root.type === "content") {
     root.views?.valueNode?.children.forEach((c) => {
       if (isViewNode(c) && c.id?.valueNode) {
         views.set(c.id.valueNode.value, {
@@ -114,11 +114,11 @@ const getViewInfo = (ctx: DocumentContext): DocumentViewInfo => {
 
     root.navigation?.valueNode?.flows.forEach((flow) => {
       flow.valueNode?.states?.forEach((state) => {
-        if (state.valueNode?.stateType?.valueNode?.value === 'VIEW') {
+        if (state.valueNode?.stateType?.valueNode?.value === "VIEW") {
           const ref = state.valueNode.properties.find(
-            (p) => p.keyNode.value === 'ref'
+            (p) => p.keyNode.value === "ref"
           );
-          if (ref?.valueNode?.type === 'string') {
+          if (ref?.valueNode?.type === "string") {
             const refVal = ref.valueNode.value;
             nodes.set(refVal, {
               id: refVal,
@@ -140,7 +140,7 @@ const getViewInfo = (ctx: DocumentContext): DocumentViewInfo => {
  * Handles everything associated with the VIEW node type (definition, validation, auto-complete)
  */
 export class ViewNodePlugin implements PlayerLanguageServicePlugin {
-  name = 'view-node';
+  name = "view-node";
 
   apply(service: PlayerLanguageService) {
     let viewInfo: DocumentViewInfo | undefined;
@@ -166,10 +166,10 @@ export class ViewNodePlugin implements PlayerLanguageServicePlugin {
       }
 
       if (
-        ctx.node.type === 'string' &&
+        ctx.node.type === "string" &&
         isPropertyNode(ctx.node.parent) &&
         isStateNode(ctx.node.parent.parent) &&
-        ctx.node.parent.keyNode.value === 'ref'
+        ctx.node.parent.keyNode.value === "ref"
       ) {
         Array.from(viewInfo?.views.keys() ?? []).forEach((vID) => {
           completionCtx.addCompletionItem({
@@ -178,10 +178,10 @@ export class ViewNodePlugin implements PlayerLanguageServicePlugin {
           });
         });
       } else if (
-        ctx.node.type === 'string' &&
+        ctx.node.type === "string" &&
         isPropertyNode(ctx.node.parent) &&
         isViewNode(ctx.node.parent.parent) &&
-        ctx.node.parent.keyNode.value === 'id'
+        ctx.node.parent.keyNode.value === "id"
       ) {
         Array.from(viewInfo?.nodes.keys() ?? []).forEach((vID) => {
           completionCtx.addCompletionItem({
@@ -199,10 +199,10 @@ export class ViewNodePlugin implements PlayerLanguageServicePlugin {
         return;
       }
 
-      if (ctx.node.type === 'string' && isPropertyNode(ctx.node.parent)) {
+      if (ctx.node.type === "string" && isPropertyNode(ctx.node.parent)) {
         if (
           isViewNode(ctx.node.parent.parent) &&
-          ctx.node.parent.keyNode.value === 'id'
+          ctx.node.parent.keyNode.value === "id"
         ) {
           const { value } = ctx.node;
           const stateNode = viewInfo?.nodes.get(value);
@@ -211,7 +211,7 @@ export class ViewNodePlugin implements PlayerLanguageServicePlugin {
           }
         } else if (
           isStateNode(ctx.node.parent.parent) &&
-          ctx.node.parent.keyNode.value === 'ref'
+          ctx.node.parent.keyNode.value === "ref"
         ) {
           const { value } = ctx.node;
           const viewNode = viewInfo?.views.get(value);

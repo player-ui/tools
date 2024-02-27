@@ -1,5 +1,5 @@
-import path from 'path';
-import fs from 'fs';
+import path from "path";
+import fs from "fs";
 
 /** To handle globby issue on windows https://github.com/sindresorhus/globby/issues/152 */
 function forcePathSeparatorToPosix(input: string) {

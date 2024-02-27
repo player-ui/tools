@@ -1,2 +1,2 @@
-export * from './Events';
-export * from './EventsPanel';
+export * from "./Events";
+export * from "./EventsPanel";

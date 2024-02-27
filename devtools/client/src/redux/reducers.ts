@@ -1,6 +1,6 @@
-import type { ActionReducerMapBuilder } from '@reduxjs/toolkit';
-import type { PlayersState } from '@player-tools/devtools-common';
-import type { AsyncRPCActions } from './actions';
+import type { ActionReducerMapBuilder } from "@reduxjs/toolkit";
+import type { PlayersState } from "@player-tools/devtools-common";
+import type { AsyncRPCActions } from "./actions";
 
 /**
  * Callback function that adds cases for async actions for the player.
@@ -11,7 +11,7 @@ export const buildPlayerReducerCallback =
   (actions: AsyncRPCActions) =>
   (builder: ActionReducerMapBuilder<PlayersState>) => {
     builder.addCase(
-      actions['player-runtime-info-request'].fulfilled,
+      actions["player-runtime-info-request"].fulfilled,
       (state, action) => {
         const { activePlayers, selectedPlayerId } = state;
 
@@ -28,7 +28,7 @@ export const buildPlayerReducerCallback =
     );
 
     builder.addCase(
-      actions['player-config-request'].fulfilled,
+      actions["player-config-request"].fulfilled,
       (state, action) => {
         const { activePlayers, selectedPlayerId } = state;
 
@@ -41,7 +41,7 @@ export const buildPlayerReducerCallback =
     );
 
     builder.addCase(
-      actions['player-view-details-request'].fulfilled,
+      actions["player-view-details-request"].fulfilled,
       (state, action) => {
         const { activePlayers, selectedPlayerId } = state;
 
@@ -54,7 +54,7 @@ export const buildPlayerReducerCallback =
     );
 
     builder.addCase(
-      actions['player-data-binding-details'].fulfilled,
+      actions["player-data-binding-details"].fulfilled,
       (state, action) => {
         const {
           meta: {
@@ -68,7 +68,7 @@ export const buildPlayerReducerCallback =
           return;
         }
 
-        if (binding === '') {
+        if (binding === "") {
           activePlayers[playerID].dataState.allBindings = payload;
           return;
         }
@@ -78,7 +78,7 @@ export const buildPlayerReducerCallback =
     );
 
     builder.addCase(
-      actions['player-execute-expression'].fulfilled,
+      actions["player-execute-expression"].fulfilled,
       (state, action) => {
         const { activePlayers, selectedPlayerId } = state;
 
@@ -89,13 +89,13 @@ export const buildPlayerReducerCallback =
         activePlayers[selectedPlayerId].consoleState?.history?.push({
           id: action.meta.requestId,
           result: action.payload,
-          expression: action.payload?.exp ?? '',
+          expression: action.payload?.exp ?? "",
         });
       }
     );
 
     builder.addCase(
-      actions['player-start-profiler-request'].fulfilled,
+      actions["player-start-profiler-request"].fulfilled,
       (state, action) => {
         const { activePlayers, selectedPlayerId } = state;
 
@@ -106,7 +106,7 @@ export const buildPlayerReducerCallback =
     );
 
     builder.addCase(
-      actions['player-stop-profiler-request'].fulfilled,
+      actions["player-stop-profiler-request"].fulfilled,
       (state, action) => {
         const { activePlayers, selectedPlayerId } = state;
 

@@ -1,4 +1,4 @@
-import type { NamedType } from '@player-tools/xlr';
+import type { NamedType } from "@player-tools/xlr";
 
 export interface Filters {
   /** filter based on plugin name */
