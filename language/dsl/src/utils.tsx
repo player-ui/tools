@@ -151,7 +151,7 @@ export function flattenChildren(children: React.ReactNode): ReactChildArray {
 export function getObjectReferences<
   OriginalPropertiesObject extends Record<string, unknown>,
   ReferencesPropertyObject extends Record<string, unknown>
->(propertiesObject: OriginalPropertiesObject) {
+>(propertiesObject: OriginalPropertiesObject): ReferencesPropertyObject {
   const result: any = {};
 
   for (const itemProp in propertiesObject) {
@@ -161,5 +161,5 @@ export function getObjectReferences<
     }
   }
 
-  return result as ReferencesPropertyObject;
+  return result;
 }
