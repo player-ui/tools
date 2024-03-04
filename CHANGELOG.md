@@ -1,3 +1,80 @@
+# 0.5.0 (Mon Mar 04 2024)
+
+### Release Notes
+
+#### Use New Rules to Skip Custom Entrypoint Insertion for CLI ([#79](https://github.com/player-ui/tools/pull/79))
+
+Fix custom entry points being overridden in CLI package
+
+#### Fix loading XLRs from node_modules in webpack plugin ([#78](https://github.com/player-ui/tools/pull/78))
+
+FIx XLR Webpack plugin loading XLRs from `node_modules`
+
+#### Fix cli package.json ([#77](https://github.com/player-ui/tools/pull/77))
+
+Fix cli package.json main/typings entrypoints
+
+#### Break out dev/hard cli deps ([#76](https://github.com/player-ui/tools/pull/76))
+
+Fix CLI build pulling in non-runtime dependencies
+
+#### Make test dependencies devDependencies ([#75](https://github.com/player-ui/tools/pull/75))
+
+Fix dependencies
+
+#### Update Player Version ([#74](https://github.com/player-ui/tools/pull/74))
+
+Update to latest Player version
+
+#### Bazel 6 ([#64](https://github.com/player-ui/tools/pull/64))
+
+Migrates to Bazel 6, vitest, pnpm, and React 18.
+
+#### Fix/more validation fixes ([#65](https://github.com/player-ui/tools/pull/65))
+
+- XLR: Fix `Exclude` on Union Types
+- XLR: Fix shallow clones causing unintended aftereffects 
+- XLR SDK: Fix application of base Player Transforms to XLRs when loaded
+- CLI: New Plugins to add Plugins to LSP and XLR SDK Transforms
+
+#### Validation Improvements ([#63](https://github.com/player-ui/tools/pull/63))
+
+Properly parse `Excludes` keyword when compiling XLRs
+
+---
+
+#### 🚀 Enhancement
+
+- Bazel 6 [#64](https://github.com/player-ui/tools/pull/64) (rafael_campos@intuit.com [@adierkens](https://github.com/adierkens) [@brocollie08](https://github.com/brocollie08) [@rafbcampos](https://github.com/rafbcampos) [@KetanReddy](https://github.com/KetanReddy))
+
+#### 🐛 Bug Fix
+
+- Release main [#80](https://github.com/player-ui/tools/pull/80) ([@intuit-svc](https://github.com/intuit-svc))
+- DSLSchema Type for Validators and DataRefs [#69](https://github.com/player-ui/tools/pull/69) (alejandro_fimbres@intuit.com [@lexfm](https://github.com/lexfm))
+- Use New Rules to Skip Custom Entrypoint Insertion for CLI [#79](https://github.com/player-ui/tools/pull/79) ([@KetanReddy](https://github.com/KetanReddy))
+- Fix loading XLRs from node_modules in webpack plugin [#78](https://github.com/player-ui/tools/pull/78) ([@KetanReddy](https://github.com/KetanReddy))
+- Fix cli package.json [#77](https://github.com/player-ui/tools/pull/77) ([@KetanReddy](https://github.com/KetanReddy))
+- Break out dev/hard cli deps [#76](https://github.com/player-ui/tools/pull/76) ([@KetanReddy](https://github.com/KetanReddy))
+- Make test dependencies devDependencies [#75](https://github.com/player-ui/tools/pull/75) ([@KetanReddy](https://github.com/KetanReddy))
+- Update Player Version [#74](https://github.com/player-ui/tools/pull/74) ([@KetanReddy](https://github.com/KetanReddy))
+- Bazel 6: Stamp and Publish support [#70](https://github.com/player-ui/tools/pull/70) ([@KetanReddy](https://github.com/KetanReddy) [@adierkens](https://github.com/adierkens))
+- Fix/more validation fixes [#65](https://github.com/player-ui/tools/pull/65) ([@KetanReddy](https://github.com/KetanReddy))
+- Sync sync changes with bazel 6 branch [#66](https://github.com/player-ui/tools/pull/66) ([@brocollie08](https://github.com/brocollie08))
+- Validation Improvements [#63](https://github.com/player-ui/tools/pull/63) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### Authors: 8
+
+- [@brocollie08](https://github.com/brocollie08)
+- [@intuit-svc](https://github.com/intuit-svc)
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+- afimbres (alejandro_fimbres@intuit.com)
+- Alex Fimbres ([@lexfm](https://github.com/lexfm))
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+- Rafael Campos ([@rafbcampos](https://github.com/rafbcampos))
+- rcampos2 (rafael_campos@intuit.com)
+
+---
+
 # 0.4.1 (Fri Nov 17 2023)
 
 ### Release Notes
