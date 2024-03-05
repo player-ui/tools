@@ -23,6 +23,10 @@ dependencies = [
     "//:node_modules/react",
     "//:node_modules/tapable-ts",
     "//:node_modules/@babel/register",
+    "//:node_modules/@babel/preset-env",
+    "//:node_modules/@babel/preset-react",
+    "//:node_modules/@babel/preset-typescript",
+    "//:node_modules/@babel/plugin-transform-react-jsx-source",
     "//:node_modules/@oclif/core",
     "//:node_modules/@oclif/plugin-legacy",
     "//:node_modules/chalk",
@@ -88,6 +92,7 @@ create_package_json(
     substitutions = {
         "0.0.0-PLACEHOLDER": "{STABLE_VERSION}",
     },
+    custom_entrypoints = True,
 )
 
 oclif_bin.oclif(
