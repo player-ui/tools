@@ -69,7 +69,7 @@ export default class XLRCompile extends BaseCommand {
         chalk.red(`${logSymbols.error} Error compiling XLRs: ${e.message}`)
       );
       console.log(chalk.red(`${e.stack}`));
-      this.exit(1)
+      this.exit(1);
     }
 
     return { exitCode: 0 };
