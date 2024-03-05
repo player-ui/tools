@@ -66,11 +66,13 @@ export default class AssetDocgenPlugin {
         operations: [
           new ConcatOperation(
             "end",
-            `export const __asset__docs = ${JSON.stringify(
+            `export const __asset__docs_${assetName} = ${JSON.stringify(
               covertXLRtoAssetDoc(
-                sdk.getType(assetName) as NamedType<ObjectType>
+                sdk.getType(assetName, {
+                  getRawType: true,
+                }) as NamedType<ObjectType>
               )
-            )}`
+            )};`
           ),
         ],
       })
