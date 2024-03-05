@@ -35,12 +35,44 @@ export default class Validate extends BaseCommand {
     };
   }
 
+  private async extendTSConfig(filePath: string, compilerOptions: object) {
+    let extConfigFile, extTSEnvConfig;
+
+    const extendedTSConfig = glob.sync(filePath)[0];
+
+    this.log(
+      `Local extended Typesscript config file found ${extendedTSConfig}`
+    );
+
+    try {
+      extConfigFile = await fs.readFile(extendedTSConfig);
+    } catch (e) {
+      this.log(
+        "Error reading the TypeScript extended configuration file. Using tsconfig compile options only"
+      );
+      return compilerOptions;
+    }
+
+    const extCompilerConfigObject =
+      extConfigFile && JSON.parse(extConfigFile.toString());
+
+    if (extCompilerConfigObject.compilerOptions) {
+      extTSEnvConfig = extCompilerConfigObject.compilerOptions;
+
+      return { ...compilerOptions, ...extTSEnvConfig };
+    } else {
+      this.log("No extended Typescript Compiler options found in file");
+    }
+
+    return compilerOptions;
+  }
+
   private async getTSConfig() {
     let TSEnvConfig, configFile;
 
     const EnvTSConfig = glob.sync("./tsconfig.json")[0];
 
-    this.log(`Local Typesscript file found ${EnvTSConfig}`);
+    this.log(`Local Typesscript config file found ${EnvTSConfig}`);
 
     try {
       configFile = await fs.readFile(EnvTSConfig);
@@ -52,12 +84,21 @@ export default class Validate extends BaseCommand {
     const compilerConfigObject =
       configFile && JSON.parse(configFile.toString());
 
-    this.log(
-      `Enviroment Typescript compiler configurations found: ${compilerConfigObject}`
-    );
+    if (compilerConfigObject.compilerOptions) {
+      TSEnvConfig = compilerConfigObject.extends
+        ? await this.extendTSConfig(
+            compilerConfigObject.extends,
+            compilerConfigObject.compilerOptions
+          )
+        : compilerConfigObject.compilerOptions;
 
-    if (compilerConfigObject.CompilerOptions) {
-      TSEnvConfig = compilerConfigObject.CompilerOptions;
+      this.log(
+        `Enviroment Typescript compiler configurations found: ${JSON.stringify(
+          TSEnvConfig,
+          null,
+          4
+        )}`
+      );
 
       return TSEnvConfig;
     } else {
