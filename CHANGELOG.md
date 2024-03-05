@@ -1,3 +1,33 @@
+# 0.5.1 (Tue Mar 05 2024)
+
+### Release Notes
+
+#### Fix issues with storybook plugin and storybook 6.5.x ([#82](https://github.com/player-ui/tools/pull/82))
+
+Storybook Plugin - Fix linting issues, doc export collision if two XLRs are exported from the same package, and not having player xlr types loaded when parsing types
+
+#### Bugfixs ([#81](https://github.com/player-ui/tools/pull/81))
+
+- CLI: Actually exit with status code if command fails
+- XLR: Fix bad migration which prevented index access types which used a `'` to fail
+- CLI: Ship babel transforms used by CLI as hard dependencies
+- CLI: Use latest bazel rules to prevent `exports` section from being generated at all which may lead to issues in Node 18 environments
+
+---
+
+#### 🐛 Bug Fix
+
+- Release main [#83](https://github.com/player-ui/tools/pull/83) ([@intuit-svc](https://github.com/intuit-svc))
+- Fix issues with storybook plugin and storybook 6.5.x [#82](https://github.com/player-ui/tools/pull/82) (ketan_reddy@intuit.com)
+- Bugfixs [#81](https://github.com/player-ui/tools/pull/81) (ketan_reddy@intuit.com)
+
+#### Authors: 2
+
+- [@intuit-svc](https://github.com/intuit-svc)
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
 # 0.5.0 (Mon Mar 04 2024)
 
 ### Release Notes
