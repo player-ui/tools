@@ -41,14 +41,17 @@ export default class Validate extends BaseCommand {
   ): Promise<ts.CompilerOptions | undefined> {
     let TSEnvConfig, configFile;
 
-    const EnvTSConfig = glob.sync(filePath ? filePath : "./tsconfig.json")[0];
+    const EnvTSConfigPath = filePath
+      ? filePath
+      : glob.sync("./tsconfig.json")[0];
 
-    this.log(`Local Typesscript config file found ${EnvTSConfig}`);
+    this.log(`Local Typesscript config file found ${EnvTSConfigPath}`);
 
     try {
-      configFile = await fs.readFile(EnvTSConfig);
+      configFile = await fs.readFile(EnvTSConfigPath);
     } catch (e) {
-      this.error("Error reading the TypeScript configuration file.");
+      this.warn("Error reading the TypeScript configuration file.");
+      return;
     }
 
     const compilerConfigObject =
@@ -70,7 +73,7 @@ export default class Validate extends BaseCommand {
 
     if (TSEnvConfig && Object.keys(TSEnvConfig).length > 0) {
       if (!compilerConfigObject.extends)
-        this.log(
+        this.debug(
           `Enviroment Typescript compiler configurations found: ${JSON.stringify(
             TSEnvConfig,
             null,
@@ -81,8 +84,8 @@ export default class Validate extends BaseCommand {
       return TSEnvConfig;
     }
 
-    this.warn(
-      `No local Typescript compiler configuration could be found on file ${EnvTSConfig}`
+    this.log(
+      `No local Typescript compiler configuration could be found on file ${EnvTSConfigPath}`
     );
   }
 
@@ -96,7 +99,7 @@ export default class Validate extends BaseCommand {
       }
     );
 
-    const TSConfig = (await this.getTSConfig()) || DEFAULT_COMPILER_OPTIONS;
+    const TSConfig = (await this.getTSConfig()) ?? DEFAULT_COMPILER_OPTIONS;
 
     const program = ts.createProgram(files, TSConfig);
 
