@@ -35,75 +35,53 @@ export default class Validate extends BaseCommand {
     };
   }
 
-  private async extendTSConfig(filePath: string, compilerOptions: object) {
-    let extConfigFile, extTSEnvConfig;
+  private async getTSConfig(
+    filePath?: string,
+    compilerOptions: ts.CompilerOptions = {}
+  ): Promise<ts.CompilerOptions | undefined> {
+    let TSEnvConfig, ExtTSEnvConfig, configFile;
 
-    const extendedTSConfig = glob.sync(filePath)[0];
-
-    this.log(
-      `Local extended Typesscript config file found ${extendedTSConfig}`
-    );
-
-    try {
-      extConfigFile = await fs.readFile(extendedTSConfig);
-    } catch (e) {
-      this.log(
-        "Error reading the TypeScript extended configuration file. Using tsconfig compile options only"
-      );
-      return compilerOptions;
-    }
-
-    const extCompilerConfigObject =
-      extConfigFile && JSON.parse(extConfigFile.toString());
-
-    if (extCompilerConfigObject.compilerOptions) {
-      extTSEnvConfig = extCompilerConfigObject.compilerOptions;
-
-      return { ...compilerOptions, ...extTSEnvConfig };
-    } else {
-      this.log("No extended Typescript Compiler options found in file");
-    }
-
-    return compilerOptions;
-  }
-
-  private async getTSConfig() {
-    let TSEnvConfig, configFile;
-
-    const EnvTSConfig = glob.sync("./tsconfig.json")[0];
+    const EnvTSConfig = glob.sync(filePath ? filePath : "./tsconfig.json")[0];
 
     this.log(`Local Typesscript config file found ${EnvTSConfig}`);
 
     try {
       configFile = await fs.readFile(EnvTSConfig);
     } catch (e) {
-      this.log("Error reading the TypeScript configuration file.");
-      return;
+      this.error("Error reading the TypeScript configuration file.");
     }
 
     const compilerConfigObject =
-      configFile && JSON.parse(configFile.toString());
+      (configFile && JSON.parse(configFile.toString())) || {};
 
-    if (compilerConfigObject.compilerOptions) {
-      TSEnvConfig = compilerConfigObject.extends
-        ? await this.extendTSConfig(
-            compilerConfigObject.extends,
-            compilerConfigObject.compilerOptions
-          )
-        : compilerConfigObject.compilerOptions;
+    if (compilerConfigObject.extends) {
+      TSEnvConfig = await this.getTSConfig(compilerConfigObject.extends, {
+        ...compilerOptions,
+        ...compilerConfigObject.compilerOptions,
+      });
+    } else {
+      TSEnvConfig = {
+        ...compilerOptions,
+        ...compilerConfigObject.compilerOptions,
+      };
+    }
 
-      this.log(
-        `Enviroment Typescript compiler configurations found: ${JSON.stringify(
-          TSEnvConfig,
-          null,
-          4
-        )}`
-      );
+    if (Object.keys(TSEnvConfig).length > 0) {
+      if (!compilerConfigObject.extends)
+        this.log(
+          `Enviroment Typescript compiler configurations found: ${JSON.stringify(
+            TSEnvConfig,
+            null,
+            4
+          )}`
+        );
 
       return TSEnvConfig;
-    } else {
-      this.log("No compiler configuration found on tsconfig.json file");
     }
+
+    this.warn(
+      `No local Typescript compiler configuration could be found on file ${EnvTSConfig}`
+    );
   }
 
   async run(): Promise<void> {
