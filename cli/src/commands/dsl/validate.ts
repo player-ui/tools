@@ -39,7 +39,7 @@ export default class Validate extends BaseCommand {
     filePath?: string,
     compilerOptions: ts.CompilerOptions = {}
   ): Promise<ts.CompilerOptions | undefined> {
-    let TSEnvConfig, ExtTSEnvConfig, configFile;
+    let TSEnvConfig, configFile;
 
     const EnvTSConfig = glob.sync(filePath ? filePath : "./tsconfig.json")[0];
 
@@ -52,21 +52,23 @@ export default class Validate extends BaseCommand {
     }
 
     const compilerConfigObject =
-      (configFile && JSON.parse(configFile.toString())) || {};
+      configFile && JSON.parse(configFile.toString());
+
+    const configCompilerOpts = compilerConfigObject?.compilerOptions || {};
 
     if (compilerConfigObject.extends) {
       TSEnvConfig = await this.getTSConfig(compilerConfigObject.extends, {
         ...compilerOptions,
-        ...compilerConfigObject.compilerOptions,
+        ...configCompilerOpts,
       });
     } else {
       TSEnvConfig = {
         ...compilerOptions,
-        ...compilerConfigObject.compilerOptions,
+        ...configCompilerOpts,
       };
     }
 
-    if (Object.keys(TSEnvConfig).length > 0) {
+    if (TSEnvConfig && Object.keys(TSEnvConfig).length > 0) {
       if (!compilerConfigObject.extends)
         this.log(
           `Enviroment Typescript compiler configurations found: ${JSON.stringify(
