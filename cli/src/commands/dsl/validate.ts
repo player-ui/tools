@@ -45,12 +45,12 @@ export default class Validate extends BaseCommand {
       ? filePath
       : glob.sync("./tsconfig.json")[0];
 
-    this.log(`Local Typesscript config file found ${EnvTSConfigPath}`);
+    this.log(`Loading TypeScript config from path ${EnvTSConfigPath}`);
 
     try {
       configFile = await fs.readFile(EnvTSConfigPath);
     } catch (e) {
-      this.warn("Error reading the TypeScript configuration file.");
+      this.warn("Error reading TypeScript configuration file, falling back to internal defaults");
       return;
     }
 
@@ -74,7 +74,7 @@ export default class Validate extends BaseCommand {
     if (TSEnvConfig && Object.keys(TSEnvConfig).length > 0) {
       if (!compilerConfigObject.extends)
         this.debug(
-          `Enviroment Typescript compiler configurations found: ${JSON.stringify(
+          `Final effective config: ${JSON.stringify(
             TSEnvConfig,
             null,
             4
@@ -85,7 +85,7 @@ export default class Validate extends BaseCommand {
     }
 
     this.log(
-      `No local Typescript compiler configuration could be found on file ${EnvTSConfigPath}`
+      `No local TypeScript compiler configuration could be found, falling back to internal defaults`
     );
   }
 
