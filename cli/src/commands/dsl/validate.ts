@@ -50,7 +50,9 @@ export default class Validate extends BaseCommand {
     try {
       configFile = await fs.readFile(EnvTSConfigPath);
     } catch (e) {
-      this.warn("Error reading TypeScript configuration file, falling back to internal defaults");
+      this.warn(
+        "Error reading TypeScript configuration file, falling back to internal defaults"
+      );
       return;
     }
 
@@ -74,11 +76,7 @@ export default class Validate extends BaseCommand {
     if (TSEnvConfig && Object.keys(TSEnvConfig).length > 0) {
       if (!compilerConfigObject.extends)
         this.debug(
-          `Final effective config: ${JSON.stringify(
-            TSEnvConfig,
-            null,
-            4
-          )}`
+          `Final effective config: ${JSON.stringify(TSEnvConfig, null, 4)}`
         );
 
       return TSEnvConfig;
