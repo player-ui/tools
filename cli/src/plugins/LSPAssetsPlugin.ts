@@ -25,13 +25,17 @@ export interface LSPAssetsPluginConfig {
  *
  */
 export class LSPAssetsPlugin implements PlayerCLIPlugin {
-  private config: LSPAssetsPluginConfig;
+  private config: LSPAssetsPluginConfig | Array<LSPAssetsPluginConfig>;
 
-  constructor(config: LSPAssetsPluginConfig) {
+  constructor(config: LSPAssetsPluginConfig | Array<LSPAssetsPluginConfig>) {
     this.config = config;
   }
 
   async onCreateLanguageService(lsp: PlayerLanguageService, exp: boolean) {
-    await lsp.setAssetTypes([this.config.path]);
+    if (Array.isArray(this.config)) {
+      await lsp.setAssetTypes(this.config.map((c) => c.path));
+    } else {
+      await lsp.setAssetTypes([this.config.path]);
+    }
   }
 }

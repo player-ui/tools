@@ -8,13 +8,21 @@ import type { PlayerCLIPlugin } from "./index";
  * Handles adding a LSP Plugin to the LSP
  */
 export class LSPPluginPlugin implements PlayerCLIPlugin {
-  private plugin: PlayerLanguageServicePlugin;
+  private plugin:
+    | PlayerLanguageServicePlugin
+    | Array<PlayerLanguageServicePlugin>;
 
-  constructor(plugin: PlayerLanguageServicePlugin) {
+  constructor(
+    plugin: PlayerLanguageServicePlugin | Array<PlayerLanguageServicePlugin>
+  ) {
     this.plugin = plugin;
   }
 
   async onCreateLanguageService(lsp: PlayerLanguageService, exp: boolean) {
-    lsp.addLSPPlugin(this.plugin);
+    if (Array.isArray(this.plugin)) {
+      this.plugin.forEach((p) => lsp.addLSPPlugin(p));
+    } else {
+      lsp.addLSPPlugin(this.plugin);
+    }
   }
 }
