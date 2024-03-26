@@ -146,3 +146,20 @@ export function flattenChildren(children: React.ReactNode): ReactChildArray {
     return flatChildren;
   }, []);
 }
+
+/** Generates object reference properties from the provided object */
+export function getObjectReferences<
+  OriginalPropertiesObject extends Record<string, unknown>,
+  ReferencesPropertyObject extends Record<string, unknown>
+>(propertiesObject: OriginalPropertiesObject): ReferencesPropertyObject {
+  const result: any = {};
+
+  for (const itemProp in propertiesObject) {
+    if (Object.prototype.hasOwnProperty.call(propertiesObject, itemProp)) {
+      const refName = `${itemProp}Ref`;
+      result[refName as keyof ReferencesPropertyObject] = { type: itemProp };
+    }
+  }
+
+  return result;
+}

@@ -2,6 +2,8 @@ import type {
   Asset,
   Expression,
   Navigation as PlayerNav,
+  Schema,
+  Validation,
 } from "@player-ui/types";
 import type {
   BindingTemplateInstance,
@@ -86,4 +88,58 @@ export interface toJsonOptions {
    * default is "applicability"
    */
   propertiesToSkip?: string[];
+}
+
+type RemoveIndexSignature<T> = {
+  [K in keyof T as string extends K
+    ? never
+    : number extends K
+    ? never
+    : symbol extends K
+    ? never
+    : K]: T[K];
+};
+
+export type ValidationRefProps = RemoveIndexSignature<Validation.Reference>;
+
+export type DataTypeRefs<
+  DataTypeObjects extends Record<string, Schema.DataType>
+> = {
+  /** Property name with DataType object */
+  [Property in Extract<keyof DataTypeObjects, string> as `${Property}Ref`]: {
+    /** DataType name */
+    type: Property;
+  };
+};
+
+export type ValidatorFunctionRefs<
+  ValidatorObjects extends { [key: string]: (...args: any[]) => any }
+> = {
+  /** Property name with validator ref object */
+  [Property in Extract<keyof ValidatorObjects, string> as `${Property}Ref`]: {
+    /** Validator name */
+    type: Property;
+  } & Parameters<ValidatorObjects[Property]>[2] &
+    ValidationRefProps;
+};
+
+export type DataTypeReference<
+  DataTypeProp = { [key: string]: Schema.DataType },
+  ValidationRef = { [key: string]: Validation.Reference },
+  SymbolType = never
+> =
+  | (Omit<Schema.DataType, "type" | "validation"> & {
+      /** Handled data type */
+      type: keyof DataTypeProp;
+      /** Data type validation refs */
+      validation?: ValidationRef[keyof ValidationRef][];
+    })
+  | SymbolType;
+
+export interface DSLSchema<DataTypeRef = DataTypeReference> {
+  [key: string]:
+    | [DataTypeRef]
+    | DataTypeRef
+    | [DSLSchema<DataTypeRef>]
+    | DSLSchema<DataTypeRef>;
 }

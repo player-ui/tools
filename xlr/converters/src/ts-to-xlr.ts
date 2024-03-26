@@ -431,7 +431,7 @@ export class TsConverter {
         ts.isLiteralTypeNode(node.indexType)
       ) {
         const baseObject = this.convertTsTypeNode(node.objectType);
-        const accessor = node.indexType.literal.getText().replace(/[""]/g, "");
+        const accessor = node.indexType.literal.getText().replace(/["']/g, "");
         if (!baseObject) {
           this.context.throwError(
             `Error: Couldn't resolve index access on property ${accessor} on type ${node.objectType.typeName.getText()}`

@@ -13,6 +13,8 @@ js_pipeline(
     test_deps = [
         ":node_modules",
         "//:vitest_config",
+        ":node_modules/@player-tools/static-xlrs",
+
     ],
     deps = [
         ":node_modules/@player-tools/xlr",

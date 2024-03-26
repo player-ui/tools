@@ -667,6 +667,13 @@ exports[`Index Types > Basic 1`] = `
         },
         "required": true,
       },
+      "key2": {
+        "node": {
+          "title": "test.key2",
+          "type": "number",
+        },
+        "required": true,
+      },
     },
     "source": "filename.ts",
     "title": "test",

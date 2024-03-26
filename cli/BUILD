@@ -10,17 +10,23 @@ npm_link_all_packages(name = "node_modules")
 
 vitest_config(name = "vitest_config")
 
+dev_dependencies = [
+    "//:node_modules/@types/babel__register",
+    "//:node_modules/@types/fs-extra",
+    "//:node_modules/@types/mkdirp",
+    "//:node_modules/std-mocks",
+    "//:node_modules/@types/std-mocks",
+    "//:node_modules/vitest",
+]
+
 dependencies = [
     "//:node_modules/react",
     "//:node_modules/tapable-ts",
     "//:node_modules/@babel/register",
-    "//:node_modules/@types/babel__register",
     "//:node_modules/@babel/preset-env",
-    "//:node_modules/@babel/preset-typescript",
     "//:node_modules/@babel/preset-react",
+    "//:node_modules/@babel/preset-typescript",
     "//:node_modules/@babel/plugin-transform-react-jsx-source",
-    "//:node_modules/@types/fs-extra",
-    "//:node_modules/@types/mkdirp",
     "//:node_modules/@oclif/core",
     "//:node_modules/@oclif/plugin-legacy",
     "//:node_modules/chalk",
@@ -38,10 +44,7 @@ dependencies = [
     "//:node_modules/vscode-languageserver-textdocument",
     "//:node_modules/vscode-languageserver-types",
     "//:node_modules/typescript",
-    "//:node_modules/vitest",
     "//:node_modules/tslib",
-    "//:node_modules/std-mocks",
-    "//:node_modules/@types/std-mocks",
     ":node_modules/@player-tools/dsl",
     ":node_modules/@player-tools/json-language-service",
     ":node_modules/@player-tools/xlr",
@@ -49,6 +52,8 @@ dependencies = [
     ":node_modules/@player-tools/xlr-utils",
     ":node_modules/@player-tools/xlr-converters",
 ]
+
+all_deps = dependencies + dev_dependencies
 
 ts_config(
     name = "tsconfig",
@@ -76,12 +81,13 @@ ts_project(
     transpiler = "tsc",
     tsconfig = ":tsconfig",
     validate = False,
-    deps = dependencies,
+    deps = all_deps,
 )
 
 create_package_json(
     name = "player-cli-package_json",
     base_package_json = "package.json",
+    custom_entrypoints = True,
     dependencies = dependencies,
     root_package_json = "//:package.json",
     substitutions = {
@@ -108,20 +114,20 @@ js_library(
         ":player-cli-manifest",
         ":player-cli-package_json",
     ] + glob(["bin/*"]),
-    deps = dependencies,
+    deps = all_deps,
 )
 
 vitest_test(
     name = "player-cli-unit",
     config = ":vitest_config",
-    data = glob(["src/**/*"]) + dependencies + ["//:vitest_config"],
+    data = glob(["src/**/*"]) + all_deps + ["//:vitest_config"],
     node_modules = "//:node_modules",
 )
 
 eslint_test(
     name = "player-cli-lint",
     srcs = glob(["src/**/*"]),
-    data = glob(["src/**/*"]) + dependencies + ["//:eslint_config"],
+    data = glob(["src/**/*"]) + all_deps + ["//:eslint_config"],
     node_modules = "//:node_modules",
 )
 
@@ -149,8 +155,11 @@ js_binary(
 )
 
 js_binary(
-  name = "dsl_bin",
-  entry_point = "bin/run",
-  data = [":player-cli-bundle", "package.json"] + dependencies,
-  visibility = ["//visibility:public"],
+    name = "dsl_bin",
+    data = [
+        "package.json",
+        ":player-cli-bundle",
+    ] + dependencies,
+    entry_point = "bin/run",
+    visibility = ["//visibility:public"],
 )
