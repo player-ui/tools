@@ -1,6 +1,6 @@
 import React from "react";
 import type { ObjectNode, PropertyNode } from "react-json-reconciler";
-import mergeRefs from "react-merge-refs";
+import { mergeRefs } from "react-merge-refs";
 import type { View as ViewType } from "@player-ui/types";
 import type { PlayerApplicability, WithChildren } from "./types";
 import {

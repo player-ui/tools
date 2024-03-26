@@ -121,7 +121,7 @@
     "react-flatten-children": "^1.1.2",
     "react-icons": "^5.0.1",
     "react-json-reconciler": "^2.0.0",
-    "react-merge-refs": "^1.1.0",
+    "react-merge-refs": "^2.1.1",
     "react-redux": "^7.2.6",
     "react-split": "^2.0.14",
     "react-syntax-highlighter": "^15.4.5",

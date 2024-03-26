@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { SchemaGenerator } from "../schema";
+import { SchemaGenerator, makeBindingsForObject } from "../schema";
 
 const BasicDataType = {
   type: "StringType",
