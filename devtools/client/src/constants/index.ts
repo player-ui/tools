@@ -1,18 +1,14 @@
 import type { ExtensionState } from "@player-tools/devtools-types";
-import type { Flow, ReactPlayerOptions } from "@player-ui/react";
-import { ReferenceAssetsPlugin } from "@player-ui/reference-assets-plugin-react";
+import type { Flow, ReactPlayerPlugin } from "@player-ui/react";
+import DevtoolsUIAssetsPlugin from "@devtools-ui/plugin";
 import { PubSubPlugin } from "@player-ui/pubsub-plugin";
 
 export const PUBSUB_PLUGIN = new PubSubPlugin();
 
-export const PLAYER_CONFIG: ReactPlayerOptions = {
-  plugins: [
-    PUBSUB_PLUGIN,
-    // TODO: swap for the devtools UI assets when they are ready:
-    new ReferenceAssetsPlugin(),
-    // TODO: fix this type - player and react player are not compatible:
-  ] as unknown as ReactPlayerOptions["plugins"],
-};
+export const PLAYER_PLUGINS: ReactPlayerPlugin[] = [
+  new DevtoolsUIAssetsPlugin(),
+  PUBSUB_PLUGIN,
+];
 
 export const INITIAL_FLOW: Flow = {
   id: "initial-flow",

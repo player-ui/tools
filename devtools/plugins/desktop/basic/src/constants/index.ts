@@ -9,8 +9,8 @@ export const PLUGIN_DESCRIPTION = "Standard Player UI Devtools";
 export const PLUGIN_VERSION = "0.0.1";
 
 export const VIEWS_IDS = {
+  CONFIG: "Config",
   FLOW: "Flow",
-  DATA: "Data",
   LOGS: "Logs",
   CONSOLE: "Console",
 };

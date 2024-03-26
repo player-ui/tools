@@ -127,6 +127,8 @@ export interface ExtensionState {
       plugins: Record<string, PluginData>;
       /** active */
       active: boolean;
+      /** config */
+      config: Record<string, unknown>;
     }
   >;
 }

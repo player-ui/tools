@@ -1,5 +1,6 @@
 import glob from "globby";
 import logSymbols from "log-symbols";
+import { promises as fs } from "fs";
 import * as ts from "typescript";
 import { Flags } from "@oclif/core";
 import { BaseCommand } from "../../utils/base-command";
@@ -34,6 +35,58 @@ export default class Validate extends BaseCommand {
     };
   }
 
+  private async getTSConfig(
+    filePath?: string,
+    compilerOptions: ts.CompilerOptions = {}
+  ): Promise<ts.CompilerOptions | undefined> {
+    let TSEnvConfig, configFile;
+
+    const EnvTSConfigPath = filePath
+      ? filePath
+      : glob.sync("./tsconfig.json")[0];
+
+    this.log(`Loading TypeScript config from path ${EnvTSConfigPath}`);
+
+    try {
+      configFile = await fs.readFile(EnvTSConfigPath);
+    } catch (e) {
+      this.warn(
+        "Error reading TypeScript configuration file, falling back to internal defaults"
+      );
+      return;
+    }
+
+    const compilerConfigObject =
+      configFile && JSON.parse(configFile.toString());
+
+    const configCompilerOpts = compilerConfigObject?.compilerOptions || {};
+
+    if (compilerConfigObject.extends) {
+      TSEnvConfig = await this.getTSConfig(compilerConfigObject.extends, {
+        ...compilerOptions,
+        ...configCompilerOpts,
+      });
+    } else {
+      TSEnvConfig = {
+        ...compilerOptions,
+        ...configCompilerOpts,
+      };
+    }
+
+    if (TSEnvConfig && Object.keys(TSEnvConfig).length > 0) {
+      if (!compilerConfigObject.extends)
+        this.debug(
+          `Final effective config: ${JSON.stringify(TSEnvConfig, null, 4)}`
+        );
+
+      return TSEnvConfig;
+    }
+
+    this.log(
+      `No local TypeScript compiler configuration could be found, falling back to internal defaults`
+    );
+  }
+
   async run(): Promise<void> {
     const { inputFiles } = await this.getOptions();
 
@@ -44,11 +97,14 @@ export default class Validate extends BaseCommand {
       }
     );
 
-    const program = ts.createProgram(files, DEFAULT_COMPILER_OPTIONS);
+    const TSConfig = (await this.getTSConfig()) ?? DEFAULT_COMPILER_OPTIONS;
+
+    const program = ts.createProgram(files, TSConfig);
 
     const allDiagnostics = ts.getPreEmitDiagnostics(program);
 
     let diagnosticsCount = 0;
+
     const groupedDiagnostics = allDiagnostics.reduce(
       (
         acc: {
@@ -99,9 +155,9 @@ export default class Validate extends BaseCommand {
 
     if (fileNameList.length) {
       this.log(
-        `${diagnosticsCount} type or syntax errors found in ${
-          fileNameList.length
-        } file${fileNameList.length > 1 ? "s" : ""}, exiting program`
+        `${diagnosticsCount} type or syntax errors found in 
+        ${fileNameList.length} 
+        file${fileNameList.length > 1 ? "s" : ""}, exiting program`
       );
       this.exit(1);
     } else {

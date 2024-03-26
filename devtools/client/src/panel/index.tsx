@@ -4,20 +4,42 @@ import type { ExtensionSupportedEvents } from "@player-tools/devtools-types";
 import { DataController, Flow, useReactPlayer } from "@player-ui/react";
 import { useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  ChakraProvider,
+  Container,
+  Flex,
+  FormControl,
+  FormLabel,
+  Heading,
+  HStack,
+  Select,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
+import { ThemeProvider } from "@devtools-ds/themes";
 
-import styles from "./index.module.css";
-import { INITIAL_FLOW, PLAYER_CONFIG, PUBSUB_PLUGIN } from "../constants";
+import { INITIAL_FLOW, PLAYER_PLUGINS, PUBSUB_PLUGIN } from "../constants";
 import { useExtensionState } from "../state";
 import { flowDiff } from "../helpers/flowDiff";
+import { theme } from "./theme";
 
 const fallbackRender: ErrorBoundary["props"]["fallbackRender"] = ({
   error,
 }) => {
   return (
-    <div className={styles.errorMessage}>
-      <p>Ops, something went wrong.</p>
-      <pre>{error.message}</pre>
-    </div>
+    <Container centerContent>
+      <Card>
+        <CardHeader>
+          <Heading>Ops, something went wrong.</Heading>
+        </CardHeader>
+      </Card>
+      <CardBody>
+        <Text as="pre">{error.message}</Text>
+      </CardBody>
+    </Container>
   );
 };
 
@@ -40,7 +62,9 @@ export const Panel = ({
       communicationLayer,
     });
 
-  const { reactPlayer } = useReactPlayer(PLAYER_CONFIG);
+  const { reactPlayer } = useReactPlayer({
+    plugins: PLAYER_PLUGINS,
+  });
 
   const dataController = useRef<WeakRef<DataController> | null>(null);
 
@@ -56,6 +80,8 @@ export const Panel = ({
     // we subscribe to all messages from the devtools plugin
     // so the plugin author can define their own events
     PUBSUB_PLUGIN.subscribe("*", (type: string, payload: string) => {
+      console.log("Received message", { type, payload });
+
       handleInteraction({
         type,
         payload,
@@ -101,68 +127,66 @@ export const Panel = ({
   const Component = reactPlayer.Component as React.FC;
 
   return (
-    <ErrorBoundary fallbackRender={fallbackRender}>
-      <div className={styles.container}>
-        <>
-          {state.current.player ? (
-            <>
-              <header className={styles.header}>
-                <div className={styles.dropdownContainer}>
-                  <label htmlFor="player">Player: </label>
-                  <select
-                    id="player"
-                    className={styles.dropdown}
-                    value={state.current.player || ""}
-                    onChange={(event) => selectPlayer(event.target.value)}
-                  >
-                    {Object.keys(state.players).map((playerID) => (
-                      <option key={playerID} value={playerID}>
-                        {playerID}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className={styles.dropdownContainer}>
-                  <label htmlFor="plugin">Plugin: </label>
-                  <select
-                    id="plugin"
-                    className={styles.dropdown}
-                    value={state.current.plugin || ""}
-                    onChange={(event) => selectPlugin(event.target.value)}
-                  >
-                    {Object.keys(
-                      state.players[state.current.player].plugins
-                    ).map((pluginID) => (
-                      <option key={pluginID} value={pluginID}>
-                        {pluginID}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </header>
-
-              <main className={styles.main}>
-                <Component />
-              </main>
-
-              <details>
-                <summary>State</summary>
-                <pre>{JSON.stringify(state, null, 2)}</pre>
-              </details>
-            </>
-          ) : (
-            <div className={styles.noPlayerMessage}>
-              <p>
-                No Player-UI instance or devtools plugin detected. Visit{" "}
-                <a href="https://player-ui.github.io/">
-                  https://player-ui.github.io/
-                </a>{" "}
-                for more info.
-              </p>
-            </div>
-          )}
-        </>
-      </div>
-    </ErrorBoundary>
+    <ChakraProvider theme={theme}>
+      <ThemeProvider colorScheme="dark">
+        <ErrorBoundary fallbackRender={fallbackRender}>
+          <VStack w="100vw" h="100vh">
+            {state.current.player ? (
+              <Flex direction="column" marginTop="4">
+                <HStack spacing="4">
+                  <FormControl>
+                    <FormLabel>Player</FormLabel>
+                    <Select
+                      id="player"
+                      value={state.current.player || ""}
+                      onChange={(event) => selectPlayer(event.target.value)}
+                    >
+                      {Object.keys(state.players).map((playerID) => (
+                        <option key={playerID} value={playerID}>
+                          {playerID}
+                        </option>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Plugin</FormLabel>
+                    <Select
+                      id="plugin"
+                      value={state.current.plugin || ""}
+                      onChange={(event) => selectPlugin(event.target.value)}
+                    >
+                      {Object.keys(
+                        state.players[state.current.player].plugins
+                      ).map((pluginID) => (
+                        <option key={pluginID} value={pluginID}>
+                          {pluginID}
+                        </option>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </HStack>
+                <Container marginY="6">
+                  <Component />
+                </Container>
+                <details>
+                  <summary>Debug</summary>
+                  <pre>{JSON.stringify(state, null, 2)}</pre>
+                </details>
+              </Flex>
+            ) : (
+              <Flex justifyContent="center" padding="6">
+                <Text>
+                  No Player-UI instance or devtools plugin detected. Visit{" "}
+                  <a href="https://player-ui.github.io/">
+                    https://player-ui.github.io/
+                  </a>{" "}
+                  for more info.
+                </Text>
+              </Flex>
+            )}
+          </VStack>
+        </ErrorBoundary>
+      </ThemeProvider>
+    </ChakraProvider>
   );
 };

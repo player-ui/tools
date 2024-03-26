@@ -13,14 +13,16 @@ js_pipeline(
     deps = [
         ":node_modules/@player-tools/devtools-messenger",
         ":node_modules/@player-tools/devtools-types",
+        "//:node_modules/@chakra-ui/react",
         "//:node_modules/@player-ui/pubsub-plugin",
         "//:node_modules/@player-ui/react",
-        "//:node_modules/@player-ui/reference-assets-plugin-react",
+        "//:node_modules/@devtools-ui/plugin",
         "//:node_modules/@types/react",
         "//:node_modules/dset",
         "//:node_modules/immer",
         "//:node_modules/react",
         "//:node_modules/react-error-boundary",
         "//:node_modules/dequal",
+        "//:node_modules/@devtools-ds/themes"
     ],
 )

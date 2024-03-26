@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "@player-tools/devtools-basic-web-plugin": "0.0.0-PLACEHOLDER",
-    "@player-ui/pubsub-plugin": "^0.6.0",
-    "@player-ui/react": "^0.5.1",
-    "@player-ui/reference-assets-plugin-react": "^0.5.1",
+    "@player-ui/pubsub-plugin": "0.7.1",
+    "@player-ui/react": "0.7.1",
+    "@player-ui/reference-assets-plugin-react": "0.7.1",
     "concurrently": "^8.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -22,7 +22,7 @@
     "tiny-uid": "^1.1.2"
   },
   "devDependencies": {
-    "@player-ui/types": "^0.5.1",
+    "@player-ui/types": "0.7.1",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@typescript-eslint/eslint-plugin": "^6.14.0",

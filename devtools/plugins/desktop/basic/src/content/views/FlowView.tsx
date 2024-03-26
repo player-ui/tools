@@ -1,21 +1,23 @@
-import { Collection, Info, Text } from "@player-ui/reference-assets-components";
 import React from "react";
+import { ObjectInspector, CopyToClipboard } from "@devtools-ui/plugin";
 import { VIEWS_IDS } from "../../constants";
-import { NavigationBar } from "../common/NavigationBar";
+import { Screen } from "../common";
 import { bindings } from "../schema";
 
 export const FlowView = (
-  <Info id={VIEWS_IDS.FLOW}>
-    <Info.Title>
-      <Text value="Flow" />
-    </Info.Title>
-    <Info.PrimaryInfo>
-      <Collection>
-        <Collection.Values>
-          <NavigationBar />
-          <Text value={bindings.flow as any} />
-        </Collection.Values>
-      </Collection>
-    </Info.PrimaryInfo>
-  </Info>
+  <Screen
+    id={VIEWS_IDS.FLOW}
+    main={
+      <ObjectInspector binding={bindings.flow as any}>
+        <ObjectInspector.Label>Flow</ObjectInspector.Label>
+      </ObjectInspector>
+    }
+    footer={
+      <CopyToClipboard binding={bindings.flow as any}>
+        <CopyToClipboard.Label>
+          Copy flow to the clipboard
+        </CopyToClipboard.Label>
+      </CopyToClipboard>
+    }
+  />
 );

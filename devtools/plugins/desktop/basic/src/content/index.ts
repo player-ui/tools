@@ -8,4 +8,11 @@ export default {
   views,
   navigation,
   schema,
+  data: {
+    expression: "",
+    flow: {},
+    history: [],
+    logs: [],
+    playerConfig: {},
+  },
 };

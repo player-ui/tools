@@ -5,7 +5,7 @@ import {
 } from "@player-ui/react";
 import { ReferenceAssetsPlugin } from "@player-ui/reference-assets-plugin-react";
 import { BasicWevDevtoolsPlugin } from "@player-tools/devtools-basic-web-plugin";
-import { Flow } from "@player-ui/types";
+import type { Flow } from "@player-ui/types";
 import { useEffect } from "react";
 import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 

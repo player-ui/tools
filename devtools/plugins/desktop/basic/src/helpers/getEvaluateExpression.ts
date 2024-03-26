@@ -1,4 +1,5 @@
 import { ExpressionEvaluator } from "@player-ui/react";
+import { v4 as uuid } from "uuid";
 import { Evaluation } from "../types";
 
 export const getEvaluateExpression =
@@ -6,15 +7,17 @@ export const getEvaluateExpression =
   (expression: string): Evaluation => {
     if (!expressionEvaluator) {
       return {
-        status: "error",
-        data: "Expression evaluator not available",
+        id: uuid(),
+        severity: "error",
+        result: "Expression evaluator not available",
         expression,
       };
     }
 
     let result: Evaluation = {
-      status: "error",
-      data: "Something went wrong",
+      id: uuid(),
+      severity: "error",
+      result: "Something went wrong",
       expression,
     };
 
@@ -28,15 +31,16 @@ export const getEvaluateExpression =
       const evaluatorResult = expressionEvaluator.deref()?.evaluate(expression);
 
       result = {
-        status: "success",
-        data: evaluatorResult,
+        id: uuid(),
+        result: evaluatorResult,
         expression,
       };
     } catch (error) {
       if (error instanceof Error) {
         result = {
-          status: "error",
-          data: error.message,
+          id: uuid(),
+          severity: "error",
+          result: error.message,
           expression,
         };
       }

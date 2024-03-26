@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "extension": ["client", "types", "messenger"],
-    "app": ["plugins/desktop/basic", "plugins/desktop/common"]
-  }
-}

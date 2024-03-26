@@ -18,6 +18,8 @@ export class BasicWevDevtoolsPlugin implements ReactPlayerPlugin {
 
   data: Record<string, unknown> = {};
 
+  playerConfig: Record<string, unknown> = {};
+
   logs: {
     severity: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -33,6 +35,12 @@ export class BasicWevDevtoolsPlugin implements ReactPlayerPlugin {
   dataController?: WeakRef<DataController>;
 
   apply(player: Player) {
+    // Config
+    this.playerConfig = {
+      version: player.getVersion(),
+      plugins: player.getPlugins().map((plugin) => plugin.name),
+    };
+
     // Data
     player.hooks.dataController.tap(this.name, (dataController) => {
       dataController.hooks.onUpdate.tap(this.name, (updates) => {
@@ -73,6 +81,7 @@ export class BasicWevDevtoolsPlugin implements ReactPlayerPlugin {
 
       return (
         <WrapperComponent
+          playerConfig={this.playerConfig}
           data={this.data}
           logs={this.logs}
           flow={this.flow}

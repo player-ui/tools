@@ -427,6 +427,7 @@ describe("Index Types", () => {
 
     export interface test {
       key: base["foo"];
+      key2: base['bar'];
     }
 
     `;

@@ -24,6 +24,7 @@ const pluginData: PluginData = {
 export const WrapperComponent = ({
   children,
   data,
+  playerConfig,
   logs,
   flow,
   expressionEvaluator,
@@ -48,15 +49,13 @@ export const WrapperComponent = ({
       ) {
         const result = expEvaluator(payload);
 
-        lastProcessedInteraction.current += 1;
-
         const newState = produce(state, (draft) => {
           const current: Array<Evaluation> =
-            (state?.plugins?.[id]?.flow?.data
-              ?.evaluations as Array<Evaluation>) || [];
+            (state?.plugins?.[id]?.flow?.data?.history as Array<Evaluation>) ||
+            [];
           dset(
             draft,
-            ["plugins", id, "flow", "data", "evaluations"],
+            ["plugins", id, "flow", "data", "history"],
             [...current, result]
           );
         });
@@ -74,10 +73,17 @@ export const WrapperComponent = ({
           timestamp: Date.now(),
           _messenger_: true,
         });
+
+        lastProcessedInteraction.current += 1;
       }
     },
     [dispatch, expressionEvaluator, id, state]
   );
+
+  // inject playerConfig into the plugin data
+  const pluginDataWithPlayerConfig = produce(pluginData, (draft) => {
+    dset(draft, ["flow", "data", "playerConfig"], playerConfig);
+  });
 
   // Initial plugin content
   useEffect(() => {
@@ -86,7 +92,7 @@ export const WrapperComponent = ({
       type: "PLAYER_DEVTOOLS_PLAYER_INIT",
       payload: {
         plugins: {
-          [id]: pluginData,
+          [id]: pluginDataWithPlayerConfig,
         },
       },
       sender: playerID,
@@ -102,7 +108,9 @@ export const WrapperComponent = ({
   // Process interactions
   useEffect(() => {
     if (lastProcessedInteraction.current < (state.interactions.length ?? 0)) {
-      state.interactions.forEach(processInteraction);
+      state.interactions
+        .slice(lastProcessedInteraction.current)
+        .forEach(processInteraction);
     }
   }, [state.interactions.length]);
 
