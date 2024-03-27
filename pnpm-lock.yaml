@@ -306,18 +306,12 @@ importers:
       react-flame-graph:
         specifier: ^1.4.0
         version: 1.4.0(react-dom@18.2.0)(react@18.2.0)
-      react-flatten-children:
-        specifier: ^1.1.2
-        version: 1.1.2
       react-icons:
         specifier: ^5.0.1
         version: 5.0.1(react@18.2.0)
       react-json-reconciler:
         specifier: ^2.0.0
         version: 2.0.0(react@18.2.0)
-      react-merge-refs:
-        specifier: ^2.1.1
-        version: 2.1.1
       react-redux:
         specifier: ^7.2.6
         version: 7.2.9(react-dom@18.2.0)(react@18.2.0)
@@ -17514,10 +17508,6 @@ packages:
 
   /react-merge-refs@1.1.0:
     resolution: {integrity: sha512-alTKsjEL0dKH/ru1Iyn7vliS2QRcBp9zZPGoWxUOvRGWPUYgjo+V01is7p04It6KhgrzhJGnIj9GgX8W4bZoCQ==, tarball: https://registry.npmjs.org/react-merge-refs/-/react-merge-refs-1.1.0.tgz}
-    dev: false
-
-  /react-merge-refs@2.1.1:
-    resolution: {integrity: sha512-jLQXJ/URln51zskhgppGJ2ub7b2WFKGq3cl3NYKtlHoTG+dN2q7EzWrn3hN3EgPsTMvpR9tpq5ijdp7YwFZkag==, tarball: https://registry.npmjs.org/react-merge-refs/-/react-merge-refs-2.1.1.tgz}
     dev: false
 
   /react-reconciler@0.26.2(react@18.2.0):
