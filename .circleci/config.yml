@@ -9,8 +9,6 @@ parameters:
     default: false
 
 orbs:
-  macos: circleci/macos@2
-  android: circleci/android@2.0
   codecov: codecov/codecov@3.2.2
 
 executors:
@@ -94,27 +92,6 @@ jobs:
       - attach_workspace:
           at: ~/tools
 
-      - run: bazel test --config=ci -- //...
-
-      - run:
-          when: always
-          command: |
-            RESULTS_DIR=_test_results
-            find -L ./bazel-testlogs -name test.xml | while read line
-            do
-              mkdir -p $RESULTS_DIR/$(dirname $line)
-              cp $line $RESULTS_DIR/$(dirname $line)
-            done
-
-      - store_test_results:
-          path: _test_results
-
-  coverage:
-    executor: base
-    steps:
-      - attach_workspace:
-          at: ~/tools
-
       - restore_cache:
           keys:
             - v1-bazel-cache-core-{{ .Branch }}-{{ .Revision }}
@@ -175,10 +152,6 @@ workflows:
           requires:
             - build
 
-      - coverage:
-          requires:
-            - build
-
   build_and_test_pr_fork:
     jobs:
       - setup:
@@ -194,10 +167,6 @@ workflows:
             - setup
 
       - test:
-          requires:
-            - build
-
-      - coverage:
           requires:
             - build
 
@@ -220,16 +189,11 @@ workflows:
           requires:
             - build
 
-      - coverage:
-          requires:
-            - build
-
       - release:
           context:
             - Publish
           requires:
             - test
-            - coverage
 
   release:
     when:
@@ -245,13 +209,8 @@ workflows:
           requires:
             - build
 
-      - coverage:
-          requires:
-            - build
-
       - release:
           context:
             - Publish
           requires:
             - test
-            - coverage
