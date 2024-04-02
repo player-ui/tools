@@ -74,9 +74,9 @@ const createTemplateInstance = (
 
   /** Try to parse the expression as valid */
   if (options.nestedContext === "expression") {
-    const parsedExpression = parseExpression(value, { strict: false });
+    const parsedExpression = parseExpression(value);
     if (parsedExpression.error) {
-      throw parsedExpression.error;
+      throw `${parsedExpression.error} in expression ${value}`;
     }
   }
 
