@@ -80,8 +80,6 @@ export const Panel = ({
     // we subscribe to all messages from the devtools plugin
     // so the plugin author can define their own events
     PUBSUB_PLUGIN.subscribe("*", (type: string, payload: string) => {
-      console.log("Received message", { type, payload });
-
       handleInteraction({
         type,
         payload,

@@ -146,6 +146,24 @@ export function flattenChildren(children: React.ReactNode): ReactChildArray {
     return flatChildren;
   }, []);
 }
+/**
+ * Hoisted from https://github.com/gregberge/react-merge-refs/blob/main/src/index.tsx
+ * Published packages are ESM only or have bad esm distributions causing issues when
+ * used in an esm environment
+ */
+export function mergeRefs<T = any>(
+  refs: Array<React.MutableRefObject<T> | React.LegacyRef<T> | undefined | null>
+): React.RefCallback<T> {
+  return (value) => {
+    refs.forEach((ref) => {
+      if (typeof ref === "function") {
+        ref(value);
+      } else if (ref != null) {
+        (ref as React.MutableRefObject<T | null>).current = value;
+      }
+    });
+  };
+}
 
 /** Generates object reference properties from the provided object */
 export function getObjectReferences<

@@ -9,7 +9,7 @@ log_step() {
 ROOT_DIR=$(git rev-parse --show-toplevel)
 
 # Define the directories
-BAZEL_OUT_DIR="$ROOT_DIR/bazel-out/darwin-fastbuild/bin"
+BAZEL_OUT_DIR="$ROOT_DIR/bazel-bin"
 
 # Define Verdaccio storage directory
 VERDACCIO_STORAGE_DIR="$HOME/.local/share/verdaccio/storage"
