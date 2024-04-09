@@ -1,6 +1,7 @@
 import glob from "globby";
 import logSymbols from "log-symbols";
-import { promises as fs } from "fs";
+import { existsSync, readFileSync } from "fs";
+import path from "path";
 import * as ts from "typescript";
 import { Flags } from "@oclif/core";
 import { BaseCommand } from "../../utils/base-command";
@@ -35,56 +36,49 @@ export default class Validate extends BaseCommand {
     };
   }
 
-  private async getTSConfig(
-    filePath?: string,
-    compilerOptions: ts.CompilerOptions = {}
-  ): Promise<ts.CompilerOptions | undefined> {
-    let TSEnvConfig, configFile;
+  private getTSConfig(filePath?: string): ts.CompilerOptions | undefined {
+    const configFileLocation = ts.findConfigFile(
+      filePath ?? ".",
+      (fName: string) => {
+        return existsSync(fName);
+      }
+    );
 
-    const EnvTSConfigPath = filePath
-      ? filePath
-      : glob.sync("./tsconfig.json")[0];
-
-    this.log(`Loading TypeScript config from path ${EnvTSConfigPath}`);
-
-    try {
-      configFile = await fs.readFile(EnvTSConfigPath);
-    } catch (e) {
-      this.warn(
-        "Error reading TypeScript configuration file, falling back to internal defaults"
-      );
+    if (!configFileLocation) {
+      this.debug(`No TSConfig found`);
       return;
     }
 
-    const compilerConfigObject =
-      configFile && JSON.parse(configFile.toString());
+    const configContent = ts.readConfigFile(configFileLocation, (p) => {
+      return readFileSync(p, "utf-8");
+    });
 
-    const configCompilerOpts = compilerConfigObject?.compilerOptions || {};
+    if (configContent.error) {
+      this.warn(
+        ts.flattenDiagnosticMessageText(configContent.error.messageText, "\n")
+      );
 
-    if (compilerConfigObject.extends) {
-      TSEnvConfig = await this.getTSConfig(compilerConfigObject.extends, {
-        ...compilerOptions,
-        ...configCompilerOpts,
-      });
-    } else {
-      TSEnvConfig = {
-        ...compilerOptions,
-        ...configCompilerOpts,
-      };
+      return;
     }
 
-    if (TSEnvConfig && Object.keys(TSEnvConfig).length > 0) {
-      if (!compilerConfigObject.extends)
-        this.debug(
-          `Final effective config: ${JSON.stringify(TSEnvConfig, null, 4)}`
-        );
-
-      return TSEnvConfig;
-    }
-
-    this.log(
-      `No local TypeScript compiler configuration could be found, falling back to internal defaults`
+    const basePath = path.dirname(configFileLocation);
+    const parsedConfigContent = ts.parseJsonConfigFileContent(
+      configContent.config,
+      ts.sys,
+      basePath
     );
+
+    if (parsedConfigContent.errors.length > 0) {
+      throw new Error(
+        `Error while parsing tsconfig: ${parsedConfigContent.errors
+          .map((d) => {
+            return ts.flattenDiagnosticMessageText(d.messageText, "\n");
+          })
+          .join("\n\n")}`
+      );
+    }
+
+    return parsedConfigContent.options;
   }
 
   async run(): Promise<void> {
@@ -97,7 +91,7 @@ export default class Validate extends BaseCommand {
       }
     );
 
-    const TSConfig = (await this.getTSConfig()) ?? DEFAULT_COMPILER_OPTIONS;
+    const TSConfig = this.getTSConfig() ?? DEFAULT_COMPILER_OPTIONS;
 
     const program = ts.createProgram(files, TSConfig);
 
