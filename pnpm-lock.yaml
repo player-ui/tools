@@ -468,9 +468,6 @@ importers:
 
   language/json-language-service:
     dependencies:
-      '@player-tools/static-xlrs':
-        specifier: workspace:*
-        version: link:../../common/static-xlrs
       '@player-tools/xlr':
         specifier: workspace:*
         version: link:../../xlr/types
@@ -480,12 +477,13 @@ importers:
       '@player-tools/xlr-utils':
         specifier: workspace:*
         version: link:../../xlr/utils
+    devDependencies:
+      '@player-tools/static-xlrs':
+        specifier: workspace:*
+        version: link:../../common/static-xlrs
 
   language/typescript-expression-plugin:
     dependencies:
-      '@player-tools/static-xlrs':
-        specifier: workspace:*
-        version: link:../../common/static-xlrs
       '@player-tools/xlr':
         specifier: workspace:*
         version: link:../../xlr/types
@@ -495,6 +493,10 @@ importers:
       '@player-tools/xlr-utils':
         specifier: workspace:*
         version: link:../../xlr/utils
+    devDependencies:
+      '@player-tools/static-xlrs':
+        specifier: workspace:*
+        version: link:../../common/static-xlrs
 
   xlr/asset-docgen-webpack-plugin:
     dependencies:
@@ -519,9 +521,6 @@ importers:
 
   xlr/sdk:
     dependencies:
-      '@player-tools/static-xlrs':
-        specifier: workspace:*
-        version: link:../../common/static-xlrs
       '@player-tools/xlr':
         specifier: workspace:*
         version: link:../types
@@ -531,6 +530,10 @@ importers:
       '@player-tools/xlr-utils':
         specifier: workspace:*
         version: link:../utils
+    devDependencies:
+      '@player-tools/static-xlrs':
+        specifier: workspace:*
+        version: link:../../common/static-xlrs
 
   xlr/types: {}
 
