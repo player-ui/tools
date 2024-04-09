@@ -10,9 +10,6 @@ vitest_config(name = "vitest_config")
 
 js_pipeline(
     package_name = "@player-tools/devtools-messenger",
-    peer_deps = [
-        "//:node_modules/typescript",
-    ],
     deps = [
         ":node_modules/@player-tools/devtools-types",
         "//:node_modules/@types/node",

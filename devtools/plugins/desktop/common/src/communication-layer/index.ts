@@ -27,7 +27,7 @@ export const useCommunicationLayer = (): Pick<
   });
 
   useEffect(() => {
-    // TODO:: figure out the connection errors when uncommenting this block
+    // TODO:: figure out the connection errors when uncommenting this block (#95)
     //
     // import("js-flipper").then(({ flipperClient }) => {
     //   flipperClient.start("Player UI Devtools").then(() => {

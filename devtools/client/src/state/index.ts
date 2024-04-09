@@ -8,6 +8,8 @@ import { useCallback, useEffect, useMemo, useReducer } from "react";
 import { INITIAL_EXTENSION_STATE } from "../constants";
 import { reducer } from "./reducer";
 
+const NOOP_ID = -1;
+
 /** Extension state */
 export const useExtensionState = ({
   communicationLayer,
@@ -47,7 +49,7 @@ export const useExtensionState = ({
   const selectPlayer = useCallback(
     (playerID: string) => {
       dispatch({
-        id: -1,
+        id: NOOP_ID,
         sender: "internal",
         context: "devtools",
         _messenger_: false,
@@ -64,7 +66,7 @@ export const useExtensionState = ({
   const selectPlugin = useCallback(
     (pluginID: string) => {
       dispatch({
-        id: -1,
+        id: NOOP_ID,
         sender: "internal",
         context: "devtools",
         _messenger_: false,

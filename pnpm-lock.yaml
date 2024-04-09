@@ -33,22 +33,22 @@ importers:
         specifier: 2.8.2
         version: 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.74)(framer-motion@4.1.17)(react-dom@18.2.0)(react@18.2.0)
       '@devtools-ds/console':
-        specifier: ^1.1.2
+        specifier: ^1.2.1
         version: 1.2.1(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
       '@devtools-ds/icon':
-        specifier: ^1.1.2
+        specifier: ^1.2.1
         version: 1.2.1(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
       '@devtools-ds/navigation':
-        specifier: ^1.1.2
+        specifier: ^1.2.1
         version: 1.2.1(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
       '@devtools-ds/object-inspector':
-        specifier: ^1.1.2
+        specifier: ^1.2.1
         version: 1.2.1(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
       '@devtools-ds/object-parser':
         specifier: ^1.2.1
         version: 1.2.1
       '@devtools-ds/table':
-        specifier: ^1.1.2
+        specifier: ^1.2.1
         version: 1.2.1(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
       '@devtools-ds/themes':
         specifier: ^1.2.1
@@ -68,9 +68,6 @@ importers:
       '@oclif/plugin-plugins':
         specifier: ^1.9.0
         version: 1.10.11(@oclif/config@1.18.17)
-      '@player-tools/dsl':
-        specifier: ^0.5.1
-        version: 0.5.1(@types/node@18.19.30)(@types/react@18.2.74)(react@18.2.0)
       '@player-ui/common-types-plugin':
         specifier: 0.7.1
         version: 0.7.1(@player-ui/player@0.7.1)
@@ -501,7 +498,7 @@ importers:
     dependencies:
       '@player-tools/devtools-basic-web-plugin':
         specifier: 0.0.0-PLACEHOLDER
-        version: 0.0.0-PLACEHOLDER(@babel/core@7.24.4)(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@oclif/config@1.18.17)(@player-ui/player@0.7.1)(@types/node@16.18.95)(eslint@8.57.0)(framer-motion@4.1.17)(jsonc-parser@2.3.1)(react-dom@18.2.0)(typescript@5.4.4)
+        version: 0.0.0-PLACEHOLDER(@babel/core@7.24.4)(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@oclif/config@1.18.17)(@player-ui/player@0.7.1)(@types/node@16.18.96)(eslint@8.57.0)(framer-motion@4.1.17)(jsonc-parser@2.3.1)(react-dom@18.2.0)(typescript@5.4.4)
       '@player-ui/pubsub-plugin':
         specifier: 0.7.1
         version: 0.7.1(@player-ui/player@0.7.1)
@@ -510,7 +507,7 @@ importers:
         version: 0.7.1(@player-ui/types@0.7.1)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
       '@player-ui/reference-assets-plugin-react':
         specifier: 0.7.1
-        version: 0.7.1(@chakra-ui/system@2.6.2)(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@player-ui/player@0.7.1)(@player-ui/react@0.7.1)(@player-ui/types@0.7.1)(@types/node@16.18.95)(@types/react@18.2.74)(framer-motion@4.1.17)(react-dom@18.2.0)(react@18.2.0)
+        version: 0.7.1(@chakra-ui/system@2.6.2)(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@player-ui/player@0.7.1)(@player-ui/react@0.7.1)(@player-ui/types@0.7.1)(@types/node@16.18.96)(@types/react@18.2.74)(framer-motion@4.1.17)(react-dom@18.2.0)(react@18.2.0)
       concurrently:
         specifier: ^8.2.2
         version: 8.2.2
@@ -559,7 +556,7 @@ importers:
         version: 5.4.4
       vite:
         specifier: ^5.0.8
-        version: 5.2.8(@types/node@16.18.95)
+        version: 5.2.8(@types/node@16.18.96)
 
   devtools/plugins/mobile/flipper-desktop-client:
     dependencies:
@@ -579,9 +576,6 @@ importers:
       '@player-tools/json-language-service':
         specifier: workspace:*
         version: link:../json-language-service
-      '@player-tools/static-xlrs':
-        specifier: workspace:*
-        version: link:../../common/static-xlrs
 
   language/json-language-service:
     dependencies:
@@ -5462,15 +5456,15 @@ packages:
       - react-dom
     dev: false
 
-  /@devtools-ui/action@0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
+  /@devtools-ui/action@0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
     resolution: {integrity: sha512-Sq4FUsFBHiZ8tTRBXH1Ni8oOH7/E9aFCSAbCEJNYgysRu5MWt/P/sCLVkAnFUNwy8dQbR4QdP8QszgZzpYF+Qg==}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.74)(framer-motion@11.0.25)(react-dom@18.2.0)(react@18.2.0)
-      '@devtools-ui/collection': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
-      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/collection': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
       '@emotion/react': 11.11.4(@types/react@18.2.74)(react@18.2.0)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.2.74)(react@18.2.0)
-      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.95)(@types/react@18.2.74)(react@18.2.0)
+      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.96)(@types/react@18.2.74)(react@18.2.0)
       '@player-ui/asset-transform-plugin': 0.7.1(@player-ui/player@0.7.1)(@player-ui/types@0.7.1)
       '@player-ui/player': 0.7.1
       '@player-ui/react': 0.7.1(@player-ui/types@0.7.1)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
@@ -5522,14 +5516,14 @@ packages:
       - typescript
     dev: false
 
-  /@devtools-ui/collection@0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
+  /@devtools-ui/collection@0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
     resolution: {integrity: sha512-aMv8vSrFa3ieHcarb8d7+jJkSXEnRy7DVZ100VlT+w+1+lGyLnXyR7qH0l+A2cXJOCocjt3X4bbwc4DFPxIq1g==}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.74)(framer-motion@11.0.25)(react-dom@18.2.0)(react@18.2.0)
-      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
       '@emotion/react': 11.11.4(@types/react@18.2.74)(react@18.2.0)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.2.74)(react@18.2.0)
-      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.95)(@types/react@18.2.74)(react@18.2.0)
+      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.96)(@types/react@18.2.74)(react@18.2.0)
       '@player-ui/player': 0.7.1
       '@player-ui/react': 0.7.1(@player-ui/types@0.7.1)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
       '@player-ui/types': 0.7.1
@@ -5578,16 +5572,16 @@ packages:
       - typescript
     dev: false
 
-  /@devtools-ui/console@0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
+  /@devtools-ui/console@0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
     resolution: {integrity: sha512-kuK3Mi9SOGpFjphx8ONkbM/J2k40BVsrIU+U0jwJH3FVGn3SQ2ueLW1HLkPPSr9ebs05GfCl6h4bJZa6Am1b9w==}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.74)(framer-motion@11.0.25)(react-dom@18.2.0)(react@18.2.0)
       '@devtools-ds/console': 1.2.1(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
-      '@devtools-ui/collection': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
-      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/collection': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
       '@emotion/react': 11.11.4(@types/react@18.2.74)(react@18.2.0)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.2.74)(react@18.2.0)
-      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.95)(@types/react@18.2.74)(react@18.2.0)
+      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.96)(@types/react@18.2.74)(react@18.2.0)
       '@player-ui/asset-transform-plugin': 0.7.1(@player-ui/player@0.7.1)(@player-ui/types@0.7.1)
       '@player-ui/player': 0.7.1
       '@player-ui/react': 0.7.1(@player-ui/types@0.7.1)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
@@ -5640,15 +5634,15 @@ packages:
       - typescript
     dev: false
 
-  /@devtools-ui/copy-to-clipboard@0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
+  /@devtools-ui/copy-to-clipboard@0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
     resolution: {integrity: sha512-oCXeGWkFoIl4fOjdsOU5AhZLRlypunHH7S4tJPsUzgmB48xekvVs+jqgk8wMh7icyfdS6lAANlOcsRZUyzY04A==}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.74)(framer-motion@11.0.25)(react-dom@18.2.0)(react@18.2.0)
-      '@devtools-ui/collection': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
-      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/collection': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
       '@emotion/react': 11.11.4(@types/react@18.2.74)(react@18.2.0)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.2.74)(react@18.2.0)
-      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.95)(@types/react@18.2.74)(react@18.2.0)
+      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.96)(@types/react@18.2.74)(react@18.2.0)
       '@player-ui/asset-transform-plugin': 0.7.1(@player-ui/player@0.7.1)(@player-ui/types@0.7.1)
       '@player-ui/player': 0.7.1
       '@player-ui/react': 0.7.1(@player-ui/types@0.7.1)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
@@ -5704,14 +5698,14 @@ packages:
       - typescript
     dev: false
 
-  /@devtools-ui/input@0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
+  /@devtools-ui/input@0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
     resolution: {integrity: sha512-EFqtYxGIsdAT8DwkUaj+5tvsCgYTxBvYg9kwXCKra3rWyO+62J+Ue1vDNWM8OgaJfX0NpqdyOFE/S5Za2h/ldg==}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.74)(framer-motion@11.0.25)(react-dom@18.2.0)(react@18.2.0)
-      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
       '@emotion/react': 11.11.4(@types/react@18.2.74)(react@18.2.0)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.2.74)(react@18.2.0)
-      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.95)(@types/react@18.2.74)(react@18.2.0)
+      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.96)(@types/react@18.2.74)(react@18.2.0)
       '@player-ui/asset-transform-plugin': 0.7.1(@player-ui/player@0.7.1)(@player-ui/types@0.7.1)
       '@player-ui/player': 0.7.1
       '@player-ui/react': 0.7.1(@player-ui/types@0.7.1)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
@@ -5762,15 +5756,15 @@ packages:
       - typescript
     dev: false
 
-  /@devtools-ui/list@0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
+  /@devtools-ui/list@0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
     resolution: {integrity: sha512-81Yvln93vE3ucKCCuqlHphSeXjZ0gg+0KRbYLmDHPMhBniAwq2aWFejhwRL3jN+NxpoBRstiXMGVj1Tr/EFBaQ==}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.74)(framer-motion@11.0.25)(react-dom@18.2.0)(react@18.2.0)
-      '@devtools-ui/collection': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
-      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/collection': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
       '@emotion/react': 11.11.4(@types/react@18.2.74)(react@18.2.0)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.2.74)(react@18.2.0)
-      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.95)(@types/react@18.2.74)(react@18.2.0)
+      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.96)(@types/react@18.2.74)(react@18.2.0)
       '@player-ui/player': 0.7.1
       '@player-ui/react': 0.7.1(@player-ui/types@0.7.1)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
       '@player-ui/types': 0.7.1
@@ -5820,15 +5814,15 @@ packages:
       - typescript
     dev: false
 
-  /@devtools-ui/navigation@0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
+  /@devtools-ui/navigation@0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
     resolution: {integrity: sha512-LqP+IKn7YDesw70qehKV4Rx7SYWUG9CvHbIEyJgl8hRDbiBoM/BP6v0H7QLiHLce7fX64dCAsWEMgWp/i/PnIA==}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.74)(framer-motion@11.0.25)(react-dom@18.2.0)(react@18.2.0)
-      '@devtools-ui/collection': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
-      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/collection': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
       '@emotion/react': 11.11.4(@types/react@18.2.74)(react@18.2.0)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.2.74)(react@18.2.0)
-      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.95)(@types/react@18.2.74)(react@18.2.0)
+      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.96)(@types/react@18.2.74)(react@18.2.0)
       '@player-ui/player': 0.7.1
       '@player-ui/react': 0.7.1(@player-ui/types@0.7.1)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
       '@player-ui/types': 0.7.1
@@ -5878,16 +5872,16 @@ packages:
       - typescript
     dev: false
 
-  /@devtools-ui/object-inspector@0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
+  /@devtools-ui/object-inspector@0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
     resolution: {integrity: sha512-uQEwUz6lc7n0u2rGJ1Kc3i93m4L6Zc8VSvrzcV2q0dnPGqXXBJ5Ozy+dyBL4HEPxrQ/1slYCifPbA+g5j26Qjg==}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.74)(framer-motion@11.0.25)(react-dom@18.2.0)(react@18.2.0)
       '@devtools-ds/object-inspector': 1.2.1(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
-      '@devtools-ui/collection': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
-      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/collection': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
       '@emotion/react': 11.11.4(@types/react@18.2.74)(react@18.2.0)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.2.74)(react@18.2.0)
-      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.95)(@types/react@18.2.74)(react@18.2.0)
+      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.96)(@types/react@18.2.74)(react@18.2.0)
       '@player-ui/player': 0.7.1
       '@player-ui/react': 0.7.1(@player-ui/types@0.7.1)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
       '@player-ui/types': 0.7.1
@@ -5938,21 +5932,21 @@ packages:
       - typescript
     dev: false
 
-  /@devtools-ui/plugin@0.0.2--canary.13.662(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@player-ui/types@0.7.1)(@types/node@16.18.95)(eslint@8.57.0)(framer-motion@4.1.17)(react-dom@18.2.0)(typescript@5.4.4):
+  /@devtools-ui/plugin@0.0.2--canary.13.662(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@player-ui/types@0.7.1)(@types/node@16.18.96)(eslint@8.57.0)(framer-motion@4.1.17)(react-dom@18.2.0)(typescript@5.4.4):
     resolution: {integrity: sha512-PJqULOsN1LuzEl0PcqNkQOpT15mBie6wmfohWf5eL3OKHYVe6Ekjqil3BAdHvAEXYZdzAK+17aChz+oElrmo1Q==}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.74)(framer-motion@4.1.17)(react-dom@18.2.0)(react@18.2.0)
-      '@devtools-ui/action': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
-      '@devtools-ui/collection': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
-      '@devtools-ui/console': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
-      '@devtools-ui/copy-to-clipboard': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
-      '@devtools-ui/input': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
-      '@devtools-ui/list': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
-      '@devtools-ui/navigation': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
-      '@devtools-ui/object-inspector': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
-      '@devtools-ui/stacked-view': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
-      '@devtools-ui/table': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
-      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/action': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/collection': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/console': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/copy-to-clipboard': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/input': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/list': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/navigation': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/object-inspector': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/stacked-view': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/table': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
       '@player-ui/asset-provider-plugin-react': 0.7.1(@player-ui/react@0.7.1)(@types/react@18.2.74)(react@18.2.0)
       '@player-ui/asset-transform-plugin': 0.7.1(@player-ui/player@0.7.1)(@player-ui/types@0.7.1)
       '@player-ui/player': 0.7.1
@@ -6014,15 +6008,15 @@ packages:
       - typescript
     dev: false
 
-  /@devtools-ui/stacked-view@0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
+  /@devtools-ui/stacked-view@0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
     resolution: {integrity: sha512-qpT7gHthEmIHdeTUafTWDGuWL552LKNHJNRSjzdyc1k3UmYxI1duxPKK4iJofSecnp0d60nh49wpWznSeKXnTw==}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.74)(framer-motion@11.0.25)(react-dom@18.2.0)(react@18.2.0)
-      '@devtools-ui/collection': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
-      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/collection': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
       '@emotion/react': 11.11.4(@types/react@18.2.74)(react@18.2.0)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.2.74)(react@18.2.0)
-      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.95)(@types/react@18.2.74)(react@18.2.0)
+      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.96)(@types/react@18.2.74)(react@18.2.0)
       '@player-ui/asset-transform-plugin': 0.7.1(@player-ui/player@0.7.1)(@player-ui/types@0.7.1)
       '@player-ui/player': 0.7.1
       '@player-ui/react': 0.7.1(@player-ui/types@0.7.1)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
@@ -6074,15 +6068,15 @@ packages:
       - typescript
     dev: false
 
-  /@devtools-ui/table@0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
+  /@devtools-ui/table@0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
     resolution: {integrity: sha512-y0GD6trx3F7M2TSYLOUrzOmN+yVFeYaNIl0OVZgg3YmeEADB+i1bcbSzPfOvxQG7hSPQVRpYzBLKsxSdUDLojg==}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.74)(framer-motion@11.0.25)(react-dom@18.2.0)(react@18.2.0)
-      '@devtools-ui/collection': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
-      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/collection': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
+      '@devtools-ui/text': 0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4)
       '@emotion/react': 11.11.4(@types/react@18.2.74)(react@18.2.0)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.2.74)(react@18.2.0)
-      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.95)(@types/react@18.2.74)(react@18.2.0)
+      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.96)(@types/react@18.2.74)(react@18.2.0)
       '@player-ui/asset-transform-plugin': 0.7.1(@player-ui/player@0.7.1)(@player-ui/types@0.7.1)
       '@player-ui/player': 0.7.1
       '@player-ui/react': 0.7.1(@player-ui/types@0.7.1)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
@@ -6134,13 +6128,13 @@ packages:
       - typescript
     dev: false
 
-  /@devtools-ui/text@0.0.2--canary.13.662(@types/node@16.18.95)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
+  /@devtools-ui/text@0.0.2--canary.13.662(@types/node@16.18.96)(eslint@8.57.0)(react-dom@18.2.0)(typescript@5.4.4):
     resolution: {integrity: sha512-cLJAQnODWW53k9+PuXOWm7MpIuarJbGJp/6ce2wSMTSU5goTM42mBZKMBBDEhPq3j7T3fSiVFaVL9SBky9laoA==}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.74)(framer-motion@11.0.25)(react-dom@18.2.0)(react@18.2.0)
       '@emotion/react': 11.11.4(@types/react@18.2.74)(react@18.2.0)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.2.74)(react@18.2.0)
-      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.95)(@types/react@18.2.74)(react@18.2.0)
+      '@player-tools/dsl': 0.5.2--canary.87.2261(@types/node@16.18.96)(@types/react@18.2.74)(react@18.2.0)
       '@player-ui/types': 0.7.1
       '@types/react': 18.2.74
       dlv: 1.1.3
@@ -7044,7 +7038,7 @@ packages:
     dev: false
 
   /@oclif/command@1.8.36(@oclif/config@1.18.17)(supports-color@8.1.1):
-    resolution: {integrity: sha512-/zACSgaYGtAQRzc7HjzrlIs14FuEYAZrMOEwicRoUnZVyRunG4+t5iSEeQu0Xy2bgbCD0U1SP/EdeNZSTXRwjQ==, tarball: https://registry.npmjs.org/@oclif/command/-/command-1.8.36.tgz}
+    resolution: {integrity: sha512-/zACSgaYGtAQRzc7HjzrlIs14FuEYAZrMOEwicRoUnZVyRunG4+t5iSEeQu0Xy2bgbCD0U1SP/EdeNZSTXRwjQ==}
     engines: {node: '>=12.0.0'}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
@@ -7076,7 +7070,7 @@ packages:
     dev: false
 
   /@oclif/config@1.18.16(supports-color@8.1.1):
-    resolution: {integrity: sha512-VskIxVcN22qJzxRUq+raalq6Q3HUde7sokB7/xk5TqRZGEKRVbFeqdQBxDWwQeudiJEgcNiMvIFbMQ43dY37FA==, tarball: https://registry.npmjs.org/@oclif/config/-/config-1.18.16.tgz}
+    resolution: {integrity: sha512-VskIxVcN22qJzxRUq+raalq6Q3HUde7sokB7/xk5TqRZGEKRVbFeqdQBxDWwQeudiJEgcNiMvIFbMQ43dY37FA==}
     engines: {node: '>=8.0.0'}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     dependencies:
@@ -7243,7 +7237,7 @@ packages:
     dev: false
 
   /@oclif/help@1.0.15(supports-color@8.1.1):
-    resolution: {integrity: sha512-Yt8UHoetk/XqohYX76DfdrUYLsPKMc5pgkzsZVHDyBSkLiGRzujVaGZdjr32ckVZU9q3a47IjhWxhip7Dz5W/g==, tarball: https://registry.npmjs.org/@oclif/help/-/help-1.0.15.tgz}
+    resolution: {integrity: sha512-Yt8UHoetk/XqohYX76DfdrUYLsPKMc5pgkzsZVHDyBSkLiGRzujVaGZdjr32ckVZU9q3a47IjhWxhip7Dz5W/g==}
     engines: {node: '>=8.0.0'}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     dependencies:
@@ -7523,7 +7517,7 @@ packages:
     dev: false
     optional: true
 
-  /@player-tools/cli@0.0.0-PLACEHOLDER(@babel/core@7.24.4)(@oclif/config@1.18.17)(@types/node@16.18.95)(@types/react@18.2.74)(jsonc-parser@2.3.1):
+  /@player-tools/cli@0.0.0-PLACEHOLDER(@babel/core@7.24.4)(@oclif/config@1.18.17)(@types/node@16.18.96)(@types/react@18.2.74)(jsonc-parser@2.3.1):
     resolution: {integrity: sha512-sfF1FSDgu/jF8Fh5DauxV0NEZZL0wvFeYttH48W0o9hEYUvj1Grb9Cktwe2tS+2PqM2Jq20i9Zhm6F2F1Ws+og==}
     hasBin: true
     dependencies:
@@ -7534,7 +7528,7 @@ packages:
       '@babel/register': 7.23.7(@babel/core@7.24.4)
       '@oclif/core': 1.9.0
       '@oclif/plugin-legacy': 1.3.6(@oclif/config@1.18.17)
-      '@player-tools/dsl': 0.0.0-PLACEHOLDER(@types/node@16.18.95)(@types/react@18.2.74)(react@18.2.0)
+      '@player-tools/dsl': 0.0.0-PLACEHOLDER(@types/node@16.18.96)(@types/react@18.2.74)(react@18.2.0)
       '@player-tools/json-language-service': 0.0.0-PLACEHOLDER
       '@player-tools/xlr': 0.0.0-PLACEHOLDER
       '@player-tools/xlr-converters': 0.0.0-PLACEHOLDER(jsonc-parser@2.3.1)(typescript@4.8.4)
@@ -7561,7 +7555,7 @@ packages:
       tapable-ts: 0.2.4
       tslib: 2.6.2
       typescript: 4.8.4
-      vitest: 1.4.0(@types/node@16.18.95)
+      vitest: 1.4.0(@types/node@16.18.96)
       vscode-languageserver-textdocument: 1.0.11
       vscode-languageserver-types: 3.17.5
     transitivePeerDependencies:
@@ -7587,14 +7581,14 @@ packages:
       - terser
     dev: false
 
-  /@player-tools/devtools-basic-web-plugin@0.0.0-PLACEHOLDER(@babel/core@7.24.4)(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@oclif/config@1.18.17)(@player-ui/player@0.7.1)(@types/node@16.18.95)(eslint@8.57.0)(framer-motion@4.1.17)(jsonc-parser@2.3.1)(react-dom@18.2.0)(typescript@5.4.4):
-    resolution: {integrity: sha512-YpoHkEwzne+vV8NK29ZtBZWwLewkAXW6Qagv+mzFr3FAudElBpjICKvH761G2l1NvcPgw56K5WzN2qFmstHzdw==}
+  /@player-tools/devtools-basic-web-plugin@0.0.0-PLACEHOLDER(@babel/core@7.24.4)(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@oclif/config@1.18.17)(@player-ui/player@0.7.1)(@types/node@16.18.96)(eslint@8.57.0)(framer-motion@4.1.17)(jsonc-parser@2.3.1)(react-dom@18.2.0)(typescript@5.4.4):
+    resolution: {integrity: sha512-HwCR2JCJ/ZaDpUomPc+KVyxPukKfN0r7MsSafBZe3Bi7FhPTZuCUvbLBgA4R3g+2r9cBk42ZKZkgnbnOj/U5og==}
     dependencies:
-      '@devtools-ui/plugin': 0.0.2--canary.13.662(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@player-ui/types@0.7.1)(@types/node@16.18.95)(eslint@8.57.0)(framer-motion@4.1.17)(react-dom@18.2.0)(typescript@5.4.4)
-      '@player-tools/cli': 0.0.0-PLACEHOLDER(@babel/core@7.24.4)(@oclif/config@1.18.17)(@types/node@16.18.95)(@types/react@18.2.74)(jsonc-parser@2.3.1)
+      '@devtools-ui/plugin': 0.0.2--canary.13.662(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@player-ui/types@0.7.1)(@types/node@16.18.96)(eslint@8.57.0)(framer-motion@4.1.17)(react-dom@18.2.0)(typescript@5.4.4)
+      '@player-tools/cli': 0.0.0-PLACEHOLDER(@babel/core@7.24.4)(@oclif/config@1.18.17)(@types/node@16.18.96)(@types/react@18.2.74)(jsonc-parser@2.3.1)
       '@player-tools/devtools-desktop-plugins-common': 0.0.0-PLACEHOLDER(@types/react@18.2.74)(react@18.2.0)(typescript@5.4.4)
       '@player-tools/devtools-types': 0.0.0-PLACEHOLDER
-      '@player-tools/dsl': 0.5.1(@types/node@16.18.95)(@types/react@18.2.74)(react@18.2.0)
+      '@player-tools/dsl': 0.0.0-PLACEHOLDER(@types/node@16.18.96)(@types/react@18.2.74)(react@18.2.0)
       '@player-ui/common-types-plugin': 0.7.1(@player-ui/player@0.7.1)
       '@player-ui/react': 0.7.1(@player-ui/types@0.7.1)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
       '@player-ui/types': 0.7.1
@@ -7657,7 +7651,7 @@ packages:
     dev: false
 
   /@player-tools/devtools-messenger@0.0.0-PLACEHOLDER(typescript@5.4.4):
-    resolution: {integrity: sha512-zq+X4nqjp4q5+emsmEhWT+e6yySU29+4NTlqbX7q5270bDBI58y+wE2F6wRfjguxAzgDiOenVV23fzgBuHd7wg==}
+    resolution: {integrity: sha512-RgqOHptf2njW76nX5NKYBdM7BICIR8SEYYxog9Yc7SkFKAxg09+5fAAeWO1GqapAaHwmXARCEqS1CFRX//j/Zg==}
     peerDependencies:
       typescript: 4.8.4
     dependencies:
@@ -7669,13 +7663,13 @@ packages:
     dev: false
 
   /@player-tools/devtools-types@0.0.0-PLACEHOLDER:
-    resolution: {integrity: sha512-xAs86QnCs63T5G2K9wEcmUvOfOYHKZALhwz3rkkznwWUof+uU5+ybAW0glywhpIRd4Fldysice5KBlnmFjTHAQ==}
+    resolution: {integrity: sha512-7AGTqvhfNtOeKrF/faUrrlZFoiGxDdQqUmFtpv8+bANQi1E01p2ILQ2PWmls7vFQ1u4XvA12B5OrOFlRU43Dxw==}
     dependencies:
       '@player-ui/types': 0.7.1
       tslib: 2.6.2
     dev: false
 
-  /@player-tools/dsl@0.0.0-PLACEHOLDER(@types/node@16.18.95)(@types/react@18.2.74)(react@18.2.0):
+  /@player-tools/dsl@0.0.0-PLACEHOLDER(@types/node@16.18.96)(@types/react@18.2.74)(react@18.2.0):
     resolution: {integrity: sha512-AfsU8lvetRpmFcYzdstcYsWjUOkK8SHuiZmeWTELDmqA85+LHId1nout8Qe8tBPreQ/QaiiqeGK29wPikrGSjw==}
     peerDependencies:
       '@types/react': ^18.2.51
@@ -7696,39 +7690,7 @@ packages:
       react-json-reconciler: 2.0.0(react@18.2.0)
       source-map-js: 1.2.0
       tapable-ts: 0.2.4
-      ts-node: 10.9.2(@types/node@16.18.95)(typescript@4.8.4)
-      tslib: 2.6.2
-      typescript: 4.8.4
-    transitivePeerDependencies:
-      - '@swc/core'
-      - '@swc/wasm'
-      - '@types/node'
-    dev: false
-
-  /@player-tools/dsl@0.5.1(@types/node@16.18.95)(@types/react@18.2.74)(react@18.2.0):
-    resolution: {integrity: sha512-IixmWPJzJg0iEWzNmRUzOMEYuEwPLCbe2yNepjyTB8RnqtSBXEn5GnkPSjbJTXguvUyY5VD1L+O39WIaYclAPQ==}
-    peerDependencies:
-      '@types/react': ^18.2.51
-      react: ^18.2.0
-    dependencies:
-      '@player-ui/player': 0.7.1-next.0
-      '@player-ui/types': 0.7.1-next.0
-      '@types/mkdirp': 1.0.2
-      '@types/react': 18.2.74
-      chalk: 4.1.2
-      command-line-application: 0.10.1
-      dequal: 2.0.3
-      fs-extra: 10.1.0
-      globby: 11.1.0
-      jsonc-parser: 2.3.1
-      mkdirp: 1.0.4
-      react: 18.2.0
-      react-flatten-children: 1.1.2
-      react-json-reconciler: 2.0.0(react@18.2.0)
-      react-merge-refs: 1.1.0
-      source-map-js: 1.2.0
-      tapable-ts: 0.2.4
-      ts-node: 10.9.2(@types/node@16.18.95)(typescript@4.8.4)
+      ts-node: 10.9.2(@types/node@16.18.96)(typescript@4.8.4)
       tslib: 2.6.2
       typescript: 4.8.4
     transitivePeerDependencies:
@@ -7769,7 +7731,7 @@ packages:
       - '@types/node'
     dev: false
 
-  /@player-tools/dsl@0.5.2--canary.87.2261(@types/node@16.18.95)(@types/react@18.2.74)(react@18.2.0):
+  /@player-tools/dsl@0.5.2--canary.87.2261(@types/node@16.18.96)(@types/react@18.2.74)(react@18.2.0):
     resolution: {integrity: sha512-cb2WdC3dOREppSL+eKiZPztQOqQASQNq3N5S4TveyTOVlH93BeOW6qH8ueIR2XmCByd90L7R8wwFIlZfg9ShIw==}
     peerDependencies:
       '@types/react': ^18.2.51
@@ -7790,7 +7752,7 @@ packages:
       react-json-reconciler: 2.0.0(react@18.2.0)
       source-map-js: 1.2.0
       tapable-ts: 0.2.4
-      ts-node: 10.9.2(@types/node@16.18.95)(typescript@4.8.4)
+      ts-node: 10.9.2(@types/node@16.18.96)(typescript@4.8.4)
       tslib: 2.6.2
       typescript: 4.8.4
     transitivePeerDependencies:
@@ -8112,7 +8074,7 @@ packages:
       - '@player-ui/types'
     dev: false
 
-  /@player-ui/reference-assets-plugin-react@0.7.1(@chakra-ui/system@2.6.2)(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@player-ui/player@0.7.1)(@player-ui/react@0.7.1)(@player-ui/types@0.7.1)(@types/node@16.18.95)(@types/react@18.2.74)(framer-motion@4.1.17)(react-dom@18.2.0)(react@18.2.0):
+  /@player-ui/reference-assets-plugin-react@0.7.1(@chakra-ui/system@2.6.2)(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@player-ui/player@0.7.1)(@player-ui/react@0.7.1)(@player-ui/types@0.7.1)(@types/node@16.18.96)(@types/react@18.2.74)(framer-motion@4.1.17)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-jgOGOx2tS0WvRCSC+GDJe2VCQXZLo5M1PWXgA73pELmrfmXJPIN8H9iWugO6O9eV+gDWDVe+nqD4JuqQEWFOSQ==}
     peerDependencies:
       '@player-ui/react': 0.7.1
@@ -8126,7 +8088,7 @@ packages:
       '@player-ui/partial-match-registry': 0.7.1
       '@player-ui/react': 0.7.1(@player-ui/types@0.7.1)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
       '@player-ui/reference-assets-plugin': 0.7.1(@player-ui/player@0.7.1)(@player-ui/types@0.7.1)
-      '@types/node': 16.18.95
+      '@types/node': 16.18.96
       clsx: 1.2.1
     transitivePeerDependencies:
       - '@chakra-ui/system'
@@ -9267,8 +9229,8 @@ packages:
       form-data: 4.0.0
     dev: false
 
-  /@types/node@16.18.95:
-    resolution: {integrity: sha512-z9w+CcR7ahc7UhsKe+PGB25nmPmCERQBAdLdFHhoZ6+FfgSr7gUvdQI0eLH2t7ue8u5wKsLdde6cHKPjhC8vGg==}
+  /@types/node@16.18.96:
+    resolution: {integrity: sha512-84iSqGXoO+Ha16j8pRZ/L90vDMKX04QTYMTfYeE1WrjWaZXuchBehGUZEpNgx7JnmlrIHdnABmpjrQjhCnNldQ==}
 
   /@types/node@18.19.30:
     resolution: {integrity: sha512-453z1zPuJLVDbyahaa1sSD5C2sht6ZpHp5rgJNs+H8YGqhluCXcuOUmBYsAo0Tos0cHySJ3lVUGbGgLlqIkpyg==}
@@ -9800,7 +9762,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.24.1(@babel/core@7.24.4)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.0
-      vite: 5.2.8(@types/node@16.18.95)
+      vite: 5.2.8(@types/node@16.18.96)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -21444,7 +21406,7 @@ packages:
     resolution: {integrity: sha512-hd5aYe8XfpWSCoh8vkV+JJmFY22Q2WtUIQIWEM3dYVKnEwMwyiRbxir/kRlTbZdGhoOeKqZ1ammPR/eiS7Tdgg==}
     dev: false
 
-  /ts-node@10.9.2(@types/node@16.18.95)(typescript@4.8.4):
+  /ts-node@10.9.2(@types/node@16.18.96)(typescript@4.8.4):
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
     peerDependencies:
@@ -21463,7 +21425,7 @@ packages:
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 16.18.95
+      '@types/node': 16.18.96
       acorn: 8.11.3
       acorn-walk: 8.3.2
       arg: 4.1.3
@@ -22097,7 +22059,7 @@ packages:
       replace-ext: 1.0.1
     dev: false
 
-  /vite-node@1.4.0(@types/node@16.18.95):
+  /vite-node@1.4.0(@types/node@16.18.96):
     resolution: {integrity: sha512-VZDAseqjrHgNd4Kh8icYHWzTKSCZMhia7GyHfhtzLW33fZlG9SwsB6CEhgyVOWkJfJ2pFLrp/Gj1FSfAiqH9Lw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -22106,7 +22068,7 @@ packages:
       debug: 4.3.4(supports-color@8.1.1)
       pathe: 1.1.2
       picocolors: 1.0.0
-      vite: 5.2.8(@types/node@16.18.95)
+      vite: 5.2.8(@types/node@16.18.96)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -22139,7 +22101,7 @@ packages:
       - terser
     dev: false
 
-  /vite@5.2.8(@types/node@16.18.95):
+  /vite@5.2.8(@types/node@16.18.96):
     resolution: {integrity: sha512-OyZR+c1CE8yeHw5V5t59aXsUPPVTHMDjEZz8MgguLL/Q7NblxhZUlTu9xSPqlsUO/y+X7dlU05jdhvyycD55DA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -22167,7 +22129,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 16.18.95
+      '@types/node': 16.18.96
       esbuild: 0.20.2
       postcss: 8.4.38
       rollup: 4.14.1
@@ -22210,7 +22172,7 @@ packages:
       fsevents: 2.3.3
     dev: false
 
-  /vitest@1.4.0(@types/node@16.18.95):
+  /vitest@1.4.0(@types/node@16.18.96):
     resolution: {integrity: sha512-gujzn0g7fmwf83/WzrDTnncZt2UiXP41mHuFYFrdwaLRVQ6JYQEiME2IfEjU3vcFL3VKa75XhI3lFgn+hfVsQw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -22235,7 +22197,7 @@ packages:
       jsdom:
         optional: true
     dependencies:
-      '@types/node': 16.18.95
+      '@types/node': 16.18.96
       '@vitest/expect': 1.4.0
       '@vitest/runner': 1.4.0
       '@vitest/snapshot': 1.4.0
@@ -22253,8 +22215,8 @@ packages:
       strip-literal: 2.1.0
       tinybench: 2.6.0
       tinypool: 0.8.3
-      vite: 5.2.8(@types/node@16.18.95)
-      vite-node: 1.4.0(@types/node@16.18.95)
+      vite: 5.2.8(@types/node@16.18.96)
+      vite-node: 1.4.0(@types/node@16.18.96)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
       - less

@@ -4,7 +4,7 @@
 
 The `@player-tools/devtools-client` exposes the Panel containing the ReactPlayer responsible for running the content sent by the Player devtool plugins on the inspected Player UI instance and the navigation bar.
 
-You can check how to use it in the [browser-extension](TODO) and [Flipper desktop App client](TODO).
+You can check how to use it in the [browser-extension](https://github.com/player-ui/browser-devtools) and [Flipper desktop App client](https://github.com/player-ui/tools/tree/main/devtools/plugins/mobile/flipper-desktop-client).
 
 ## Overview
 
@@ -31,15 +31,15 @@ yarn add @player-tools/devtools-client
 The Devtools client is a React component that receives the content from the devtools plugins running into the Player UI in use by the inspected page. You can use it in your React application as any other React component.
 
 ```jsx
-import { Panel } from '@player-tools/devtools-client';
-import type { MessengerOptions } from '@player-tools/devtools-messenger';
-import browser from 'webextension-polyfill';
+import { Panel } from "@player-tools/devtools-client";
+import type { MessengerOptions } from "@player-tools/devtools-messenger";
+import browser from "webextension-polyfill";
 
 const port = browser.runtime.connect();
 
 const communicationLayer: Pick<
   MessengerOptions,
-  'sendMessage' | 'addListener' | 'removeListener'
+  "sendMessage" | "addListener" | "removeListener"
 > = {
   sendMessage: async (message) =>
     port.postMessage({
@@ -59,8 +59,8 @@ root.render(<Panel communicationLayer={communicationLayer} />);
 
 ## Contributing
 
-We welcome contributions to the Player UI Devtools Browser Extension. If you're interested in contributing, please check out the [contributing guide](TODO).
+We welcome contributions to the Player UI Devtools Browser Extension.
 
 ## License
 
-The Player UI Devtools Browser Extension is licensed under the [MIT license](TODO).
+The Player UI Devtools Browser Extension is licensed under the MIT license.
