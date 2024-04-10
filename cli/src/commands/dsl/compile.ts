@@ -181,9 +181,8 @@ export default class DSLCompile extends BaseCommand {
         results.exitCode = 100;
         this.log("");
         this.log(
-          chalk.red(`${logSymbols.error} Error compiling ${file}: ${e.message}`)
+          chalk.red(`${logSymbols.error} Error compiling ${file}: ${e.stack}`)
         );
-        this.debug(e);
         compilerResults.push({
           state: "completed",
           error: e,
