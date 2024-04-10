@@ -6,5 +6,8 @@
     "@player-tools/xlr": "workspace:*",
     "@player-tools/xlr-sdk": "workspace:*",
     "@player-tools/xlr-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@player-tools/static-xlrs": "workspace:*"
   }
 }
