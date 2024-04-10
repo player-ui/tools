@@ -20,14 +20,15 @@ export function tsStripOptionalType(node: ts.TypeNode): ts.TypeNode {
 /**
  * Returns if the top level declaration is exported
  */
-export function isExportedDeclaration(node: ts.Statement) {
+export function isExportedDeclaration(node: ts.Statement): boolean {
   const modifiers = ts.canHaveModifiers(node)
     ? ts.getModifiers(node)
     : undefined;
-  return (
-    modifiers &&
-    modifiers.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword)
-  );
+
+  if (modifiers) {
+    return modifiers.some((m) => m.kind === ts.SyntaxKind.ExportKeyword);
+  }
+  return false;
 }
 
 /**
@@ -257,7 +258,7 @@ export function fillInGenerics(
   return xlrNode;
 }
 
-/** Applies the TS `Pick` type to an interface/union/intersection */
+/** Applies the TS `Pick` or `Omit` type to an interface/union/intersection */
 export function applyPickOrOmitToNodeType(
   baseObject: NodeType,
   operation: "Pick" | "Omit",
@@ -326,7 +327,7 @@ export function applyPickOrOmitToNodeType(
   return { ...baseObject, or: pickedTypes };
 }
 
-/** Applies the TS `Omit` type to an interface/union/intersection */
+/** Applies the TS `Partial` or `Required` type to an interface/union/intersection */
 export function applyPartialOrRequiredToNodeType(
   baseObject: NodeType,
   modifier: boolean

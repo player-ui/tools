@@ -1,3 +1,4 @@
+import type { TextSpan } from "typescript";
 import type { Position } from "vscode-languageserver-types";
 import type { ExpressionNode, NodeLocation } from "@player-ui/player";
 import { parseTree } from "jsonc-parser";
@@ -47,7 +48,7 @@ export function getTokenAtPosition(
 }
 
 /** Get the location info that TS expects for it's diags */
-export function toTSLocation(node: ExpressionNode): ts.TextSpan {
+export function toTSLocation(node: ExpressionNode): TextSpan {
   const start = node.location?.start.character;
   const end = node.location?.end.character;
   if (start === undefined || end === undefined) {
