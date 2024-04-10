@@ -1,5 +1,5 @@
 import * as React from "react";
-import { parseExpression } from "@player-ui/player";
+import { parseExpression, isErrorWithLocation } from "@player-ui/player";
 
 export type TemplateInstanceRefStringContext = "binding" | "expression";
 export interface TemplateRefStringOptions {
@@ -74,9 +74,22 @@ const createTemplateInstance = (
 
   /** Try to parse the expression as valid */
   if (options.nestedContext === "expression") {
-    const parsedExpression = parseExpression(value, { strict: false });
-    if (parsedExpression.error) {
-      throw parsedExpression.error;
+    try {
+      parseExpression(value);
+    } catch (e) {
+      if (e instanceof Error) {
+        let message: string;
+        if (isErrorWithLocation(e)) {
+          message = `${e} in expression: \r\n ${
+            value.slice(0, e.index + 1) + "\u2588" + value.slice(e.index + 1)
+          }`;
+        } else {
+          message = `${e} in expression ${value}`;
+        }
+        throw new Error(message);
+      }
+
+      throw new Error(`Unknown problem parsing expression ${e}`);
     }
   }
 

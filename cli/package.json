@@ -12,14 +12,14 @@
     "bin": "player",
     "dirname": "player",
     "topicSeparator": " ",
-    "commands": "dist/commands"
+    "commands": "dist/commands",
+    "plugins": [
+      "@oclif/plugin-plugins"
+    ]
   },
   "bin": {
     "player": "bin/run"
   },
-  "plugins": [
-    "@oclif/plugin-plugins"
-  ],
   "dependencies": {
     "@player-tools/dsl": "workspace:*",
     "@player-tools/json-language-service": "workspace:*",
