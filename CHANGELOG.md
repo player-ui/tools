@@ -1,3 +1,58 @@
+# 0.5.2 (Wed Apr 10 2024)
+
+### Release Notes
+
+#### Better DSL Expression Compilation ([#89](https://github.com/player-ui/tools/pull/89))
+
+DSL - Better error messages for expressions with errors during DSL compilation
+
+#### XLR Helper Functions Tests ([#84](https://github.com/player-ui/tools/pull/84))
+
+Add more test coverage for XLR helper functions
+
+#### Fix Oclif CLI Plugins not Registering ([#94](https://github.com/player-ui/tools/pull/94))
+
+- Fix Oclif plugins not registering
+- Use shared Oclif macro for CLI build
+
+#### LSP API Improvements ([#85](https://github.com/player-ui/tools/pull/85))
+
+- Allow `LSPAssetsPlugin` to take multiple XLR bundles.
+- Allow `LSPPluginPlugin` to take multiple LSP plugins.
+
+#### Fix Import Errors When Using DSL in ESM First Projects ([#87](https://github.com/player-ui/tools/pull/87))
+
+Fix issue with DSL package in ESM projects
+
+#### Bazel 7 ([#86](https://github.com/player-ui/tools/pull/86))
+
+Internal - Use Bazel 7 for builds.
+
+---
+
+#### 🐛 Bug Fix
+
+- Release main [#97](https://github.com/player-ui/tools/pull/97) ([@intuit-svc](https://github.com/intuit-svc))
+- Update ts version [#93](https://github.com/player-ui/tools/pull/93) ([@adierkens](https://github.com/adierkens) [@KetanReddy](https://github.com/KetanReddy))
+- Better DSL Expression Compilation [#89](https://github.com/player-ui/tools/pull/89) ([@KetanReddy](https://github.com/KetanReddy))
+- XLR Helper Functions Tests [#84](https://github.com/player-ui/tools/pull/84) ([@KetanReddy](https://github.com/KetanReddy))
+- Fix Oclif CLI Plugins not Registering [#94](https://github.com/player-ui/tools/pull/94) ([@KetanReddy](https://github.com/KetanReddy))
+- LSP API Improvements [#85](https://github.com/player-ui/tools/pull/85) ([@KetanReddy](https://github.com/KetanReddy))
+- Fix Import Errors When Using DSL in ESM First Projects [#87](https://github.com/player-ui/tools/pull/87) ([@KetanReddy](https://github.com/KetanReddy))
+- Update Circle Configs [#88](https://github.com/player-ui/tools/pull/88) ([@KetanReddy](https://github.com/KetanReddy))
+- Bazel 7 [#86](https://github.com/player-ui/tools/pull/86) ([@KetanReddy](https://github.com/KetanReddy))
+- Setting reading  local TSConf with dsl validate command and TS type-checker [#72](https://github.com/player-ui/tools/pull/72) (alejandro_fimbres@intuit.com [@lexfm](https://github.com/lexfm))
+
+#### Authors: 5
+
+- [@intuit-svc](https://github.com/intuit-svc)
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+- afimbres (alejandro_fimbres@intuit.com)
+- Alex Fimbres ([@lexfm](https://github.com/lexfm))
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
 # 0.5.1 (Tue Mar 05 2024)
 
 ### Release Notes
