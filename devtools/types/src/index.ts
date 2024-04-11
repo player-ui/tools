@@ -1,6 +1,6 @@
 import type { Flow } from "@player-ui/types";
 
-export interface BaseEvent<T extends string, P> {
+export interface BaseEvent<T extends string, P = null> {
   /** Event type */
   type: T;
   /** Event payload */
@@ -22,7 +22,7 @@ export type TransactionMetadata = {
   _messenger_: boolean;
 };
 
-export type BeaconEvent = BaseEvent<"MESSENGER_BEACON", null>;
+export type BeaconEvent = BaseEvent<"MESSENGER_BEACON">;
 
 export type EventsBatchEvent<T extends BaseEvent<string, unknown>> = BaseEvent<
   "MESSENGER_EVENT_BATCH",
@@ -40,7 +40,7 @@ export type RequestLostEventsEvent = BaseEvent<
   }
 >;
 
-export type DisconnectEvent = BaseEvent<"MESSENGER_DISCONNECT", null>;
+export type DisconnectEvent = BaseEvent<"MESSENGER_DISCONNECT">;
 
 export type InternalEvent<T extends BaseEvent<string, unknown>> =
   | BeaconEvent
@@ -180,10 +180,7 @@ export type DevtoolsDataChangeEvent = BaseEvent<
   DataChangePayload
 >;
 
-export type PlayerStoppedEvent = BaseEvent<
-  "PLAYER_DEVTOOLS_PLAYER_STOPPED",
-  null
->;
+export type PlayerStoppedEvent = BaseEvent<"PLAYER_DEVTOOLS_PLAYER_STOPPED">;
 
 export type DevtoolsEventsBatchEvent = BaseEvent<
   "MESSENGER_EVENT_BATCH",

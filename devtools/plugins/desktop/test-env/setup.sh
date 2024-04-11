@@ -22,7 +22,7 @@ BROWSER_DEVTOOLS_DEPS=("@player-ui/pubsub-plugin" "dequal" "@player-tools/devtoo
 
 # Run publish-to-verdaccio.sh
 log_step "Running publish-to-verdaccio.sh..."
-sh "$ROOT_DIR/publish-to-verdaccio.sh"
+sh "$ROOT_DIR/scripts/publish-to-verdaccio.sh"
 
 # Go to the test environment directory and install dependencies
 log_step "Installing test-env dependencies..."

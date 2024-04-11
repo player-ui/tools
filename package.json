@@ -12,7 +12,7 @@
     "link:local": "node ./scripts/pnpm-link-setup.js",
     "lint": "eslint --cache --ext .js,.jsx,.ts,.tsx $(scripts/pkg-roots.sh)",
     "prepare": "is-ci || husky install",
-    "pub:local": "sh ./publish-to-verdaccio.sh",
+    "pub:local": "sh ./scripts/publish-to-verdaccio.sh",
     "test": "bazel test -- $(bazel query \"kind(nodejs_test, //...)\" --output label 2>/dev/null | tr '\\n' ' ')"
   },
   "engines": {

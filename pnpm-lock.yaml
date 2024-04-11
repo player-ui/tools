@@ -7661,9 +7661,9 @@ packages:
     dev: false
 
   /@player-tools/devtools-types@0.0.0-PLACEHOLDER:
-    resolution: {integrity: sha512-7AGTqvhfNtOeKrF/faUrrlZFoiGxDdQqUmFtpv8+bANQi1E01p2ILQ2PWmls7vFQ1u4XvA12B5OrOFlRU43Dxw==}
+    resolution: {integrity: sha512-6i5g8LAuA8tm4Sf2sRe0sMSCuHpeLugt7W7DWMcMHDlwRUJ5FbuvdrYfExNvk/sDdGD5fm1E3ags2MczfGfGPA==}
     dependencies:
-      '@player-ui/types': 0.7.1
+      '@player-ui/types': 0.7.2-next.4
       tslib: 2.6.2
     dev: false
 
@@ -8141,7 +8141,7 @@ packages:
     resolution: {integrity: sha512-TXpjhVE7oZ7W23VjJMGaGTdSWxYexUQXa4yNSvTKUWxkQiqGxpqcb5hq0AVgNbH7cuEabTGz+DGvXMTUS1UyPg==}
     peerDependencies:
       '@types/react': ^17.0.25
-      react: ^18.2.0
+      react: ^17.0.2
     dependencies:
       '@babel/runtime': 7.15.4
       '@types/react': 18.2.74

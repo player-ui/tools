@@ -5,37 +5,9 @@ import {
 } from "@player-ui/react";
 import { ReferenceAssetsPlugin } from "@player-ui/reference-assets-plugin-react";
 import { BasicWevDevtoolsPlugin } from "@player-tools/devtools-basic-web-plugin";
-import type { Flow } from "@player-ui/types";
 import { useEffect } from "react";
 import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
-
-const flow: Flow = {
-  id: "flow",
-  views: [
-    {
-      id: "view-1",
-      type: "text",
-      value: "example - {{foo.bar}}",
-    },
-  ],
-  data: {
-    foo: {
-      bar: "test1",
-      fuz: "test2",
-    },
-  },
-  navigation: {
-    BEGIN: "FLOW_1",
-    FLOW_1: {
-      startState: "VIEW_1",
-      VIEW_1: {
-        state_type: "VIEW",
-        ref: "view-1",
-        transitions: {},
-      },
-    },
-  },
-};
+import flow from "./flow.json";
 
 // Add the plugins to test here:
 const testingPlugins: ReactPlayerOptions["plugins"] = [

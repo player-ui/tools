@@ -1,6 +1,5 @@
 import React from "react";
-import type { PluginClient } from "flipper-plugin";
-import { Layout, usePlugin } from "flipper-plugin";
+import { type PluginClient, Layout, usePlugin } from "flipper-plugin";
 import type { BaseEvent, Transaction } from "@player-tools/devtools-types";
 import { Panel } from "@player-tools/devtools-client";
 

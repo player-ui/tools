@@ -27,41 +27,39 @@ export const useCommunicationLayer = (): Pick<
   });
 
   useEffect(() => {
-    // TODO:: figure out the connection errors when uncommenting this block (#95)
-    //
-    // import("js-flipper").then(({ flipperClient }) => {
-    //   flipperClient.start("Player UI Devtools").then(() => {
-    //     flipperClient.addPlugin({
-    //       getId() {
-    //         return "player-devtools";
-    //       },
-    //
-    //       onConnect(connection) {
-    //         /** MessengerOptions['sendMessage'] */
-    //         const sendMessage: CommunicationLayerMethods["sendMessage"] =
-    //           async (message) => {
-    //             connection.send("message::plugin", message);
-    //           };
-    //
-    //         /** MessengerOptions['addListener'] */
-    //         const addListener: CommunicationLayerMethods["addListener"] = (
-    //           listener
-    //         ) => {
-    //           connection.receive("message::flipper", (message) => {
-    //             listener(message);
-    //           });
-    //         };
-    //
-    //         setLayerCallbacks((current) => ({
-    //           sendMessage: [...current.sendMessage, sendMessage],
-    //           addListener: [...current.addListener, addListener],
-    //           removeListener: current.removeListener,
-    //         }));
-    //       },
-    //       onDisconnect() {},
-    //     });
-    //   });
-    // });
+    import("js-flipper").then(({ flipperClient }) => {
+      flipperClient.start("Player UI Devtools").then(() => {
+        flipperClient.addPlugin({
+          getId() {
+            return "player-devtools";
+          },
+
+          onConnect(connection) {
+            /** MessengerOptions['sendMessage'] */
+            const sendMessage: CommunicationLayerMethods["sendMessage"] =
+              async (message) => {
+                connection.send("message::plugin", message);
+              };
+
+            /** MessengerOptions['addListener'] */
+            const addListener: CommunicationLayerMethods["addListener"] = (
+              listener
+            ) => {
+              connection.receive("message::flipper", (message) => {
+                listener(message);
+              });
+            };
+
+            setLayerCallbacks((current) => ({
+              sendMessage: [...current.sendMessage, sendMessage],
+              addListener: [...current.addListener, addListener],
+              removeListener: current.removeListener,
+            }));
+          },
+          onDisconnect() {},
+        });
+      });
+    });
 
     let windowListener: null | ((event: MessageEvent) => void) = null;
 

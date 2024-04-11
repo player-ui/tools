@@ -6,13 +6,13 @@
   "pluginType": "client",
   "main": "src/index.tsx",
   "scripts": {
-    "prepack": "flipper-pkg lint && flipper-pkg bundle"
+    "prepack": "flipper-pkg lint"
   },
   "dependencies": {
     "@player-tools/devtools-client": "workspace:*",
     "@player-tools/devtools-types": "workspace:*"
   },
-  "flipperBundlerEntry": "src",
+  "flipperBundlerEntry": "src/index.tsx",
   "keywords": [
     "flipper-plugin",
     "@flipper-plugin/player-ui",
