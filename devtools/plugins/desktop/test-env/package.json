@@ -11,10 +11,9 @@
     "dev:chrome": "sh setup.sh"
   },
   "dependencies": {
-    "@player-tools/devtools-basic-web-plugin": "*",
-    "@player-ui/pubsub-plugin": "0.7.1",
-    "@player-ui/react": "0.7.1",
-    "@player-ui/reference-assets-plugin-react": "0.7.1",
+    "@player-ui/pubsub-plugin": "0.7.2-next.4",
+    "@player-ui/react": "0.7.2-next.4",
+    "@player-ui/reference-assets-plugin-react": "0.7.2-next.4",
     "concurrently": "^8.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

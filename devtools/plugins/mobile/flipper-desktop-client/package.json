@@ -3,11 +3,7 @@
   "name": "flipper-plugin-player-ui-devtools",
   "id": "player-ui-devtools",
   "version": "0.0.0-PLACEHOLDER",
-  "pluginType": "client",
-  "main": "src/index.tsx",
-  "scripts": {
-    "prepack": "flipper-pkg lint"
-  },
+  "main": "dist/index.js",
   "dependencies": {
     "@player-tools/devtools-client": "workspace:*",
     "@player-tools/devtools-types": "workspace:*"
@@ -18,7 +14,7 @@
     "@flipper-plugin/player-ui",
     "player-ui-devtools"
   ],
-  "icon": "icon",
+  "icon": "apps",
   "title": "Player UI Devtools",
   "description": "A Flipper plugin able to interact with an active Player instance"
 }

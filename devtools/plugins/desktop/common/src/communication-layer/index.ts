@@ -1,8 +1,11 @@
 import type {
   ExtensionSupportedEvents,
+  MessengerEvent,
   MessengerOptions,
+  TransactionMetadata,
 } from "@player-tools/devtools-types";
 import { useEffect, useState } from "react";
+import { type FlipperPluginConnection, flipperClient } from "js-flipper";
 
 type IntoArrays<T> = {
   [P in keyof T]: T[P][];
@@ -15,11 +18,71 @@ type CommunicationLayerMethods = Pick<
 
 type Callbacks = IntoArrays<CommunicationLayerMethods>;
 
+// keep track of the Flipper connection between React renders
+let flipperConnection: FlipperPluginConnection | null = null;
+
+export const startFlipperConnection = (
+  setLayerCallbacks: (
+    value: React.SetStateAction<IntoArrays<CommunicationLayerMethods>>
+  ) => void
+) => {
+  const listeners: Array<
+    (
+      message: TransactionMetadata & MessengerEvent<ExtensionSupportedEvents>
+    ) => void
+  > = [];
+
+  if (!flipperConnection) {
+    flipperClient
+      .start("player-ui-devtools")
+      .then(() => {
+        flipperClient.addPlugin({
+          getId() {
+            return "player-ui-devtools";
+          },
+          onConnect(conn) {
+            flipperConnection = conn;
+
+            conn.receive("message::flipper", (message) => {
+              listeners.forEach((listener) => listener(message));
+            });
+          },
+          onDisconnect() {
+            console.log("Flipper client disconnected");
+            flipperConnection = null;
+          },
+        });
+      })
+      .catch((error) => {
+        console.error("Failed to start Flipper client", error);
+      });
+  }
+
+  const sendMessage: CommunicationLayerMethods["sendMessage"] = async (
+    message
+  ) => {
+    flipperConnection?.send("message::plugin", message);
+  };
+
+  const addListener: CommunicationLayerMethods["addListener"] = (listener) => {
+    listeners.push(listener);
+  };
+
+  setLayerCallbacks((current) => ({
+    sendMessage: [...current.sendMessage, sendMessage],
+    addListener: [...current.addListener, addListener],
+    removeListener: current.removeListener,
+  }));
+};
+
 /** Web extension communication layer leverage by the @player-tools/devtools-messenger */
 export const useCommunicationLayer = (): Pick<
   MessengerOptions<ExtensionSupportedEvents>,
   "sendMessage" | "addListener" | "removeListener"
 > => {
+  const flipperConnectionIsActive =
+    localStorage.getItem("player-ui-devtools-flipper-active") === "true";
+
   const [layerCallbacks, setLayerCallbacks] = useState<Callbacks>({
     sendMessage: [],
     addListener: [],
@@ -27,39 +90,13 @@ export const useCommunicationLayer = (): Pick<
   });
 
   useEffect(() => {
-    import("js-flipper").then(({ flipperClient }) => {
-      flipperClient.start("Player UI Devtools").then(() => {
-        flipperClient.addPlugin({
-          getId() {
-            return "player-devtools";
-          },
-
-          onConnect(connection) {
-            /** MessengerOptions['sendMessage'] */
-            const sendMessage: CommunicationLayerMethods["sendMessage"] =
-              async (message) => {
-                connection.send("message::plugin", message);
-              };
-
-            /** MessengerOptions['addListener'] */
-            const addListener: CommunicationLayerMethods["addListener"] = (
-              listener
-            ) => {
-              connection.receive("message::flipper", (message) => {
-                listener(message);
-              });
-            };
-
-            setLayerCallbacks((current) => ({
-              sendMessage: [...current.sendMessage, sendMessage],
-              addListener: [...current.addListener, addListener],
-              removeListener: current.removeListener,
-            }));
-          },
-          onDisconnect() {},
-        });
-      });
-    });
+    if (flipperConnectionIsActive) {
+      startFlipperConnection(setLayerCallbacks);
+    } else {
+      console.warn(
+        "Flipper connection is disabled. Activate it in the Player UI devtools popup."
+      );
+    }
 
     let windowListener: null | ((event: MessageEvent) => void) = null;
 

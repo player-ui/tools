@@ -60,4 +60,4 @@ done
 
 # Run the commands concurrently
 log_step "Running commands concurrently..."
-concurrently --kill-others "cd $DEST_DIR && pnpm inject:chrome" "cd $TEST_ENV_DIR && pnpm dev"
+concurrently --kill-others "cd $DEST_DIR && pnpm inject:chrome" "cd $TEST_ENV_DIR && pnpm dev --host"

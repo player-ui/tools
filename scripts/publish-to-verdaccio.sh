@@ -109,5 +109,5 @@ PACKAGES=($(for pkg in $PACKAGES; do echo "$BAZEL_OUT_DIR/${pkg}/${pkg##*/}"; do
 log_step "Publishing local packages to Verdaccio..."
 for PACKAGE in "${PACKAGES[@]}"; do
   cd "$PACKAGE"
-  pnpm publish --registry $VERDACCIO_REGISTRY --no-git-checks
+  npm publish --registry $VERDACCIO_REGISTRY --no-git-checks
 done
