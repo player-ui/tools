@@ -64,7 +64,7 @@ DESCRIPTION
 
 ## `player dsl validate`
 
-Runs isolated TSC compiler on authored Player DSL Typescript files.
+Runs isolated TSC type-checking instance on authored Player DSL Typescript files.
 
 ```
 USAGE
@@ -76,7 +76,7 @@ FLAGS
   -f, --files=<value>...  A list of files or globs to validate
 
 DESCRIPTION
-  Runs isolated TSC compiler on authored Player DSL Typescript files.
+  Runs isolated TSC type-checking instance on authored Player DSL Typescript files.
 ```
 
 <!-- commandsstop -->
