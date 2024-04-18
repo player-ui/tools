@@ -21,16 +21,17 @@ yarn add @player-tools/devtools-desktop-common
 ```
 
 ## Usage
+
 You can import the utilities from the package in your TypeScript or JavaScript files:
 
 ```ts
-import { communicationLayer, usePluginState } from '@player-tools/devtools-desktop-common';
+import {
+  communicationLayer,
+  usePluginState,
+} from "@player-tools/devtools-desktop-common";
 ```
 
 ## Contributing
 
 We welcome contributions to the Player UI Devtools. If you're interested in contributing, please check out the contributing guide.
 
-## License
-
-The Player UI Devtools are licensed under the MIT license.

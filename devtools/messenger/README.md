@@ -27,11 +27,11 @@ npm @player-tools/devtools-messenger
 Here's a basic example of how to use Devtools Messenger:
 
 ```ts
-import { Messenger } from 'devtools-messenger';
+import { Messenger } from "devtools-messenger";
 
 const messenger = new Messenger({
-  context: 'devtools',
-  target: 'player',
+  context: "devtools",
+  target: "player",
   messageCallback: (message) => dispatch(message),
   sendMessage: (message) => browser.runtime.sendMessage(message),
   addListener: (callback) => {
@@ -74,7 +74,3 @@ If a message fails to be sent, the `handleFailedMessage` function will be called
 ## Contributing
 
 We welcome contributions! Please see our contributing guide for more details.
-
-## License
-
-Devtools Messenger is MIT licensed.

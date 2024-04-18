@@ -25,7 +25,7 @@ yarn add @player-tools/devtools-desktop-basic
 You can import the utilities from the package in your TypeScript or JavaScript files:
 
 ```ts
-import { BasicPlugin } from '@player-tools/devtools-desktop-basic';
+import { BasicPlugin } from "@player-tools/devtools-desktop-basic";
 ```
 
 Then, you can use the `BasicPlugin` in your application:
@@ -37,7 +37,3 @@ const myPlugin = new BasicPlugin();
 ## Contributing
 
 We welcome contributions to the Player UI Devtools. If you're interested in contributing, please check out the contributing guide.
-
-## License
-
-The Player UI Devtools are licensed under the MIT license.

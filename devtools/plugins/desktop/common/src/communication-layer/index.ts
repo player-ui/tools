@@ -80,8 +80,9 @@ export const useCommunicationLayer = (): Pick<
   MessengerOptions<ExtensionSupportedEvents>,
   "sendMessage" | "addListener" | "removeListener"
 > => {
-  const flipperConnectionIsActive =
-    localStorage.getItem("player-ui-devtools-flipper-active") === "true";
+  const flipperConnectionIsActive = localStorage.getItem(
+    "player-ui-devtools-flipper-active"
+  );
 
   const [layerCallbacks, setLayerCallbacks] = useState<Callbacks>({
     sendMessage: [],
@@ -90,11 +91,11 @@ export const useCommunicationLayer = (): Pick<
   });
 
   useEffect(() => {
-    if (flipperConnectionIsActive) {
+    if (flipperConnectionIsActive === "true") {
       startFlipperConnection(setLayerCallbacks);
     } else {
       console.warn(
-        "Flipper connection is disabled. Activate it in the Player UI devtools popup."
+        "The Flipper connection is disabled. If you want to enable it, use the Player UI extension popup."
       );
     }
 

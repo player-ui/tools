@@ -34,7 +34,18 @@ export class BasicWevDevtoolsPlugin implements ReactPlayerPlugin {
 
   dataController?: WeakRef<DataController>;
 
+  checkIfDevtoolsIsActive() {
+    return localStorage.getItem("player-ui-devtools-active") === "true";
+  }
+
   apply(player: Player) {
+    if (!this.checkIfDevtoolsIsActive()) {
+      console.log(
+        "The plugin has been registered, but the Player development tools are not active. If you are working in a production environment, it is recommended to remove the plugin. Either way, you can activate the Player development tools by clicking on the extension popup and refreshing the page."
+      );
+      return;
+    }
+
     // Config
     this.playerConfig = {
       version: player.getVersion(),
@@ -75,6 +86,10 @@ export class BasicWevDevtoolsPlugin implements ReactPlayerPlugin {
   }
 
   applyReact(reactPlayer: ReactPlayer) {
+    if (!this.checkIfDevtoolsIsActive()) {
+      return;
+    }
+
     // eslint-disable-next-line react/display-name
     reactPlayer.hooks.webComponent.tap(this.name, (Comp) => () => {
       const Component = Comp as React.FC;

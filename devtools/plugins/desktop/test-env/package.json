@@ -11,6 +11,7 @@
     "dev:chrome": "sh setup.sh"
   },
   "dependencies": {
+    "@player-tools/devtools-basic-web-plugin": "0.0.0-PLACEHOLDER",
     "@player-ui/pubsub-plugin": "0.7.2-next.4",
     "@player-ui/react": "0.7.2-next.4",
     "@player-ui/reference-assets-plugin-react": "0.7.2-next.4",

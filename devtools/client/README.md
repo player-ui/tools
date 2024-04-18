@@ -60,7 +60,3 @@ root.render(<Panel communicationLayer={communicationLayer} />);
 ## Contributing
 
 We welcome contributions to the Player UI Devtools Browser Extension.
-
-## License
-
-The Player UI Devtools Browser Extension is licensed under the MIT license.
