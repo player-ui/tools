@@ -62,4 +62,21 @@ DESCRIPTION
   Compile Player DSL files into JSON
 ```
 
+## `player dsl validate`
+
+Runs isolated TSC type-checking instance on authored Player DSL Typescript files.
+
+```
+USAGE
+  $ player dsl validate [-f <value>] [-c <value>] 
+
+FLAGS
+  -c, --config=<value>  Path to a specific config file to load.
+                        By default, will automatically search for an rc or config file to load
+  -f, --files=<value>...  A list of files or globs to validate
+
+DESCRIPTION
+  Runs isolated TSC type-checking instance on authored Player DSL Typescript files.
+```
+
 <!-- commandsstop -->
