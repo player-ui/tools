@@ -22,16 +22,16 @@ yarn add @player-tools/devtools-desktop-basic
 
 ## Usage
 
-You can import the utilities from the package in your TypeScript or JavaScript files:
+You can import the plugin in your TypeScript or JavaScript files:
 
 ```ts
-import { BasicPlugin } from "@player-tools/devtools-desktop-basic";
+import { BasicWevDevtoolsPlugin } from "@player-tools/devtools-desktop-basic";
 ```
 
-Then, you can use the `BasicPlugin` in your application:
+Then, you can use the `BasicWevDevtoolsPlugin` in your application:
 
 ```ts
-const myPlugin = new BasicPlugin();
+const myPlugin = new BasicWevDevtoolsPlugin();
 ```
 
 ## Contributing

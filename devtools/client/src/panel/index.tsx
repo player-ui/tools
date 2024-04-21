@@ -1,6 +1,8 @@
 import React, { useRef } from "react";
-import type { MessengerOptions } from "@player-tools/devtools-types";
-import type { ExtensionSupportedEvents } from "@player-tools/devtools-types";
+import type {
+  MessengerOptions,
+  ExtensionSupportedEvents,
+} from "@player-tools/devtools-types";
 import { DataController, Flow, useReactPlayer } from "@player-ui/react";
 import { useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -21,7 +23,8 @@ import {
 } from "@chakra-ui/react";
 import { ThemeProvider } from "@devtools-ds/themes";
 
-import { INITIAL_FLOW, PLAYER_PLUGINS, PUBSUB_PLUGIN } from "../constants";
+import { INITIAL_FLOW } from "../constants";
+import { PLAYER_PLUGINS, PUBSUB_PLUGIN } from "../plugins";
 import { useExtensionState } from "../state";
 import { flowDiff } from "../helpers/flowDiff";
 import { theme } from "./theme";
@@ -44,9 +47,28 @@ const fallbackRender: ErrorBoundary["props"]["fallbackRender"] = ({
 };
 
 /**
- * Panel component
+ * Panel Component
  *
- * devtools plugin authors can define their plugins content using DSL and have it rendered here
+ * This component serves as the main container for the devtools plugin content defined by plugin authors using Player-UI DSL.
+ *
+ * Props:
+ * - `communicationLayer`: An object that allows communication between the devtools and the Player-UI plugins,
+ *   enabling the exchange of data and events.
+ *
+ * Features:
+ * - Error Handling: Utilizes the `ErrorBoundary` component from `react-error-boundary` to gracefully handle and display errors
+ *   that may occur during the rendering of the plugin's content.
+ * - State Management: Integrates with custom hooks such as `useExtensionState` to manage the state of the plugin and its components.
+ * - Player Integration: Uses the `useReactPlayer` hook from `player-ui/react` to render interactive player components based on the
+ *   DSL defined by the plugin authors.
+ *
+ * Example Usage:
+ * ```tsx
+ * <Panel communicationLayer={myCommunicationLayer} />
+ * ```
+ *
+ * Note: The `communicationLayer` prop is essential for the proper functioning of the `Panel` component, as it enables the necessary
+ * communication and data exchange with the player-ui/react library.
  */
 export const Panel = ({
   communicationLayer,
@@ -71,7 +93,7 @@ export const Panel = ({
   const currentFlow = useRef<Flow | null>(null);
 
   useEffect(() => {
-    reactPlayer.player.hooks.dataController.tap("panel", (d) => {
+    reactPlayer.player.hooks.dataController.tap("devtools-panel", (d) => {
       dataController.current = new WeakRef(d);
     });
   }, [reactPlayer]);

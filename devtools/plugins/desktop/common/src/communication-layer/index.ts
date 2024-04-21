@@ -21,6 +21,7 @@ type Callbacks = IntoArrays<CommunicationLayerMethods>;
 // keep track of the Flipper connection between React renders
 let flipperConnection: FlipperPluginConnection | null = null;
 
+/** Adds a Flipper client and starts the connection */
 export const startFlipperConnection = (
   setLayerCallbacks: (
     value: React.SetStateAction<IntoArrays<CommunicationLayerMethods>>

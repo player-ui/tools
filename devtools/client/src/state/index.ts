@@ -10,7 +10,14 @@ import { reducer } from "./reducer";
 
 const NOOP_ID = -1;
 
-/** Extension state */
+/**
+ * Custom React hook for managing the state of the devtools extension.
+ *
+ * This hook initializes the extension's state and sets up a communication layer
+ * using the `Messenger` class. It provides methods to select a player or plugin,
+ * and handle interactions, which dispatch actions to update the state accordingly.
+ *
+ */
 export const useExtensionState = ({
   communicationLayer,
 }: {
@@ -80,6 +87,11 @@ export const useExtensionState = ({
     [dispatch]
   );
 
+  /**
+   * Plugin authors can add interactive elements to the Player-UI content by leveraging
+   * the pub-sub plugin and having the handle interaction proxy the message to the inspected
+   * Player-UI instance.
+   */
   const handleInteraction = useCallback(
     ({
       type,

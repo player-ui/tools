@@ -1,14 +1,5 @@
 import type { ExtensionState } from "@player-tools/devtools-types";
-import type { Flow, ReactPlayerPlugin } from "@player-ui/react";
-import DevtoolsUIAssetsPlugin from "@devtools-ui/plugin";
-import { PubSubPlugin } from "@player-ui/pubsub-plugin";
-
-export const PUBSUB_PLUGIN = new PubSubPlugin();
-
-export const PLAYER_PLUGINS: ReactPlayerPlugin[] = [
-  new DevtoolsUIAssetsPlugin(),
-  PUBSUB_PLUGIN,
-];
+import type { Flow } from "@player-ui/react";
 
 export const INITIAL_FLOW: Flow = {
   id: "initial-flow",

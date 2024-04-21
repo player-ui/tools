@@ -1,6 +1,15 @@
 import type { Flow } from "@player-ui/react";
 import { dequal } from "dequal";
 
+/**
+ * Compares two Flow objects and identifies if there's a change in their structure or data.
+ *
+ * This function takes two Flow objects as input, `curr` (current) and `next` (next), and compares them
+ * to determine if there's a change in the flow's structure or its data. If there's a change in the flow's
+ * structure (excluding the `data` property), it returns an object indicating a "flow" change along with the
+ * new flow. If there's a change in the `data` property, it returns an object indicating a "data" change along
+ * with the new data. If there are no changes, it returns null.
+ */
 export const flowDiff = ({
   curr,
   next,

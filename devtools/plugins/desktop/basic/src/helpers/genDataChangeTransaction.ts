@@ -4,6 +4,16 @@ import type {
 } from "@player-tools/devtools-types";
 import type { Flow } from "@player-ui/react";
 
+const NOOP_ID = -1;
+
+/**
+ * Generates a data change transaction for the player devtools plugin.
+ *
+ * This function creates a transaction object that represents a change in data
+ * within a player devtools plugin. The transaction includes details such as the
+ * plugin ID, the changed data, and the player ID. It is used to communicate
+ * changes between the plugin and devtools.
+ */
 export const genDataChangeTransaction = ({
   playerID,
   data,
@@ -14,7 +24,7 @@ export const genDataChangeTransaction = ({
   pluginID: string;
 }): Transaction<DevtoolsDataChangeEvent> => {
   return {
-    id: -1,
+    id: NOOP_ID,
     type: "PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE",
     payload: {
       pluginID,

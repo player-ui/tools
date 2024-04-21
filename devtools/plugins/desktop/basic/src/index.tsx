@@ -11,10 +11,11 @@ import { dset } from "dset/merge";
 import { produce } from "immer";
 import React from "react";
 import { WrapperComponent } from "./WrapperComponent";
+import { PLUGIN_ID, PLUGIN_INACTIVE_WARNING } from "./constants";
 
-/** Basic Web Devtools Plugin */
+/** Taps into the Player and ReactPlayer hooks and leverage the WrapperComponent to define and process the content. */
 export class BasicWevDevtoolsPlugin implements ReactPlayerPlugin {
-  name = "player_ui_basic_devtools_plugin";
+  name = PLUGIN_ID;
 
   data: Record<string, unknown> = {};
 
@@ -40,9 +41,7 @@ export class BasicWevDevtoolsPlugin implements ReactPlayerPlugin {
 
   apply(player: Player) {
     if (!this.checkIfDevtoolsIsActive()) {
-      console.log(
-        "The plugin has been registered, but the Player development tools are not active. If you are working in a production environment, it is recommended to remove the plugin. Either way, you can activate the Player development tools by clicking on the extension popup and refreshing the page."
-      );
+      console.log(PLUGIN_INACTIVE_WARNING);
       return;
     }
 

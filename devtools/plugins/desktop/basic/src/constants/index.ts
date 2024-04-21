@@ -25,3 +25,6 @@ export const BASE_PLUGIN_DATA: Omit<PluginData, "flow"> = {
   description: PLUGIN_DESCRIPTION,
   version: PLUGIN_VERSION,
 };
+
+export const PLUGIN_INACTIVE_WARNING =
+  "The plugin has been registered, but the Player development tools are not active. If you are working in a production environment, it is recommended to remove the plugin. Either way, you can activate the Player development tools by clicking on the extension popup and refreshing the page.";

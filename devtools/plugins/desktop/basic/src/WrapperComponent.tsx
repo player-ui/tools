@@ -20,7 +20,7 @@ const pluginData: PluginData = {
   flow: flow as Flow,
 };
 
-/** Tap into the ReactPlayer hooks and create the content to be rendered into the extension Player UI */
+/** Defines the content to be rendered into the extension Player UI and process changes */
 export const WrapperComponent = ({
   children,
   data,
