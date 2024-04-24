@@ -6,7 +6,7 @@ export const registerForPaths = () => {
     extensions: [".es6", ".es", ".jsx", ".js", ".mjs", ".tsx", ".ts"],
 
     presets: [
-      [require.resolve("@babel/preset-env"), { modules: "cjs" }],
+      [require.resolve("@babel/preset-env"), { modules: true }],
       require.resolve("@babel/preset-typescript"),
       require.resolve("@babel/preset-react"),
     ],

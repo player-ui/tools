@@ -96,8 +96,10 @@ export default class DSLCompile extends BaseCommand {
       file: string
     ): Promise<CompilationResult | undefined> => {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const requiredModule = require(path.resolve(file));
-      const defaultExport = requiredModule.default;
+      const importedModule = await import(path.resolve(file));
+      // const requiredModule = require(path.resolve(file));
+
+      const defaultExport = importedModule.default;
 
       if (!defaultExport) {
         return;
