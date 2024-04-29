@@ -18,14 +18,6 @@ export function toJsonElement(
 ): React.ReactElement {
   const indexProp = typeof indexOrKey === "number" ? { key: indexOrKey } : null;
 
-  if (Array.isArray(value)) {
-    return (
-      <array {...indexProp}>
-        {value.map((item, idx) => toJsonElement(item, idx, options))}
-      </array>
-    );
-  }
-
   /** Allow users to pass in BindingTemplateInstance and ExpressionTemplateInstance directly without turning them into strings first */
   if (isTemplateStringInstance(value)) {
     if (
@@ -36,6 +28,14 @@ export function toJsonElement(
     }
 
     return <value {...indexProp}>{value.toRefString()}</value>;
+  }
+
+  if (Array.isArray(value)) {
+    return (
+      <array {...indexProp}>
+        {value.map((item, idx) => toJsonElement(item, idx, options))}
+      </array>
+    );
   }
 
   if (typeof value === "object" && value !== null) {
