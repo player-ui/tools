@@ -1,4 +1,8 @@
-import { ExpressionEvaluator, ViewInstance } from "@player-ui/react";
+import type {
+  ExpressionEvaluator,
+  Player,
+  ViewInstance,
+} from "@player-ui/react";
 import { Flow } from "@player-ui/types";
 
 export interface Evaluation {
@@ -32,4 +36,6 @@ export interface WrapperComponentProps {
   expressionEvaluator?: WeakRef<ExpressionEvaluator>;
   /** view instace */
   view?: WeakRef<ViewInstance>;
+  /** override flow */
+  overrideFlow?: Player["start"];
 }
