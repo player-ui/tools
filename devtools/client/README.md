@@ -67,7 +67,7 @@ cd devtools/plugins/desktop/test-env
 pnpm run dev:chrome
 ```
 
-For local development; Running the above command will create a new `browser-devtools` folder on your desktop. This is where the chrome extension will live.
+For local development; Running the above command will create a new `browser-devtools` folder on your desktop. This is where the chrome and firefox extension will live.
 If you need to make any changes to the extension; you can modify the `browser-devtools` folder and run `build:chrome` or `build:firefox`
 
 Chrome:
