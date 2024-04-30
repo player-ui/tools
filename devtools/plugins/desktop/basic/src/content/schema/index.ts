@@ -10,6 +10,7 @@ export const schema = {
   playerConfig: RecordType,
   flow: RecordType,
   expression: dataTypes.StringType,
+  code: dataTypes.StringType,
   history: [
     {
       id: dataTypes.StringType,

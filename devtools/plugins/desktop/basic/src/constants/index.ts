@@ -13,10 +13,12 @@ export const VIEWS_IDS = {
   FLOW: "Flow",
   LOGS: "Logs",
   CONSOLE: "Console",
+  EDITOR: "Editor",
 };
 
 export const INTERACTIONS = {
   EVALUATE_EXPRESSION: "evaluate-expression",
+  OVERRIDE_FLOW: "override-flow",
 };
 
 export const BASE_PLUGIN_DATA: Omit<PluginData, "flow"> = {

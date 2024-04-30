@@ -35,6 +35,8 @@ export class BasicWevDevtoolsPlugin implements ReactPlayerPlugin {
 
   dataController?: WeakRef<DataController>;
 
+  overrideFlow?: ReactPlayer["start"];
+
   checkIfDevtoolsIsActive() {
     return localStorage.getItem("player-ui-devtools-active") === "true";
   }
@@ -82,6 +84,9 @@ export class BasicWevDevtoolsPlugin implements ReactPlayerPlugin {
     player.hooks.expressionEvaluator.tap(this.name, (evaluator) => {
       this.expressionEvaluator = new WeakRef(evaluator);
     });
+
+    // Override flow
+    this.overrideFlow = player.start.bind(player);
   }
 
   applyReact(reactPlayer: ReactPlayer) {
@@ -100,6 +105,7 @@ export class BasicWevDevtoolsPlugin implements ReactPlayerPlugin {
           logs={this.logs}
           flow={this.flow}
           view={this.view}
+          overrideFlow={this.overrideFlow}
           expressionEvaluator={this.expressionEvaluator}
         >
           <Component />
