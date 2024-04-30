@@ -28,6 +28,7 @@ export const WrapperComponent = ({
   logs,
   flow,
   expressionEvaluator,
+  overrideFlow,
 }: WrapperComponentProps): JSX.Element => {
   const [state, playerID, dispatch] = usePluginState();
   const lastProcessedInteraction = React.useRef(0);
@@ -75,6 +76,18 @@ export const WrapperComponent = ({
         });
 
         lastProcessedInteraction.current += 1;
+      }
+
+      if (type === INTERACTIONS.OVERRIDE_FLOW && payload && overrideFlow) {
+        let newFlow: Flow | undefined;
+
+        try {
+          newFlow = JSON.parse(payload);
+        } catch (e) {
+          console.error("Error parsing new flow", e);
+        }
+
+        newFlow && overrideFlow(newFlow);
       }
     },
     [dispatch, expressionEvaluator, id, state]
