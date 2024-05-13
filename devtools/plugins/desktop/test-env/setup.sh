@@ -15,7 +15,7 @@ DEST_DIR="$HOME/Desktop/browser-devtools"
 VERDACCIO_REGISTRY="http://localhost:4873"
 
 # Define Plugins to test
-PLUGINS=("@player-tools/devtools-basic-web-plugin")
+PLUGINS=("@player-tools/devtools-basic-web-plugin" "@player-tools/devtools-profiler-web-plugin")
 
 # Define browser-devtools depenedencies
 BROWSER_DEVTOOLS_DEPS=("@player-ui/pubsub-plugin" "dequal" "@player-tools/devtools-client" "@player-tools/devtools-messenger" "@player-tools/devtools-types")
