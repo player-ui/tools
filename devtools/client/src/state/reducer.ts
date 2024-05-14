@@ -18,17 +18,9 @@ export const reducer = (
           sender,
           payload: { plugins },
         } = transaction;
-        const { player, plugin } = draft.current;
 
-        if (!player && !plugin) {
-          // if there is no player and plugin selected, select the first one:
-          dset(draft, ["current", "player"], sender);
-          dset(
-            draft,
-            ["current", "plugin"],
-            plugins[Object.keys(plugins)[0]].id
-          );
-        }
+        dset(draft, ["current", "player"], sender);
+        dset(draft, ["current", "plugin"], plugins[Object.keys(plugins)[0]].id);
 
         dset(draft, ["players", sender, "plugins"], plugins);
         dset(draft, ["players", sender, "active"], true);
