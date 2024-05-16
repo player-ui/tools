@@ -9,6 +9,11 @@ export default {
   navigation,
   schema,
   data: {
-    rootNode: {},
+    rootNode: {
+      name: "root",
+      value: 0,
+    },
+    displayFlameGraph: false,
+    profiling: false,
   },
 };

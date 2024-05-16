@@ -1,28 +1,15 @@
 export type ProfilerNode = {
-  /**
-   * hook name
-   */
+  /** hook name */
   name: string;
-  /*
-   * startTime of the hook
-   */
+  /* startTime of the hook */
   startTime?: number;
-  /**
-   * endTime of the hook
-   */
+  /** endTime of the hook */
   endTime?: number;
-  /**
-   * duration of hook resolution times
-   * unit: ms
-   */
+  /** % of the total time running the profiler */
   value?: number;
-  /**
-   * tooltip to be shown on hover
-   */
+  /** tooltip to be shown on hover */
   tooltip?: string;
-  /**
-   * subhook profiler nodes
-   */
+  /** subhook profiler nodes */
   children: ProfilerNode[];
 };
 

@@ -56,17 +56,38 @@ export const WrapperComponent = ({
       } = interaction;
       if (type === INTERACTIONS.START_PROFILING) {
         startProfiler();
-        console.log("Started Profiling");
         lastProcessedInteraction.current += 1;
+
+        const newState = produce(state, (draft) => {
+          dset(draft, ["plugins", id, "flow", "data", "profiling"], true);
+          dset(
+            draft,
+            ["plugins", id, "flow", "data", "displayFlameGraph"],
+            false
+          );
+        });
+
+        const transaction = genDataChangeTransaction({
+          playerID,
+          data: newState.plugins[id].flow.data,
+          pluginID: id,
+        });
+
+        dispatch(transaction);
       }
 
       if (type === INTERACTIONS.STOP_PROFILING) {
         const rootNode = stopProfiler();
-        console.log("Profiling Stopped: ", rootNode);
         lastProcessedInteraction.current += 1;
 
         const newState = produce(state, (draft) => {
           dset(draft, ["plugins", id, "flow", "data", "rootNode"], rootNode);
+          dset(draft, ["plugins", id, "flow", "data", "profiling"], false);
+          dset(
+            draft,
+            ["plugins", id, "flow", "data", "displayFlameGraph"],
+            true
+          );
         });
 
         const transaction = genDataChangeTransaction({

@@ -3,6 +3,7 @@ import React from "react";
 import { PLUGIN_ID } from "./constants";
 import { ProfilerNode } from "./types";
 import { WrapperComponent } from "./WrapperComponent";
+import { profiler } from "./helpers";
 
 export class ProfilerPlugin implements ReactPlayerPlugin {
   name = PLUGIN_ID;
@@ -16,95 +17,35 @@ export class ProfilerPlugin implements ReactPlayerPlugin {
       return;
     }
 
-    const rootNode: ProfilerNode = {
-      name: "root",
-      children: [],
-    };
-
-    const record: { [key: string]: number[] } = {};
-
     let tapped = false;
 
-    /** add newNode to its parent's children array */
-    const addNodeToTree = (newNode: ProfilerNode, parentNode: ProfilerNode) => {
-      parentNode.children.push(newNode);
-      return newNode;
-    };
-
-    /** start timer and save start time in the record */
-    const startTimer = (
-      hookName: string,
-      record: { [key: string]: number[] }
-    ) => {
-      /**
-       * TODO: use context to pass start times
-       * once tapable supports ts types for context property
-       */
-      const startTime = performance.now();
-      if (!record[hookName] || record[hookName].length === 2) {
-        // eslint-disable-next-line no-param-reassign
-        record[hookName] = [];
-        record[hookName].push(startTime);
-      }
-    };
-
-    /** end timer and calculate duration */
-    const endTimer = (
-      hookName: string,
-      record: { [key: string]: number[] },
-      parentNode: ProfilerNode,
-      children?: ProfilerNode[]
-    ) => {
-      let startTime;
-      let duration;
-      const endTime = performance.now();
-      for (const key in record) {
-        if (key === hookName && record[key].length === 1) {
-          [startTime] = record[key];
-          duration = endTime - startTime;
-          record[key].push(endTime);
-        }
-      }
-
-      const newNode: ProfilerNode = {
-        name: hookName,
-        startTime,
-        endTime,
-        value: duration === 0 ? 0.01 : duration,
-        tooltip: `${hookName}, ${duration?.toFixed(4)} (ms)`,
-        children: children ?? [],
-      };
-
-      addNodeToTree(newNode, parentNode);
-
-      return newNode;
-    };
+    const { startTimer, endTimer, stopProfiler, reset } = profiler();
 
     /** function to tap into hooks and start the profiler */
     const startProfiler = () => {
       // reset root node if profilers are already tapped
       if (tapped) {
-        rootNode.children = [];
+        reset();
       }
 
       tapped = true;
 
       player.hooks.onStart.intercept({
         call: () => {
-          startTimer("onStart", record);
+          startTimer("onStart");
         },
       });
 
       player.hooks.onStart.tap(this.name, () => {
-        endTimer("onStart", record, rootNode);
+        endTimer({ hookName: "onStart" });
       });
 
       player.hooks.flowController.intercept({
         call: (fc) => {
-          startTimer("flowController", record);
+          startTimer("flowController");
           fc.hooks.flow.intercept({
             call: () => {
-              startTimer("flow", record);
+              startTimer("flow");
             },
           });
         },
@@ -117,28 +58,26 @@ export class ProfilerPlugin implements ReactPlayerPlugin {
         };
 
         fc.hooks.flow.tap(this.name, () => {
-          endTimer("flow", record, flowControllerNode);
+          endTimer({ hookName: "flow", parentNode: flowControllerNode });
         });
 
-        flowControllerNode = endTimer(
-          flowControllerNode.name,
-          record,
-          rootNode,
-          flowControllerNode.children
-        );
+        flowControllerNode = endTimer({
+          hookName: flowControllerNode.name,
+          children: flowControllerNode.children,
+        });
       });
 
       player.hooks.viewController.intercept({
         call: (vc) => {
-          startTimer("viewController", record);
+          startTimer("viewController");
           vc.hooks.resolveView.intercept({
             call: () => {
-              startTimer("resolveView", record);
+              startTimer("resolveView");
             },
           });
           vc.hooks.view.intercept({
             call: () => {
-              startTimer("view", record);
+              startTimer("view");
             },
           });
         },
@@ -151,43 +90,41 @@ export class ProfilerPlugin implements ReactPlayerPlugin {
         };
 
         vc.hooks.resolveView.tap(this.name, (asset) => {
-          endTimer("resolveView", record, viewControllerNode);
+          endTimer({ hookName: "resolveView", parentNode: viewControllerNode });
           return asset;
         });
 
-        viewControllerNode = endTimer(
-          viewControllerNode.name,
-          record,
-          rootNode,
-          viewControllerNode.children
-        );
+        viewControllerNode = endTimer({
+          hookName: viewControllerNode.name,
+          children: viewControllerNode.children,
+        });
       });
 
       player.hooks.view.intercept({
         call: (view) => {
-          startTimer("view", record);
+          startTimer("view");
 
           view.hooks.onUpdate.intercept({
             call: () => {
-              startTimer("onUpdate", record);
+              startTimer("onUpdate");
             },
           });
 
           view.hooks.parser.intercept({
             call: () => {
-              startTimer("parser", record);
+              startTimer("parser");
             },
           });
 
           view.hooks.resolver.intercept({
             call: () => {
-              startTimer("resolver", record);
+              startTimer("resolver");
             },
           });
 
           view.hooks.templatePlugin.intercept({
             call: () => {
-              startTimer("templatePlugin", record);
+              startTimer("templatePlugin");
             },
           });
         },
@@ -200,37 +137,40 @@ export class ProfilerPlugin implements ReactPlayerPlugin {
         };
 
         view.hooks.onUpdate.tap(this.name, () => {
-          endTimer("onUpdate", record, viewNode);
+          endTimer({ hookName: "onUpdate", parentNode: viewNode });
         });
 
         view.hooks.parser.tap(this.name, () => {
-          endTimer("parser", record, viewNode);
+          endTimer({ hookName: "parser", parentNode: viewNode });
         });
 
         view.hooks.resolver.tap(this.name, () => {
-          endTimer("resolver", record, viewNode);
+          endTimer({ hookName: "resolver", parentNode: viewNode });
         });
 
         view.hooks.templatePlugin.tap(this.name, () => {
-          endTimer("templatePlugin", record, viewNode);
+          endTimer({ hookName: "templatePlugin", parentNode: viewNode });
         });
 
-        viewNode = endTimer(viewNode.name, record, rootNode, viewNode.children);
+        viewNode = endTimer({
+          hookName: viewNode.name,
+          children: viewNode.children,
+        });
       });
 
       player.hooks.expressionEvaluator.intercept({
         call: (ev) => {
-          startTimer("expressionEvaluator", record);
+          startTimer("expressionEvaluator");
 
           ev.hooks.resolve.intercept({
             call: () => {
-              startTimer("resolve", record);
+              startTimer("resolve");
             },
           });
 
           ev.hooks.onError.intercept({
             call: () => {
-              startTimer("onError", record);
+              startTimer("onError");
             },
           });
         },
@@ -243,74 +183,78 @@ export class ProfilerPlugin implements ReactPlayerPlugin {
         };
 
         ev.hooks.resolve.tap(this.name, () => {
-          endTimer("resolve", record, expressionEvaluatorNode);
+          endTimer({
+            hookName: "resolve",
+            parentNode: expressionEvaluatorNode,
+          });
         });
 
         ev.hooks.onError.tap(this.name, () => {
-          endTimer("onError", record, expressionEvaluatorNode);
+          endTimer({
+            hookName: "onError",
+            parentNode: expressionEvaluatorNode,
+          });
           return undefined;
         });
 
-        expressionEvaluatorNode = endTimer(
-          expressionEvaluatorNode.name,
-          record,
-          rootNode,
-          expressionEvaluatorNode.children
-        );
+        expressionEvaluatorNode = endTimer({
+          hookName: expressionEvaluatorNode.name,
+          children: expressionEvaluatorNode.children,
+        });
       });
 
       player.hooks.dataController.intercept({
         call: (dc) => {
-          startTimer("dataController", record);
+          startTimer("dataController");
 
           dc.hooks.resolve.intercept({
             call: () => {
-              startTimer("resolve", record);
+              startTimer("resolve");
             },
           });
           dc.hooks.resolveDataStages.intercept({
             call: () => {
-              startTimer("resolveDataStages", record);
+              startTimer("resolveDataStages");
             },
           });
           dc.hooks.resolveDefaultValue.intercept({
             call: () => {
-              startTimer("resolveDefaultValue", record);
+              startTimer("resolveDefaultValue");
             },
           });
           dc.hooks.onDelete.intercept({
             call: () => {
-              startTimer("onDelete", record);
+              startTimer("onDelete");
             },
           });
           dc.hooks.onSet.intercept({
             call: () => {
-              startTimer("onSet", record);
+              startTimer("onSet");
             },
           });
           dc.hooks.onGet.intercept({
             call: () => {
-              startTimer("onGet", record);
+              startTimer("onGet");
             },
           });
           dc.hooks.onUpdate.intercept({
             call: () => {
-              startTimer("onUpdate", record);
+              startTimer("onUpdate");
             },
           });
           dc.hooks.format.intercept({
             call: () => {
-              startTimer("resolve", record);
+              startTimer("resolve");
             },
           });
           dc.hooks.deformat.intercept({
             call: () => {
-              startTimer("deformat", record);
+              startTimer("deformat");
             },
           });
           dc.hooks.serialize.intercept({
             call: () => {
-              startTimer("serialize", record);
+              startTimer("serialize");
             },
           });
         },
@@ -323,60 +267,64 @@ export class ProfilerPlugin implements ReactPlayerPlugin {
         };
 
         dc.hooks.resolve.tap(this.name, () => {
-          endTimer("resolve", record, dataControllerNode);
+          endTimer({ hookName: "resolve", parentNode: dataControllerNode });
         });
 
         dc.hooks.resolveDataStages.tap(this.name, (dataPipeline) => {
-          endTimer("resolveDataStages", record, dataControllerNode);
+          endTimer({
+            hookName: "resolveDataStages",
+            parentNode: dataControllerNode,
+          });
           return dataPipeline;
         });
 
         dc.hooks.resolveDefaultValue.tap(this.name, () => {
-          endTimer("resolveDefaultValue", record, dataControllerNode);
+          endTimer({
+            hookName: "resolveDefaultValue",
+            parentNode: dataControllerNode,
+          });
         });
 
         dc.hooks.onDelete.tap(this.name, () => {
-          endTimer("onDelete", record, dataControllerNode);
+          endTimer({ hookName: "onDelete", parentNode: dataControllerNode });
         });
 
         dc.hooks.onSet.tap(this.name, () => {
-          endTimer("onSet", record, dataControllerNode);
+          endTimer({ hookName: "onSet", parentNode: dataControllerNode });
         });
 
         dc.hooks.onGet.tap(this.name, () => {
-          endTimer("onGet", record, dataControllerNode);
+          endTimer({ hookName: "onGet", parentNode: dataControllerNode });
         });
 
         dc.hooks.onUpdate.tap(this.name, () => {
-          endTimer("onUpdate", record, dataControllerNode);
+          endTimer({ hookName: "onUpdate", parentNode: dataControllerNode });
         });
 
         dc.hooks.format.tap(this.name, () => {
-          endTimer("format", record, dataControllerNode);
+          endTimer({ hookName: "format", parentNode: dataControllerNode });
         });
 
         dc.hooks.deformat.tap(this.name, () => {
-          endTimer("deformat", record, dataControllerNode);
+          endTimer({ hookName: "deformat", parentNode: dataControllerNode });
         });
 
         dc.hooks.serialize.tap(this.name, () => {
-          endTimer("serialize", record, dataControllerNode);
+          endTimer({ hookName: "serialize", parentNode: dataControllerNode });
         });
 
-        dataControllerNode = endTimer(
-          dataControllerNode.name,
-          record,
-          rootNode,
-          dataControllerNode.children
-        );
+        dataControllerNode = endTimer({
+          hookName: dataControllerNode.name,
+          children: dataControllerNode.children,
+        });
       });
 
       player.hooks.schema.intercept({
         call: (sc) => {
-          startTimer("schema", record);
+          startTimer("schema");
           sc.hooks.resolveTypeForBinding.intercept({
             call: () => {
-              startTimer("resolveTypeForBinding", record);
+              startTimer("resolveTypeForBinding");
             },
           });
         },
@@ -389,35 +337,36 @@ export class ProfilerPlugin implements ReactPlayerPlugin {
         };
 
         sc.hooks.resolveTypeForBinding.tap(this.name, (dataType) => {
-          endTimer("resolveTypeForBinding", record, schemaNode);
+          endTimer({
+            hookName: "resolveTypeForBinding",
+            parentNode: schemaNode,
+          });
           return dataType;
         });
 
-        schemaNode = endTimer(
-          schemaNode.name,
-          record,
-          rootNode,
-          schemaNode.children
-        );
+        schemaNode = endTimer({
+          hookName: schemaNode.name,
+          children: schemaNode.children,
+        });
       });
 
       player.hooks.validationController.intercept({
         call: (vc) => {
-          startTimer("validationController", record);
+          startTimer("validationController");
 
           vc.hooks.createValidatorRegistry.intercept({
             call: () => {
-              startTimer("createValidatorRegistry", record);
+              startTimer("createValidatorRegistry");
             },
           });
           vc.hooks.onAddValidation.intercept({
             call: () => {
-              startTimer("onAddValidation", record);
+              startTimer("onAddValidation");
             },
           });
           vc.hooks.onRemoveValidation.intercept({
             call: () => {
-              startTimer("onRemoveValidation", record);
+              startTimer("onRemoveValidation");
             },
           });
         },
@@ -430,38 +379,45 @@ export class ProfilerPlugin implements ReactPlayerPlugin {
         };
 
         vc.hooks.createValidatorRegistry.tap(this.name, () => {
-          endTimer("createValidatorRegistry", record, validationControllerNode);
+          endTimer({
+            hookName: "createValidatorRegistry",
+            parentNode: validationControllerNode,
+          });
         });
 
         vc.hooks.onAddValidation.tap(this.name, (validationResponse) => {
-          endTimer("onAddValidation", record, validationControllerNode);
+          endTimer({
+            hookName: "onAddValidation",
+            parentNode: validationControllerNode,
+          });
           return validationResponse;
         });
 
         vc.hooks.onRemoveValidation.tap(this.name, (validationResponse) => {
-          endTimer("onRemoveValidation", record, validationControllerNode);
+          endTimer({
+            hookName: "onRemoveValidation",
+            parentNode: validationControllerNode,
+          });
           return validationResponse;
         });
 
-        validationControllerNode = endTimer(
-          validationControllerNode.name,
-          record,
-          rootNode,
-          validationControllerNode.children
-        );
+        validationControllerNode = endTimer({
+          hookName: validationControllerNode.name,
+          children: validationControllerNode.children,
+        });
       });
 
       player.hooks.bindingParser.intercept({
         call: (bp) => {
-          startTimer("bindingParser", record);
+          startTimer("bindingParser");
           bp.hooks.skipOptimization.intercept({
             call: () => {
-              startTimer("skipOptimization", record);
+              startTimer("skipOptimization");
             },
           });
           bp.hooks.beforeResolveNode.intercept({
             call: () => {
-              startTimer("beforeResolveNode", record);
+              startTimer("beforeResolveNode");
             },
           });
         },
@@ -474,66 +430,56 @@ export class ProfilerPlugin implements ReactPlayerPlugin {
         };
 
         bp.hooks.skipOptimization.tap(this.name, () => {
-          endTimer("skipOptimization", record, bindingParserNode);
+          endTimer({
+            hookName: "skipOptimization",
+            parentNode: bindingParserNode,
+          });
           return undefined;
         });
         bp.hooks.beforeResolveNode.tap(this.name, (node) => {
-          endTimer("beforeResolveNode", record, bindingParserNode);
+          endTimer({
+            hookName: "beforeResolveNode",
+            parentNode: bindingParserNode,
+          });
           return node;
         });
 
-        bindingParserNode = endTimer(
-          bindingParserNode.name,
-          record,
-          rootNode,
-          bindingParserNode.children
-        );
+        bindingParserNode = endTimer({
+          hookName: bindingParserNode.name,
+          children: bindingParserNode.children,
+        });
       });
 
       player.hooks.state.intercept({
         call: () => {
-          startTimer("state", record);
+          startTimer("state");
         },
       });
 
       player.hooks.state.tap(this.name, () => {
-        endTimer("state", record, rootNode);
+        endTimer({ hookName: "state" });
       });
 
       player.hooks.onEnd.intercept({
         call: () => {
-          startTimer("onEnd", record);
+          startTimer("onEnd");
         },
       });
 
       player.hooks.onEnd.tap(this.name, () => {
-        endTimer("onEnd", record, rootNode);
+        endTimer({ hookName: "onEnd" });
       });
 
       player.hooks.resolveFlowContent.intercept({
         call: () => {
-          startTimer("resolveFlowContent", record);
+          startTimer("resolveFlowContent");
         },
       });
 
       player.hooks.resolveFlowContent.tap(this.name, (flow) => {
-        endTimer("resolveFlowContent", record, rootNode);
+        endTimer({ hookName: "resolveFlowContent" });
         return flow;
       });
-    };
-
-    const stopProfiler = () => {
-      /**
-       * TODO: untap from the hooks once repo is migrated to use tapable-ts
-       * that supports untapping
-       */
-      rootNode.endTime = performance.now();
-      if (rootNode.startTime) {
-        const duration = rootNode.endTime - rootNode.startTime;
-        rootNode.value = duration / 1000;
-        rootNode.tooltip = `${rootNode.name}, ${duration.toFixed(4)} (ms)`;
-      }
-      return rootNode;
     };
 
     // eslint-disable-next-line react/display-name

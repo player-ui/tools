@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { expression as e } from "@player-tools/dsl";
-import { Action, Collection, ObjectInspector, Text } from "@devtools-ui/plugin";
+import { Action, Collection, FlameGraph, Text } from "@devtools-ui/plugin";
 import { INTERACTIONS, VIEWS_IDS } from "../../constants";
 import { Screen } from "../common";
 import { bindings } from "../schema";
@@ -14,22 +15,42 @@ export const ProfilerView = (
     header={
       <Collection>
         <Collection.Values>
-          <Action key="startProfiler" exp={startProfilerExpression.toString()}>
-            <Action.Label>
-              <Text>Start</Text>
-            </Action.Label>
-          </Action>
-          <Action key="stopProfiler" exp={stopProfilerExpression.toString()}>
+          <Action
+            applicability={e` {{profiling}} === true ` as any}
+            key="stopProfiler"
+            exp={stopProfilerExpression.toString()}
+          >
             <Action.Label>
               <Text>Stop</Text>
+            </Action.Label>
+          </Action>
+          <Action
+            applicability={e` {{profiling}} === false ` as any}
+            key="startProfiler"
+            exp={startProfilerExpression.toString()}
+          >
+            <Action.Label>
+              <Text>Start</Text>
             </Action.Label>
           </Action>
         </Collection.Values>
       </Collection>
     }
     main={
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      <ObjectInspector binding={bindings.rootNode as any} />
+      <Collection>
+        <Collection.Values>
+          <FlameGraph
+            applicability={e` {{displayFlameGraph}} === true ` as any}
+            binding={bindings.rootNode as any}
+          />
+          <Text applicability={e` {{profiling}} === true` as any}>
+            Profiling...
+          </Text>
+          <Text applicability={e` {{profiling}} === false` as any}>
+            Start the profiler to generate the flame graph.
+          </Text>
+        </Collection.Values>
+      </Collection>
     }
   />
 );
