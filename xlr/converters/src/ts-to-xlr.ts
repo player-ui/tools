@@ -453,7 +453,13 @@ export class TsConverter {
         }
       }
 
-      if (ts.isTypeQueryNode(node.objectType)) {
+      let queryNode = node.objectType;
+      // handle cases where the object being accessed is wrapped in () because of linting
+      if (ts.isParenthesizedTypeNode(node.objectType)) {
+        queryNode = node.objectType.type;
+      }
+
+      if (ts.isTypeQueryNode(queryNode)) {
         const elements = this.tsNodeToType(node.objectType) as TupleType;
         return {
           type: "or",
@@ -462,7 +468,7 @@ export class TsConverter {
       }
 
       this.context.throwError(
-        `Error: could not solve IndexedAccessType ${node.getFullText()}`
+        `Error: could not solve IndexedAccessType: ${node.getFullText()}`
       );
     }
 
