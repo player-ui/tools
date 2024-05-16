@@ -22,7 +22,8 @@ export interface PropertyNode {
 export function propertyToTuple(node: Node): PropertyNode {
   let key = node.children?.[0].value as string;
   if (key.includes("-")) {
-    key = `"${key}"`;
+    // XLR outputs all escaped properties with single quotes
+    key = `'${key}'`;
   }
 
   return {
