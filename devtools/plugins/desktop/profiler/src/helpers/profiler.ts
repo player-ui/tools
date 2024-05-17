@@ -82,7 +82,12 @@ export const profiler = () => {
     const totalTime = endTime - (rootNode.startTime ?? 0);
 
     rootNode.endTime = endTime;
-    rootNode.value = Math.ceil((totalTime || 0.01) * 1000);
+    // set the stop profiler value is the sum of its children values
+    // otherwise the difference of width of the root and the other nodes
+    // make it impossible to see them into the flame graph
+    rootNode.value =
+      rootNode.children.reduce((acc, { value }) => (acc += value ?? 0), 0) ||
+      Math.ceil((totalTime || 0.01) * 1000);
     rootNode.tooltip = `Profiler total time span ${totalTime.toFixed(4)} (ms)`;
 
     // Sort durations array in descending order
@@ -92,7 +97,7 @@ export const profiler = () => {
       rootNode,
       durations: durations.map(({ hookName, duration }) => ({
         name: hookName,
-        duration: duration.toFixed(4),
+        duration: `${duration.toFixed(4)} ms`,
       })),
     };
   };

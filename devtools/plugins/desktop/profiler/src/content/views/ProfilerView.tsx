@@ -52,11 +52,20 @@ export const ProfilerView = (
           <FlameGraph
             applicability={e` {{displayFlameGraph}} === true ` as any}
             binding={bindings.rootNode as any}
+            height={200}
           />
-          <Text applicability={e` {{profiling}} === true` as any}>
+          <Text
+            applicability={
+              e` {{displayFlameGraph}} === false && {{profiling}} === true` as any
+            }
+          >
             Profiling...
           </Text>
-          <Text applicability={e` {{profiling}} === false` as any}>
+          <Text
+            applicability={
+              e` {{displayFlameGraph}} === false && {{profiling}} === false ` as any
+            }
+          >
             Start the profiler to generate the flame graph.
           </Text>
         </Collection.Values>

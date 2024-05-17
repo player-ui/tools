@@ -37,10 +37,10 @@ describe("Profiler", () => {
 
     expect(rootNode).toStrictEqual({
       durations: [
-        { name: "process2", duration: "0.5000" },
-        { name: "process2.1", duration: "0.2000" },
-        { name: "process2.2", duration: "0.2000" },
-        { name: "process1", duration: "0.1000" },
+        { name: "process2", duration: "0.5000 ms" },
+        { name: "process2.1", duration: "0.2000 ms" },
+        { name: "process2.2", duration: "0.2000 ms" },
+        { name: "process1", duration: "0.1000 ms" },
       ],
       rootNode: {
         children: [
@@ -82,7 +82,7 @@ describe("Profiler", () => {
         name: "root",
         startTime: 2490.1,
         tooltip: "Profiler total time span 0.9000 (ms)",
-        value: 900,
+        value: 600,
       },
     });
 

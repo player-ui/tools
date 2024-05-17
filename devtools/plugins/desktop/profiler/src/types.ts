@@ -5,7 +5,7 @@ export type ProfilerNode = {
   startTime?: number;
   /** endTime of the hook */
   endTime?: number;
-  /** % of the total time running the profiler */
+  /** duration casted to a positive integer (multiplied by 1000) */
   value?: number;
   /** tooltip to be shown on hover */
   tooltip?: string;
