@@ -10,7 +10,7 @@ export default {
   schema,
   data: {
     rootNode: {
-      name: "root",
+      name: "profiler time span",
       value: 0,
     },
     displayFlameGraph: false,

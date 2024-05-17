@@ -1,36 +1,38 @@
 import type { ProfilerNode } from "../types";
 
-/** Profiler to record the performance of hooks */
 export const profiler = () => {
-  const rootNode: ProfilerNode = {
+  let rootNode: ProfilerNode = {
     name: "root",
     children: [],
   };
 
-  const record: { [key: string]: number[] } = {};
+  let record: { [key: string]: number[] } = {};
+  let durations: { hookName: string; duration: number }[] = [];
 
-  /** add newNode to its parent's children array */
+  const start = () => {
+    rootNode = {
+      name: "root",
+      startTime: performance.now(),
+      children: [],
+    };
+    record = {};
+    durations = [];
+  };
+
   const addNodeToTree = (newNode: ProfilerNode, parentNode: ProfilerNode) => {
     parentNode.children.push(newNode);
     return newNode;
   };
 
-  /** start timer and save start time in the record */
   const startTimer = (hookName: string) => {
     const startTime = performance.now();
 
-    if (!rootNode.startTime) {
-      rootNode.startTime = startTime;
-    }
-
     if (!record[hookName] || record[hookName].length === 2) {
-      // eslint-disable-next-line no-param-reassign
       record[hookName] = [];
       record[hookName].push(startTime);
     }
   };
 
-  /** end timer and calculate duration */
   const endTimer = ({
     hookName,
     parentNode = rootNode,
@@ -40,9 +42,11 @@ export const profiler = () => {
     parentNode?: ProfilerNode;
     children?: ProfilerNode[];
   }) => {
-    let startTime;
-    let duration;
+    let startTime: number | undefined;
+    let duration: number | undefined;
+
     const endTime = performance.now();
+
     for (const key in record) {
       if (key === hookName && record[key].length === 1) {
         [startTime] = record[key];
@@ -51,62 +55,52 @@ export const profiler = () => {
       }
     }
 
+    const value = Math.ceil((duration || 0.01) * 1000);
+
     const newNode: ProfilerNode = {
       name: hookName,
       startTime,
       endTime,
-      // values will be calculated on stopProfiler, so they represent
-      // the percentage of time spent based on the total
-      value: 0,
-      tooltip: `${hookName}, ${(duration ? duration : 0.01).toFixed(4)} (ms)`,
+      value,
+      tooltip: `${hookName}, ${(duration || 0.01).toFixed(4)} (ms)`,
       children: children ?? [],
     };
 
     addNodeToTree(newNode, parentNode);
 
+    // Push the hookName and duration into durations array
+    durations.push({ hookName, duration: duration ? duration : 0.01 });
+
     return newNode;
   };
 
-  const reset = () => {
-    rootNode.children = [];
-  };
+  const stopProfiler = (): {
+    rootNode: ProfilerNode;
+    durations: { name: string; duration: string }[];
+  } => {
+    const endTime = performance.now();
+    const totalTime = endTime - (rootNode.startTime ?? 0);
 
-  const stopProfiler = () => {
-    rootNode.endTime = performance.now();
-    if (rootNode.startTime) {
-      const totalDuration = rootNode.endTime - rootNode.startTime;
+    rootNode.endTime = endTime;
+    rootNode.value = Math.ceil((totalTime || 0.01) * 1000);
+    rootNode.tooltip = `Profiler total time span ${totalTime.toFixed(4)} (ms)`;
 
-      // set the value of each node based on the total duration (% of time spent in that node)
-      const calculateValue = (node: ProfilerNode) => {
-        if (node.children.length === 0) {
-          const value =
-            (((node.endTime ?? 0) - (node.startTime ?? 0)) / totalDuration) *
-            100;
-          node.value = Math.ceil(value);
-        } else {
-          const childrenValue = node.children.reduce((sum, child) => {
-            calculateValue(child);
-            return sum + (child.value ?? 0);
-          }, 0);
-          const nodeValue =
-            (((node.endTime ?? 0) - (node.startTime ?? 0)) / totalDuration) *
-            100;
-          node.value = Math.ceil(Math.max(nodeValue, childrenValue));
-        }
-        node.tooltip = `${node.name}, ${(
-          (node.endTime ?? 0) - (node.startTime ?? 0)
-        ).toFixed(4)} (ms), ${node.value.toFixed(2)}%`;
-      };
+    // Sort durations array in descending order
+    durations.sort((a, b) => b.duration - a.duration);
 
-      calculateValue(rootNode);
-    }
-    return rootNode;
+    return {
+      rootNode,
+      durations: durations.map(({ hookName, duration }) => ({
+        name: hookName,
+        duration: duration.toFixed(4),
+      })),
+    };
   };
 
   return {
+    start,
     startTimer,
     endTimer,
     stopProfiler,
-    reset,
   };
 };

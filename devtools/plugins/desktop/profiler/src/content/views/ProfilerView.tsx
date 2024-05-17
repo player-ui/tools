@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { expression as e } from "@player-tools/dsl";
-import { Action, Collection, FlameGraph, Text } from "@devtools-ui/plugin";
+import {
+  Action,
+  Collection,
+  FlameGraph,
+  Table,
+  Text,
+} from "@devtools-ui/plugin";
 import { INTERACTIONS, VIEWS_IDS } from "../../constants";
 import { Screen } from "../common";
 import { bindings } from "../schema";
@@ -39,6 +45,10 @@ export const ProfilerView = (
     main={
       <Collection>
         <Collection.Values>
+          <Table
+            applicability={e` {{displayFlameGraph}} === true ` as any}
+            binding={bindings.durations as any}
+          />
           <FlameGraph
             applicability={e` {{displayFlameGraph}} === true ` as any}
             binding={bindings.rootNode as any}

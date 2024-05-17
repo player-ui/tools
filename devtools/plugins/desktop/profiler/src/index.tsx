@@ -17,18 +17,11 @@ export class ProfilerPlugin implements ReactPlayerPlugin {
       return;
     }
 
-    let tapped = false;
-
-    const { startTimer, endTimer, stopProfiler, reset } = profiler();
+    const { start, startTimer, endTimer, stopProfiler } = profiler();
 
     /** function to tap into hooks and start the profiler */
     const startProfiler = () => {
-      // reset root node if profilers are already tapped
-      if (tapped) {
-        reset();
-      }
-
-      tapped = true;
+      start();
 
       player.hooks.onStart.intercept({
         call: () => {

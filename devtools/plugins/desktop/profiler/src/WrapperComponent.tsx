@@ -59,6 +59,11 @@ export const WrapperComponent = ({
         lastProcessedInteraction.current += 1;
 
         const newState = produce(state, (draft) => {
+          dset(draft, ["plugins", id, "flow", "data", "rootNode"], {
+            name: "root",
+            children: [],
+          });
+          dset(draft, ["plugins", id, "flow", "data", "durations"], []);
           dset(draft, ["plugins", id, "flow", "data", "profiling"], true);
           dset(
             draft,
@@ -77,11 +82,12 @@ export const WrapperComponent = ({
       }
 
       if (type === INTERACTIONS.STOP_PROFILING) {
-        const rootNode = stopProfiler();
+        const { rootNode, durations } = stopProfiler();
         lastProcessedInteraction.current += 1;
 
         const newState = produce(state, (draft) => {
           dset(draft, ["plugins", id, "flow", "data", "rootNode"], rootNode);
+          dset(draft, ["plugins", id, "flow", "data", "durations"], durations);
           dset(draft, ["plugins", id, "flow", "data", "profiling"], false);
           dset(
             draft,

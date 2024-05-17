@@ -19,5 +19,8 @@ export interface WrapperComponentProps {
   /** Start profiler */
   startProfiler: () => void;
   /** Stop profiler */
-  stopProfiler: () => ProfilerNode;
+  stopProfiler: () => {
+    rootNode: ProfilerNode;
+    durations: { name: string; duration: string }[];
+  };
 }

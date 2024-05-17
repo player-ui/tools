@@ -3285,7 +3285,7 @@ packages:
       react: 18.3.1
     dev: false
 
-  /@chakra-ui/accordion@2.3.1(@chakra-ui/system@2.6.2)(framer-motion@11.2.3)(react@18.3.1):
+  /@chakra-ui/accordion@2.3.1(@chakra-ui/system@2.6.2)(framer-motion@11.2.4)(react@18.3.1):
     resolution: {integrity: sha512-FSXRm8iClFyU+gVaXisOSEw0/4Q+qZbFRiuhIAkVU6Boj0FxAMrlo9a8AV5TuF77rgaHytCdHk0Ng+cyUijrag==, tarball: https://registry.npmjs.org/@chakra-ui/accordion/-/accordion-2.3.1.tgz}
     peerDependencies:
       '@chakra-ui/system': '>=2.0.0'
@@ -3299,8 +3299,8 @@ packages:
       '@chakra-ui/react-use-merge-refs': 2.1.0(react@18.3.1)
       '@chakra-ui/shared-utils': 2.0.5
       '@chakra-ui/system': 2.6.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(react@18.3.1)
-      '@chakra-ui/transition': 2.1.0(framer-motion@11.2.3)(react@18.3.1)
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      '@chakra-ui/transition': 2.1.0(framer-motion@11.2.4)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
     dev: false
 
@@ -3952,7 +3952,7 @@ packages:
       react: 18.3.1
     dev: false
 
-  /@chakra-ui/menu@2.2.1(@chakra-ui/system@2.6.2)(framer-motion@11.2.3)(react@18.3.1):
+  /@chakra-ui/menu@2.2.1(@chakra-ui/system@2.6.2)(framer-motion@11.2.4)(react@18.3.1):
     resolution: {integrity: sha512-lJS7XEObzJxsOwWQh7yfG4H8FzFPRP5hVPN/CL+JzytEINCSBvsCDHrYPQGp7jzpCi8vnTqQQGQe0f8dwnXd2g==, tarball: https://registry.npmjs.org/@chakra-ui/menu/-/menu-2.2.1.tgz}
     peerDependencies:
       '@chakra-ui/system': '>=2.0.0'
@@ -3974,8 +3974,8 @@ packages:
       '@chakra-ui/react-use-update-effect': 2.1.0(react@18.3.1)
       '@chakra-ui/shared-utils': 2.0.5
       '@chakra-ui/system': 2.6.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(react@18.3.1)
-      '@chakra-ui/transition': 2.1.0(framer-motion@11.2.3)(react@18.3.1)
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      '@chakra-ui/transition': 2.1.0(framer-motion@11.2.4)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
     dev: false
 
@@ -4031,7 +4031,7 @@ packages:
       - '@types/react'
     dev: false
 
-  /@chakra-ui/modal@2.3.1(@chakra-ui/system@2.6.2)(@types/react@18.3.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1):
+  /@chakra-ui/modal@2.3.1(@chakra-ui/system@2.6.2)(@types/react@18.3.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-TQv1ZaiJMZN+rR9DK0snx/OPwmtaGH1HbZtlYt4W4s6CzyK541fxLRTjIXfEzIGpvNW+b6VFuFjbcR78p4DEoQ==, tarball: https://registry.npmjs.org/@chakra-ui/modal/-/modal-2.3.1.tgz}
     peerDependencies:
       '@chakra-ui/system': '>=2.0.0'
@@ -4047,9 +4047,9 @@ packages:
       '@chakra-ui/react-use-merge-refs': 2.1.0(react@18.3.1)
       '@chakra-ui/shared-utils': 2.0.5
       '@chakra-ui/system': 2.6.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(react@18.3.1)
-      '@chakra-ui/transition': 2.1.0(framer-motion@11.2.3)(react@18.3.1)
+      '@chakra-ui/transition': 2.1.0(framer-motion@11.2.4)(react@18.3.1)
       aria-hidden: 1.2.4
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       react-remove-scroll: 2.5.10(@types/react@18.3.2)(react@18.3.1)
@@ -4176,7 +4176,7 @@ packages:
       react: 18.3.1
     dev: false
 
-  /@chakra-ui/popover@2.2.1(@chakra-ui/system@2.6.2)(framer-motion@11.2.3)(react@18.3.1):
+  /@chakra-ui/popover@2.2.1(@chakra-ui/system@2.6.2)(framer-motion@11.2.4)(react@18.3.1):
     resolution: {integrity: sha512-K+2ai2dD0ljvJnlrzesCDT9mNzLifE3noGKZ3QwLqd/K34Ym1W/0aL1ERSynrcG78NKoXS54SdEzkhCZ4Gn/Zg==, tarball: https://registry.npmjs.org/@chakra-ui/popover/-/popover-2.2.1.tgz}
     peerDependencies:
       '@chakra-ui/system': '>=2.0.0'
@@ -4195,7 +4195,7 @@ packages:
       '@chakra-ui/react-use-merge-refs': 2.1.0(react@18.3.1)
       '@chakra-ui/shared-utils': 2.0.5
       '@chakra-ui/system': 2.6.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(react@18.3.1)
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
     dev: false
 
@@ -4639,7 +4639,7 @@ packages:
       - '@types/react'
     dev: false
 
-  /@chakra-ui/react@2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1):
+  /@chakra-ui/react@2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-Hn0moyxxyCDKuR9ywYpqgX8dvjqwu9ArwpIb9wHNYjnODETjLwazgNIliCVBRcJvysGRiV51U2/JtJVrpeCjUQ==, tarball: https://registry.npmjs.org/@chakra-ui/react/-/react-2.8.2.tgz}
     peerDependencies:
       '@emotion/react': ^11.0.0
@@ -4648,7 +4648,7 @@ packages:
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
-      '@chakra-ui/accordion': 2.3.1(@chakra-ui/system@2.6.2)(framer-motion@11.2.3)(react@18.3.1)
+      '@chakra-ui/accordion': 2.3.1(@chakra-ui/system@2.6.2)(framer-motion@11.2.4)(react@18.3.1)
       '@chakra-ui/alert': 2.2.2(@chakra-ui/system@2.6.2)(react@18.3.1)
       '@chakra-ui/avatar': 2.3.0(@chakra-ui/system@2.6.2)(react@18.3.1)
       '@chakra-ui/breadcrumb': 2.2.0(@chakra-ui/system@2.6.2)(react@18.3.1)
@@ -4669,11 +4669,11 @@ packages:
       '@chakra-ui/layout': 2.3.1(@chakra-ui/system@2.6.2)(react@18.3.1)
       '@chakra-ui/live-region': 2.1.0(react@18.3.1)
       '@chakra-ui/media-query': 3.3.0(@chakra-ui/system@2.6.2)(react@18.3.1)
-      '@chakra-ui/menu': 2.2.1(@chakra-ui/system@2.6.2)(framer-motion@11.2.3)(react@18.3.1)
-      '@chakra-ui/modal': 2.3.1(@chakra-ui/system@2.6.2)(@types/react@18.3.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1)
+      '@chakra-ui/menu': 2.2.1(@chakra-ui/system@2.6.2)(framer-motion@11.2.4)(react@18.3.1)
+      '@chakra-ui/modal': 2.3.1(@chakra-ui/system@2.6.2)(@types/react@18.3.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1)
       '@chakra-ui/number-input': 2.1.2(@chakra-ui/system@2.6.2)(react@18.3.1)
       '@chakra-ui/pin-input': 2.1.0(@chakra-ui/system@2.6.2)(react@18.3.1)
-      '@chakra-ui/popover': 2.2.1(@chakra-ui/system@2.6.2)(framer-motion@11.2.3)(react@18.3.1)
+      '@chakra-ui/popover': 2.2.1(@chakra-ui/system@2.6.2)(framer-motion@11.2.4)(react@18.3.1)
       '@chakra-ui/popper': 3.1.0(react@18.3.1)
       '@chakra-ui/portal': 2.1.0(react-dom@18.3.1)(react@18.3.1)
       '@chakra-ui/progress': 2.2.0(@chakra-ui/system@2.6.2)(react@18.3.1)
@@ -4688,7 +4688,7 @@ packages:
       '@chakra-ui/stat': 2.1.1(@chakra-ui/system@2.6.2)(react@18.3.1)
       '@chakra-ui/stepper': 2.3.1(@chakra-ui/system@2.6.2)(react@18.3.1)
       '@chakra-ui/styled-system': 2.9.2
-      '@chakra-ui/switch': 2.1.2(@chakra-ui/system@2.6.2)(framer-motion@11.2.3)(react@18.3.1)
+      '@chakra-ui/switch': 2.1.2(@chakra-ui/system@2.6.2)(framer-motion@11.2.4)(react@18.3.1)
       '@chakra-ui/system': 2.6.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(react@18.3.1)
       '@chakra-ui/table': 2.1.0(@chakra-ui/system@2.6.2)(react@18.3.1)
       '@chakra-ui/tabs': 3.0.0(@chakra-ui/system@2.6.2)(react@18.3.1)
@@ -4696,14 +4696,14 @@ packages:
       '@chakra-ui/textarea': 2.1.2(@chakra-ui/system@2.6.2)(react@18.3.1)
       '@chakra-ui/theme': 3.3.1(@chakra-ui/styled-system@2.9.2)
       '@chakra-ui/theme-utils': 2.0.21
-      '@chakra-ui/toast': 7.0.2(@chakra-ui/system@2.6.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1)
-      '@chakra-ui/tooltip': 2.3.1(@chakra-ui/system@2.6.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1)
-      '@chakra-ui/transition': 2.1.0(framer-motion@11.2.3)(react@18.3.1)
+      '@chakra-ui/toast': 7.0.2(@chakra-ui/system@2.6.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1)
+      '@chakra-ui/tooltip': 2.3.1(@chakra-ui/system@2.6.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1)
+      '@chakra-ui/transition': 2.1.0(framer-motion@11.2.4)(react@18.3.1)
       '@chakra-ui/utils': 2.0.15
       '@chakra-ui/visually-hidden': 2.2.0(@chakra-ui/system@2.6.2)(react@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.2)(react@18.3.1)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.2)(react@18.3.1)
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
     transitivePeerDependencies:
@@ -4974,7 +4974,7 @@ packages:
       react: 18.3.1
     dev: false
 
-  /@chakra-ui/switch@2.1.2(@chakra-ui/system@2.6.2)(framer-motion@11.2.3)(react@18.3.1):
+  /@chakra-ui/switch@2.1.2(@chakra-ui/system@2.6.2)(framer-motion@11.2.4)(react@18.3.1):
     resolution: {integrity: sha512-pgmi/CC+E1v31FcnQhsSGjJnOE2OcND4cKPyTE+0F+bmGm48Q/b5UmKD9Y+CmZsrt/7V3h8KNczowupfuBfIHA==, tarball: https://registry.npmjs.org/@chakra-ui/switch/-/switch-2.1.2.tgz}
     peerDependencies:
       '@chakra-ui/system': '>=2.0.0'
@@ -4984,7 +4984,7 @@ packages:
       '@chakra-ui/checkbox': 2.3.2(@chakra-ui/system@2.6.2)(react@18.3.1)
       '@chakra-ui/shared-utils': 2.0.5
       '@chakra-ui/system': 2.6.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(react@18.3.1)
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
     dev: false
 
@@ -5237,7 +5237,7 @@ packages:
       react-dom: 18.3.1(react@18.3.1)
     dev: false
 
-  /@chakra-ui/toast@7.0.2(@chakra-ui/system@2.6.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1):
+  /@chakra-ui/toast@7.0.2(@chakra-ui/system@2.6.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-yvRP8jFKRs/YnkuE41BVTq9nB2v/KDRmje9u6dgDmE5+1bFt3bwjdf9gVbif4u5Ve7F7BGk5E093ARRVtvLvXA==, tarball: https://registry.npmjs.org/@chakra-ui/toast/-/toast-7.0.2.tgz}
     peerDependencies:
       '@chakra-ui/system': 2.6.2
@@ -5255,7 +5255,7 @@ packages:
       '@chakra-ui/styled-system': 2.9.2
       '@chakra-ui/system': 2.6.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(react@18.3.1)
       '@chakra-ui/theme': 3.3.1(@chakra-ui/styled-system@2.9.2)
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
     dev: false
@@ -5303,7 +5303,7 @@ packages:
       react-dom: 18.3.1(react@18.3.1)
     dev: false
 
-  /@chakra-ui/tooltip@2.3.1(@chakra-ui/system@2.6.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1):
+  /@chakra-ui/tooltip@2.3.1(@chakra-ui/system@2.6.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-Rh39GBn/bL4kZpuEMPPRwYNnccRCL+w9OqamWHIB3Qboxs6h8cOyXfIdGxjo72lvhu1QI/a4KFqkM3St+WfC0A==, tarball: https://registry.npmjs.org/@chakra-ui/tooltip/-/tooltip-2.3.1.tgz}
     peerDependencies:
       '@chakra-ui/system': '>=2.0.0'
@@ -5320,7 +5320,7 @@ packages:
       '@chakra-ui/react-use-merge-refs': 2.1.0(react@18.3.1)
       '@chakra-ui/shared-utils': 2.0.5
       '@chakra-ui/system': 2.6.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(react@18.3.1)
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
     dev: false
@@ -5358,14 +5358,14 @@ packages:
       react: 18.3.1
     dev: false
 
-  /@chakra-ui/transition@2.1.0(framer-motion@11.2.3)(react@18.3.1):
+  /@chakra-ui/transition@2.1.0(framer-motion@11.2.4)(react@18.3.1):
     resolution: {integrity: sha512-orkT6T/Dt+/+kVwJNy7zwJ+U2xAZ3EU7M3XCs45RBvUnZDr/u9vdmaM/3D/rOpmQJWgQBwKPJleUXrYWUagEDQ==, tarball: https://registry.npmjs.org/@chakra-ui/transition/-/transition-2.1.0.tgz}
     peerDependencies:
       framer-motion: '>=4.0.0'
       react: ^18.2.0
     dependencies:
       '@chakra-ui/shared-utils': 2.0.5
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
     dev: false
 
@@ -5641,7 +5641,7 @@ packages:
   /@devtools-ui/action@0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1):
     resolution: {integrity: sha512-DXQYl7839MKnrM9LMmGIpH4C7uTzfBFotqK17TU43rYZ/bi1/ZXYEchavkDezS4xms6VnwCw8O1jcxYl7ZNsMQ==, tarball: https://registry.npmjs.org/@devtools-ui/action/-/action-0.2.0--canary.25.1169.tgz}
     dependencies:
-      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1)
+      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1)
       '@devtools-ui/collection': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
       '@devtools-ui/text': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.2)(react@18.3.1)
@@ -5653,7 +5653,7 @@ packages:
       '@player-ui/types': 0.7.3
       '@types/react': 18.3.2
       dlv: 1.1.3
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -5667,7 +5667,7 @@ packages:
   /@devtools-ui/code-editor@0.2.0--canary.25.1169(@babel/runtime@7.24.5)(@codemirror/autocomplete@6.16.0)(@codemirror/language@6.10.1)(@codemirror/lint@6.7.1)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.26.3)(@types/node@18.19.33)(codemirror@6.0.1)(react-dom@18.3.1):
     resolution: {integrity: sha512-guFNt7L5Ge59Hpa88yAkkfGeSJ++llBx8LWdjYYoXpn7q6oThXrZVv1S6wFao+IBJSzQnqxKod9LXHb7LTcVwg==, tarball: https://registry.npmjs.org/@devtools-ui/code-editor/-/code-editor-0.2.0--canary.25.1169.tgz}
     dependencies:
-      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1)
+      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1)
       '@codemirror/lang-json': 6.0.1
       '@emotion/react': 11.11.4(@types/react@18.3.2)(react@18.3.1)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.2)(react@18.3.1)
@@ -5680,7 +5680,7 @@ packages:
       '@uiw/react-codemirror': 4.22.0(@babel/runtime@7.24.5)(@codemirror/autocomplete@6.16.0)(@codemirror/language@6.10.1)(@codemirror/lint@6.7.1)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.26.3)(codemirror@6.0.1)(react-dom@18.3.1)(react@18.3.1)
       dlv: 1.1.3
       esbuild: 0.13.15
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -5703,7 +5703,7 @@ packages:
   /@devtools-ui/collection@0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1):
     resolution: {integrity: sha512-P5Thgx4xcQIWJIJIU0gYqOO4q2bsTZXEg91DxgcGKSkuuaWUhTiRfX3WxUlaA9spZCOI8ZAeUfLUHGaRTMOkKg==, tarball: https://registry.npmjs.org/@devtools-ui/collection/-/collection-0.2.0--canary.25.1169.tgz}
     dependencies:
-      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1)
+      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1)
       '@devtools-ui/text': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.2)(react@18.3.1)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.2)(react@18.3.1)
@@ -5713,7 +5713,7 @@ packages:
       '@player-ui/types': 0.7.3
       '@types/react': 18.3.2
       dlv: 1.1.3
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -5727,7 +5727,7 @@ packages:
   /@devtools-ui/console@0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1):
     resolution: {integrity: sha512-9Uyl7D2p4k1aSbwFKHwxBs/yUkjzVEfbBiiQjf2rDxtT4t3Lsy5jDoSRayaHqbLGpflZgWrzy+eWwauoCqxsog==, tarball: https://registry.npmjs.org/@devtools-ui/console/-/console-0.2.0--canary.25.1169.tgz}
     dependencies:
-      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1)
+      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1)
       '@devtools-ds/console': 1.2.1(@types/react@18.3.2)(react-dom@18.3.1)(react@18.3.1)
       '@devtools-ui/collection': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
       '@devtools-ui/text': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
@@ -5740,7 +5740,7 @@ packages:
       '@player-ui/types': 0.7.3
       '@types/react': 18.3.2
       dlv: 1.1.3
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -5754,7 +5754,7 @@ packages:
   /@devtools-ui/copy-to-clipboard@0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1):
     resolution: {integrity: sha512-1mXs++lPyir7yQhtdH6Dq77q3i3J2ckWV7SidYE4MJp9En3CIPrzNfUuS0FN0v+j37XplMlmUB/JPYwY1gfDmw==, tarball: https://registry.npmjs.org/@devtools-ui/copy-to-clipboard/-/copy-to-clipboard-0.2.0--canary.25.1169.tgz}
     dependencies:
-      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1)
+      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1)
       '@devtools-ui/collection': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
       '@devtools-ui/text': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.2)(react@18.3.1)
@@ -5767,7 +5767,7 @@ packages:
       '@types/react': 18.3.2
       '@types/react-copy-to-clipboard': 5.0.7
       dlv: 1.1.3
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       react-copy-to-clipboard: 5.1.0(react@18.3.1)
       tslib: 2.6.2
@@ -5782,7 +5782,7 @@ packages:
   /@devtools-ui/flame-graph@0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1):
     resolution: {integrity: sha512-o8CPjTuRrA/WhQr1WSLL3asLEuK4ELhTiSFVMtkUbU4cB7swoZKDBdJWbTsfhEuzzYQlBETLbYvoObxFup7x+g==, tarball: https://registry.npmjs.org/@devtools-ui/flame-graph/-/flame-graph-0.2.0--canary.25.1169.tgz}
     dependencies:
-      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1)
+      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.2)(react@18.3.1)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.2)(react@18.3.1)
       '@player-tools/dsl': 0.6.0-next.2(@types/node@18.19.33)(@types/react@18.3.2)(react@18.3.1)
@@ -5792,7 +5792,7 @@ packages:
       '@player-ui/types': 0.7.3
       '@types/react': 18.3.2
       dlv: 1.1.3
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       react-flame-graph: 1.4.0(react-dom@18.3.1)(react@18.3.1)
       tslib: 2.6.2
@@ -5807,7 +5807,7 @@ packages:
   /@devtools-ui/input@0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1):
     resolution: {integrity: sha512-iK5nv3V1PkoxfK4/Lwk7xEeTxxzt3+Og+59vo3AEaJ1V3yGUO+fZS8sVVhpYGkFWGkMg5mDfUH9D0ozpX7J2XQ==, tarball: https://registry.npmjs.org/@devtools-ui/input/-/input-0.2.0--canary.25.1169.tgz}
     dependencies:
-      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1)
+      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1)
       '@devtools-ui/text': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.2)(react@18.3.1)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.2)(react@18.3.1)
@@ -5818,7 +5818,7 @@ packages:
       '@player-ui/types': 0.7.3
       '@types/react': 18.3.2
       dlv: 1.1.3
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -5832,7 +5832,7 @@ packages:
   /@devtools-ui/list@0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1):
     resolution: {integrity: sha512-CCy7moKrTMG62hg/jiNJ8e7eiwbzi8lXwOXlj2A9vuhykQDK8uTwVpEfbBDa0zdJsTyHTbgEus87RZDRvf+tVA==, tarball: https://registry.npmjs.org/@devtools-ui/list/-/list-0.2.0--canary.25.1169.tgz}
     dependencies:
-      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1)
+      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1)
       '@devtools-ui/collection': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
       '@devtools-ui/text': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.2)(react@18.3.1)
@@ -5843,7 +5843,7 @@ packages:
       '@player-ui/types': 0.7.3
       '@types/react': 18.3.2
       dlv: 1.1.3
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -5857,7 +5857,7 @@ packages:
   /@devtools-ui/navigation@0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1):
     resolution: {integrity: sha512-Em60vJcHGYDfk8xzx2nyCYFm1eRts3GfWcvzO8GCH/Jm1jQ6xzqK8AHWzPn/GN3gVCNSgQ9OCjkqGzvPa4Fxlg==, tarball: https://registry.npmjs.org/@devtools-ui/navigation/-/navigation-0.2.0--canary.25.1169.tgz}
     dependencies:
-      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1)
+      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1)
       '@devtools-ui/collection': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
       '@devtools-ui/text': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.2)(react@18.3.1)
@@ -5868,7 +5868,7 @@ packages:
       '@player-ui/types': 0.7.3
       '@types/react': 18.3.2
       dlv: 1.1.3
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -5882,7 +5882,7 @@ packages:
   /@devtools-ui/object-inspector@0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1):
     resolution: {integrity: sha512-LnKc3+Lfy2doqXWTwfS9YogzjlBzO6z/7YcHX2/GGwNOhUq0bDbUpyqJ0K5bJ+TRPfNYwyddxUZFNnOnx5nC4A==, tarball: https://registry.npmjs.org/@devtools-ui/object-inspector/-/object-inspector-0.2.0--canary.25.1169.tgz}
     dependencies:
-      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1)
+      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1)
       '@devtools-ds/object-inspector': 1.2.1(@types/react@18.3.2)(react-dom@18.3.1)(react@18.3.1)
       '@devtools-ui/collection': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
       '@devtools-ui/text': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
@@ -5894,7 +5894,7 @@ packages:
       '@player-ui/types': 0.7.3
       '@types/react': 18.3.2
       dlv: 1.1.3
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -5955,7 +5955,7 @@ packages:
   /@devtools-ui/radio-group@0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1):
     resolution: {integrity: sha512-K8RqlAkBUhUtV2oomFj8o9P38Je43oEq6ZBjJhWUBu7v0F47yIhmik19c7HDlxqIOIzFbRX97xaz2CAPJOdm0w==, tarball: https://registry.npmjs.org/@devtools-ui/radio-group/-/radio-group-0.2.0--canary.25.1169.tgz}
     dependencies:
-      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1)
+      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1)
       '@devtools-ui/collection': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
       '@devtools-ui/text': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.2)(react@18.3.1)
@@ -5967,7 +5967,7 @@ packages:
       '@player-ui/types': 0.7.3
       '@types/react': 18.3.2
       dlv: 1.1.3
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -5981,7 +5981,7 @@ packages:
   /@devtools-ui/stacked-view@0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1):
     resolution: {integrity: sha512-0HpqIEPRn/FxeRhvHFbanNehcig83zTwRVNojNonJezzX0iHUAd9NWJja3uWIS0P7FtMjiN0DzCtTOu3v5Ph+g==, tarball: https://registry.npmjs.org/@devtools-ui/stacked-view/-/stacked-view-0.2.0--canary.25.1169.tgz}
     dependencies:
-      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1)
+      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1)
       '@devtools-ui/collection': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
       '@devtools-ui/text': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.2)(react@18.3.1)
@@ -5993,7 +5993,7 @@ packages:
       '@player-ui/types': 0.7.3
       '@types/react': 18.3.2
       dlv: 1.1.3
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -6007,7 +6007,7 @@ packages:
   /@devtools-ui/table@0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1):
     resolution: {integrity: sha512-ePxQUDoYivQhFAH7hkqxadjHhKxphlzqG5a36FLHkBDWZehFTV3eWt0uW1crwnGCbiOr2q0JbmlLgMTM6Yr/EA==, tarball: https://registry.npmjs.org/@devtools-ui/table/-/table-0.2.0--canary.25.1169.tgz}
     dependencies:
-      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1)
+      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1)
       '@devtools-ui/collection': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
       '@devtools-ui/text': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.2)(react@18.3.1)
@@ -6019,7 +6019,7 @@ packages:
       '@player-ui/types': 0.7.3
       '@types/react': 18.3.2
       dlv: 1.1.3
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -6033,14 +6033,14 @@ packages:
   /@devtools-ui/text@0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1):
     resolution: {integrity: sha512-iuYFlZarRnJqjVi2AY+vgvadZJKueW6G2UAzn2gy2ttJQlBqirLBSZzCxPi7hFJzwJlZ+/aSzIJuCelqHzajew==, tarball: https://registry.npmjs.org/@devtools-ui/text/-/text-0.2.0--canary.25.1169.tgz}
     dependencies:
-      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1)
+      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.2)(react@18.3.1)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.2)(react@18.3.1)
       '@player-tools/dsl': 0.6.0-next.2(@types/node@18.19.33)(@types/react@18.3.2)(react@18.3.1)
       '@player-ui/types': 0.7.3
       '@types/react': 18.3.2
       dlv: 1.1.3
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -6054,7 +6054,7 @@ packages:
   /@devtools-ui/toggle@0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1):
     resolution: {integrity: sha512-vl0XruQPL9kP9/LlIv9ZpxBDhSacWf1nlZcP0v2sgjLyPRZLPi+Fz9bHGC4F+HLLy6zd/6oEYpknsdD1Gq6MmQ==, tarball: https://registry.npmjs.org/@devtools-ui/toggle/-/toggle-0.2.0--canary.25.1169.tgz}
     dependencies:
-      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.3)(react-dom@18.3.1)(react@18.3.1)
+      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.2)(framer-motion@11.2.4)(react-dom@18.3.1)(react@18.3.1)
       '@devtools-ui/collection': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
       '@devtools-ui/text': 0.2.0--canary.25.1169(@types/node@18.19.33)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.2)(react@18.3.1)
@@ -6066,7 +6066,7 @@ packages:
       '@player-ui/types': 0.7.3
       '@types/react': 18.3.2
       dlv: 1.1.3
-      framer-motion: 11.2.3(react-dom@18.3.1)(react@18.3.1)
+      framer-motion: 11.2.4(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -8799,17 +8799,17 @@ packages:
   /@types/lodash.mergewith@4.6.6:
     resolution: {integrity: sha512-RY/8IaVENjG19rxTZu9Nukqh0W2UrYgmBj5sdns4hWRZaV8PqR7wIKHFKzvOTjo4zVRV7sVI+yFhAJql12Kfqg==, tarball: https://registry.npmjs.org/@types/lodash.mergewith/-/lodash.mergewith-4.6.6.tgz}
     dependencies:
-      '@types/lodash': 4.17.1
+      '@types/lodash': 4.17.3
     dev: false
 
   /@types/lodash.mergewith@4.6.7:
     resolution: {integrity: sha512-3m+lkO5CLRRYU0fhGRp7zbsGi6+BZj0uTVSwvcKU+nSlhjA9/QRNfuSGnD2mX6hQA7ZbmcCkzk5h4ZYGOtk14A==, tarball: https://registry.npmjs.org/@types/lodash.mergewith/-/lodash.mergewith-4.6.7.tgz}
     dependencies:
-      '@types/lodash': 4.17.1
+      '@types/lodash': 4.17.3
     dev: false
 
-  /@types/lodash@4.17.1:
-    resolution: {integrity: sha512-X+2qazGS3jxLAIz5JDXDzglAF3KpijdhFxlf/V1+hEsOUc+HnWi81L/uv/EvGuV90WY+7mPGFCUDGfQC3Gj95Q==, tarball: https://registry.npmjs.org/@types/lodash/-/lodash-4.17.1.tgz}
+  /@types/lodash@4.17.3:
+    resolution: {integrity: sha512-zmNrEJaBvNskZXQWaUQq6bktF4IDGVfDS78M+YEk5aCn9M/b94/mB/6WCyfH2/MjwBdc6QuOor95CIlKWYRL3A==, tarball: https://registry.npmjs.org/@types/lodash/-/lodash-4.17.3.tgz}
     dev: false
 
   /@types/micromatch@4.0.7:
@@ -10439,7 +10439,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001620
-      electron-to-chromium: 1.4.772
+      electron-to-chromium: 1.4.773
       node-releases: 2.0.14
       update-browserslist-db: 1.0.16(browserslist@4.23.0)
     dev: false
@@ -12193,8 +12193,8 @@ packages:
       jake: 10.9.1
     dev: false
 
-  /electron-to-chromium@1.4.772:
-    resolution: {integrity: sha512-jFfEbxR/abTTJA3ci+2ok1NTuOBBtB4jH+UT6PUmRN+DY3WSD4FFRsgoVQ+QNIJ0T7wrXwzsWCI2WKC46b++2A==, tarball: https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.772.tgz}
+  /electron-to-chromium@1.4.773:
+    resolution: {integrity: sha512-87eHF+h3PlCRwbxVEAw9KtK3v7lWfc/sUDr0W76955AdYTG4bV/k0zrl585Qnj/skRMH2qOSiE+kqMeOQ+LOpw==, tarball: https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.773.tgz}
     dev: false
 
   /elegant-spinner@2.0.0:
@@ -13781,8 +13781,8 @@ packages:
       map-cache: 0.2.2
     dev: false
 
-  /framer-motion@11.2.3(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-SKp4jSyRKo5bUzbHp5f/TLiYLxUthh5SpO0MJ5RFtuHa9h4UZlSxQDe7ydmemj2SOYHXwJhJ8DNQ3ZRz+ydkuw==, tarball: https://registry.npmjs.org/framer-motion/-/framer-motion-11.2.3.tgz}
+  /framer-motion@11.2.4(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-D+EXd0lspaZijv3BJhAcSsyGz+gnvoEdnf+QWkPZdhoFzbeX/2skrH9XSVFb0osgUnCajW8x1frjhLuKwa/Reg==, tarball: https://registry.npmjs.org/framer-motion/-/framer-motion-11.2.4.tgz}
     peerDependencies:
       '@emotion/is-prop-valid': '*'
       react: ^18.2.0
