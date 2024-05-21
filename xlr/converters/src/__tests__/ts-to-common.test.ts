@@ -476,7 +476,7 @@ describe("Type with typeof", () => {
     ] as const
     
     export type options = typeof options[number];
-
+    export type options2 = (typeof options)[number];
     `;
 
     const { sf, tc } = setupTestEnv(sc);

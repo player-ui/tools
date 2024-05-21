@@ -1186,6 +1186,27 @@ exports[`Type with typeof > Indexing 1`] = `
     "title": "options",
     "type": "or",
   },
+  {
+    "genericTokens": undefined,
+    "name": "options2",
+    "or": [
+      {
+        "const": "one",
+        "type": "string",
+      },
+      {
+        "const": "two",
+        "type": "string",
+      },
+      {
+        "const": "three",
+        "type": "string",
+      },
+    ],
+    "source": "filename.ts",
+    "title": "options2",
+    "type": "or",
+  },
 ]
 `;
 
