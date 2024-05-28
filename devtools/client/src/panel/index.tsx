@@ -150,49 +150,53 @@ export const Panel = ({
     <ChakraProvider theme={theme}>
       <ThemeProvider colorScheme="dark">
         <ErrorBoundary fallbackRender={fallbackRender}>
-          <VStack w="100vw" h="100vh">
+          <Flex direction="column" w="100vw" h="100vh" alignItems={"normal"}>
             {state.current.player ? (
-              <Flex direction="column" marginTop="4">
-                <HStack spacing="4">
-                  <FormControl>
-                    <FormLabel>Player</FormLabel>
-                    <Select
-                      id="player"
-                      value={state.current.player || ""}
-                      onChange={(event) => selectPlayer(event.target.value)}
-                    >
-                      {Object.keys(state.players).map((playerID) => (
-                        <option key={playerID} value={playerID}>
-                          {playerID}
-                        </option>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Plugin</FormLabel>
-                    <Select
-                      id="plugin"
-                      value={state.current.plugin || ""}
-                      onChange={(event) => selectPlugin(event.target.value)}
-                    >
-                      {Object.keys(
-                        state.players[state.current.player].plugins
-                      ).map((pluginID) => (
-                        <option key={pluginID} value={pluginID}>
-                          {pluginID}
-                        </option>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </HStack>
-                <Container marginY="6">
-                  <Component />
-                </Container>
-                <details>
-                  <summary>Debug</summary>
-                  <pre>{JSON.stringify(state, null, 2)}</pre>
-                </details>
-              </Flex>
+              <Container minWidth={"100%"}>
+                <Flex direction="column" marginTop="4">
+                  <Flex gap={"8"}>
+                    <FormControl>
+                      <FormLabel>Test Player2</FormLabel>
+                      <Select
+                        id="player"
+                        value={state.current.player || ""}
+                        onChange={(event) => selectPlayer(event.target.value)}
+                      >
+                        {Object.keys(state.players).map((playerID) => (
+                          <option key={playerID} value={playerID}>
+                            {playerID}
+                          </option>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel>Plugin</FormLabel>
+                      <Select
+                        id="plugin"
+                        value={state.current.plugin || ""}
+                        onChange={(event) => selectPlugin(event.target.value)}
+                      >
+                        {Object.keys(
+                          state.players[state.current.player].plugins
+                        ).map((pluginID) => (
+                          <option key={pluginID} value={pluginID}>
+                            {pluginID}
+                          </option>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Flex>
+                  <Container marginY="6">
+                    <Component />
+                  </Container>
+                  <details>
+                    <summary>Debug</summary>
+                    <pre style={{ maxHeight: "30vh", overflow: "scroll" }}>
+                      {JSON.stringify(state, null, 2)}
+                    </pre>
+                  </details>
+                </Flex>
+              </Container>
             ) : (
               <Flex justifyContent="center" padding="6">
                 <Text>
@@ -204,7 +208,7 @@ export const Panel = ({
                 </Text>
               </Flex>
             )}
-          </VStack>
+          </Flex>
         </ErrorBoundary>
       </ThemeProvider>
     </ChakraProvider>
