@@ -1,3 +1,37 @@
+# 0.6.0 (Thu May 02 2024)
+
+### Release Notes
+
+#### Handle Template Strings Earlier in DSL Compilation ([#102](https://github.com/player-ui/tools/pull/102))
+
+DSL - Allow intermediate binding paths to be used in content
+
+---
+
+#### 🚀 Enhancement
+
+- chore: bump player and devtools-assets version [#107](https://github.com/player-ui/tools/pull/107) (rafael_campos@intuit.com [@rafbcampos](https://github.com/rafbcampos))
+- Devtools revamp [#90](https://github.com/player-ui/tools/pull/90) (rafael_campos@intuit.com [@rafbcampos](https://github.com/rafbcampos))
+
+#### 🐛 Bug Fix
+
+- Release main [#108](https://github.com/player-ui/tools/pull/108) ([@intuit-svc](https://github.com/intuit-svc))
+- chore: bump player and devtools-assets versions [#106](https://github.com/player-ui/tools/pull/106) (rafael_campos@intuit.com [@rafbcampos](https://github.com/rafbcampos))
+- feat: adds editor view to basic devtools plugin [#103](https://github.com/player-ui/tools/pull/103) (rafael_campos@intuit.com [@rafbcampos](https://github.com/rafbcampos))
+- Handle Template Strings Earlier in DSL Compilation [#102](https://github.com/player-ui/tools/pull/102) ([@KetanReddy](https://github.com/KetanReddy))
+- chore: update locks [#100](https://github.com/player-ui/tools/pull/100) (rafael_campos@intuit.com [@rafbcampos](https://github.com/rafbcampos))
+- [Docs] DSL pckg name and CLI validate command docs update [#99](https://github.com/player-ui/tools/pull/99) ([@lexfm](https://github.com/lexfm))
+
+#### Authors: 5
+
+- [@intuit-svc](https://github.com/intuit-svc)
+- Alex Fimbres ([@lexfm](https://github.com/lexfm))
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+- Rafael Campos ([@rafbcampos](https://github.com/rafbcampos))
+- rcampos2 (rafael_campos@intuit.com)
+
+---
+
 # 0.5.2 (Wed Apr 10 2024)
 
 ### Release Notes
