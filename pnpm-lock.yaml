@@ -58,8 +58,8 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1(@types/react@18.3.1)(react-dom@18.3.1)(react@18.3.1)
       '@devtools-ui/plugin':
-        specifier: 0.1.1
-        version: 0.1.1(@babel/runtime@7.24.5)(@codemirror/autocomplete@6.16.0)(@codemirror/language@6.10.1)(@codemirror/lint@6.7.0)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.26.3)(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@player-ui/types@0.7.3)(@types/node@18.19.31)(codemirror@6.0.1)(framer-motion@4.1.17)(react-dom@18.3.1)
+        specifier: 0.1.2--canary.27.1288
+        version: 0.1.2--canary.27.1288(@babel/runtime@7.24.5)(@codemirror/autocomplete@6.16.0)(@codemirror/language@6.10.1)(@codemirror/lint@6.7.0)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.26.3)(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@player-ui/types@0.7.3)(@types/node@18.19.31)(codemirror@6.0.1)(framer-motion@4.1.17)(react-dom@18.3.1)
       '@emotion/styled':
         specifier: ^11
         version: 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.1)(react@18.3.1)
@@ -5622,12 +5622,12 @@ packages:
       - react-dom
     dev: false
 
-  /@devtools-ui/action@0.1.1(@types/node@18.19.31)(react-dom@18.3.1):
-    resolution: {integrity: sha512-mxu8iw791aBhkUhf3l79shCi9wtv3liz91eseHZmuuASJjZOJ7rG+9r+K6/9jjyQizKoeLaZITe2LQ9eW+Sdng==, tarball: https://registry.npmjs.org/@devtools-ui/action/-/action-0.1.1.tgz}
+  /@devtools-ui/action@0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1):
+    resolution: {integrity: sha512-Tbp+DRT24roxm9Z9JViDAxd8ev9midOj+UnDGzcw4SgeOtFyjwwECVmR/vnTs5SjJTaJyfbDA3eH4TT0RHFEFw==, tarball: https://registry.npmjs.org/@devtools-ui/action/-/action-0.1.2--canary.27.1288.tgz}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.1)(framer-motion@11.1.7)(react-dom@18.3.1)(react@18.3.1)
-      '@devtools-ui/collection': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
-      '@devtools-ui/text': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/collection': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/text': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.1)(react@18.3.1)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.1)(react@18.3.1)
       '@player-tools/dsl': 0.6.0-next.2(@types/node@18.19.31)(@types/react@18.3.1)(react@18.3.1)
@@ -5648,8 +5648,8 @@ packages:
       - react-dom
     dev: false
 
-  /@devtools-ui/code-editor@0.1.1(@babel/runtime@7.24.5)(@codemirror/autocomplete@6.16.0)(@codemirror/language@6.10.1)(@codemirror/lint@6.7.0)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.26.3)(@types/node@18.19.31)(codemirror@6.0.1)(react-dom@18.3.1):
-    resolution: {integrity: sha512-3gx70uB+C1j1yk6EBipsd4EazZAxaFSLKXdqEYbk1k0q2Aflq644A6C3PXXtEKj3VudEyoybDXggpd1FERR6vg==, tarball: https://registry.npmjs.org/@devtools-ui/code-editor/-/code-editor-0.1.1.tgz}
+  /@devtools-ui/code-editor@0.1.2--canary.27.1288(@babel/runtime@7.24.5)(@codemirror/autocomplete@6.16.0)(@codemirror/language@6.10.1)(@codemirror/lint@6.7.0)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.26.3)(@types/node@18.19.31)(codemirror@6.0.1)(react-dom@18.3.1):
+    resolution: {integrity: sha512-zcTxF0FweiAa/d31VkvD1beaAlQfAI1/nQnlxKS+XWP7N2li1jONdnxUVncRNlPOJKDx+pnywpiUUSxY1GqgLw==, tarball: https://registry.npmjs.org/@devtools-ui/code-editor/-/code-editor-0.1.2--canary.27.1288.tgz}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.1)(framer-motion@11.1.7)(react-dom@18.3.1)(react@18.3.1)
       '@codemirror/lang-json': 6.0.1
@@ -5684,11 +5684,11 @@ packages:
       - react-dom
     dev: false
 
-  /@devtools-ui/collection@0.1.1(@types/node@18.19.31)(react-dom@18.3.1):
-    resolution: {integrity: sha512-cfs7SZHsR69ZhmMdThur5KMXL9AOj3X8M74IqF9gqh0eMnaS5et0OL6V5os2ASC/Ky6VF7yRqoUeFXMMSLHquA==, tarball: https://registry.npmjs.org/@devtools-ui/collection/-/collection-0.1.1.tgz}
+  /@devtools-ui/collection@0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1):
+    resolution: {integrity: sha512-lBxnJS9CgX7qgu9VjuuOkkucn0I1Y/bluPmReyFnD1Vn+OLb3h2UKNn77H/B6jS6rGsGOJi8rUcU8HZvw68g/A==, tarball: https://registry.npmjs.org/@devtools-ui/collection/-/collection-0.1.2--canary.27.1288.tgz}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.1)(framer-motion@11.1.7)(react-dom@18.3.1)(react@18.3.1)
-      '@devtools-ui/text': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/text': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.1)(react@18.3.1)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.1)(react@18.3.1)
       '@player-tools/dsl': 0.6.0-next.2(@types/node@18.19.31)(@types/react@18.3.1)(react@18.3.1)
@@ -5708,13 +5708,13 @@ packages:
       - react-dom
     dev: false
 
-  /@devtools-ui/console@0.1.1(@types/node@18.19.31)(react-dom@18.3.1):
-    resolution: {integrity: sha512-jboxlALCN1dp8gx9T1F2fPMs+f5kCp8lCTh3noIC95qS68ph+LDAj0Vp5sRAjzl9iu4jwXbJPzsAWwTDz/oN9g==, tarball: https://registry.npmjs.org/@devtools-ui/console/-/console-0.1.1.tgz}
+  /@devtools-ui/console@0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1):
+    resolution: {integrity: sha512-pmwaycmiLvN1k7CZzAKjgs1xIDd8QjxFb+qGkgnikelxWRFkGdzIG9G7K3jHltZYWrNOIR+aWVe9N5fWgCg4mg==, tarball: https://registry.npmjs.org/@devtools-ui/console/-/console-0.1.2--canary.27.1288.tgz}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.1)(framer-motion@11.1.7)(react-dom@18.3.1)(react@18.3.1)
       '@devtools-ds/console': 1.2.1(@types/react@18.3.1)(react-dom@18.3.1)(react@18.3.1)
-      '@devtools-ui/collection': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
-      '@devtools-ui/text': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/collection': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/text': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.1)(react@18.3.1)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.1)(react@18.3.1)
       '@player-tools/dsl': 0.6.0-next.2(@types/node@18.19.31)(@types/react@18.3.1)(react@18.3.1)
@@ -5735,12 +5735,12 @@ packages:
       - react-dom
     dev: false
 
-  /@devtools-ui/copy-to-clipboard@0.1.1(@types/node@18.19.31)(react-dom@18.3.1):
-    resolution: {integrity: sha512-heZx6Zv/t1i59m5oO1G3OW45z0UIXniKgmwjRNraCbpdK0Jdm5I27ClPCSHfW7A5KeCqMokpsEyofngU2ykBKg==, tarball: https://registry.npmjs.org/@devtools-ui/copy-to-clipboard/-/copy-to-clipboard-0.1.1.tgz}
+  /@devtools-ui/copy-to-clipboard@0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1):
+    resolution: {integrity: sha512-Et++uTi15xj3BZxsLjZ0O0G9JTmk4b2do4offBD3iE/8dLvOcaUnDxNNINw1rOVi6nTO4noQ5TKWeTJ4ZMfH9A==, tarball: https://registry.npmjs.org/@devtools-ui/copy-to-clipboard/-/copy-to-clipboard-0.1.2--canary.27.1288.tgz}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.1)(framer-motion@11.1.7)(react-dom@18.3.1)(react@18.3.1)
-      '@devtools-ui/collection': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
-      '@devtools-ui/text': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/collection': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/text': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.1)(react@18.3.1)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.1)(react@18.3.1)
       '@player-tools/dsl': 0.6.0-next.2(@types/node@18.19.31)(@types/react@18.3.1)(react@18.3.1)
@@ -5763,11 +5763,36 @@ packages:
       - react-dom
     dev: false
 
-  /@devtools-ui/input@0.1.1(@types/node@18.19.31)(react-dom@18.3.1):
-    resolution: {integrity: sha512-Wydl+kwC5BCtwxkDEycy6pO3dzjRc4pC9Lv0+MKAq7oWimRTtmDg2dX0ZMgwaDGw+tQ6oqYS+OcEZuk35XmAUA==, tarball: https://registry.npmjs.org/@devtools-ui/input/-/input-0.1.1.tgz}
+  /@devtools-ui/flame-graph@0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1):
+    resolution: {integrity: sha512-lja8CPSSY7qJZl46RcPs7rFXc+61moAtItih4RZELRUWqwI/8PcVjWbXB6S2cQND0JUO3WOzRmlWOBaE870/Bg==, tarball: https://registry.npmjs.org/@devtools-ui/flame-graph/-/flame-graph-0.1.2--canary.27.1288.tgz}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.1)(framer-motion@11.1.7)(react-dom@18.3.1)(react@18.3.1)
-      '@devtools-ui/text': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
+      '@emotion/react': 11.11.4(@types/react@18.3.1)(react@18.3.1)
+      '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.1)(react@18.3.1)
+      '@player-tools/dsl': 0.6.0-next.2(@types/node@18.19.31)(@types/react@18.3.1)(react@18.3.1)
+      '@player-ui/asset-transform-plugin': 0.7.3(@player-ui/player@0.7.3)(@player-ui/types@0.7.3)
+      '@player-ui/player': 0.7.3
+      '@player-ui/react': 0.7.3(@player-ui/types@0.7.3)(@types/react@18.3.1)(react-dom@18.3.1)(react@18.3.1)
+      '@player-ui/types': 0.7.3
+      '@types/react': 18.3.1
+      dlv: 1.1.3
+      framer-motion: 11.1.7(react-dom@18.3.1)(react@18.3.1)
+      react: 18.3.1
+      react-flame-graph: 1.4.0(react-dom@18.3.1)(react@18.3.1)
+      tslib: 2.6.2
+    transitivePeerDependencies:
+      - '@emotion/is-prop-valid'
+      - '@swc/core'
+      - '@swc/wasm'
+      - '@types/node'
+      - react-dom
+    dev: false
+
+  /@devtools-ui/input@0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1):
+    resolution: {integrity: sha512-WF68XPL23crHEm/7mqyoq3SlllO0QtCU8Q5svOhnNqQxtQBq4Ya48SRPYn/XeJzoi5UIxVKi2DVyWONHE+uSPg==, tarball: https://registry.npmjs.org/@devtools-ui/input/-/input-0.1.2--canary.27.1288.tgz}
+    dependencies:
+      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.1)(framer-motion@11.1.7)(react-dom@18.3.1)(react@18.3.1)
+      '@devtools-ui/text': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.1)(react@18.3.1)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.1)(react@18.3.1)
       '@player-tools/dsl': 0.6.0-next.2(@types/node@18.19.31)(@types/react@18.3.1)(react@18.3.1)
@@ -5788,12 +5813,12 @@ packages:
       - react-dom
     dev: false
 
-  /@devtools-ui/list@0.1.1(@types/node@18.19.31)(react-dom@18.3.1):
-    resolution: {integrity: sha512-E7+HglpCHwp9wDvsFrq5vfxIFTdO12hQHpXOpB24fqIz3V8P5XT2ujDihLquLKdxhYLC0PD3zGN8Eh4k2UlHLA==, tarball: https://registry.npmjs.org/@devtools-ui/list/-/list-0.1.1.tgz}
+  /@devtools-ui/list@0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1):
+    resolution: {integrity: sha512-44DJ1gqp+hSOcJ2YYukG/eYBuvlg6btJM32ypcsBW8DMo0JhqWyPaU1utgz+Iw3Q2cLF33QlY5jozbbYX6kRkA==, tarball: https://registry.npmjs.org/@devtools-ui/list/-/list-0.1.2--canary.27.1288.tgz}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.1)(framer-motion@11.1.7)(react-dom@18.3.1)(react@18.3.1)
-      '@devtools-ui/collection': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
-      '@devtools-ui/text': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/collection': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/text': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.1)(react@18.3.1)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.1)(react@18.3.1)
       '@player-tools/dsl': 0.6.0-next.2(@types/node@18.19.31)(@types/react@18.3.1)(react@18.3.1)
@@ -5813,12 +5838,12 @@ packages:
       - react-dom
     dev: false
 
-  /@devtools-ui/navigation@0.1.1(@types/node@18.19.31)(react-dom@18.3.1):
-    resolution: {integrity: sha512-LNN6AAk+O85bXLQxjQTTmfO1ZdLDhHIZ7AXgRPRLUMgsS+XZ10p1thx9vRCtDkzJzjsWcASndsNMcSLACFUP8w==, tarball: https://registry.npmjs.org/@devtools-ui/navigation/-/navigation-0.1.1.tgz}
+  /@devtools-ui/navigation@0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1):
+    resolution: {integrity: sha512-LJNexfLvA0Le6kmLScOypFRGU6YdcRsmKwVx1IGsAY6LSOnLwf6ko4HB5iS3kvjfvodLYIk3kOz5w17CdGHMUQ==, tarball: https://registry.npmjs.org/@devtools-ui/navigation/-/navigation-0.1.2--canary.27.1288.tgz}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.1)(framer-motion@11.1.7)(react-dom@18.3.1)(react@18.3.1)
-      '@devtools-ui/collection': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
-      '@devtools-ui/text': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/collection': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/text': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.1)(react@18.3.1)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.1)(react@18.3.1)
       '@player-tools/dsl': 0.6.0-next.2(@types/node@18.19.31)(@types/react@18.3.1)(react@18.3.1)
@@ -5838,13 +5863,13 @@ packages:
       - react-dom
     dev: false
 
-  /@devtools-ui/object-inspector@0.1.1(@types/node@18.19.31)(react-dom@18.3.1):
-    resolution: {integrity: sha512-cQrOvlvcRunqqJSOQDz5zUM7cQW0HmD8mNBdMr43IFQpKyBG3CPD8wUmUNY4y2kT6i+OTYQphaRL3WThaLVqxA==, tarball: https://registry.npmjs.org/@devtools-ui/object-inspector/-/object-inspector-0.1.1.tgz}
+  /@devtools-ui/object-inspector@0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1):
+    resolution: {integrity: sha512-/Ci/xBxUXG9rS5T63PwpZ3VfuQnFL8A8uWp4V9aUM4V6lkaTFPHJfiRn/FHz5FaFnTTX+TYcJ8+OpgJH8hxrNA==, tarball: https://registry.npmjs.org/@devtools-ui/object-inspector/-/object-inspector-0.1.2--canary.27.1288.tgz}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.1)(framer-motion@11.1.7)(react-dom@18.3.1)(react@18.3.1)
       '@devtools-ds/object-inspector': 1.2.1(@types/react@18.3.1)(react-dom@18.3.1)(react@18.3.1)
-      '@devtools-ui/collection': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
-      '@devtools-ui/text': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/collection': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/text': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.1)(react@18.3.1)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.1)(react@18.3.1)
       '@player-tools/dsl': 0.6.0-next.2(@types/node@18.19.31)(@types/react@18.3.1)(react@18.3.1)
@@ -5864,23 +5889,25 @@ packages:
       - react-dom
     dev: false
 
-  /@devtools-ui/plugin@0.1.1(@babel/runtime@7.24.5)(@codemirror/autocomplete@6.16.0)(@codemirror/language@6.10.1)(@codemirror/lint@6.7.0)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.26.3)(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@player-ui/types@0.7.3)(@types/node@18.19.31)(codemirror@6.0.1)(framer-motion@4.1.17)(react-dom@18.3.1):
-    resolution: {integrity: sha512-x4P8S/IhfCaLQMEHrV3V/CLqly7Gwvmu0fpUlm23Ag19gxGjNfNWCKUfepaZ9Ell64oB/IkTEhlTSTWYD3FqKw==, tarball: https://registry.npmjs.org/@devtools-ui/plugin/-/plugin-0.1.1.tgz}
+  /@devtools-ui/plugin@0.1.2--canary.27.1288(@babel/runtime@7.24.5)(@codemirror/autocomplete@6.16.0)(@codemirror/language@6.10.1)(@codemirror/lint@6.7.0)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.26.3)(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@player-ui/types@0.7.3)(@types/node@18.19.31)(codemirror@6.0.1)(framer-motion@4.1.17)(react-dom@18.3.1):
+    resolution: {integrity: sha512-Ox4fsKekMfyLCV0eX8WvDv2XhQD9l1flZNpWNtCyALCl7LqFUF6MO2b+82vPAXMfnCBjH99srTUM61ESfrt6mg==, tarball: https://registry.npmjs.org/@devtools-ui/plugin/-/plugin-0.1.2--canary.27.1288.tgz}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.1)(framer-motion@4.1.17)(react-dom@18.3.1)(react@18.3.1)
-      '@devtools-ui/action': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
-      '@devtools-ui/code-editor': 0.1.1(@babel/runtime@7.24.5)(@codemirror/autocomplete@6.16.0)(@codemirror/language@6.10.1)(@codemirror/lint@6.7.0)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.26.3)(@types/node@18.19.31)(codemirror@6.0.1)(react-dom@18.3.1)
-      '@devtools-ui/collection': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
-      '@devtools-ui/console': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
-      '@devtools-ui/copy-to-clipboard': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
-      '@devtools-ui/input': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
-      '@devtools-ui/list': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
-      '@devtools-ui/navigation': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
-      '@devtools-ui/object-inspector': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
-      '@devtools-ui/stacked-view': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
-      '@devtools-ui/table': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
-      '@devtools-ui/text': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
-      '@devtools-ui/toggle': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/action': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/code-editor': 0.1.2--canary.27.1288(@babel/runtime@7.24.5)(@codemirror/autocomplete@6.16.0)(@codemirror/language@6.10.1)(@codemirror/lint@6.7.0)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.26.3)(@types/node@18.19.31)(codemirror@6.0.1)(react-dom@18.3.1)
+      '@devtools-ui/collection': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/console': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/copy-to-clipboard': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/flame-graph': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/input': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/list': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/navigation': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/object-inspector': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/radio-group': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/stacked-view': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/table': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/text': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/toggle': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
       '@player-ui/asset-provider-plugin-react': 0.7.3(@player-ui/react@0.7.3)(@types/react@18.3.1)(react@18.3.1)
       '@player-ui/asset-transform-plugin': 0.7.3(@player-ui/player@0.7.3)(@player-ui/types@0.7.3)
       '@player-ui/player': 0.7.3
@@ -5909,12 +5936,12 @@ packages:
       - react-dom
     dev: false
 
-  /@devtools-ui/stacked-view@0.1.1(@types/node@18.19.31)(react-dom@18.3.1):
-    resolution: {integrity: sha512-XYx81fbCyu9goX957jiQJybKLTK/n3prMW6Hs6lEM2Px0FoueYFYVvXFDQZAxEi27tTI364Dc3YtM8OfcZy6kw==, tarball: https://registry.npmjs.org/@devtools-ui/stacked-view/-/stacked-view-0.1.1.tgz}
+  /@devtools-ui/radio-group@0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1):
+    resolution: {integrity: sha512-nmC0sGXwUtY6zyP9kDBGEPkmIwtCgzl++bN7gqjxsxzrW4khKd7zMWWK/g9T+0AtrB8DBN2f2mL/3gZTLAgdYg==, tarball: https://registry.npmjs.org/@devtools-ui/radio-group/-/radio-group-0.1.2--canary.27.1288.tgz}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.1)(framer-motion@11.1.7)(react-dom@18.3.1)(react@18.3.1)
-      '@devtools-ui/collection': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
-      '@devtools-ui/text': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/collection': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/text': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.1)(react@18.3.1)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.1)(react@18.3.1)
       '@player-tools/dsl': 0.6.0-next.2(@types/node@18.19.31)(@types/react@18.3.1)(react@18.3.1)
@@ -5935,12 +5962,12 @@ packages:
       - react-dom
     dev: false
 
-  /@devtools-ui/table@0.1.1(@types/node@18.19.31)(react-dom@18.3.1):
-    resolution: {integrity: sha512-gfgG6D3ENW7hKNMBiVNbFCFNvD0fUjrzIpnHRuMxrBH6y3BMDuLE9H5+eW79SG9IHdZGcXRAFFsJVWdIOTYIlA==, tarball: https://registry.npmjs.org/@devtools-ui/table/-/table-0.1.1.tgz}
+  /@devtools-ui/stacked-view@0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1):
+    resolution: {integrity: sha512-n4su/lDSxbve1UuXpJjvMs0lksaX1vC2MCtz1zntSzjIoKnOsfBRCBcei+7/sM/GnQeI25bUkKbt14wl2NvxLQ==, tarball: https://registry.npmjs.org/@devtools-ui/stacked-view/-/stacked-view-0.1.2--canary.27.1288.tgz}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.1)(framer-motion@11.1.7)(react-dom@18.3.1)(react@18.3.1)
-      '@devtools-ui/collection': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
-      '@devtools-ui/text': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/collection': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/text': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.1)(react@18.3.1)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.1)(react@18.3.1)
       '@player-tools/dsl': 0.6.0-next.2(@types/node@18.19.31)(@types/react@18.3.1)(react@18.3.1)
@@ -5961,8 +5988,34 @@ packages:
       - react-dom
     dev: false
 
-  /@devtools-ui/text@0.1.1(@types/node@18.19.31)(react-dom@18.3.1):
-    resolution: {integrity: sha512-+yYIhG5FdBhnKtaVj33tiyWmFP9QeNpHCT3f5AK7S54qOBsxiq0GtOAO/v+IMWsFkjg30Bywu7Hys1AeKb+PBw==, tarball: https://registry.npmjs.org/@devtools-ui/text/-/text-0.1.1.tgz}
+  /@devtools-ui/table@0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1):
+    resolution: {integrity: sha512-Um+DfpEOj7hp+tJEXA150QPKhp5+3yp6+PGklg3UAtkvh/6ukTWAUmrhC9F7+PdQpFvxsOmxS93LogQkANa9jQ==, tarball: https://registry.npmjs.org/@devtools-ui/table/-/table-0.1.2--canary.27.1288.tgz}
+    dependencies:
+      '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.1)(framer-motion@11.1.7)(react-dom@18.3.1)(react@18.3.1)
+      '@devtools-ui/collection': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/text': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@emotion/react': 11.11.4(@types/react@18.3.1)(react@18.3.1)
+      '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.1)(react@18.3.1)
+      '@player-tools/dsl': 0.6.0-next.2(@types/node@18.19.31)(@types/react@18.3.1)(react@18.3.1)
+      '@player-ui/asset-transform-plugin': 0.7.3(@player-ui/player@0.7.3)(@player-ui/types@0.7.3)
+      '@player-ui/player': 0.7.3
+      '@player-ui/react': 0.7.3(@player-ui/types@0.7.3)(@types/react@18.3.1)(react-dom@18.3.1)(react@18.3.1)
+      '@player-ui/types': 0.7.3
+      '@types/react': 18.3.1
+      dlv: 1.1.3
+      framer-motion: 11.1.7(react-dom@18.3.1)(react@18.3.1)
+      react: 18.3.1
+      tslib: 2.6.2
+    transitivePeerDependencies:
+      - '@emotion/is-prop-valid'
+      - '@swc/core'
+      - '@swc/wasm'
+      - '@types/node'
+      - react-dom
+    dev: false
+
+  /@devtools-ui/text@0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1):
+    resolution: {integrity: sha512-kS56tby/EVDYO94yF8HNCynhwTW7vFu3p0Y8wsXyUbYFdLrDxEP1bQd6O51jNhm00tvNdV+cZQ/uXTtAkoERNw==, tarball: https://registry.npmjs.org/@devtools-ui/text/-/text-0.1.2--canary.27.1288.tgz}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.1)(framer-motion@11.1.7)(react-dom@18.3.1)(react@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.1)(react@18.3.1)
@@ -5982,12 +6035,12 @@ packages:
       - react-dom
     dev: false
 
-  /@devtools-ui/toggle@0.1.1(@types/node@18.19.31)(react-dom@18.3.1):
-    resolution: {integrity: sha512-kAusU/2kz/FpMpsyp+F8QKWrTRQmAerZYX3rQkV1l2Ej/73j3rCfyAMXQ7r+GFRqLDBnMS43wNApV66FSgtVog==, tarball: https://registry.npmjs.org/@devtools-ui/toggle/-/toggle-0.1.1.tgz}
+  /@devtools-ui/toggle@0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1):
+    resolution: {integrity: sha512-bDjFnYdb55/1i5HdqSjpfa/HcYpba9zS4ZiVky+biU3C8SvDg29XV69zHkTRGzvTNu6Gjmrjrt0oaWxa2GoMFQ==, tarball: https://registry.npmjs.org/@devtools-ui/toggle/-/toggle-0.1.2--canary.27.1288.tgz}
     dependencies:
       '@chakra-ui/react': 2.8.2(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.3.1)(framer-motion@11.1.7)(react-dom@18.3.1)(react@18.3.1)
-      '@devtools-ui/collection': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
-      '@devtools-ui/text': 0.1.1(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/collection': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
+      '@devtools-ui/text': 0.1.2--canary.27.1288(@types/node@18.19.31)(react-dom@18.3.1)
       '@emotion/react': 11.11.4(@types/react@18.3.1)(react@18.3.1)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.1)(react@18.3.1)
       '@player-tools/dsl': 0.6.0-next.2(@types/node@18.19.31)(@types/react@18.3.1)(react@18.3.1)
