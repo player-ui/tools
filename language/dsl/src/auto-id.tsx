@@ -1,5 +1,5 @@
 import React from "react";
-import type { JsonNode } from "react-json-reconciler";
+import type { ObjectNode, JsonNode } from "react-json-reconciler";
 import { flattenNodes } from "react-json-reconciler";
 import { SlotContext } from "./components";
 import type { WithChildren } from "./types";
@@ -133,4 +133,15 @@ export const OptionalIDSuffixProvider = (
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
   return <>{props.children}</>;
+};
+
+/** An object wrapper that tracks its index from a parent */
+export const ObjectWithIndexTracking = (props: WithChildren) => {
+  const ref = React.useRef<ObjectNode>(null);
+
+  return (
+    <OptionalIDSuffixProvider wrapperRef={ref}>
+      <obj ref={ref}>{props.children}</obj>
+    </OptionalIDSuffixProvider>
+  );
 };
