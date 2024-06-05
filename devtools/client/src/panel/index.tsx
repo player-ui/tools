@@ -156,7 +156,7 @@ export const Panel = ({
                 <Flex direction="column" marginTop="4">
                   <Flex gap={"8"}>
                     <FormControl>
-                      <FormLabel>Test Player2</FormLabel>
+                      <FormLabel>Player</FormLabel>
                       <Select
                         id="player"
                         value={state.current.player || ""}
@@ -186,9 +186,9 @@ export const Panel = ({
                       </Select>
                     </FormControl>
                   </Flex>
-                  <Container marginY="6">
+                  <Flex>
                     <Component />
-                  </Container>
+                  </Flex>
                   <details>
                     <summary>Debug</summary>
                     <pre style={{ maxHeight: "30vh", overflow: "scroll" }}>
