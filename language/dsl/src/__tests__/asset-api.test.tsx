@@ -3,7 +3,13 @@ import React from "react";
 import { render } from "react-json-reconciler";
 import { binding as b } from "../string-templates";
 import { Switch } from "../switch";
-import { Collection, Text, Input, ArrayProp } from "./helpers/asset-library";
+import {
+  Collection,
+  Text,
+  Input,
+  ArrayProp,
+  Choice,
+} from "./helpers/asset-library";
 
 describe("components", () => {
   test("automatically creates collections", async () => {
@@ -266,6 +272,49 @@ describe("components", () => {
           value: "Text",
         },
       },
+    });
+  });
+
+  test("auto-id for non-asset", async () => {
+    const element = (
+      <Choice id="choice" binding={b`foo.bar.baz`}>
+        <Choice.Items>
+          <Choice.Item>
+            <Choice.Item.Label>Item 1</Choice.Item.Label>
+          </Choice.Item>
+          <Choice.Item>
+            <Choice.Item.Label>Item 2</Choice.Item.Label>
+          </Choice.Item>
+        </Choice.Items>
+      </Choice>
+    );
+
+    expect((await render(element)).jsonValue).toStrictEqual({
+      id: "choice",
+      type: "choice",
+      binding: "foo.bar.baz",
+      items: [
+        {
+          id: "choice-items-0",
+          label: {
+            asset: {
+              id: "choice-items-0-label",
+              type: "text",
+              value: "Item 1",
+            },
+          },
+        },
+        {
+          id: "choice-items-1",
+          label: {
+            asset: {
+              id: "choice-items-1-label",
+              type: "text",
+              value: "Item 2",
+            },
+          },
+        },
+      ],
     });
   });
 
