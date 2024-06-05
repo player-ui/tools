@@ -15,6 +15,7 @@ dependencies = [
     "//:node_modules/@player-ui/common-types-plugin",
     "//:node_modules/@player-ui/react",
     "//:node_modules/@devtools-ui/plugin",
+    "//:node_modules/@player-ui/reference-assets-plugin-react",
     "//:node_modules/@player-ui/types",
     "//:node_modules/@types/react",
     "//:node_modules/react",

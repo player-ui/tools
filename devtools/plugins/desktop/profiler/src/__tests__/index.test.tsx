@@ -1,8 +1,9 @@
 import React from "react";
+import { ReferenceAssetsPlugin } from "@player-ui/reference-assets-plugin-react";
+import { Flow, ReactPlayer } from "@player-ui/react";
 import { test, vi, describe, expect } from "vitest";
 import { render } from "@testing-library/react";
 import { ProfilerPlugin } from "..";
-import { Flow, ReactPlayer } from "@player-ui/react";
 
 vi.mock("../WrapperComponent.tsx", () => ({
   WrapperComponent: vi.fn(),
@@ -21,9 +22,9 @@ const flow: Flow = {
   id: "flow_1",
   views: [
     {
-      id: "first_view",
-      type: "simple",
-      value: "{{foo.bar}}",
+      id: "test",
+      type: "text",
+      value: "TEST",
     },
   ],
   navigation: {
@@ -32,7 +33,7 @@ const flow: Flow = {
       startState: "view_1",
       view_1: {
         state_type: "VIEW",
-        ref: "first_view",
+        ref: "test",
         transitions: {
           "*": "end_1",
         },
@@ -295,7 +296,9 @@ describe("ProfilerPlugin", () => {
   });
 
   test("snapshot", async () => {
-    const rp = new ReactPlayer({ plugins: [new ProfilerPlugin()] });
+    const rp = new ReactPlayer({
+      plugins: [new ProfilerPlugin(), new ReferenceAssetsPlugin()],
+    });
     rp.start(flow);
     await waitForMicrotasks();
     const el = render(<rp.Component />);
