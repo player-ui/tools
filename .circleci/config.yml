@@ -14,7 +14,7 @@ orbs:
 executors:
   base:
     docker:
-      - image: docker.io/playerui/bazel-docker:6
+      - image: docker.io/playerui/bazel-docker-slim:9
     working_directory: ~/tools
     resource_class: xlarge
     environment:
