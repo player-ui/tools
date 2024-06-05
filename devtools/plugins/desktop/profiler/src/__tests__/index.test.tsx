@@ -1,6 +1,8 @@
 import React from "react";
 import { test, vi, describe, expect } from "vitest";
+import { render } from "@testing-library/react";
 import { ProfilerPlugin } from "..";
+import { Flow, ReactPlayer } from "@player-ui/react";
 
 vi.mock("../WrapperComponent.tsx", () => ({
   WrapperComponent: vi.fn(),
@@ -14,6 +16,42 @@ const now = vi.fn(() => {
 });
 
 global.performance = { ...global.performance, now };
+
+const flow: Flow = {
+  id: "flow_1",
+  views: [
+    {
+      id: "first_view",
+      type: "simple",
+      value: "{{foo.bar}}",
+    },
+  ],
+  navigation: {
+    BEGIN: "flow_1",
+    flow_1: {
+      startState: "view_1",
+      view_1: {
+        state_type: "VIEW",
+        ref: "first_view",
+        transitions: {
+          "*": "end_1",
+        },
+      },
+      end_1: {
+        state_type: "END",
+        outcome: "end",
+      },
+    },
+  },
+};
+
+function waitForMicrotasks() {
+  return new Promise((resolve) => {
+    queueMicrotask(() => {
+      resolve({});
+    });
+  });
+}
 
 class MockPlayer {
   callbacks: any[] = [];
@@ -254,5 +292,13 @@ describe("ProfilerPlugin", () => {
         value: 1200,
       },
     });
+  });
+
+  test("snapshot", async () => {
+    const rp = new ReactPlayer({ plugins: [new ProfilerPlugin()] });
+    rp.start(flow);
+    await waitForMicrotasks();
+    const el = render(<rp.Component />);
+    expect(el).toMatchSnapshot();
   });
 });
