@@ -1,7 +1,5 @@
-load("@aspect_rules_js//js:defs.bzl", "js_run_binary")
 load("@npm//:defs.bzl", "npm_link_all_packages")
-load("@rules_player//javascript:defs.bzl", "js_pipeline")
-load("//helpers:defs.bzl", "tsup_config", "vitest_config")
+load("//helpers:defs.bzl", "dsl_pipeline", "tsup_config", "vitest_config")
 
 npm_link_all_packages(name = "node_modules")
 
@@ -31,25 +29,9 @@ dsl_input = "src/content/index.ts"
 
 dsl_output = "_generated"
 
-js_run_binary(
-    name = "compile_dsl",
-    srcs = glob(["src/**/*"]) + ["package.json"] + dependencies,
-    args = [
-        "dsl",
-        "compile",
-        "-i",
-        dsl_input,
-        "-o",
-        dsl_output,
-        "--skip-validation",
-    ],
-    chdir = package_name(),
-    out_dirs = [dsl_output],
-    tool = "//cli:dsl_bin",
-)
-
-js_pipeline(
+dsl_pipeline(
     package_name = "@player-tools/devtools-basic-web-plugin",
-    srcs = [":compile_dsl"] + glob(["src/**/*"]),
     deps = dependencies,
+    dsl_input = dsl_input,
+    dsl_output = dsl_output,
 )

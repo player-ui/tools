@@ -28,6 +28,7 @@ devtools/client/node_modules
 devtools/messenger/node_modules
 devtools/plugins/desktop/basic/node_modules
 devtools/plugins/desktop/common/node_modules
+devtools/plugins/desktop/profiler/node_modules
 devtools/plugins/mobile/flipper-desktop-client/node_modules
 devtools/types/node_modules
 devtools/common/node_modules
