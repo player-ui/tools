@@ -38,6 +38,22 @@ commands:
       - run: |
           source ~/.bashrc
           npx auto shipit --only-graduate-with-release-label -vv
+  dry_run:
+    description: Perform Auto shipit --dry-run
+    steps:
+      - attach_workspace:
+          at: ~/tools
+
+      - restore_cache:
+          keys:
+            - v1-bazel-cache-core-{{ .Branch }}-{{ .Revision }}
+            - v1-bazel-cache-core-{{ .Branch }}
+            - v1-bazel-cache-core-main
+
+      - run: |
+          echo 'export GH_TOKEN=${GH_TOKEN}' >> ~/.bashrc
+          source ~/.bashrc
+          npx auto shipit --dry-run
 
 jobs:
   setup:
@@ -85,6 +101,7 @@ jobs:
           root: .
           paths:
             - .
+      - dry_run
 
   test:
     executor: base
