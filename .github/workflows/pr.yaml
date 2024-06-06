@@ -16,11 +16,5 @@ jobs:
         with:
           node-version: "18"
 
-      - name: Install Dependencies
-        run: npx pnpm i
-
-      - name: Build Project
-        run: npx bazel build //...
-
       - name: Dry Run
         run: npx auto shipit --dry-run
