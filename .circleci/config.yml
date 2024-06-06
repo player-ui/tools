@@ -45,7 +45,7 @@ commands:
           name: Check branch status
           command: |
             if [[ -n "$(git status --porcelain)" ]]; then 
-              echo "Error: The branch is not clean after the build. Please commit."
+              echo "Error: The branch is not clean after the build. Please run the build locally and commit any changes."
               exit 1
             else
               echo "The branch is clean after the build."
