@@ -38,6 +38,18 @@ commands:
       - run: |
           source ~/.bashrc
           npx auto shipit --only-graduate-with-release-label -vv
+  check_branch_status:
+    description: "Check if the branch is clean after the build"
+    steps:
+      - run:
+          name: Check branch status
+          command: |
+            if [[ -n "$(git status --porcelain)" ]]; then 
+              echo "Error: The branch is not clean after the build. Please run the build locally and commit any changes."
+              exit 1
+            else
+              echo "The branch is clean after the build."
+            fi
 
 jobs:
   setup:
@@ -85,6 +97,7 @@ jobs:
           root: .
           paths:
             - .
+      - check_branch_status
 
   test:
     executor: base
