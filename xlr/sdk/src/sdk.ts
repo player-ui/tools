@@ -1,4 +1,7 @@
+/* eslint-disable prettier/prettier */
 import type {
+  AndType,
+  ConditionalType,
   Manifest,
   NamedType,
   NodeType,
@@ -10,6 +13,7 @@ import type {
 import type { TopLevelDeclaration } from "@player-tools/xlr-utils";
 import {
   computeEffectiveObject,
+  resolveConditional,
   resolveReferenceNode,
 } from "@player-tools/xlr-utils";
 import { fillInGenerics } from "@player-tools/xlr-utils";
@@ -195,7 +199,7 @@ export class XLRSDK {
         | undefined;
     }
 
-    type = fillInGenerics(this.resolveType(type)) as NamedType;
+    type = this.resolveType(type)
 
     this.computedNodeCache.set(id, type);
 
@@ -277,7 +281,6 @@ export class XLRSDK {
     transforms?: Array<TransformFunction>
   ): [string, string][] {
     const typesToExport = this.registry.list(filters).map((type) => {
-      const resolvedType = this.resolveType(type);
       const effectiveType =
         transforms?.reduce(
           (typeAccumulator: NamedType<NodeType>, transformFn) =>
@@ -285,8 +288,8 @@ export class XLRSDK {
               typeAccumulator,
               this.registry.info(type.name)?.capability as string
             ) as NamedType<NodeType>,
-          resolvedType
-        ) ?? resolvedType;
+          type
+        ) ?? type;
 
       return effectiveType;
     });
@@ -299,49 +302,97 @@ export class XLRSDK {
     throw new Error(`Unknown export format ${exportType}`);
   }
 
-  private resolveType(type: NodeType): NamedType {
-    return simpleTransformGenerator("object", "any", (objectNode) => {
-      if (objectNode.extends) {
-        const refName = objectNode.extends.ref.split("<")[0];
-        let extendedType = this.getType(refName, { getRawType: true });
-        if (!extendedType) {
-          throw new Error(
-            `Error resolving ${objectNode.name}: can't find extended type ${refName}`
-          );
-        }
+  /**
+   * Transforms a generated XLR node into its final representation by
+   * Resolving all `extends` properties
+   * Solving any conditional types
+   * Computing the effective types of any union elements
+   * Resolving any ref nodes
+   * filing in any remaining generics with their default value
+   */
+  private resolveType(type: NamedType): NamedType {
+    // Solve `extends` property on objects
+    let resolvedObject = simpleTransformGenerator(
+      "object",
+      "any",
+      (objectNode) => {
+        if (objectNode.extends) {
+          const refName = objectNode.extends.ref.split("<")[0];
+          let extendedType = this.getType(refName, { getRawType: true });
+          if (!extendedType) {
+            throw new Error(
+              `Error resolving ${objectNode.name}: can't find extended type ${refName}`
+            );
+          }
 
-        extendedType = resolveReferenceNode(
-          objectNode.extends,
-          extendedType as NamedType<ObjectType>
-        ) as NamedType;
-        if (extendedType.type === "object") {
+          extendedType = resolveReferenceNode(
+            objectNode.extends,
+            extendedType as NamedType<ObjectType>
+          ) as NamedType;
+          if (extendedType.type === "object") {
+            return {
+              ...computeEffectiveObject(
+                extendedType as ObjectType,
+                objectNode as ObjectType,
+                false
+              ),
+              name: objectNode.name,
+              description: objectNode.description,
+            };
+          }
+
+          // if the merge isn't straightforward, defer until validation time for now
           return {
-            ...computeEffectiveObject(
-              extendedType as ObjectType,
-              objectNode as ObjectType,
-              false
-            ),
             name: objectNode.name,
-            description: objectNode.description,
-          };
+            type: "and",
+            and: [
+              {
+                ...objectNode,
+                extends: undefined,
+              },
+              extendedType,
+            ],
+          } as unknown as ObjectNode;
         }
 
-        // if the merge isn't straightforward, defer until validation time for now
-        return {
-          name: objectNode.name,
-          type: "and",
-          and: [
-            {
-              ...objectNode,
-              extends: undefined,
-            },
-            extendedType,
-          ],
-        } as unknown as ObjectNode;
+        return objectNode;
       }
+    )(type, "any");
 
-      return objectNode;
-    })(type, "any") as NamedType;
+    resolvedObject = fillInGenerics(resolvedObject);
+
+    // Solve any Conditional types that are in the object
+    resolvedObject = simpleTransformGenerator(
+      "conditional",
+      "any",
+      (node) => {
+        return resolveConditional(node) as ConditionalType
+      }
+    )(resolvedObject, "any");
+
+    // Solve Any type union with their effective value
+    resolvedObject = simpleTransformGenerator(
+      "and",
+      "any",
+      (node) => {
+        return {
+          ...this.validator.computeIntersectionType(node.and),
+          ...(node.name ? { name: node.name } : {}),
+        } as any
+      }
+    )(resolvedObject, "any");
+
+    // Solve any `ref` properties with actual values
+    resolvedObject = simpleTransformGenerator(
+      "ref",
+      "any",
+      (refNode) => {
+        return this.validator.getRefType(refNode) as any;
+      }
+    )(resolvedObject, "any");
+
+    // finally solve all generics
+    return resolvedObject as NamedType
   }
 
   private exportToTypeScript(
