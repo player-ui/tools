@@ -26,9 +26,10 @@ const isInView = (node: ASTNode): boolean => {
 const checkTypesForAssetWrapper = (nodes: Array<NodeType>): boolean => {
   for (let i = 0; i < nodes.length; i++) {
     const node = nodes[i];
-    if (node.type === "ref" && node.ref.includes("AssetWrapper")) return true;
-    if (node.type === "or") return checkTypesForAssetWrapper(node.or);
-    if (node.type === "and") return checkTypesForAssetWrapper(node.and);
+    if (node.type === "object" && node.title?.includes("AssetWrapper")) {
+      return true;
+    } else if (node.type === "or") return checkTypesForAssetWrapper(node.or);
+    else if (node.type === "and") return checkTypesForAssetWrapper(node.and);
   }
 
   return false;
