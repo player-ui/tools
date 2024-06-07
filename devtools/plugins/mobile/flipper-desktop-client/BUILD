@@ -58,23 +58,23 @@ js_run_binary(
     tool = ":flipper_pkg",
 )
 
-js_pipeline(
-    package_name = "@flipper-plugin-player-ui-devtools",
-    deps = [
-        ":node_modules/@player-tools/devtools-client",
-        ":node_modules/@player-tools/devtools-types",
-        "//:node_modules/@types/react",
-        "//:node_modules/react",
-    ],
-    test_deps = [
-        "//:node_modules",
-        "//:vitest_config",
-    ],
-    build_deps = [
-        "//:node_modules/@oclif/errors",
-        "//:node_modules/flipper-pkg",
-    ],
-    peer_deps = [
-        "//:node_modules/flipper-plugin",
-    ]
-)
+// js_pipeline(
+//     package_name = "@flipper-plugin-player-ui-devtools",
+//     deps = [
+//         ":node_modules/@player-tools/devtools-client",
+//         ":node_modules/@player-tools/devtools-types",
+//         "//:node_modules/@types/react",
+//         "//:node_modules/react",
+//     ],
+//     test_deps = [
+//         "//:node_modules",
+//         "//:vitest_config",
+//     ],
+//     build_deps = [
+//         "//:node_modules/@oclif/errors",
+//         "//:node_modules/flipper-pkg",
+//     ],
+//     peer_deps = [
+//         "//:node_modules/flipper-plugin",
+//     ]
+// )
