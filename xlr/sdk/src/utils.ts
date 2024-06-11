@@ -11,6 +11,14 @@ import type {
 } from "@player-tools/xlr";
 import { isGenericNamedType } from "@player-tools/xlr-utils";
 
+type TypedTransformFunction<T extends NodeTypeStrings = NodeTypeStrings> = (
+  input: NodeTypeMap[T]
+) => NodeTypeMap[T];
+
+export type TransformFunctionMap = {
+  [nodeType in NodeTypeStrings]?: Array<TypedTransformFunction<nodeType>>;
+};
+
 const isMatchingCapability = (
   capability: string,
   capabilitiesToMatch: string | Array<string>
@@ -22,6 +30,146 @@ const isMatchingCapability = (
   return capability === capabilitiesToMatch;
 };
 
+export function xlrTransformWalker(
+  transformMap: TransformFunctionMap
+): (node: NodeType) => NodeType {
+  const walker = (n: NamedType | NodeType): NodeType => {
+    let node = { ...n };
+    const transformFunctions = transformMap[node.type] as unknown as Array<
+      TypedTransformFunction<typeof node.type>
+    >;
+
+    for (const transformFn of transformFunctions ?? []) {
+      node = transformFn(node);
+    }
+
+    if (node.type === "object") {
+      const newObjectProperties: Record<string, ObjectProperty> = {};
+
+      for (const key in node.properties) {
+        const value = node.properties[key];
+        newObjectProperties[key] = {
+          required: value.required,
+          node: walker(value.node),
+        };
+      }
+
+      // need to walk generic tokens
+      return {
+        ...node,
+        properties: { ...newObjectProperties },
+        ...(isGenericNamedType(node)
+          ? {
+              genericTokens: node.genericTokens.map((token) => {
+                return {
+                  ...token,
+                  constraints: token.constraints
+                    ? walker(token.constraints)
+                    : undefined,
+                  default: token.default ? walker(token.default) : undefined,
+                };
+              }),
+            }
+          : {}),
+        extends: node.extends ? (walker(node.extends) as RefNode) : undefined,
+        additionalProperties: node.additionalProperties
+          ? walker(node.additionalProperties)
+          : false,
+      };
+    }
+
+    if (node.type === "array") {
+      return {
+        ...node,
+        elementType: walker(node.elementType),
+      };
+    }
+
+    if (node.type === "and") {
+      return {
+        ...node,
+        and: node.and.map((element) => walker(element)),
+      };
+    }
+
+    if (node.type === "or") {
+      return {
+        ...node,
+        or: node.or.map((element) => walker(element)),
+      };
+    }
+
+    if (node.type === "ref") {
+      return {
+        ...node,
+        ...(node.genericArguments
+          ? {
+              genericArguments: node.genericArguments?.map((arg) =>
+                walker(arg)
+              ),
+            }
+          : {}),
+      };
+    }
+
+    if (node.type === "tuple") {
+      return {
+        ...node,
+        elementTypes: node.elementTypes.map((element) => {
+          return {
+            name: element.name,
+            type: walker(element.type),
+            optional: element.optional,
+          };
+        }),
+        additionalItems: node.additionalItems
+          ? walker(node.additionalItems)
+          : false,
+      };
+    }
+
+    if (node.type === "function") {
+      return {
+        ...node,
+        parameters: node.parameters.map((param) => {
+          return {
+            ...param,
+            type: walker(param.type),
+            default: param.default ? walker(param.default) : undefined,
+          };
+        }),
+        returnType: node.returnType ? walker(node.returnType) : undefined,
+      };
+    }
+
+    if (node.type === "record") {
+      return {
+        ...node,
+        keyType: walker(node.keyType),
+        valueType: walker(node.valueType),
+      };
+    }
+
+    if (node.type === "conditional") {
+      return {
+        ...node,
+        check: {
+          left: walker(node.check.left),
+          right: walker(node.check.left),
+        },
+        value: {
+          true: walker(node.value.true),
+          false: walker(node.value.false),
+        },
+      };
+    }
+
+    return n;
+  };
+
+  return walker;
+}
+
 /**
  * Helper function for simple transforms
  * Walks an XLR tree looking for the specified node type calls the supplied function when called
@@ -31,152 +179,15 @@ export function simpleTransformGenerator<
 >(
   typeToTransform: T,
   capabilityToTransform: string | Array<string>,
-  functionToRun: (input: NodeTypeMap[T]) => NodeTypeMap[T]
+  functionToRun: TypedTransformFunction<T>
 ): TransformFunction {
   /** walker for an XLR tree to touch every node */
-  const walker: TransformFunction = (
-    n: NamedType | NodeType,
-    capability: string
-  ) => {
+  return (n: NamedType | NodeType, capability: string) => {
     // Run transform on base node before running on children
     if (isMatchingCapability(capability, capabilityToTransform)) {
-      let node = { ...n };
-      if (node.type === typeToTransform) {
-        node = functionToRun(node as unknown as NodeTypeMap[T]);
-      }
-
-      if (node.type === "object") {
-        const newObjectProperties: Record<string, ObjectProperty> = {};
-
-        for (const key in node.properties) {
-          const value = node.properties[key];
-          newObjectProperties[key] = {
-            required: value.required,
-            node: walker(value.node, capability),
-          };
-        }
-
-        // need to walk generic tokens
-        return {
-          ...node,
-          properties: { ...newObjectProperties },
-          ...(isGenericNamedType(node)
-            ? {
-                genericTokens: node.genericTokens.map((token) => {
-                  return {
-                    ...token,
-                    constraints: token.constraints
-                      ? walker(token.constraints, capability)
-                      : undefined,
-                    default: token.default
-                      ? walker(token.default, capability)
-                      : undefined,
-                  };
-                }),
-              }
-            : {}),
-          extends: node.extends
-            ? (walker(node.extends, capability) as RefNode)
-            : undefined,
-          additionalProperties: node.additionalProperties
-            ? walker(node.additionalProperties, capability)
-            : false,
-        };
-      }
-
-      if (node.type === "array") {
-        return {
-          ...node,
-          elementType: walker(node.elementType, capability),
-        };
-      }
-
-      if (node.type === "and") {
-        return {
-          ...node,
-          and: node.and.map((element) => walker(element, capability)),
-        };
-      }
-
-      if (node.type === "or") {
-        return {
-          ...node,
-          or: node.or.map((element) => walker(element, capability)),
-        };
-      }
-
-      if (node.type === "ref") {
-        return {
-          ...node,
-          ...(node.genericArguments
-            ? {
-                genericArguments: node.genericArguments?.map((arg) =>
-                  walker(arg, capability)
-                ),
-              }
-            : {}),
-        };
-      }
-
-      if (node.type === "tuple") {
-        return {
-          ...node,
-          elementTypes: node.elementTypes.map((element) => {
-            return {
-              name: element.name,
-              type: walker(element.type, capability),
-              optional: element.optional,
-            };
-          }),
-          additionalItems: node.additionalItems
-            ? walker(node.additionalItems, capability)
-            : false,
-        };
-      }
-
-      if (node.type === "function") {
-        return {
-          ...node,
-          parameters: node.parameters.map((param) => {
-            return {
-              ...param,
-              type: walker(param.type, capability),
-              default: param.default
-                ? walker(param.default, capability)
-                : undefined,
-            };
-          }),
-          returnType: node.returnType
-            ? walker(node.returnType, capability)
-            : undefined,
-        };
-      }
-
-      if (node.type === "record") {
-        return {
-          ...node,
-          keyType: walker(node.keyType, capability),
-          valueType: walker(node.valueType, capability),
-        };
-      }
-
-      if (node.type === "conditional") {
-        return {
-          ...node,
-          check: {
-            left: walker(node.check.left, capability),
-            right: walker(node.check.left, capability),
-          },
-          value: {
-            true: walker(node.value.true, capability),
-            false: walker(node.value.false, capability),
-          },
-        };
-      }
+      return xlrTransformWalker({ [typeToTransform]: [functionToRun] })(n);
     }
 
     return n;
   };
-
-  return walker;
 }

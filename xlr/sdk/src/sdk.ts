@@ -27,7 +27,7 @@ import type { XLRRegistry, Filters } from "./registry";
 import { BasicXLRRegistry } from "./registry";
 import type { ExportTypes } from "./types";
 import { XLRValidator } from "./validator";
-import { simpleTransformGenerator } from "./utils";
+import { simpleTransformGenerator, TransformFunctionMap, xlrTransformWalker } from "./utils";
 
 export interface GetTypeOptions {
   /** Resolves `extends` fields in objects */
@@ -311,11 +311,10 @@ export class XLRSDK {
    * filing in any remaining generics with their default value
    */
   private resolveType(type: NamedType): NamedType {
-    // Solve `extends` property on objects
-    let resolvedObject = simpleTransformGenerator(
-      "object",
-      "any",
-      (objectNode) => {
+    const resolvedObject = fillInGenerics(type);
+
+    const transformMap: TransformFunctionMap = {
+      object: [(objectNode: ObjectType) => {
         if (objectNode.extends) {
           const refName = objectNode.extends.ref.split("<")[0];
           let extendedType = this.getType(refName, { getRawType: true });
@@ -356,43 +355,23 @@ export class XLRSDK {
         }
 
         return objectNode;
-      }
-    )(type, "any");
-
-    resolvedObject = fillInGenerics(resolvedObject);
-
-    // Solve any Conditional types that are in the object
-    resolvedObject = simpleTransformGenerator(
-      "conditional",
-      "any",
-      (node) => {
-        return resolveConditional(node) as ConditionalType
-      }
-    )(resolvedObject, "any");
-
-    // Solve Any type union with their effective value
-    resolvedObject = simpleTransformGenerator(
-      "and",
-      "any",
-      (node) => {
+      }],
+      conditional: [      (node) => {
+        return resolveConditional(node) as any
+      }],
+      and: [(node) => {
         return {
           ...this.validator.computeIntersectionType(node.and),
           ...(node.name ? { name: node.name } : {}),
         } as any
-      }
-    )(resolvedObject, "any");
+      }],
+      ref: [(refNode) => {
+        return this.validator.getRefType(refNode) as any
+      }]
+    }
 
-    // Solve any `ref` properties with actual values
-    resolvedObject = simpleTransformGenerator(
-      "ref",
-      "any",
-      (refNode) => {
-        return this.validator.getRefType(refNode) as any;
-      }
-    )(resolvedObject, "any");
 
-    // finally solve all generics
-    return resolvedObject as NamedType
+    return xlrTransformWalker(transformMap)(resolvedObject) as NamedType
   }
 
   private exportToTypeScript(
