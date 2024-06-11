@@ -501,6 +501,21 @@ importers:
         specifier: workspace:*
         version: link:../../../types
 
+  devtools/plugins/desktop/profiler:
+    dependencies:
+      '@player-tools/cli':
+        specifier: workspace:*
+        version: link:../../../../cli
+      '@player-tools/devtools-desktop-plugins-common':
+        specifier: workspace:*
+        version: link:../common
+      '@player-tools/devtools-types':
+        specifier: workspace:*
+        version: link:../../../types
+      '@player-tools/dsl':
+        specifier: workspace:*
+        version: link:../../../../language/dsl
+
   devtools/plugins/mobile/flipper-desktop-client:
     dependencies:
       '@player-tools/devtools-client':
@@ -15687,7 +15702,7 @@ packages:
     dev: false
 
   /json5@2.2.3:
-    resolution: {integrity: sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==}
+    resolution: {integrity: sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==, tarball: https://registry.npmjs.org/json5/-/json5-2.2.3.tgz}
     engines: {node: '>=6'}
     hasBin: true
     dev: false

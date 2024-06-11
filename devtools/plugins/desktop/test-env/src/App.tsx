@@ -5,6 +5,7 @@ import {
 } from "@player-ui/react";
 import { ReferenceAssetsPlugin } from "@player-ui/reference-assets-plugin-react";
 import { BasicWevDevtoolsPlugin } from "@player-tools/devtools-basic-web-plugin";
+import { ProfilerPlugin } from "@player-tools/devtools-profiler-web-plugin";
 import { useEffect } from "react";
 import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 import flow from "./flow.json";
@@ -12,6 +13,7 @@ import flow from "./flow.json";
 // Add the plugins to test here:
 const testingPlugins: ReactPlayerOptions["plugins"] = [
   new BasicWevDevtoolsPlugin() as unknown as ReactPlayerPlugin,
+  new ProfilerPlugin() as unknown as ReactPlayerPlugin,
 ];
 
 const config: ReactPlayerOptions = {

@@ -19,7 +19,11 @@ export const reducer = (
           payload: { plugins },
         } = transaction;
         dset(draft, ["current", "player"], sender);
-        dset(draft, ["current", "plugin"], plugins[Object.keys(plugins)[0]].id);
+        dset(
+          draft,
+          ["current", "plugin"],
+          draft.current.plugin || plugins[Object.keys(plugins)[0]].id
+        );
 
         dset(draft, ["players", sender, "plugins"], plugins);
         dset(draft, ["players", sender, "active"], true);

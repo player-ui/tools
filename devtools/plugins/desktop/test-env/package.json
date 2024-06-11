@@ -12,9 +12,10 @@
   },
   "dependencies": {
     "@player-tools/devtools-basic-web-plugin": "0.0.0-PLACEHOLDER",
-    "@player-ui/pubsub-plugin": "0.7.2-next.4",
-    "@player-ui/react": "0.7.2-next.4",
-    "@player-ui/reference-assets-plugin-react": "0.7.2-next.4",
+    "@player-tools/devtools-profiler-web-plugin": "0.0.0-PLACEHOLDER",
+    "@player-ui/pubsub-plugin": "0.7.3",
+    "@player-ui/react": "0.7.3",
+    "@player-ui/reference-assets-plugin-react": "0.7.3",
     "concurrently": "^8.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
