@@ -274,7 +274,7 @@ export class XLRValidator {
 
         return typeof literalType.value === "string";
       case "null":
-        return literalType.value === "null";
+        return literalType.value === null;
       case "never":
         return literalType === undefined;
       case "any":
