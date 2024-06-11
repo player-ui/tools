@@ -151,9 +151,10 @@ export function fillInGenerics(
     localGenerics = new Map();
     if (isGenericNodeType(xlrNode)) {
       xlrNode.genericTokens?.forEach((token) => {
+        const genericValue = (token.default ?? token.constraints) as NodeType;
         localGenerics.set(
           token.symbol,
-          (token.default ?? token.constraints) as NodeType
+          fillInGenerics(genericValue, localGenerics)
         );
       });
     }
@@ -227,8 +228,10 @@ export function fillInGenerics(
   }
 
   if (xlrNode.type === "array") {
-    // eslint-disable-next-line no-param-reassign
-    xlrNode.elementType = fillInGenerics(xlrNode.elementType, localGenerics);
+    return {
+      ...xlrNode,
+      elementType: fillInGenerics(xlrNode.elementType, localGenerics),
+    };
   } else if (xlrNode.type === "or" || xlrNode.type === "and") {
     let pointer;
     if (xlrNode.type === "or") {

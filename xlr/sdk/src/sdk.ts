@@ -1,7 +1,5 @@
 /* eslint-disable prettier/prettier */
 import type {
-  AndType,
-  ConditionalType,
   Manifest,
   NamedType,
   NodeType,
@@ -356,7 +354,7 @@ export class XLRSDK {
 
         return objectNode;
       }],
-      conditional: [      (node) => {
+      conditional: [(node) => {
         return resolveConditional(node) as any
       }],
       and: [(node) => {

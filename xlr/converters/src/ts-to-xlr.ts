@@ -39,6 +39,7 @@ import {
   isTopLevelDeclaration,
   resolveConditional,
   applyExcludeToNodeType,
+  isPrimitiveTypeNode,
 } from "@player-tools/xlr-utils";
 import { ConversionError } from "./types";
 
@@ -359,7 +360,15 @@ export class TsConverter {
           false: this.convertTsTypeNode(node.falseType) as NodeType,
         },
       } as ConditionalType;
-      return resolveConditional(xlrNode);
+      // Resolve simple conditionals now, defer complex ones to runtime
+      if (
+        isPrimitiveTypeNode(xlrNode.check.left) &&
+        isPrimitiveTypeNode(xlrNode.check.right)
+      ) {
+        return resolveConditional(xlrNode);
+      } else {
+        return xlrNode;
+      }
     }
 
     if (ts.isTypeReferenceNode(node)) {
