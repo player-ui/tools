@@ -8,7 +8,7 @@ export const FlowView = (
   <Screen
     id={VIEWS_IDS.FLOW}
     main={
-      <ObjectInspector binding={bindings.flow as any}>
+      <ObjectInspector binding={bindings.flow as any} filter>
         <ObjectInspector.Label>Flow</ObjectInspector.Label>
       </ObjectInspector>
     }
