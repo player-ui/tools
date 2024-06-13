@@ -1,0 +1,32 @@
+import { expression as e } from "@player-tools/dsl";
+import { Action, Collection, Input, Table, Text } from "@devtools-ui/plugin";
+import React from "react";
+import { VIEWS_IDS, INTERACTIONS } from "../../constants";
+import { Screen } from "../common";
+import { bindings } from "../schema";
+
+// TODO: customize it!
+
+const desc = `In this view, we have some examples of how to interact with your dev 
+tools plugin running within the inspect player. You can input a hex color (e.g., #3467eb) and 
+click the button to see its effect on your inspected player. Additionally, 
+you can observe that the logs flow from the inspected player to your table.`;
+const evaluateExpression = e` publish('${INTERACTIONS.PERFORM_ACTION_WITH_PAYLOAD}', ${bindings.color}) `;
+
+export const View2 = (
+  <Screen
+    id={VIEWS_IDS.VIEW_2}
+    main={
+      <Collection>
+        <Collection.Values>
+          <Text>{desc}</Text>
+          <Input binding={bindings.color as any} />
+          <Action exp={evaluateExpression.toString()}>
+            <Action.Label>Highlight</Action.Label>
+          </Action>
+          <Table binding={bindings.logs as any} />
+        </Collection.Values>
+      </Collection>
+    }
+  />
+);

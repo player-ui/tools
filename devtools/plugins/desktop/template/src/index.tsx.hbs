@@ -1,0 +1,56 @@
+import type { Player, ReactPlayer, ReactPlayerPlugin } from "@player-ui/react";
+import React from "react";
+import { WrapperComponent } from "./WrapperComponent";
+import { PLUGIN_ID, PLUGIN_INACTIVE_WARNING } from "./constants";
+
+// Development tools plugins are essentially Player plugins. This means they can utilize all the hooks
+// exposed by the Player and should implement the same interface as any other Player plugin. In this example,
+// we are tapping into the logs, but there are several other hooks available for leverage, such as data and flow.
+
+// TODO: Define your plugin logic here
+
+/** Taps into the Player and ReactPlayer hooks and leverage the WrapperComponent to define and process the content. */
+export class TemplatePlugin implements ReactPlayerPlugin {
+  name = PLUGIN_ID;
+
+  logs: {
+    severity: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    message: any;
+  }[] = [];
+
+  checkIfDevtoolsIsActive() {
+    return localStorage.getItem("player-ui-devtools-active") === "true";
+  }
+
+  apply(player: Player) {
+    // To prevent any performance impact due to development tools plugins running in production, we should only register
+    // those if the development tools flag is active (the user toggles it by accessing the browser extension option panel).
+    if (!this.checkIfDevtoolsIsActive()) {
+      console.log(PLUGIN_INACTIVE_WARNING);
+      return;
+    }
+
+    // Tap into the Logs hook to capture all logs from the inspected Player.
+    player.logger.hooks.log.tap(this.name, (severity, message) => {
+      this.logs = [...this.logs, { severity, message }];
+    });
+  }
+
+  applyReact(reactPlayer: ReactPlayer) {
+    if (!this.checkIfDevtoolsIsActive()) {
+      return;
+    }
+
+    // eslint-disable-next-line react/display-name
+    reactPlayer.hooks.webComponent.tap(this.name, (Comp) => () => {
+      const Component = Comp as React.FC;
+
+      return (
+        <WrapperComponent logs={this.logs}>
+          <Component />
+        </WrapperComponent>
+      );
+    });
+  }
+}
