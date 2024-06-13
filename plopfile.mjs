@@ -1,18 +1,25 @@
 import fs from "fs";
 import path from "path";
 
+const toKebabCase = (str) =>
+  str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, "$1-$2").toLowerCase();
+
 export default function (plop) {
-  plop.setActionType("renameFiles", function (answers) {
+  plop.setActionType("renameBuildFiles", function (answers) {
     const { pluginName } = answers;
-    const basePath = path.resolve(process.cwd(), toKebabCase(pluginName));
+    const name = toKebabCase(pluginName.toLowerCase());
+    const basePath = path.resolve(
+      process.cwd(),
+      `./devtools/plugins/desktop/${name}/`
+    );
     fs.renameSync(
       path.join(basePath, "BUILD.hbs"),
       path.join(basePath, "BUILD")
     );
-    return `${pluginName}/README and ${pluginName}/BUILD have been renamed`;
+    return `./devtools/plugins/desktop/${pluginName}/BUILD have been renamed`;
   });
 
-  plop.setGenerator("web dev tools plugin", {
+  plop.setGenerator("dev-tools-web-plugin", {
     description: "Create a new web dev tools plugin",
     prompts: [
       {
@@ -36,7 +43,7 @@ export default function (plop) {
         stripExtension: true,
       },
       {
-        type: "renameFiles",
+        type: "renameBuildFiles",
       },
       ...Object.values(extendedActions),
     ],
@@ -47,14 +54,14 @@ const extendedActions = {
   bazelIgnore: {
     type: "append",
     path: "./.bazelignore",
-    pattern: /(.|\n)+(.*node_modules)/,
-    template: "{{dashCase assetName}}/node_modules",
+    pattern: /\# Node modules/,
+    template: "{{dashCase pluginName}}/node_modules",
   },
   pnpmWorkspace: {
     type: "append",
     path: "./pnpm-workspace.yaml",
-    pattern: /(.|\n)+(.[\w|"])/,
-    template: '  - "{{dashCase assetName}}"',
+    pattern: /packages\:/,
+    template: '  - "devtools/plugins/desktop/{{dashCase pluginName}}"',
   },
   testAppImport: {
     type: "append",
@@ -62,19 +69,20 @@ const extendedActions = {
     pattern:
       /import { BasicWevDevtoolsPlugin } from "@player-tools\/devtools-basic-web-plugin";\n?/,
     template:
-      'import { {{pascalCase pluginName}} } from "@player-tools/template-plugin";',
+      'import { {{pascalCase pluginName}} } from "@player-tools/template-plugin";\n',
   },
   testAppPlugin: {
     type: "append",
     path: "./devtools/plugins/desktop/test-env/src/App.tsx",
-    pattern: /new BasicWebDevtoolsPlugin\(\) as unknown as ReactPlayerPlugin,/,
+    pattern:
+      /new BasicWebDevtoolsPlugin\(\) as unknown as ReactPlayerPlugin,\n?/,
     template:
-      "new {{pascalCase pluginName}}Plugin() as unknown as ReactPlayerPlugin,",
+      "new {{pascalCase pluginName}}Plugin() as unknown as ReactPlayerPlugin,\n",
   },
   testAppSetup: {
-    type: "append",
+    type: "modify",
     path: "./devtools/plugins/desktop/test-env/setup.sh",
     pattern: /(PLUGINS=.*)(\))/,
-    template: ' "@player-tools/{{pluginName}}-plugin"$2',
+    template: '$1 "@player-tools/{{dashCase pluginName}}-plugin"$2\n',
   },
 };

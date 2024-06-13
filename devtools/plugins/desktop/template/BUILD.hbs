@@ -30,7 +30,7 @@ dsl_input = "src/content/index.ts"
 dsl_output = "_generated"
 
 dsl_pipeline(
-    package_name = "@player-tools/template-plugin",
+    package_name = "@player-tools/{{dashCase pluginName}}-plugin",
     deps = dependencies,
     dsl_input = dsl_input,
     dsl_output = dsl_output,

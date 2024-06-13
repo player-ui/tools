@@ -1,23 +1,23 @@
-# @player-tools/devtools-desktop-basic
+# @player-tools/{{ dashCase pluginName}}-plugin
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
-This package provides a basic devtools plugin for the Player UI.
+{{pluginDescription}}
 
 ## Overview
 
-The `@player-tools/devtools-desktop-basic` package is a part of the Player UI Devtools architecture.
+The `@player-tools/{{ dashCase pluginName}}-plugin` package is a part of the Player UI Devtools architecture.
 
 ## Installation
 
 The package is available as an npm package. You can install it using (p)npm or yarn:
 
 ```bash
-npm install @player-tools/devtools-desktop-basic
+npm install @player-tools/{{ dashCase pluginName}}-plugin
 ```
 
 ```bash
-yarn add @player-tools/devtools-desktop-basic
+yarn add @player-tools/{{ dashCase pluginName}}-plugin
 ```
 
 ## Usage
@@ -25,13 +25,13 @@ yarn add @player-tools/devtools-desktop-basic
 You can import the plugin in your TypeScript or JavaScript files:
 
 ```ts
-import { BasicWevDevtoolsPlugin } from "@player-tools/devtools-desktop-basic";
+import { {{pascalCase pluginName}}Plugin } from "@player-tools/{{ dashCase pluginName}}-plugin";
 ```
 
-Then, you can use the `BasicWevDevtoolsPlugin` in your application:
+Then, you can use the `{{pascalCase pluginName}}Plugin` in your application:
 
 ```ts
-const myPlugin = new BasicWevDevtoolsPlugin();
+const myPlugin = new {{pascalCase pluginName}}Plugin();
 ```
 
 ## Contributing

@@ -11,6 +11,7 @@
     "setup": "node ./scripts/generate-pnpm-workspace.js",
     "link:local": "node ./scripts/pnpm-link-setup.js",
     "lint": "eslint --cache --ext .js,.jsx,.ts,.tsx $(scripts/pkg-roots.sh)",
+    "gen:dev-tools-web-plugin": "plop dev-tools-web-plugin",
     "prepare": "is-ci || husky install",
     "pub:local": "sh ./scripts/publish-to-verdaccio.sh",
     "test": "bazel test -- $(bazel query \"kind(nodejs_test, //...)\" --output label 2>/dev/null | tr '\\n' ' ')"
@@ -171,5 +172,8 @@
   "resolutions": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "plop": "^4.0.1"
   }
 }
