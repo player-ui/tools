@@ -25,11 +25,13 @@ import type { XLRRegistry, Filters } from "./registry";
 import { BasicXLRRegistry } from "./registry";
 import type { ExportTypes } from "./types";
 import { XLRValidator } from "./validator";
-import { simpleTransformGenerator, TransformFunctionMap, xlrTransformWalker } from "./utils";
+import { TransformFunctionMap, xlrTransformWalker } from "./utils";
 
 export interface GetTypeOptions {
   /** Resolves `extends` fields in objects */
   getRawType?: boolean;
+  /** Perform optimizations to resolve all references, type intersections, and conditionals */
+  optimize?: boolean;
 }
 
 /**
@@ -197,7 +199,7 @@ export class XLRSDK {
         | undefined;
     }
 
-    type = this.resolveType(type)
+    type = this.resolveType(type, options?.optimize)
 
     this.computedNodeCache.set(id, type);
 
@@ -308,10 +310,10 @@ export class XLRSDK {
    * Resolving any ref nodes
    * filing in any remaining generics with their default value
    */
-  private resolveType(type: NamedType): NamedType {
+  private resolveType(type: NamedType, optimize = true): NamedType {
     const resolvedObject = fillInGenerics(type);
 
-    const transformMap: TransformFunctionMap = {
+    let transformMap: TransformFunctionMap = {
       object: [(objectNode: ObjectType) => {
         if (objectNode.extends) {
           const refName = objectNode.extends.ref.split("<")[0];
@@ -354,20 +356,25 @@ export class XLRSDK {
 
         return objectNode;
       }],
-      conditional: [(node) => {
-        return resolveConditional(node) as any
-      }],
-      and: [(node) => {
-        return {
-          ...this.validator.computeIntersectionType(node.and),
-          ...(node.name ? { name: node.name } : {}),
-        } as any
-      }],
-      ref: [(refNode) => {
-        return this.validator.getRefType(refNode) as any
-      }]
-    }
+    } 
 
+    if(optimize){
+      transformMap = {
+        ...transformMap,
+        conditional: [(node) => {
+          return resolveConditional(node) as any
+        }],
+        and: [(node) => {
+          return {
+            ...this.validator.computeIntersectionType(node.and),
+            ...(node.name ? { name: node.name } : {}),
+          } as any
+        }],
+        ref: [(refNode) => {
+          return this.validator.getRefType(refNode) as any
+        }]
+      }
+    }
 
     return xlrTransformWalker(transformMap)(resolvedObject) as NamedType
   }
