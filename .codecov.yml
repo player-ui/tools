@@ -1,0 +1,3 @@
+ignore:
+  - "devtools/plugins/desktop/basic/src/content"
+  - "devtools/plugins/desktop/profiler/src/content"

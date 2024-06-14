@@ -1,0 +1,99 @@
+{
+  "id": "flow",
+  "views": [
+    {
+      "id": "view-1",
+      "type": "info",
+      "title": {
+        "asset": {
+          "id": "view-1-title",
+          "type": "text",
+          "value": "View 1"
+        }
+      },
+      "primaryInfo": {
+        "asset": {
+          "id": "view-1-primary-info",
+          "type": "text",
+          "value": "Binding test (foo.bar): {{foo.bar}}"
+        }
+      },
+      "actions": [
+        {
+          "asset": {
+            "id": "view-1-action-1",
+            "type": "action",
+            "value": "Next",
+            "label": {
+              "asset": {
+                "id": "view-1-action-1-label",
+                "type": "text",
+                "value": "Continue"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "view-2",
+      "type": "info",
+      "title": {
+        "asset": {
+          "id": "view-2-title",
+          "type": "text",
+          "value": "View 2"
+        }
+      },
+      "primaryInfo": {
+        "asset": {
+          "id": "view-2-primary-info",
+          "type": "text",
+          "value": "Binding test (foo.fuz): {{foo.fuz}}"
+        }
+      },
+      "actions": [
+        {
+          "asset": {
+            "id": "view-2-action-1",
+            "type": "action",
+            "value": "Prev",
+            "label": {
+              "asset": {
+                "id": "view-2-action-1-label",
+                "type": "text",
+                "value": "Back"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "data": {
+    "foo": {
+      "bar": "test1",
+      "fuz": "test2"
+    }
+  },
+  "navigation": {
+    "BEGIN": "FLOW_1",
+    "FLOW_1": {
+      "startState": "VIEW_1",
+      "VIEW_1": {
+        "state_type": "VIEW",
+        "ref": "view-1",
+        "transitions": {
+          "Next": "VIEW_2"
+        }
+      },
+      "VIEW_2": {
+        "state_type": "VIEW",
+        "ref": "view-2",
+        "transitions": {
+          "Prev": "VIEW_1"
+        }
+      }
+    }
+  }
+}

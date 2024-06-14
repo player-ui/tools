@@ -1,6 +1,6 @@
 import { test, expect } from "vitest";
 import React from "react";
-import { render, expression as e } from "..";
+import { render, expression as e, makeBindingsForObject } from "..";
 import { Collection, Input, Text } from "./helpers/asset-library";
 
 test("works with a Component that returns a Fragment of items", async () => {
@@ -78,4 +78,48 @@ test("handles invalid expressions", async () => {
   await expect(render(<App />)).rejects.toThrow(
     'Unclosed quote after "" at character 9'
   );
+});
+
+test("handles using intermediate schema values as bindings", async () => {
+  const model = {
+    some: {
+      path: [
+        {
+          of: {
+            things: {
+              type: "StringType",
+            },
+          },
+        },
+      ],
+    },
+  };
+
+  const schema = makeBindingsForObject(model);
+
+  const App = () => {
+    return (
+      <Collection>
+        <Collection.Values>
+          <Text value={schema.some.path} />
+        </Collection.Values>
+      </Collection>
+    );
+  };
+
+  expect((await render(<App />)).jsonValue).toMatchInlineSnapshot(`
+    {
+      "id": "root",
+      "type": "collection",
+      "values": [
+        {
+          "asset": {
+            "id": "values-0",
+            "type": "text",
+            "value": "{{some.path}}",
+          },
+        },
+      ],
+    }
+  `);
 });

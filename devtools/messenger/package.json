@@ -1,0 +1,8 @@
+{
+  "name": "@player-tools/devtools-messenger",
+  "version": "0.0.0-PLACEHOLDER",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@player-tools/devtools-types": "workspace:*"
+  }
+}

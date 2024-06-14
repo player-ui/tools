@@ -14,21 +14,31 @@ profile
 
 # Node modules
 node_modules
-cli/node_modules
-common/static-xlrs/node_modules
+xlr/utils/node_modules
+xlr/types/node_modules
+xlr/sdk/node_modules
+xlr/converters/node_modules
+xlr/asset-docgen-webpack-plugin/node_modules
+language/typescript-expression-plugin/node_modules
+language/json-language-service/node_modules
+language/json-language-server/node_modules
+language/dsl/node_modules
+helpers/node_modules
 devtools/client/node_modules
+devtools/messenger/node_modules
+devtools/plugins/desktop/basic/node_modules
+devtools/plugins/desktop/common/node_modules
+devtools/plugins/desktop/profiler/node_modules
+devtools/plugins/mobile/flipper-desktop-client/node_modules
+devtools/types/node_modules
 devtools/common/node_modules
 devtools/flipper/node_modules
 devtools/ui/node_modules
-language/dsl/node_modules
-language/json-language-server/node_modules
-language/json-language-service/node_modules
-language/typescript-expression-plugin/node_modules
-xlr/asset-docgen-webpack-plugin/node_modules
-xlr/converters/node_modules
-xlr/sdk/node_modules
-xlr/types/node_modules
-xlr/utils/node_modules
+common/static-xlrs/node_modules
+cli/node_modules
+
+# Devtools plugins test environment
+devtools/plugins/desktop/test-env/node_modules
 
 # Backup files
 _backup

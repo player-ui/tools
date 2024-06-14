@@ -40,6 +40,11 @@ export interface PlayerApplicability {
     | boolean;
 }
 
+export type WithApplicability<T = Record<string, unknown>> = T &
+  PlayerApplicability;
+
+export type WithPlayerTypes<T> = WithApplicability<WithTemplateTypes<T>>;
+
 export type AssetPropsWithChildren<T extends Asset> = WithChildren<
   WithTemplateTypes<
     OmitProp<RemoveUnknownIndex<T>, "id" | "type"> & Partial<Pick<Asset, "id">>

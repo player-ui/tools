@@ -1,0 +1,11 @@
+{
+  "name": "@player-tools/devtools-basic-web-plugin",
+  "version": "0.0.0-PLACEHOLDER",
+  "main": "src/index.tsx",
+  "dependencies": {
+    "@player-tools/devtools-types": "workspace:*",
+    "@player-tools/devtools-desktop-plugins-common": "workspace:*",
+    "@player-tools/dsl": "workspace:*",
+    "@player-tools/cli": "workspace:*"
+  }
+}
