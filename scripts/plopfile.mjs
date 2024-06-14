@@ -36,9 +36,9 @@ export default function (plop) {
     actions: [
       {
         type: "addMany",
-        destination: "./devtools/plugins/desktop/{{dashCase pluginName}}",
-        base: "./devtools/plugins/desktop/template",
-        templateFiles: "./devtools/plugins/desktop/template/**/*",
+        destination: "../devtools/plugins/desktop/{{dashCase pluginName}}",
+        base: "../devtools/plugins/desktop/template",
+        templateFiles: "../devtools/plugins/desktop/template/**/*",
         globOptions: { dot: true },
         stripExtension: true,
       },
@@ -53,19 +53,19 @@ export default function (plop) {
 const extendedActions = {
   bazelIgnore: {
     type: "append",
-    path: "./.bazelignore",
+    path: "../.bazelignore",
     pattern: /\# Node modules/,
     template: "{{dashCase pluginName}}/node_modules",
   },
   pnpmWorkspace: {
     type: "append",
-    path: "./pnpm-workspace.yaml",
+    path: "../pnpm-workspace.yaml",
     pattern: /packages\:/,
     template: '  - "devtools/plugins/desktop/{{dashCase pluginName}}"',
   },
   testAppImport: {
     type: "append",
-    path: "./devtools/plugins/desktop/test-env/src/App.tsx",
+    path: "../devtools/plugins/desktop/test-env/src/App.tsx",
     pattern:
       /import { BasicWevDevtoolsPlugin } from "@player-tools\/devtools-basic-web-plugin";\n?/,
     template:
@@ -73,7 +73,7 @@ const extendedActions = {
   },
   testAppPlugin: {
     type: "append",
-    path: "./devtools/plugins/desktop/test-env/src/App.tsx",
+    path: "../devtools/plugins/desktop/test-env/src/App.tsx",
     pattern:
       /new BasicWebDevtoolsPlugin\(\) as unknown as ReactPlayerPlugin,\n?/,
     template:
@@ -81,7 +81,7 @@ const extendedActions = {
   },
   testAppSetup: {
     type: "modify",
-    path: "./devtools/plugins/desktop/test-env/setup.sh",
+    path: "../devtools/plugins/desktop/test-env/setup.sh",
     pattern: /(PLUGINS=.*)(\))/,
     template: '$1 "@player-tools/{{dashCase pluginName}}-plugin"$2\n',
   },
