@@ -164,7 +164,7 @@ export function xlrTransformWalker(
       };
     }
 
-    return n;
+    return node;
   };
 
   return walker;
