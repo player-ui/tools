@@ -33,6 +33,7 @@ export abstract class BaseCommand extends Command {
         return await configLoader.load(configFilePath);
       } catch (e: unknown) {
         this.warn(`Error loading config file: ${configFilePath}`);
+        this.warn(e as any);
       }
     }
 
