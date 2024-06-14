@@ -317,7 +317,7 @@ export class XLRSDK {
       object: [(objectNode: ObjectType) => {
         if (objectNode.extends) {
           const refName = objectNode.extends.ref.split("<")[0];
-          let extendedType = this.getType(refName);
+          let extendedType = this.getType(refName, {getRawType: true});
           if (!extendedType) {
             throw new Error(
               `Error resolving ${objectNode.name}: can't find extended type ${refName}`

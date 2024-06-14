@@ -147,7 +147,7 @@ export function resolveConditional(conditional: ConditionalType): NodeType {
 }
 
 /**
- *
+ * Resolve referenced node with potential generic arguments
  */
 export function resolveReferenceNode(
   genericReference: RefNode,
