@@ -317,7 +317,7 @@ export class XLRSDK {
       object: [(objectNode: ObjectType) => {
         if (objectNode.extends) {
           const refName = objectNode.extends.ref.split("<")[0];
-          let extendedType = this.getType(refName, { getRawType: true });
+          let extendedType = this.getType(refName);
           if (!extendedType) {
             throw new Error(
               `Error resolving ${objectNode.name}: can't find extended type ${refName}`
@@ -338,6 +338,18 @@ export class XLRSDK {
               name: objectNode.name,
               description: objectNode.description,
             };
+          }
+
+          if( extendedType.type === "or"){
+            return {
+              ...this.validator.computeIntersectionType([
+                objectNode,
+                extendedType
+              ]
+              ),
+              name: objectNode.name,
+              description: objectNode.description,
+            } as any;
           }
 
           // if the merge isn't straightforward, defer until validation time for now
