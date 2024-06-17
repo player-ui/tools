@@ -1,0 +1,41 @@
+import type { PluginData } from "@player-tools/devtools-types";
+
+export const PLUGIN_ID = "player-ui-{{dashCase pluginName}}-plugin";
+
+export const PLUGIN_NAME = "{{pascalCase pluginName}}";
+
+export const PLUGIN_DESCRIPTION = "{{pluginDescription}}";
+
+export const PLUGIN_VERSION = "0.0.1";
+
+// Your dev tools plugin displays content using a Player instance, which means
+// it has the same features as any Player content, including multi-view content.
+// Your plugin has two views, but we change, remove or add views by adjusting the
+// key-value pairs to this record. The `src/content/navigation` uses this
+// record to make the `flow.navigation`, providing transitions for each element
+// within the record.
+export const VIEWS_IDS = {
+  // TODO: Add your view IDs here
+  VIEW_1: "view-1",
+  VIEW_2: "view-2",
+};
+
+// You can add interactions to your plugin, such as handling a button click or
+// sending data inserted into an input by the user. To ensure that the content
+// in the development tools panel and the plugin running in the inspected Player
+// stay in sync, specify your interaction below. You can later make use of these
+// interactions in the `src/WrapperComponent`.
+export const INTERACTIONS = {
+  // TODO: Add your interactions here
+  PERFORM_ACTION_WITH_PAYLOAD: "perform-action-with-payload",
+};
+
+export const BASE_PLUGIN_DATA: Omit<PluginData, "flow"> = {
+  id: PLUGIN_ID,
+  name: PLUGIN_NAME,
+  description: PLUGIN_DESCRIPTION,
+  version: PLUGIN_VERSION,
+};
+
+export const PLUGIN_INACTIVE_WARNING =
+  "The plugin has been registered, but the Player development tools are not active. If you are working in a production environment, it is recommended to remove the plugin. Either way, you can activate the Player development tools by clicking on the extension popup and refreshing the page.";
