@@ -6,9 +6,10 @@ import type {
   ObjectProperty,
   ObjectType,
   OrType,
+  RefNode,
 } from "@player-tools/xlr";
 import { computeExtends, resolveConditional } from "./validation-helpers";
-import { isGenericNodeType } from "./type-checks";
+import { isGenericNamedType, isGenericNodeType } from "./type-checks";
 
 /**
  * Returns the required type or the optionally required type
@@ -150,9 +151,10 @@ export function fillInGenerics(
     localGenerics = new Map();
     if (isGenericNodeType(xlrNode)) {
       xlrNode.genericTokens?.forEach((token) => {
+        const genericValue = (token.default ?? token.constraints) as NodeType;
         localGenerics.set(
           token.symbol,
-          (token.default ?? token.constraints) as NodeType
+          fillInGenerics(genericValue, localGenerics)
         );
       });
     }
@@ -201,12 +203,35 @@ export function fillInGenerics(
     return {
       ...xlrNode,
       properties: newProperties,
+      ...(isGenericNamedType(xlrNode)
+        ? {
+            genericTokens: xlrNode.genericTokens.map((token) => {
+              return {
+                ...token,
+                constraints: token.constraints
+                  ? fillInGenerics(token.constraints, localGenerics)
+                  : undefined,
+                default: token.default
+                  ? fillInGenerics(token.default, localGenerics)
+                  : undefined,
+              };
+            }),
+          }
+        : {}),
+      extends: xlrNode.extends
+        ? (fillInGenerics(xlrNode.extends, localGenerics) as RefNode)
+        : undefined,
+      additionalProperties: xlrNode.additionalProperties
+        ? fillInGenerics(xlrNode.additionalProperties, localGenerics)
+        : false,
     };
   }
 
   if (xlrNode.type === "array") {
-    // eslint-disable-next-line no-param-reassign
-    xlrNode.elementType = fillInGenerics(xlrNode.elementType, localGenerics);
+    return {
+      ...xlrNode,
+      elementType: fillInGenerics(xlrNode.elementType, localGenerics),
+    };
   } else if (xlrNode.type === "or" || xlrNode.type === "and") {
     let pointer;
     if (xlrNode.type === "or") {

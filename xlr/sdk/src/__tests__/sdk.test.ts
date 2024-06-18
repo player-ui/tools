@@ -48,14 +48,6 @@ describe("Loading XLRs", () => {
 });
 
 describe("Object Recall", () => {
-  test("Processed", () => {
-    const sdk = new XLRSDK();
-    sdk.loadDefinitionsFromModule(Types);
-    sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
-
-    expect(sdk.getType("InputAsset")).toMatchSnapshot();
-  });
-
   test("Raw", () => {
     const sdk = new XLRSDK();
     sdk.loadDefinitionsFromModule(Types);
@@ -63,9 +55,25 @@ describe("Object Recall", () => {
 
     expect(sdk.getType("InputAsset", { getRawType: true })).toMatchSnapshot();
   });
+
+  test("Processed", () => {
+    const sdk = new XLRSDK();
+    sdk.loadDefinitionsFromModule(Types);
+    sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
+
+    expect(sdk.getType("InputAsset", { optimize: false })).toMatchSnapshot();
+  });
+
+  test("Optimized", () => {
+    const sdk = new XLRSDK();
+    sdk.loadDefinitionsFromModule(Types);
+    sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
+
+    expect(sdk.getType("InputAsset")).toMatchSnapshot();
+  });
 });
 
-describe("Basic Validation", () => {
+describe("Validation", () => {
   test("Basic Validation By Name", () => {
     const mockAsset = parseTree(`
     {
@@ -86,7 +94,31 @@ describe("Basic Validation", () => {
     expect(sdk.validateByName("InputAsset", mockAsset)).toMatchSnapshot();
   });
 
-  test("Basic Validation By Type", () => {
+  test("Basic Validation By Type (unoptimized)", () => {
+    const mockAsset = parseTree(`
+    {
+      "id": 1,
+      "type": "input",
+      "binding": "some.data",
+      "label": {
+        "asset": {
+          "value": "{{input.label}}"
+        }
+      }
+    `);
+
+    const sdk = new XLRSDK();
+    sdk.loadDefinitionsFromModule(Types);
+    sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
+
+    const inputAsset = sdk.getType("InputAsset", { optimize: false });
+    expect(inputAsset).toBeDefined();
+    expect(
+      sdk.validateByType(inputAsset as NamedType, mockAsset)
+    ).toMatchSnapshot();
+  });
+
+  test("Basic Validation By Type (optimized)", () => {
     const mockAsset = parseTree(`
     {
       "id": 1,
