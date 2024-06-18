@@ -28,8 +28,11 @@ const checkTypesForAssetWrapper = (nodes: Array<NodeType>): boolean => {
     const node = nodes[i];
     if (node.type === "object" && node.title?.includes("AssetWrapper")) {
       return true;
-    } else if (node.type === "or") return checkTypesForAssetWrapper(node.or);
-    else if (node.type === "and") return checkTypesForAssetWrapper(node.and);
+    } else if (node.type === "or") {
+      return checkTypesForAssetWrapper(node.or);
+    } else if (node.type === "and") {
+      return checkTypesForAssetWrapper(node.and);
+    }
   }
 
   return false;

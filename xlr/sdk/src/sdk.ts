@@ -303,12 +303,12 @@ export class XLRSDK {
   }
 
   /**
-   * Transforms a generated XLR node into its final representation by
-   * Resolving all `extends` properties
-   * Solving any conditional types
-   * Computing the effective types of any union elements
-   * Resolving any ref nodes
-   * filing in any remaining generics with their default value
+   * Transforms a generated XLR node into its final representation by resolving all `extends` properties.
+   * If `optimize` is set to true the following operations are also performed:
+   *  - Solving any conditional types
+   *  - Computing the effective types of any union elements
+   *  - Resolving any ref nodes
+   *  - filing in any remaining generics with their default value
    */
   private resolveType(type: NamedType, optimize = true): NamedType {
     const resolvedObject = fillInGenerics(type);
