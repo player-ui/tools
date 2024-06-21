@@ -126,31 +126,28 @@ export function computeExtends(a: NodeType, b: NodeType): boolean {
  */
 export function resolveConditional(conditional: ConditionalType): NodeType {
   const { left, right } = conditional.check;
-  if (isPrimitiveTypeNode(left) && isPrimitiveTypeNode(right)) {
-    const conditionalResult = conditional.value.false;
+  const conditionalResult = computeExtends(left, right)
+    ? conditional.value.true
+    : conditional.value.false;
 
-    // Compose first level generics here since `conditionalResult` won't have them
-    if (isGenericNodeType(conditional)) {
-      const genericMap: Map<string, NodeType> = new Map();
-      conditional.genericTokens.forEach((token) => {
-        genericMap.set(
-          token.symbol,
-          token.default ?? token.constraints ?? { type: "any" }
-        );
-      });
+  // Compose first level generics here since `conditionalResult` won't have them
+  if (isGenericNodeType(conditional)) {
+    const genericMap: Map<string, NodeType> = new Map();
+    conditional.genericTokens.forEach((token) => {
+      genericMap.set(
+        token.symbol,
+        token.default ?? token.constraints ?? { type: "any" }
+      );
+    });
 
-      return fillInGenerics(conditionalResult, genericMap);
-    }
-
-    return conditionalResult;
+    return fillInGenerics(conditionalResult, genericMap);
   }
 
-  // unable to process return original
-  return conditional;
+  return conditionalResult;
 }
 
 /**
- *
+ * Resolve referenced node with potential generic arguments
  */
 export function resolveReferenceNode(
   genericReference: RefNode,

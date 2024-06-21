@@ -875,6 +875,7 @@ exports[`Player Types Export 1`] = `
     "elementType": {
       "additionalProperties": false,
       "description": "A single case statement to use in a switch",
+      "extends": undefined,
       "genericTokens": [
         {
           "constraints": {
@@ -1038,6 +1039,7 @@ exports[`Player Types Export 1`] = `
         "and": [
           {
             "additionalProperties": false,
+            "extends": undefined,
             "genericTokens": [
               {
                 "constraints": {
@@ -1061,6 +1063,7 @@ exports[`Player Types Export 1`] = `
                   "elementType": {
                     "additionalProperties": false,
                     "description": "A single case statement to use in a switch",
+                    "extends": undefined,
                     "genericTokens": [
                       {
                         "constraints": {
@@ -1163,6 +1166,7 @@ exports[`Player Types Export 1`] = `
         "and": [
           {
             "additionalProperties": false,
+            "extends": undefined,
             "genericTokens": [
               {
                 "constraints": {
@@ -1186,6 +1190,7 @@ exports[`Player Types Export 1`] = `
                   "elementType": {
                     "additionalProperties": false,
                     "description": "A single case statement to use in a switch",
+                    "extends": undefined,
                     "genericTokens": [
                       {
                         "constraints": {
@@ -1309,6 +1314,7 @@ exports[`Player Types Export 1`] = `
     "or": [
       {
         "additionalProperties": false,
+        "extends": undefined,
         "genericTokens": [
           {
             "constraints": {
@@ -1330,6 +1336,7 @@ exports[`Player Types Export 1`] = `
               "elementType": {
                 "additionalProperties": false,
                 "description": "A single case statement to use in a switch",
+                "extends": undefined,
                 "genericTokens": [
                   {
                     "constraints": {
@@ -1405,6 +1412,7 @@ exports[`Player Types Export 1`] = `
       },
       {
         "additionalProperties": false,
+        "extends": undefined,
         "genericTokens": [
           {
             "constraints": {
@@ -1426,6 +1434,7 @@ exports[`Player Types Export 1`] = `
               "elementType": {
                 "additionalProperties": false,
                 "description": "A single case statement to use in a switch",
+                "extends": undefined,
                 "genericTokens": [
                   {
                     "constraints": {
@@ -1868,6 +1877,7 @@ If the expression is a composite, the last expression executed is the return val
                                 {
                                   "additionalProperties": false,
                                   "description": "An object with an expression in it",
+                                  "extends": undefined,
                                   "genericTokens": undefined,
                                   "name": "ExpressionObject",
                                   "properties": {
@@ -1904,6 +1914,7 @@ If the expression is a composite, the last expression executed is the return val
                                 {
                                   "additionalProperties": false,
                                   "description": "An object with an expression in it",
+                                  "extends": undefined,
                                   "genericTokens": undefined,
                                   "name": "ExpressionObject",
                                   "properties": {
@@ -2000,6 +2011,7 @@ If the expression is a composite, the last expression executed is the return val
                                 {
                                   "additionalProperties": false,
                                   "description": "An object with an expression in it",
+                                  "extends": undefined,
                                   "name": "ExpressionObject",
                                   "properties": {
                                     "exp": {
@@ -2034,6 +2046,7 @@ If the expression is a composite, the last expression executed is the return val
                                 {
                                   "additionalProperties": false,
                                   "description": "An object with an expression in it",
+                                  "extends": undefined,
                                   "name": "ExpressionObject",
                                   "properties": {
                                     "exp": {
@@ -2112,6 +2125,7 @@ If this is a flow started from another flow, the outcome determines the flow tra
                                 {
                                   "additionalProperties": false,
                                   "description": "An object with an expression in it",
+                                  "extends": undefined,
                                   "name": "ExpressionObject",
                                   "properties": {
                                     "exp": {
@@ -2146,6 +2160,7 @@ If this is a flow started from another flow, the outcome determines the flow tra
                                 {
                                   "additionalProperties": false,
                                   "description": "An object with an expression in it",
+                                  "extends": undefined,
                                   "name": "ExpressionObject",
                                   "properties": {
                                     "exp": {
@@ -2243,6 +2258,7 @@ The return value determines the transition to take",
                                 {
                                   "additionalProperties": false,
                                   "description": "An object with an expression in it",
+                                  "extends": undefined,
                                   "name": "ExpressionObject",
                                   "properties": {
                                     "exp": {
@@ -2277,6 +2293,7 @@ The return value determines the transition to take",
                                 {
                                   "additionalProperties": false,
                                   "description": "An object with an expression in it",
+                                  "extends": undefined,
                                   "name": "ExpressionObject",
                                   "properties": {
                                     "exp": {
@@ -2364,6 +2381,7 @@ The flow will wait for the embedded application to manage moving to the next sta
                                 {
                                   "additionalProperties": false,
                                   "description": "An object with an expression in it",
+                                  "extends": undefined,
                                   "name": "ExpressionObject",
                                   "properties": {
                                     "exp": {
@@ -2398,6 +2416,7 @@ The flow will wait for the embedded application to manage moving to the next sta
                                 {
                                   "additionalProperties": false,
                                   "description": "An object with an expression in it",
+                                  "extends": undefined,
                                   "name": "ExpressionObject",
                                   "properties": {
                                     "exp": {
@@ -3549,6 +3568,7 @@ So this explicity says there should never be an exp prop on a state node that"s 
             {
               "additionalProperties": false,
               "description": "An object with an expression in it",
+              "extends": undefined,
               "name": "ExpressionObject",
               "properties": {
                 "exp": {
@@ -3583,6 +3603,7 @@ So this explicity says there should never be an exp prop on a state node that"s 
             {
               "additionalProperties": false,
               "description": "An object with an expression in it",
+              "extends": undefined,
               "name": "ExpressionObject",
               "properties": {
                 "exp": {
@@ -3681,6 +3702,7 @@ So this explicity says there should never be an exp prop on a state node that"s 
             {
               "additionalProperties": false,
               "description": "An object with an expression in it",
+              "extends": undefined,
               "name": "ExpressionObject",
               "properties": {
                 "exp": {
@@ -3715,6 +3737,7 @@ So this explicity says there should never be an exp prop on a state node that"s 
             {
               "additionalProperties": false,
               "description": "An object with an expression in it",
+              "extends": undefined,
               "name": "ExpressionObject",
               "properties": {
                 "exp": {
@@ -3809,6 +3832,7 @@ So this explicity says there should never be an exp prop on a state node that"s 
             {
               "additionalProperties": false,
               "description": "An object with an expression in it",
+              "extends": undefined,
               "name": "ExpressionObject",
               "properties": {
                 "exp": {
@@ -3843,6 +3867,7 @@ So this explicity says there should never be an exp prop on a state node that"s 
             {
               "additionalProperties": false,
               "description": "An object with an expression in it",
+              "extends": undefined,
               "name": "ExpressionObject",
               "properties": {
                 "exp": {
@@ -3924,6 +3949,7 @@ The return value determines the transition to take",
             {
               "additionalProperties": false,
               "description": "An object with an expression in it",
+              "extends": undefined,
               "name": "ExpressionObject",
               "properties": {
                 "exp": {
@@ -3958,6 +3984,7 @@ The return value determines the transition to take",
             {
               "additionalProperties": false,
               "description": "An object with an expression in it",
+              "extends": undefined,
               "name": "ExpressionObject",
               "properties": {
                 "exp": {
@@ -4045,6 +4072,7 @@ The flow will wait for the embedded application to manage moving to the next sta
             {
               "additionalProperties": false,
               "description": "An object with an expression in it",
+              "extends": undefined,
               "name": "ExpressionObject",
               "properties": {
                 "exp": {
@@ -4079,6 +4107,7 @@ The flow will wait for the embedded application to manage moving to the next sta
             {
               "additionalProperties": false,
               "description": "An object with an expression in it",
+              "extends": undefined,
               "name": "ExpressionObject",
               "properties": {
                 "exp": {
@@ -4172,6 +4201,7 @@ The flow will wait for the embedded application to manage moving to the next sta
             {
               "additionalProperties": false,
               "description": "An object with an expression in it",
+              "extends": undefined,
               "name": "ExpressionObject",
               "properties": {
                 "exp": {
@@ -4206,6 +4236,7 @@ The flow will wait for the embedded application to manage moving to the next sta
             {
               "additionalProperties": false,
               "description": "An object with an expression in it",
+              "extends": undefined,
               "name": "ExpressionObject",
               "properties": {
                 "exp": {
@@ -4946,6 +4977,7 @@ The flow will wait for the embedded application to manage moving to the next sta
                   {
                     "additionalProperties": false,
                     "description": "An object with an expression in it",
+                    "extends": undefined,
                     "name": "ExpressionObject",
                     "properties": {
                       "exp": {
@@ -4980,6 +5012,7 @@ The flow will wait for the embedded application to manage moving to the next sta
                   {
                     "additionalProperties": false,
                     "description": "An object with an expression in it",
+                    "extends": undefined,
                     "name": "ExpressionObject",
                     "properties": {
                       "exp": {
@@ -6671,6 +6704,7 @@ This will be used to lookup the proper handler",
                   },
                   {
                     "additionalProperties": false,
+                    "extends": undefined,
                     "properties": {
                       "validation": {
                         "node": {
@@ -6679,6 +6713,7 @@ This will be used to lookup the proper handler",
                             "additionalProperties": {
                               "type": "unknown",
                             },
+                            "extends": undefined,
                             "name": "CrossfieldReference",
                             "properties": {
                               "dataTarget": {

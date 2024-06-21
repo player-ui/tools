@@ -140,6 +140,13 @@ export const applyTemplateProperty: TransformFunction = (node, capability) => {
                 ? value.node.elementType.ref
                 : value.node.elementType.name
             }, "${key}">`,
+            genericArguments: [
+              value.node.elementType,
+              {
+                type: "string",
+                const: key,
+              },
+            ],
           });
         }
       }

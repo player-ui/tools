@@ -1,921 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Basic Validation > Basic Validation By Name 1`] = `
-[
-  {
-    "message": "Expected type "string" but got "number"",
-    "node": {
-      "children": [
-        {
-          "length": 4,
-          "offset": 13,
-          "parent": [Circular],
-          "type": "string",
-          "value": "id",
-        },
-        {
-          "length": 1,
-          "offset": 19,
-          "parent": [Circular],
-          "type": "number",
-          "value": 1,
-        },
-      ],
-      "colonOffset": 17,
-      "length": 7,
-      "offset": 13,
-      "parent": {
-        "children": [
-          [Circular],
-          {
-            "children": [
-              {
-                "length": 6,
-                "offset": 28,
-                "parent": [Circular],
-                "type": "string",
-                "value": "type",
-              },
-              {
-                "length": 7,
-                "offset": 36,
-                "parent": [Circular],
-                "type": "string",
-                "value": "input",
-              },
-            ],
-            "colonOffset": 34,
-            "length": 15,
-            "offset": 28,
-            "parent": [Circular],
-            "type": "property",
-          },
-          {
-            "children": [
-              {
-                "length": 9,
-                "offset": 51,
-                "parent": [Circular],
-                "type": "string",
-                "value": "binding",
-              },
-              {
-                "length": 11,
-                "offset": 62,
-                "parent": [Circular],
-                "type": "string",
-                "value": "some.data",
-              },
-            ],
-            "colonOffset": 60,
-            "length": 22,
-            "offset": 51,
-            "parent": [Circular],
-            "type": "property",
-          },
-          {
-            "children": [
-              {
-                "length": 7,
-                "offset": 81,
-                "parent": [Circular],
-                "type": "string",
-                "value": "label",
-              },
-              {
-                "children": [
-                  {
-                    "children": [
-                      {
-                        "length": 7,
-                        "offset": 100,
-                        "parent": [Circular],
-                        "type": "string",
-                        "value": "asset",
-                      },
-                      {
-                        "children": [
-                          {
-                            "children": [
-                              {
-                                "length": 7,
-                                "offset": 121,
-                                "parent": [Circular],
-                                "type": "string",
-                                "value": "value",
-                              },
-                              {
-                                "length": 17,
-                                "offset": 130,
-                                "parent": [Circular],
-                                "type": "string",
-                                "value": "{{input.label}}",
-                              },
-                            ],
-                            "colonOffset": 128,
-                            "length": 26,
-                            "offset": 121,
-                            "parent": [Circular],
-                            "type": "property",
-                          },
-                        ],
-                        "length": 48,
-                        "offset": 109,
-                        "parent": [Circular],
-                        "type": "object",
-                      },
-                    ],
-                    "colonOffset": 107,
-                    "length": 57,
-                    "offset": 100,
-                    "parent": [Circular],
-                    "type": "property",
-                  },
-                ],
-                "length": 75,
-                "offset": 90,
-                "parent": [Circular],
-                "type": "object",
-              },
-            ],
-            "colonOffset": 88,
-            "length": 84,
-            "offset": 81,
-            "parent": [Circular],
-            "type": "property",
-          },
-        ],
-        "length": 165,
-        "offset": 5,
-        "type": "object",
-      },
-      "type": "property",
-    },
-    "type": "type",
-  },
-  {
-    "message": "Property "id" missing from type "Asset"",
-    "node": {
-      "children": [
-        {
-          "children": [
-            {
-              "length": 7,
-              "offset": 121,
-              "parent": [Circular],
-              "type": "string",
-              "value": "value",
-            },
-            {
-              "length": 17,
-              "offset": 130,
-              "parent": [Circular],
-              "type": "string",
-              "value": "{{input.label}}",
-            },
-          ],
-          "colonOffset": 128,
-          "length": 26,
-          "offset": 121,
-          "parent": [Circular],
-          "type": "property",
-        },
-      ],
-      "length": 48,
-      "offset": 109,
-      "parent": {
-        "children": [
-          {
-            "length": 7,
-            "offset": 100,
-            "parent": [Circular],
-            "type": "string",
-            "value": "asset",
-          },
-          [Circular],
-        ],
-        "colonOffset": 107,
-        "length": 57,
-        "offset": 100,
-        "parent": {
-          "children": [
-            [Circular],
-          ],
-          "length": 75,
-          "offset": 90,
-          "parent": {
-            "children": [
-              {
-                "length": 7,
-                "offset": 81,
-                "parent": [Circular],
-                "type": "string",
-                "value": "label",
-              },
-              [Circular],
-            ],
-            "colonOffset": 88,
-            "length": 84,
-            "offset": 81,
-            "parent": {
-              "children": [
-                {
-                  "children": [
-                    {
-                      "length": 4,
-                      "offset": 13,
-                      "parent": [Circular],
-                      "type": "string",
-                      "value": "id",
-                    },
-                    {
-                      "length": 1,
-                      "offset": 19,
-                      "parent": [Circular],
-                      "type": "number",
-                      "value": 1,
-                    },
-                  ],
-                  "colonOffset": 17,
-                  "length": 7,
-                  "offset": 13,
-                  "parent": [Circular],
-                  "type": "property",
-                },
-                {
-                  "children": [
-                    {
-                      "length": 6,
-                      "offset": 28,
-                      "parent": [Circular],
-                      "type": "string",
-                      "value": "type",
-                    },
-                    {
-                      "length": 7,
-                      "offset": 36,
-                      "parent": [Circular],
-                      "type": "string",
-                      "value": "input",
-                    },
-                  ],
-                  "colonOffset": 34,
-                  "length": 15,
-                  "offset": 28,
-                  "parent": [Circular],
-                  "type": "property",
-                },
-                {
-                  "children": [
-                    {
-                      "length": 9,
-                      "offset": 51,
-                      "parent": [Circular],
-                      "type": "string",
-                      "value": "binding",
-                    },
-                    {
-                      "length": 11,
-                      "offset": 62,
-                      "parent": [Circular],
-                      "type": "string",
-                      "value": "some.data",
-                    },
-                  ],
-                  "colonOffset": 60,
-                  "length": 22,
-                  "offset": 51,
-                  "parent": [Circular],
-                  "type": "property",
-                },
-                [Circular],
-              ],
-              "length": 165,
-              "offset": 5,
-              "type": "object",
-            },
-            "type": "property",
-          },
-          "type": "object",
-        },
-        "type": "property",
-      },
-      "type": "object",
-    },
-    "type": "missing",
-  },
-  {
-    "message": "Property "type" missing from type "Asset"",
-    "node": {
-      "children": [
-        {
-          "children": [
-            {
-              "length": 7,
-              "offset": 121,
-              "parent": [Circular],
-              "type": "string",
-              "value": "value",
-            },
-            {
-              "length": 17,
-              "offset": 130,
-              "parent": [Circular],
-              "type": "string",
-              "value": "{{input.label}}",
-            },
-          ],
-          "colonOffset": 128,
-          "length": 26,
-          "offset": 121,
-          "parent": [Circular],
-          "type": "property",
-        },
-      ],
-      "length": 48,
-      "offset": 109,
-      "parent": {
-        "children": [
-          {
-            "length": 7,
-            "offset": 100,
-            "parent": [Circular],
-            "type": "string",
-            "value": "asset",
-          },
-          [Circular],
-        ],
-        "colonOffset": 107,
-        "length": 57,
-        "offset": 100,
-        "parent": {
-          "children": [
-            [Circular],
-          ],
-          "length": 75,
-          "offset": 90,
-          "parent": {
-            "children": [
-              {
-                "length": 7,
-                "offset": 81,
-                "parent": [Circular],
-                "type": "string",
-                "value": "label",
-              },
-              [Circular],
-            ],
-            "colonOffset": 88,
-            "length": 84,
-            "offset": 81,
-            "parent": {
-              "children": [
-                {
-                  "children": [
-                    {
-                      "length": 4,
-                      "offset": 13,
-                      "parent": [Circular],
-                      "type": "string",
-                      "value": "id",
-                    },
-                    {
-                      "length": 1,
-                      "offset": 19,
-                      "parent": [Circular],
-                      "type": "number",
-                      "value": 1,
-                    },
-                  ],
-                  "colonOffset": 17,
-                  "length": 7,
-                  "offset": 13,
-                  "parent": [Circular],
-                  "type": "property",
-                },
-                {
-                  "children": [
-                    {
-                      "length": 6,
-                      "offset": 28,
-                      "parent": [Circular],
-                      "type": "string",
-                      "value": "type",
-                    },
-                    {
-                      "length": 7,
-                      "offset": 36,
-                      "parent": [Circular],
-                      "type": "string",
-                      "value": "input",
-                    },
-                  ],
-                  "colonOffset": 34,
-                  "length": 15,
-                  "offset": 28,
-                  "parent": [Circular],
-                  "type": "property",
-                },
-                {
-                  "children": [
-                    {
-                      "length": 9,
-                      "offset": 51,
-                      "parent": [Circular],
-                      "type": "string",
-                      "value": "binding",
-                    },
-                    {
-                      "length": 11,
-                      "offset": 62,
-                      "parent": [Circular],
-                      "type": "string",
-                      "value": "some.data",
-                    },
-                  ],
-                  "colonOffset": 60,
-                  "length": 22,
-                  "offset": 51,
-                  "parent": [Circular],
-                  "type": "property",
-                },
-                [Circular],
-              ],
-              "length": 165,
-              "offset": 5,
-              "type": "object",
-            },
-            "type": "property",
-          },
-          "type": "object",
-        },
-        "type": "property",
-      },
-      "type": "object",
-    },
-    "type": "missing",
-  },
-]
-`;
-
-exports[`Basic Validation > Basic Validation By Type 1`] = `
-[
-  {
-    "message": "Expected type "string" but got "number"",
-    "node": {
-      "children": [
-        {
-          "length": 4,
-          "offset": 13,
-          "parent": [Circular],
-          "type": "string",
-          "value": "id",
-        },
-        {
-          "length": 1,
-          "offset": 19,
-          "parent": [Circular],
-          "type": "number",
-          "value": 1,
-        },
-      ],
-      "colonOffset": 17,
-      "length": 7,
-      "offset": 13,
-      "parent": {
-        "children": [
-          [Circular],
-          {
-            "children": [
-              {
-                "length": 6,
-                "offset": 28,
-                "parent": [Circular],
-                "type": "string",
-                "value": "type",
-              },
-              {
-                "length": 7,
-                "offset": 36,
-                "parent": [Circular],
-                "type": "string",
-                "value": "input",
-              },
-            ],
-            "colonOffset": 34,
-            "length": 15,
-            "offset": 28,
-            "parent": [Circular],
-            "type": "property",
-          },
-          {
-            "children": [
-              {
-                "length": 9,
-                "offset": 51,
-                "parent": [Circular],
-                "type": "string",
-                "value": "binding",
-              },
-              {
-                "length": 11,
-                "offset": 62,
-                "parent": [Circular],
-                "type": "string",
-                "value": "some.data",
-              },
-            ],
-            "colonOffset": 60,
-            "length": 22,
-            "offset": 51,
-            "parent": [Circular],
-            "type": "property",
-          },
-          {
-            "children": [
-              {
-                "length": 7,
-                "offset": 81,
-                "parent": [Circular],
-                "type": "string",
-                "value": "label",
-              },
-              {
-                "children": [
-                  {
-                    "children": [
-                      {
-                        "length": 7,
-                        "offset": 100,
-                        "parent": [Circular],
-                        "type": "string",
-                        "value": "asset",
-                      },
-                      {
-                        "children": [
-                          {
-                            "children": [
-                              {
-                                "length": 7,
-                                "offset": 121,
-                                "parent": [Circular],
-                                "type": "string",
-                                "value": "value",
-                              },
-                              {
-                                "length": 17,
-                                "offset": 130,
-                                "parent": [Circular],
-                                "type": "string",
-                                "value": "{{input.label}}",
-                              },
-                            ],
-                            "colonOffset": 128,
-                            "length": 26,
-                            "offset": 121,
-                            "parent": [Circular],
-                            "type": "property",
-                          },
-                        ],
-                        "length": 48,
-                        "offset": 109,
-                        "parent": [Circular],
-                        "type": "object",
-                      },
-                    ],
-                    "colonOffset": 107,
-                    "length": 57,
-                    "offset": 100,
-                    "parent": [Circular],
-                    "type": "property",
-                  },
-                ],
-                "length": 75,
-                "offset": 90,
-                "parent": [Circular],
-                "type": "object",
-              },
-            ],
-            "colonOffset": 88,
-            "length": 84,
-            "offset": 81,
-            "parent": [Circular],
-            "type": "property",
-          },
-        ],
-        "length": 165,
-        "offset": 5,
-        "type": "object",
-      },
-      "type": "property",
-    },
-    "type": "type",
-  },
-  {
-    "message": "Property "id" missing from type "Asset"",
-    "node": {
-      "children": [
-        {
-          "children": [
-            {
-              "length": 7,
-              "offset": 121,
-              "parent": [Circular],
-              "type": "string",
-              "value": "value",
-            },
-            {
-              "length": 17,
-              "offset": 130,
-              "parent": [Circular],
-              "type": "string",
-              "value": "{{input.label}}",
-            },
-          ],
-          "colonOffset": 128,
-          "length": 26,
-          "offset": 121,
-          "parent": [Circular],
-          "type": "property",
-        },
-      ],
-      "length": 48,
-      "offset": 109,
-      "parent": {
-        "children": [
-          {
-            "length": 7,
-            "offset": 100,
-            "parent": [Circular],
-            "type": "string",
-            "value": "asset",
-          },
-          [Circular],
-        ],
-        "colonOffset": 107,
-        "length": 57,
-        "offset": 100,
-        "parent": {
-          "children": [
-            [Circular],
-          ],
-          "length": 75,
-          "offset": 90,
-          "parent": {
-            "children": [
-              {
-                "length": 7,
-                "offset": 81,
-                "parent": [Circular],
-                "type": "string",
-                "value": "label",
-              },
-              [Circular],
-            ],
-            "colonOffset": 88,
-            "length": 84,
-            "offset": 81,
-            "parent": {
-              "children": [
-                {
-                  "children": [
-                    {
-                      "length": 4,
-                      "offset": 13,
-                      "parent": [Circular],
-                      "type": "string",
-                      "value": "id",
-                    },
-                    {
-                      "length": 1,
-                      "offset": 19,
-                      "parent": [Circular],
-                      "type": "number",
-                      "value": 1,
-                    },
-                  ],
-                  "colonOffset": 17,
-                  "length": 7,
-                  "offset": 13,
-                  "parent": [Circular],
-                  "type": "property",
-                },
-                {
-                  "children": [
-                    {
-                      "length": 6,
-                      "offset": 28,
-                      "parent": [Circular],
-                      "type": "string",
-                      "value": "type",
-                    },
-                    {
-                      "length": 7,
-                      "offset": 36,
-                      "parent": [Circular],
-                      "type": "string",
-                      "value": "input",
-                    },
-                  ],
-                  "colonOffset": 34,
-                  "length": 15,
-                  "offset": 28,
-                  "parent": [Circular],
-                  "type": "property",
-                },
-                {
-                  "children": [
-                    {
-                      "length": 9,
-                      "offset": 51,
-                      "parent": [Circular],
-                      "type": "string",
-                      "value": "binding",
-                    },
-                    {
-                      "length": 11,
-                      "offset": 62,
-                      "parent": [Circular],
-                      "type": "string",
-                      "value": "some.data",
-                    },
-                  ],
-                  "colonOffset": 60,
-                  "length": 22,
-                  "offset": 51,
-                  "parent": [Circular],
-                  "type": "property",
-                },
-                [Circular],
-              ],
-              "length": 165,
-              "offset": 5,
-              "type": "object",
-            },
-            "type": "property",
-          },
-          "type": "object",
-        },
-        "type": "property",
-      },
-      "type": "object",
-    },
-    "type": "missing",
-  },
-  {
-    "message": "Property "type" missing from type "Asset"",
-    "node": {
-      "children": [
-        {
-          "children": [
-            {
-              "length": 7,
-              "offset": 121,
-              "parent": [Circular],
-              "type": "string",
-              "value": "value",
-            },
-            {
-              "length": 17,
-              "offset": 130,
-              "parent": [Circular],
-              "type": "string",
-              "value": "{{input.label}}",
-            },
-          ],
-          "colonOffset": 128,
-          "length": 26,
-          "offset": 121,
-          "parent": [Circular],
-          "type": "property",
-        },
-      ],
-      "length": 48,
-      "offset": 109,
-      "parent": {
-        "children": [
-          {
-            "length": 7,
-            "offset": 100,
-            "parent": [Circular],
-            "type": "string",
-            "value": "asset",
-          },
-          [Circular],
-        ],
-        "colonOffset": 107,
-        "length": 57,
-        "offset": 100,
-        "parent": {
-          "children": [
-            [Circular],
-          ],
-          "length": 75,
-          "offset": 90,
-          "parent": {
-            "children": [
-              {
-                "length": 7,
-                "offset": 81,
-                "parent": [Circular],
-                "type": "string",
-                "value": "label",
-              },
-              [Circular],
-            ],
-            "colonOffset": 88,
-            "length": 84,
-            "offset": 81,
-            "parent": {
-              "children": [
-                {
-                  "children": [
-                    {
-                      "length": 4,
-                      "offset": 13,
-                      "parent": [Circular],
-                      "type": "string",
-                      "value": "id",
-                    },
-                    {
-                      "length": 1,
-                      "offset": 19,
-                      "parent": [Circular],
-                      "type": "number",
-                      "value": 1,
-                    },
-                  ],
-                  "colonOffset": 17,
-                  "length": 7,
-                  "offset": 13,
-                  "parent": [Circular],
-                  "type": "property",
-                },
-                {
-                  "children": [
-                    {
-                      "length": 6,
-                      "offset": 28,
-                      "parent": [Circular],
-                      "type": "string",
-                      "value": "type",
-                    },
-                    {
-                      "length": 7,
-                      "offset": 36,
-                      "parent": [Circular],
-                      "type": "string",
-                      "value": "input",
-                    },
-                  ],
-                  "colonOffset": 34,
-                  "length": 15,
-                  "offset": 28,
-                  "parent": [Circular],
-                  "type": "property",
-                },
-                {
-                  "children": [
-                    {
-                      "length": 9,
-                      "offset": 51,
-                      "parent": [Circular],
-                      "type": "string",
-                      "value": "binding",
-                    },
-                    {
-                      "length": 11,
-                      "offset": 62,
-                      "parent": [Circular],
-                      "type": "string",
-                      "value": "some.data",
-                    },
-                  ],
-                  "colonOffset": 60,
-                  "length": 22,
-                  "offset": 51,
-                  "parent": [Circular],
-                  "type": "property",
-                },
-                [Circular],
-              ],
-              "length": 165,
-              "offset": 5,
-              "type": "object",
-            },
-            "type": "property",
-          },
-          "type": "object",
-        },
-        "type": "property",
-      },
-      "type": "object",
-    },
-    "type": "missing",
-  },
-]
-`;
-
 exports[`Export Test > Exports Typescript Types With Filters 1`] = `
 "import { Expression, Asset, Binding, AssetWrapper } from "@player-ui/types";
 
@@ -923,11 +7,7 @@ exports[`Export Test > Exports Typescript Types With Filters 1`] = `
  * This is the most generic way of gathering data. The input is bound to a data model using the 'binding' property.
  * Players can get field type information from the 'schema' definition, thus to decide the input controls for visual rendering.
 */
-export interface InputAsset<AnyTextAsset extends Asset = Asset> {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: 'input';
+export interface InputAsset<AnyTextAsset extends Asset = Asset> extends Asset<'input'> {
     /** Asset container for a field label. */
     label?: AssetWrapper<AnyTextAsset>;
     /** Asset container for a note. */
@@ -939,13 +19,8 @@ export interface InputAsset<AnyTextAsset extends Asset = Asset> {
         /** Additional data to beacon when this input changes */
         beacon?: string | Record<string, any>;
     };
-    [key: string]: unknown;
 }
-export interface TextAsset {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: 'text';
+export interface TextAsset extends Asset<'text'> {
     /** The text to display */
     value: string;
     /** Any modifiers on the text */
@@ -968,18 +43,13 @@ export interface TextAsset {
             'mime-type'?: string;
         };
     }>;
-    [key: string]: unknown;
 }
 /**
  * User actions can be represented in several places.
  * Each view typically has one or more actions that allow the user to navigate away from that view.
  * In addition, several asset types can have actions that apply to that asset only.
 */
-export interface ActionAsset<AnyTextAsset extends Asset = Asset> {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: 'action';
+export interface ActionAsset<AnyTextAsset extends Asset = Asset> extends Asset<'action'> {
     /** The transition value of the action in the state machine */
     value?: string;
     /** A text-like asset for the action's label */
@@ -995,13 +65,8 @@ export interface ActionAsset<AnyTextAsset extends Asset = Asset> {
         /** Force transition to the next view without checking for validation */
         skipValidation?: boolean;
     };
-    [key: string]: unknown;
 }
-export interface InfoAsset {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: 'info';
+export interface InfoAsset extends Asset<'info'> {
     /** The string value to show */
     title?: AssetWrapper;
     /** subtitle */
@@ -1010,18 +75,12 @@ export interface InfoAsset {
     primaryInfo?: AssetWrapper;
     /** List of actions to show at the bottom of the page */
     actions?: Array<AssetWrapper>;
-    [key: string]: unknown;
 }
-export interface CollectionAsset {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: 'collection';
+export interface CollectionAsset extends Asset<'collection'> {
     /** An optional label to title the collection */
     label?: AssetWrapper;
     /** The string value to show */
     values?: Array<AssetWrapper>;
-    [key: string]: unknown;
 }"
 `;
 
@@ -1032,11 +91,7 @@ exports[`Export Test > Exports Typescript Types With Transforms 1`] = `
  * This is the most generic way of gathering data. The input is bound to a data model using the 'binding' property.
  * Players can get field type information from the 'schema' definition, thus to decide the input controls for visual rendering.
 */
-export interface InputAsset<AnyTextAsset extends Asset = Asset> {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: 'input';
+export interface InputAsset<AnyTextAsset extends Asset = Asset> extends Asset<'input'> {
     /** Asset container for a field label. */
     label?: AssetWrapper<AnyTextAsset>;
     /** Asset container for a note. */
@@ -1049,13 +104,8 @@ export interface InputAsset<AnyTextAsset extends Asset = Asset> {
         beacon?: string | Record<string, any>;
     };
     transformed?: true;
-    [key: string]: unknown;
 }
-export interface TextAsset {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: 'text';
+export interface TextAsset extends Asset<'text'> {
     /** The text to display */
     value: string;
     /** Any modifiers on the text */
@@ -1079,18 +129,13 @@ export interface TextAsset {
         };
     }>;
     transformed?: true;
-    [key: string]: unknown;
 }
 /**
  * User actions can be represented in several places.
  * Each view typically has one or more actions that allow the user to navigate away from that view.
  * In addition, several asset types can have actions that apply to that asset only.
 */
-export interface ActionAsset<AnyTextAsset extends Asset = Asset> {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: 'action';
+export interface ActionAsset<AnyTextAsset extends Asset = Asset> extends Asset<'action'> {
     /** The transition value of the action in the state machine */
     value?: string;
     /** A text-like asset for the action's label */
@@ -1107,13 +152,8 @@ export interface ActionAsset<AnyTextAsset extends Asset = Asset> {
         skipValidation?: boolean;
     };
     transformed?: true;
-    [key: string]: unknown;
 }
-export interface InfoAsset {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: 'info';
+export interface InfoAsset extends Asset<'info'> {
     /** The string value to show */
     title?: AssetWrapper;
     /** subtitle */
@@ -1123,19 +163,13 @@ export interface InfoAsset {
     /** List of actions to show at the bottom of the page */
     actions?: Array<AssetWrapper>;
     transformed?: true;
-    [key: string]: unknown;
 }
-export interface CollectionAsset {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: 'collection';
+export interface CollectionAsset extends Asset<'collection'> {
     /** An optional label to title the collection */
     label?: AssetWrapper;
     /** The string value to show */
     values?: Array<AssetWrapper>;
     transformed?: true;
-    [key: string]: unknown;
 }"
 `;
 
@@ -1151,14 +185,9 @@ export interface Asset<T extends string = string> {
     [key: string]: unknown;
 }
 /** An asset that contains a Binding. */
-export interface AssetBinding<T extends string = string> {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: T;
+export interface AssetBinding extends Asset {
     /** A binding that points to somewhere in the data model */
     binding: Binding;
-    [key: string]: unknown;
 }
 /** A single case statement to use in a switch */
 export interface SwitchCase<T extends Asset = Asset> {
@@ -1539,7 +568,7 @@ export interface NavigationBaseState<T extends string = any> {
      * TS gets really confused with both the ActionState and the onStart state both declaring the \`exp\` property
      * So this explicity says there should never be an exp prop on a state node that's not of type 'ACTION'
     */
-    exp?: T extends T ? Expression : never;
+    exp?: T extends 'ACTION' ? Expression : never;
 }
 /** A generic state that can transition to another state */
 export interface NavigationFlowTransitionableState<T extends string = any> {
@@ -1561,7 +590,7 @@ export interface NavigationFlowTransitionableState<T extends string = any> {
      * TS gets really confused with both the ActionState and the onStart state both declaring the \`exp\` property
      * So this explicity says there should never be an exp prop on a state node that's not of type 'ACTION'
     */
-    exp?: T extends T ? Expression : never;
+    exp?: T extends 'ACTION' ? Expression : never;
     /** A mapping of transition-name to FlowState name */
     transitions: Record<string, string>;
 }
@@ -1857,7 +886,7 @@ export interface Template<ValueType extends any = unknown, Key extends string = 
     */
     output: Key;
 }
-export type View<T extends Asset = Asset> = unknown extends unknown ? T & {
+export type View<T extends Asset = Asset> = unknown extends Asset ? T & {
     /** Each view can optionally supply a list of validations to run against a particular view */
     validation?: Array<{
         /**
@@ -1885,7 +914,7 @@ export interface Flow<T extends Asset = Asset> {
     /** A unique identifier for the flow */
     id: string;
     /** A list of views (each with an ID) that can be shown to a user */
-    views?: Array<unknown extends unknown ? T & {
+    views?: Array<unknown extends Asset ? T & {
         /** Each view can optionally supply a list of validations to run against a particular view */
         validation?: Array<{
             /**
@@ -2150,11 +1179,7 @@ export interface Flow<T extends Asset = Asset> {
  * This is the most generic way of gathering data. The input is bound to a data model using the 'binding' property.
  * Players can get field type information from the 'schema' definition, thus to decide the input controls for visual rendering.
 */
-export interface InputAsset<AnyTextAsset extends Asset = Asset> {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: 'input';
+export interface InputAsset<AnyTextAsset extends Asset = Asset> extends Asset<'input'> {
     /** Asset container for a field label. */
     label?: AssetWrapper<AnyTextAsset>;
     /** Asset container for a note. */
@@ -2166,13 +1191,8 @@ export interface InputAsset<AnyTextAsset extends Asset = Asset> {
         /** Additional data to beacon when this input changes */
         beacon?: string | Record<string, any>;
     };
-    [key: string]: unknown;
 }
-export interface TextAsset {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: 'text';
+export interface TextAsset extends Asset<'text'> {
     /** The text to display */
     value: string;
     /** Any modifiers on the text */
@@ -2195,18 +1215,13 @@ export interface TextAsset {
             'mime-type'?: string;
         };
     }>;
-    [key: string]: unknown;
 }
 /**
  * User actions can be represented in several places.
  * Each view typically has one or more actions that allow the user to navigate away from that view.
  * In addition, several asset types can have actions that apply to that asset only.
 */
-export interface ActionAsset<AnyTextAsset extends Asset = Asset> {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: 'action';
+export interface ActionAsset<AnyTextAsset extends Asset = Asset> extends Asset<'action'> {
     /** The transition value of the action in the state machine */
     value?: string;
     /** A text-like asset for the action's label */
@@ -2222,13 +1237,8 @@ export interface ActionAsset<AnyTextAsset extends Asset = Asset> {
         /** Force transition to the next view without checking for validation */
         skipValidation?: boolean;
     };
-    [key: string]: unknown;
 }
-export interface InfoAsset {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: 'info';
+export interface InfoAsset extends Asset<'info'> {
     /** The string value to show */
     title?: AssetWrapper;
     /** subtitle */
@@ -2237,19 +1247,300 @@ export interface InfoAsset {
     primaryInfo?: AssetWrapper;
     /** List of actions to show at the bottom of the page */
     actions?: Array<AssetWrapper>;
-    [key: string]: unknown;
 }
-export interface CollectionAsset {
-    /** Each asset requires a unique id per view */
-    id: string;
-    /** The asset type determines the semantics of how a user interacts with a page */
-    type: 'collection';
+export interface CollectionAsset extends Asset<'collection'> {
     /** An optional label to title the collection */
     label?: AssetWrapper;
     /** The string value to show */
     values?: Array<AssetWrapper>;
-    [key: string]: unknown;
 }"
+`;
+
+exports[`Object Recall > Optimized 1`] = `
+{
+  "additionalProperties": {
+    "type": "unknown",
+  },
+  "description": "This is the most generic way of gathering data. The input is bound to a data model using the 'binding' property.
+Players can get field type information from the 'schema' definition, thus to decide the input controls for visual rendering.",
+  "extends": undefined,
+  "genericTokens": [
+    {
+      "constraints": {
+        "additionalProperties": {
+          "type": "unknown",
+        },
+        "description": "An asset is the smallest unit of user interaction in a player view",
+        "extends": undefined,
+        "genericTokens": [
+          {
+            "constraints": {
+              "type": "string",
+            },
+            "default": {
+              "type": "string",
+            },
+            "symbol": "T",
+          },
+        ],
+        "name": "Asset",
+        "properties": {
+          "id": {
+            "node": {
+              "description": "Each asset requires a unique id per view",
+              "title": "Asset.id",
+              "type": "string",
+            },
+            "required": true,
+          },
+          "type": {
+            "node": {
+              "description": "The asset type determines the semantics of how a user interacts with a page",
+              "title": "Asset.type",
+              "type": "string",
+            },
+            "required": true,
+          },
+        },
+        "source": "src/index.ts",
+        "title": "Asset",
+        "type": "object",
+      },
+      "default": {
+        "additionalProperties": {
+          "type": "unknown",
+        },
+        "description": "An asset is the smallest unit of user interaction in a player view",
+        "extends": undefined,
+        "genericTokens": [
+          {
+            "constraints": {
+              "type": "string",
+            },
+            "default": {
+              "type": "string",
+            },
+            "symbol": "T",
+          },
+        ],
+        "name": "Asset",
+        "properties": {
+          "id": {
+            "node": {
+              "description": "Each asset requires a unique id per view",
+              "title": "Asset.id",
+              "type": "string",
+            },
+            "required": true,
+          },
+          "type": {
+            "node": {
+              "description": "The asset type determines the semantics of how a user interacts with a page",
+              "title": "Asset.type",
+              "type": "string",
+            },
+            "required": true,
+          },
+        },
+        "source": "src/index.ts",
+        "title": "Asset",
+        "type": "object",
+      },
+      "symbol": "AnyTextAsset",
+    },
+  ],
+  "name": "InputAsset",
+  "properties": {
+    "binding": {
+      "node": {
+        "description": "Bindings describe locations in the data model.",
+        "name": "Binding",
+        "source": "src/index.ts",
+        "title": "Binding",
+        "type": "string",
+      },
+      "required": true,
+    },
+    "id": {
+      "node": {
+        "description": "Each asset requires a unique id per view",
+        "title": "Asset.id",
+        "type": "string",
+      },
+      "required": true,
+    },
+    "label": {
+      "node": {
+        "additionalProperties": {
+          "type": "unknown",
+        },
+        "description": "An object that contains an asset",
+        "extends": undefined,
+        "genericTokens": [],
+        "name": "AssetWrapper",
+        "properties": {
+          "asset": {
+            "node": {
+              "additionalProperties": {
+                "type": "unknown",
+              },
+              "description": "An asset is the smallest unit of user interaction in a player view",
+              "extends": undefined,
+              "genericTokens": [
+                {
+                  "constraints": {
+                    "type": "string",
+                  },
+                  "default": {
+                    "type": "string",
+                  },
+                  "symbol": "T",
+                },
+              ],
+              "name": "Asset",
+              "properties": {
+                "id": {
+                  "node": {
+                    "description": "Each asset requires a unique id per view",
+                    "title": "Asset.id",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+                "type": {
+                  "node": {
+                    "description": "The asset type determines the semantics of how a user interacts with a page",
+                    "title": "Asset.type",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+              },
+              "source": "src/index.ts",
+              "title": "Asset",
+              "type": "object",
+            },
+            "required": true,
+          },
+        },
+        "source": "src/index.ts",
+        "title": "AssetWrapper",
+        "type": "object",
+      },
+      "required": false,
+    },
+    "metaData": {
+      "node": {
+        "additionalProperties": false,
+        "description": "Optional additional data",
+        "extends": undefined,
+        "properties": {
+          "beacon": {
+            "node": {
+              "description": "Additional data to beacon when this input changes",
+              "name": "BeaconDataType",
+              "or": [
+                {
+                  "title": "BeaconDataType",
+                  "type": "string",
+                },
+                {
+                  "keyType": {
+                    "type": "string",
+                  },
+                  "title": "BeaconDataType",
+                  "type": "record",
+                  "valueType": {
+                    "type": "any",
+                  },
+                },
+              ],
+              "source": "/private/var/tmp/_bazel_kreddy8/6fc13ccb395252816f0c23d8394e8532/sandbox/darwin-sandbox/134/execroot/player/node_modules/@player-ui/beacon-plugin/dist/index.d.ts",
+              "title": "InputAsset.metaData.beacon",
+              "type": "or",
+            },
+            "required": false,
+          },
+        },
+        "title": "InputAsset.metaData",
+        "type": "object",
+      },
+      "required": false,
+    },
+    "note": {
+      "node": {
+        "additionalProperties": {
+          "type": "unknown",
+        },
+        "description": "An object that contains an asset",
+        "extends": undefined,
+        "genericTokens": [],
+        "name": "AssetWrapper",
+        "properties": {
+          "asset": {
+            "node": {
+              "additionalProperties": {
+                "type": "unknown",
+              },
+              "description": "An asset is the smallest unit of user interaction in a player view",
+              "extends": undefined,
+              "genericTokens": [
+                {
+                  "constraints": {
+                    "type": "string",
+                  },
+                  "default": {
+                    "type": "string",
+                  },
+                  "symbol": "T",
+                },
+              ],
+              "name": "Asset",
+              "properties": {
+                "id": {
+                  "node": {
+                    "description": "Each asset requires a unique id per view",
+                    "title": "Asset.id",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+                "type": {
+                  "node": {
+                    "description": "The asset type determines the semantics of how a user interacts with a page",
+                    "title": "Asset.type",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+              },
+              "source": "src/index.ts",
+              "title": "Asset",
+              "type": "object",
+            },
+            "required": true,
+          },
+        },
+        "source": "src/index.ts",
+        "title": "AssetWrapper",
+        "type": "object",
+      },
+      "required": false,
+    },
+    "type": {
+      "node": {
+        "const": "input",
+        "description": "The asset type determines the semantics of how a user interacts with a page",
+        "title": "Asset.type",
+        "type": "string",
+      },
+      "required": true,
+    },
+  },
+  "source": "src/index.ts",
+  "title": "Asset",
+  "type": "object",
+}
 `;
 
 exports[`Object Recall > Processed 1`] = `
@@ -2487,4 +1778,1378 @@ Players can get field type information from the 'schema' definition, thus to dec
   "title": "InputAsset",
   "type": "object",
 }
+`;
+
+exports[`Validation > Basic Validation By Name 1`] = `
+[
+  {
+    "message": "Expected type "string" but got "number"",
+    "node": {
+      "children": [
+        {
+          "length": 4,
+          "offset": 13,
+          "parent": [Circular],
+          "type": "string",
+          "value": "id",
+        },
+        {
+          "length": 1,
+          "offset": 19,
+          "parent": [Circular],
+          "type": "number",
+          "value": 1,
+        },
+      ],
+      "colonOffset": 17,
+      "length": 7,
+      "offset": 13,
+      "parent": {
+        "children": [
+          [Circular],
+          {
+            "children": [
+              {
+                "length": 6,
+                "offset": 28,
+                "parent": [Circular],
+                "type": "string",
+                "value": "type",
+              },
+              {
+                "length": 7,
+                "offset": 36,
+                "parent": [Circular],
+                "type": "string",
+                "value": "input",
+              },
+            ],
+            "colonOffset": 34,
+            "length": 15,
+            "offset": 28,
+            "parent": [Circular],
+            "type": "property",
+          },
+          {
+            "children": [
+              {
+                "length": 9,
+                "offset": 51,
+                "parent": [Circular],
+                "type": "string",
+                "value": "binding",
+              },
+              {
+                "length": 11,
+                "offset": 62,
+                "parent": [Circular],
+                "type": "string",
+                "value": "some.data",
+              },
+            ],
+            "colonOffset": 60,
+            "length": 22,
+            "offset": 51,
+            "parent": [Circular],
+            "type": "property",
+          },
+          {
+            "children": [
+              {
+                "length": 7,
+                "offset": 81,
+                "parent": [Circular],
+                "type": "string",
+                "value": "label",
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "length": 7,
+                        "offset": 100,
+                        "parent": [Circular],
+                        "type": "string",
+                        "value": "asset",
+                      },
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "length": 7,
+                                "offset": 121,
+                                "parent": [Circular],
+                                "type": "string",
+                                "value": "value",
+                              },
+                              {
+                                "length": 17,
+                                "offset": 130,
+                                "parent": [Circular],
+                                "type": "string",
+                                "value": "{{input.label}}",
+                              },
+                            ],
+                            "colonOffset": 128,
+                            "length": 26,
+                            "offset": 121,
+                            "parent": [Circular],
+                            "type": "property",
+                          },
+                        ],
+                        "length": 48,
+                        "offset": 109,
+                        "parent": [Circular],
+                        "type": "object",
+                      },
+                    ],
+                    "colonOffset": 107,
+                    "length": 57,
+                    "offset": 100,
+                    "parent": [Circular],
+                    "type": "property",
+                  },
+                ],
+                "length": 75,
+                "offset": 90,
+                "parent": [Circular],
+                "type": "object",
+              },
+            ],
+            "colonOffset": 88,
+            "length": 84,
+            "offset": 81,
+            "parent": [Circular],
+            "type": "property",
+          },
+        ],
+        "length": 165,
+        "offset": 5,
+        "type": "object",
+      },
+      "type": "property",
+    },
+    "type": "type",
+  },
+  {
+    "message": "Property "id" missing from type "Asset"",
+    "node": {
+      "children": [
+        {
+          "children": [
+            {
+              "length": 7,
+              "offset": 121,
+              "parent": [Circular],
+              "type": "string",
+              "value": "value",
+            },
+            {
+              "length": 17,
+              "offset": 130,
+              "parent": [Circular],
+              "type": "string",
+              "value": "{{input.label}}",
+            },
+          ],
+          "colonOffset": 128,
+          "length": 26,
+          "offset": 121,
+          "parent": [Circular],
+          "type": "property",
+        },
+      ],
+      "length": 48,
+      "offset": 109,
+      "parent": {
+        "children": [
+          {
+            "length": 7,
+            "offset": 100,
+            "parent": [Circular],
+            "type": "string",
+            "value": "asset",
+          },
+          [Circular],
+        ],
+        "colonOffset": 107,
+        "length": 57,
+        "offset": 100,
+        "parent": {
+          "children": [
+            [Circular],
+          ],
+          "length": 75,
+          "offset": 90,
+          "parent": {
+            "children": [
+              {
+                "length": 7,
+                "offset": 81,
+                "parent": [Circular],
+                "type": "string",
+                "value": "label",
+              },
+              [Circular],
+            ],
+            "colonOffset": 88,
+            "length": 84,
+            "offset": 81,
+            "parent": {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "length": 4,
+                      "offset": 13,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "id",
+                    },
+                    {
+                      "length": 1,
+                      "offset": 19,
+                      "parent": [Circular],
+                      "type": "number",
+                      "value": 1,
+                    },
+                  ],
+                  "colonOffset": 17,
+                  "length": 7,
+                  "offset": 13,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                {
+                  "children": [
+                    {
+                      "length": 6,
+                      "offset": 28,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "type",
+                    },
+                    {
+                      "length": 7,
+                      "offset": 36,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "input",
+                    },
+                  ],
+                  "colonOffset": 34,
+                  "length": 15,
+                  "offset": 28,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                {
+                  "children": [
+                    {
+                      "length": 9,
+                      "offset": 51,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "binding",
+                    },
+                    {
+                      "length": 11,
+                      "offset": 62,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "some.data",
+                    },
+                  ],
+                  "colonOffset": 60,
+                  "length": 22,
+                  "offset": 51,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                [Circular],
+              ],
+              "length": 165,
+              "offset": 5,
+              "type": "object",
+            },
+            "type": "property",
+          },
+          "type": "object",
+        },
+        "type": "property",
+      },
+      "type": "object",
+    },
+    "type": "missing",
+  },
+  {
+    "message": "Property "type" missing from type "Asset"",
+    "node": {
+      "children": [
+        {
+          "children": [
+            {
+              "length": 7,
+              "offset": 121,
+              "parent": [Circular],
+              "type": "string",
+              "value": "value",
+            },
+            {
+              "length": 17,
+              "offset": 130,
+              "parent": [Circular],
+              "type": "string",
+              "value": "{{input.label}}",
+            },
+          ],
+          "colonOffset": 128,
+          "length": 26,
+          "offset": 121,
+          "parent": [Circular],
+          "type": "property",
+        },
+      ],
+      "length": 48,
+      "offset": 109,
+      "parent": {
+        "children": [
+          {
+            "length": 7,
+            "offset": 100,
+            "parent": [Circular],
+            "type": "string",
+            "value": "asset",
+          },
+          [Circular],
+        ],
+        "colonOffset": 107,
+        "length": 57,
+        "offset": 100,
+        "parent": {
+          "children": [
+            [Circular],
+          ],
+          "length": 75,
+          "offset": 90,
+          "parent": {
+            "children": [
+              {
+                "length": 7,
+                "offset": 81,
+                "parent": [Circular],
+                "type": "string",
+                "value": "label",
+              },
+              [Circular],
+            ],
+            "colonOffset": 88,
+            "length": 84,
+            "offset": 81,
+            "parent": {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "length": 4,
+                      "offset": 13,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "id",
+                    },
+                    {
+                      "length": 1,
+                      "offset": 19,
+                      "parent": [Circular],
+                      "type": "number",
+                      "value": 1,
+                    },
+                  ],
+                  "colonOffset": 17,
+                  "length": 7,
+                  "offset": 13,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                {
+                  "children": [
+                    {
+                      "length": 6,
+                      "offset": 28,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "type",
+                    },
+                    {
+                      "length": 7,
+                      "offset": 36,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "input",
+                    },
+                  ],
+                  "colonOffset": 34,
+                  "length": 15,
+                  "offset": 28,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                {
+                  "children": [
+                    {
+                      "length": 9,
+                      "offset": 51,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "binding",
+                    },
+                    {
+                      "length": 11,
+                      "offset": 62,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "some.data",
+                    },
+                  ],
+                  "colonOffset": 60,
+                  "length": 22,
+                  "offset": 51,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                [Circular],
+              ],
+              "length": 165,
+              "offset": 5,
+              "type": "object",
+            },
+            "type": "property",
+          },
+          "type": "object",
+        },
+        "type": "property",
+      },
+      "type": "object",
+    },
+    "type": "missing",
+  },
+]
+`;
+
+exports[`Validation > Basic Validation By Type (optimized) 1`] = `
+[
+  {
+    "message": "Expected type "string" but got "number"",
+    "node": {
+      "children": [
+        {
+          "length": 4,
+          "offset": 13,
+          "parent": [Circular],
+          "type": "string",
+          "value": "id",
+        },
+        {
+          "length": 1,
+          "offset": 19,
+          "parent": [Circular],
+          "type": "number",
+          "value": 1,
+        },
+      ],
+      "colonOffset": 17,
+      "length": 7,
+      "offset": 13,
+      "parent": {
+        "children": [
+          [Circular],
+          {
+            "children": [
+              {
+                "length": 6,
+                "offset": 28,
+                "parent": [Circular],
+                "type": "string",
+                "value": "type",
+              },
+              {
+                "length": 7,
+                "offset": 36,
+                "parent": [Circular],
+                "type": "string",
+                "value": "input",
+              },
+            ],
+            "colonOffset": 34,
+            "length": 15,
+            "offset": 28,
+            "parent": [Circular],
+            "type": "property",
+          },
+          {
+            "children": [
+              {
+                "length": 9,
+                "offset": 51,
+                "parent": [Circular],
+                "type": "string",
+                "value": "binding",
+              },
+              {
+                "length": 11,
+                "offset": 62,
+                "parent": [Circular],
+                "type": "string",
+                "value": "some.data",
+              },
+            ],
+            "colonOffset": 60,
+            "length": 22,
+            "offset": 51,
+            "parent": [Circular],
+            "type": "property",
+          },
+          {
+            "children": [
+              {
+                "length": 7,
+                "offset": 81,
+                "parent": [Circular],
+                "type": "string",
+                "value": "label",
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "length": 7,
+                        "offset": 100,
+                        "parent": [Circular],
+                        "type": "string",
+                        "value": "asset",
+                      },
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "length": 7,
+                                "offset": 121,
+                                "parent": [Circular],
+                                "type": "string",
+                                "value": "value",
+                              },
+                              {
+                                "length": 17,
+                                "offset": 130,
+                                "parent": [Circular],
+                                "type": "string",
+                                "value": "{{input.label}}",
+                              },
+                            ],
+                            "colonOffset": 128,
+                            "length": 26,
+                            "offset": 121,
+                            "parent": [Circular],
+                            "type": "property",
+                          },
+                        ],
+                        "length": 48,
+                        "offset": 109,
+                        "parent": [Circular],
+                        "type": "object",
+                      },
+                    ],
+                    "colonOffset": 107,
+                    "length": 57,
+                    "offset": 100,
+                    "parent": [Circular],
+                    "type": "property",
+                  },
+                ],
+                "length": 75,
+                "offset": 90,
+                "parent": [Circular],
+                "type": "object",
+              },
+            ],
+            "colonOffset": 88,
+            "length": 84,
+            "offset": 81,
+            "parent": [Circular],
+            "type": "property",
+          },
+        ],
+        "length": 165,
+        "offset": 5,
+        "type": "object",
+      },
+      "type": "property",
+    },
+    "type": "type",
+  },
+  {
+    "message": "Property "id" missing from type "Asset"",
+    "node": {
+      "children": [
+        {
+          "children": [
+            {
+              "length": 7,
+              "offset": 121,
+              "parent": [Circular],
+              "type": "string",
+              "value": "value",
+            },
+            {
+              "length": 17,
+              "offset": 130,
+              "parent": [Circular],
+              "type": "string",
+              "value": "{{input.label}}",
+            },
+          ],
+          "colonOffset": 128,
+          "length": 26,
+          "offset": 121,
+          "parent": [Circular],
+          "type": "property",
+        },
+      ],
+      "length": 48,
+      "offset": 109,
+      "parent": {
+        "children": [
+          {
+            "length": 7,
+            "offset": 100,
+            "parent": [Circular],
+            "type": "string",
+            "value": "asset",
+          },
+          [Circular],
+        ],
+        "colonOffset": 107,
+        "length": 57,
+        "offset": 100,
+        "parent": {
+          "children": [
+            [Circular],
+          ],
+          "length": 75,
+          "offset": 90,
+          "parent": {
+            "children": [
+              {
+                "length": 7,
+                "offset": 81,
+                "parent": [Circular],
+                "type": "string",
+                "value": "label",
+              },
+              [Circular],
+            ],
+            "colonOffset": 88,
+            "length": 84,
+            "offset": 81,
+            "parent": {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "length": 4,
+                      "offset": 13,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "id",
+                    },
+                    {
+                      "length": 1,
+                      "offset": 19,
+                      "parent": [Circular],
+                      "type": "number",
+                      "value": 1,
+                    },
+                  ],
+                  "colonOffset": 17,
+                  "length": 7,
+                  "offset": 13,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                {
+                  "children": [
+                    {
+                      "length": 6,
+                      "offset": 28,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "type",
+                    },
+                    {
+                      "length": 7,
+                      "offset": 36,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "input",
+                    },
+                  ],
+                  "colonOffset": 34,
+                  "length": 15,
+                  "offset": 28,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                {
+                  "children": [
+                    {
+                      "length": 9,
+                      "offset": 51,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "binding",
+                    },
+                    {
+                      "length": 11,
+                      "offset": 62,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "some.data",
+                    },
+                  ],
+                  "colonOffset": 60,
+                  "length": 22,
+                  "offset": 51,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                [Circular],
+              ],
+              "length": 165,
+              "offset": 5,
+              "type": "object",
+            },
+            "type": "property",
+          },
+          "type": "object",
+        },
+        "type": "property",
+      },
+      "type": "object",
+    },
+    "type": "missing",
+  },
+  {
+    "message": "Property "type" missing from type "Asset"",
+    "node": {
+      "children": [
+        {
+          "children": [
+            {
+              "length": 7,
+              "offset": 121,
+              "parent": [Circular],
+              "type": "string",
+              "value": "value",
+            },
+            {
+              "length": 17,
+              "offset": 130,
+              "parent": [Circular],
+              "type": "string",
+              "value": "{{input.label}}",
+            },
+          ],
+          "colonOffset": 128,
+          "length": 26,
+          "offset": 121,
+          "parent": [Circular],
+          "type": "property",
+        },
+      ],
+      "length": 48,
+      "offset": 109,
+      "parent": {
+        "children": [
+          {
+            "length": 7,
+            "offset": 100,
+            "parent": [Circular],
+            "type": "string",
+            "value": "asset",
+          },
+          [Circular],
+        ],
+        "colonOffset": 107,
+        "length": 57,
+        "offset": 100,
+        "parent": {
+          "children": [
+            [Circular],
+          ],
+          "length": 75,
+          "offset": 90,
+          "parent": {
+            "children": [
+              {
+                "length": 7,
+                "offset": 81,
+                "parent": [Circular],
+                "type": "string",
+                "value": "label",
+              },
+              [Circular],
+            ],
+            "colonOffset": 88,
+            "length": 84,
+            "offset": 81,
+            "parent": {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "length": 4,
+                      "offset": 13,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "id",
+                    },
+                    {
+                      "length": 1,
+                      "offset": 19,
+                      "parent": [Circular],
+                      "type": "number",
+                      "value": 1,
+                    },
+                  ],
+                  "colonOffset": 17,
+                  "length": 7,
+                  "offset": 13,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                {
+                  "children": [
+                    {
+                      "length": 6,
+                      "offset": 28,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "type",
+                    },
+                    {
+                      "length": 7,
+                      "offset": 36,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "input",
+                    },
+                  ],
+                  "colonOffset": 34,
+                  "length": 15,
+                  "offset": 28,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                {
+                  "children": [
+                    {
+                      "length": 9,
+                      "offset": 51,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "binding",
+                    },
+                    {
+                      "length": 11,
+                      "offset": 62,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "some.data",
+                    },
+                  ],
+                  "colonOffset": 60,
+                  "length": 22,
+                  "offset": 51,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                [Circular],
+              ],
+              "length": 165,
+              "offset": 5,
+              "type": "object",
+            },
+            "type": "property",
+          },
+          "type": "object",
+        },
+        "type": "property",
+      },
+      "type": "object",
+    },
+    "type": "missing",
+  },
+]
+`;
+
+exports[`Validation > Basic Validation By Type (unoptimized) 1`] = `
+[
+  {
+    "message": "Expected type "string" but got "number"",
+    "node": {
+      "children": [
+        {
+          "length": 4,
+          "offset": 13,
+          "parent": [Circular],
+          "type": "string",
+          "value": "id",
+        },
+        {
+          "length": 1,
+          "offset": 19,
+          "parent": [Circular],
+          "type": "number",
+          "value": 1,
+        },
+      ],
+      "colonOffset": 17,
+      "length": 7,
+      "offset": 13,
+      "parent": {
+        "children": [
+          [Circular],
+          {
+            "children": [
+              {
+                "length": 6,
+                "offset": 28,
+                "parent": [Circular],
+                "type": "string",
+                "value": "type",
+              },
+              {
+                "length": 7,
+                "offset": 36,
+                "parent": [Circular],
+                "type": "string",
+                "value": "input",
+              },
+            ],
+            "colonOffset": 34,
+            "length": 15,
+            "offset": 28,
+            "parent": [Circular],
+            "type": "property",
+          },
+          {
+            "children": [
+              {
+                "length": 9,
+                "offset": 51,
+                "parent": [Circular],
+                "type": "string",
+                "value": "binding",
+              },
+              {
+                "length": 11,
+                "offset": 62,
+                "parent": [Circular],
+                "type": "string",
+                "value": "some.data",
+              },
+            ],
+            "colonOffset": 60,
+            "length": 22,
+            "offset": 51,
+            "parent": [Circular],
+            "type": "property",
+          },
+          {
+            "children": [
+              {
+                "length": 7,
+                "offset": 81,
+                "parent": [Circular],
+                "type": "string",
+                "value": "label",
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "length": 7,
+                        "offset": 100,
+                        "parent": [Circular],
+                        "type": "string",
+                        "value": "asset",
+                      },
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "length": 7,
+                                "offset": 121,
+                                "parent": [Circular],
+                                "type": "string",
+                                "value": "value",
+                              },
+                              {
+                                "length": 17,
+                                "offset": 130,
+                                "parent": [Circular],
+                                "type": "string",
+                                "value": "{{input.label}}",
+                              },
+                            ],
+                            "colonOffset": 128,
+                            "length": 26,
+                            "offset": 121,
+                            "parent": [Circular],
+                            "type": "property",
+                          },
+                        ],
+                        "length": 48,
+                        "offset": 109,
+                        "parent": [Circular],
+                        "type": "object",
+                      },
+                    ],
+                    "colonOffset": 107,
+                    "length": 57,
+                    "offset": 100,
+                    "parent": [Circular],
+                    "type": "property",
+                  },
+                ],
+                "length": 75,
+                "offset": 90,
+                "parent": [Circular],
+                "type": "object",
+              },
+            ],
+            "colonOffset": 88,
+            "length": 84,
+            "offset": 81,
+            "parent": [Circular],
+            "type": "property",
+          },
+        ],
+        "length": 165,
+        "offset": 5,
+        "type": "object",
+      },
+      "type": "property",
+    },
+    "type": "type",
+  },
+  {
+    "message": "Property "id" missing from type "Asset"",
+    "node": {
+      "children": [
+        {
+          "children": [
+            {
+              "length": 7,
+              "offset": 121,
+              "parent": [Circular],
+              "type": "string",
+              "value": "value",
+            },
+            {
+              "length": 17,
+              "offset": 130,
+              "parent": [Circular],
+              "type": "string",
+              "value": "{{input.label}}",
+            },
+          ],
+          "colonOffset": 128,
+          "length": 26,
+          "offset": 121,
+          "parent": [Circular],
+          "type": "property",
+        },
+      ],
+      "length": 48,
+      "offset": 109,
+      "parent": {
+        "children": [
+          {
+            "length": 7,
+            "offset": 100,
+            "parent": [Circular],
+            "type": "string",
+            "value": "asset",
+          },
+          [Circular],
+        ],
+        "colonOffset": 107,
+        "length": 57,
+        "offset": 100,
+        "parent": {
+          "children": [
+            [Circular],
+          ],
+          "length": 75,
+          "offset": 90,
+          "parent": {
+            "children": [
+              {
+                "length": 7,
+                "offset": 81,
+                "parent": [Circular],
+                "type": "string",
+                "value": "label",
+              },
+              [Circular],
+            ],
+            "colonOffset": 88,
+            "length": 84,
+            "offset": 81,
+            "parent": {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "length": 4,
+                      "offset": 13,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "id",
+                    },
+                    {
+                      "length": 1,
+                      "offset": 19,
+                      "parent": [Circular],
+                      "type": "number",
+                      "value": 1,
+                    },
+                  ],
+                  "colonOffset": 17,
+                  "length": 7,
+                  "offset": 13,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                {
+                  "children": [
+                    {
+                      "length": 6,
+                      "offset": 28,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "type",
+                    },
+                    {
+                      "length": 7,
+                      "offset": 36,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "input",
+                    },
+                  ],
+                  "colonOffset": 34,
+                  "length": 15,
+                  "offset": 28,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                {
+                  "children": [
+                    {
+                      "length": 9,
+                      "offset": 51,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "binding",
+                    },
+                    {
+                      "length": 11,
+                      "offset": 62,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "some.data",
+                    },
+                  ],
+                  "colonOffset": 60,
+                  "length": 22,
+                  "offset": 51,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                [Circular],
+              ],
+              "length": 165,
+              "offset": 5,
+              "type": "object",
+            },
+            "type": "property",
+          },
+          "type": "object",
+        },
+        "type": "property",
+      },
+      "type": "object",
+    },
+    "type": "missing",
+  },
+  {
+    "message": "Property "type" missing from type "Asset"",
+    "node": {
+      "children": [
+        {
+          "children": [
+            {
+              "length": 7,
+              "offset": 121,
+              "parent": [Circular],
+              "type": "string",
+              "value": "value",
+            },
+            {
+              "length": 17,
+              "offset": 130,
+              "parent": [Circular],
+              "type": "string",
+              "value": "{{input.label}}",
+            },
+          ],
+          "colonOffset": 128,
+          "length": 26,
+          "offset": 121,
+          "parent": [Circular],
+          "type": "property",
+        },
+      ],
+      "length": 48,
+      "offset": 109,
+      "parent": {
+        "children": [
+          {
+            "length": 7,
+            "offset": 100,
+            "parent": [Circular],
+            "type": "string",
+            "value": "asset",
+          },
+          [Circular],
+        ],
+        "colonOffset": 107,
+        "length": 57,
+        "offset": 100,
+        "parent": {
+          "children": [
+            [Circular],
+          ],
+          "length": 75,
+          "offset": 90,
+          "parent": {
+            "children": [
+              {
+                "length": 7,
+                "offset": 81,
+                "parent": [Circular],
+                "type": "string",
+                "value": "label",
+              },
+              [Circular],
+            ],
+            "colonOffset": 88,
+            "length": 84,
+            "offset": 81,
+            "parent": {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "length": 4,
+                      "offset": 13,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "id",
+                    },
+                    {
+                      "length": 1,
+                      "offset": 19,
+                      "parent": [Circular],
+                      "type": "number",
+                      "value": 1,
+                    },
+                  ],
+                  "colonOffset": 17,
+                  "length": 7,
+                  "offset": 13,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                {
+                  "children": [
+                    {
+                      "length": 6,
+                      "offset": 28,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "type",
+                    },
+                    {
+                      "length": 7,
+                      "offset": 36,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "input",
+                    },
+                  ],
+                  "colonOffset": 34,
+                  "length": 15,
+                  "offset": 28,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                {
+                  "children": [
+                    {
+                      "length": 9,
+                      "offset": 51,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "binding",
+                    },
+                    {
+                      "length": 11,
+                      "offset": 62,
+                      "parent": [Circular],
+                      "type": "string",
+                      "value": "some.data",
+                    },
+                  ],
+                  "colonOffset": 60,
+                  "length": 22,
+                  "offset": 51,
+                  "parent": [Circular],
+                  "type": "property",
+                },
+                [Circular],
+              ],
+              "length": 165,
+              "offset": 5,
+              "type": "object",
+            },
+            "type": "property",
+          },
+          "type": "object",
+        },
+        "type": "property",
+      },
+      "type": "object",
+    },
+    "type": "missing",
+  },
+]
 `;

@@ -1,0 +1,22 @@
+import { Text } from "@devtools-ui/plugin";
+import React from "react";
+import { VIEWS_IDS } from "../../constants";
+import { Screen } from "../common";
+
+// Dev tools plugins should utilize devtools-assets (https://github.com/player-ui/devtools-assets)
+// if you intend to use our browser extension (https://chromewebstore.google.com/detail/player-ui-devtools/oookcmbndmalnmacldppblmblakggabo).
+// For more information on how to create Player content, please refer to our documentation at https://player-ui.github.io/latest/dsl/views.
+
+// TODO: customize it!
+
+const welcomeMessage = `Welcome to your new plugin! It was generated using a template, so it's
+time to customize it to meet your needs. You can locate your plugin at
+"devtools/plugins/desktop/{{pluginName}}", where you will find
+instructions on how to customize it. Also, be sure to check the Player-UI
+documentation at https://player-ui.github.io/latest/.
+Check the View 2 for an example of how to interact with the Player.
+Happy hacking!`;
+
+export const View1 = (
+  <Screen id={VIEWS_IDS.VIEW_1} main={<Text>{welcomeMessage}</Text>} />
+);
