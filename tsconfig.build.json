@@ -15,7 +15,8 @@
     "importHelpers": true,
     "resolveJsonModule": true,
     "composite": true,
-    "outDir": "out"
+    "outDir": "out",
+    "isolatedDeclarations": true,
   },
   "exclude": ["out", "node_modules"]
 }
