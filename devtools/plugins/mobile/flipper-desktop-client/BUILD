@@ -2,6 +2,8 @@ load("@aspect_bazel_lib//lib:directory_path.bzl", "directory_path")
 load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_run_binary")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@rules_player//javascript:defs.bzl", "create_package_json")
+load("@rules_player//javascript:defs.bzl", "js_pipeline")
+
 load("//helpers:defs.bzl", "vitest_config")
 
 npm_link_all_packages(name = "node_modules")
