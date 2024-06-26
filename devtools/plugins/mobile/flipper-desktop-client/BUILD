@@ -2,7 +2,6 @@ load("@aspect_bazel_lib//lib:directory_path.bzl", "directory_path")
 load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_run_binary")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@rules_player//javascript:defs.bzl", "create_package_json")
-load("@rules_player//javascript:defs.bzl", "js_pipeline")
 
 load("//helpers:defs.bzl", "vitest_config")
 
@@ -44,14 +43,11 @@ directory_path(
     path = "bin/run",
 )
 
-js_binary(
-    name = "flipper_pkg",
-    data = ["//:node_modules/flipper-pkg"],
-    entry_point = ":flipper_pkg_entry",
-)
 
-js_run_binary(
-    name = "flipper-desktop-client",
+npm_package(
+    name = "flipper-plugin-player-ui-devtools",
+    visibility = ["//visibility:public"],
+    package = "@player-tools/flipper-plugin-player-ui-devtools",
     srcs = glob(["src/**/*"]) + [":package"] + deps + peer_deps + build_deps,
     args = ["bundle"],
     chdir = package_name(),
@@ -60,23 +56,10 @@ js_run_binary(
     tool = ":flipper_pkg",
 )
 
-js_pipeline(
-    package_name = "@flipper-plugin-player-ui-devtools",
-    deps = [
-        ":node_modules/@player-tools/devtools-client",
-        ":node_modules/@player-tools/devtools-types",
-        "//:node_modules/@types/react",
-        "//:node_modules/react",
-    ],
-    test_deps = [
-        "//:node_modules",
-        "//:vitest_config",
-    ],
-    build_deps = [
-        "//:node_modules/@oclif/errors",
-        "//:node_modules/flipper-pkg",
-    ],
-    peer_deps = [
-        "//:node_modules/flipper-plugin",
-    ]
+js_binary(
+    name = "flipper_pkg",
+    data = ["//:node_modules/flipper-pkg"],
+    entry_point = ":flipper_pkg_entry",
+    # required to make npm to be available in PATH
+    include_npm = True,
 )
