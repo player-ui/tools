@@ -62,7 +62,7 @@ js_run_binary(
 
 npm_package(
     name="flipper-plugin-player-ui-devtools",
-    package="@player/flipper-plugin-player-ui-devtools",
+    package="flipper-plugin-player-ui-devtools",
     visibility = ["//visibility:public"],
     srcs = [":flipper-desktop-client"],
 )

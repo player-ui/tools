@@ -1,6 +1,6 @@
 {
   "$schema": "https://fbflipper.com/schemas/plugin-package/v2.json",
-  "name": "@player-tools/flipper-plugin-player-ui-devtools",
+  "name": "flipper-plugin-player-ui-devtools",
   "id": "player-ui-devtools",
   "pluginType": "client",
   "version": "0.0.0-PLACEHOLDER",
