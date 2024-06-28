@@ -64,7 +64,7 @@ npm_package(
     name="flipper-plugin-player-ui-devtools",
     package="flipper-plugin-player-ui-devtools",
     visibility = ["//visibility:public"],
-    srcs = [":flipper-desktop-client"],
+    srcs = [":flipper-desktop-client"] + glob(["src/**/*"]) + [":package"] + deps + peer_deps + build_deps,
 )
 
 js_binary(
