@@ -4,6 +4,7 @@ load("//helpers:defs.bzl", "vitest_config")
 
 npm_link_all_packages(name = "node_modules")
 
+tsup_config(name = "tsup_config")
 
 vitest_config(name = "vitest_config")
 
