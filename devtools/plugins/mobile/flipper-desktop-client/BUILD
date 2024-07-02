@@ -1,6 +1,6 @@
 load("@rules_player//javascript:defs.bzl", "js_pipeline")
 load("@npm//:defs.bzl", "npm_link_all_packages")
-load("//helpers:defs.bzl", "vitest_config")
+load("//helpers:defs.bzl", "tsup_config", "vitest_config")
 
 npm_link_all_packages(name = "node_modules")
 
