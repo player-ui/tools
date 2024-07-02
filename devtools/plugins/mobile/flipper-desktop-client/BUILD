@@ -70,6 +70,7 @@ npm_package(
 js_binary(
     name = "flipper-plugin-player-ui-devtools.npm-publish",
     data = [":flipper-plugin-player-ui-devtools"],
+    native.package_name(),
     entry_point = "@aspect_rules_js//npm/private:npm_publish_mjs",
     include_npm = True,
 )
