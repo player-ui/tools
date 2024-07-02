@@ -12,6 +12,7 @@ Place for:
 - XLR
 - Devtools Common
 
+Testing new Token for canary
 
 ## Contributing
 
