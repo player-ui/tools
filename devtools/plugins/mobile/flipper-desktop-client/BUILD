@@ -70,7 +70,7 @@ npm_package(
 )
 
 js_binary(
-    name = pkg_name + "npm-publish",
+    name = pkg_name + ".npm-publish",
     data = [":" + pkg_name],
     chdir = package_name() + "/" + pkg_name,
     entry_point = "@aspect_rules_js//npm/private:npm_publish_mjs",
