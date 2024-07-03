@@ -26,6 +26,8 @@ peer_deps = [
     "//:node_modules/flipper-plugin",
 ]
 
+pkg_name = "flipper-plugin-player-ui-devtools"
+
 create_package_json(
     name = "package",
     base_package_json = "package.json",
@@ -61,16 +63,16 @@ js_run_binary(
 )
 
 npm_package(
-    name="flipper-plugin-player-ui-devtools",
-    package="flipper-plugin-player-ui-devtools",
+    name = pkg_name,
+    package = pkg_name,
     visibility = ["//visibility:public"],
     srcs = [":flipper-desktop-client"] + glob(["src/**/*"]) + [":package"] + deps + peer_deps + build_deps,
 )
 
 js_binary(
-    name = "flipper-plugin-player-ui-devtools.npm-publish",
-    data = [":flipper-plugin-player-ui-devtools"],
-    chdir = package_name() + "/" + "flipper-plugin-player-ui-devtools",
+    name = pkg_name + "npm-publish",
+    data = [":" + pkg_name],
+    chdir = package_name() + "/" + pkg_name,
     entry_point = "@aspect_rules_js//npm/private:npm_publish_mjs",
     include_npm = True,
 )
