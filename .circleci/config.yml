@@ -141,47 +141,64 @@ workflows:
               ignore:
                 - main
                 - /version-.*/
-                - /pull\/.*/
             tags:
               ignore: /.*/
 
       - bazelrc:
+          filters:
+            branches:
+              ignore: /pull\/.*/
           context:
             - BuildTools
           requires:
             - setup
 
       - build:
+          name: build-trunk
+          filters:
+            branches:
+              ignore:
+                -  /pull\/.*/
           requires:
             - bazelrc
 
-      - maybe_release:
-          context:
-            - Publish
-          requires:
-            - build
-
-      - test:
-          requires:
-            - build
-
-  build_and_test_pr_fork:
-    jobs:
-      - setup:
+      - build:
+          name: build-fork
           filters:
             branches:
               only:
                 - /pull\/.*/
-            tags:
-              ignore: /.*/
-
-      - build:
           requires:
             - setup
 
-      - test:
+      - maybe_release:
+          filters:
+            branches:
+              ignore:
+                - /pull\/.*/
+          context:
+            - Publish
           requires:
-            - build
+            - build-trunk
+
+      - test:
+          name: test-trunk
+          filters:
+            branches:
+              ignore:
+                - /pull\/.*/
+          requires:
+            - build-trunk
+
+      - test:
+          name: test-fork
+          filters:
+            branches:
+              only:
+                - /pull\/.*./
+          requires:
+            - build-fork
+
 
   build_and_test_main:
     when:
