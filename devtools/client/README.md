@@ -60,3 +60,23 @@ root.render(<Panel communicationLayer={communicationLayer} />);
 ## Contributing
 
 We welcome contributions to the Player UI Devtools Browser Extension.
+
+### Local Extension Development
+``` bash
+cd devtools/plugins/desktop/test-env
+pnpm run dev:chrome
+```
+
+For local development; Running the above command will create a new `browser-devtools` folder on your desktop. This is where the chrome and firefox extension will live.
+If you need to make any changes to the extension; you can modify the `browser-devtools` folder and run `build:chrome` or `build:firefox`
+
+#### Chrome:
+To test your extension; go to the `/build` folder within `browser-devtools`. there should be a `chrome-mv3-prod` folder.
+Head into your Google Chrome Browser and click on Manage Extensions. Make sure you have Developer mode enabled on the top right and click the "Loan Unpacked" and select the `chrome-mv3-prod` folder.
+
+
+#### Firefox:
+To test your extension within Firefox; go to this url on your Firefox Browser `about:debugging#/runtime/this-firefox`.
+Click on `Load Temporary Add-on` and you will go into the folder called `firefox-mv2-prod` within the `/build` folder of devtools. Here, you will select the `manifest.json` file and that will load the add on into firefox.
+
+

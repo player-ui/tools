@@ -14,7 +14,7 @@ orbs:
 executors:
   base:
     docker:
-      - image: docker.io/playerui/bazel-docker:6
+      - image: docker.io/playerui/bazel-docker-slim:9
     working_directory: ~/tools
     resource_class: xlarge
     environment:
@@ -38,6 +38,18 @@ commands:
       - run: |
           source ~/.bashrc
           npx auto shipit --only-graduate-with-release-label -vv
+  check_branch_status:
+    description: "Check if the branch is clean after the build"
+    steps:
+      - run:
+          name: Check branch status
+          command: |
+            if [[ -n "$(git status --porcelain)" ]]; then 
+              echo "Error: The branch is not clean after the build. Please run the build locally and commit any changes."
+              exit 1
+            else
+              echo "The branch is clean after the build."
+            fi
 
 jobs:
   setup:
@@ -85,6 +97,7 @@ jobs:
           root: .
           paths:
             - .
+      - check_branch_status
 
   test:
     executor: base
@@ -128,47 +141,64 @@ workflows:
               ignore:
                 - main
                 - /version-.*/
-                - /pull\/.*/
             tags:
               ignore: /.*/
 
       - bazelrc:
+          filters:
+            branches:
+              ignore: /pull\/.*/
           context:
             - BuildTools
           requires:
             - setup
 
       - build:
+          name: build-trunk
+          filters:
+            branches:
+              ignore:
+                -  /pull\/.*/
           requires:
             - bazelrc
 
-      - maybe_release:
-          context:
-            - Publish
-          requires:
-            - build
-
-      - test:
-          requires:
-            - build
-
-  build_and_test_pr_fork:
-    jobs:
-      - setup:
+      - build:
+          name: build-fork
           filters:
             branches:
               only:
                 - /pull\/.*/
-            tags:
-              ignore: /.*/
-
-      - build:
           requires:
             - setup
 
-      - test:
+      - maybe_release:
+          filters:
+            branches:
+              ignore:
+                - /pull\/.*/
+          context:
+            - Publish
           requires:
-            - build
+            - build-trunk
+
+      - test:
+          name: test-trunk
+          filters:
+            branches:
+              ignore:
+                - /pull\/.*/
+          requires:
+            - build-trunk
+
+      - test:
+          name: test-fork
+          filters:
+            branches:
+              only:
+                - /pull\/.*./
+          requires:
+            - build-fork
+
 
   build_and_test_main:
     when:

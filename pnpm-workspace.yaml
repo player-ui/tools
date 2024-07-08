@@ -14,6 +14,7 @@ packages:
   - "devtools/plugins/mobile/flipper-desktop-client"
   - "devtools/plugins/desktop/common"
   - "devtools/plugins/desktop/basic"
+  - "devtools/plugins/desktop/profiler"
   - "devtools/messenger"
   - "devtools/client"
   - "common/static-xlrs"

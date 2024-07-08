@@ -13,9 +13,15 @@ import {
   PropertyNode,
   ValueNode,
 } from "react-json-reconciler";
-import { Asset, View, createSlot } from "../../components";
-import type { AssetPropsWithChildren, WithChildren } from "../../types";
+import { Asset, View, createSlot, GeneratedIDProperty } from "../../components";
+import { ObjectWithIndexTracking } from "../../auto-id";
+import type {
+  AssetPropsWithChildren,
+  WithChildren,
+  WithPlayerTypes,
+} from "../../types";
 import type { BindingTemplateInstance } from "../../string-templates";
+import { toJsonProperties } from "../../utils";
 
 // #region - Asset Types
 
@@ -369,3 +375,104 @@ Info.AdditionalInfo = createSlot<{
   wrapInAsset: true,
   CollectionComp,
 });
+
+export interface ChoiceAsset extends AssetType<"choice"> {
+  /** A text-like asset for the choice's label */
+  title?: AssetWrapper;
+
+  /** Asset container for a note. */
+  note?: AssetWrapper;
+
+  /** The location in the data-model to store the data */
+  binding?: Binding;
+
+  /** The options to select from */
+  items?: Array<ChoiceItemType>;
+
+  /** Optional additional data */
+  metaData?: {
+    /** Additional data to send along with beacons */
+    beacon?: string | Record<string, any>;
+  };
+}
+
+export interface ChoiceItemType {
+  /** The id associated with the choice item */
+  id: string;
+
+  /** A text-like asset for the choice's label */
+  label?: AssetWrapper;
+
+  /** The value of the input from the data-model */
+  value?: string | number | boolean | null;
+}
+
+export const Choice = (
+  props: Omit<AssetPropsWithChildren<ChoiceAsset>, "binding"> & {
+    /** The binding */
+    binding: BindingTemplateInstance;
+  }
+) => {
+  const { binding, children, ...rest } = props;
+  return (
+    <Asset type="choice" {...rest}>
+      <property name="binding">{binding.toValue()}</property>
+      {children}
+    </Asset>
+  );
+};
+
+Choice.Title = createSlot({
+  name: "title",
+  TextComp: Text,
+  wrapInAsset: true,
+  CollectionComp,
+});
+
+Choice.Note = createSlot({
+  name: "note",
+  TextComp: Text,
+  wrapInAsset: true,
+  CollectionComp,
+});
+
+Choice.Items = createSlot({
+  name: "items",
+  TextComp: Text,
+  isArray: true,
+  wrapInAsset: false,
+  CollectionComp,
+});
+
+const ChoiceItem = (
+  props: WithChildren<
+    WithPlayerTypes<
+      Omit<ChoiceItemType, "id"> & {
+        id?: string;
+      }
+    >
+  >
+) => {
+  const { children, id, ...rest } = props;
+
+  return (
+    <ObjectWithIndexTracking>
+      {id && (
+        <property name="id">
+          <value>{id}</value>
+        </property>
+      )}
+      {!id && <GeneratedIDProperty />}
+      {toJsonProperties(rest, { propertiesToSkip: ["applicability"] })}
+      {children}
+    </ObjectWithIndexTracking>
+  );
+};
+
+ChoiceItem.Label = createSlot({
+  name: "label",
+  TextComp: Text,
+  wrapInAsset: true,
+  CollectionComp,
+});
+Choice.Item = ChoiceItem;

@@ -1,0 +1,35 @@
+import { dataTypes } from "@player-ui/common-types-plugin";
+import { type DSLSchema, makeBindingsForObject } from "@player-tools/dsl";
+
+// Here is the schema for your developer tools panel Player content.
+// Any bindings should be added as a key to this record, and the value
+// must be a DSLSchema. You can learn more about the schema in the
+// Player documentation (https://player-ui.github.io/next/dsl/schema#basic-schema).
+
+export const schema = {
+  // TODO: Add your schema here
+  color: dataTypes.StringType,
+  logs: [
+    {
+      id: dataTypes.StringType,
+      time: dataTypes.StringType,
+      type: dataTypes.StringType,
+      message: dataTypes.StringType,
+      severity: dataTypes.StringType,
+      binding: dataTypes.StringType,
+      from: dataTypes.StringType,
+      to: dataTypes.StringType,
+      state: dataTypes.StringType,
+      error: dataTypes.StringType,
+      outcome: dataTypes.StringType,
+      metricType: dataTypes.StringType,
+    },
+  ] as [DSLSchema],
+};
+
+// This is a record of bindings for the schema above. Instead of setting the bindings
+// as strings, we leverage the template strings generated here. This way, we can ensure
+// that the bindings are correct and up-to-date with the schema. For more information
+// on the makeBindingsForObject function, see the Player documentation
+// (https://player-ui.github.io/next/dsl/schema#using-the-schema-object-in-jsxtsx-content)
+export const bindings = makeBindingsForObject(schema);

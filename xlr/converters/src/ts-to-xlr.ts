@@ -39,6 +39,7 @@ import {
   isTopLevelDeclaration,
   resolveConditional,
   applyExcludeToNodeType,
+  isPrimitiveTypeNode,
 } from "@player-tools/xlr-utils";
 import { ConversionError } from "./types";
 
@@ -359,7 +360,15 @@ export class TsConverter {
           false: this.convertTsTypeNode(node.falseType) as NodeType,
         },
       } as ConditionalType;
-      return resolveConditional(xlrNode);
+      // Resolve simple conditionals now, defer complex ones to runtime
+      if (
+        isPrimitiveTypeNode(xlrNode.check.left) &&
+        isPrimitiveTypeNode(xlrNode.check.right)
+      ) {
+        return resolveConditional(xlrNode);
+      } else {
+        return xlrNode;
+      }
     }
 
     if (ts.isTypeReferenceNode(node)) {
@@ -453,7 +462,13 @@ export class TsConverter {
         }
       }
 
-      if (ts.isTypeQueryNode(node.objectType)) {
+      let queryNode = node.objectType;
+      // handle cases where the object being accessed is wrapped in () because of linting
+      if (ts.isParenthesizedTypeNode(node.objectType)) {
+        queryNode = node.objectType.type;
+      }
+
+      if (ts.isTypeQueryNode(queryNode)) {
         const elements = this.tsNodeToType(node.objectType) as TupleType;
         return {
           type: "or",
@@ -462,7 +477,7 @@ export class TsConverter {
       }
 
       this.context.throwError(
-        `Error: could not solve IndexedAccessType ${node.getFullText()}`
+        `Error: could not solve IndexedAccessType: ${node.getFullText()}`
       );
     }
 

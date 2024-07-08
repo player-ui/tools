@@ -274,7 +274,7 @@ export class XLRValidator {
 
         return typeof literalType.value === "string";
       case "null":
-        return literalType.value === "null";
+        return literalType.value === null;
       case "never":
         return literalType === undefined;
       case "any":
@@ -288,7 +288,7 @@ export class XLRValidator {
     }
   }
 
-  private getRefType(ref: RefType): NodeType {
+  public getRefType(ref: RefType): NodeType {
     let refName = ref.ref;
     if (refName.indexOf("<") > 0) {
       [refName] = refName.split("<");
@@ -312,7 +312,7 @@ export class XLRValidator {
     return exp;
   }
 
-  private computeIntersectionType(types: Array<NodeType>): ObjectType | OrType {
+  public computeIntersectionType(types: Array<NodeType>): ObjectType | OrType {
     let firstElement = types[0];
     let effectiveType: ObjectType | OrType;
 

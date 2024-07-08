@@ -15,10 +15,10 @@ DEST_DIR="$HOME/Desktop/browser-devtools"
 VERDACCIO_REGISTRY="http://localhost:4873"
 
 # Define Plugins to test
-PLUGINS=("@player-tools/devtools-basic-web-plugin")
+PLUGINS=("@player-tools/devtools-basic-web-plugin" "@player-tools/devtools-profiler-web-plugin")
 
 # Define browser-devtools depenedencies
-BROWSER_DEVTOOLS_DEPS=("@player-ui/pubsub-plugin" "dequal" "@player-tools/devtools-client" "@player-tools/devtools-messenger" "@player-tools/devtools-types")
+BROWSER_DEVTOOLS_DEPS=("@player-ui/pubsub-plugin" "dequal" "@player-tools/devtools-client@0.0.0-PLACEHOLDER" "@player-tools/devtools-messenger@0.0.0-PLACEHOLDER" "@player-tools/devtools-types@0.0.0-PLACEHOLDER")
 
 # Run publish-to-verdaccio.sh
 log_step "Running publish-to-verdaccio.sh..."
