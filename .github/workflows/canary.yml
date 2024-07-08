@@ -21,11 +21,6 @@ jobs:
             const { number: pull_number } = context.payload.issue;
             const { login: username } = context.payload.comment.user;
 
-            // CircleCI uses pull/<number> for forks
-            if (owner !== 'player-ui') {
-              return "pull/" + pull_number
-            }
-
             await github.rest.repos.checkCollaborator({
               owner,
               repo,
@@ -37,11 +32,16 @@ jobs:
               comment_id: context.payload.comment.id,
               content: "eyes",
             });
-            const { data: { head: { ref: branch }}} = await github.rest.pulls.get({
+            const { data: { head: { ref: branch, login: prOwner }}} = await github.rest.pulls.get({
               owner,
               repo,
               pull_number,
             });
+
+            if (prOwner !== "player-ui") {
+              return "pull/" + pull_number;
+            }
+
             return branch;
       - name: Not a collaborator
         if: ${{ failure() }}
