@@ -39,7 +39,9 @@ jobs:
             });
 
             if (prOwner !== "player-ui") {
-              return "pull/" + pull_number;
+              // CircleCI format for triggering PR
+              // https://circleci.com/docs/api/v2/index.html#operation/triggerPipeline
+              return "pull/" + pull_number + "/head";
             }
 
             return branch;
