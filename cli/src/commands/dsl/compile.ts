@@ -136,7 +136,7 @@ export default class DSLCompile extends BaseCommand {
       );
 
       const compileResult = await context.hooks.compileContent.call(
-        { type: contentType as DefaultCompilerContentType },
+        { type: contentType },
         preProcessedValue,
         file
       );

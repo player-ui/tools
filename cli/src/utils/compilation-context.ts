@@ -9,6 +9,10 @@ export interface identifyContentReturn {
   extension: string;
 }
 
+export interface compileContentArgs extends Omit<SerializeContext, "type"> {
+  type: string;
+}
+
 export interface compilationResult {
   /** the JSON value of the source */
   value: string;
@@ -44,7 +48,7 @@ export class CompilationContext {
      * @returns CompilerReturn object instance or undefined
      */
     compileContent: new AsyncSeriesBailHook<
-      [SerializeContext, any, string],
+      [compileContentArgs, any, string],
       compilationResult
     >(),
   };
