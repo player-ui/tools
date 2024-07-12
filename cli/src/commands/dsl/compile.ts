@@ -105,13 +105,14 @@ export default class DSLCompile extends BaseCommand {
 
       const preProcessedValue =
         await context.dslCompiler.hooks.preProcessFlow.call(defaultExport);
-      const contentType =
+      const { type: contentType, extension: ext } =
         (await context.hooks.identifyContentType.call(
           file,
           preProcessedValue
-        )) ||
-        fallbackFingerprint(preProcessedValue, file) ||
-        "unknown";
+        )) || {
+          type: fallbackFingerprint(preProcessedValue, file) || "unknown",
+          extension: ".json",
+        };
 
       let relativePath = path.relative(input, file);
       if (!relativePath) {
@@ -123,7 +124,7 @@ export default class DSLCompile extends BaseCommand {
         path.format({
           ...path.parse(relativePath),
           base: undefined,
-          ext: ".json",
+          ext,
         })
       );
 
@@ -141,20 +142,10 @@ export default class DSLCompile extends BaseCommand {
       );
 
       if (compileResult) {
-        const contentStr = JSON.stringify(compileResult.value, null, 2);
-
         await mkdirp(path.dirname(outputFile));
-        await fs.writeFile(outputFile, contentStr);
+        await fs.writeFile(outputFile, compileResult.value);
         if (compileResult.sourceMap) {
           await fs.writeFile(`${outputFile}.map`, compileResult.sourceMap);
-        }
-
-        if (contentType) {
-          return {
-            contentType,
-            outputFile,
-            inputFile: file,
-          };
         }
 
         return {
@@ -162,6 +153,12 @@ export default class DSLCompile extends BaseCommand {
           outputFile,
           inputFile: file,
         };
+      } else {
+        this.log(
+          `${logSymbols.error} Error compiling %s, no result was returned by compiler`,
+          normalizePath(file)
+        );
+        throw new Error(`Error compiling file ${normalizePath(file)}`);
       }
     };
 

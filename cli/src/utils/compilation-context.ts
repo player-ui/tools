@@ -1,10 +1,21 @@
-import type {
-  DSLCompiler,
-  CompilerReturn,
-  SerializeContext,
-} from "@player-tools/dsl";
+import type { DSLCompiler, SerializeContext } from "@player-tools/dsl";
 import { isDefaultCompilerContentType } from "@player-tools/dsl";
 import { AsyncSeriesBailHook } from "tapable-ts";
+
+export interface identifyContentReturn {
+  /** The identified type the content should be compiled as */
+  type: string;
+  /** The file extension the content should be written as */
+  extension: string;
+}
+
+export interface compilationResult {
+  /** the JSON value of the source */
+  value: string;
+
+  /** The sourcemap of the content */
+  sourceMap?: string;
+}
 
 /**
  *
@@ -17,9 +28,12 @@ export class CompilationContext {
      *
      * @param fileName - The relative name of the file
      * @param content - The contents in the file
-     * @returns string with the content type.
+     * @returns content type and extension
      */
-    identifyContentType: new AsyncSeriesBailHook<[string, any], string>(),
+    identifyContentType: new AsyncSeriesBailHook<
+      [string, any],
+      identifyContentReturn
+    >(),
 
     /**
      * Function for returning the compile content given an specific type or condition
@@ -31,7 +45,7 @@ export class CompilationContext {
      */
     compileContent: new AsyncSeriesBailHook<
       [SerializeContext, any, string],
-      CompilerReturn
+      compilationResult
     >(),
   };
 
@@ -43,7 +57,16 @@ export class CompilationContext {
 
     this.hooks.compileContent.tap("default", async ({ type }, content) => {
       if (isDefaultCompilerContentType(type)) {
-        return this.dslCompiler.serialize(content, { type });
+        const compilationResults = await this.dslCompiler.serialize(content, {
+          type,
+        });
+
+        if (compilationResults) {
+          return {
+            value: JSON.stringify(compilationResults.value),
+            sourceMap: compilationResults.sourceMap,
+          };
+        }
       }
     });
   }
