@@ -26,23 +26,19 @@ jobs:
               repo,
               username,
             });
+
             github.rest.reactions.createForIssueComment({
               owner,
               repo,
               comment_id: context.payload.comment.id,
               content: "eyes",
             });
+            
             const { data: { head: { ref: branch, login: prOwner }}} = await github.rest.pulls.get({
               owner,
               repo,
               pull_number,
             });
-
-            if (prOwner !== "player-ui") {
-              // CircleCI format for triggering PR
-              // https://circleci.com/docs/api/v2/index.html#operation/triggerPipeline
-              return "pull/" + pull_number + "/head";
-            }
 
             return branch;
       - name: Not a collaborator
