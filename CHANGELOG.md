@@ -1,3 +1,81 @@
+# 0.7.0 (Fri Jul 19 2024)
+
+### Release Notes
+
+#### Update CLI to Allow Compilation to any File Type ([#146](https://github.com/player-ui/tools/pull/146))
+
+Allow DSL compilation phase to compile to non `.json` targets
+
+#### Fix Issue Validating Templates ([#125](https://github.com/player-ui/tools/pull/125))
+
+XLR - Fully resolve references, intersection types, conditional types, and generic types when returning a type
+JSON Language Server - Add generic tokens when constructing template types in transform
+Validation - Fix issue validating nested arrays in templates.
+
+#### #132 - Adds a dev tools web plugin generator ([#133](https://github.com/player-ui/tools/pull/133))
+
+Adds a generator to facilitate adding new dev tools web plugins:
+
+```bash
+pnpm gen:dev-tools-web-plugin
+```
+
+#### Fix Bug when Validating `null` literals ([#123](https://github.com/player-ui/tools/pull/123))
+
+Validator - Properly validate `NullType` nodes against `null` literals
+
+#### Fix Parsing Indexed Access Types with Parentheses ([#112](https://github.com/player-ui/tools/pull/112))
+
+XLR - Fixed compilation of `IndexedAccesNodes `that use parentheses around the first element.
+
+#### Fix Regression on Validation of Keys with Escaped Characters ([#110](https://github.com/player-ui/tools/pull/110))
+
+XLR - Fixes validation of objects where a property is escaped using single/double quotes and the property is required or the object doesn't allow additional properties.
+
+---
+
+#### 🚀 Enhancement
+
+- Update CLI to Allow Compilation to any File Type [#146](https://github.com/player-ui/tools/pull/146) ([@KetanReddy](https://github.com/KetanReddy))
+- #132 - Adds a dev tools web plugin generator [#133](https://github.com/player-ui/tools/pull/133) ([@rafbcampos](https://github.com/rafbcampos))
+- Dev tools profiler plugin [#114](https://github.com/player-ui/tools/pull/114) ([@rafbcampos](https://github.com/rafbcampos))
+
+#### 🐛 Bug Fix
+
+- Release main [#150](https://github.com/player-ui/tools/pull/150) ([@intuit-svc](https://github.com/intuit-svc))
+- revert canary on forks [#147](https://github.com/player-ui/tools/pull/147) ([@mercillo](https://github.com/mercillo))
+- trigger forked PR canary in correct format for CircleCI [#145](https://github.com/player-ui/tools/pull/145) ([@hborawski](https://github.com/hborawski))
+- Fix Canary workflow for forks [#144](https://github.com/player-ui/tools/pull/144) ([@hborawski](https://github.com/hborawski))
+- [circleCI] allows us to build from forks [#135](https://github.com/player-ui/tools/pull/135) ([@mercillo](https://github.com/mercillo))
+- [bazel - npm registry] flipper-plugin-player-ui-devtools [#138](https://github.com/player-ui/tools/pull/138) ([@lexfm](https://github.com/lexfm))
+- Fix Issue Validating Templates [#125](https://github.com/player-ui/tools/pull/125) ([@KetanReddy](https://github.com/KetanReddy))
+- [Devtools]FlowPanel/ObjectInspector/PathFilter [#131](https://github.com/player-ui/tools/pull/131) ([@lexfm](https://github.com/lexfm))
+- chore: add branch check to CI and bump locks [#124](https://github.com/player-ui/tools/pull/124) ([@rafbcampos](https://github.com/rafbcampos))
+- Fix Bug when Validating `null` literals [#123](https://github.com/player-ui/tools/pull/123) ([@KetanReddy](https://github.com/KetanReddy))
+- Devtools- panel layout fix and version upgrade [#122](https://github.com/player-ui/tools/pull/122) ([@mercillo](https://github.com/mercillo))
+- Use Slim Bazel Image [#119](https://github.com/player-ui/tools/pull/119) ([@KetanReddy](https://github.com/KetanReddy))
+- Added additional DSL types and component [#118](https://github.com/player-ui/tools/pull/118) ([@mrigankmg](https://github.com/mrigankmg))
+- Devtools/default selected player [#117](https://github.com/player-ui/tools/pull/117) ([@mercillo](https://github.com/mercillo))
+- Fix Parsing Indexed Access Types with Parentheses [#112](https://github.com/player-ui/tools/pull/112) ([@KetanReddy](https://github.com/KetanReddy))
+- Fix Regression on Validation of Keys with Escaped Characters [#110](https://github.com/player-ui/tools/pull/110) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### 📝 Documentation
+
+- Docs/devtools - local development for extension [#105](https://github.com/player-ui/tools/pull/105) (marlon_ercillo@intuit.com [@mercillo](https://github.com/mercillo))
+
+#### Authors: 8
+
+- [@intuit-svc](https://github.com/intuit-svc)
+- Alex Fimbres ([@lexfm](https://github.com/lexfm))
+- Harris Borawski ([@hborawski](https://github.com/hborawski))
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+- marky ercillo (marlon_ercillo@intuit.com)
+- Marlon "Marky" Ercillo ([@mercillo](https://github.com/mercillo))
+- Mrigank Mehta ([@mrigankmg](https://github.com/mrigankmg))
+- Rafael Campos ([@rafbcampos](https://github.com/rafbcampos))
+
+---
+
 # 0.6.0 (Thu May 02 2024)
 
 ### Release Notes
