@@ -37,6 +37,7 @@ rules_ts_ext = use_extension(
     dev_dependency = True,
 )
 
-rules_ts_ext.deps()
+# can revert after 3.0.0 is released
+rules_ts_ext.deps(ts_version_from = "//:package.json", ts_integrity="sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==")
 
 use_repo(rules_ts_ext, "npm_typescript")

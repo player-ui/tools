@@ -1,6 +1,6 @@
 {
   "lockFileVersion": 6,
-  "moduleFileHash": "fd98891fef91c5bc5eb9901761046bf1bf1782576921d706e7587c1f35535006",
+  "moduleFileHash": "181194d2e2c6f102ac70b0d7afab32d4eba3c85a31bd7b44b52f917644c1459b",
   "flags": {
     "cmdRegistries": [
       "https://bcr.bazel.build/"
@@ -106,11 +106,14 @@
           "tags": [
             {
               "tagName": "deps",
-              "attributeValues": {},
+              "attributeValues": {
+                "ts_version_from": "//:package.json",
+                "ts_integrity": "sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q=="
+              },
               "devDependency": true,
               "location": {
                 "file": "@@//:MODULE.bazel",
-                "line": 40,
+                "line": 41,
                 "column": 18
               }
             }
@@ -2276,8 +2279,9 @@
             "ruleClassName": "http_archive_version",
             "attributes": {
               "bzlmod": true,
-              "version": "5.4.5",
-              "integrity": "",
+              "version": "",
+              "version_from": "@@//:package.json",
+              "integrity": "sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==",
               "build_file": "@@aspect_rules_ts~//ts:BUILD.typescript",
               "build_file_substitutions": {
                 "bazel_worker_version": "5.4.2",
