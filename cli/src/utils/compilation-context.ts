@@ -67,7 +67,7 @@ export class CompilationContext {
 
         if (compilationResults) {
           return {
-            value: JSON.stringify(compilationResults.value),
+            value: JSON.stringify(compilationResults.value, null, 2),
             sourceMap: compilationResults.sourceMap,
           };
         }
