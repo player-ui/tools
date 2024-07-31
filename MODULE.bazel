@@ -38,6 +38,7 @@ rules_ts_ext = use_extension(
 )
 
 # can revert after 3.0.0 is released
+# needed because cli transpile happens through tsc and it needs to use version we specify, not the rules internal version
 rules_ts_ext.deps(ts_version_from = "//:package.json", ts_integrity="sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==")
 
 use_repo(rules_ts_ext, "npm_typescript")
