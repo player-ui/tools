@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 
-const oclif = require('@oclif/core')
-process.env.NODE_ENV = 'production'
+const oclif = require("@oclif/core");
 
-oclif.run().then(require('@oclif/core/flush')).catch(require('@oclif/core/handle'))
+// Setting this to production break source-map generation for dsl content
+process.env.NODE_ENV = "development";
+
+oclif
+  .run()
+  .then(require("@oclif/core/flush"))
+  .catch(require("@oclif/core/handle"));
