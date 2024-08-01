@@ -18,7 +18,10 @@ export class LSPPluginPlugin implements PlayerCLIPlugin {
     this.plugin = plugin;
   }
 
-  async onCreateLanguageService(lsp: PlayerLanguageService, exp: boolean) {
+  async onCreateLanguageService(
+    lsp: PlayerLanguageService,
+    exp: boolean
+  ): Promise<void> {
     if (Array.isArray(this.plugin)) {
       this.plugin.forEach((p) => lsp.addLSPPlugin(p));
     } else {

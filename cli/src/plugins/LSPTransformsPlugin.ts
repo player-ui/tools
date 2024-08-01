@@ -12,7 +12,10 @@ export class LSPTransformsPlugin implements PlayerCLIPlugin {
     this.functionsToLoad = functionsToLoad;
   }
 
-  async onCreateLanguageService(lsp: PlayerLanguageService, exp: boolean) {
+  async onCreateLanguageService(
+    lsp: PlayerLanguageService,
+    exp: boolean
+  ): Promise<void> {
     lsp.addXLRTransforms(this.functionsToLoad);
   }
 }
