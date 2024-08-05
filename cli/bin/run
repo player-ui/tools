@@ -1,6 +1,10 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-var-requires */
 
-const oclif = require('@oclif/core')
-process.env.NODE_ENV = 'production'
+const oclif = require("@oclif/core");
+process.env.NODE_ENV = "production";
 
-oclif.run().then(require('@oclif/core/flush')).catch(require('@oclif/core/handle'))
+oclif
+  .run()
+  .then(require("@oclif/core/flush"))
+  .catch(require("@oclif/core/handle"));

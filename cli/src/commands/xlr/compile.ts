@@ -29,7 +29,7 @@ export default class XLRCompile extends BaseCommand {
       description: "Output directory to write results to.",
       default: "./dist",
     }),
-    mode: Flags.enum({
+    mode: Flags.string({
       char: "m",
       description:
         "Search strategy for types to export: plugin (default, looks for exported EnchancedPlayerPlugin classes) or type (all exported types)",

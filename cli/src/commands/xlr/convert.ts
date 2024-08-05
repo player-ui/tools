@@ -31,7 +31,7 @@ export default class XLRConvert extends BaseCommand {
       char: "o",
       description: "Output directory to write results to.",
     }),
-    lang: Flags.enum({
+    lang: Flags.string({
       char: "l",
       description:
         "Search strategy for types to export: plugin (default, looks for exported EnchancedPlayerPlugin classes) or type (all exported types)",
