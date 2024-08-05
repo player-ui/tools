@@ -198,9 +198,7 @@ export abstract class BaseCommand extends Command {
     return compilerContext;
   }
 
-  exit(code?: number): void {
-    if (process.env.NODE_ENV !== "test") {
-      super.exit(code);
-    }
+  exit(code?: number): never {
+    super.exit(code);
   }
 }
