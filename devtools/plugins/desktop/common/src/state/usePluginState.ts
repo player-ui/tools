@@ -24,7 +24,6 @@ export const usePluginState = (): [
   string,
   React.Dispatch<Transaction<ExtensionSupportedEvents>>
 ] => {
-  console.log('@@ usePlugin State')
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const lastMessageIndex = useRef<number>(-1);
   const { sendMessage, addListener, removeListener } = useCommunicationLayer();

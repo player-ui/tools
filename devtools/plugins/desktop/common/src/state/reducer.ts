@@ -36,7 +36,6 @@ export const reducer = (
       });
     case "PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE":
       return produce(state, (draft) => {
-        console.log("@@ PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE", state)
         const { payload } = transaction;
 
         if (!payload.data) return state;

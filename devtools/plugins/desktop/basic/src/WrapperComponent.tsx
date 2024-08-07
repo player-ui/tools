@@ -128,7 +128,6 @@ export const WrapperComponent = ({
 
   // Data changes
   useEffect(() => {
-    console.log(" @@ Data Changes")
     if (dequal(state.plugins[id]?.flow?.data?.data, data)) return;
 
     const newState = produce(state, (draft) => {
@@ -146,7 +145,6 @@ export const WrapperComponent = ({
 
   // Logs changes
   useEffect(() => {
-    console.log(" @@ Log Changes")
     if (dequal(state.plugins[id]?.flow?.data?.logs, logs)) return;
 
     const newState = produce(state, (draft) => {
@@ -165,7 +163,6 @@ export const WrapperComponent = ({
 
   // Flow changes
   useEffect(() => {
-    console.log(" @@ Flow Changes")
     if (dequal(state.plugins[id]?.flow?.data?.flow, flow)) return;
     
 
@@ -173,7 +170,6 @@ export const WrapperComponent = ({
       set(draft, ["plugins", id, "flow", "data", "flow"], flow )
     });
 
-    console.log(" @@  NewState: ",newState )
     const transaction = genDataChangeTransaction({
       playerID,
       data: newState.plugins[id].flow.data,
