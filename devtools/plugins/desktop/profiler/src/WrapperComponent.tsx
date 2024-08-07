@@ -7,7 +7,7 @@ import type {
 } from "@player-tools/devtools-types";
 import type { Flow } from "@player-ui/react";
 import { produce } from "immer";
-import set from "lodash.set"
+import set from "lodash.set";
 import React, { useCallback, useEffect } from "react";
 import { BASE_PLUGIN_DATA, INTERACTIONS } from "./constants";
 import type { WrapperComponentProps } from "./types";

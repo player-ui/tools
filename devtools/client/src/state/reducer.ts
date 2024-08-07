@@ -3,7 +3,7 @@ import type {
   ExtensionSupportedEvents,
   Transaction,
 } from "@player-tools/devtools-types";
-import set from "lodash.set"
+import set from "lodash.set";
 import { produce } from "immer";
 
 /** Extension state reducer */
