@@ -3,7 +3,7 @@ import type {
   ExtensionSupportedEvents,
   Transaction,
 } from "@player-tools/devtools-types";
-import { dset } from "dset/merge";
+import set from "lodash.set"
 import { produce } from "immer";
 
 /** Extension state reducer */
@@ -18,15 +18,15 @@ export const reducer = (
           sender,
           payload: { plugins },
         } = transaction;
-        dset(draft, ["current", "player"], sender);
-        dset(
+        set(draft, ["current", "player"], sender);
+        set(
           draft,
           ["current", "plugin"],
           draft.current.plugin || plugins[Object.keys(plugins)[0]].id
         );
 
-        dset(draft, ["players", sender, "plugins"], plugins);
-        dset(draft, ["players", sender, "active"], true);
+        set(draft, ["players", sender, "plugins"], plugins);
+        set(draft, ["players", sender, "active"], true);
       });
     case "PLAYER_DEVTOOLS_PLUGIN_FLOW_CHANGE":
       return produce(state, (draft) => {
@@ -35,7 +35,7 @@ export const reducer = (
           payload: { flow, pluginID },
         } = transaction;
 
-        dset(draft, ["players", sender, "plugins", pluginID, "flow"], flow);
+        set(draft, ["players", sender, "plugins", pluginID, "flow"], flow);
       });
     case "PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE":
       return produce(state, (draft) => {
@@ -43,7 +43,7 @@ export const reducer = (
           sender,
           payload: { data, pluginID },
         } = transaction;
-        dset(
+        set(
           draft,
           ["players", sender, "plugins", pluginID, "flow", "data"],
           data
@@ -57,17 +57,17 @@ export const reducer = (
       return produce(state, (draft) => {
         const { sender } = transaction;
 
-        dset(draft, ["players", sender, "active"], false);
+        set(draft, ["players", sender, "active"], false);
       });
     case "PLAYER_DEVTOOLS_PLAYER_SELECTED":
       return produce(state, (draft) => {
         const { playerID } = transaction.payload;
-        dset(draft, ["current", "player"], playerID);
+        set(draft, ["current", "player"], playerID);
       });
     case "PLAYER_DEVTOOLS_PLUGIN_SELECTED":
       return produce(state, (draft) => {
         const { pluginID } = transaction.payload;
-        dset(draft, ["current", "plugin"], pluginID);
+        set(draft, ["current", "plugin"], pluginID);
       });
     default:
       return state;
