@@ -148,7 +148,6 @@ export const WrapperComponent = ({
     if (dequal(state.plugins[id]?.flow?.data?.logs, logs)) return;
 
     const newState = produce(state, (draft) => {
-
       set(draft, ["plugins", id, "flow", "data", "logs"], logs);
     });
 
@@ -164,10 +163,9 @@ export const WrapperComponent = ({
   // Flow changes
   useEffect(() => {
     if (dequal(state.plugins[id]?.flow?.data?.flow, flow)) return;
-    
 
     const newState = produce(state, (draft) => {
-      set(draft, ["plugins", id, "flow", "data", "flow"], flow )
+      set(draft, ["plugins", id, "flow", "data", "flow"], flow );
     });
 
     const transaction = genDataChangeTransaction({
