@@ -22,8 +22,9 @@ dependencies = [
     "//:node_modules/immer",
     "//:node_modules/uuid",
     "//:node_modules/@types/uuid",
-    "//:node_modules/dset",
     "//:node_modules/dequal",
+    "//:node_modules/lodash.set",
+    "//:node_modules/@types/lodash.set",
 ]
 
 dsl_input = "src/content/index.ts"

@@ -20,8 +20,9 @@ dependencies = [
     "//:node_modules/react",
     "//:node_modules/immer",
     "//:node_modules/uuid",
+    "//:node_modules/lodash.set",
+    "//:node_modules/@types/lodash.set",
     "//:node_modules/@types/uuid",
-    "//:node_modules/dset",
     "//:node_modules/dequal",
 ]
 

@@ -7,8 +7,8 @@ import type {
 } from "@player-tools/devtools-types";
 import type { Flow } from "@player-ui/react";
 import { dequal } from "dequal";
-import { dset } from "dset/merge";
 import { produce } from "immer";
+import set from "lodash.set";
 import React, { useCallback, useEffect } from "react";
 import { BASE_PLUGIN_DATA, INTERACTIONS } from "./constants";
 import type { Evaluation, WrapperComponentProps } from "./types";
@@ -49,12 +49,11 @@ export const WrapperComponent = ({
         payload
       ) {
         const result = expEvaluator(payload);
-
         const newState = produce(state, (draft) => {
           const current: Array<Evaluation> =
             (state?.plugins?.[id]?.flow?.data?.history as Array<Evaluation>) ||
             [];
-          dset(
+          set(
             draft,
             ["plugins", id, "flow", "data", "history"],
             [...current, result]
@@ -95,7 +94,7 @@ export const WrapperComponent = ({
 
   // inject playerConfig into the plugin data
   const pluginDataWithPlayerConfig = produce(pluginData, (draft) => {
-    dset(draft, ["flow", "data", "playerConfig"], playerConfig);
+    set(draft, ["flow", "data", "playerConfig"], playerConfig);
   });
 
   // Initial plugin content
@@ -132,7 +131,7 @@ export const WrapperComponent = ({
     if (dequal(state.plugins[id]?.flow?.data?.data, data)) return;
 
     const newState = produce(state, (draft) => {
-      dset(draft, ["plugins", id, "flow", "data", "data"], data);
+      set(draft, ["plugins", id, "flow", "data", "data"], data);
     });
 
     const transaction = genDataChangeTransaction({
@@ -149,7 +148,7 @@ export const WrapperComponent = ({
     if (dequal(state.plugins[id]?.flow?.data?.logs, logs)) return;
 
     const newState = produce(state, (draft) => {
-      dset(draft, ["plugins", id, "flow", "data", "logs"], logs);
+      set(draft, ["plugins", id, "flow", "data", "logs"], logs);
     });
 
     const transaction = genDataChangeTransaction({
@@ -166,7 +165,7 @@ export const WrapperComponent = ({
     if (dequal(state.plugins[id]?.flow?.data?.flow, flow)) return;
 
     const newState = produce(state, (draft) => {
-      dset(draft, ["plugins", id, "flow", "data", "flow"], flow);
+      set(draft, ["plugins", id, "flow", "data", "flow"], flow);
     });
 
     const transaction = genDataChangeTransaction({

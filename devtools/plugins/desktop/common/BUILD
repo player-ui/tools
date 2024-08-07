@@ -17,9 +17,10 @@ js_pipeline(
     deps = [
         ":node_modules/@player-tools/devtools-messenger",
         ":node_modules/@player-tools/devtools-types",
-        "//:node_modules/dset",
         "//:node_modules/dequal",
         "//:node_modules/immer",
+        "//:node_modules/lodash.set",
+        "//:node_modules/@types/lodash.set",
         "//:node_modules/js-flipper",
         "//:node_modules/tiny-uid",
     ],
