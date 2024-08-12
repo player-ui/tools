@@ -18,6 +18,12 @@ export default class Validate extends BaseCommand {
       description: "A list of files or globs to validate",
       multiple: true,
     }),
+    severity: Flags.string({
+      char: "s",
+      description: "The severity of the validation",
+      options: ["error", "warn"],
+      default: "error",
+    }),
   };
 
   private async getOptions() {
@@ -33,6 +39,7 @@ export default class Validate extends BaseCommand {
 
     return {
       inputFiles: Array.isArray(files) ? files : [files],
+      severity: flags.severity,
     };
   }
 
@@ -82,7 +89,7 @@ export default class Validate extends BaseCommand {
   }
 
   async run(): Promise<void> {
-    const { inputFiles } = await this.getOptions();
+    const { inputFiles, severity } = await this.getOptions();
 
     const files = await glob(
       convertToFileGlob(inputFiles, "**/*.(tsx|jsx|js|ts)"),
@@ -153,7 +160,9 @@ export default class Validate extends BaseCommand {
         ${fileNameList.length} 
         file${fileNameList.length > 1 ? "s" : ""}, exiting program`
       );
-      this.exit(1);
+      if (severity === "error") {
+        this.exit(1);
+      }
     } else {
       this.log(`${logSymbols.success} No TSX types or errors found.`);
     }
