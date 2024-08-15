@@ -20,7 +20,8 @@ export default class Validate extends BaseCommand {
     }),
     severity: Flags.string({
       char: "s",
-      description: "The severity of the validation",
+      description:
+        "Setting the validation severity to 'warn' will change the validation step into a warning-only, not halting the process with code 1. That exposes an intermediate option between the default behaviour, where it will fail on errors, and skipping validation.",
       options: ["error", "warn"],
       default: "error",
     }),
@@ -104,61 +105,72 @@ export default class Validate extends BaseCommand {
 
     const allDiagnostics = ts.getPreEmitDiagnostics(program);
 
-    let diagnosticsCount = 0;
-
     const groupedDiagnostics = allDiagnostics.reduce(
-      (
-        acc: {
-          [key: string]: any[];
-        },
-        diagnostic
-      ) => {
+      (acc, diagnostic) => {
         const fileName = diagnostic.file?.fileName;
+        const category = diagnostic.category;
+
         if (fileName && files.includes(fileName)) {
-          if (!acc[fileName]) {
-            acc[fileName] = [];
+          const key =
+            category === ts.DiagnosticCategory.Error ? "errors" : "warnings";
+
+          if (!acc[key][fileName]) {
+            acc[key][fileName] = [];
           }
 
-          acc[fileName].push(diagnostic);
-          diagnosticsCount += 1;
+          acc[key][fileName].push(diagnostic);
         }
 
         return acc;
       },
-      {}
+      { errors: {}, warnings: {} } as {
+        errors: Record<string, ts.Diagnostic[]>;
+        warnings: Record<string, ts.Diagnostic[]>;
+      }
     );
 
-    const fileNameList = Object.keys(groupedDiagnostics);
+    ["errors", "warnings"].forEach((category) => {
+      const diagnosticsList = Object.keys(
+        groupedDiagnostics[category as keyof typeof groupedDiagnostics]
+      );
 
-    fileNameList.forEach((diagnosticGroup) => {
-      this.log(`${diagnosticGroup}`);
-      groupedDiagnostics[diagnosticGroup].forEach((diagnostic) => {
-        if (diagnostic.file) {
-          const { line, character } = ts.getLineAndCharacterOfPosition(
-            diagnostic.file,
-            diagnostic.start!
-          );
-          const message = ts.flattenDiagnosticMessageText(
-            diagnostic.messageText,
-            "\n"
-          );
+      diagnosticsList.forEach((diagnosticGroup) => {
+        this.log(`${diagnosticGroup}`);
+        groupedDiagnostics[category as keyof typeof groupedDiagnostics][
+          diagnosticGroup
+        ].forEach((diagnostic) => {
+          if (diagnostic.file) {
+            const { line, character } = ts.getLineAndCharacterOfPosition(
+              diagnostic.file,
+              diagnostic.start ?? 0
+            );
+            const message = ts.flattenDiagnosticMessageText(
+              diagnostic.messageText,
+              "\n"
+            );
 
-          this.log(
-            `  ${logSymbols.error} (${line + 1},${character + 1}): ${message}`
-          );
-        } else {
-          this.log(
-            ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n")
-          );
-        }
+            const logSymbol =
+              category === "errors" ? logSymbols.error : logSymbols.warning;
+
+            this.log(
+              `  ${logSymbol} (${line + 1},${character + 1}): ${message}`
+            );
+          } else {
+            this.log(
+              ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n")
+            );
+          }
+        });
       });
     });
 
-    if (fileNameList.length) {
+    const errorsCount = Object.keys(groupedDiagnostics.errors).length;
+
+    if (errorsCount) {
       this.log(
-        `${diagnosticsCount} type or syntax errors found in 
-        ${fileNameList.length} 
-        file${fileNameList.length > 1 ? "s" : ""}, exiting program`
+        `Type or syntax errors found in ${errorsCount} file${
+          errorsCount > 1 ? "s" : ""
+        }, exiting program`
       );
       if (severity === "error") {
         this.exit(1);
