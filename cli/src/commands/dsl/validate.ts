@@ -111,34 +111,36 @@ export default class Validate extends BaseCommand {
         const category = diagnostic.category;
 
         if (fileName && files.includes(fileName)) {
-          const key =
-            category === ts.DiagnosticCategory.Error ? "errors" : "warnings";
-
-          if (!acc[key][fileName]) {
-            acc[key][fileName] = [];
+          if (!acc[category][fileName]) {
+            acc[category][fileName] = [];
           }
 
-          acc[key][fileName].push(diagnostic);
+          acc[category][fileName].push(diagnostic);
         }
 
         return acc;
       },
-      { errors: {}, warnings: {} } as {
-        errors: Record<string, ts.Diagnostic[]>;
-        warnings: Record<string, ts.Diagnostic[]>;
-      }
+      {
+        [ts.DiagnosticCategory.Error]: {},
+        [ts.DiagnosticCategory.Warning]: {},
+        [ts.DiagnosticCategory.Message]: {},
+        [ts.DiagnosticCategory.Suggestion]: {},
+      } as Record<ts.DiagnosticCategory, Record<string, ts.Diagnostic[]>>
     );
 
-    ["errors", "warnings"].forEach((category) => {
-      const diagnosticsList = Object.keys(
-        groupedDiagnostics[category as keyof typeof groupedDiagnostics]
-      );
+    const diagnosticCategories = [
+      ts.DiagnosticCategory.Error,
+      ts.DiagnosticCategory.Warning,
+      ts.DiagnosticCategory.Message,
+      ts.DiagnosticCategory.Suggestion,
+    ];
+
+    diagnosticCategories.forEach((category) => {
+      const diagnosticsList = Object.keys(groupedDiagnostics[category]);
 
       diagnosticsList.forEach((diagnosticGroup) => {
         this.log(`${diagnosticGroup}`);
-        groupedDiagnostics[category as keyof typeof groupedDiagnostics][
-          diagnosticGroup
-        ].forEach((diagnostic) => {
+        groupedDiagnostics[category][diagnosticGroup].forEach((diagnostic) => {
           if (diagnostic.file) {
             const { line, character } = ts.getLineAndCharacterOfPosition(
               diagnostic.file,
@@ -149,8 +151,22 @@ export default class Validate extends BaseCommand {
               "\n"
             );
 
-            const logSymbol =
-              category === "errors" ? logSymbols.error : logSymbols.warning;
+            let logSymbol = logSymbols.info;
+
+            switch (category) {
+              case ts.DiagnosticCategory.Error:
+                logSymbol = logSymbols.error;
+                break;
+              case ts.DiagnosticCategory.Warning:
+                logSymbol = logSymbols.warning;
+                break;
+              case ts.DiagnosticCategory.Message:
+                logSymbol = logSymbols.info;
+                break;
+              case ts.DiagnosticCategory.Suggestion:
+                logSymbol = logSymbols.info;
+                break;
+            }
 
             this.log(
               `  ${logSymbol} (${line + 1},${character + 1}): ${message}`
@@ -164,7 +180,9 @@ export default class Validate extends BaseCommand {
       });
     });
 
-    const errorsCount = Object.keys(groupedDiagnostics.errors).length;
+    const errorsCount = Object.keys(
+      groupedDiagnostics[ts.DiagnosticCategory.Error]
+    ).length;
 
     if (errorsCount) {
       this.log(
