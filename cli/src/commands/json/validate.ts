@@ -70,7 +70,6 @@ export default class Validate extends BaseCommand {
         },
         run: async () => {
           const contents = await fs.readFile(f, "utf-8");
-          const lsp = await this.createLanguageService(exp);
 
           const validations =
             (await lsp.validateTextDocument(

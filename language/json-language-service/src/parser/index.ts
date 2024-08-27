@@ -16,7 +16,7 @@ export interface PlayerContentProvider {
 export async function walk(
   node: ASTNode,
   visitor: (n: ASTNode) => Promise<boolean>
-) {
+): Promise<void> {
   const queue: ASTNode[] = [node];
   let stop = false;
 
