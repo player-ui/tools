@@ -246,7 +246,7 @@ function getLocationForSchemaType(
 export class SchemaInfoPlugin implements PlayerLanguageServicePlugin {
   name = "view-node";
 
-  apply(service: PlayerLanguageService) {
+  apply(service: PlayerLanguageService): void {
     let schemaInfo: SchemaInfo | undefined;
 
     service.hooks.onDocumentUpdate.tap(this.name, (ctx) => {

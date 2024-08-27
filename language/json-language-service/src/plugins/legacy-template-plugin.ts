@@ -115,7 +115,7 @@ function createRuleVisitor(
 export class LegacyTemplatePlugin implements PlayerLanguageServicePlugin {
   name = "legacy-template";
 
-  apply(service: PlayerLanguageService) {
+  apply(service: PlayerLanguageService): void {
     service.hooks.validate.tap(this.name, async (ctx, validationContext) => {
       validationContext.useASTVisitor(
         createRuleVisitor(validationContext, ctx)

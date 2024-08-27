@@ -71,7 +71,7 @@ function createRuleVisitor(context: ValidationContext): ASTVisitor {
 export class LegacyActionPlugin implements PlayerLanguageServicePlugin {
   name = "legacy-action";
 
-  apply(service: PlayerLanguageService) {
+  apply(service: PlayerLanguageService): void {
     service.hooks.validate.tap(this.name, async (ctx, validationContext) => {
       validationContext.useASTVisitor(createRuleVisitor(validationContext));
     });

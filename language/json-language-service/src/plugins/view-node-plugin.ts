@@ -142,7 +142,7 @@ const getViewInfo = (ctx: DocumentContext): DocumentViewInfo => {
 export class ViewNodePlugin implements PlayerLanguageServicePlugin {
   name = "view-node";
 
-  apply(service: PlayerLanguageService) {
+  apply(service: PlayerLanguageService): void {
     let viewInfo: DocumentViewInfo | undefined;
 
     service.hooks.validate.tap(this.name, async (ctx, validation) => {
