@@ -92,10 +92,16 @@ function formatDiagnostic(
   longestLine: number,
   fName: string
 ): string {
-  const type =
-    diag.severity === DiagnosticSeverity.Error
-      ? chalk.red(`${logSymbols.error}  `)
-      : chalk.yellow(`${logSymbols.warning}  `);
+  let type: string;
+
+  if (diag.severity === DiagnosticSeverity.Error) {
+    type = chalk.red(`${logSymbols.error}  `);
+  } else if (diag.severity === DiagnosticSeverity.Warning) {
+    type = chalk.yellow(`${logSymbols.warning}  `);
+  } else {
+    type = chalk.blue(`${logSymbols.info}  `);
+  }
+
   const msg = chalk.bold(diag.message);
   const range = getLineRange(diag.range);
 
