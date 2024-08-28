@@ -24,8 +24,9 @@ export const WrapperComponent = ({
   children,
   startProfiler,
   stopProfiler,
+  id: playerID,
 }: WrapperComponentProps): JSX.Element => {
-  const [state, playerID, dispatch] = usePluginState();
+  const [state, dispatch] = usePluginState({ playerID });
   const lastProcessedInteraction = React.useRef(0);
   const id = pluginData.id;
 

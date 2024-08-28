@@ -9,7 +9,7 @@ import type { Flow } from "@player-ui/react";
 import { dequal } from "dequal";
 import { produce } from "immer";
 import set from "lodash.set";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BASE_PLUGIN_DATA, INTERACTIONS } from "./constants";
 import type { Evaluation, WrapperComponentProps } from "./types";
 import { genDataChangeTransaction, getEvaluateExpression } from "./helpers";
@@ -29,9 +29,11 @@ export const WrapperComponent = ({
   flow,
   expressionEvaluator,
   overrideFlow,
+  id: playerID,
 }: WrapperComponentProps): JSX.Element => {
-  const [state, playerID, dispatch] = usePluginState();
-  const lastProcessedInteraction = React.useRef(0);
+  const [state, dispatch] = usePluginState({ playerID });
+  const [highlight, setHighlight] = useState(false);
+  const lastProcessedInteraction = useRef(0);
   const expEvaluator = useCallback(getEvaluateExpression(expressionEvaluator), [
     expressionEvaluator,
   ]);
@@ -88,9 +90,32 @@ export const WrapperComponent = ({
 
         newFlow && overrideFlow(newFlow);
       }
+
+      if (type === INTERACTIONS.PLAYER_SELECTED && payload) {
+        dispatch({
+          id: -1,
+          type: "PLAYER_DEVTOOLS_SELECTED_PLAYER_CHANGE",
+          payload: { playerID: payload },
+          sender: playerID,
+          context: "player",
+          target: "player",
+          timestamp: Date.now(),
+          _messenger_: true,
+        });
+      }
     },
     [dispatch, expressionEvaluator, id, state]
   );
+
+  useEffect(() => {
+    if (playerID === state.currentPlayer) {
+      setHighlight(true);
+      const timer = setTimeout(() => {
+        setHighlight(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [playerID, state.currentPlayer]);
 
   // inject playerConfig into the plugin data
   const pluginDataWithPlayerConfig = produce(pluginData, (draft) => {
@@ -177,5 +202,9 @@ export const WrapperComponent = ({
     dispatch(transaction);
   }, [flow]);
 
-  return children as JSX.Element;
+  return (
+    <div id={playerID} style={highlight ? { border: "2px solid blue" } : {}}>
+      {children}
+    </div>
+  );
 };
