@@ -7,7 +7,7 @@ import type {
   ReactPlayerPlugin,
   ViewInstance,
 } from "@player-ui/react";
-import { dset } from "dset/merge";
+import set from "lodash.set";
 import { produce } from "immer";
 import React from "react";
 import { WrapperComponent } from "./WrapperComponent";
@@ -58,7 +58,7 @@ export class BasicWevDevtoolsPlugin implements ReactPlayerPlugin {
       dataController.hooks.onUpdate.tap(this.name, (updates) => {
         const newPlayerState = produce(this.data, (draft) => {
           updates.forEach(({ binding, newValue }) => {
-            dset(draft, ["data", ...binding.asArray()], newValue);
+            set(draft, ["data", ...binding.asArray()], newValue);
           });
         });
         this.data = newPlayerState;

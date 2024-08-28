@@ -42,6 +42,12 @@ export default class DSLCompile extends BaseCommand {
       description: "Use experimental language features",
       default: false,
     }),
+    severity: Flags.string({
+      char: "s",
+      description: "The severity of the validation",
+      options: ["error", "warn"],
+      default: "error",
+    }),
   };
 
   private async getOptions() {
@@ -61,6 +67,7 @@ export default class DSLCompile extends BaseCommand {
       skipValidation:
         flags["skip-validation"] ?? config.dsl?.skipValidation ?? false,
       exp,
+      severity: flags.severity,
     };
   }
 
@@ -68,7 +75,8 @@ export default class DSLCompile extends BaseCommand {
     /** the status code */
     exitCode: number;
   }> {
-    const { input, output, skipValidation, exp } = await this.getOptions();
+    const { input, output, skipValidation, exp, severity } =
+      await this.getOptions();
 
     const files = await glob(
       convertToFileGlob([input], "**/*.(tsx|jsx|js|ts)"),
@@ -86,7 +94,7 @@ export default class DSLCompile extends BaseCommand {
     this.debug("Found %i files to process", files.length);
 
     if (!skipValidation) {
-      await ValidateTSTypes.run(["-f", input]);
+      await ValidateTSTypes.run(["-f", input, "-s", severity]);
     }
 
     const context = await this.createCompilerContext();
