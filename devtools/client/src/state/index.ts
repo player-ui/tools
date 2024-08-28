@@ -66,6 +66,14 @@ export const useExtensionState = ({
           playerID,
         },
       });
+
+      messenger.sendMessage({
+        type: "PLAYER_DEVTOOLS_PLUGIN_INTERACTION",
+        payload: {
+          type: "player-selected",
+          payload: playerID,
+        },
+      });
     },
     [dispatch]
   );

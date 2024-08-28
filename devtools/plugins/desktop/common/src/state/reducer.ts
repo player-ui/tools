@@ -59,6 +59,13 @@ export const reducer = (
 
         set(draft, ["interactions"], [...draft.interactions, transaction]);
       });
+    case "PLAYER_DEVTOOLS_SELECTED_PLAYER_CHANGE":
+      const { playerID } = transaction.payload;
+
+      if (!playerID) return state;
+      return produce(state, (draft) => {
+        dset(draft, "currentPlayer", playerID);
+      });
     default:
       return state;
   }

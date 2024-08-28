@@ -23,4 +23,6 @@ export interface WrapperComponentProps {
     rootNode: ProfilerNode;
     durations: { name: string; duration: string }[];
   };
+  /** Player instance id */
+  id: string;
 }

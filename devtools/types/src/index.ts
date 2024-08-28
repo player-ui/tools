@@ -208,6 +208,14 @@ export type DevtoolsPluginInteractionEvent = BaseEvent<
   PluginInteractionPayload
 >;
 
+export type DevtoolsPluginSelectedPlayerEvent = BaseEvent<
+  "PLAYER_DEVTOOLS_SELECTED_PLAYER_CHANGE",
+  {
+    /** Player ID */
+    playerID: string;
+  }
+>;
+
 export type ExtensionSupportedEvents =
   | PlayerInitEvent
   | DevtoolsFlowChangeEvent
@@ -218,7 +226,8 @@ export type ExtensionSupportedEvents =
   | ExtensionSelectedPluginEvent
   | BeaconEvent
   | DisconnectEvent
-  | DevtoolsPluginInteractionEvent;
+  | DevtoolsPluginInteractionEvent
+  | DevtoolsPluginSelectedPlayerEvent;
 
 export type CommunicationLayerMethods = Pick<
   MessengerOptions<ExtensionSupportedEvents>,
@@ -233,4 +242,6 @@ export interface DevtoolsPluginsStore {
   messages: Array<ExtensionSupportedEvents>;
   /** Array of interactions triggered from the Devtools Player Content by plugin and player */
   interactions: Array<DevtoolsPluginInteractionEvent>;
+  /** Current player ID */
+  currentPlayer: string;
 }
