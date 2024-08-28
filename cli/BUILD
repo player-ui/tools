@@ -57,10 +57,6 @@ deps = [
 oclif_pipeline(
     package_name = "@player-tools/cli",
     build_deps = build_deps,
-    test_deps = [
-        "//:node_modules",
-        "//:vitest_config",
-    ],
     deps = deps,
 )
 
