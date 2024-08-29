@@ -5,6 +5,8 @@ export interface BaseEvent<T extends string, P = null> {
   type: T;
   /** Event payload */
   payload: P;
+  /** Target ID */
+  target?: string;
 }
 
 export type TransactionMetadata = {
@@ -14,8 +16,6 @@ export type TransactionMetadata = {
   timestamp: number;
   /** Sender ID */
   sender: string;
-  /** Target ID */
-  target?: string;
   /** Context */
   context: "player" | "devtools";
   /** Messenger tag */
@@ -35,8 +35,8 @@ export type EventsBatchEvent<T extends BaseEvent<string, unknown>> = BaseEvent<
 export type RequestLostEventsEvent = BaseEvent<
   "MESSENGER_REQUEST_LOST_EVENTS",
   {
-    /** Last received message id */
-    lastReceivedMessageId: number;
+    /** Messages received count */
+    messagesReceived: number;
   }
 >;
 
@@ -58,10 +58,10 @@ export type Transaction<T extends BaseEvent<string, unknown>> =
 export type Connection = {
   /** Target ID */
   id: string;
-  /** Last sent message id */
-  lastSentMessageId: number;
-  /** Last received message id */
-  lastReceivedMessageId: number;
+  /** Messages sent*/
+  messagesSent: number;
+  /** Messages received */
+  messagesReceived: number;
   /** Lost events since the last one received */
   desync: boolean;
 };

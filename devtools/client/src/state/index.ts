@@ -38,6 +38,7 @@ export const useExtensionState = ({
       },
       ...communicationLayer,
       logger: console,
+      debug: true,
     }),
     [dispatch, communicationLayer]
   );
@@ -104,7 +105,10 @@ export const useExtensionState = ({
     ({
       type,
       payload,
+      playerID,
     }: {
+      /** player id */
+      playerID: string;
       /** interaction type */
       type: string;
       /** interaction payload */
@@ -112,6 +116,7 @@ export const useExtensionState = ({
     }) => {
       messenger.sendMessage({
         type: "PLAYER_DEVTOOLS_PLUGIN_INTERACTION",
+        target: playerID,
         payload: {
           type,
           payload,
