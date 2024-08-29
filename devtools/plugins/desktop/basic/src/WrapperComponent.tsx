@@ -38,7 +38,7 @@ export const WrapperComponent = ({
     expressionEvaluator,
   ]);
 
-  const id = pluginData.id;
+  const pluginID = pluginData.id;
 
   const processInteraction = useCallback(
     (interaction: DevtoolsPluginInteractionEvent) => {
@@ -53,11 +53,11 @@ export const WrapperComponent = ({
         const result = expEvaluator(payload);
         const newState = produce(state, (draft) => {
           const current: Array<Evaluation> =
-            (state?.plugins?.[id]?.flow?.data?.history as Array<Evaluation>) ||
-            [];
+            (state?.plugins?.[pluginID]?.flow?.data
+              ?.history as Array<Evaluation>) || [];
           set(
             draft,
-            ["plugins", id, "flow", "data", "history"],
+            ["plugins", pluginID, "flow", "data", "history"],
             [...current, result]
           );
         });
@@ -66,12 +66,12 @@ export const WrapperComponent = ({
           id: -1,
           type: "PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE",
           payload: {
-            pluginID: id,
-            data: newState.plugins[id].flow.data,
+            pluginID: pluginID,
+            data: newState.plugins[pluginID].flow.data,
           },
           sender: playerID,
           context: "player",
-          target: "player",
+          target: playerID,
           timestamp: Date.now(),
           _messenger_: true,
         });
@@ -98,13 +98,13 @@ export const WrapperComponent = ({
           payload: { playerID: payload },
           sender: playerID,
           context: "player",
-          target: "player",
+          target: playerID,
           timestamp: Date.now(),
           _messenger_: true,
         });
       }
     },
-    [dispatch, expressionEvaluator, id, state]
+    [dispatch, expressionEvaluator, pluginID, state]
   );
 
   useEffect(() => {
@@ -129,7 +129,7 @@ export const WrapperComponent = ({
       type: "PLAYER_DEVTOOLS_PLAYER_INIT",
       payload: {
         plugins: {
-          [id]: pluginDataWithPlayerConfig,
+          [pluginID]: pluginDataWithPlayerConfig,
         },
       },
       sender: playerID,
@@ -153,16 +153,16 @@ export const WrapperComponent = ({
 
   // Data changes
   useEffect(() => {
-    if (dequal(state.plugins[id]?.flow?.data?.data, data)) return;
+    if (dequal(state.plugins[pluginID]?.flow?.data?.data, data)) return;
 
     const newState = produce(state, (draft) => {
-      set(draft, ["plugins", id, "flow", "data", "data"], data);
+      set(draft, ["plugins", pluginID, "flow", "data", "data"], data);
     });
 
     const transaction = genDataChangeTransaction({
       playerID,
-      data: newState.plugins[id].flow.data,
-      pluginID: id,
+      data: newState.plugins[pluginID].flow.data,
+      pluginID: pluginID,
     });
 
     dispatch(transaction);
@@ -170,16 +170,16 @@ export const WrapperComponent = ({
 
   // Logs changes
   useEffect(() => {
-    if (dequal(state.plugins[id]?.flow?.data?.logs, logs)) return;
+    if (dequal(state.plugins[pluginID]?.flow?.data?.logs, logs)) return;
 
     const newState = produce(state, (draft) => {
-      set(draft, ["plugins", id, "flow", "data", "logs"], logs);
+      set(draft, ["plugins", pluginID, "flow", "data", "logs"], logs);
     });
 
     const transaction = genDataChangeTransaction({
       playerID,
-      data: newState.plugins[id].flow.data,
-      pluginID: id,
+      data: newState.plugins[pluginID].flow.data,
+      pluginID: pluginID,
     });
 
     dispatch(transaction);
@@ -187,16 +187,16 @@ export const WrapperComponent = ({
 
   // Flow changes
   useEffect(() => {
-    if (dequal(state.plugins[id]?.flow?.data?.flow, flow)) return;
+    if (dequal(state.plugins[pluginID]?.flow?.data?.flow, flow)) return;
 
     const newState = produce(state, (draft) => {
-      set(draft, ["plugins", id, "flow", "data", "flow"], flow);
+      set(draft, ["plugins", pluginID, "flow", "data", "flow"], flow);
     });
 
     const transaction = genDataChangeTransaction({
       playerID,
-      data: newState.plugins[id].flow.data,
-      pluginID: id,
+      data: newState.plugins[pluginID].flow.data,
+      pluginID: pluginID,
     });
 
     dispatch(transaction);

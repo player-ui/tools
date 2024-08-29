@@ -39,6 +39,7 @@ export const usePluginState = ({
       addListener,
       removeListener,
       logger: console,
+      debug: true,
     };
 
     return new Messenger(options);

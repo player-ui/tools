@@ -14,6 +14,14 @@ import type {
 
 const counters: Record<string, number> = {};
 
+const internalEvents: Array<InternalEvent<BaseEvent<string, unknown>>["type"]> =
+  [
+    "MESSENGER_BEACON",
+    "MESSENGER_DISCONNECT",
+    "MESSENGER_REQUEST_LOST_EVENTS",
+    "MESSENGER_EVENT_BATCH",
+  ];
+
 /**
  * Messenger<EventsType>
  *
@@ -113,13 +121,6 @@ export class Messenger<T extends BaseEvent<string, unknown>> {
 
   /** generate a sequential id for each non-internal message */
   private getTransactionID(message: MessengerEvent<T>, target?: string) {
-    const internalEvents: Array<InternalEvent<T>["type"]> = [
-      "MESSENGER_BEACON",
-      "MESSENGER_DISCONNECT",
-      "MESSENGER_REQUEST_LOST_EVENTS",
-      "MESSENGER_EVENT_BATCH",
-    ];
-
     if (
       !target ||
       internalEvents.includes(message.type as InternalEvent<T>["type"])
@@ -134,17 +135,14 @@ export class Messenger<T extends BaseEvent<string, unknown>> {
     return counters[target]++;
   }
 
-  private addTransactionMetadata(
-    event: MessengerEvent<T>,
-    target?: string
-  ): Transaction<T> {
+  private addTransactionMetadata(event: MessengerEvent<T>): Transaction<T> {
     const metadata = {
       _messenger_: true,
-      id: this.getTransactionID(event, target),
+      id: this.getTransactionID(event, event.target),
       sender: this.id,
       timestamp: Date.now(),
       context: this.options.context,
-      ...(target && { target }),
+      ...(event.target && { target: event.target }),
     };
 
     return {
@@ -171,8 +169,8 @@ export class Messenger<T extends BaseEvent<string, unknown>> {
     const isFromMessenger = parsed._messenger_;
     const isFromSelf = parsed.sender === this.id;
     const isFromSameContext = parsed.context === this.options.context;
-    const isTargetingOthers = parsed.target && parsed.target !== this.id;
-    const isKnownConnection = this.connections[parsed.sender];
+    const isTargetingOthers = parsed.target ? parsed.target !== this.id : false;
+    const isKnownConnection = Boolean(this.connections[parsed.sender]);
 
     if (
       !isFromMessenger ||
@@ -200,25 +198,30 @@ export class Messenger<T extends BaseEvent<string, unknown>> {
     if (isKnownConnection) {
       const isBatch = parsed.type === "MESSENGER_EVENT_BATCH";
 
-      // if batch, get the first message id, so we can check for missing messages:
       const transactionID = isBatch
         ? (parsed.payload as EventsBatchEvent<T>["payload"]).events[0].id
         : parsed.id;
 
-      const { lastReceivedMessageId, desync } = this.connections[parsed.sender];
+      if (transactionID === -1) {
+        console.dir({ parsed }, { depth: null });
+        return;
+      }
+
+      const { messagesReceived, desync } = this.connections[parsed.sender];
 
       // if we already received this message, ignore:
-      if (transactionID <= lastReceivedMessageId) {
+      if (transactionID <= messagesReceived) {
         return;
       }
 
       // if we missed messages, request them, unless we already did:
-      if (!desync && transactionID > lastReceivedMessageId + 1) {
+      if (!desync && transactionID > messagesReceived + 1) {
         const message: RequestLostEventsEvent = {
           type: "MESSENGER_REQUEST_LOST_EVENTS",
           payload: {
-            lastReceivedMessageId,
+            messagesReceived,
           },
+          target: parsed.sender,
         };
 
         this.options.sendMessage(this.addTransactionMetadata(message));
@@ -237,16 +240,12 @@ export class Messenger<T extends BaseEvent<string, unknown>> {
       if (isBatch) {
         // clear desync flag on event batch:
         this.connections[parsed.sender].desync = false;
+        this.connections[parsed.sender].messagesReceived += (
+          parsed.payload as EventsBatchEvent<T>["payload"]
+        ).events.length;
+      } else {
+        this.connections[parsed.sender].messagesReceived += 1;
       }
-
-      // if batch, get the last message id:
-      const newLastMessageIdx = isBatch
-        ? (parsed.payload as EventsBatchEvent<T>["payload"]).events.slice(-1)[0]
-            .id
-        : parsed.id;
-
-      // update last received message id:
-      this.connections[parsed.sender].lastReceivedMessageId = newLastMessageIdx;
     }
 
     this.options.messageCallback(parsed);
@@ -257,62 +256,78 @@ export class Messenger<T extends BaseEvent<string, unknown>> {
   }
 
   private handleBeaconMessage(parsed: Transaction<T>) {
-    // if we reach here, we assume a new connection and send all events:
+    if (this.connections[parsed.sender]) {
+      return;
+    }
+
+    this.connections[parsed.sender] = {
+      id: parsed.sender,
+      messagesReceived: 0,
+      messagesSent: 0,
+      desync: false,
+    };
+
     if ((Messenger.contextEvents[this.options.context] as T[]).length > 0) {
       const message: EventsBatchEvent<T> = {
         type: "MESSENGER_EVENT_BATCH",
         payload: {
           events: (Messenger.contextEvents[this.options.context] as T[]).map(
-            (event) => this.addTransactionMetadata(event, parsed.sender)
+            (event) => this.addTransactionMetadata(event)
           ),
         },
+        target: parsed.sender,
       };
 
-      this.options.sendMessage(
-        this.addTransactionMetadata(message, parsed.sender)
-      );
+      this.options.sendMessage(this.addTransactionMetadata(message));
 
       this.log(
         `messages [0 - ${
           (Messenger.contextEvents[this.options.context] as T[]).length - 1
         }] sent to ${parsed.context}:${parsed.sender}`
       );
+
+      this.connections[parsed.sender].messagesSent =
+        Messenger.contextEvents[this.options.context].length;
     }
-
-    const newConnection: Connection = {
-      id: parsed.sender,
-      lastSentMessageId:
-        (Messenger.contextEvents[this.options.context] as T[]).length - 1,
-      lastReceivedMessageId: -1,
-      desync: false,
-    };
-
-    this.connections[parsed.sender] = newConnection;
 
     this.log(`new connection added - ${parsed.context}:${parsed.sender}`);
   }
 
   private handleLostEventsRequest(parsed: Transaction<T>) {
-    const lastMessageIdx = (parsed.payload as RequestLostEventsEvent["payload"])
-      .lastReceivedMessageId;
+    if (
+      !this.connections[parsed.sender] ||
+      Messenger.contextEvents[this.options.context].length === 0
+    ) {
+      return;
+    }
+
+    const sentCount = this.connections[parsed.sender].messagesSent;
 
     const missingEvents = (
       Messenger.contextEvents[this.options.context] as T[]
     ).slice(
-      lastMessageIdx + 1,
+      sentCount,
       (Messenger.contextEvents[this.options.context] as T[]).length
     );
+
+    if (missingEvents.length === 0) {
+      return;
+    }
 
     const message: EventsBatchEvent<T> = {
       type: "MESSENGER_EVENT_BATCH",
       payload: {
         events: missingEvents.map((event) =>
-          this.addTransactionMetadata(event, parsed.sender)
+          this.addTransactionMetadata(event)
         ),
       },
+      target: parsed.sender,
     };
 
     this.options.sendMessage(this.addTransactionMetadata(message));
+
+    this.connections[parsed.sender].messagesSent =
+      Messenger.contextEvents[parsed.context].length;
 
     this.log(
       `messages [0 - ${
@@ -333,16 +348,17 @@ export class Messenger<T extends BaseEvent<string, unknown>> {
     const parsed: T =
       typeof message === "string" ? JSON.parse(message) : message;
 
-    (Messenger.contextEvents[this.options.context] as T[]).push(parsed);
+    Messenger.contextEvents[this.options.context].push(parsed);
 
     // send to all connections:
     Object.values(this.connections).forEach(({ id }) => {
-      const msg = this.addTransactionMetadata(parsed, id);
-
+      const msg = this.addTransactionMetadata({ target: id, ...parsed });
       this.options
         .sendMessage(msg)
         .then(() => {
-          this.connections[id].lastSentMessageId = msg.id;
+          if (msg.id !== -1 && msg.target === id) {
+            this.connections[id].messagesSent += 1;
+          }
         })
         .catch(() => {
           this.options.handleFailedMessage?.(msg);
@@ -367,8 +383,9 @@ export class Messenger<T extends BaseEvent<string, unknown>> {
       const event: DisconnectEvent = {
         type: "MESSENGER_DISCONNECT",
         payload: null,
+        target: connection,
       };
-      const message = this.addTransactionMetadata(event, connection);
+      const message = this.addTransactionMetadata(event);
       this.options.sendMessage(message);
     });
 
