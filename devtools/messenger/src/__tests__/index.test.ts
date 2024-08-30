@@ -1,4 +1,4 @@
-import { describe, afterEach, expect, test, vi } from "vitest";
+import { describe, beforeEach, expect, test, vi } from "vitest";
 import { Messenger } from "../index";
 import { createMockContext } from "./helpers";
 import { BaseEvent } from "@player-tools/devtools-types";
@@ -6,9 +6,9 @@ import { BaseEvent } from "@player-tools/devtools-types";
 vi.useFakeTimers();
 
 describe("Messenger", () => {
-  afterEach(() => {
+  beforeEach(() => {
     vi.clearAllMocks();
-    Messenger.resetEvents();
+    Messenger.reset();
   });
 
   test("beacons", () => {
@@ -22,7 +22,7 @@ describe("Messenger", () => {
       removeListener: mockMessagingAPI.removeListener.bind(mockMessagingAPI),
       messageCallback: spies.web1.messageCallback,
       context: "devtools",
-      id: "test",
+      id: "test1",
       logger: console,
     });
 
@@ -42,7 +42,7 @@ describe("Messenger", () => {
       removeListener: mockMessagingAPI.removeListener.bind(mockMessagingAPI),
       messageCallback: spies.web1.messageCallback,
       context: "devtools",
-      id: "test",
+      id: "test2",
       logger: console,
     });
 
@@ -71,11 +71,11 @@ describe("Messenger", () => {
       sender: "test-2",
     });
 
-    expect(spies.web1.sendMessage).toHaveBeenCalledTimes(5);
+    expect(spies.web1.sendMessage).toHaveBeenCalledTimes(8);
 
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
       1,
-      expect.objectContaining({ type: "MESSENGER_BEACON" })
+      expect.objectContaining({ ...events[0], sender: "test2" })
     );
 
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
@@ -85,7 +85,7 @@ describe("Messenger", () => {
 
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
       3,
-      expect.objectContaining({ type: "MESSENGER_BEACON" })
+      expect.objectContaining({ ...events[1], sender: "test2" })
     );
 
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
@@ -95,13 +95,29 @@ describe("Messenger", () => {
 
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
       5,
+      expect.objectContaining({ ...events[2], sender: "test2" })
+    );
+
+    expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
+      6,
+      expect.objectContaining({ type: "MESSENGER_BEACON" })
+    );
+
+    expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
+      7,
+      expect.objectContaining({ type: "MESSENGER_BEACON" })
+    );
+
+    expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
+      8,
       expect.objectContaining({
         type: "MESSENGER_EVENT_BATCH",
+        target: "test-2",
         payload: {
           events: [
-            expect.objectContaining({ ...events[0], target: "test-2" }),
-            expect.objectContaining({ ...events[1], target: "test-2" }),
-            expect.objectContaining({ ...events[2], target: "test-2" }),
+            expect.objectContaining({ ...events[0] }),
+            expect.objectContaining({ ...events[1] }),
+            expect.objectContaining({ ...events[2] }),
           ],
         },
       })
@@ -141,7 +157,7 @@ describe("Messenger", () => {
       removeListener: mockMessagingAPI.removeListener.bind(mockMessagingAPI),
       messageCallback: spies.devtools.messageCallback,
       context: "devtools",
-      id: "devtools",
+      id: "devtools1",
       logger: console,
     });
 
@@ -157,7 +173,7 @@ describe("Messenger", () => {
 
     vi.advanceTimersByTime(1000);
 
-    expect(spies.web1.sendMessage).toHaveBeenCalledTimes(11);
+    expect(spies.web1.sendMessage).toHaveBeenCalledTimes(12);
 
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
       1,
@@ -166,7 +182,7 @@ describe("Messenger", () => {
 
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
       2,
-      expect.objectContaining({ type: "MESSENGER_BEACON" })
+      expect.objectContaining({ ...eventsweb1[0], sender: "web1" })
     );
 
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
@@ -176,24 +192,23 @@ describe("Messenger", () => {
 
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
       4,
+      expect.objectContaining({ type: "MESSENGER_BEACON" })
+    );
+
+    expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
+      5,
       expect.objectContaining({
         type: "MESSENGER_EVENT_BATCH",
+        target: "devtools1",
         payload: {
-          events: [
-            expect.objectContaining({ ...eventsweb1[0], target: "devtools" }),
-          ],
+          events: [expect.objectContaining({ ...eventsweb1[0] })],
         },
       })
     );
 
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
-      5,
-      expect.objectContaining({ ...eventsDevtools[0], sender: "devtools" })
-    );
-
-    expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
       6,
-      expect.objectContaining({ type: "MESSENGER_BEACON" })
+      expect.objectContaining({ ...eventsDevtools[0], sender: "devtools1" })
     );
 
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
@@ -203,26 +218,31 @@ describe("Messenger", () => {
 
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
       8,
-      expect.objectContaining({ ...eventsweb1[1], sender: "web1" })
+      expect.objectContaining({ type: "MESSENGER_BEACON" })
     );
 
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
       9,
-      expect.objectContaining({ ...eventsDevtools[1], sender: "devtools" })
+      expect.objectContaining({ ...eventsweb1[1], sender: "web1" })
     );
 
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
       10,
-      expect.objectContaining({ type: "MESSENGER_BEACON" })
+      expect.objectContaining({ ...eventsDevtools[1], sender: "devtools1" })
     );
 
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
       11,
       expect.objectContaining({ type: "MESSENGER_BEACON" })
     );
+
+    expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
+      12,
+      expect.objectContaining({ type: "MESSENGER_BEACON" })
+    );
   });
 
-  test.only("messages sent between two web Messenger instances and one devtools instance", () => {
+  test("messages sent between two web Messenger instances and one devtools instance", () => {
     const { spies, mockMessagingAPI } = createMockContext();
 
     const eventsWeb1: Array<BaseEvent<string, unknown>> = [
@@ -245,7 +265,7 @@ describe("Messenger", () => {
       addListener: mockMessagingAPI.addListener.bind(mockMessagingAPI),
       removeListener: mockMessagingAPI.removeListener.bind(mockMessagingAPI),
       messageCallback: spies.web1.messageCallback,
-      id: "web1",
+      id: "web2",
       context: "player",
       logger: console,
     });
@@ -255,7 +275,7 @@ describe("Messenger", () => {
       addListener: mockMessagingAPI.addListener.bind(mockMessagingAPI),
       removeListener: mockMessagingAPI.removeListener.bind(mockMessagingAPI),
       messageCallback: spies.web2.messageCallback,
-      id: "web2",
+      id: "web3",
       context: "player",
       logger: console,
     });
@@ -265,7 +285,7 @@ describe("Messenger", () => {
       addListener: mockMessagingAPI.addListener.bind(mockMessagingAPI),
       removeListener: mockMessagingAPI.removeListener.bind(mockMessagingAPI),
       messageCallback: spies.devtools.messageCallback,
-      id: "devtools",
+      id: "devtools2",
       context: "devtools",
       logger: console,
     });
@@ -284,9 +304,9 @@ describe("Messenger", () => {
 
     vi.advanceTimersByTime(1000);
 
-    expect(spies.web1.sendMessage).toHaveBeenCalledTimes(17);
-    expect(spies.web2.sendMessage).toHaveBeenCalledTimes(17);
-    expect(spies.devtools.sendMessage).toHaveBeenCalledTimes(17);
+    expect(spies.web1.sendMessage).toHaveBeenCalledTimes(15);
+    expect(spies.web2.sendMessage).toHaveBeenCalledTimes(15);
+    expect(spies.devtools.sendMessage).toHaveBeenCalledTimes(15);
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
       1,
       expect.objectContaining({ type: "MESSENGER_BEACON" })
@@ -313,7 +333,7 @@ describe("Messenger", () => {
     );
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
       7,
-      expect.objectContaining({ ...eventsDevtools[0], target: "web1" })
+      expect.objectContaining({ type: "MESSENGER_BEACON" })
     );
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
       8,
@@ -325,34 +345,26 @@ describe("Messenger", () => {
     );
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
       10,
-      expect.objectContaining({ type: "MESSENGER_BEACON" })
-    );
-    expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
-      11,
       expect.objectContaining({ ...eventsWeb1[1], target: "devtools" })
     );
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
-      12,
+      11,
       expect.objectContaining({ ...eventsWeb2[1], target: "devtools" })
     );
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
-      13,
+      12,
       expect.objectContaining({ ...eventsDevtools[1], target: "web2" })
+    );
+    expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
+      13,
+      expect.objectContaining({ type: "MESSENGER_BEACON" })
     );
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
       14,
-      expect.objectContaining({ ...eventsDevtools[1], target: "web2" })
+      expect.objectContaining({ type: "MESSENGER_BEACON" })
     );
     expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
       15,
-      expect.objectContaining({ type: "MESSENGER_BEACON" })
-    );
-    expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
-      16,
-      expect.objectContaining({ type: "MESSENGER_BEACON" })
-    );
-    expect(spies.web1.sendMessage).toHaveBeenNthCalledWith(
-      17,
       expect.objectContaining({ type: "MESSENGER_BEACON" })
     );
   });

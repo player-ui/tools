@@ -102,7 +102,6 @@ export const Panel = ({
     PUBSUB_PLUGIN.subscribe("*", (type: string, payload: string) => {
       handleInteraction({
         type,
-        playerID: state.current.player || "",
         payload,
       });
     });
