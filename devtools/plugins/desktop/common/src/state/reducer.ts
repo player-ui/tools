@@ -64,7 +64,7 @@ export const reducer = (
 
       if (!playerID) return state;
       return produce(state, (draft) => {
-        dset(draft, "currentPlayer", playerID);
+        set(draft, "currentPlayer", playerID);
       });
     default:
       return state;
