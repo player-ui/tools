@@ -38,7 +38,6 @@ export const useExtensionState = ({
       },
       ...communicationLayer,
       logger: console,
-      debug: true,
     }),
     [dispatch, communicationLayer]
   );
