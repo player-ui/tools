@@ -6,22 +6,23 @@ import type {
   Transaction,
 } from "@player-tools/devtools-types";
 import { useEffect, useMemo, useReducer, useRef } from "react";
-import uid from "tiny-uid";
 import { useCommunicationLayer } from "../communication-layer";
 import { reducer } from "./reducer";
-
-const playerID = uid();
 
 const INITIAL_STATE: DevtoolsPluginsStore = {
   messages: [],
   plugins: {},
   interactions: [],
+  currentPlayer: "",
 };
 
 /** devtools plugin state */
-export const usePluginState = (): [
+export const usePluginState = ({
+  playerID,
+}: {
+  playerID: string;
+}): [
   DevtoolsPluginsStore,
-  string,
   React.Dispatch<Transaction<ExtensionSupportedEvents>>
 ] => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
@@ -56,5 +57,5 @@ export const usePluginState = (): [
     }
   }, [state.messages, messenger]);
 
-  return [state, playerID, dispatch];
+  return [state, dispatch];
 };

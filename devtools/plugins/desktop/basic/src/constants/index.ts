@@ -19,6 +19,7 @@ export const VIEWS_IDS = {
 export const INTERACTIONS = {
   EVALUATE_EXPRESSION: "evaluate-expression",
   OVERRIDE_FLOW: "override-flow",
+  PLAYER_SELECTED: "player-selected",
 };
 
 export const BASE_PLUGIN_DATA: Omit<PluginData, "flow"> = {

@@ -16,10 +16,8 @@ import {
   FormControl,
   FormLabel,
   Heading,
-  HStack,
   Select,
   Text,
-  VStack,
 } from "@chakra-ui/react";
 import { ThemeProvider } from "@devtools-ds/themes";
 
