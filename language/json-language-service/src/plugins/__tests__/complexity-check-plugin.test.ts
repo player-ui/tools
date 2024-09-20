@@ -180,7 +180,7 @@ describe("complexity plugin", () => {
      * 1 x for each view node (1 total) = 1
      * 1 x from exps in ACTION states (3 total) = 5
      * 1 x for each asset node (3 total) = 3
-     * 2 x for each expression (`2 total) = 4
+     * 2 x for each expression (2 total) = 4
      * 2 x for each data evaluated (10 total) = 20
      */
     expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
@@ -271,13 +271,100 @@ describe("complexity plugin", () => {
      * Score break down
      * 1 x for each view node (1 total) = 1
      * 1 x from exps in ACTION states (3 total) = 3
-     * 1 x for each asset node (2 total) = 2
-     * 2 x for each expression (`2 total) = 4
+     * 1 x for each asset node (1 total) = 1
+     * 2 x for template asset (1 total) = 2
+     * 3 x for nested template asset (1 total) = 3
+     * 2 x for each expression (2 total) = 4
      * 2 x for each data evaluated (1 total) = 2
      */
     expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
       [
-        "Error: Content complexity is 12",
+        "Error: Content complexity is 16",
+      ]
+    `);
+  });
+
+  test("Measures asset complexity", async () => {
+    let customService: PlayerLanguageService = new PlayerLanguageService();
+
+    customService = new PlayerLanguageService();
+    customService.addLSPPlugin(
+      new ComplexityCheck({
+        maxAcceptableComplexity: 0,
+        assetComplexity: { info: 2, text: 1, table: 5 },
+      })
+    );
+    await customService.setAssetTypesFromModule([
+      Types,
+      ReferenceAssetsWebPluginManifest,
+    ]);
+
+    const textDocument = toTextDocument(
+      JSON.stringify({
+        id: "test",
+        views: [
+          {
+            id: "yes",
+            type: "info",
+            title: {
+              asset: {
+                id: "info-title",
+                type: "text",
+                value: "{{some.infoText}}",
+              },
+            },
+            subTitle: {
+              asset: {
+                id: "info-subTitle",
+                type: "text",
+                value: "@[something]@",
+              },
+            },
+          },
+        ],
+        navigation: {
+          BEGIN: "FLOW_1",
+          FLOW_1: {
+            startState: "ACTION_1",
+            ACTION_1: {
+              state_type: "ACTION",
+              exp: ["something"],
+              transitions: {
+                "*": "VIEW_1",
+              },
+            },
+            VIEW_1: {
+              state_type: "VIEW",
+              ref: "yes",
+              transitions: {
+                "*": "ACTION_2",
+              },
+            },
+            ACTION_2: {
+              state_type: "ACTION",
+              exp: ["{{somethingElse}} = 1", "something else"],
+              transitions: {
+                "*": "VIEW_1",
+              },
+            },
+          },
+        },
+      })
+    );
+
+    const validations = await customService.validateTextDocument(textDocument);
+    expect(validations).toHaveLength(1);
+    /**
+     * Score break down
+     * 1 x for each view node (1 total) = 1
+     * 1 x from exps in ACTION states (3 total) = 3
+     * 1 x for each asset node (1 total) = 1
+     * 2 x for each expression (1 total) = 2
+     * 2 x for each data evaluated (1 total) = 2
+     */
+    expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
+      [
+        "Error: Content complexity is 14",
       ]
     `);
   });

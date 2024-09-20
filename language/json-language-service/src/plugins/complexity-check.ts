@@ -9,6 +9,7 @@ import {
   getProperty,
   isPropertyNode,
   type ASTNode,
+  type ViewASTNode,
   type PlayerLanguageService,
   type PlayerLanguageServicePlugin,
 } from "..";
@@ -34,6 +35,8 @@ export interface ComplexityCheckConfig {
 
    */
   maxWarningLevel?: number;
+  /** If set, maps complexity based on asset type */
+  assetComplexity?: Record<string, number>;
 }
 
 /**
@@ -164,9 +167,26 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
 
         console.log("assetNode:", this.contentScore);
       },
-      ViewNode: () => {
+      ViewNode: (viewNode: ViewASTNode) => {
         this.contentScore += 1;
-        console.log("viewNode:", this.contentScore);
+
+        const viewType = viewNode.viewType?.valueNode?.value;
+
+        // Map the assetComplexity score based on the view type
+        const viewComplexity = viewType
+          ? this.config.assetComplexity?.[viewType]
+          : undefined;
+
+        if (viewComplexity !== undefined) {
+          this.contentScore += viewComplexity;
+          console.log(
+            `viewNode: ${viewType}, complexity: ${viewComplexity}, contentScore: ${this.contentScore}`
+          );
+        } else {
+          console.log(
+            `viewNode: ${viewType}, no matching complexity type found, contentScore is: ${this.contentScore}`
+          );
+        }
       },
       StringNode: (stringNode) => {
         const stringContent = stringNode.value;
