@@ -4,13 +4,11 @@ import {
   Range,
   TextDocument,
 } from "vscode-languageserver-types";
-import {
-  BindingLike,
-  DataModelOptions,
-  resolveDataRefs,
-} from "@player-ui/player";
+import { resolveDataRefs } from "@player-ui/player";
 import {
   getProperty,
+  isPropertyNode,
+  type ASTNode,
   type PlayerLanguageService,
   type PlayerLanguageServicePlugin,
 } from "..";
@@ -75,6 +73,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
           this.contentScore < this.config.maxWarningLevel
         ) {
           diagnostic = {
+            // message: `Warning: Content complexity is ${this.contentScore}, which is above your warning threshold of ${this.config.maxWarningLevel}`,
             message: `Warning: Content complexity is ${this.contentScore}`,
             severity: DiagnosticSeverity.Warning,
             range: makeRange(
@@ -85,6 +84,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
           };
         } else {
           diagnostic = {
+            // message: `Error: Content complexity is ${this.contentScore}, however the maximum acceptable complexity is ${this.config.maxAcceptableComplexity}`,
             message: `Error: Content complexity is ${this.contentScore}`,
             severity: DiagnosticSeverity.Error,
             range: makeRange(
@@ -120,12 +120,17 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
       },
 
       FlowStateNode: (flowState) => {
-        // add complexity per expression that needs to run
+        // add complexity per expression in a state
         if (flowState.stateType) {
           if (flowState.stateType.valueNode?.value === "ACTION") {
             const numExp = getProperty(flowState, "exp");
             if (numExp?.valueNode?.type === "array") {
               this.contentScore += numExp.valueNode.children.length;
+              console.log(
+                "state exp:",
+                numExp.valueNode.children.length,
+                this.contentScore
+              );
             } else {
               this.contentScore += 1;
             }
@@ -133,33 +138,56 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
         }
       },
       AssetNode: (assetNode) => {
-        // add complexity for every asset
-        this.contentScore += 1;
+        let scoreModifier = 1;
+        // recursively check parent nodes for templates
+        function checkParentTemplate(node: ASTNode) {
+          if (node.parent) {
+            if (
+              isPropertyNode(node.parent) &&
+              node.parent.keyNode.value === "template"
+            ) {
+              // incerases the score modifier for each template parent
+              scoreModifier += 1;
+              console.log(
+                "found a template parent, modified score:",
+                scoreModifier
+              );
+              return checkParentTemplate(node.parent);
+            }
+            return checkParentTemplate(node.parent);
+          }
+          return node;
+        }
+
+        checkParentTemplate(assetNode);
+        this.contentScore += scoreModifier;
+
+        console.log("assetNode:", this.contentScore);
       },
-      ViewNode: (assetNode) => {
-        // Add complexity per view
+      ViewNode: () => {
         this.contentScore += 1;
+        console.log("viewNode:", this.contentScore);
       },
       StringNode: (stringNode) => {
         const stringContent = stringNode.value;
-        // TODO handle nested binding/expressions
         resolveDataRefs(stringContent, {
           model: {
-            get: () => {
+            get: (binding) => {
               this.contentScore += 2;
-              return "";
+              console.log("model - get:", binding, this.contentScore);
+              return binding;
             },
-            set: (
-              transaction: [BindingLike, any][],
-              options?: DataModelOptions | undefined
-            ) => {
+            set: () => {
               this.contentScore += 2;
+              console.log("model - set:", this.contentScore);
               return [];
             },
             delete: () => {},
           },
-          evaluate: () => {
+          evaluate: (str) => {
             this.contentScore += 2;
+            console.log("model - evaluate:", str, this.contentScore);
+            return str;
           },
         });
       },
