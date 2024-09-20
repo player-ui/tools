@@ -58,6 +58,7 @@ oclif_pipeline(
     package_name = "@player-tools/cli",
     build_deps = build_deps,
     deps = deps,
+    manifest = False
 )
 
 directory_path(
