@@ -165,7 +165,22 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
         checkParentTemplate(assetNode);
         this.contentScore += scoreModifier;
 
-        console.log("assetNode:", this.contentScore);
+        const assetType = assetNode.assetType?.valueNode?.value;
+
+        const assetComplexity = assetType
+          ? this.config.assetComplexity?.[assetType]
+          : undefined;
+
+        if (assetComplexity !== undefined) {
+          this.contentScore += assetComplexity;
+          console.log(
+            `assetNode: ${assetType}, complexity: ${assetComplexity}, contentScore: ${this.contentScore}`
+          );
+        } else {
+          console.log(
+            `assetNode: ${assetType}, no matching complexity type found, contentScore is: ${this.contentScore}`
+          );
+        }
       },
       ViewNode: (viewNode: ViewASTNode) => {
         this.contentScore += 1;
