@@ -12,6 +12,7 @@ import {
   type ViewASTNode,
   type PlayerLanguageService,
   type PlayerLanguageServicePlugin,
+  AssetASTNode,
 } from "..";
 import type { ASTVisitor, ValidationContext } from "../types";
 
@@ -140,7 +141,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
           }
         }
       },
-      AssetNode: (assetNode) => {
+      AssetNode: (assetNode: AssetASTNode) => {
         let scoreModifier = 1;
         // recursively check parent nodes for templates
         function checkParentTemplate(node: ASTNode) {
@@ -171,16 +172,17 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
           ? this.config.assetComplexity?.[assetType]
           : undefined;
 
-        if (assetComplexity !== undefined) {
-          this.contentScore += assetComplexity;
-          console.log(
-            `assetNode: ${assetType}, complexity: ${assetComplexity}, contentScore: ${this.contentScore}`
-          );
-        } else {
-          console.log(
-            `assetNode: ${assetType}, no matching complexity type found, contentScore is: ${this.contentScore}`
-          );
+        if (this.config.assetComplexity) {
+          if (assetComplexity) {
+            this.contentScore += assetComplexity;
+            console.log(
+              `assetNode: ${assetType}, complexity: ${assetComplexity}`
+            );
+          } else {
+            console.log(`assetNode: ${assetType}, complexity type not found`);
+          }
         }
+        console.log("assetNode:", this.contentScore);
       },
       ViewNode: (viewNode: ViewASTNode) => {
         this.contentScore += 1;
@@ -192,16 +194,15 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
           ? this.config.assetComplexity?.[viewType]
           : undefined;
 
-        if (viewComplexity !== undefined) {
-          this.contentScore += viewComplexity;
-          console.log(
-            `viewNode: ${viewType}, complexity: ${viewComplexity}, contentScore: ${this.contentScore}`
-          );
-        } else {
-          console.log(
-            `viewNode: ${viewType}, no matching complexity type found, contentScore is: ${this.contentScore}`
-          );
+        if (this.config.assetComplexity) {
+          if (viewComplexity) {
+            this.contentScore += viewComplexity;
+            console.log(`viewNode: ${viewType}, complexity: ${viewComplexity}`);
+          } else {
+            console.log(`viewNode: ${viewType}, complexity for type not found`);
+          }
         }
+        console.log("viewNode:", this.contentScore);
       },
       StringNode: (stringNode) => {
         const stringContent = stringNode.value;

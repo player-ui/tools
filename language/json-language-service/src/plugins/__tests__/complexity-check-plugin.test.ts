@@ -291,7 +291,7 @@ describe("complexity plugin", () => {
     customService.addLSPPlugin(
       new ComplexityCheck({
         maxAcceptableComplexity: 0,
-        assetComplexity: { info: 2, text: 1, table: 5 },
+        assetComplexity: { text: 1, info: 2, table: 5 },
       })
     );
     await customService.setAssetTypesFromModule([
@@ -357,14 +357,16 @@ describe("complexity plugin", () => {
     /**
      * Score break down
      * 1 x for each view node (1 total) = 1
+     * 2 x for each view type = info (1 total) = 2
      * 1 x from exps in ACTION states (3 total) = 3
-     * 1 x for each asset node (1 total) = 1
-     * 2 x for each expression (1 total) = 2
+     * 1 x for each asset node (2 total) = 2
+     * 1 x for each asset type = text (2 total) = 2
+     * 2 x for each expression (2 total) = 4
      * 2 x for each data evaluated (1 total) = 2
      */
     expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
       [
-        "Error: Content complexity is 14",
+        "Error: Content complexity is 16",
       ]
     `);
   });
