@@ -8,13 +8,13 @@ import { resolveDataRefs } from "@player-ui/player";
 import {
   getProperty,
   isPropertyNode,
+  AssetASTNode,
   type ASTNode,
   type ViewASTNode,
   type PlayerLanguageService,
   type PlayerLanguageServicePlugin,
-  AssetASTNode,
-} from "..";
-import type { ASTVisitor, ValidationContext } from "../types";
+  type ASTVisitor,
+} from "@player-tools/json-language-service";
 
 const makeRange = (
   start: number,
@@ -31,13 +31,15 @@ export interface ComplexityCheckConfig {
   /** Cutoff for content to be acceptable */
   maxAcceptableComplexity: number;
   /**
-   * If set, anything above `maxAcceptableComplexity` but below this will be logged as a warning
-   * and anything above this will be an error. If this is not set anything over `maxAcceptableComplexity`
-
+   * If set, any score above this number but below `maxAcceptableComplexity` will be logged as a warning
    */
   maxWarningLevel?: number;
-  /** If set, maps complexity based on asset type */
+  /** If set, maps complexity based on asset or view type */
   assetComplexity?: Record<string, number>;
+  /** A way to pass in configurable options */
+  options?: {
+    verbose: boolean;
+  };
 }
 
 /**
@@ -60,24 +62,23 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
   }
 
   apply(service: PlayerLanguageService): void {
-    service.hooks.validate.tap(this.name, async (ctx, validation) => {
-      validation.useASTVisitor(this.createContentChecker(validation));
+    service.hooks.validate.tap(this.name, async (_ctx, validation) => {
+      validation.useASTVisitor(this.createContentChecker());
     });
 
-    service.hooks.onDocumentUpdate.tap(this.name, (contxt) => {
+    service.hooks.onDocumentUpdate.tap(this.name, () => {
       this.contentScore = 0;
     });
 
     service.hooks.onValidateEnd.tap(this.name, (diagnostics, context) => {
       let diagnostic: Diagnostic;
 
-      if (this.contentScore > this.config.maxAcceptableComplexity) {
+      if (this.contentScore < this.config.maxAcceptableComplexity) {
         if (
           this.config.maxWarningLevel &&
-          this.contentScore < this.config.maxWarningLevel
+          this.contentScore > this.config.maxWarningLevel
         ) {
           diagnostic = {
-            // message: `Warning: Content complexity is ${this.contentScore}, which is above your warning threshold of ${this.config.maxWarningLevel}`,
             message: `Warning: Content complexity is ${this.contentScore}`,
             severity: DiagnosticSeverity.Warning,
             range: makeRange(
@@ -88,8 +89,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
           };
         } else {
           diagnostic = {
-            // message: `Error: Content complexity is ${this.contentScore}, however the maximum acceptable complexity is ${this.config.maxAcceptableComplexity}`,
-            message: `Error: Content complexity is ${this.contentScore}`,
+            message: `Info: Content complexity is ${this.contentScore}`,
             severity: DiagnosticSeverity.Error,
             range: makeRange(
               this.range.start,
@@ -100,7 +100,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
         }
       } else {
         diagnostic = {
-          message: `Info: Content complexity is ${this.contentScore}`,
+          message: `Error: Content complexity is ${this.contentScore}`,
           severity: DiagnosticSeverity.Information,
           range: makeRange(
             this.range.start,
@@ -114,7 +114,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
   }
 
   /** Create a validation visitor for dealing with transition states */
-  createContentChecker = (ctx: ValidationContext): ASTVisitor => {
+  createContentChecker = (): ASTVisitor => {
     return {
       FlowNode: (flowNode) => {
         this.range = {
@@ -168,10 +168,12 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
 
         const assetType = assetNode.assetType?.valueNode?.value;
 
+        // Map the assetComplexity score based on the asset type
         const assetComplexity = assetType
           ? this.config.assetComplexity?.[assetType]
           : undefined;
 
+        // Only run if assetComplexity is set in the config
         if (this.config.assetComplexity) {
           if (assetComplexity) {
             this.contentScore += assetComplexity;
@@ -194,6 +196,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
           ? this.config.assetComplexity?.[viewType]
           : undefined;
 
+        // Only run if assetComplexity is set in the config
         if (this.config.assetComplexity) {
           if (viewComplexity) {
             this.contentScore += viewComplexity;

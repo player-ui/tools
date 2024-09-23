@@ -534,6 +534,25 @@ importers:
 
   devtools/types: {}
 
+  language/complexity-check-plugin:
+    dependencies:
+      '@player-tools/json-language-service':
+        specifier: workspace:*
+        version: link:../json-language-service
+      '@player-tools/xlr':
+        specifier: workspace:*
+        version: link:../../xlr/types
+      '@player-tools/xlr-sdk':
+        specifier: workspace:*
+        version: link:../../xlr/sdk
+      '@player-tools/xlr-utils':
+        specifier: workspace:*
+        version: link:../../xlr/utils
+    devDependencies:
+      '@player-tools/static-xlrs':
+        specifier: workspace:*
+        version: link:../../common/static-xlrs
+
   language/dsl: {}
 
   language/json-language-server:
@@ -13960,7 +13979,7 @@ packages:
     resolution: {integrity: sha512-oWb1Z6mkHIskLzEJ/XWX0srkpkTQ7vaopMQkyaEIoq0fmtFVxOthb8cCxeT+p3ynTdkk/RZwbgG4brR5BeWECw==, tarball: https://registry.npmjs.org/fsevents/-/fsevents-1.2.13.tgz}
     engines: {node: '>= 4.0'}
     os: [darwin]
-    deprecated: The v1 package contains DANGEROUS / INSECURE binaries. Upgrade to safe fsevents v2
+    deprecated: Upgrade to fsevents v2 to mitigate potential security issues
     requiresBuild: true
     dependencies:
       bindings: 1.5.0

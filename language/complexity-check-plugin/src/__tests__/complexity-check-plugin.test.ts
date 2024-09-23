@@ -3,8 +3,11 @@ import {
   ReferenceAssetsWebPluginManifest,
   Types,
 } from "@player-tools/static-xlrs";
-import { PlayerLanguageService } from "../..";
-import { toTextDocument } from "../../utils";
+import {
+  PlayerLanguageService,
+  toTextDocument,
+} from "@player-tools/json-language-service";
+
 import { ComplexityCheck } from "../complexity-check";
 
 describe("complexity plugin", () => {
@@ -367,6 +370,93 @@ describe("complexity plugin", () => {
     expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
       [
         "Error: Content complexity is 16",
+      ]
+    `);
+  });
+
+  test("Outputs warning message correctly", async () => {
+    let customService: PlayerLanguageService = new PlayerLanguageService();
+
+    customService = new PlayerLanguageService();
+    customService.addLSPPlugin(
+      new ComplexityCheck({
+        maxAcceptableComplexity: 15,
+        maxWarningLevel: 10,
+      })
+    );
+    await customService.setAssetTypesFromModule([
+      Types,
+      ReferenceAssetsWebPluginManifest,
+    ]);
+
+    const textDocument = toTextDocument(
+      JSON.stringify({
+        id: "test",
+        views: [
+          {
+            id: "yes",
+            type: "info",
+            title: {
+              asset: {
+                id: "info-title",
+                type: "text",
+                value: "{{some.infoText}}",
+              },
+            },
+            subTitle: {
+              asset: {
+                id: "info-subTitle",
+                type: "text",
+                value: "@[something]@",
+              },
+            },
+          },
+        ],
+        navigation: {
+          BEGIN: "FLOW_1",
+          FLOW_1: {
+            startState: "ACTION_1",
+            ACTION_1: {
+              state_type: "ACTION",
+              exp: ["something"],
+              transitions: {
+                "*": "VIEW_1",
+              },
+            },
+            VIEW_1: {
+              state_type: "VIEW",
+              ref: "yes",
+              transitions: {
+                "*": "ACTION_2",
+              },
+            },
+            ACTION_2: {
+              state_type: "ACTION",
+              exp: ["{{somethingElse}} = 1", "something else"],
+              transitions: {
+                "*": "VIEW_1",
+              },
+            },
+          },
+        },
+      })
+    );
+
+    const validations = await customService.validateTextDocument(textDocument);
+    expect(validations).toHaveLength(1);
+    /**
+     * Score break down
+     * 1 x for each view node (1 total) = 1
+     * 2 x for each view type = info (1 total) = 2
+     * 1 x from exps in ACTION states (3 total) = 3
+     * 1 x for each asset node (2 total) = 2
+     * 1 x for each asset type = text (2 total) = 2
+     * 2 x for each expression (2 total) = 4
+     * 2 x for each data evaluated (1 total) = 2
+     */
+    expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
+      [
+        "Warning: Content complexity is 12",
       ]
     `);
   });

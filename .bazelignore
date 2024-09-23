@@ -23,6 +23,7 @@ language/typescript-expression-plugin/node_modules
 language/json-language-service/node_modules
 language/json-language-server/node_modules
 language/dsl/node_modules
+language/complexity-check-plugin/node_modules
 helpers/node_modules
 devtools/client/node_modules
 devtools/messenger/node_modules
