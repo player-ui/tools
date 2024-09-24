@@ -15,7 +15,12 @@ describe("complexity plugin", () => {
 
   beforeEach(async () => {
     service = new PlayerLanguageService();
-    service.addLSPPlugin(new ComplexityCheck({ maxAcceptableComplexity: 0 }));
+    service.addLSPPlugin(
+      new ComplexityCheck({
+        maxAcceptableComplexity: 0,
+        options: { verbose: true },
+      })
+    );
     await service.setAssetTypesFromModule([
       Types,
       ReferenceAssetsWebPluginManifest,
@@ -181,7 +186,7 @@ describe("complexity plugin", () => {
     /**
      * Score break down
      * 1 x for each view node (1 total) = 1
-     * 1 x from exps in ACTION states (3 total) = 5
+     * 1 x from exps in ACTION states (5 total) = 5
      * 1 x for each asset node (3 total) = 3
      * 2 x for each expression (2 total) = 4
      * 2 x for each data evaluated (10 total) = 20
@@ -295,6 +300,7 @@ describe("complexity plugin", () => {
       new ComplexityCheck({
         maxAcceptableComplexity: 0,
         assetComplexity: { text: 1, info: 2, table: 5 },
+        options: { verbose: true },
       })
     );
     await customService.setAssetTypesFromModule([
@@ -382,6 +388,7 @@ describe("complexity plugin", () => {
       new ComplexityCheck({
         maxAcceptableComplexity: 15,
         maxWarningLevel: 10,
+        options: { verbose: true },
       })
     );
     await customService.setAssetTypesFromModule([

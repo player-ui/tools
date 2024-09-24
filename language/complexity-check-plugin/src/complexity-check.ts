@@ -38,7 +38,8 @@ export interface ComplexityCheckConfig {
   assetComplexity?: Record<string, number>;
   /** A way to pass in configurable options */
   options?: {
-    verbose: boolean;
+    /** Read out all logging messages */
+    verbose?: boolean;
   };
 }
 
@@ -130,13 +131,16 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
             const numExp = getProperty(flowState, "exp");
             if (numExp?.valueNode?.type === "array") {
               this.contentScore += numExp.valueNode.children.length;
-              console.log(
-                "state exp:",
-                numExp.valueNode.children.length,
-                this.contentScore
-              );
+              if (this.config.options?.verbose) {
+                console.log(
+                  `state exp (x${numExp.valueNode.children.length}): ${this.contentScore}`
+                );
+              }
             } else {
               this.contentScore += 1;
+              if (this.config.options?.verbose) {
+                console.log(`state exp: ${this.contentScore}`);
+              }
             }
           }
         }
@@ -144,7 +148,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
       AssetNode: (assetNode: AssetASTNode) => {
         let scoreModifier = 1;
         // recursively check parent nodes for templates
-        function checkParentTemplate(node: ASTNode) {
+        const checkParentTemplate = (node: ASTNode) => {
           if (node.parent) {
             if (
               isPropertyNode(node.parent) &&
@@ -152,16 +156,16 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
             ) {
               // incerases the score modifier for each template parent
               scoreModifier += 1;
-              console.log(
-                "found a template parent, modified score:",
-                scoreModifier
-              );
+
+              if (this.config.options?.verbose) {
+                console.log(`found a template parent (+1)`);
+              }
               return checkParentTemplate(node.parent);
             }
             return checkParentTemplate(node.parent);
           }
           return node;
-        }
+        };
 
         checkParentTemplate(assetNode);
         this.contentScore += scoreModifier;
@@ -177,14 +181,21 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
         if (this.config.assetComplexity) {
           if (assetComplexity) {
             this.contentScore += assetComplexity;
-            console.log(
-              `assetNode: ${assetType}, complexity: ${assetComplexity}`
-            );
+            if (this.config.options?.verbose) {
+              console.log(
+                `assetNode (+${assetComplexity} for ${assetType}): ${this.contentScore}`
+              );
+            }
           } else {
-            console.log(`assetNode: ${assetType}, complexity type not found`);
+            if (this.config.options?.verbose) {
+              console.log(
+                `assetNode (${assetType} complexity type not found): ${this.contentScore}`
+              );
+            }
           }
+        } else if (this.config.options?.verbose) {
+          console.log("assetNode:", this.contentScore);
         }
-        console.log("assetNode:", this.contentScore);
       },
       ViewNode: (viewNode: ViewASTNode) => {
         this.contentScore += 1;
@@ -200,12 +211,21 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
         if (this.config.assetComplexity) {
           if (viewComplexity) {
             this.contentScore += viewComplexity;
-            console.log(`viewNode: ${viewType}, complexity: ${viewComplexity}`);
+            if (this.config.options?.verbose) {
+              console.log(
+                `viewNode (+${viewComplexity} for ${viewType}): ${this.contentScore}`
+              );
+            }
           } else {
-            console.log(`viewNode: ${viewType}, complexity for type not found`);
+            if (this.config.options?.verbose) {
+              console.log(
+                `viewNode (${viewType} complexity type not found): ${this.contentScore}`
+              );
+            }
           }
+        } else if (this.config.options?.verbose) {
+          console.log("viewNode:", this.contentScore);
         }
-        console.log("viewNode:", this.contentScore);
       },
       StringNode: (stringNode) => {
         const stringContent = stringNode.value;
@@ -213,19 +233,25 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
           model: {
             get: (binding) => {
               this.contentScore += 2;
-              console.log("model - get:", binding, this.contentScore);
+              if (this.config.options?.verbose) {
+                console.log(`model (get: ${binding}): ${this.contentScore}`);
+              }
               return binding;
             },
-            set: () => {
+            set: (binding) => {
               this.contentScore += 2;
-              console.log("model - set:", this.contentScore);
+              if (this.config.options?.verbose) {
+                console.log(`model (set: ${binding}): ${this.contentScore}`);
+              }
               return [];
             },
             delete: () => {},
           },
           evaluate: (str) => {
             this.contentScore += 2;
-            console.log("model - evaluate:", str, this.contentScore);
+            if (this.config.options?.verbose) {
+              console.log(`model (evaluate: ${str}): ${this.contentScore}`);
+            }
             return str;
           },
         });
