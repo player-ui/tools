@@ -38,4 +38,6 @@ export interface WrapperComponentProps {
   view?: WeakRef<ViewInstance>;
   /** override flow */
   overrideFlow?: Player["start"];
+  /** Player instance id */
+  id: string;
 }

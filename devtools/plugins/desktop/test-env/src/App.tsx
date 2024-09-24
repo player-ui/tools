@@ -1,5 +1,4 @@
 import {
-  ReactPlayerOptions,
   ReactPlayerPlugin,
   useReactPlayer,
 } from "@player-ui/react";
@@ -9,19 +8,7 @@ import { ProfilerPlugin } from "@player-tools/devtools-profiler-web-plugin";
 import { useEffect } from "react";
 import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
 import flow from "./flow.json";
-
-// Add the plugins to test here:
-const testingPlugins: ReactPlayerOptions["plugins"] = [
-  new BasicWevDevtoolsPlugin() as unknown as ReactPlayerPlugin,
-  new ProfilerPlugin() as unknown as ReactPlayerPlugin,
-];
-
-const config: ReactPlayerOptions = {
-  plugins: [
-    new ReferenceAssetsPlugin() as unknown as ReactPlayerPlugin,
-    ...testingPlugins,
-  ],
-};
+import flow2 from "./flow2.json";
 
 const fallbackRender: ErrorBoundary["props"]["fallbackRender"] = ({
   error,
@@ -35,7 +22,14 @@ const fallbackRender: ErrorBoundary["props"]["fallbackRender"] = ({
 };
 
 const Player = () => {
-  const { reactPlayer } = useReactPlayer(config);
+  const id = "player1";
+  const { reactPlayer } = useReactPlayer({
+    plugins: [
+      new ReferenceAssetsPlugin() as unknown as ReactPlayerPlugin,
+      new BasicWevDevtoolsPlugin(id) as unknown as ReactPlayerPlugin,
+      new ProfilerPlugin(id) as unknown as ReactPlayerPlugin,
+    ],
+  });
   const { showBoundary } = useErrorBoundary();
 
   useEffect(() => {
@@ -49,10 +43,33 @@ const Player = () => {
   return <reactPlayer.Component />;
 };
 
+const Player2 = () => {
+  const id = "player2";
+  const { reactPlayer } = useReactPlayer({
+    plugins: [
+      new ReferenceAssetsPlugin() as unknown as ReactPlayerPlugin,
+      new BasicWevDevtoolsPlugin(id) as unknown as ReactPlayerPlugin,
+      new ProfilerPlugin(id) as unknown as ReactPlayerPlugin,
+    ],
+  });
+  const { showBoundary } = useErrorBoundary();
+
+  useEffect(() => {
+    try {
+      reactPlayer.start(flow2);
+    } catch (e) {
+      showBoundary(e);
+    }
+  }, [reactPlayer, showBoundary]);
+
+  return <reactPlayer.Component />;
+};
+
 const App = () => {
   return (
     <ErrorBoundary fallbackRender={fallbackRender}>
       <Player />
+      <Player2 />
     </ErrorBoundary>
   );
 };

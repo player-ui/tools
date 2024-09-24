@@ -6,6 +6,12 @@ import { WrapperComponent } from "./WrapperComponent";
 import { profiler } from "./helpers";
 
 export class ProfilerPlugin implements ReactPlayerPlugin {
+  private id: string;
+
+  constructor(id?: string) {
+    this.id = id ?? "default-id";
+  }
+
   name = PLUGIN_ID;
 
   checkIfDevtoolsIsActive() {
@@ -481,6 +487,7 @@ export class ProfilerPlugin implements ReactPlayerPlugin {
         <WrapperComponent
           startProfiler={startProfiler}
           stopProfiler={stopProfiler}
+          id={this.id}
         >
           <Comp />
         </WrapperComponent>

@@ -6,12 +6,14 @@ import {
   DevtoolsDataChangeEvent,
   PlayerInitEvent,
   DevtoolsPluginInteractionEvent,
+  DevtoolsPluginSelectedPlayerEvent,
 } from "@player-tools/devtools-types";
 
 const INITIAL_STATE: DevtoolsPluginsStore = {
   messages: [],
   plugins: {},
   interactions: [],
+  currentPlayer: "",
 };
 
 let mockTransactionID = 1;
@@ -67,11 +69,22 @@ const mockPluginInteractionTransaction: Transaction<DevtoolsPluginInteractionEve
     },
   };
 
+const mockDevtoolSelectedPlayerChangeInteractionTransaction: Transaction<DevtoolsPluginSelectedPlayerEvent> =
+  {
+    ...mockTransactionMetadata,
+    type: "PLAYER_DEVTOOLS_SELECTED_PLAYER_CHANGE",
+    id: mockTransactionID++,
+    payload: {
+      playerID: "playerID",
+    },
+  };
+
 describe("reducer", () => {
   test("handles PLAYER_DEVTOOLS_PLAYER_INIT", () => {
     const newState = reducer(INITIAL_STATE, mockPlayerInitTransaction);
     expect(newState).toMatchInlineSnapshot(`
       {
+        "currentPlayer": "",
         "interactions": [],
         "messages": [
           {
@@ -116,6 +129,7 @@ describe("reducer", () => {
     const newState = reducer(INITIAL_STATE, mockPluginDataChangeTransaction);
     expect(newState).toMatchInlineSnapshot(`
       {
+        "currentPlayer": "",
         "interactions": [],
         "messages": [
           {
@@ -145,6 +159,7 @@ describe("reducer", () => {
     const newState = reducer(INITIAL_STATE, mockPluginInteractionTransaction);
     expect(newState).toMatchInlineSnapshot(`
       {
+        "currentPlayer": "",
         "interactions": [
           {
             "_messenger_": true,
@@ -160,6 +175,20 @@ describe("reducer", () => {
             "type": "PLAYER_DEVTOOLS_PLUGIN_INTERACTION",
           },
         ],
+        "messages": [],
+        "plugins": {},
+      }
+    `);
+  });
+  test("handles PLAYER_DEVTOOLS_SELECTED_PLAYER_CHANGE", () => {
+    const newState = reducer(
+      INITIAL_STATE,
+      mockDevtoolSelectedPlayerChangeInteractionTransaction
+    );
+    expect(newState).toMatchInlineSnapshot(`
+      {
+        "currentPlayer": "playerID",
+        "interactions": [],
         "messages": [],
         "plugins": {},
       }

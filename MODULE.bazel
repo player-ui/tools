@@ -2,14 +2,18 @@ module(name = "player-tools", version = "1.0")
 
 bazel_dep(name = "rules_player")
 
-git_override(module_name = "rules_player", remote = "https://github.com/player-ui/rules_player.git", commit = "d003efcacc5343ad6021a0ba5bb029607d31f8fb")
-#local_path_override(module_name = "rules_player", path = "../rules_player")
+archive_override(
+  module_name = "rules_player",
+  strip_prefix = "rules_player-1.1.5",
+  urls = ["https://github.com/player-ui/rules_player/archive/refs/tags/v1.1.5.tar.gz"],
+  integrity = "sha256-sotB/beOkcn7FD+NurO6Uqi2OoKbbXHd7ya4ZO9nBCg="
+)
 
-bazel_dep(name = "aspect_bazel_lib", version = "2.7.8")
-bazel_dep(name = "aspect_rules_js", version = "1.42.3")
+bazel_dep(name = "aspect_bazel_lib", version = "2.8.0")
+bazel_dep(name = "aspect_rules_js", version = "2.0.0")
 bazel_dep(name = "bazel_skylib", version = "1.7.1")
 bazel_dep(name = "rules_pkg", version = "1.0.1")
-bazel_dep(name = "aspect_rules_ts", version = "2.4.2")
+bazel_dep(name = "aspect_rules_ts", version = "3.0.0")
 
 ####### Node.js version #########
 bazel_dep(name = "rules_nodejs", version = "6.2.0")
@@ -27,6 +31,7 @@ npm.npm_translate_lock(
     ],
     npmrc = "//:.npmrc",
     verify_node_modules_ignored = "//:.bazelignore",
+    npm_package_target_name = "{dirname}"
 )
 
 use_repo(npm, "npm")
@@ -37,8 +42,6 @@ rules_ts_ext = use_extension(
     dev_dependency = True,
 )
 
-# can revert after 3.0.0 is released
-# needed because cli transpile happens through tsc and it needs to use version we specify, not the rules internal version
-rules_ts_ext.deps(ts_version_from = "//:package.json", ts_integrity="sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==")
+rules_ts_ext.deps()
 
 use_repo(rules_ts_ext, "npm_typescript")

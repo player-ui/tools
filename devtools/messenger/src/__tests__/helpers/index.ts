@@ -38,7 +38,13 @@ export class MockedMessagingAPI {
 
 export function createMockContext() {
   const spies = {
-    web: {
+    web1: {
+      sendMessage: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      messageCallback: vi.fn(),
+    },
+    web2: {
       sendMessage: vi.fn(),
       addListener: vi.fn(),
       removeListener: vi.fn(),
@@ -52,7 +58,11 @@ export function createMockContext() {
     },
   };
 
-  const mockMessagingAPI = new MockedMessagingAPI([spies.web, spies.devtools]);
+  const mockMessagingAPI = new MockedMessagingAPI([
+    spies.web1,
+    spies.web2,
+    spies.devtools,
+  ]);
 
   return {
     spies,

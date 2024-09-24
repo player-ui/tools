@@ -210,10 +210,15 @@ workflows:
               only:
                 - main
                 - /version-.*/
+      - bazelrc:
+          context:
+            - BuildTools
+          requires:
+            - setup
 
       - build:
           requires:
-            - setup
+            - bazelrc
 
       - test:
           requires:
@@ -225,7 +230,7 @@ workflows:
           requires:
             - test
 
-  release:
+  full_release:
     when:
       equal: [release, << pipeline.parameters.GHA_Action >>]
     jobs:
@@ -235,9 +240,15 @@ workflows:
           requires:
             - setup
 
+      - bazelrc:
+          context:
+            - BuildTools
+          requires:
+            - setup
+
       - test:
           requires:
-            - build
+            - bazelrc
 
       - release:
           context:

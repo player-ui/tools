@@ -15,6 +15,12 @@ import { PLUGIN_ID, PLUGIN_INACTIVE_WARNING } from "./constants";
 
 /** Taps into the Player and ReactPlayer hooks and leverage the WrapperComponent to define and process the content. */
 export class BasicWevDevtoolsPlugin implements ReactPlayerPlugin {
+  private id: string;
+
+  constructor(id?: string) {
+    this.id = id ?? "default-id";
+  }
+
   name = PLUGIN_ID;
 
   data: Record<string, unknown> = {};
@@ -107,6 +113,7 @@ export class BasicWevDevtoolsPlugin implements ReactPlayerPlugin {
           view={this.view}
           overrideFlow={this.overrideFlow}
           expressionEvaluator={this.expressionEvaluator}
+          id={this.id}
         >
           <Component />
         </WrapperComponent>

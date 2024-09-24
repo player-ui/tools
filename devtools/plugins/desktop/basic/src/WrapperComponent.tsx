@@ -9,7 +9,7 @@ import type { Flow } from "@player-ui/react";
 import { dequal } from "dequal";
 import { produce } from "immer";
 import set from "lodash.set";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BASE_PLUGIN_DATA, INTERACTIONS } from "./constants";
 import type { Evaluation, WrapperComponentProps } from "./types";
 import { genDataChangeTransaction, getEvaluateExpression } from "./helpers";
@@ -29,14 +29,16 @@ export const WrapperComponent = ({
   flow,
   expressionEvaluator,
   overrideFlow,
+  id: playerID,
 }: WrapperComponentProps): JSX.Element => {
-  const [state, playerID, dispatch] = usePluginState();
-  const lastProcessedInteraction = React.useRef(0);
+  const [state, dispatch] = usePluginState({ playerID });
+  const [highlight, setHighlight] = useState(false);
+  const lastProcessedInteraction = useRef(0);
   const expEvaluator = useCallback(getEvaluateExpression(expressionEvaluator), [
     expressionEvaluator,
   ]);
 
-  const id = pluginData.id;
+  const pluginID = pluginData.id;
 
   const processInteraction = useCallback(
     (interaction: DevtoolsPluginInteractionEvent) => {
@@ -51,11 +53,11 @@ export const WrapperComponent = ({
         const result = expEvaluator(payload);
         const newState = produce(state, (draft) => {
           const current: Array<Evaluation> =
-            (state?.plugins?.[id]?.flow?.data?.history as Array<Evaluation>) ||
-            [];
+            (state?.plugins?.[pluginID]?.flow?.data
+              ?.history as Array<Evaluation>) || [];
           set(
             draft,
-            ["plugins", id, "flow", "data", "history"],
+            ["plugins", pluginID, "flow", "data", "history"],
             [...current, result]
           );
         });
@@ -64,12 +66,12 @@ export const WrapperComponent = ({
           id: -1,
           type: "PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE",
           payload: {
-            pluginID: id,
-            data: newState.plugins[id].flow.data,
+            pluginID: pluginID,
+            data: newState.plugins[pluginID].flow.data,
           },
           sender: playerID,
           context: "player",
-          target: "player",
+          target: playerID,
           timestamp: Date.now(),
           _messenger_: true,
         });
@@ -88,9 +90,32 @@ export const WrapperComponent = ({
 
         newFlow && overrideFlow(newFlow);
       }
+
+      if (type === INTERACTIONS.PLAYER_SELECTED && payload) {
+        dispatch({
+          id: -1,
+          type: "PLAYER_DEVTOOLS_SELECTED_PLAYER_CHANGE",
+          payload: { playerID: payload },
+          sender: playerID,
+          context: "player",
+          target: playerID,
+          timestamp: Date.now(),
+          _messenger_: true,
+        });
+      }
     },
-    [dispatch, expressionEvaluator, id, state]
+    [dispatch, expressionEvaluator, pluginID, state]
   );
+
+  useEffect(() => {
+    if (playerID === state.currentPlayer) {
+      setHighlight(true);
+      const timer = setTimeout(() => {
+        setHighlight(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [playerID, state.currentPlayer]);
 
   // inject playerConfig into the plugin data
   const pluginDataWithPlayerConfig = produce(pluginData, (draft) => {
@@ -104,7 +129,7 @@ export const WrapperComponent = ({
       type: "PLAYER_DEVTOOLS_PLAYER_INIT",
       payload: {
         plugins: {
-          [id]: pluginDataWithPlayerConfig,
+          [pluginID]: pluginDataWithPlayerConfig,
         },
       },
       sender: playerID,
@@ -128,16 +153,16 @@ export const WrapperComponent = ({
 
   // Data changes
   useEffect(() => {
-    if (dequal(state.plugins[id]?.flow?.data?.data, data)) return;
+    if (dequal(state.plugins[pluginID]?.flow?.data?.data, data)) return;
 
     const newState = produce(state, (draft) => {
-      set(draft, ["plugins", id, "flow", "data", "data"], data);
+      set(draft, ["plugins", pluginID, "flow", "data", "data"], data);
     });
 
     const transaction = genDataChangeTransaction({
       playerID,
-      data: newState.plugins[id].flow.data,
-      pluginID: id,
+      data: newState.plugins[pluginID].flow.data,
+      pluginID: pluginID,
     });
 
     dispatch(transaction);
@@ -145,16 +170,16 @@ export const WrapperComponent = ({
 
   // Logs changes
   useEffect(() => {
-    if (dequal(state.plugins[id]?.flow?.data?.logs, logs)) return;
+    if (dequal(state.plugins[pluginID]?.flow?.data?.logs, logs)) return;
 
     const newState = produce(state, (draft) => {
-      set(draft, ["plugins", id, "flow", "data", "logs"], logs);
+      set(draft, ["plugins", pluginID, "flow", "data", "logs"], logs);
     });
 
     const transaction = genDataChangeTransaction({
       playerID,
-      data: newState.plugins[id].flow.data,
-      pluginID: id,
+      data: newState.plugins[pluginID].flow.data,
+      pluginID: pluginID,
     });
 
     dispatch(transaction);
@@ -162,20 +187,24 @@ export const WrapperComponent = ({
 
   // Flow changes
   useEffect(() => {
-    if (dequal(state.plugins[id]?.flow?.data?.flow, flow)) return;
+    if (dequal(state.plugins[pluginID]?.flow?.data?.flow, flow)) return;
 
     const newState = produce(state, (draft) => {
-      set(draft, ["plugins", id, "flow", "data", "flow"], flow);
+      set(draft, ["plugins", pluginID, "flow", "data", "flow"], flow);
     });
 
     const transaction = genDataChangeTransaction({
       playerID,
-      data: newState.plugins[id].flow.data,
-      pluginID: id,
+      data: newState.plugins[pluginID].flow.data,
+      pluginID: pluginID,
     });
 
     dispatch(transaction);
   }, [flow]);
 
-  return children as JSX.Element;
+  return (
+    <div id={playerID} style={highlight ? { border: "2px solid blue" } : {}}>
+      {children}
+    </div>
+  );
 };

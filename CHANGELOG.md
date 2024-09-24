@@ -1,3 +1,100 @@
+# 0.8.0 (Thu Sep 12 2024)
+
+### Release Notes
+
+#### Use bazelrc for Main Builds ([#164](https://github.com/player-ui/tools/pull/164))
+
+Use bazelrc to include CI bazel configuration for builds off of main 
+
+### Change Type (required)
+Indicate the type of change your pull request is:
+
+<!-- 
+  We use semantic versioning: https://semver.org/. Review that documentation for 
+  more detailed guidelines.
+-->
+- [x] `patch`
+- [ ] `minor`
+- [ ] `major`
+
+<!--
+  To include release notes in the automatic changelong, just add a level 1 markdown header below
+  and include any markdown notes to go into the changelog: https://intuit.github.io/auto/docs/generated/changelog#additional-release-notes
+
+  Example:
+
+  # Release Notes
+  Added new plugin, to use it:
+  ```typescript
+  const plugin = new Plugin(...)
+  ```
+-->
+
+#### Update Rules Versions ([#163](https://github.com/player-ui/tools/pull/163))
+
+Update JS Rules to latest Aspect major
+
+<!-- 
+  We use semantic versioning: https://semver.org/. Review that documentation for 
+  more detailed guidelines.
+-->
+- [x] `patch`
+- [ ] `minor`
+- [ ] `major`
+
+<!--
+  To include release notes in the automatic changelong, just add a level 1 markdown header below
+  and include any markdown notes to go into the changelog: https://intuit.github.io/auto/docs/generated/changelog#additional-release-notes
+
+  Example:
+
+  # Release Notes
+  Added new plugin, to use it:
+  ```typescript
+  const plugin = new Plugin(...)
+  ```
+-->
+
+#### Fix Source Maps not Being Generated for DSL Content ([#155](https://github.com/player-ui/tools/pull/155))
+
+Fix source maps not being generated for DSL content when compiled by the cli
+
+#### Update Dependencies ([#151](https://github.com/player-ui/tools/pull/151))
+
+- Use Node 20
+- Use TypeScript 5.5
+
+---
+
+#### 🚀 Enhancement
+
+- feat: doesn't exit with error if warn-only on dsl validation [#159](https://github.com/player-ui/tools/pull/159) ([@rafbcampos](https://github.com/rafbcampos))
+
+#### 🐛 Bug Fix
+
+- Release main [#166](https://github.com/player-ui/tools/pull/166) ([@intuit-svc](https://github.com/intuit-svc))
+- feat: highlight current player instance [#160](https://github.com/player-ui/tools/pull/160) ([@cehan-Chloe](https://github.com/cehan-Chloe) [@rafbcampos](https://github.com/rafbcampos))
+- Update Rules Versions [#163](https://github.com/player-ui/tools/pull/163) ([@KetanReddy](https://github.com/KetanReddy))
+- Fix object null in deeply nested obejcts - devtools [#158](https://github.com/player-ui/tools/pull/158) ([@mercillo](https://github.com/mercillo))
+- Fix Source Maps not Being Generated for DSL Content [#155](https://github.com/player-ui/tools/pull/155) ([@KetanReddy](https://github.com/KetanReddy))
+- Update Dependencies [#151](https://github.com/player-ui/tools/pull/151) ([@KetanReddy](https://github.com/KetanReddy))
+- Re-add compiler formatting to dsl output [#153](https://github.com/player-ui/tools/pull/153) ([@sugarmanz](https://github.com/sugarmanz))
+
+#### 🔩 Dependency Updates
+
+- Use bazelrc for Main Builds [#164](https://github.com/player-ui/tools/pull/164) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### Authors: 6
+
+- [@intuit-svc](https://github.com/intuit-svc)
+- Chloeeeeeee ([@cehan-Chloe](https://github.com/cehan-Chloe))
+- Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz))
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+- Marlon "Marky" Ercillo ([@mercillo](https://github.com/mercillo))
+- Rafael Campos ([@rafbcampos](https://github.com/rafbcampos))
+
+---
+
 # 0.7.0 (Fri Jul 19 2024)
 
 ### Release Notes
