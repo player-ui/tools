@@ -5,8 +5,7 @@
   "types": "./dist/index.d.ts",
   "files": [
     "bin",
-    "dist",
-    "oclif.manifest.json"
+    "dist"
   ],
   "oclif": {
     "bin": "player",
