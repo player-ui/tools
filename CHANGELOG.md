@@ -1,3 +1,25 @@
+# 0.8.1 (Thu Sep 26 2024)
+
+### Release Notes
+
+#### Don't create oclif manifest ([#168](https://github.com/player-ui/tools/pull/168))
+
+Fixes issue with oclif manifest not being stamped with the right version leading to console errors
+
+---
+
+#### 🐛 Bug Fix
+
+- Release main [#170](https://github.com/player-ui/tools/pull/170) ([@intuit-svc](https://github.com/intuit-svc))
+- Don't create oclif manifest [#168](https://github.com/player-ui/tools/pull/168) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### Authors: 2
+
+- [@intuit-svc](https://github.com/intuit-svc)
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
 # 0.8.0 (Thu Sep 12 2024)
 
 ### Release Notes
