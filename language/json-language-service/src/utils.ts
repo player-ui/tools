@@ -115,7 +115,9 @@ export function formatLikeNode(
 }
 
 /** Maps the string identifying the FlowType to the named type */
-export function mapFlowStateToType(flowType: string | undefined) {
+export function mapFlowStateToType(
+  flowType: string | undefined
+): string | undefined {
   let flowXLR;
   switch (flowType) {
     case "VIEW":
