@@ -20,6 +20,7 @@ js_pipeline(
         "//:node_modules/@types/react",
         "//:node_modules/immer",
         "//:node_modules/lodash.set",
+        "//:node_modules/dset",
         "//:node_modules/@types/lodash.set",
         "//:node_modules/react",
         "//:node_modules/react-error-boundary",
