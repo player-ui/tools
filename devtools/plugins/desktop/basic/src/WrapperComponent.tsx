@@ -8,7 +8,7 @@ import type {
 import type { Flow } from "@player-ui/react";
 import { dequal } from "dequal";
 import { produce } from "immer";
-import set from "lodash.set";
+import { dset } from "dset/merge";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BASE_PLUGIN_DATA, INTERACTIONS } from "./constants";
 import type { Evaluation, WrapperComponentProps } from "./types";
@@ -55,7 +55,7 @@ export const WrapperComponent = ({
           const current: Array<Evaluation> =
             (state?.plugins?.[pluginID]?.flow?.data
               ?.history as Array<Evaluation>) || [];
-          set(
+          dset(
             draft,
             ["plugins", pluginID, "flow", "data", "history"],
             [...current, result]
@@ -119,7 +119,7 @@ export const WrapperComponent = ({
 
   // inject playerConfig into the plugin data
   const pluginDataWithPlayerConfig = produce(pluginData, (draft) => {
-    set(draft, ["flow", "data", "playerConfig"], playerConfig);
+    dset(draft, ["flow", "data", "playerConfig"], playerConfig);
   });
 
   // Initial plugin content
@@ -156,7 +156,7 @@ export const WrapperComponent = ({
     if (dequal(state.plugins[pluginID]?.flow?.data?.data, data)) return;
 
     const newState = produce(state, (draft) => {
-      set(draft, ["plugins", pluginID, "flow", "data", "data"], data);
+      dset(draft, ["plugins", pluginID, "flow", "data", "data"], data);
     });
 
     const transaction = genDataChangeTransaction({
@@ -173,7 +173,7 @@ export const WrapperComponent = ({
     if (dequal(state.plugins[pluginID]?.flow?.data?.logs, logs)) return;
 
     const newState = produce(state, (draft) => {
-      set(draft, ["plugins", pluginID, "flow", "data", "logs"], logs);
+      dset(draft, ["plugins", pluginID, "flow", "data", "logs"], logs);
     });
 
     const transaction = genDataChangeTransaction({
@@ -190,7 +190,7 @@ export const WrapperComponent = ({
     if (dequal(state.plugins[pluginID]?.flow?.data?.flow, flow)) return;
 
     const newState = produce(state, (draft) => {
-      set(draft, ["plugins", pluginID, "flow", "data", "flow"], flow);
+      dset(draft, ["plugins", pluginID, "flow", "data", "flow"], flow);
     });
 
     const transaction = genDataChangeTransaction({

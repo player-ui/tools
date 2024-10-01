@@ -23,8 +23,7 @@ dependencies = [
     "//:node_modules/uuid",
     "//:node_modules/@types/uuid",
     "//:node_modules/dequal",
-    "//:node_modules/lodash.set",
-    "//:node_modules/@types/lodash.set",
+    "//:node_modules/dset",
 ]
 
 dsl_input = "src/content/index.ts"

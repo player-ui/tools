@@ -7,7 +7,7 @@ import type {
   ReactPlayerPlugin,
   ViewInstance,
 } from "@player-ui/react";
-import set from "lodash.set";
+import { dset } from "dset/merge";
 import { produce } from "immer";
 import React from "react";
 import { WrapperComponent } from "./WrapperComponent";

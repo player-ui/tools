@@ -93,6 +93,7 @@
     "dequal": "^2.0.2",
     "detect-indent": "^6.0.0",
     "dlv": "^1.1.3",
+    "dset": "^3.1.3",
     "duplicate-package-checker-webpack-plugin": "^3.0.0",
     "easy-table": "1.2.0",
     "elegant-spinner": "^2.0.0",
