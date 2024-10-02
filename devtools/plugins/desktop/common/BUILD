@@ -20,8 +20,6 @@ js_pipeline(
         "//:node_modules/dequal",
         "//:node_modules/immer",
         "//:node_modules/dset",
-        "//:node_modules/lodash.merge",
-        "//:node_modules/@types/lodash.merge",
         "//:node_modules/js-flipper",
         "//:node_modules/tiny-uid",
     ],

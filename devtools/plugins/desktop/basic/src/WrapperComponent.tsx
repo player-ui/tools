@@ -8,29 +8,17 @@ import type {
 import type { Flow } from "@player-ui/react";
 import { dequal } from "dequal";
 import { produce } from "immer";
-import merge from "lodash.merge";
 import { dset } from "dset/merge";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BASE_PLUGIN_DATA, INTERACTIONS } from "./constants";
 import type { Evaluation, WrapperComponentProps } from "./types";
 import { genDataChangeTransaction, getEvaluateExpression } from "./helpers";
 import flow from "../_generated/index.json";
+import { log } from "console";
 
 const pluginData: PluginData = {
   ...BASE_PLUGIN_DATA,
   flow: flow as Flow,
-};
-
-const safelyMerge = (target: any, path: string[] | string, value: any) => {
-  const pathArray = typeof path === "string" ? path.split(",") : path;
-  let obj = target;
-  for (let i = 0; i < pathArray.length - 1; i++) {
-    if (obj[path[i]] === null || obj[path[i]] === undefined) {
-      obj[path[i]] = {};
-    }
-    obj = obj[path[i]];
-  }
-  dset(target, path, value);
 };
 
 /** Defines the content to be rendered into the extension Player UI and process changes */
@@ -68,7 +56,7 @@ export const WrapperComponent = ({
           const current: Array<Evaluation> =
             (state?.plugins?.[pluginID]?.flow?.data
               ?.history as Array<Evaluation>) || [];
-          safelyMerge(
+          dset(
             draft,
             ["plugins", pluginID, "flow", "data", "history"],
             [...current, result]
@@ -132,7 +120,7 @@ export const WrapperComponent = ({
 
   // inject playerConfig into the plugin data
   const pluginDataWithPlayerConfig = produce(pluginData, (draft) => {
-    safelyMerge(draft, ["flow", "data", "playerConfig"], playerConfig);
+    dset(draft, ["flow", "data", "playerConfig"], playerConfig);
   });
 
   // Initial plugin content
@@ -169,7 +157,12 @@ export const WrapperComponent = ({
     if (dequal(state.plugins[pluginID]?.flow?.data?.data, data)) return;
 
     const newState = produce(state, (draft) => {
-      safelyMerge(draft, ["plugins", pluginID, "flow", "data", "data"], data);
+      try {
+        dset(draft, ["plugins", pluginID, "flow", "data", "data"], data);
+      } catch {
+        console.log("Error setting the following data: ", data);
+        return;
+      }
     });
 
     const transaction = genDataChangeTransaction({
@@ -186,7 +179,11 @@ export const WrapperComponent = ({
     if (dequal(state.plugins[pluginID]?.flow?.data?.logs, logs)) return;
 
     const newState = produce(state, (draft) => {
-      safelyMerge(draft, ["plugins", pluginID, "flow", "data", "logs"], logs);
+      try {
+        dset(draft, ["plugins", pluginID, "flow", "data", "logs"], logs);
+      } catch {
+        console.error("Error setting the following log: ", logs);
+      }
     });
 
     const transaction = genDataChangeTransaction({
@@ -202,7 +199,12 @@ export const WrapperComponent = ({
   useEffect(() => {
     if (dequal(state.plugins[pluginID]?.flow?.data?.flow, flow)) return;
     const newState = produce(state, (draft) => {
-      merge(draft.plugins[pluginID].flow.data?.flow, flow);
+      try {
+        dset(draft, ["plugins", pluginID, "flow", "data", "flow"], flow);
+      } catch {
+        console.error("Error setting the following flow:", flow);
+        return;
+      }
     });
 
     const transaction = genDataChangeTransaction({

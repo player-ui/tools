@@ -19,18 +19,6 @@ const pluginData: PluginData = {
   flow: flow as Flow,
 };
 
-const safelyMerge = (target: any, path: string[] | string, value: any) => {
-  const pathArray = typeof path === "string" ? path.split(",") : path;
-  let obj = target;
-  for (let i = 0; i < pathArray.length - 1; i++) {
-    if (obj[path[i]] === null) {
-      obj[path[i]] = {};
-    }
-    obj = obj[path[i]];
-  }
-  dset(target, path, value);
-};
-
 /** Defines the content to be rendered into the extension Player UI and process changes */
 export const WrapperComponent = ({
   children,
@@ -72,17 +60,13 @@ export const WrapperComponent = ({
         lastProcessedInteraction.current += 1;
 
         const newState = produce(state, (draft) => {
-          safelyMerge(draft, ["plugins", id, "flow", "data", "rootNode"], {
+          dset(draft, ["plugins", id, "flow", "data", "rootNode"], {
             name: "root",
             children: [],
           });
-          safelyMerge(draft, ["plugins", id, "flow", "data", "durations"], []);
-          safelyMerge(
-            draft,
-            ["plugins", id, "flow", "data", "profiling"],
-            true
-          );
-          safelyMerge(
+          dset(draft, ["plugins", id, "flow", "data", "durations"], []);
+          dset(draft, ["plugins", id, "flow", "data", "profiling"], true);
+          dset(
             draft,
             ["plugins", id, "flow", "data", "displayFlameGraph"],
             false
@@ -103,22 +87,10 @@ export const WrapperComponent = ({
         lastProcessedInteraction.current += 1;
 
         const newState = produce(state, (draft) => {
-          safelyMerge(
-            draft,
-            ["plugins", id, "flow", "data", "rootNode"],
-            rootNode
-          );
-          safelyMerge(
-            draft,
-            ["plugins", id, "flow", "data", "durations"],
-            durations
-          );
-          safelyMerge(
-            draft,
-            ["plugins", id, "flow", "data", "profiling"],
-            false
-          );
-          safelyMerge(
+          dset(draft, ["plugins", id, "flow", "data", "rootNode"], rootNode);
+          dset(draft, ["plugins", id, "flow", "data", "durations"], durations);
+          dset(draft, ["plugins", id, "flow", "data", "profiling"], false);
+          dset(
             draft,
             ["plugins", id, "flow", "data", "displayFlameGraph"],
             true
