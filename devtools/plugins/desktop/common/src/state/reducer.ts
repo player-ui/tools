@@ -16,6 +16,18 @@ const containsInteraction = (
   return interactions.filter((i) => dequal(i, interaction)).length > 0;
 };
 
+const safelyMerge = (target: any, path: string[] | string, value: any) => {
+  const pathArray = typeof path === "string" ? path.split(",") : path;
+  let obj = target;
+  for (let i = 0; i < pathArray.length - 1; i++) {
+    if (obj[path[i]] === null) {
+      obj[path[i]] = {};
+    }
+    obj = obj[path[i]];
+  }
+  dset(target, path, value);
+};
+
 /** devtools plugin state reducer */
 export const reducer = (
   state: DevtoolsPluginsStore,
@@ -25,7 +37,7 @@ export const reducer = (
     case "PLAYER_DEVTOOLS_PLAYER_INIT":
       return produce(state, (draft) => {
         const { payload } = transaction;
-        dset(draft, "plugins", payload.plugins);
+        safelyMerge(draft, "plugins", payload.plugins);
 
         const message: PlayerInitEvent = {
           type: "PLAYER_DEVTOOLS_PLAYER_INIT",
@@ -40,7 +52,7 @@ export const reducer = (
 
         if (!payload.data) return state;
 
-        dset(
+        safelyMerge(
           draft.plugins,
           [transaction.payload.pluginID, "flow", "data"],
           transaction.payload.data
@@ -57,14 +69,14 @@ export const reducer = (
       return produce(state, (draft) => {
         if (containsInteraction(draft.interactions, transaction)) return state;
 
-        dset(draft, ["interactions"], [...draft.interactions, transaction]);
+        safelyMerge(draft, ["interactions"], [...draft.interactions, transaction]);
       });
     case "PLAYER_DEVTOOLS_SELECTED_PLAYER_CHANGE":
       const { playerID } = transaction.payload;
 
       if (!playerID) return state;
       return produce(state, (draft) => {
-        dset(draft, "currentPlayer", playerID);
+        safelyMerge(draft, "currentPlayer", playerID);
       });
     default:
       return state;
