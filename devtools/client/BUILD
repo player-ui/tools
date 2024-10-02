@@ -19,8 +19,6 @@ js_pipeline(
         "//:node_modules/@devtools-ui/plugin",
         "//:node_modules/@types/react",
         "//:node_modules/immer",
-        "//:node_modules/lodash.merge",
-        "//:node_modules/@types/lodash.merge",
         "//:node_modules/dset",
         "//:node_modules/react",
         "//:node_modules/react-error-boundary",
