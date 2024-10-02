@@ -4,6 +4,7 @@ import type {
   Transaction,
 } from "@player-tools/devtools-types";
 import { dset } from "dset/merge";
+import merge from "lodash.merge";
 import { produce } from "immer";
 
 const safelyMerge = (target: any, path: string[] | string, value: any) => {
@@ -59,7 +60,7 @@ export const reducer = (
           sender,
           payload: { data, pluginID },
         } = transaction;
-        safelyMerge(
+        merge(
           draft,
           ["players", sender, "plugins", pluginID, "flow", "data"],
           data

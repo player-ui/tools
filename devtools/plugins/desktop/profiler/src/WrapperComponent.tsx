@@ -77,7 +77,11 @@ export const WrapperComponent = ({
             children: [],
           });
           safelyMerge(draft, ["plugins", id, "flow", "data", "durations"], []);
-          safelyMerge(draft, ["plugins", id, "flow", "data", "profiling"], true);
+          safelyMerge(
+            draft,
+            ["plugins", id, "flow", "data", "profiling"],
+            true
+          );
           safelyMerge(
             draft,
             ["plugins", id, "flow", "data", "displayFlameGraph"],
@@ -99,9 +103,21 @@ export const WrapperComponent = ({
         lastProcessedInteraction.current += 1;
 
         const newState = produce(state, (draft) => {
-          safelyMerge(draft, ["plugins", id, "flow", "data", "rootNode"], rootNode);
-          safelyMerge(draft, ["plugins", id, "flow", "data", "durations"], durations);
-          safelyMerge(draft, ["plugins", id, "flow", "data", "profiling"], false);
+          safelyMerge(
+            draft,
+            ["plugins", id, "flow", "data", "rootNode"],
+            rootNode
+          );
+          safelyMerge(
+            draft,
+            ["plugins", id, "flow", "data", "durations"],
+            durations
+          );
+          safelyMerge(
+            draft,
+            ["plugins", id, "flow", "data", "profiling"],
+            false
+          );
           safelyMerge(
             draft,
             ["plugins", id, "flow", "data", "displayFlameGraph"],

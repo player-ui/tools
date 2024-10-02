@@ -8,6 +8,7 @@ import type {
 import type { Flow } from "@player-ui/react";
 import { dequal } from "dequal";
 import { produce } from "immer";
+import merge from "lodash.merge";
 import { dset } from "dset/merge";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BASE_PLUGIN_DATA, INTERACTIONS } from "./constants";
@@ -200,9 +201,8 @@ export const WrapperComponent = ({
   // Flow changes
   useEffect(() => {
     if (dequal(state.plugins[pluginID]?.flow?.data?.flow, flow)) return;
-    //investigate here
     const newState = produce(state, (draft) => {
-      safelyMerge(draft, ["plugins", pluginID, "flow", "data", "flow"], flow);
+      merge(draft.plugins[pluginID].flow.data?.flow, flow);
     });
 
     const transaction = genDataChangeTransaction({

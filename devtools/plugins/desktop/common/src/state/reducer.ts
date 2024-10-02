@@ -8,6 +8,7 @@ import type {
   Transaction,
 } from "@player-tools/devtools-types";
 import { dset } from "dset/merge";
+import merge from "lodash.merge";
 
 const containsInteraction = (
   interactions: DevtoolsPluginsStore["interactions"],
@@ -52,12 +53,10 @@ export const reducer = (
 
         if (!payload.data) return state;
 
-        safelyMerge(
-          draft.plugins,
-          [transaction.payload.pluginID, "flow", "data"],
+        merge(
+          draft.plugins[transaction.payload.pluginID].flow.data,
           transaction.payload.data
         );
-
         const message: DevtoolsDataChangeEvent = {
           type: "PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE",
           payload,
@@ -69,7 +68,11 @@ export const reducer = (
       return produce(state, (draft) => {
         if (containsInteraction(draft.interactions, transaction)) return state;
 
-        safelyMerge(draft, ["interactions"], [...draft.interactions, transaction]);
+        safelyMerge(
+          draft,
+          ["interactions"],
+          [...draft.interactions, transaction]
+        );
       });
     case "PLAYER_DEVTOOLS_SELECTED_PLAYER_CHANGE":
       const { playerID } = transaction.payload;
