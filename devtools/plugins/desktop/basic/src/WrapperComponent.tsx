@@ -20,6 +20,18 @@ const pluginData: PluginData = {
   flow: flow as Flow,
 };
 
+const safelyMerge = (target: any, path: string[] | string, value: any) => {
+  const pathArray = typeof path === "string" ? path.split(",") : path;
+  let obj = target;
+  for (let i = 0; i < pathArray.length - 1; i++) {
+    if (obj[path[i]] === null || obj[path[i]] === undefined) {
+      obj[path[i]] = {};
+    }
+    obj = obj[path[i]];
+  }
+  dset(target, path, value);
+};
+
 /** Defines the content to be rendered into the extension Player UI and process changes */
 export const WrapperComponent = ({
   children,
@@ -55,7 +67,7 @@ export const WrapperComponent = ({
           const current: Array<Evaluation> =
             (state?.plugins?.[pluginID]?.flow?.data
               ?.history as Array<Evaluation>) || [];
-          dset(
+          safelyMerge(
             draft,
             ["plugins", pluginID, "flow", "data", "history"],
             [...current, result]
@@ -119,7 +131,7 @@ export const WrapperComponent = ({
 
   // inject playerConfig into the plugin data
   const pluginDataWithPlayerConfig = produce(pluginData, (draft) => {
-    dset(draft, ["flow", "data", "playerConfig"], playerConfig);
+    safelyMerge(draft, ["flow", "data", "playerConfig"], playerConfig);
   });
 
   // Initial plugin content
@@ -156,7 +168,7 @@ export const WrapperComponent = ({
     if (dequal(state.plugins[pluginID]?.flow?.data?.data, data)) return;
 
     const newState = produce(state, (draft) => {
-      dset(draft, ["plugins", pluginID, "flow", "data", "data"], data);
+      safelyMerge(draft, ["plugins", pluginID, "flow", "data", "data"], data);
     });
 
     const transaction = genDataChangeTransaction({
@@ -173,7 +185,7 @@ export const WrapperComponent = ({
     if (dequal(state.plugins[pluginID]?.flow?.data?.logs, logs)) return;
 
     const newState = produce(state, (draft) => {
-      dset(draft, ["plugins", pluginID, "flow", "data", "logs"], logs);
+      safelyMerge(draft, ["plugins", pluginID, "flow", "data", "logs"], logs);
     });
 
     const transaction = genDataChangeTransaction({
@@ -188,9 +200,9 @@ export const WrapperComponent = ({
   // Flow changes
   useEffect(() => {
     if (dequal(state.plugins[pluginID]?.flow?.data?.flow, flow)) return;
-
+    //investigate here
     const newState = produce(state, (draft) => {
-      dset(draft, ["plugins", pluginID, "flow", "data", "flow"], flow);
+      safelyMerge(draft, ["plugins", pluginID, "flow", "data", "flow"], flow);
     });
 
     const transaction = genDataChangeTransaction({

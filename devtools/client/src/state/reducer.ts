@@ -6,6 +6,18 @@ import type {
 import { dset } from "dset/merge";
 import { produce } from "immer";
 
+const safelyMerge = (target: any, path: string[] | string, value: any) => {
+  const pathArray = typeof path === "string" ? path.split(",") : path;
+  let obj = target;
+  for (let i = 0; i < pathArray.length - 1; i++) {
+    if (obj[path[i]] === null) {
+      obj[path[i]] = {};
+    }
+    obj = obj[path[i]];
+  }
+  dset(target, path, value);
+};
+
 /** Extension state reducer */
 export const reducer = (
   state: ExtensionState,
@@ -18,15 +30,15 @@ export const reducer = (
           sender,
           payload: { plugins },
         } = transaction;
-        dset(draft, ["current", "player"], sender);
-        dset(
+        safelyMerge(draft, ["current", "player"], sender);
+        safelyMerge(
           draft,
           ["current", "plugin"],
           draft.current.plugin || plugins[Object.keys(plugins)[0]].id
         );
 
-        dset(draft, ["players", sender, "plugins"], plugins);
-        dset(draft, ["players", sender, "active"], true);
+        safelyMerge(draft, ["players", sender, "plugins"], plugins);
+        safelyMerge(draft, ["players", sender, "active"], true);
       });
     case "PLAYER_DEVTOOLS_PLUGIN_FLOW_CHANGE":
       return produce(state, (draft) => {
@@ -35,7 +47,11 @@ export const reducer = (
           payload: { flow, pluginID },
         } = transaction;
 
-        dset(draft, ["players", sender, "plugins", pluginID, "flow"], flow);
+        safelyMerge(
+          draft,
+          ["players", sender, "plugins", pluginID, "flow"],
+          flow
+        );
       });
     case "PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE":
       return produce(state, (draft) => {
@@ -43,7 +59,7 @@ export const reducer = (
           sender,
           payload: { data, pluginID },
         } = transaction;
-        dset(
+        safelyMerge(
           draft,
           ["players", sender, "plugins", pluginID, "flow", "data"],
           data
@@ -57,17 +73,17 @@ export const reducer = (
       return produce(state, (draft) => {
         const { sender } = transaction;
 
-        dset(draft, ["players", sender, "active"], false);
+        safelyMerge(draft, ["players", sender, "active"], false);
       });
     case "PLAYER_DEVTOOLS_PLAYER_SELECTED":
       return produce(state, (draft) => {
         const { playerID } = transaction.payload;
-        dset(draft, ["current", "player"], playerID);
+        safelyMerge(draft, ["current", "player"], playerID);
       });
     case "PLAYER_DEVTOOLS_PLUGIN_SELECTED":
       return produce(state, (draft) => {
         const { pluginID } = transaction.payload;
-        dset(draft, ["current", "plugin"], pluginID);
+        safelyMerge(draft, ["current", "plugin"], pluginID);
       });
     default:
       return state;
