@@ -10,6 +10,7 @@ import type {
   PlayerConfigResolvedShape,
 } from "../config";
 import { CompilationContext } from "./compilation-context";
+import { LogLevels } from "./log-levels";
 
 const configLoader = cosmiconfig("player");
 
@@ -20,6 +21,12 @@ export abstract class BaseCommand extends Command {
       description:
         "Path to a specific config file to load.\nBy default, will automatically search for an rc or config file to load",
       char: "c",
+    }),
+    loglevel: Flags.string({
+      char: "v",
+      description: "How verbose logs should be",
+      options: LogLevels,
+      default: "warn",
     }),
   };
 

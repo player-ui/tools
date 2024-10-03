@@ -1,4 +1,4 @@
-import type { Diagnostic, Range } from "vscode-languageserver-types";
+import { Diagnostic, Range } from "vscode-languageserver-types";
 import { DiagnosticSeverity } from "vscode-languageserver-types";
 import chalk from "chalk";
 import logSymbols from "log-symbols";
@@ -98,8 +98,12 @@ function formatDiagnostic(
     type = chalk.red(`${logSymbols.error}  `);
   } else if (diag.severity === DiagnosticSeverity.Warning) {
     type = chalk.yellow(`${logSymbols.warning}  `);
-  } else {
+  } else if (diag.severity === DiagnosticSeverity.Information){
     type = chalk.blue(`${logSymbols.info}  `);
+  } else if (diag.severity === DiagnosticSeverity.Hint){
+    type = chalk.gray(`${logSymbols.info}  `);
+  } else {
+    type = chalk.green(`${logSymbols.info}  `);    
   }
 
   const msg = chalk.bold(diag.message);
@@ -117,11 +121,13 @@ function formatDiagnostic(
 export function formatDiagnosticResults(
   filePath: string,
   results: Diagnostic[],
-  verbose = false
+  loglevel: DiagnosticSeverity
 ) {
   const count = {
     errors: 0,
     warnings: 0,
+    info: 0,
+    trace: 0
   };
   const linePrefix = "  ";
   const longestLine = Math.max(
@@ -134,9 +140,13 @@ export function formatDiagnosticResults(
         count.errors += 1;
       } else if (diag.severity === DiagnosticSeverity.Warning) {
         count.warnings += 1;
+      } else if (diag.severity === DiagnosticSeverity.Information) {
+        count.info += 1;
+      } else if (diag.severity === DiagnosticSeverity.Hint) {
+        count.trace += 1;
       }
 
-      if (diag.severity === DiagnosticSeverity.Error || verbose) {
+      if (diag.severity && loglevel >= diag.severity) {
         return linePrefix + formatDiagnostic(diag, longestLine + 1, filePath);
       }
 
@@ -146,18 +156,30 @@ export function formatDiagnosticResults(
 
   if (count.errors > 0) {
     lines = ["", `${chalk.red(logSymbols.error)} ${filePath}`, ...lines, ""];
-  } else if (verbose) {
-    if (count.warnings > 0) {
+  } else if (count.warnings > 0 && loglevel >= DiagnosticSeverity.Warning) {
       lines = [
         "",
         `${chalk.yellow(logSymbols.warning)} ${filePath}`,
         ...lines,
         "",
       ];
+    } else if (count.info > 0 && loglevel >= DiagnosticSeverity.Information){
+      lines = [
+        "",
+        `${chalk.blue(logSymbols.info)} ${filePath}`,
+        ...lines,
+        "",
+      ];
+    } else if (count.trace > 0 && loglevel >= DiagnosticSeverity.Hint) {
+      lines = [
+        "",
+        `${chalk.gray(logSymbols.info)} ${filePath}`,
+        ...lines,
+        "",
+      ];
     } else {
       lines = [`${chalk.green(logSymbols.success)} ${filePath}`, ...lines];
     }
-  }
 
   return {
     ...count,
@@ -205,7 +227,7 @@ export const validationRenderer: TaskProgressRenderer<
         const formattedDiags = formatDiagnosticResults(
           task.data?.file ? normalizePath(task.data.file) : "",
           sortDiagnostics(task.output),
-          true
+          ctx.loglevel
         );
 
         output.push(...formattedDiags.lines);
@@ -235,7 +257,7 @@ export const validationRenderer: TaskProgressRenderer<
         const formattedDiags = formatDiagnosticResults(
           t.data?.file ?? "",
           t.output,
-          true
+          ctx.loglevel
         );
 
         count.errors += formattedDiags.errors;
