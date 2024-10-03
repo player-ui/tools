@@ -160,7 +160,7 @@ export const WrapperComponent = ({
       try {
         dset(draft, ["plugins", pluginID, "flow", "data", "data"], data);
       } catch {
-        console.log("Error setting the following data: ", data);
+        console.error("Error setting the following data: ", data);
         return;
       }
     });
