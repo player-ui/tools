@@ -9,6 +9,7 @@ import type { Flow } from "@player-ui/react";
 import { dequal } from "dequal";
 import { produce } from "immer";
 import set from "lodash.set";
+import { merge } from "ts-deepmerge";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BASE_PLUGIN_DATA, INTERACTIONS } from "./constants";
 import type { Evaluation, WrapperComponentProps } from "./types";
@@ -156,7 +157,10 @@ export const WrapperComponent = ({
     if (dequal(state.plugins[pluginID]?.flow?.data?.data, data)) return;
 
     const newState = produce(state, (draft) => {
-      set(draft, ["plugins", pluginID, "flow", "data", "data"], data);
+      if (draft.plugins[pluginID].flow.data?.data) {
+        merge(draft.plugins[pluginID].flow.data?.data, data);
+      }
+      // set(draft, ["plugins", pluginID, "flow", "data", "data"], data);
     });
 
     const transaction = genDataChangeTransaction({
@@ -173,7 +177,10 @@ export const WrapperComponent = ({
     if (dequal(state.plugins[pluginID]?.flow?.data?.logs, logs)) return;
 
     const newState = produce(state, (draft) => {
-      set(draft, ["plugins", pluginID, "flow", "data", "logs"], logs);
+      if (draft.plugins[pluginID].flow.data?.logs) {
+        merge(draft.plugins[pluginID].flow.data.logs, logs);
+      }
+      // set(draft, ["plugins", pluginID, "flow", "data", "logs"], logs);
     });
 
     const transaction = genDataChangeTransaction({
@@ -190,7 +197,10 @@ export const WrapperComponent = ({
     if (dequal(state.plugins[pluginID]?.flow?.data?.flow, flow)) return;
 
     const newState = produce(state, (draft) => {
-      set(draft, ["plugins", pluginID, "flow", "data", "flow"], flow);
+      if (draft.plugins[pluginID].flow.data?.flow) {
+        merge(draft.plugins[pluginID].flow.data.flow, flow as object);
+      }
+      // set(draft, ["plugins", pluginID, "flow", "data", "flow"], flow);
     });
 
     const transaction = genDataChangeTransaction({

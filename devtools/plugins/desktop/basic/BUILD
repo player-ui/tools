@@ -21,6 +21,7 @@ dependencies = [
     "//:node_modules/immer",
     "//:node_modules/uuid",
     "//:node_modules/lodash.set",
+    "//:node_modules/ts-deepmerge",
     "//:node_modules/@types/lodash.set",
     "//:node_modules/@types/uuid",
     "//:node_modules/dequal",

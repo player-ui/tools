@@ -8,6 +8,7 @@ import type {
   ViewInstance,
 } from "@player-ui/react";
 import set from "lodash.set";
+import { merge } from "ts-deepmerge";
 import { produce } from "immer";
 import React from "react";
 import { WrapperComponent } from "./WrapperComponent";
