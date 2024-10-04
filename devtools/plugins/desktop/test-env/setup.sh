@@ -18,7 +18,7 @@ VERDACCIO_REGISTRY="http://localhost:4873"
 PLUGINS=("@player-tools/devtools-basic-web-plugin" "@player-tools/devtools-profiler-web-plugin")
 
 # Define browser-devtools depenedencies
-BROWSER_DEVTOOLS_DEPS=("@player-ui/pubsub-plugin" "dequal" "@player-tools/devtools-client@0.8.1" "@player-tools/devtools-messenger@0.8.1" "@player-tools/devtools-types@0.8.1")
+BROWSER_DEVTOOLS_DEPS=("@player-ui/pubsub-plugin" "dequal" "@player-tools/devtools-client@0.0.0-PLACEHOLDER" "@player-tools/devtools-messenger@0.0.0-PLACEHOLDER" "@player-tools/devtools-types@0.0.0-PLACEHOLDER")
 
 # Run publish-to-verdaccio.sh
 log_step "Running publish-to-verdaccio.sh..."
