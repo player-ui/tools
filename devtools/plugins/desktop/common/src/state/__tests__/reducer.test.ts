@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi, beforeEach, afterEach } from "vitest";
 import { reducer } from "../reducer";
 import {
   DevtoolsPluginsStore,
@@ -57,6 +57,28 @@ const mockPluginDataChangeTransaction: Transaction<DevtoolsDataChangeEvent> = {
     pluginID: "test",
   },
 };
+
+const mockPluginDataChangeTransactionWithNull: Transaction<DevtoolsDataChangeEvent> =
+  {
+    ...mockTransactionMetadata,
+    type: "PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE",
+    id: mockTransactionID++,
+    payload: {
+      data: { hello: null },
+      pluginID: "test",
+    },
+  };
+
+const mockPluginDataChangeTransactionWithUndefined: Transaction<DevtoolsDataChangeEvent> =
+  {
+    ...mockTransactionMetadata,
+    type: "PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE",
+    id: mockTransactionID++,
+    payload: {
+      data: { hello: null },
+      pluginID: "test",
+    },
+  };
 
 const mockPluginInteractionTransaction: Transaction<DevtoolsPluginInteractionEvent> =
   {
@@ -164,7 +186,7 @@ describe("reducer", () => {
           {
             "_messenger_": true,
             "context": "devtools",
-            "id": 3,
+            "id": 5,
             "payload": {
               "payload": "{"expression": "{{foo.bar}}"}",
               "type": "evaluate-expression",
@@ -193,5 +215,71 @@ describe("reducer", () => {
         "plugins": {},
       }
     `);
+  });
+
+  test("should handle PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE action with valid data", () => {
+    const result = reducer(INITIAL_STATE, mockPluginDataChangeTransaction);
+    expect(result.plugins.test).toBeDefined();
+    expect(result.plugins.test.flow.data).toEqual({ foo: "bar" });
+    expect(result.messages).toHaveLength(1);
+    expect(result.messages[0].type).toEqual(
+      "PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE"
+    );
+  });
+
+  test("should handle PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE action when data is null", () => {
+    const transaction = {
+      type: "PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE",
+      plugins: [],
+      messages: [],
+    };
+    const result = reducer(
+      transaction,
+      mockPluginDataChangeTransactionWithNull
+    );
+
+    expect(result.messages).toHaveLength(1);
+    expect(result.plugins.test).toBeUndefined();
+  });
+
+  test("should handle PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE action when data is undefined", () => {
+    const transaction = {
+      type: "PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE",
+      plugins: [],
+      messages: [],
+    };
+    const result = reducer(
+      transaction,
+      mockPluginDataChangeTransactionWithUndefined
+    );
+
+    expect(result.messages).toHaveLength(1);
+    expect(result.plugins.test).toBeUndefined();
+  });
+
+  test("should not overwrite when there are two plugins", () => {
+    const transaction = {
+      ...INITIAL_STATE,
+      messages: [],
+      plugins: {
+        multiple: {
+          flow: {
+            data: {
+              hello: "world",
+            },
+          },
+        },
+      },
+      interactions: [],
+      currentPlayer: "",
+      type: "PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE",
+      payload: {
+        pluginID: "plugin-1",
+        data: undefined,
+      },
+    };
+
+    const newState = reducer(transaction, mockPluginDataChangeTransaction);
+    expect(Object.keys(newState.plugins).length).toEqual(2);
   });
 });
