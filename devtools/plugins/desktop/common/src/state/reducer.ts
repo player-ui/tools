@@ -39,6 +39,7 @@ export const reducer = (
         const { payload } = transaction;
 
         if (!payload.data) return state;
+
         try {
           dset(
             draft,
@@ -48,7 +49,6 @@ export const reducer = (
         } catch {
           console.error("error setting data:", transaction.payload.data);
         }
-
         const message: DevtoolsDataChangeEvent = {
           type: "PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE",
           payload,

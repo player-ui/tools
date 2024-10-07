@@ -13,16 +13,16 @@ describe("BasicWevDevtoolPlugins", () => {
       hooks: {
         dataController: {
           tap: vi.fn(),
-        },
+        } as any,
         onStart: {
           tap: vi.fn(),
-        },
+        } as any,
         view: {
           tap: vi.fn(),
-        },
+        } as any,
         expressionEvaluator: {
           tap: vi.fn(),
-        },
+        } as any,
       },
       logger: {
         hooks: {
