@@ -20,10 +20,9 @@ dependencies = [
     "//:node_modules/react",
     "//:node_modules/immer",
     "//:node_modules/uuid",
-    "//:node_modules/lodash.set",
-    "//:node_modules/@types/lodash.set",
     "//:node_modules/@types/uuid",
     "//:node_modules/dequal",
+    "//:node_modules/dset",
 ]
 
 dsl_input = "src/content/index.ts"

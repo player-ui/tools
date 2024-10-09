@@ -7,7 +7,7 @@ import type {
 } from "@player-tools/devtools-types";
 import type { Flow } from "@player-ui/react";
 import { produce } from "immer";
-import set from "lodash.set";
+import { dset } from "dset/merge";
 import React, { useCallback, useEffect } from "react";
 import { BASE_PLUGIN_DATA, INTERACTIONS } from "./constants";
 import type { WrapperComponentProps } from "./types";
@@ -60,13 +60,13 @@ export const WrapperComponent = ({
         lastProcessedInteraction.current += 1;
 
         const newState = produce(state, (draft) => {
-          set(draft, ["plugins", id, "flow", "data", "rootNode"], {
+          dset(draft, ["plugins", id, "flow", "data", "rootNode"], {
             name: "root",
             children: [],
           });
-          set(draft, ["plugins", id, "flow", "data", "durations"], []);
-          set(draft, ["plugins", id, "flow", "data", "profiling"], true);
-          set(
+          dset(draft, ["plugins", id, "flow", "data", "durations"], []);
+          dset(draft, ["plugins", id, "flow", "data", "profiling"], true);
+          dset(
             draft,
             ["plugins", id, "flow", "data", "displayFlameGraph"],
             false
@@ -87,10 +87,10 @@ export const WrapperComponent = ({
         lastProcessedInteraction.current += 1;
 
         const newState = produce(state, (draft) => {
-          set(draft, ["plugins", id, "flow", "data", "rootNode"], rootNode);
-          set(draft, ["plugins", id, "flow", "data", "durations"], durations);
-          set(draft, ["plugins", id, "flow", "data", "profiling"], false);
-          set(
+          dset(draft, ["plugins", id, "flow", "data", "rootNode"], rootNode);
+          dset(draft, ["plugins", id, "flow", "data", "durations"], durations);
+          dset(draft, ["plugins", id, "flow", "data", "profiling"], false);
+          dset(
             draft,
             ["plugins", id, "flow", "data", "displayFlameGraph"],
             true
