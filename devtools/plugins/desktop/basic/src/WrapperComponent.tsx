@@ -14,7 +14,6 @@ import { BASE_PLUGIN_DATA, INTERACTIONS } from "./constants";
 import type { Evaluation, WrapperComponentProps } from "./types";
 import { genDataChangeTransaction, getEvaluateExpression } from "./helpers";
 import flow from "../_generated/index.json";
-import { log } from "console";
 
 const pluginData: PluginData = {
   ...BASE_PLUGIN_DATA,
