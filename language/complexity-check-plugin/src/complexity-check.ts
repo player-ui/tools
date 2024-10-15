@@ -50,6 +50,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
   name = "complexity-check";
 
   private config: ComplexityCheckConfig;
+  private assetTypeCount: Record<string, number>;
   private contentScore: number;
   private range: {
     start: number;
@@ -58,6 +59,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
 
   constructor(config: ComplexityCheckConfig) {
     this.config = config;
+    this.assetTypeCount = {};
     this.contentScore = 0;
     this.range = { start: 0, end: 0 };
   }
@@ -68,10 +70,17 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
     });
 
     service.hooks.onDocumentUpdate.tap(this.name, () => {
+      this.assetTypeCount = {};
       this.contentScore = 0;
     });
 
     service.hooks.onValidateEnd.tap(this.name, (diagnostics, context) => {
+      Object.entries(this.assetTypeCount).forEach(([assetType, score]) => {
+        if (this.config.options?.verbose) {
+          console.log(`${assetType} count: ${score}`);
+        }
+      });
+
       let diagnostic: Diagnostic;
 
       if (this.contentScore < this.config.maxAcceptableComplexity) {
@@ -181,6 +190,16 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
         if (this.config.assetComplexity) {
           if (assetComplexity) {
             this.contentScore += assetComplexity;
+
+            // if an assetType is found, add 1 point for each occurence
+            if (assetType) {
+              if (this.assetTypeCount[assetType]) {
+                this.assetTypeCount[assetType] += 1;
+              } else {
+                this.assetTypeCount[assetType] = 0;
+              }
+            }
+
             if (this.config.options?.verbose) {
               console.log(
                 `assetNode (+${assetComplexity} for ${assetType}): ${this.contentScore}`
@@ -211,6 +230,11 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
         if (this.config.assetComplexity) {
           if (viewComplexity) {
             this.contentScore += viewComplexity;
+            if (viewType) {
+              this.assetTypeCount[viewType] = this.assetTypeCount[
+                viewType
+              ] += 1;
+            }
             if (this.config.options?.verbose) {
               console.log(
                 `viewNode (+${viewComplexity} for ${viewType}): ${this.contentScore}`
@@ -232,14 +256,14 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
         resolveDataRefs(stringContent, {
           model: {
             get: (binding) => {
-              this.contentScore += 2;
+              this.contentScore += 4;
               if (this.config.options?.verbose) {
                 console.log(`model (get: ${binding}): ${this.contentScore}`);
               }
               return binding;
             },
             set: (binding) => {
-              this.contentScore += 2;
+              this.contentScore += 4;
               if (this.config.options?.verbose) {
                 console.log(`model (set: ${binding}): ${this.contentScore}`);
               }
@@ -248,7 +272,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
             delete: () => {},
           },
           evaluate: (str) => {
-            this.contentScore += 2;
+            this.contentScore += 4;
             if (this.config.options?.verbose) {
               console.log(`model (evaluate: ${str}): ${this.contentScore}`);
             }

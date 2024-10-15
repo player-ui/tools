@@ -26,6 +26,6 @@ A scoring breakdown of what this package analyzes:
 | View node                     | 1                 |
 | Asset node                    | 1                 |
 | Asset node in a template      | 2 (+1 per nested) |
-| Evaluation (@[]@)             | 2                 |
-| Expression ({{ }})            | 2                 |
+| Evaluation (@[]@)             | 4                 |
+| Expression ({{ }})            | 4                 |
 | View/asset type complexity    | Custom            |
