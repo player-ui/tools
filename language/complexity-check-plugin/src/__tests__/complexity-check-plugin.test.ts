@@ -88,12 +88,12 @@ describe("complexity plugin", () => {
      * 1 x for each view node (1 total) = 1
      * 1 x from exps in ACTION states (3 total) = 3
      * 1 x for each asset node (2 total) = 2
-     * 2 x for each expression (`2 total) = 4
-     * 2 x for each data evaluated (1 total) = 2
+     * 4 x for each expression (`2 total) = 8
+     * 4 x for each data evaluated (1 total) = 4
      */
     expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
       [
-        "Error: Content complexity is 12",
+        "Error: Content complexity is 18",
       ]
     `);
   });
@@ -188,12 +188,12 @@ describe("complexity plugin", () => {
      * 1 x for each view node (1 total) = 1
      * 1 x from exps in ACTION states (5 total) = 5
      * 1 x for each asset node (3 total) = 3
-     * 2 x for each expression (2 total) = 4
-     * 2 x for each data evaluated (10 total) = 20
+     * 4 x for each expression (2 total) = 8
+     * 4 x for each data evaluated (10 total) = 40
      */
     expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
       [
-        "Error: Content complexity is 33",
+        "Error: Content complexity is 57",
       ]
     `);
   });
@@ -280,14 +280,14 @@ describe("complexity plugin", () => {
      * 1 x for each view node (1 total) = 1
      * 1 x from exps in ACTION states (3 total) = 3
      * 1 x for each asset node (1 total) = 1
-     * 2 x for template asset (1 total) = 2
-     * 3 x for nested template asset (1 total) = 3
-     * 2 x for each expression (2 total) = 4
-     * 2 x for each data evaluated (1 total) = 2
+     * 4 x for template asset (1 total) = 2
+     * 2 x for nested template asset (1 total) = 2
+     * 4 x for each expression (2 total) = 8
+     * 4 x for each data evaluated (1 total) = 8
      */
     expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
       [
-        "Error: Content complexity is 16",
+        "Error: Content complexity is 22",
       ]
     `);
   });
@@ -366,16 +366,16 @@ describe("complexity plugin", () => {
     /**
      * Score break down
      * 1 x for each view node (1 total) = 1
-     * 2 x for each view type = info (1 total) = 2
+     * 4 x for each view type = info (1 total) = 2
      * 1 x from exps in ACTION states (3 total) = 3
      * 1 x for each asset node (2 total) = 2
      * 1 x for each asset type = text (2 total) = 2
-     * 2 x for each expression (2 total) = 4
-     * 2 x for each data evaluated (1 total) = 2
+     * 4 x for each expression (2 total) = 8
+     * 4 x for each data evaluated (1 total) = 4
      */
     expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
       [
-        "Error: Content complexity is 16",
+        "Error: Content complexity is 22",
       ]
     `);
   });
@@ -386,7 +386,7 @@ describe("complexity plugin", () => {
     customService = new PlayerLanguageService();
     customService.addLSPPlugin(
       new ComplexityCheck({
-        maxAcceptableComplexity: 15,
+        maxAcceptableComplexity: 20,
         maxWarningLevel: 10,
         options: { verbose: true },
       })
@@ -454,16 +454,16 @@ describe("complexity plugin", () => {
     /**
      * Score break down
      * 1 x for each view node (1 total) = 1
-     * 2 x for each view type = info (1 total) = 2
+     * 4 x for each view type = info (1 total) = 2
      * 1 x from exps in ACTION states (3 total) = 3
      * 1 x for each asset node (2 total) = 2
      * 1 x for each asset type = text (2 total) = 2
-     * 2 x for each expression (2 total) = 4
-     * 2 x for each data evaluated (1 total) = 2
+     * 4 x for each expression (2 total) = 8
+     * 4 x for each data evaluated (1 total) = 4
      */
     expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
       [
-        "Warning: Content complexity is 12",
+        "Warning: Content complexity is 18",
       ]
     `);
   });
