@@ -7,6 +7,7 @@ import { BaseCommand } from "../../utils/base-command";
 import { validationRenderer } from "../../utils/diag-renderer";
 import { convertToFileGlob } from "../../utils/fs";
 import { createTaskRunner } from "../../utils/task-runner";
+import { stringToLogLevel } from "../../utils/log-levels"
 
 /** A command to validate JSON content */
 export default class Validate extends BaseCommand {
@@ -22,6 +23,12 @@ export default class Validate extends BaseCommand {
     exp: Flags.boolean({
       description: "Use experimental language features",
       default: false,
+    }),
+    severity: Flags.string({
+      char: "s",
+      description: "The severity of validation issues",
+      options: ["error", "warn"],
+      default: "error",
     }),
   };
 
@@ -41,6 +48,8 @@ export default class Validate extends BaseCommand {
     return {
       files: Array.isArray(files) ? files : [files],
       exp,
+      severity: flags.severity,
+      loglevel: flags.loglevel
     };
   }
 
@@ -48,7 +57,7 @@ export default class Validate extends BaseCommand {
     /** the status code */
     exitCode: number;
   }> {
-    const { files: inputFiles, exp } = await this.getOptions();
+    const { files: inputFiles, exp, severity, loglevel } = await this.getOptions();
     const expandedFilesList = convertToFileGlob(inputFiles, "**/*.json");
     this.debug("Searching for files using: %o", expandedFilesList);
     const files = await glob(expandedFilesList, {
@@ -70,7 +79,6 @@ export default class Validate extends BaseCommand {
         },
         run: async () => {
           const contents = await fs.readFile(f, "utf-8");
-          const lsp = await this.createLanguageService(exp);
 
           const validations =
             (await lsp.validateTextDocument(
@@ -80,18 +88,21 @@ export default class Validate extends BaseCommand {
           return validations;
         },
       })),
-    });
+      loglevel: stringToLogLevel(loglevel)
+    },);
 
     const taskResults = await taskRunner.run();
 
-    taskResults.forEach((t) => {
-      if (
-        t.error ||
-        t.output.some((d) => d.severity === DiagnosticSeverity.Error)
-      ) {
-        results.exitCode = 100;
-      }
-    });
+    if(severity !== "error"){
+      taskResults.forEach((t) => {
+        if (
+          t.error ||
+          t.output.some((d) => d.severity === DiagnosticSeverity.Error)
+        ) {
+          results.exitCode = 100;
+        }
+      });
+    }
 
     this.debug("finished");
     this.exit(results.exitCode);

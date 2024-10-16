@@ -44,7 +44,7 @@ export default class DSLCompile extends BaseCommand {
     }),
     severity: Flags.string({
       char: "s",
-      description: "The severity of the validation",
+      description: "The severity of validation issues",
       options: ["error", "warn"],
       default: "error",
     }),
@@ -68,6 +68,7 @@ export default class DSLCompile extends BaseCommand {
         flags["skip-validation"] ?? config.dsl?.skipValidation ?? false,
       exp,
       severity: flags.severity,
+      loglevel: flags.loglevel
     };
   }
 
@@ -75,7 +76,7 @@ export default class DSLCompile extends BaseCommand {
     /** the status code */
     exitCode: number;
   }> {
-    const { input, output, skipValidation, exp, severity } =
+    const { input, output, skipValidation, exp, severity, loglevel } =
       await this.getOptions();
 
     const files = await glob(
@@ -211,6 +212,7 @@ export default class DSLCompile extends BaseCommand {
               return result.output?.outputFile ?? "";
             }),
           ...(exp ? ["--exp"] : []),
+          `-s ${severity} -v ${loglevel}`
         ]);
       } else {
         console.log("No output to validate");

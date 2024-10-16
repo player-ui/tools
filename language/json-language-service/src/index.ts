@@ -79,7 +79,36 @@ export class PlayerLanguageService {
     Map<Diagnostic, Violation>
   >();
 
-  public readonly hooks = {
+  public readonly hooks: {
+    onDocumentUpdate: SyncHook<[DocumentContext], Record<string, any>>;
+    validate: AsyncParallelHook<[DocumentContext, ValidationContext], void>;
+    onValidateEnd: SyncWaterfallHook<
+      [
+        Diagnostic[],
+        {
+          /** The context of the document */
+          documentContext: DocumentContext;
+          /** A callback for adding a new fixable rule */
+          addFixableViolation: (diag: Diagnostic, violation: Violation) => void;
+        }
+      ],
+      Record<string, any>
+    >;
+    complete: AsyncParallelHook<
+      [EnhancedDocumentContextWithPosition, CompletionContext],
+      void
+    >;
+    hover: SyncBailHook<
+      [EnhancedDocumentContextWithPosition],
+      Hover | undefined,
+      Record<string, any>
+    >;
+    definition: SyncBailHook<
+      [EnhancedDocumentContextWithPosition],
+      Location | undefined,
+      Record<string, any>
+    >;
+  } = {
     onDocumentUpdate: new SyncHook<[DocumentContext]>(),
 
     validate: new AsyncParallelHook<
@@ -200,7 +229,7 @@ export class PlayerLanguageService {
     };
   }
 
-  public onClose(document: TextDocument) {
+  public onClose(document: TextDocument): void {
     this.fixableViolationsForDocument.delete(document.uri);
     this.parseCache.delete(document.uri);
   }
@@ -423,11 +452,11 @@ export class PlayerLanguageService {
     );
   }
 
-  public addLSPPlugin(plugin: PlayerLanguageServicePlugin) {
+  public addLSPPlugin(plugin: PlayerLanguageServicePlugin): void {
     plugin.apply(this);
   }
 
-  async setAssetTypes(typeFiles: Array<string>) {
+  async setAssetTypes(typeFiles: Array<string>): Promise<void> {
     // await this.typescriptService.setAssetTypes(typeFiles);
     typeFiles.forEach((file) => {
       // Find a better way of loading default types
@@ -443,17 +472,19 @@ export class PlayerLanguageService {
     });
   }
 
-  async setAssetTypesFromModule(manifest: Array<TSManifest>) {
-    manifest.forEach((m) => {
-      if (m.capabilities["Types"]?.length) {
-        this.XLRService.XLRSDK.loadDefinitionsFromModule(m);
-      } else {
-        this.XLRService.XLRSDK.loadDefinitionsFromModule(
-          m,
-          DEFAULT_FILTERS,
-          TRANSFORM_FUNCTIONS
-        );
-      }
-    });
+  async setAssetTypesFromModule(manifest: Array<TSManifest>): Promise<void> {
+    await Promise.allSettled(
+      manifest.map((m) => {
+        if (m.capabilities["Types"]?.length) {
+          return this.XLRService.XLRSDK.loadDefinitionsFromModule(m);
+        } else {
+          return this.XLRService.XLRSDK.loadDefinitionsFromModule(
+            m,
+            DEFAULT_FILTERS,
+            TRANSFORM_FUNCTIONS
+          );
+        }
+      })
+    );
   }
 }

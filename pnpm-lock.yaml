@@ -537,6 +537,16 @@ importers:
 
   devtools/types: {}
 
+  language/complexity-check-plugin:
+    dependencies:
+      '@player-tools/json-language-service':
+        specifier: workspace:*
+        version: link:../json-language-service
+    devDependencies:
+      '@player-tools/static-xlrs':
+        specifier: workspace:*
+        version: link:../../common/static-xlrs
+
   language/dsl: {}
 
   language/json-language-server:

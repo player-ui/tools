@@ -93,7 +93,7 @@ const getFlowNode = (node: ASTNode): FlowASTNode | undefined => {
 export class NavStatePlugin implements PlayerLanguageServicePlugin {
   name = "nav-state";
 
-  apply(service: PlayerLanguageService) {
+  apply(service: PlayerLanguageService): void {
     service.hooks.validate.tap(this.name, async (ctx, validation) => {
       validation.useASTVisitor(createValidationVisitor(validation));
     });

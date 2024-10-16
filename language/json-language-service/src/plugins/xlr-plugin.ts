@@ -332,7 +332,7 @@ function hover(ctx: EnhancedDocumentContextWithPosition) {
 export class XLRPlugin implements PlayerLanguageServicePlugin {
   name = "xlr-plugin";
 
-  apply(service: PlayerLanguageService) {
+  apply(service: PlayerLanguageService): void {
     service.hooks.validate.tap(this.name, async (ctx, validation) => {
       validation.useASTVisitor(
         createValidationVisitor(validation, service.XLRService.XLRSDK)
