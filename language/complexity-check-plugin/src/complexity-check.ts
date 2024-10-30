@@ -10,7 +10,6 @@ import {
   isPropertyNode,
   AssetASTNode,
 } from "@player-tools/json-language-service";
-
 import type {
   ASTNode,
   ASTVisitor,
