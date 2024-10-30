@@ -9,11 +9,14 @@ import {
   getProperty,
   isPropertyNode,
   AssetASTNode,
-  type ASTNode,
-  type ViewASTNode,
-  type PlayerLanguageService,
-  type PlayerLanguageServicePlugin,
-  type ASTVisitor,
+} from "@player-tools/json-language-service";
+
+import type {
+  ASTNode,
+  ASTVisitor,
+  PlayerLanguageService,
+  PlayerLanguageServicePlugin,
+  ViewASTNode,
 } from "@player-tools/json-language-service";
 
 const makeRange = (
