@@ -79,19 +79,24 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
         this.hintsArray.push(`${type}: ${count}`);
       });
 
-      let diagnostic: Diagnostic;
+      console.log(this, context);
 
-      if (this.hintsArray.length > 0) {
-        diagnostic = {
-          message: `Hints: ${this.hintsArray.join("\n")}`,
-          severity: DiagnosticSeverity.Hint,
-          range: makeRange(
-            this.range.start,
-            this.range.end,
-            context.documentContext.document
-          ),
-        };
-        return [...diagnostics, diagnostic];
+      const diagnosticRange = makeRange(
+        this.range.start,
+        this.range.end,
+        context.documentContext.document
+      );
+
+      let message = `Content complexity is ${this.contentScore}`;
+
+      let diagnostic: Diagnostic = {
+        message: `Info: ${message}`,
+        severity: DiagnosticSeverity.Information,
+        range: diagnosticRange,
+      };
+
+      if (diagnostic.severity === DiagnosticSeverity.Hint) {
+        message += `\nScore breakdown:\n${this.hintsArray.join("\n")}`;
       }
 
       if (this.contentScore < this.config.maxAcceptableComplexity) {
@@ -100,34 +105,16 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
           this.contentScore > this.config.maxWarningLevel
         ) {
           diagnostic = {
-            message: `Warning: Content complexity is ${this.contentScore}`,
+            message: `Warning: ${message}`,
             severity: DiagnosticSeverity.Warning,
-            range: makeRange(
-              this.range.start,
-              this.range.end,
-              context.documentContext.document
-            ),
-          };
-        } else {
-          diagnostic = {
-            message: `Info: Content complexity is ${this.contentScore}`,
-            severity: DiagnosticSeverity.Error,
-            range: makeRange(
-              this.range.start,
-              this.range.end,
-              context.documentContext.document
-            ),
+            range: diagnosticRange,
           };
         }
       } else {
         diagnostic = {
-          message: `Error: Content complexity is ${this.contentScore}`,
-          severity: DiagnosticSeverity.Information,
-          range: makeRange(
-            this.range.start,
-            this.range.end,
-            context.documentContext.document
-          ),
+          message: `Error: ${message}`,
+          severity: DiagnosticSeverity.Error,
+          range: diagnosticRange,
         };
       }
 
