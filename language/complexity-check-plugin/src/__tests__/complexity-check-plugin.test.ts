@@ -18,7 +18,6 @@ describe("complexity plugin", () => {
     service.addLSPPlugin(
       new ComplexityCheck({
         maxAcceptableComplexity: 0,
-        options: { verbose: true },
       })
     );
     await service.setAssetTypesFromModule([
@@ -300,7 +299,6 @@ describe("complexity plugin", () => {
       new ComplexityCheck({
         maxAcceptableComplexity: 0,
         assetComplexity: { text: 1, info: 2, table: 5 },
-        options: { verbose: true },
       })
     );
     await customService.setAssetTypesFromModule([
@@ -388,7 +386,6 @@ describe("complexity plugin", () => {
       new ComplexityCheck({
         maxAcceptableComplexity: 20,
         maxWarningLevel: 10,
-        options: { verbose: true },
       })
     );
     await customService.setAssetTypesFromModule([
