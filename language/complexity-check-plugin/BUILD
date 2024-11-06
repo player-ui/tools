@@ -19,6 +19,8 @@ js_pipeline(
         "//:node_modules/jsonc-parser",
         "//:node_modules/typescript-template-language-service-decorator",
         "//:node_modules/vscode-languageserver-types",
+        "//:node_modules/vscode-languageserver-textdocument",
         "//:node_modules/typescript",
+        
     ],
 )
