@@ -7,6 +7,7 @@ import {
   PlayerLanguageService,
   toTextDocument,
 } from "@player-tools/json-language-service";
+import { DiagnosticSeverity } from "vscode-languageserver-types";
 
 import { ComplexityCheck } from "../complexity-check";
 
@@ -17,7 +18,7 @@ describe("complexity plugin", () => {
     service = new PlayerLanguageService();
     service.addLSPPlugin(
       new ComplexityCheck({
-        maxAcceptableComplexity: 0,
+        maxAcceptableComplexity: 60,
       })
     );
     await service.setAssetTypesFromModule([
@@ -81,7 +82,7 @@ describe("complexity plugin", () => {
     );
 
     const validations = await service.validateTextDocument(textDocument);
-    expect(validations).toHaveLength(1);
+    expect(validations).toHaveLength(9);
     /**
      * Score break down
      * 1 x for each view node (1 total) = 1
@@ -90,10 +91,8 @@ describe("complexity plugin", () => {
      * 4 x for each expression (`2 total) = 8
      * 4 x for each data evaluated (1 total) = 4
      */
-    expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
-      [
-        "Error: Content complexity is 18",
-      ]
+    expect(validations?.map((v) => v.message)[0]).toMatchInlineSnapshot(`
+        "Content complexity is 18"
     `);
   });
 
@@ -181,7 +180,7 @@ describe("complexity plugin", () => {
     );
 
     const validations = await service.validateTextDocument(textDocument);
-    expect(validations).toHaveLength(1);
+    expect(validations).toHaveLength(20);
     /**
      * Score break down
      * 1 x for each view node (1 total) = 1
@@ -190,10 +189,8 @@ describe("complexity plugin", () => {
      * 4 x for each expression (2 total) = 8
      * 4 x for each data evaluated (10 total) = 40
      */
-    expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
-      [
-        "Error: Content complexity is 57",
-      ]
+    expect(validations?.map((v) => v.message)[0]).toMatchInlineSnapshot(`
+        "Content complexity is 57"
     `);
   });
 
@@ -273,7 +270,7 @@ describe("complexity plugin", () => {
     );
 
     const validations = await service.validateTextDocument(textDocument);
-    expect(validations).toHaveLength(1);
+    expect(validations).toHaveLength(13);
     /**
      * Score break down
      * 1 x for each view node (1 total) = 1
@@ -284,21 +281,19 @@ describe("complexity plugin", () => {
      * 4 x for each expression (2 total) = 8
      * 4 x for each data evaluated (1 total) = 8
      */
-    expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
-      [
-        "Error: Content complexity is 22",
-      ]
+    expect(validations?.map((v) => v.message)[0]).toMatchInlineSnapshot(`
+        "Content complexity is 22"
     `);
   });
 
-  test("Measures asset complexity", async () => {
+  test("Measures type complexity", async () => {
     let customService: PlayerLanguageService = new PlayerLanguageService();
 
     customService = new PlayerLanguageService();
     customService.addLSPPlugin(
       new ComplexityCheck({
-        maxAcceptableComplexity: 0,
-        assetComplexity: { text: 1, info: 2, table: 5 },
+        maxAcceptableComplexity: 60,
+        typeWeights: { text: 1, info: 2, table: 5 },
       })
     );
     await customService.setAssetTypesFromModule([
@@ -360,7 +355,7 @@ describe("complexity plugin", () => {
     );
 
     const validations = await customService.validateTextDocument(textDocument);
-    expect(validations).toHaveLength(1);
+    expect(validations).toHaveLength(12);
     /**
      * Score break down
      * 1 x for each view node (1 total) = 1
@@ -371,10 +366,8 @@ describe("complexity plugin", () => {
      * 4 x for each expression (2 total) = 8
      * 4 x for each data evaluated (1 total) = 4
      */
-    expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
-      [
-        "Error: Content complexity is 22",
-      ]
+    expect(validations?.map((v) => v.message)[0]).toMatchInlineSnapshot(`
+        "Content complexity is 22"
     `);
   });
 
@@ -447,7 +440,7 @@ describe("complexity plugin", () => {
     );
 
     const validations = await customService.validateTextDocument(textDocument);
-    expect(validations).toHaveLength(1);
+    expect(validations).toHaveLength(9);
     /**
      * Score break down
      * 1 x for each view node (1 total) = 1
@@ -458,10 +451,11 @@ describe("complexity plugin", () => {
      * 4 x for each expression (2 total) = 8
      * 4 x for each data evaluated (1 total) = 4
      */
-    expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
-      [
-        "Warning: Content complexity is 18",
-      ]
+    expect(validations?.map((v) => v.message)[0]).toMatchInlineSnapshot(`
+      "Content complexity is 18, Warning: 10, Maximum: 20"
     `);
+    expect(validations?.map((v) => v.severity)[0]).toBe(
+      DiagnosticSeverity.Warning
+    );
   });
 });
