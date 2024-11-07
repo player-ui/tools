@@ -82,7 +82,7 @@ describe("complexity plugin", () => {
     );
 
     const validations = await service.validateTextDocument(textDocument);
-    expect(validations).toHaveLength(9);
+    expect(validations).toHaveLength(10);
     /**
      * Score break down
      * 1 x for each view node (1 total) = 1
@@ -180,7 +180,7 @@ describe("complexity plugin", () => {
     );
 
     const validations = await service.validateTextDocument(textDocument);
-    expect(validations).toHaveLength(20);
+    expect(validations).toHaveLength(21);
     /**
      * Score break down
      * 1 x for each view node (1 total) = 1
@@ -270,7 +270,7 @@ describe("complexity plugin", () => {
     );
 
     const validations = await service.validateTextDocument(textDocument);
-    expect(validations).toHaveLength(13);
+    expect(validations).toHaveLength(14);
     /**
      * Score break down
      * 1 x for each view node (1 total) = 1
@@ -286,7 +286,7 @@ describe("complexity plugin", () => {
     `);
   });
 
-  test("Measures type complexity", async () => {
+  test("Accounts for weighted types", async () => {
     let customService: PlayerLanguageService = new PlayerLanguageService();
 
     customService = new PlayerLanguageService();
@@ -355,7 +355,7 @@ describe("complexity plugin", () => {
     );
 
     const validations = await customService.validateTextDocument(textDocument);
-    expect(validations).toHaveLength(12);
+    expect(validations).toHaveLength(13);
     /**
      * Score break down
      * 1 x for each view node (1 total) = 1
@@ -440,7 +440,7 @@ describe("complexity plugin", () => {
     );
 
     const validations = await customService.validateTextDocument(textDocument);
-    expect(validations).toHaveLength(9);
+    expect(validations).toHaveLength(10);
     /**
      * Score break down
      * 1 x for each view node (1 total) = 1

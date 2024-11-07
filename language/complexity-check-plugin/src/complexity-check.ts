@@ -83,9 +83,12 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
         context.documentContext.document
       );
 
-      if (this.config.typeWeights) {
+      if (
+        this.config.typeWeights &&
+        Object.keys(this.config.typeWeights).length > 0
+      ) {
         this.verboseDetails.push({
-          message: `\n TYPE TOTALS: \n`,
+          message: `----- Type Totals -----`,
           severity: DiagnosticSeverity.Information,
           range: diagnosticRange,
         });
@@ -103,6 +106,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
           });
         }
       });
+
       const message = `Content complexity is ${this.contentScore}`;
 
       let diagnostic: Diagnostic = {
@@ -130,7 +134,14 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
         };
       }
 
-      return [...diagnostics, diagnostic, ...this.verboseDetails];
+      // Add separator for complexity breakdown
+      this.verboseDetails.unshift({
+        message: "----- Score Breakdown -----",
+        severity: DiagnosticSeverity.Information,
+        range: diagnosticRange,
+      });
+
+      return [diagnostic, ...diagnostics, ...this.verboseDetails];
     });
   }
 
@@ -182,7 +193,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
               scoreModifier += 1;
 
               this.verboseDetails.push({
-                message: `found a template parent (+1)`,
+                message: `found a template parent (+1): ${this.contentScore}`,
                 severity: DiagnosticSeverity.Information,
                 range: toRange(ctx.document, assetNode),
               });
@@ -217,7 +228,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
               }
             }
             this.verboseDetails.push({
-              message: `assetNode (+${typeWeights} for ${assetType}): ${this.contentScore}`,
+              message: `assetNode (1 +${typeWeights} for ${assetType}): ${this.contentScore}`,
               severity: DiagnosticSeverity.Information,
               range: toRange(ctx.document, assetNode),
             });
@@ -259,7 +270,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
               }
             }
             this.verboseDetails.push({
-              message: `viewNode (+${viewComplexity} for ${viewType}): ${this.contentScore}`,
+              message: `viewNode (1 +${viewComplexity} for ${viewType}): ${this.contentScore}`,
               severity: DiagnosticSeverity.Information,
               range: toRange(ctx.document, viewNode),
             });
@@ -286,7 +297,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
               this.contentScore += 4;
 
               this.verboseDetails.push({
-                message: `model - get: ${binding} (+ ${multiplier}): ${this.contentScore}`,
+                message: `model - get: ${binding} (+${multiplier}): ${this.contentScore}`,
                 severity: DiagnosticSeverity.Information,
                 range: toRange(ctx.document, stringNode),
               });
@@ -297,7 +308,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
               this.contentScore += 4;
 
               this.verboseDetails.push({
-                message: `model - set: ${binding} (+ ${multiplier}: ${this.contentScore}`,
+                message: `model - set: ${binding} (+${multiplier}: ${this.contentScore}`,
                 severity: DiagnosticSeverity.Information,
                 range: toRange(ctx.document, stringNode),
               });
@@ -310,7 +321,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
             this.contentScore += 4;
 
             this.verboseDetails.push({
-              message: `model - evaluate: ${str} (+ ${multiplier}): ${this.contentScore}`,
+              message: `model - evaluate: ${str} (+${multiplier}): ${this.contentScore}`,
               severity: DiagnosticSeverity.Information,
               range: toRange(ctx.document, stringNode),
             });
