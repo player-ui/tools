@@ -6,11 +6,11 @@ The runtime is a script injected into the page that's responsible for attaching 
 
 ## Usage
 
-Complexity is measured by a score which is measured against error and warning limits that teams can define.
+Complexity is measured by a score which is measured against error and warning limits.
 
-Teams can set a `maxAcceptableComplexity` which will trigger an error if the complexity score is higher. A score below `maxAcceptableComplexity` but higher than `maxWarningLevel` will return a warning.
+The config supports a `maxAcceptableComplexity` value, which will trigger an error if the complexity score is higher. A score below `maxAcceptableComplexity` but higher than `maxWarningLevel` will return a warning.
 
-To view a complete list of criteria that impacts the complexity score, pass in `options: {verbose: true}` into `ComplexityCheck`.
+To view a complete score breakdown that impacts the complexity score, pass in `-v trace` when running this plugin on content.
 
 ## Tests
 
@@ -28,4 +28,4 @@ A scoring breakdown of what this package analyzes:
 | Asset node in a template      | 2 (+1 per nested) |
 | Evaluation (@[]@)             | 4                 |
 | Expression ({{ }})            | 4                 |
-| View/asset type complexity    | Custom            |
+| View/asset type weight        | Custom            |

@@ -77,35 +77,35 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
     });
 
     service.hooks.onValidateEnd.tap(this.name, (diagnostics, context) => {
-      const diagnosticRange = makeRange(
-        this.range.start,
-        this.range.end,
-        context.documentContext.document
-      );
+      const diagnosticRange = {
+        start: { line: 0, character: 0 },
+        end: { line: 0, character: 0 },
+      };
 
-      if (
-        this.config.typeWeights &&
-        Object.keys(this.config.typeWeights).length > 0
-      ) {
-        this.verboseDetails.push({
-          message: `----- Type Totals -----`,
-          severity: DiagnosticSeverity.Information,
-          range: diagnosticRange,
-        });
-      }
+      // TO DO: Potentially display this in a totals summary within diag-renderer
+      // if (
+      //   this.config.typeWeights &&
+      //   Object.keys(this.config.typeWeights).length > 0
+      // ) {
+      //   this.verboseDetails.push({
+      //     message: `----- Type Totals -----`,
+      //     severity: DiagnosticSeverity.Information,
+      //     range: diagnosticRange,
+      //   });
+      // }
 
-      Object.entries(this.typeCount).forEach(([type, count]) => {
-        if (this.config.typeWeights) {
-          const typeMultiplier = this.config.typeWeights[type];
-          this.verboseDetails.push({
-            message: `${type}: ${count} x ${typeMultiplier} pt = ${
-              count * typeMultiplier
-            }`,
-            severity: DiagnosticSeverity.Information,
-            range: diagnosticRange,
-          });
-        }
-      });
+      // Object.entries(this.typeCount).forEach(([type, count]) => {
+      //   if (this.config.typeWeights) {
+      //     const typeMultiplier = this.config.typeWeights[type];
+      //     this.verboseDetails.push({
+      //       message: `${type}: ${count} x ${typeMultiplier} pt = ${
+      //         count * typeMultiplier
+      //       }`,
+      //       severity: DiagnosticSeverity.Information,
+      //       range: diagnosticRange,
+      //     });
+      //   }
+      // });
 
       const message = `Content complexity is ${this.contentScore}`;
 
@@ -133,13 +133,6 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
           range: diagnosticRange,
         };
       }
-
-      // Add separator for complexity breakdown
-      this.verboseDetails.unshift({
-        message: "----- Score Breakdown -----",
-        severity: DiagnosticSeverity.Information,
-        range: diagnosticRange,
-      });
 
       return [diagnostic, ...diagnostics, ...this.verboseDetails];
     });
@@ -294,7 +287,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
         resolveDataRefs(stringContent, {
           model: {
             get: (binding) => {
-              this.contentScore += 4;
+              this.contentScore += multiplier;
 
               this.verboseDetails.push({
                 message: `model - get: ${binding} (+${multiplier}): ${this.contentScore}`,
@@ -305,7 +298,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
               return binding;
             },
             set: (binding) => {
-              this.contentScore += 4;
+              this.contentScore += multiplier;
 
               this.verboseDetails.push({
                 message: `model - set: ${binding} (+${multiplier}: ${this.contentScore}`,
@@ -318,7 +311,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
             delete: () => {},
           },
           evaluate: (str) => {
-            this.contentScore += 4;
+            this.contentScore += multiplier;
 
             this.verboseDetails.push({
               message: `model - evaluate: ${str} (+${multiplier}): ${this.contentScore}`,
