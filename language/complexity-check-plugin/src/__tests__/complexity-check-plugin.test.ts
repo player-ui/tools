@@ -275,11 +275,10 @@ describe("complexity plugin", () => {
      * Score break down
      * 1 x for each view node (1 total) = 1
      * 1 x from exps in ACTION states (3 total) = 3
-     * 1 x for each asset node (1 total) = 1
-     * 4 x for template asset (1 total) = 2
-     * 2 x for nested template asset (1 total) = 2
+     * 1 x for each asset node (3 total) = 3
+     * 1 x template parent found (3 total) = 3
      * 4 x for each expression (2 total) = 8
-     * 4 x for each data evaluated (1 total) = 8
+     * 4 x for each data evaluated (1 total) = 4
      */
     expect(validations?.map((v) => v.message)[0]).toMatchInlineSnapshot(`
         "Content complexity is 22"
@@ -444,15 +443,13 @@ describe("complexity plugin", () => {
     /**
      * Score break down
      * 1 x for each view node (1 total) = 1
-     * 4 x for each view type = info (1 total) = 2
      * 1 x from exps in ACTION states (3 total) = 3
      * 1 x for each asset node (2 total) = 2
-     * 1 x for each asset type = text (2 total) = 2
      * 4 x for each expression (2 total) = 8
      * 4 x for each data evaluated (1 total) = 4
      */
     expect(validations?.map((v) => v.message)[0]).toMatchInlineSnapshot(`
-      "Content complexity is 18, Warning: 10, Maximum: 20"
+      "Content complexity is 18, Warning: 10"
     `);
     expect(validations?.map((v) => v.severity)[0]).toBe(
       DiagnosticSeverity.Warning

@@ -68,7 +68,7 @@ A scoring breakdown of what this package analyzes:
 | Exp in ACTION states (array)  | 1                                       |
 | View node                     | 1                                       |
 | Asset node                    | 1                                       |
-| Asset node in a template      | 2 (+1 per nested)                       |
+| Template                      | 1 (+1 per nested)                       |
 | Evaluation (@[]@)             | 4                                       |
 | Expression ({{ }})            | 4                                       |
 | View/asset type weight        | `Record<string, number>;`               |

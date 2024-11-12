@@ -35,18 +35,21 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
   private config: ComplexityCheckConfig;
   private typeCount: Record<string, number>;
   private contentScore: number;
-  private range: {
-    start: number;
-    end: number;
-  };
   private verboseDetails: Diagnostic[];
+  private scoreCriteria: Record<string, number>;
 
   constructor(config: ComplexityCheckConfig) {
     this.config = config;
     this.typeCount = {};
     this.contentScore = 0;
-    this.range = { start: 0, end: 0 };
     this.verboseDetails = [];
+    this.scoreCriteria = {
+      expInActionState: 1,
+      assetNode: 1,
+      viewNode: 1,
+      template: 1,
+      model: 4,
+    };
   }
 
   apply(service: PlayerLanguageService): void {
@@ -100,31 +103,26 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
   /** Create a validation visitor for dealing with transition states */
   createContentChecker = (ctx: DocumentContext): ASTVisitor => {
     return {
-      FlowNode: (flowNode) => {
-        this.range = {
-          start: flowNode.jsonNode.offset,
-          end: flowNode.jsonNode.offset + flowNode.jsonNode.length,
-        };
-      },
-
       FlowStateNode: (flowState) => {
         // add complexity per expression in a state
         if (flowState.stateType) {
           if (flowState.stateType.valueNode?.value === "ACTION") {
             const numExp = getProperty(flowState, "exp");
             if (numExp?.valueNode?.type === "array") {
-              this.contentScore += numExp.valueNode.children.length;
+              this.contentScore +=
+                numExp.valueNode.children.length *
+                this.scoreCriteria.expInActionState;
 
               this.verboseDetails.push({
-                message: `state exp (+${numExp.valueNode.children.length}): ${this.contentScore}`,
+                message: `state exp (+${this.scoreCriteria.expInActionState} x ${numExp.valueNode.children.length}): ${this.contentScore}`,
                 severity: DiagnosticSeverity.Information,
                 range: toRange(ctx.document, flowState),
               });
             } else {
-              this.contentScore += 1;
+              this.contentScore += this.scoreCriteria.expInActionState;
 
               this.verboseDetails.push({
-                message: `state exp: ${this.contentScore}`,
+                message: `state exp (+${this.scoreCriteria.expInActionState}): ${this.contentScore}`,
                 severity: DiagnosticSeverity.Information,
                 range: toRange(ctx.document, flowState),
               });
@@ -133,7 +131,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
         }
       },
       AssetNode: (assetNode: AssetASTNode) => {
-        let scoreModifier = 1;
+     
         // recursively check parent nodes for templates
         const checkParentTemplate = (node: ASTNode) => {
           if (node.parent) {
@@ -141,11 +139,13 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
               isPropertyNode(node.parent) &&
               node.parent.keyNode.value === "template"
             ) {
-              // incerases the score modifier for each template parent
-              scoreModifier += 1;
+              // increase the template count each time it finds a nested template
+           
+              this.contentScore +=             
+              this.scoreCriteria.template;
 
               this.verboseDetails.push({
-                message: `found a template parent (+1): ${this.contentScore}`,
+                message: `found a template parent (+${this.scoreCriteria.template}): ${this.contentScore}`,
                 severity: DiagnosticSeverity.Information,
                 range: toRange(ctx.document, assetNode),
               });
@@ -158,7 +158,8 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
         };
 
         checkParentTemplate(assetNode);
-        this.contentScore += scoreModifier;
+        this.contentScore +=
+          this.scoreCriteria.assetNode;
 
         const assetType = assetNode.assetType?.valueNode?.value;
 
@@ -180,26 +181,26 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
               }
             }
             this.verboseDetails.push({
-              message: `assetNode (1 +${typeWeights} for ${assetType}): ${this.contentScore}`,
+              message: `assetNode (${this.scoreCriteria.assetNode} +${typeWeights} for ${assetType}): ${this.contentScore}`,
               severity: DiagnosticSeverity.Information,
               range: toRange(ctx.document, assetNode),
             });
           } else {
             this.verboseDetails.push({
-              message: `assetNode (+1 - ${assetType} complexity type not found): ${this.contentScore}`,
+              message: `assetNode (+${this.scoreCriteria.assetNode} - ${assetType} complexity type not found): ${this.contentScore}`,
               severity: DiagnosticSeverity.Information,
               range: toRange(ctx.document, assetNode),
             });
           }
         } else
           this.verboseDetails.push({
-            message: `assetNode (+1): ${this.contentScore}`,
+            message: `assetNode (+${this.scoreCriteria.assetNode}): ${this.contentScore}`,
             severity: DiagnosticSeverity.Information,
             range: toRange(ctx.document, assetNode),
           });
       },
       ViewNode: (viewNode: ViewASTNode) => {
-        this.contentScore += 1;
+        this.contentScore += this.scoreCriteria.viewNode;
 
         const viewType = viewNode.viewType?.valueNode?.value;
 
@@ -222,34 +223,33 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
               }
             }
             this.verboseDetails.push({
-              message: `viewNode (1 +${viewComplexity} for ${viewType}): ${this.contentScore}`,
+              message: `viewNode (${this.scoreCriteria.viewNode} +${viewComplexity} for ${viewType}): ${this.contentScore}`,
               severity: DiagnosticSeverity.Information,
               range: toRange(ctx.document, viewNode),
             });
           } else {
             this.verboseDetails.push({
-              message: `viewNode (+1 - ${viewType} complexity type not found): ${this.contentScore}`,
+              message: `viewNode (+${this.scoreCriteria.viewNode} - ${viewType} complexity type not found): ${this.contentScore}`,
               severity: DiagnosticSeverity.Information,
               range: toRange(ctx.document, viewNode),
             });
           }
         } else
           this.verboseDetails.push({
-            message: `viewNode (+1): ${this.contentScore}`,
+            message: `viewNode (+${this.scoreCriteria.viewNode}): ${this.contentScore}`,
             severity: DiagnosticSeverity.Information,
             range: toRange(ctx.document, viewNode),
           });
       },
       StringNode: (stringNode) => {
         const stringContent = stringNode.value;
-        const multiplier = 4;
         resolveDataRefs(stringContent, {
           model: {
             get: (binding) => {
-              this.contentScore += multiplier;
+              this.contentScore += this.scoreCriteria.model;
 
               this.verboseDetails.push({
-                message: `model - get: ${binding} (+${multiplier}): ${this.contentScore}`,
+                message: `model - get: ${binding} (+${this.scoreCriteria.get}): ${this.contentScore}`,
                 severity: DiagnosticSeverity.Information,
                 range: toRange(ctx.document, stringNode),
               });
@@ -257,10 +257,10 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
               return binding;
             },
             set: (binding) => {
-              this.contentScore += multiplier;
+              this.contentScore += this.scoreCriteria.model;
 
               this.verboseDetails.push({
-                message: `model - set: ${binding} (+${multiplier}: ${this.contentScore}`,
+                message: `model - set: ${binding} (+${this.scoreCriteria.set}: ${this.contentScore}`,
                 severity: DiagnosticSeverity.Information,
                 range: toRange(ctx.document, stringNode),
               });
@@ -270,10 +270,10 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
             delete: () => {},
           },
           evaluate: (str) => {
-            this.contentScore += multiplier;
+            this.contentScore += this.scoreCriteria.model;
 
             this.verboseDetails.push({
-              message: `model - evaluate: ${str} (+${multiplier}): ${this.contentScore}`,
+              message: `model - evaluate: ${str} (+${this.scoreCriteria.evaluate}): ${this.contentScore}`,
               severity: DiagnosticSeverity.Information,
               range: toRange(ctx.document, stringNode),
             });
