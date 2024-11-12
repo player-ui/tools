@@ -1,9 +1,4 @@
-import {
-  Diagnostic,
-  DiagnosticSeverity,
-  Range,
-} from "vscode-languageserver-types";
-import { TextDocument } from "vscode-languageserver-textdocument";
+import { Diagnostic, DiagnosticSeverity } from "vscode-languageserver-types";
 import { resolveDataRefs } from "@player-ui/player";
 import {
   getProperty,
@@ -20,17 +15,6 @@ import type {
   DocumentContext,
 } from "@player-tools/json-language-service";
 
-const makeRange = (
-  start: number,
-  end: number,
-  document: TextDocument
-): Range => {
-  return {
-    start: document.positionAt(start),
-    end: document.positionAt(end),
-  };
-};
-
 export interface ComplexityCheckConfig {
   /** Cutoff for content to be acceptable */
   maxAcceptableComplexity: number;
@@ -38,7 +22,7 @@ export interface ComplexityCheckConfig {
    * If set, any score above this number but below `maxAcceptableComplexity` will be logged as a warning
    */
   maxWarningLevel?: number;
-  /** If set, maps complexity based on asset or view type */
+  /** If set, maps additional complexity based on asset or view type */
   typeWeights?: Record<string, number>;
 }
 
@@ -66,8 +50,8 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
   }
 
   apply(service: PlayerLanguageService): void {
-    service.hooks.validate.tap(this.name, async (_ctx, validation) => {
-      validation.useASTVisitor(this.createContentChecker(_ctx));
+    service.hooks.validate.tap(this.name, async (ctx, validation) => {
+      validation.useASTVisitor(this.createContentChecker(ctx));
     });
 
     service.hooks.onDocumentUpdate.tap(this.name, () => {
@@ -76,36 +60,11 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
       this.verboseDetails = [];
     });
 
-    service.hooks.onValidateEnd.tap(this.name, (diagnostics, context) => {
+    service.hooks.onValidateEnd.tap(this.name, (diagnostics) => {
       const diagnosticRange = {
         start: { line: 0, character: 0 },
         end: { line: 0, character: 0 },
       };
-
-      // TO DO: Potentially display this in a totals summary within diag-renderer
-      // if (
-      //   this.config.typeWeights &&
-      //   Object.keys(this.config.typeWeights).length > 0
-      // ) {
-      //   this.verboseDetails.push({
-      //     message: `----- Type Totals -----`,
-      //     severity: DiagnosticSeverity.Information,
-      //     range: diagnosticRange,
-      //   });
-      // }
-
-      // Object.entries(this.typeCount).forEach(([type, count]) => {
-      //   if (this.config.typeWeights) {
-      //     const typeMultiplier = this.config.typeWeights[type];
-      //     this.verboseDetails.push({
-      //       message: `${type}: ${count} x ${typeMultiplier} pt = ${
-      //         count * typeMultiplier
-      //       }`,
-      //       severity: DiagnosticSeverity.Information,
-      //       range: diagnosticRange,
-      //     });
-      //   }
-      // });
 
       const message = `Content complexity is ${this.contentScore}`;
 
@@ -121,7 +80,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
           this.contentScore > this.config.maxWarningLevel
         ) {
           diagnostic = {
-            message: `${message}, Warning: ${this.config.maxWarningLevel}, Maximum: ${this.config.maxAcceptableComplexity}`,
+            message: `${message}, Warning: ${this.config.maxWarningLevel}`,
             severity: DiagnosticSeverity.Warning,
             range: diagnosticRange,
           };

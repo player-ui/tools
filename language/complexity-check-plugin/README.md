@@ -2,15 +2,58 @@
 
 Evaluate your content's complexity against a set of criteria to understand potential performance impact in product and reduce costly runtime calculations.
 
-The runtime is a script injected into the page that's responsible for attaching to any running player instances. It injects a global __Player_Devtools plugin that's used to send events to and from the content script (and thus the rest of the ecosystem).
+## Config
 
-## Usage
+### `maxAcceptableComplexity`
 
-Complexity is measured by a score which is measured against error and warning limits.
+The config requires a `maxAcceptableComplexity` value, which will trigger an error if the complexity score returned is higher.
 
-The config supports a `maxAcceptableComplexity` value, which will trigger an error if the complexity score is higher. A score below `maxAcceptableComplexity` but higher than `maxWarningLevel` will return a warning.
+```ts
+  maxAcceptableComplexity: number;
 
-To view a complete score breakdown that impacts the complexity score, pass in `-v trace` when running this plugin on content.
+  // Example readout
+  ERROR 126:13  Content complexity is 800, Maximum: 500 path/to/file
+```
+
+### `maxWarningLevel`
+
+A score higher than `maxWarningLevel` but lower than `maxAcceptableComplexity` will return a warning.
+
+```ts
+  maxWarningLevel?: number;
+
+  // Example readout
+  WARN 126:13  Content complexity is 400, Warning: 350 path/to/file
+```
+
+### `typeWeights`
+
+Assign additional points based on view or asset type complexity.
+
+```ts
+  typeWeights?: Record<string, number>;
+```
+
+## Implementation
+
+```ts
+import { ComplexityCheck } from '@player-tools/complexity-check-plugin';
+
+new ComplexityCheck({
+    maxAcceptableComplexity: 500,
+    maxWarningLevel: 350,
+    typeWeights: {
+        action: 9.5,
+        badge: 2,
+        image: 7.5,
+        video: 8,
+    }
+})
+```
+
+## Verbose logging
+
+To view a complete score breakdown that impacts the complexity score, pass in `-v trace` when running this plugin on content, for example `yarn run player json validate -v trace`.
 
 ## Tests
 
@@ -20,12 +63,12 @@ To view a complete score breakdown that impacts the complexity score, pass in `-
 
 A scoring breakdown of what this package analyzes:
 
-| Criteria                      | Points            |
-|-------------------------------|-------------------|
-| Exp in ACTION states (array)  | 1                 |
-| View node                     | 1                 |
-| Asset node                    | 1                 |
-| Asset node in a template      | 2 (+1 per nested) |
-| Evaluation (@[]@)             | 4                 |
-| Expression ({{ }})            | 4                 |
-| View/asset type weight        | Custom            |
+| Criteria                      | Points                                  |
+|-------------------------------|-----------------------------------------|
+| Exp in ACTION states (array)  | 1                                       |
+| View node                     | 1                                       |
+| Asset node                    | 1                                       |
+| Asset node in a template      | 2 (+1 per nested)                       |
+| Evaluation (@[]@)             | 4                                       |
+| Expression ({{ }})            | 4                                       |
+| View/asset type weight        | `Record<string, number>;`               |
