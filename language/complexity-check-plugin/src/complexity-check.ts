@@ -131,7 +131,6 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
         }
       },
       AssetNode: (assetNode: AssetASTNode) => {
-     
         // recursively check parent nodes for templates
         const checkParentTemplate = (node: ASTNode) => {
           if (node.parent) {
@@ -140,9 +139,8 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
               node.parent.keyNode.value === "template"
             ) {
               // increase the template count each time it finds a nested template
-           
-              this.contentScore +=             
-              this.scoreCriteria.template;
+
+              this.contentScore += this.scoreCriteria.template;
 
               this.verboseDetails.push({
                 message: `found a template parent (+${this.scoreCriteria.template}): ${this.contentScore}`,
@@ -158,8 +156,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
         };
 
         checkParentTemplate(assetNode);
-        this.contentScore +=
-          this.scoreCriteria.assetNode;
+        this.contentScore += this.scoreCriteria.assetNode;
 
         const assetType = assetNode.assetType?.valueNode?.value;
 
