@@ -15,6 +15,16 @@ import type {
   DocumentContext,
 } from "@player-tools/json-language-service";
 
+const BASE_WEIGHTS = {
+  expInActionState: 1,
+  assetNode: 1,
+  viewNode: 1,
+  template: 1,
+  modelGet: 4,
+  modelSet: 4,
+  modelEvaluate: 4,
+};
+
 export interface ComplexityCheckConfig {
   /** Cutoff for content to be acceptable */
   maxAcceptableComplexity: number;
@@ -24,6 +34,8 @@ export interface ComplexityCheckConfig {
   maxWarningLevel?: number;
   /** If set, maps additional complexity based on asset or view type */
   typeWeights?: Record<string, number>;
+  /** If set, assign override values for the keys specified from baseWeights */
+  baseWeightOverrides?: Partial<Record<keyof typeof BASE_WEIGHTS, number>>;
 }
 
 /**
@@ -43,13 +55,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
     this.typeCount = {};
     this.contentScore = 0;
     this.verboseDetails = [];
-    this.scoreCriteria = {
-      expInActionState: 1,
-      assetNode: 1,
-      viewNode: 1,
-      template: 1,
-      model: 4,
-    };
+    this.scoreCriteria = { ...BASE_WEIGHTS, ...config.baseWeightOverrides };
   }
 
   apply(service: PlayerLanguageService): void {
@@ -104,7 +110,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
   createContentChecker = (ctx: DocumentContext): ASTVisitor => {
     return {
       FlowStateNode: (flowState) => {
-        // add complexity per expression in a state
+        // Add complexity per expression in a state
         if (flowState.stateType) {
           if (flowState.stateType.valueNode?.value === "ACTION") {
             const numExp = getProperty(flowState, "exp");
@@ -131,14 +137,14 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
         }
       },
       AssetNode: (assetNode: AssetASTNode) => {
-        // recursively check parent nodes for templates
+        // Recursively check parent nodes for templates
         const checkParentTemplate = (node: ASTNode) => {
           if (node.parent) {
             if (
               isPropertyNode(node.parent) &&
               node.parent.keyNode.value === "template"
             ) {
-              // increase the template count each time it finds a nested template
+              // Increase the template count each time it finds a nested template
 
               this.contentScore += this.scoreCriteria.template;
 
@@ -170,7 +176,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
           if (typeWeights) {
             this.contentScore += typeWeights;
             if (assetType) {
-              // if an assetType is found, add 1 point to typeCount for each occurrence
+              // If an assetType is found, add 1 point to typeCount for each occurrence
               if (this.typeCount[assetType] !== undefined) {
                 this.typeCount[assetType] += 1;
               } else {
@@ -212,7 +218,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
             this.contentScore += viewComplexity;
 
             if (viewType) {
-              // if a viewType is found, add 1 point to typeCount for each occurrence
+              // If a viewType is found, add 1 point to typeCount for each occurrence
               if (this.typeCount[viewType] !== undefined) {
                 this.typeCount[viewType] += 1;
               } else {
@@ -243,10 +249,10 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
         resolveDataRefs(stringContent, {
           model: {
             get: (binding) => {
-              this.contentScore += this.scoreCriteria.model;
+              this.contentScore += this.scoreCriteria.modelGet;
 
               this.verboseDetails.push({
-                message: `model - get: ${binding} (+${this.scoreCriteria.get}): ${this.contentScore}`,
+                message: `model - get: ${binding} (+${this.scoreCriteria.modelGet}): ${this.contentScore}`,
                 severity: DiagnosticSeverity.Information,
                 range: toRange(ctx.document, stringNode),
               });
@@ -254,10 +260,10 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
               return binding;
             },
             set: (binding) => {
-              this.contentScore += this.scoreCriteria.model;
+              this.contentScore += this.scoreCriteria.modelSet;
 
               this.verboseDetails.push({
-                message: `model - set: ${binding} (+${this.scoreCriteria.set}: ${this.contentScore}`,
+                message: `model - set: ${binding} (+${this.scoreCriteria.modelSet}: ${this.contentScore}`,
                 severity: DiagnosticSeverity.Information,
                 range: toRange(ctx.document, stringNode),
               });
@@ -267,10 +273,10 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
             delete: () => {},
           },
           evaluate: (str) => {
-            this.contentScore += this.scoreCriteria.model;
+            this.contentScore += this.scoreCriteria.modelEvaluate;
 
             this.verboseDetails.push({
-              message: `model - evaluate: ${str} (+${this.scoreCriteria.evaluate}): ${this.contentScore}`,
+              message: `model - evaluate: ${str} (+${this.scoreCriteria.modelEvaluate}): ${this.contentScore}`,
               severity: DiagnosticSeverity.Information,
               range: toRange(ctx.document, stringNode),
             });

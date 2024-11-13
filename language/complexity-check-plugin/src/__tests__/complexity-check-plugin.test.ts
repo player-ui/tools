@@ -455,4 +455,93 @@ describe("complexity plugin", () => {
       DiagnosticSeverity.Warning
     );
   });
+
+  test("Calculates custom score criteria correctly", async () => {
+    let customService: PlayerLanguageService = new PlayerLanguageService();
+
+    customService = new PlayerLanguageService();
+    customService.addLSPPlugin(
+      new ComplexityCheck({
+        maxAcceptableComplexity: 20,
+        maxWarningLevel: 10,
+        baseWeightOverrides: {
+          assetNode: 4,
+        },
+      })
+    );
+    await customService.setAssetTypesFromModule([
+      Types,
+      ReferenceAssetsWebPluginManifest,
+    ]);
+
+    const textDocument = toTextDocument(
+      JSON.stringify({
+        id: "test",
+        views: [
+          {
+            id: "yes",
+            type: "info",
+            title: {
+              asset: {
+                id: "info-title",
+                type: "text",
+                value: "{{some.infoText}}",
+              },
+            },
+            subTitle: {
+              asset: {
+                id: "info-subTitle",
+                type: "text",
+                value: "@[something]@",
+              },
+            },
+          },
+        ],
+        navigation: {
+          BEGIN: "FLOW_1",
+          FLOW_1: {
+            startState: "ACTION_1",
+            ACTION_1: {
+              state_type: "ACTION",
+              exp: ["something"],
+              transitions: {
+                "*": "VIEW_1",
+              },
+            },
+            VIEW_1: {
+              state_type: "VIEW",
+              ref: "yes",
+              transitions: {
+                "*": "ACTION_2",
+              },
+            },
+            ACTION_2: {
+              state_type: "ACTION",
+              exp: ["{{somethingElse}} = 1", "something else"],
+              transitions: {
+                "*": "VIEW_1",
+              },
+            },
+          },
+        },
+      })
+    );
+
+    const validations = await customService.validateTextDocument(textDocument);
+    expect(validations).toHaveLength(9);
+    /**
+     * Score break down
+     * 1 x for each view node (1 total) = 1
+     * 1 x from exps in ACTION states (3 total) = 3
+     * 4 x for each asset node (2 total) = 8
+     * 4 x for each expression (2 total) = 8
+     * 4 x for each data evaluated (1 total) = 4
+     */
+    expect(validations?.map((v) => v.message)[0]).toMatchInlineSnapshot(`
+      "Content complexity is 24, Maximum: 20"
+    `);
+    expect(validations?.map((v) => v.severity)[0]).toBe(
+      DiagnosticSeverity.Error
+    );
+  });
 });

@@ -34,6 +34,10 @@ Assign additional points based on view or asset type complexity.
   typeWeights?: Record<string, number>;
 ```
 
+### `baseWeightOverrides`
+
+Assign optional override values to base weights.
+
 ## Implementation
 
 ```ts
@@ -59,7 +63,7 @@ To view a complete score breakdown that impacts the complexity score, pass in `-
 
 `bazel test //language/complexity-check-plugin:complexity-check-plugin_vitest --test_output=all`
 
-## Scoring criteria
+## Scoring criteria - base weights
 
 A scoring breakdown of what this package analyzes:
 
@@ -69,6 +73,6 @@ A scoring breakdown of what this package analyzes:
 | View node                     | 1                                       |
 | Asset node                    | 1                                       |
 | Template                      | 1 (+1 per nested)                       |
-| Evaluation (@[]@)             | 4                                       |
-| Expression ({{ }})            | 4                                       |
+| Model - Evaluation (@[]@)     | 4                                       |
+| Model - Get ({{ }})           | 4                                       |
 | View/asset type weight        | `Record<string, number>;`               |
