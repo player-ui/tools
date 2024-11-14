@@ -132,6 +132,9 @@ importers:
       '@types/fs-extra':
         specifier: ^9.0.13
         version: 9.0.13
+      '@types/lodash.merge':
+        specifier: ^4.3.9
+        version: 4.6.9
       '@types/lodash.set':
         specifier: ^4.3.9
         version: 4.3.9
@@ -300,6 +303,9 @@ importers:
       lint-staged:
         specifier: ^11.2.3
         version: 11.2.6
+      lodash.merge:
+        specifier: ^4.3.2
+        version: 4.6.2
       lodash.set:
         specifier: ^4.3.2
         version: 4.3.2
@@ -3945,6 +3951,9 @@ packages:
 
   '@types/lockfile@1.0.4':
     resolution: {integrity: sha512-Q8oFIHJHr+htLrTXN2FuZfg+WXVHQRwU/hC2GpUu+Q8e3FUM9EDkS2pE3R2AO1ZGu56f479ybdMCNF1DAu8cAQ==, tarball: https://registry.npmjs.org/@types/lockfile/-/lockfile-1.0.4.tgz}
+
+  '@types/lodash.merge@4.6.9':
+    resolution: {integrity: sha512-23sHDPmzd59kUgWyKGiOMO2Qb9YtqRO/x4IhkgNUiPQ1+5MUVqi6bCZeq9nBJ17msjIMbEIO5u+XW4Kz6aGUhQ==, tarball: https://registry.npmjs.org/@types/lodash.merge/-/lodash.merge-4.6.9.tgz}
 
   '@types/lodash.mergewith@4.6.6':
     resolution: {integrity: sha512-RY/8IaVENjG19rxTZu9Nukqh0W2UrYgmBj5sdns4hWRZaV8PqR7wIKHFKzvOTjo4zVRV7sVI+yFhAJql12Kfqg==, tarball: https://registry.npmjs.org/@types/lodash.mergewith/-/lodash.mergewith-4.6.6.tgz}
@@ -16616,6 +16625,10 @@ snapshots:
       '@types/node': 18.19.47
 
   '@types/lockfile@1.0.4': {}
+
+  '@types/lodash.merge@4.6.9':
+    dependencies:
+      '@types/lodash': 4.17.7
 
   '@types/lodash.mergewith@4.6.6':
     dependencies:
