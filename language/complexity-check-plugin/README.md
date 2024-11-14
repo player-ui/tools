@@ -48,9 +48,9 @@ new ComplexityCheck({
     maxWarningLevel: 350,
     typeWeights: {
         action: 9.5,
-        badge: 2,
-        image: 7.5,
-        video: 8,
+        text: 2,
+        collection: 7.5,
+        input: 8,
     }
 })
 ```
