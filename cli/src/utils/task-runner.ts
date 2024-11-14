@@ -1,4 +1,5 @@
 import logUpdate from "log-update";
+import { DiagnosticSeverity } from "vscode-languageserver-types";
 
 /* eslint-disable no-param-reassign */
 interface BaseTask<Results, Data> {
@@ -44,6 +45,9 @@ export interface TaskProgressRenderer<ResultType, Data = unknown> {
   onUpdate: (ctx: {
     /** The tasks that are running */
     tasks: Array<Task<ResultType, Data>>;
+
+    /** What level of information to log */
+    loglevel: DiagnosticSeverity
   }) => string;
 
   /** Called for a summary */
@@ -53,6 +57,9 @@ export interface TaskProgressRenderer<ResultType, Data = unknown> {
 
     /** Number of ms it took to run */
     duration: number;
+
+    /** What level of information to log */
+    loglevel: DiagnosticSeverity
   }) => string;
 }
 
@@ -68,12 +75,16 @@ interface TaskRunner<R, Data> {
 export const createTaskRunner = <R, D>({
   tasks,
   renderer,
+  loglevel,
 }: {
   /** A list of tasks to run */
   tasks: Array<Pick<BaseTask<R, D>, "data" | "run">>;
 
   /** How to report progress */
   renderer: TaskProgressRenderer<R, D>;
+
+  /** What level of logs to write */
+  loglevel: DiagnosticSeverity
 }): TaskRunner<R, D> => {
   const statefulTasks: Array<Task<R, D>> = tasks.map((t) => {
     return {
@@ -93,7 +104,7 @@ export const createTaskRunner = <R, D>({
         return;
       }
 
-      const output = renderer.onUpdate({ tasks: statefulTasks });
+      const output = renderer.onUpdate({ tasks: statefulTasks, loglevel });
       if (process.stdout.isTTY) {
         logUpdate(output);
       }
@@ -122,6 +133,7 @@ export const createTaskRunner = <R, D>({
     const output = renderer.onEnd({
       duration,
       tasks: statefulTasks as Array<CompletedTask<R, D>>,
+      loglevel
     });
 
     console.log(output);

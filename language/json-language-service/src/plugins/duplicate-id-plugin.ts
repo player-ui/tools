@@ -110,7 +110,7 @@ const createValidationVisitor = (ctx: ValidationContext): ASTVisitor => {
 export class DuplicateIDPlugin implements PlayerLanguageServicePlugin {
   name = "duplicate-id";
 
-  apply(service: PlayerLanguageService) {
+  apply(service: PlayerLanguageService): void {
     service.hooks.validate.tap(this.name, async (ctx, validation) => {
       validation.useASTVisitor(createValidationVisitor(validation));
     });

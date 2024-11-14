@@ -19,6 +19,7 @@ js_pipeline(
         ":node_modules/@player-tools/xlr",
         ":node_modules/@player-tools/xlr-sdk",
         ":node_modules/@player-tools/xlr-utils",
+        "//:node_modules/@player-ui/player",
         "//:node_modules/change-case",
         "//:node_modules/cross-fetch",
         "//:node_modules/detect-indent",

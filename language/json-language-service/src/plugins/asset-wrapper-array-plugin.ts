@@ -51,7 +51,7 @@ const checkSwitchCase = (node: StringASTNode): boolean => {
 export class AssetWrapperArrayPlugin implements PlayerLanguageServicePlugin {
   name = "asset-wrapper-to-array";
 
-  apply(service: PlayerLanguageService) {
+  apply(service: PlayerLanguageService): void {
     service.hooks.validate.tap(
       this.name,
       async (documentInfo, validationContext) => {

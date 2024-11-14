@@ -9,6 +9,7 @@ packages:
   - "language/json-language-service"
   - "language/json-language-server"
   - "language/dsl"
+  - "language/complexity-check-plugin"
   - "helpers"
   - "devtools/types"
   - "devtools/plugins/mobile/flipper-desktop-client"
