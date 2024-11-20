@@ -212,7 +212,10 @@ export default class DSLCompile extends BaseCommand {
               return result.output?.outputFile ?? "";
             }),
           ...(exp ? ["--exp"] : []),
-          `-s ${severity} -v ${loglevel}`
+          "-s",
+          severity,
+          "-v",
+          loglevel,
         ]);
       } else {
         console.log("No output to validate");
