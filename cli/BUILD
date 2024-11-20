@@ -32,7 +32,6 @@ deps = [
     "//:node_modules/@babel/preset-typescript",
     "//:node_modules/@babel/register",
     "//:node_modules/@oclif/core",
-    "//:node_modules/@oclif/plugin-legacy",
     "//:node_modules/@oclif/plugin-plugins",
     "//:node_modules/chalk",
     "//:node_modules/cosmiconfig",
