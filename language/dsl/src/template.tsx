@@ -40,7 +40,8 @@ export interface TemplateProps {
 function addTemplateToObject(
   obj: ObjectNode,
   templateObj: ObjectNode,
-  templateParentNodeType: string
+  templateParentNodeType: string,
+  insertionIndex: number | undefined
 ): () => void {
   // find a template property
   // add one if none exists
@@ -52,7 +53,11 @@ function addTemplateToObject(
   if (!templateProp) {
     templateProp = new PropertyNode(new ValueNode("template"), new ArrayNode());
     templateProp.parent = obj;
-    obj.properties.push(templateProp);
+    obj.properties.splice(
+      insertionIndex ?? obj.properties.length - 1,
+      0,
+      templateProp
+    );
   }
 
   const templateItems = templateProp.valueNode as ArrayNode;
@@ -161,8 +166,35 @@ export const Template = (props: TemplateProps) => {
         return;
       }
 
+      let prefix = false;
+      if (
+        proxyRef.current.parent &&
+        proxyRef.current.parent.type === "array" &&
+        proxyRef.current.parent.items[0].type === "proxy"
+      ) {
+        prefix = true;
+      }
+
+      const containingSlot = proxyRef.current.parent?.parent;
+      let insertionIndex = undefined;
+      if (
+        containingSlot &&
+        containingSlot.type === "property" &&
+        containingSlot.keyNode.type === "value"
+      ) {
+        insertionIndex = parentObject.properties.findIndex((properties) => {
+          return properties.keyNode.value === containingSlot.keyNode.value;
+        });
+        insertionIndex = prefix ? insertionIndex : insertionIndex + 1;
+      }
+
       // remove the template when unmounted
-      return addTemplateToObject(parentObject, templateObj, outputProp);
+      return addTemplateToObject(
+        parentObject,
+        templateObj,
+        outputProp,
+        insertionIndex
+      );
     }
   }, [proxyRef, outputProp, outputElement.items]);
 

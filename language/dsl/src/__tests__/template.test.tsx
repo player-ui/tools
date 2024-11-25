@@ -75,6 +75,114 @@ test("works if already in a template array", async () => {
   });
 });
 
+test("Template Order is preserved", async () => {
+  const element = (
+    <Collection id="view-1">
+      <Collection.Values>
+        <Collection>
+          <Collection.Label>
+            This collection has a template first
+          </Collection.Label>
+          <Collection.Values>
+            <Template data={b`foo`}>
+              <Text>Dynamic Item _index_</Text>
+            </Template>
+            <Text>Static Item</Text>
+          </Collection.Values>
+        </Collection>
+
+        <Collection>
+          <Collection.Label>
+            This collection has a template last
+          </Collection.Label>
+          <Collection.Values>
+            <Text>Static Item</Text>
+            <Template data={b`foo`}>
+              <Text>Dynamic Item _index_</Text>
+            </Template>
+          </Collection.Values>
+        </Collection>
+      </Collection.Values>
+    </Collection>
+  );
+  expect((await render(element)).jsonValue).toStrictEqual({
+    id: "view-1",
+    type: "collection",
+    values: [
+      {
+        asset: {
+          id: "view-1-values-0",
+          type: "collection",
+          label: {
+            asset: {
+              id: "view-1-values-0-label",
+              type: "text",
+              value: "This collection has a template first",
+            },
+          },
+          template: [
+            {
+              data: "foo",
+              output: "values",
+              value: {
+                asset: {
+                  id: "view-1-values-0-values-_index_",
+                  type: "text",
+                  value: "Dynamic Item _index_",
+                },
+              },
+            },
+          ],
+          values: [
+            {
+              asset: {
+                id: "view-1-values-0-values-1",
+                type: "text",
+                value: "Static Item",
+              },
+            },
+          ],
+        },
+      },
+      {
+        asset: {
+          id: "view-1-values-1",
+          type: "collection",
+          label: {
+            asset: {
+              id: "view-1-values-1-label",
+              type: "text",
+              value: "This collection has a template last",
+            },
+          },
+          values: [
+            {
+              asset: {
+                id: "view-1-values-1-values-0",
+                type: "text",
+                value: "Static Item",
+              },
+            },
+          ],
+          template: [
+            {
+              data: "foo",
+              output: "values",
+              value: {
+                asset: {
+                  id: "view-1-values-1-values-_index_",
+                  type: "text",
+                  value: "Dynamic Item _index_",
+                },
+              },
+            },
+          ],
+        },
+      },
+    ],
+  });
+});
+
 test("template will delete empty arrays related to the template only", async () => {
   const element = (
     <Collection>
