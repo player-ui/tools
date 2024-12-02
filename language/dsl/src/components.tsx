@@ -17,6 +17,7 @@ import {
   flattenChildren,
   mergeRefs,
 } from "./utils";
+import type { BindingTemplateInstance } from "./string-templates";
 
 export type AssetProps = PlayerApplicability & {
   /** id of the asset */
@@ -86,6 +87,24 @@ export const Asset = React.forwardRef<ObjectNode, AssetProps>((props, ref) => {
   const localRef = React.useRef<ObjectNode>(null);
   const Wrapper = slotContext?.wrapInAsset ? AssetWrapper : React.Fragment;
 
+  // Check to see if the applicability type is a binding using type BindingTemplateInstance
+  const isBinding = (obj: any): obj is BindingTemplateInstance => {
+    return obj && obj.__type === "binding";
+  };
+
+  const getResolvedValue = () => {
+    if (applicability !== undefined){
+      if (typeof applicability === "boolean") {
+        return applicability;
+      }
+      if (isBinding(applicability)) {
+        // converts bindings to use {{ }}
+        return applicability.toString();
+      }
+      return applicability.toValue();
+    }
+  };
+
   return (
     <Wrapper
       ref={slotContext?.wrapInAsset ? mergeRefs([ref, localRef]) : undefined}
@@ -107,13 +126,7 @@ export const Asset = React.forwardRef<ObjectNode, AssetProps>((props, ref) => {
               <property name="type">{type}</property>
               {applicability !== undefined && (
                 <property name="applicability">
-                  <value
-                    value={
-                      typeof applicability === "boolean"
-                        ? applicability
-                        : applicability.toValue()
-                    }
-                  />
+                  <value value={getResolvedValue()} />
                 </property>
               )}
               {toJsonProperties(rest)}
