@@ -1,7 +1,7 @@
 import { test, expect, describe } from "vitest";
 import React from "react";
 import { render } from "react-json-reconciler";
-import { binding as b } from "../string-templates";
+import { binding as b, expression as e } from "../string-templates";
 import { Switch } from "../switch";
 import {
   Collection,
@@ -222,7 +222,7 @@ describe("components", () => {
       expect(element.jsonValue).toStrictEqual({
         id: "custom-id",
         type: "input",
-        applicability: "foo.bar.baz",
+        applicability: "{{foo.bar.baz}}",
         label: {
           asset: {
             type: "text",
@@ -252,6 +252,60 @@ describe("components", () => {
           },
         },
       });
+    });
+
+    test("works with bindings", async () => {
+      const show = b`show`;
+      const App = () => {
+        return (
+          <Collection>
+            <Collection.Values>
+              <Text applicability={show}>
+                Hidden - using a binding for applicability
+              </Text>
+              <Text applicability={e`${show}`}>
+                Hidden - using an expression for applicability
+              </Text>
+              <Text applicability={true}>
+                Hidden - using a boolean for applicability
+              </Text>
+            </Collection.Values>
+          </Collection>
+        );
+      };
+
+      expect((await render(<App />)).jsonValue).toMatchInlineSnapshot(`
+        {
+          "id": "root",
+          "type": "collection",
+          "values": [
+            {
+              "asset": {
+                "applicability": "{{show}}",
+                "id": "values-0",
+                "type": "text",
+                "value": "Hidden - using a binding for applicability",
+              },
+            },
+            {
+              "asset": {
+                "applicability": "{{show}}",
+                "id": "values-1",
+                "type": "text",
+                "value": "Hidden - using an expression for applicability",
+              },
+            },
+            {
+              "asset": {
+                "applicability": true,
+                "id": "values-2",
+                "type": "text",
+                "value": "Hidden - using a boolean for applicability",
+              },
+            },
+          ],
+        }
+      `);
     });
   });
 
