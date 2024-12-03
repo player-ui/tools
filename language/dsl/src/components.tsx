@@ -93,7 +93,7 @@ export const Asset = React.forwardRef<ObjectNode, AssetProps>((props, ref) => {
   };
 
   const getResolvedValue = () => {
-    if (applicability !== undefined){
+    if (applicability !== undefined) {
       if (typeof applicability === "boolean") {
         return applicability;
       }
