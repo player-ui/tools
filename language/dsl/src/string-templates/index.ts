@@ -214,3 +214,15 @@ export const isTemplateStringInstance = (
     (val as any)[OpaqueIdentifier] === true
   );
 };
+
+/** Check if a value is a binding */
+export const isBindingTemplateInstance = (
+  val: unknown
+): val is BindingTemplateInstance => {
+  return (
+    val !== null &&
+    typeof val === "object" &&
+    (val as any)[OpaqueIdentifier] === true &&
+    (val as BindingTemplateInstance).__type === "binding"
+  );
+};
