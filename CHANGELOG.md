@@ -1,3 +1,105 @@
+# 0.9.0 (Fri Jan 10 2025)
+
+### Release Notes
+
+#### Preserve Order of Templates in Slots ([#177](https://github.com/player-ui/tools/pull/177))
+
+Fix an issue where Template components in slots that contained a static element wouldn't be serialized to JSON in the same order they were authored in.
+
+<!-- 
+
+Describe what's changing, why, and any other background info.
+
+Make sure to add:
+  - Tests
+  - Documentation Updates
+
+-->
+
+
+### Change Type (required)
+Indicate the type of change your pull request is:
+
+<!-- 
+  We use semantic versioning: https://semver.org/. Review that documentation for 
+  more detailed guidelines.
+-->
+- [x] `patch`
+- [ ] `minor`
+- [ ] `major`
+
+<!--
+  To include release notes in the automatic changelong, just add a level 1 markdown header below
+  and include any markdown notes to go into the changelog: https://intuit.github.io/auto/docs/generated/changelog#additional-release-notes
+
+  Example:
+
+  # Release Notes
+  Added new plugin, to use it:
+  ```typescript
+  const plugin = new Plugin(...)
+  ```
+-->
+
+#### Remove Unneeded Dependency ([#178](https://github.com/player-ui/tools/pull/178))
+
+- Remove unneeded dependency `@oclif/plugin-legacy`
+- Fix issue with how the DSL compilation command passed arguments to the JSON validation plugin
+
+### Change Type (required)
+Indicate the type of change your pull request is:
+
+<!-- 
+  We use semantic versioning: https://semver.org/. Review that documentation for 
+  more detailed guidelines.
+-->
+- [x] `patch`
+- [ ] `minor`
+- [ ] `major`
+
+<!--
+  To include release notes in the automatic changelong, just add a level 1 markdown header below
+  and include any markdown notes to go into the changelog: https://intuit.github.io/auto/docs/generated/changelog#additional-release-notes
+
+  Example:
+
+  # Release Notes
+  Added new plugin, to use it:
+  ```typescript
+  const plugin = new Plugin(...)
+  ```
+-->
+
+#### Add options to LSPAssetsPlugin to load from TSManifest via module import ([#171](https://github.com/player-ui/tools/pull/171))
+
+Allow for loading XLRs to LSP via module imports. Add explicit (optional for now) toggle for distinguishing between module and manifest loading.
+
+---
+
+#### 🚀 Enhancement
+
+- Multiple devtools plugin fix [#174](https://github.com/player-ui/tools/pull/174) ([@mercillo](https://github.com/mercillo))
+
+#### 🐛 Bug Fix
+
+- Release main [#181](https://github.com/player-ui/tools/pull/181) ([@intuit-svc](https://github.com/intuit-svc))
+- Support bindings for applicability [#180](https://github.com/player-ui/tools/pull/180) ([@kharrop](https://github.com/kharrop))
+- Preserve Order of Templates in Slots [#177](https://github.com/player-ui/tools/pull/177) ([@KetanReddy](https://github.com/KetanReddy))
+- Remove Unneeded Dependency [#178](https://github.com/player-ui/tools/pull/178) ([@KetanReddy](https://github.com/KetanReddy))
+- feat: complexity checker plugin [#169](https://github.com/player-ui/tools/pull/169) ([@KetanReddy](https://github.com/KetanReddy) [@kharrop](https://github.com/kharrop) [@cehan-Chloe](https://github.com/cehan-Chloe) [@rafbcampos](https://github.com/rafbcampos) [@intuit-svc](https://github.com/intuit-svc) [@mercillo](https://github.com/mercillo))
+- Add options to LSPAssetsPlugin to load from TSManifest via module import [#171](https://github.com/player-ui/tools/pull/171) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### Authors: 6
+
+- [@intuit-svc](https://github.com/intuit-svc)
+- Chloeeeeeee ([@cehan-Chloe](https://github.com/cehan-Chloe))
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+- Marlon "Marky" Ercillo ([@mercillo](https://github.com/mercillo))
+- Rafael Campos ([@rafbcampos](https://github.com/rafbcampos))
+
+---
+
 # 0.8.1 (Thu Sep 26 2024)
 
 ### Release Notes
