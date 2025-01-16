@@ -78,45 +78,49 @@ export const applyAssetWrapperOrSwitch: TransformFunction = (
  * Modifies any primitive type property node (except id/type) to be Bindings or Expressions
  */
 export const applyValueRefs: TransformFunction = (node, capability) => {
-  return simpleTransformGenerator("object", "Assets", (inputNode) => {
-    const xlrNode = { ...inputNode };
-    for (const key in xlrNode.properties) {
-      if (key === "id" || key === "type") {
-        continue;
+  return simpleTransformGenerator(
+    "object",
+    ["Assets", "Views"],
+    (inputNode) => {
+      const xlrNode = { ...inputNode };
+      for (const key in xlrNode.properties) {
+        if (key === "id") {
+          continue;
+        }
+
+        const value = xlrNode.properties[key];
+        if (value.node.type === "or") {
+          value.node.or.push({
+            type: "ref",
+            ref: "ExpressionRef",
+          });
+          value.node.or.push({
+            type: "ref",
+            ref: "BindingRef",
+          });
+        } else if (isPrimitiveTypeNode(value.node)) {
+          const newUnionType: OrType = {
+            type: "or",
+            description: value.node.description,
+            or: [
+              value.node,
+              {
+                type: "ref",
+                ref: "ExpressionRef",
+              },
+              {
+                type: "ref",
+                ref: "BindingRef",
+              },
+            ],
+          };
+          value.node = newUnionType;
+        }
       }
 
-      const value = xlrNode.properties[key];
-      if (value.node.type === "or") {
-        value.node.or.push({
-          type: "ref",
-          ref: "ExpressionRef",
-        });
-        value.node.or.push({
-          type: "ref",
-          ref: "BindingRef",
-        });
-      } else if (isPrimitiveTypeNode(value.node)) {
-        const newUnionType: OrType = {
-          type: "or",
-          description: value.node.description,
-          or: [
-            value.node,
-            {
-              type: "ref",
-              ref: "ExpressionRef",
-            },
-            {
-              type: "ref",
-              ref: "BindingRef",
-            },
-          ],
-        };
-        value.node = newUnionType;
-      }
+      return xlrNode;
     }
-
-    return xlrNode;
-  })(node, capability);
+  )(node, capability);
 };
 
 /**

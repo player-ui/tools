@@ -339,10 +339,24 @@ exports[`Transform Tests > applyValueRefs Transform 1`] = `
     },
     "type": {
       "node": {
-        "const": "mock",
         "description": "The asset type determines the semantics of how a user interacts with a page",
-        "title": "Asset.type",
-        "type": "string",
+        "or": [
+          {
+            "const": "mock",
+            "description": "The asset type determines the semantics of how a user interacts with a page",
+            "title": "Asset.type",
+            "type": "string",
+          },
+          {
+            "ref": "ExpressionRef",
+            "type": "ref",
+          },
+          {
+            "ref": "BindingRef",
+            "type": "ref",
+          },
+        ],
+        "type": "or",
       },
       "required": true,
     },
