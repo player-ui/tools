@@ -23,7 +23,7 @@ class NextChangelogsPlugin {
       const [latest, second] = getLatestReleaseTags();
       if (dryRun) {
         auto.logger.log.info(
-          `Dry run: making changelog from last release: ${latestRelease}`,
+          `Dry run: making changelog from ${second} -> ${latest}`
         );
       } else {
         await auto.changelog({
