@@ -223,7 +223,7 @@ describe("complexity plugin", () => {
                         output: "values",
                         value: {
                           asset: {
-                            id: "info-title-2",
+                            id: "outer-collection-_index_-values_index1_",
                             type: "text",
                             value: "{{foo.people._index_}}",
                           },
