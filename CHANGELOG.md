@@ -1,3 +1,28 @@
+# 0.9.1-next.1 (Fri Jan 24 2025)
+
+### Release Notes
+
+#### Add Check for Missing `_index_` Segments of Asset IDs in Templates ([#188](https://github.com/player-ui/tools/pull/188))
+
+Fix `DuplicateIDPlugin` validation plugin not checking for `_index_` elements in IDs of templated assets which would lead to duplicate ID issues at runtime.
+
+#### Add Support for Retaining `next` Release Information in Changelogs ([#185](https://github.com/player-ui/tools/pull/185))
+
+Keep information about `next` release in changelog
+
+---
+
+#### 🐛 Bug Fix
+
+- Add Check for Missing `_index_` Segments of Asset IDs in Templates [#188](https://github.com/player-ui/tools/pull/188) ([@KetanReddy](https://github.com/KetanReddy))
+- Add Support for Retaining `next` Release Information in Changelogs [#185](https://github.com/player-ui/tools/pull/185) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### Authors: 1
+
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
 # 0.9.0 (Fri Jan 10 2025)
 
 ### Release Notes
