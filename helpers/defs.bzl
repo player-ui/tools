@@ -2,6 +2,11 @@ load("@aspect_rules_js//js:defs.bzl", "js_run_binary")
 load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
 load("@rules_player//javascript:defs.bzl", "js_pipeline")
 
+COMMON_TEST_DEPS = [
+    "//:node_modules/dlv",
+    "//:vitest_config"
+]
+
 def tsup_config(name):
     prefix = "../" * len(native.package_name().split("/"))
 
@@ -19,11 +24,11 @@ def vitest_config(name):
 
     expand_template(
         name = name,
-        out = "vitest.config.ts",
+        out = "vitest.config.mts",
         substitutions = {
             "%PREFIX%": prefix,
         },
-        template = "//helpers:vitest.config.ts.tmpl",
+        template = "//helpers:vitest.config.mts.tmpl",
     )
 
 def dsl_pipeline(package_name, deps, dsl_input, dsl_output):
@@ -61,4 +66,5 @@ def dsl_pipeline(package_name, deps, dsl_input, dsl_output):
         package_name = package_name,
         srcs = [binary_target] + native.glob(["src/**/*"]),
         deps = deps,
+        test_deps = COMMON_TEST_DEPS
     )

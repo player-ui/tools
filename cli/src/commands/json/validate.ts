@@ -7,7 +7,7 @@ import { BaseCommand } from "../../utils/base-command";
 import { validationRenderer } from "../../utils/diag-renderer";
 import { convertToFileGlob } from "../../utils/fs";
 import { createTaskRunner } from "../../utils/task-runner";
-import { stringToLogLevel } from "../../utils/log-levels"
+import { stringToLogLevel } from "../../utils/log-levels";
 
 /** A command to validate JSON content */
 export default class Validate extends BaseCommand {
@@ -49,7 +49,7 @@ export default class Validate extends BaseCommand {
       files: Array.isArray(files) ? files : [files],
       exp,
       severity: flags.severity,
-      loglevel: flags.loglevel
+      loglevel: flags.loglevel,
     };
   }
 
@@ -57,7 +57,12 @@ export default class Validate extends BaseCommand {
     /** the status code */
     exitCode: number;
   }> {
-    const { files: inputFiles, exp, severity, loglevel } = await this.getOptions();
+    const {
+      files: inputFiles,
+      exp,
+      severity,
+      loglevel,
+    } = await this.getOptions();
     const expandedFilesList = convertToFileGlob(inputFiles, "**/*.json");
     this.debug("Searching for files using: %o", expandedFilesList);
     const files = await glob(expandedFilesList, {
@@ -88,12 +93,12 @@ export default class Validate extends BaseCommand {
           return validations;
         },
       })),
-      loglevel: stringToLogLevel(loglevel)
-    },);
+      loglevel: stringToLogLevel(loglevel),
+    });
 
     const taskResults = await taskRunner.run();
 
-    if(severity !== "error"){
+    if (severity !== "error") {
       taskResults.forEach((t) => {
         if (
           t.error ||

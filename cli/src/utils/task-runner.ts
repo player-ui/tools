@@ -47,7 +47,7 @@ export interface TaskProgressRenderer<ResultType, Data = unknown> {
     tasks: Array<Task<ResultType, Data>>;
 
     /** What level of information to log */
-    loglevel: DiagnosticSeverity
+    loglevel: DiagnosticSeverity;
   }) => string;
 
   /** Called for a summary */
@@ -59,7 +59,7 @@ export interface TaskProgressRenderer<ResultType, Data = unknown> {
     duration: number;
 
     /** What level of information to log */
-    loglevel: DiagnosticSeverity
+    loglevel: DiagnosticSeverity;
   }) => string;
 }
 
@@ -84,7 +84,7 @@ export const createTaskRunner = <R, D>({
   renderer: TaskProgressRenderer<R, D>;
 
   /** What level of logs to write */
-  loglevel: DiagnosticSeverity
+  loglevel: DiagnosticSeverity;
 }): TaskRunner<R, D> => {
   const statefulTasks: Array<Task<R, D>> = tasks.map((t) => {
     return {
@@ -133,7 +133,7 @@ export const createTaskRunner = <R, D>({
     const output = renderer.onEnd({
       duration,
       tasks: statefulTasks as Array<CompletedTask<R, D>>,
-      loglevel
+      loglevel,
     });
 
     console.log(output);

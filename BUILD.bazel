@@ -15,7 +15,7 @@ exports_files([
     ".eslintrc.js",
     ".prettierrc.js",
     "package.json",
-    "vitest.config.ts",
+    "vitest.config.mts",
     ".editorconfig",
     ".all-contributorsrc",
     "README.md",
@@ -26,7 +26,7 @@ js_library(
     testonly = True,
     srcs = [
         "scripts/vitest.setup.ts",
-        "vitest.config.ts",
+        "vitest.config.mts",
     ],
     visibility = ["//visibility:public"],
     deps = [

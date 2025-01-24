@@ -1,5 +1,6 @@
 import { configDefaults, defineConfig } from "vitest/config";
 import path from "node:path";
+import { UserConfig } from "vitest";
 
 export default defineConfig({
   test: {
@@ -48,4 +49,4 @@ export default defineConfig({
       reporter: ["text", "html", "lcovonly"],
     },
   },
-});
+}) as UserConfig;
