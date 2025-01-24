@@ -44,6 +44,7 @@ export default defineConfig({
         "**/__mocks__/**",
         "**/*.d.ts",
         "**/*.test.*",
+        "vitest.config.mts",
       ],
       all: true,
       reporter: ["text", "html", "lcovonly"],
