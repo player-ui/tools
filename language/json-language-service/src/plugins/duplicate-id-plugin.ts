@@ -1,8 +1,26 @@
 import { DiagnosticSeverity } from "vscode-languageserver-types";
 import type { AssetASTNode, ASTNode, ViewASTNode } from "../parser";
-import { getViewNode, replaceString } from "../parser";
+import { getViewNode, isPropertyNode, replaceString } from "../parser";
 import type { PlayerLanguageService, PlayerLanguageServicePlugin } from "..";
 import type { Violation, ValidationContext, ASTVisitor } from "../types";
+
+/** Recurse up tree from node to find how many parents are templates */
+const checkParentTemplate = (node: ASTNode, depth = 0) => {
+  if (node.parent) {
+    if (
+      isPropertyNode(node.parent) &&
+      node.parent.keyNode.value === "template"
+    ) {
+      // Increase the template count each time it finds a nested template
+
+      depth += 1;
+
+      return checkParentTemplate(node.parent, depth);
+    }
+    return checkParentTemplate(node.parent, depth);
+  }
+  return depth;
+};
 
 /** Create an id for the node given it's path */
 const generateID = (node?: ASTNode): string => {
@@ -83,6 +101,28 @@ const createValidationVisitor = (ctx: ValidationContext): ASTVisitor => {
 
       const assetIDMap = viewInfo.get(view);
       const idInfo = assetIDMap?.get(id);
+
+      const templateDepth = checkParentTemplate(assetNode);
+
+      if (templateDepth > 0) {
+        const expectedIndexElements = [];
+        for (let i = 0; i < templateDepth; i++) {
+          expectedIndexElements.push(`_index${i === 0 ? "" : i}_`);
+        }
+        const missingIndexSegments = expectedIndexElements.filter(
+          (e) => !id.includes(e)
+        );
+
+        if (missingIndexSegments.length !== 0) {
+          ctx.addViolation({
+            node: assetNode,
+            severity: DiagnosticSeverity.Error,
+            message: `The id for this templated elements is missing the following index segments: ${missingIndexSegments.join(
+              ", "
+            )}`,
+          });
+        }
+      }
 
       if (idInfo) {
         if (!idInfo.handled) {
