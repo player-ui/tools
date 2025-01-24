@@ -1,5 +1,6 @@
 import { configDefaults, defineConfig } from "vitest/config";
 import path from "node:path";
+import { UserConfig } from "vitest";
 
 export default defineConfig({
   test: {
@@ -43,9 +44,10 @@ export default defineConfig({
         "**/__mocks__/**",
         "**/*.d.ts",
         "**/*.test.*",
+        "vitest.config.mts",
       ],
       all: true,
       reporter: ["text", "html", "lcovonly"],
     },
   },
-});
+}) as UserConfig;

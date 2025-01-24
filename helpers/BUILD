@@ -3,7 +3,7 @@ load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 
 exports_files([
     "tsup.config.ts.tmpl",
-    "vitest.config.ts.tmpl",
+    "vitest.config.mts.tmpl",
     "defs.bzl",
 ])
 

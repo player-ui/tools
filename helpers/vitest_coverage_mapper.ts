@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 
 /**
- * Setting the output file in vitest.config.ts doesn't actually write the file to the right location
+ * Setting the output file in vitest.config.mts doesn't actually write the file to the right location
  * This is a workaround to copy to the file to where bazel expects it to be once the test is over
  */
 class CustomReporter {

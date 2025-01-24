@@ -68,7 +68,7 @@ export default class DSLCompile extends BaseCommand {
         flags["skip-validation"] ?? config.dsl?.skipValidation ?? false,
       exp,
       severity: flags.severity,
-      loglevel: flags.loglevel
+      loglevel: flags.loglevel,
     };
   }
 

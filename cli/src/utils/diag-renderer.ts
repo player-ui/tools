@@ -98,12 +98,12 @@ function formatDiagnostic(
     type = chalk.red(`${logSymbols.error}  `);
   } else if (diag.severity === DiagnosticSeverity.Warning) {
     type = chalk.yellow(`${logSymbols.warning}  `);
-  } else if (diag.severity === DiagnosticSeverity.Information){
+  } else if (diag.severity === DiagnosticSeverity.Information) {
     type = chalk.blue(`${logSymbols.info}  `);
-  } else if (diag.severity === DiagnosticSeverity.Hint){
+  } else if (diag.severity === DiagnosticSeverity.Hint) {
     type = chalk.gray(`${logSymbols.info}  `);
   } else {
-    type = chalk.green(`${logSymbols.info}  `);    
+    type = chalk.green(`${logSymbols.info}  `);
   }
 
   const msg = chalk.bold(diag.message);
@@ -127,7 +127,7 @@ export function formatDiagnosticResults(
     errors: 0,
     warnings: 0,
     info: 0,
-    trace: 0
+    trace: 0,
   };
   const linePrefix = "  ";
   const longestLine = Math.max(
@@ -157,29 +157,19 @@ export function formatDiagnosticResults(
   if (count.errors > 0) {
     lines = ["", `${chalk.red(logSymbols.error)} ${filePath}`, ...lines, ""];
   } else if (count.warnings > 0 && loglevel >= DiagnosticSeverity.Warning) {
-      lines = [
-        "",
-        `${chalk.yellow(logSymbols.warning)} ${filePath}`,
-        ...lines,
-        "",
-      ];
-    } else if (count.info > 0 && loglevel >= DiagnosticSeverity.Information){
-      lines = [
-        "",
-        `${chalk.blue(logSymbols.info)} ${filePath}`,
-        ...lines,
-        "",
-      ];
-    } else if (count.trace > 0 && loglevel >= DiagnosticSeverity.Hint) {
-      lines = [
-        "",
-        `${chalk.gray(logSymbols.info)} ${filePath}`,
-        ...lines,
-        "",
-      ];
-    } else {
-      lines = [`${chalk.green(logSymbols.success)} ${filePath}`, ...lines];
-    }
+    lines = [
+      "",
+      `${chalk.yellow(logSymbols.warning)} ${filePath}`,
+      ...lines,
+      "",
+    ];
+  } else if (count.info > 0 && loglevel >= DiagnosticSeverity.Information) {
+    lines = ["", `${chalk.blue(logSymbols.info)} ${filePath}`, ...lines, ""];
+  } else if (count.trace > 0 && loglevel >= DiagnosticSeverity.Hint) {
+    lines = ["", `${chalk.gray(logSymbols.info)} ${filePath}`, ...lines, ""];
+  } else {
+    lines = [`${chalk.green(logSymbols.success)} ${filePath}`, ...lines];
+  }
 
   return {
     ...count,
