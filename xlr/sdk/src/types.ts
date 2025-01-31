@@ -9,6 +9,12 @@ export interface ValidationError {
 
   /** Rough categorization of the error type */
   type: "type" | "missing" | "unknown" | "value" | "unexpected";
+
+  /** Expected types */
+  expected?: string | number | boolean;
+
+  /** Received types */
+  received?: string | number | boolean;
 }
 
 /** Support Export Formats */

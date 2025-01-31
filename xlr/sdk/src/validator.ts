@@ -44,6 +44,7 @@ export class XLRValidator {
           type: "type",
           node: rootNode,
           message: `Expected an object but got an "${rootNode.type}"`,
+          expected: rootNode.type,
         });
       }
     } else if (xlrNode.type === "array") {
@@ -54,6 +55,7 @@ export class XLRValidator {
           type: "type",
           node: rootNode,
           message: `Expected an array but got an "${rootNode.type}"`,
+          expected: rootNode.type,
         });
       }
     } else if (xlrNode.type === "template") {
@@ -62,30 +64,66 @@ export class XLRValidator {
         validationIssues.push(error);
       }
     } else if (xlrNode.type === "or") {
-      // eslint-disable-next-line no-restricted-syntax
+      const potentialTypeErrors: Array<{
+        type: NodeType;
+        errors: Array<ValidationError>;
+      }> = [];
+
       for (const potentialType of xlrNode.or) {
         const potentialErrors = this.validateType(rootNode, potentialType);
+
         if (potentialErrors.length === 0) {
-          return validationIssues;
+          return validationIssues; // Valid type found
         }
+
+        potentialTypeErrors.push({
+          type: potentialType,
+          errors: potentialErrors,
+        });
       }
 
+      // Construct a more detailed error message
       let message: string;
+      const expectedTypes = xlrNode.or.map(
+        (node) => node.name ?? node.title ?? node.type
+      );
 
       if (xlrNode.name) {
-        message = `Does not match any of the expected types for type: '${xlrNode.name}'`;
+        message = `Does not match any of the expected types for type: '${xlrNode.name}'\n`;
       } else if (xlrNode.title) {
-        message = `Does not match any of the expected types for property: '${xlrNode.title}'`;
+        message = `Does not match any of the expected types for property: '${xlrNode.title}'\n`;
       } else {
-        message = `Does not match any of the types ${xlrNode.or
-          .map((node) => node.name ?? node.title ?? "<unnamed type>")
-          .join(" | ")}`;
+        message = `Does not match any of the types: ${expectedTypes.join(
+          " | "
+        )}\n`;
+      }
+
+      const maxValidShown = 3; // Number of primary results to display
+      const displayedErrors = potentialTypeErrors
+        .slice(0, maxValidShown)
+        .map((typeError) =>
+          typeError.errors.map((error) => error.expected ?? error.message)
+        )
+        .join(" | ");
+
+      const additionalCount = potentialTypeErrors.length - maxValidShown;
+
+      const expectedList =
+        displayedErrors +
+        (additionalCount > 0 ? ` ... +${additionalCount} more` : "");
+
+      if (expectedList.trim() !== "") {
+        if (rootNode.value !== undefined) {
+          message += `Got: ${rootNode.value} and expected: ${expectedList}`;
+        } else {
+          message += `${expectedList}`;
+        }
       }
 
       validationIssues.push({
         type: "value",
         node: rootNode,
-        message,
+        message: message.trim(),
       });
     } else if (xlrNode.type === "and") {
       const effectiveType = {
@@ -109,6 +147,7 @@ export class XLRValidator {
           type: "unknown",
           node: rootNode,
           message: `Type "${xlrNode.ref}" is not defined in provided bundles`,
+          received: xlrNode.ref,
         });
       } else {
         validationIssues.push(
@@ -127,12 +166,16 @@ export class XLRValidator {
             type: "type",
             node: rootNode.parent as Node,
             message: `Expected "${xlrNode.const}" but got "${rootNode.value}"`,
+            expected: xlrNode.const,
+            received: rootNode.value,
           });
         } else {
           validationIssues.push({
             type: "type",
             node: rootNode.parent as Node,
             message: `Expected type "${xlrNode.type}" but got "${rootNode.type}"`,
+            expected: xlrNode.type,
+            received: rootNode.type,
           });
         }
       }
@@ -182,6 +225,7 @@ export class XLRValidator {
         type: "type",
         node: node.parent as Node,
         message: `Expected type "${xlrNode.type}" but got "${typeof node}"`,
+        expected: xlrNode.type,
       };
     }
 
@@ -192,6 +236,7 @@ export class XLRValidator {
         type: "value",
         node: node.parent as Node,
         message: `Does not match expected format: ${xlrNode.format}`,
+        expected: xlrNode.format,
       };
     }
   }
@@ -217,6 +262,7 @@ export class XLRValidator {
           type: "missing",
           node,
           message: `Property "${prop}" missing from type "${xlrNode.name}"`,
+          expected: prop,
         });
       }
 
