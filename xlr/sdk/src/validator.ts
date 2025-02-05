@@ -70,15 +70,10 @@ export class XLRValidator {
       }> = [];
 
       for (const potentialType of xlrNode.or) {
-        // Skip any RefNodes
-        if (potentialType.type === "ref") {
-          continue;
-        }
-
         const potentialErrors = this.validateType(rootNode, potentialType);
 
         if (potentialErrors.length === 0) {
-          return [];
+          return validationIssues;
         }
 
         potentialTypeErrors.push({
@@ -88,9 +83,9 @@ export class XLRValidator {
       }
 
       let message: string;
-      const expectedTypes = xlrNode.or
-        .filter((node) => node.type !== "ref")
-        .map((node) => node.name ?? node.title ?? node.type);
+      const expectedTypes = xlrNode.or.map(
+        (node) => node.name ?? node.title ?? node.type
+      );
 
       if (xlrNode.name) {
         message = `Does not match any of the expected types for type: '${xlrNode.name}'\n`;
@@ -102,42 +97,33 @@ export class XLRValidator {
         )}\n`;
       }
 
-      const maxValidShown = 8;
+      const maxValidShown = 8; // Number of results to display
 
-      // Collect all unique expected values
-      const allExpectedValues = new Set<string>();
-      // const allAdditionalMessages: string[] = [];
+      const displayedErrors = potentialTypeErrors
+        .map((typeError) =>
+          typeError.errors
+            .map((error) => error.expected)
+            // Ignore ref node
+            .filter((expected) => !(expected as string).includes("Ref"))
+            .join(" | ")
+        )
+        .slice(0, maxValidShown)
+        .filter((error) => error !== "")
+        .join(" | ");
 
-      potentialTypeErrors.forEach((typeError) => {
-        typeError.errors.forEach((error) => {
-          // Collect expected values
-          if (error.expected) {
-            // Split and add unique values
-            String(error.expected)
-              .split(" | ")
-              .forEach((val) => allExpectedValues.add(val.trim()));
-          }
-        });
-      });
+      const additionalCount = potentialTypeErrors.length - maxValidShown;
 
-      // Convert expected values to display format
-      const expectedValuesList = Array.from(allExpectedValues);
-      const displayExpectedValues =
-        expectedValuesList.slice(0, maxValidShown).join(" | ") +
-        (expectedValuesList.length > maxValidShown
-          ? ` ... +${expectedValuesList.length - maxValidShown} more`
-          : "");
+      const expectedList =
+        displayedErrors +
+        (additionalCount > 0 ? ` ... +${additionalCount} more` : "");
 
-      if (rootNode.value !== undefined) {
-        message += `Got: ${rootNode.value} and expected: ${displayExpectedValues}\n`;
-      } else {
-        message += `\n${displayExpectedValues}`;
+      if (expectedList.trim() !== "") {
+        if (rootNode.value !== undefined) {
+          message += `Got: ${rootNode.value} and expected: ${expectedList}\n`;
+        } else {
+          message += `\n${expectedList}`;
+        }
       }
-
-      // TO DO: Display full list based on loglevel
-      // allAdditionalMessages.forEach((msg) => {
-      //   message += `\n${msg}`;
-      // });
 
       validationIssues.push({
         type: "value",
