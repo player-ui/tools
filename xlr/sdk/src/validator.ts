@@ -97,33 +97,47 @@ export class XLRValidator {
         )}\n`;
       }
 
-      const maxValidShown = 8; // Number of results to display
+      const maxValidShown = 8;
 
-      const displayedErrors = potentialTypeErrors
-        .map((typeError) =>
-          typeError.errors
-            .map((error) => error.expected)
-            // Ignore ref node
-            .filter((expected) => !(expected as string).includes("Ref"))
-            .join(" | ")
-        )
-        .slice(0, maxValidShown)
-        .filter((error) => error !== "")
-        .join(" | ");
+      // Collect all unique expected values
+      const allExpectedValues = new Set<string>();
+      // const allAdditionalMessages: string[] = [];
 
-      const additionalCount = potentialTypeErrors.length - maxValidShown;
+      potentialTypeErrors.forEach((typeError) => {
+        typeError.errors.forEach((error) => {
+          // Collect expected values
+          if (
+            error.expected &&
+            !String(error.expected).includes("Ref") &&
+            !error.message.includes("@[.*]@") &&
+            !error.message.includes("{{.*}}")
+          ) {
+            // Split and add unique values
+            String(error.expected)
+              .split(" | ")
+              .forEach((val) => allExpectedValues.add(val.trim()));
+          }
+        });
+      });
 
-      const expectedList =
-        displayedErrors +
-        (additionalCount > 0 ? ` ... +${additionalCount} more` : "");
+      // Convert expected values to display format
+      const expectedValuesList = Array.from(allExpectedValues);
+      const displayExpectedValues =
+        expectedValuesList.slice(0, maxValidShown).join(" | ") +
+        (expectedValuesList.length > maxValidShown
+          ? ` ... +${expectedValuesList.length - maxValidShown} more`
+          : "");
 
-      if (expectedList.trim() !== "") {
-        if (rootNode.value !== undefined) {
-          message += `Got: ${rootNode.value} and expected: ${expectedList}\n`;
-        } else {
-          message += `\n${expectedList}`;
-        }
+      if (rootNode.value !== undefined) {
+        message += `Got: ${rootNode.value} and expected: ${displayExpectedValues}\n`;
+      } else {
+        message += `\n${displayExpectedValues}`;
       }
+
+      // TO DO: Display full list based on loglevel
+      // allAdditionalMessages.forEach((msg) => {
+      //   message += `\n${msg}`;
+      // });
 
       validationIssues.push({
         type: "value",
