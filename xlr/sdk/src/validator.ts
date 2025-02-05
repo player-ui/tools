@@ -97,20 +97,15 @@ export class XLRValidator {
         )}\n`;
       }
 
-      const maxValidShown = 8;
-
-      // Collect all unique expected values
       const allExpectedValues = new Set<string>();
-      // const allAdditionalMessages: string[] = [];
 
       potentialTypeErrors.forEach((typeError) => {
         typeError.errors.forEach((error) => {
-          // Collect expected values
+          // Collect expected values without RefNodes
           if (
             error.expected &&
-            !String(error.expected).includes("Ref") &&
-            !error.message.includes("@[.*]@") &&
-            !error.message.includes("{{.*}}")
+            !String(error.expected).includes("@[.*]@") &&
+            !String(error.expected).includes("{{.*}}")
           ) {
             // Split and add unique values
             String(error.expected)
@@ -122,22 +117,12 @@ export class XLRValidator {
 
       // Convert expected values to display format
       const expectedValuesList = Array.from(allExpectedValues);
-      const displayExpectedValues =
-        expectedValuesList.slice(0, maxValidShown).join(" | ") +
-        (expectedValuesList.length > maxValidShown
-          ? ` ... +${expectedValuesList.length - maxValidShown} more`
-          : "");
 
       if (rootNode.value !== undefined) {
-        message += `Got: ${rootNode.value} and expected: ${displayExpectedValues}\n`;
+        message += `Got: ${rootNode.value} and expected: ${expectedValuesList}\n`;
       } else {
-        message += `\n${displayExpectedValues}`;
+        message += `\n${expectedValuesList}`;
       }
-
-      // TO DO: Display full list based on loglevel
-      // allAdditionalMessages.forEach((msg) => {
-      //   message += `\n${msg}`;
-      // });
 
       validationIssues.push({
         type: "value",
