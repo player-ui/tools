@@ -7,6 +7,7 @@ import type {
   OrType,
   PrimitiveTypes,
   RefType,
+  RefNode,
   TemplateLiteralType,
 } from "@player-tools/xlr";
 import {
@@ -72,13 +73,13 @@ export class XLRValidator {
       for (const potentialType of xlrNode.or) {
         // Skip any RefNodes
         if (potentialType.type === "ref") {
-          continue;
+          return validationIssues;
         }
 
         const potentialErrors = this.validateType(rootNode, potentialType);
 
         if (potentialErrors.length === 0) {
-          return [];
+          return validationIssues;
         }
 
         potentialTypeErrors.push({
