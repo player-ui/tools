@@ -11,9 +11,9 @@ export interface ValidationError {
   type: "type" | "missing" | "unknown" | "value" | "unexpected";
 
   /** Expected types */
-  expected?: string | number | boolean;
+  expected?: string[] | string | number | boolean;
 
-  /** Received types */
+  /** Received types*/
   received?: string | number | boolean;
 }
 
