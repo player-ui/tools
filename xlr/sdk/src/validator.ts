@@ -7,7 +7,6 @@ import type {
   OrType,
   PrimitiveTypes,
   RefType,
-  RefNode,
   TemplateLiteralType,
 } from "@player-tools/xlr";
 import {
@@ -73,13 +72,13 @@ export class XLRValidator {
       for (const potentialType of xlrNode.or) {
         // Skip any RefNodes
         if (potentialType.type === "ref") {
-          return validationIssues;
+          continue;
         }
 
         const potentialErrors = this.validateType(rootNode, potentialType);
 
         if (potentialErrors.length === 0) {
-          return validationIssues;
+          return [];
         }
 
         potentialTypeErrors.push({
@@ -112,7 +111,7 @@ export class XLRValidator {
       potentialTypeErrors.forEach((typeError) => {
         typeError.errors.forEach((error) => {
           // Collect expected values
-          if (error.expected && !String(error.expected).includes("Ref")) {
+          if (error.expected) {
             // Split and add unique values
             String(error.expected)
               .split(" | ")
