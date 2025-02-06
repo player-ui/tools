@@ -18,14 +18,24 @@ import {
 } from "@player-tools/xlr-utils";
 import type { ValidationError } from "./types";
 
+export interface XLRValidatorConfig {
+  /** URL mapping for supplemental documentation */
+  urlMapping?: Record<string, string>;
+}
+
 /**
  * Validator for XLRs on JSON Nodes
  */
 export class XLRValidator {
+  private config: XLRValidatorConfig;
   private resolveType: (id: string) => NamedType<NodeType> | undefined;
   private regexCache: Map<string, RegExp>;
 
-  constructor(resolveType: (id: string) => NamedType<NodeType> | undefined) {
+  constructor(
+    resolveType: (id: string) => NamedType<NodeType> | undefined,
+    config?: XLRValidatorConfig
+  ) {
+    this.config = config || {};
     this.resolveType = resolveType;
     this.regexCache = new Map();
   }
@@ -104,8 +114,9 @@ export class XLRValidator {
           // Collect expected values without RefNodes
           if (
             error.expected &&
-            !String(error.expected).includes("@[.*]@") &&
-            !String(error.expected).includes("{{.*}}")
+            !String(error.expected).includes("Ref") &&
+            !error.message.includes("@[.*]@") &&
+            !error.message.includes("{{.*}}")
           ) {
             // Split and add unique values
             String(error.expected)
@@ -115,8 +126,14 @@ export class XLRValidator {
         });
       });
 
-      // Convert expected values to display format
-      const expectedValuesList = Array.from(allExpectedValues);
+      // Display list of expected types as a union
+      let expectedValuesList = Array.from(allExpectedValues).join(" | ");
+
+      const docsURL = this.config.urlMapping;
+
+      if (docsURL && xlrNode.name && docsURL[xlrNode.name]) {
+        expectedValuesList = docsURL[xlrNode.name];
+      }
 
       if (rootNode.value !== undefined) {
         message += `Got: ${rootNode.value} and expected: ${expectedValuesList}\n`;
@@ -128,7 +145,7 @@ export class XLRValidator {
         type: "value",
         node: rootNode,
         message: message.trim(),
-        expected: message.trim(),
+        expected: `\n${message.trim()}`,
       });
     } else if (xlrNode.type === "and") {
       const effectiveType = {
