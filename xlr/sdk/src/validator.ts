@@ -114,9 +114,10 @@ export class XLRValidator {
           // Collect expected values without RefNodes
           if (
             error.expected &&
-            !String(error.expected).includes("Ref") &&
-            !error.message.includes("@[.*]@") &&
-            !error.message.includes("{{.*}}")
+            // !String(error.expected).includes("Ref") &&
+            // !error.message.includes("@[.*]@") &&
+            // !error.message.includes("{{.*}}")
+            !xlrNode.or.every((orNode) => isPrimitiveTypeNode(orNode))
           ) {
             // Split and add unique values
             String(error.expected)
