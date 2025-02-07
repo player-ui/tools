@@ -147,7 +147,7 @@ export class XLRValidator {
       validationIssues.push({
         type: "value",
         node: rootNode,
-        message: `${message}\n${infoMessage}`,
+        message: message + infoMessage,
         severity: DiagnosticSeverity.Information,
       });
 
