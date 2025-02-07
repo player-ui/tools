@@ -17,6 +17,7 @@ import {
   computeEffectiveObject,
 } from "@player-tools/xlr-utils";
 import type { ValidationError } from "./types";
+import { DiagnosticSeverity } from "vscode-languageserver-types";
 
 export interface XLRValidatorConfig {
   /** URL mapping for supplemental documentation */
@@ -98,9 +99,9 @@ export class XLRValidator {
       );
 
       if (xlrNode.name) {
-        message = `Does not match any of the expected types for type: '${xlrNode.name}'\n`;
+        message = `Received unexpected types for type: '${xlrNode.name}'\n`;
       } else if (xlrNode.title) {
-        message = `Does not match any of the expected types for property: '${xlrNode.title}'\n`;
+        message = `Received unexpected types for property: '${xlrNode.title}'\n`;
       } else {
         message = `Does not match any of the types: ${expectedTypes.join(
           " | "
@@ -110,43 +111,50 @@ export class XLRValidator {
       const allExpectedValues = new Set<string>();
 
       potentialTypeErrors.forEach((typeError) => {
-        typeError.errors.forEach((error) => {
-          // Collect expected values without RefNodes
-          if (
-            error.expected &&
-            // !String(error.expected).includes("Ref") &&
-            // !error.message.includes("@[.*]@") &&
-            // !error.message.includes("{{.*}}")
-            !xlrNode.or.every((orNode) => isPrimitiveTypeNode(orNode))
-          ) {
-            // Split and add unique values
-            String(error.expected)
-              .split(" | ")
-              .forEach((val) => allExpectedValues.add(val.trim()));
-          }
-        });
+        // Exclude if the type is a ref type
+        if (typeError.type.type !== "template") {
+          typeError.errors.forEach((error) => {
+            // Collect expected values without RefNodes
+            if (error.expected) {
+              // Split and add unique values
+              String(error.expected)
+                .split(" | ")
+                .forEach((val) => allExpectedValues.add(val.trim()));
+            }
+          });
+        }
       });
 
       // Display list of expected types as a union
-      let expectedValuesList = Array.from(allExpectedValues).join(" | ");
+      let expectedTypesList = Array.from(allExpectedValues)
+        .slice(0, 20)
+        .join(" | ");
 
       const docsURL = this.config.urlMapping;
 
       if (docsURL && xlrNode.name && docsURL[xlrNode.name]) {
-        expectedValuesList = docsURL[xlrNode.name];
+        expectedTypesList = docsURL[xlrNode.name];
       }
 
+      let infoMessage = "";
+
       if (rootNode.value !== undefined) {
-        message += `Got: ${rootNode.value} and expected: ${expectedValuesList}\n`;
+        infoMessage = `Got: ${rootNode.value} and expected: ${expectedTypesList}\n`;
       } else {
-        message += `\n${expectedValuesList}`;
+        infoMessage = `${expectedTypesList}`;
       }
 
       validationIssues.push({
         type: "value",
         node: rootNode,
+        message: `${message}\n${infoMessage}`,
+        severity: DiagnosticSeverity.Information,
+      });
+
+      validationIssues.push({
+        type: "value",
+        node: rootNode,
         message: message.trim(),
-        expected: `\n${message.trim()}`,
       });
     } else if (xlrNode.type === "and") {
       const effectiveType = {
@@ -285,7 +293,6 @@ export class XLRValidator {
           type: "missing",
           node,
           message: `Property "${prop}" missing from type "${xlrNode.name}"`,
-          expected: prop,
         });
       }
 

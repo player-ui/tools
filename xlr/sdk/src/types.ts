@@ -1,4 +1,5 @@
 import type { Node } from "jsonc-parser";
+import { DiagnosticSeverity } from "vscode-languageserver-types";
 
 export interface ValidationError {
   /** Error message text */
@@ -15,6 +16,9 @@ export interface ValidationError {
 
   /** Received types*/
   received?: string | number | boolean;
+
+  /** Diagnostic log level */
+  severity?: DiagnosticSeverity;
 }
 
 /** Support Export Formats */
