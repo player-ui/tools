@@ -108,40 +108,39 @@ export class XLRValidator {
         )}\n`;
       }
 
-      const allExpectedValues = new Set<string>();
+      const nestedTypes = new Set<string>();
 
       potentialTypeErrors.forEach((typeError) => {
-        // Exclude if the type is a ref type
+        // Exclude so nested types don't try to resolve ExpressionRef | BindingRef
         if (typeError.type.type !== "template") {
           typeError.errors.forEach((error) => {
-            // Collect expected values without RefNodes
             if (error.expected) {
-              // Split and add unique values
+              // Split by expected type if union
               String(error.expected)
                 .split(" | ")
-                .forEach((val) => allExpectedValues.add(val.trim()));
+                .forEach((val) => nestedTypes.add(val.trim()));
             }
           });
         }
       });
 
       // Display list of expected types as a union
-      let expectedTypesList = Array.from(allExpectedValues)
-        .slice(0, 20)
-        .join(" | ");
+      let nestedTypesList = Array.from(nestedTypes).slice(0, 20).join(" | ");
 
       const docsURL = this.config.urlMapping;
 
+      // Support passing in a URL for matching type
       if (docsURL && xlrNode.name && docsURL[xlrNode.name]) {
-        expectedTypesList = docsURL[xlrNode.name];
+        nestedTypesList = docsURL[xlrNode.name];
       }
 
+      // Support supplemental info message
       let infoMessage = "";
 
       if (rootNode.value !== undefined) {
-        infoMessage = `Got: ${rootNode.value} and expected: ${expectedTypesList}\n`;
+        infoMessage = `Got: ${rootNode.value} and expected: ${nestedTypesList}\n`;
       } else {
-        infoMessage = `${expectedTypesList}`;
+        infoMessage = `Expected: ${nestedTypesList}`;
       }
 
       validationIssues.push(

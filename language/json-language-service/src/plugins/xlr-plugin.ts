@@ -70,7 +70,7 @@ function createValidationVisitor(
           ctx.addViolation({
             node: findErrorNode(assetNode, issue.node),
             message: `Asset Validation Error - ${issue.type}: ${issue.message}`,
-            severity: issue.severity ?? DiagnosticSeverity.Information,
+            severity: issue.severity ?? DiagnosticSeverity.Error,
           });
         }
       });
