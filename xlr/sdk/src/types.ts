@@ -1,7 +1,7 @@
 import type { Node } from "jsonc-parser";
 import { DiagnosticSeverity } from "vscode-languageserver-types";
 
-export interface ValidationError {
+export interface ValidationMessage {
   /** Error message text */
   message: string;
 

@@ -70,7 +70,7 @@ function createValidationVisitor(
           ctx.addViolation({
             node: findErrorNode(assetNode, issue.node),
             message: `Asset Validation Error - ${issue.type}: ${issue.message}`,
-            severity: issue.severity ?? DiagnosticSeverity.Error,
+            severity: issue.severity ?? DiagnosticSeverity.Information,
           });
         }
       });
@@ -97,7 +97,7 @@ function createValidationVisitor(
           ctx.addViolation({
             node: findErrorNode(viewNode, issue.node),
             message: `View Validation Error - ${issue.type}: ${issue.message}`,
-            severity: issue.severity ?? DiagnosticSeverity.Error,
+            severity: DiagnosticSeverity.Error,
           });
         }
       });
@@ -142,7 +142,7 @@ function createValidationVisitor(
           ctx.addViolation({
             node: findErrorNode(contentNode, issue.node),
             message: `Content Validation Error - ${issue.type}: ${issue.message}`,
-            severity: issue.severity ?? DiagnosticSeverity.Error,
+            severity: DiagnosticSeverity.Error,
           });
         }
       });
@@ -159,7 +159,7 @@ function createValidationVisitor(
           ctx.addViolation({
             node: findErrorNode(navigationNode, issue.node),
             message: `Navigation Validation Error - ${issue.type}: ${issue.message}`,
-            severity: issue.severity ?? DiagnosticSeverity.Error,
+            severity: DiagnosticSeverity.Error,
           });
         }
       });
@@ -176,7 +176,7 @@ function createValidationVisitor(
           ctx.addViolation({
             node: findErrorNode(flowNode, issue.node),
             message: `Navigation Flow Validation Error - ${issue.type}: ${issue.message}`,
-            severity: issue.severity ?? DiagnosticSeverity.Error,
+            severity: DiagnosticSeverity.Error,
           });
         }
       });
@@ -197,7 +197,7 @@ function createValidationVisitor(
             ctx.addViolation({
               node: findErrorNode(flowStateNode, issue.node),
               message: `Navigation Node Validation Error - ${issue.type}: ${issue.message}`,
-              severity: issue.severity ?? DiagnosticSeverity.Error,
+              severity: DiagnosticSeverity.Error,
             });
           }
         });

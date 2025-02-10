@@ -16,7 +16,7 @@ import {
   resolveReferenceNode,
   computeEffectiveObject,
 } from "@player-tools/xlr-utils";
-import type { ValidationError } from "./types";
+import type { ValidationMessage } from "./types";
 import { DiagnosticSeverity } from "vscode-languageserver-types";
 
 export interface XLRValidatorConfig {
@@ -45,8 +45,8 @@ export class XLRValidator {
   public validateType(
     rootNode: Node,
     xlrNode: NodeType
-  ): Array<ValidationError> {
-    const validationIssues = new Array<ValidationError>();
+  ): Array<ValidationMessage> {
+    const validationIssues = new Array<ValidationMessage>();
     if (xlrNode.type === "object") {
       if (rootNode.type === "object") {
         validationIssues.push(...this.validateObject(xlrNode, rootNode));
@@ -77,7 +77,7 @@ export class XLRValidator {
     } else if (xlrNode.type === "or") {
       const potentialTypeErrors: Array<{
         type: NodeType;
-        errors: Array<ValidationError>;
+        errors: Array<ValidationMessage>;
       }> = [];
 
       for (const potentialType of xlrNode.or) {
@@ -144,18 +144,20 @@ export class XLRValidator {
         infoMessage = `${expectedTypesList}`;
       }
 
-      validationIssues.push({
-        type: "value",
-        node: rootNode,
-        message: message + infoMessage,
-        severity: DiagnosticSeverity.Information,
-      });
-
-      validationIssues.push({
-        type: "value",
-        node: rootNode,
-        message: message.trim(),
-      });
+      validationIssues.push(
+        {
+          type: "value",
+          node: rootNode,
+          message: message.trim(),
+          severity: DiagnosticSeverity.Error,
+        },
+        {
+          type: "value",
+          node: rootNode,
+          message: infoMessage,
+          severity: DiagnosticSeverity.Information,
+        }
+      );
     } else if (xlrNode.type === "and") {
       const effectiveType = {
         ...this.computeIntersectionType(xlrNode.and),
@@ -250,7 +252,7 @@ export class XLRValidator {
   private validateTemplate(
     node: Node,
     xlrNode: TemplateLiteralType
-  ): ValidationError | undefined {
+  ): ValidationMessage | undefined {
     if (node.type !== "string") {
       return {
         type: "type",
@@ -273,7 +275,7 @@ export class XLRValidator {
   }
 
   private validateArray(rootNode: Node, xlrNode: ArrayType) {
-    const issues: Array<ValidationError> = [];
+    const issues: Array<ValidationMessage> = [];
     rootNode.children?.forEach((child) =>
       issues.push(...this.validateType(child, xlrNode.elementType))
     );
@@ -281,7 +283,7 @@ export class XLRValidator {
   }
 
   private validateObject(xlrNode: ObjectType, node: Node) {
-    const issues: Array<ValidationError> = [];
+    const issues: Array<ValidationMessage> = [];
     const objectProps = makePropertyMap(node);
 
     // eslint-disable-next-line guard-for-in, no-restricted-syntax
