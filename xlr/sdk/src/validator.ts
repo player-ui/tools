@@ -149,7 +149,7 @@ export class XLRValidator {
       if (rootNode.value !== undefined) {
         infoMessage = `Got: ${rootNode.value} and expected: ${nestedTypesList}\n`;
       } else if (nestedTypesList) {
-        infoMessage = `Expected: ${nestedTypesList} (or binding/expression)`;
+        infoMessage = `Expected: ${nestedTypesList} | (binding/expression)`;
       }
 
       validationIssues.push({

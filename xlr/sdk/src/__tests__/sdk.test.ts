@@ -1,5 +1,5 @@
 import { test, expect, describe } from "vitest";
-import type { NamedType, TransformFunction } from "@player-tools/xlr";
+import type { NamedType, TransformFunction, OrType } from "@player-tools/xlr";
 import { parseTree } from "jsonc-parser";
 import {
   Types,
@@ -7,6 +7,8 @@ import {
 } from "@player-tools/static-xlrs";
 import type { Filters } from "../registry";
 import { XLRSDK } from "../sdk";
+import { XLRValidator } from "../validator";
+import { ValidationMessage } from "../types";
 
 const EXCLUDE: Filters = { typeFilter: "Transformed" };
 
@@ -219,5 +221,47 @@ describe("Export Test", () => {
     );
     expect(results[0][0]).toBe("out.d.ts");
     expect(results[0][1]).toMatchSnapshot();
+  });
+});
+
+describe("Or Type Validation", () => {
+  test("Outputs helpful type error messages", () => {
+    const mockAsset = parseTree(`
+    {
+      "type": "string",
+      "value": "orange"
+    }`);
+
+    const orType: OrType = {
+      type: "or",
+      or: [
+        { type: "string", const: "apple" },
+        { type: "string", const: "banana" },
+        { type: "string", const: "carrot" },
+        { type: "string", const: "deli-meat" },
+      ],
+    };
+
+    const sdk = new XLRSDK();
+    sdk.loadDefinitionsFromModule(Types);
+    sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
+
+    const validator = new XLRValidator(sdk.getType);
+    let validationResult: ValidationMessage[];
+
+    if (mockAsset.children && mockAsset.children.length > 0) {
+      validationResult = validator.validateType(mockAsset.children[0], orType);
+    } else {
+      validationResult = [];
+    }
+
+    // Expected error and info messages
+    expect(validationResult).toHaveLength(2);
+    expect(validationResult[0].message).toBe(
+      "Does not match any of the types: string | string | string | string"
+    );
+    expect(validationResult[1].message).toBe(
+      "Expected: apple | banana | carrot | deli-meat | (binding/expression)"
+    );
   });
 });
