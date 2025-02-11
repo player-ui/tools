@@ -1,5 +1,5 @@
 import type { NodeType } from "@player-tools/xlr";
-import type { XLRSDK } from "@player-tools/xlr-sdk";
+import type { ValidationMessage, XLRSDK } from "@player-tools/xlr-sdk";
 import type { CompletionItem } from "vscode-languageserver-types";
 import {
   CompletionItemKind,
@@ -16,6 +16,10 @@ import type {
 import { mapFlowStateToType } from "../utils";
 import type { ASTNode, ObjectASTNode } from "../parser";
 import type { EnhancedDocumentContextWithPosition } from "../types";
+
+function isError(issue: ValidationMessage): boolean {
+  return issue.severity === DiagnosticSeverity.Error;
+}
 
 /** BFS search to find a JSONC node in children of some AST Node */
 const findErrorNode = (rootNode: ASTNode, nodeToFind: Node): ASTNode => {
@@ -65,13 +69,15 @@ function createValidationVisitor(
         assetNode.jsonNode
       );
       validationIssues.forEach((issue) => {
-        if (!nodesWithErrors.has(issue.node) || issue.type === "missing") {
-          nodesWithErrors.add(issue.node);
+        if (!(nodesWithErrors.has(issue.node) && isError(issue))) {
           ctx.addViolation({
             node: findErrorNode(assetNode, issue.node),
             message: `Asset Validation Error - ${issue.type}: ${issue.message}`,
             severity: issue.severity ?? DiagnosticSeverity.Error,
           });
+          if (isError(issue)) {
+            nodesWithErrors.add(issue.node);
+          }
         }
       });
     },
@@ -92,13 +98,15 @@ function createValidationVisitor(
         viewNode.jsonNode
       );
       validationIssues.forEach((issue) => {
-        if (!nodesWithErrors.has(issue.node) || issue.type === "missing") {
-          nodesWithErrors.add(issue.node);
+        if (!(nodesWithErrors.has(issue.node) && isError(issue))) {
           ctx.addViolation({
             node: findErrorNode(viewNode, issue.node),
             message: `View Validation Error - ${issue.type}: ${issue.message}`,
             severity: DiagnosticSeverity.Error,
           });
+          if (isError(issue)) {
+            nodesWithErrors.add(issue.node);
+          }
         }
       });
     },

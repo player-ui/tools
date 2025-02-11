@@ -135,28 +135,29 @@ export class XLRValidator {
       }
 
       // Support supplemental info message
-      let infoMessage = "";
+      let infoMessage;
 
       if (rootNode.value !== undefined) {
         infoMessage = `Got: ${rootNode.value} and expected: ${nestedTypesList}\n`;
-      } else {
-        infoMessage = `Expected: ${nestedTypesList}`;
+      } else if (nestedTypesList) {
+        infoMessage = `Expected: ${nestedTypesList} (or binding/expression)`;
       }
 
-      validationIssues.push(
-        {
-          type: "value",
-          node: rootNode,
-          message: message.trim(),
-          severity: DiagnosticSeverity.Error,
-        },
-        {
+      validationIssues.push({
+        type: "value",
+        node: rootNode,
+        message: message.trim(),
+        severity: DiagnosticSeverity.Error,
+      });
+
+      if (infoMessage) {
+        validationIssues.push({
           type: "value",
           node: rootNode,
           message: infoMessage,
           severity: DiagnosticSeverity.Information,
-        }
-      );
+        });
+      }
     } else if (xlrNode.type === "and") {
       const effectiveType = {
         ...this.computeIntersectionType(xlrNode.and),
