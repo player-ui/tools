@@ -1783,6 +1783,7 @@ Players can get field type information from the 'schema' definition, thus to dec
 exports[`Validation > Basic Validation By Name 1`] = `
 [
   {
+    "expected": "string",
     "message": "Expected type "string" but got "number"",
     "node": {
       "children": [
@@ -1931,6 +1932,7 @@ exports[`Validation > Basic Validation By Name 1`] = `
       },
       "type": "property",
     },
+    "received": "number",
     "type": "type",
   },
   {
@@ -2241,6 +2243,7 @@ exports[`Validation > Basic Validation By Name 1`] = `
 exports[`Validation > Basic Validation By Type (optimized) 1`] = `
 [
   {
+    "expected": "string",
     "message": "Expected type "string" but got "number"",
     "node": {
       "children": [
@@ -2389,6 +2392,7 @@ exports[`Validation > Basic Validation By Type (optimized) 1`] = `
       },
       "type": "property",
     },
+    "received": "number",
     "type": "type",
   },
   {
@@ -2699,6 +2703,7 @@ exports[`Validation > Basic Validation By Type (optimized) 1`] = `
 exports[`Validation > Basic Validation By Type (unoptimized) 1`] = `
 [
   {
+    "expected": "string",
     "message": "Expected type "string" but got "number"",
     "node": {
       "children": [
@@ -2847,6 +2852,7 @@ exports[`Validation > Basic Validation By Type (unoptimized) 1`] = `
       },
       "type": "property",
     },
+    "received": "number",
     "type": "type",
   },
   {
