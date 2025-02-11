@@ -115,7 +115,7 @@ export class XLRValidator {
         if (typeError.type.type !== "template") {
           typeError.errors.forEach((error) => {
             if (error.expected) {
-              // Split by expected type if union
+              // Split by separate types if union
               String(error.expected)
                 .split(" | ")
                 .forEach((val) => nestedTypes.add(val.trim()));
@@ -124,8 +124,17 @@ export class XLRValidator {
         }
       });
 
+      const maxValidShown = 20; // Max number of nested types to display
+      const additionalCount = potentialTypeErrors.length - maxValidShown;
+
       // Display list of expected types as a union
-      let nestedTypesList = Array.from(nestedTypes).slice(0, 20).join(" | ");
+      let nestedTypesList = Array.from(nestedTypes)
+        .slice(0, maxValidShown)
+        .join(" | ");
+
+      if (additionalCount > 0) {
+        nestedTypesList += " | ... +" + additionalCount;
+      }
 
       const docsURL = this.config.urlMapping;
 
@@ -180,7 +189,6 @@ export class XLRValidator {
           type: "unknown",
           node: rootNode,
           message: `Type "${xlrNode.ref}" is not defined in provided bundles`,
-          received: xlrNode.ref,
         });
       } else {
         validationIssues.push(
@@ -200,7 +208,6 @@ export class XLRValidator {
             node: rootNode.parent as Node,
             message: `Expected "${xlrNode.const}" but got "${rootNode.value}"`,
             expected: xlrNode.const,
-            received: rootNode.value,
           });
         } else {
           validationIssues.push({
@@ -208,7 +215,6 @@ export class XLRValidator {
             node: rootNode.parent as Node,
             message: `Expected type "${xlrNode.type}" but got "${rootNode.type}"`,
             expected: xlrNode.type,
-            received: rootNode.type,
           });
         }
       }

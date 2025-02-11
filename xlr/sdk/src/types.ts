@@ -14,9 +14,6 @@ export interface ValidationMessage {
   /** Expected types */
   expected?: string[] | string | number | boolean;
 
-  /** Received types*/
-  received?: string | number | boolean;
-
   /** Diagnostic log level */
   severity?: DiagnosticSeverity;
 }
