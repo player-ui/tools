@@ -168,7 +168,7 @@ exports[`player language service > validation > throws AssetWrapper errors 1`] =
     "severity": 2,
   },
   {
-    "message": "View Validation Error - value: Does not match any of the expected types for type: 'AssetWrapperOrSwitch'",
+    "message": "View Validation Error - value: Received unexpected types for type: 'AssetWrapperOrSwitch'",
     "range": {
       "end": {
         "character": 16,
@@ -180,6 +180,20 @@ exports[`player language service > validation > throws AssetWrapper errors 1`] =
       },
     },
     "severity": 1,
+  },
+  {
+    "message": "View Validation Error - value: Expected: array | (binding/expression)",
+    "range": {
+      "end": {
+        "character": 16,
+        "line": 12,
+      },
+      "start": {
+        "character": 23,
+        "line": 8,
+      },
+    },
+    "severity": 3,
   },
   {
     "message": "Implicit Array -> "collection" assets is not supported.",

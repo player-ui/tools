@@ -59,7 +59,7 @@ describe("missing-asset-wrapper", () => {
     expect(validations).toHaveLength(1);
     expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
       [
-        "View Validation Error - value: Does not match any of the expected types for type: 'AssetWrapperOrSwitch'",
+        "View Validation Error - value: Received unexpected types for type: 'AssetWrapperOrSwitch'",
       ]
     `);
   });
@@ -72,7 +72,7 @@ describe("missing-asset-wrapper", () => {
     expect(diags).toMatchInlineSnapshot(`
       [
         {
-          "message": "View Validation Error - value: Does not match any of the expected types for type: 'AssetWrapperOrSwitch'",
+          "message": "View Validation Error - value: Received unexpected types for type: 'AssetWrapperOrSwitch'",
           "range": {
             "end": {
               "character": 7,

@@ -18,7 +18,9 @@ import type { ASTNode, ObjectASTNode } from "../parser";
 import type { EnhancedDocumentContextWithPosition } from "../types";
 
 function isError(issue: ValidationMessage): boolean {
-  return issue.severity === DiagnosticSeverity.Error;
+  return (
+    issue.severity === undefined || issue.severity === DiagnosticSeverity.Error
+  );
 }
 
 /** BFS search to find a JSONC node in children of some AST Node */
@@ -72,7 +74,7 @@ function createValidationVisitor(
         if (!(nodesWithErrors.has(issue.node) && isError(issue))) {
           ctx.addViolation({
             node: findErrorNode(assetNode, issue.node),
-            message: isError(issue)
+            message: !(nodesWithErrors.has(issue.node) && isError(issue))
               ? `Asset Validation Error - ${issue.type}: ${issue.message}`
               : issue.message,
             severity: issue.severity ?? DiagnosticSeverity.Error,
@@ -103,8 +105,10 @@ function createValidationVisitor(
         if (!(nodesWithErrors.has(issue.node) && isError(issue))) {
           ctx.addViolation({
             node: findErrorNode(viewNode, issue.node),
-            message: `View Validation Error - ${issue.type}: ${issue.message}`,
-            severity: DiagnosticSeverity.Error,
+            message: !(nodesWithErrors.has(issue.node) && isError(issue))
+              ? `View Validation Error - ${issue.type}: ${issue.message}`
+              : issue.message,
+            severity: issue.severity ?? DiagnosticSeverity.Error,
           });
           if (isError(issue)) {
             nodesWithErrors.add(issue.node);
