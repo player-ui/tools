@@ -13,7 +13,7 @@ stores loaded types.
 
 ## Validation
 
-To run XLR validation, `yarn run player dsl compile` which will display any
+To run XLR validation, `yarn run player dsl validate` which will display any
 relevant errors.
 
-For additional debugging information, `yarn run player dsl compile -v info`.
+For additional debugging information, `yarn run player dsl validate -v info`.

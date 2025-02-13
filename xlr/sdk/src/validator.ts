@@ -24,6 +24,8 @@ export interface XLRValidatorConfig {
   urlMapping?: Record<string, string>;
 }
 
+const MAX_VALID_SHOWN = 20;
+
 /**
  * Validator for XLRs on JSON Nodes
  */
@@ -94,63 +96,23 @@ export class XLRValidator {
       }
 
       let message: string;
-      const expectedTypes = xlrNode.or.map(
-        (node) => node.name ?? node.title ?? node.type
-      );
-
-      if (xlrNode.name) {
-        message = `Received unexpected types for type: '${xlrNode.name}'\n`;
-      } else if (xlrNode.title) {
-        message = `Received unexpected types for property: '${xlrNode.title}'\n`;
-      } else {
-        message = `Does not match any of the types: ${expectedTypes.join(
-          " | "
-        )}\n`;
-      }
-
-      const nestedTypes = new Set<string>();
-
-      potentialTypeErrors.forEach((typeError) => {
-        // Exclude so nested types don't try to resolve ExpressionRef | BindingRef
-        if (typeError.type.type !== "template") {
-          typeError.errors.forEach((error) => {
-            if (error.expected) {
-              // Split by separate types if union
-              String(error.expected)
-                .split(" | ")
-                .forEach((val) => nestedTypes.add(val.trim()));
-            }
-          });
-        }
-      });
-
-      const maxValidShown = 20; // Max number of nested types to display
-      const additionalCount = potentialTypeErrors.length - maxValidShown;
-
-      // Display list of expected types as a union
-      let nestedTypesList = Array.from(nestedTypes)
-        .slice(0, maxValidShown)
+      const expectedTypes = xlrNode.or
+        .map((node) => node.name ?? node.title ?? node.type ?? "<unnamed type>")
         .join(" | ");
 
-      if (additionalCount > 0) {
-        nestedTypesList += " | ... +" + additionalCount;
+      if (xlrNode.name) {
+        message = `Does not match any of the expected types for type: '${xlrNode.name}'`;
+      } else if (xlrNode.title) {
+        message = `Does not match any of the expected types for property: '${xlrNode.title}'`;
+      } else {
+        message = `Does not match any of the types: ${expectedTypes}`;
       }
 
-      const docsURL = this.config.urlMapping;
-
-      // Support passing in a URL for matching type
-      if (docsURL && xlrNode.name && docsURL[xlrNode.name]) {
-        nestedTypesList = docsURL[xlrNode.name];
-      }
-
-      // Support supplemental info message
-      let infoMessage;
-
-      if (rootNode.value !== undefined) {
-        infoMessage = `Got: ${rootNode.value} and expected: ${nestedTypesList}\n`;
-      } else if (nestedTypesList) {
-        infoMessage = `Expected: ${nestedTypesList} | (binding/expression)`;
-      }
+      const { infoMessage } = this.generateNestedTypesInfo(
+        potentialTypeErrors,
+        xlrNode,
+        rootNode
+      );
 
       validationIssues.push({
         type: "value",
@@ -253,6 +215,57 @@ export class XLRValidator {
     }
 
     return validationIssues;
+  }
+
+  private generateNestedTypesInfo(
+    potentialTypeErrors: Array<{
+      type: NodeType;
+      errors: Array<ValidationMessage>;
+    }>,
+    xlrNode: OrType,
+    rootNode: Node
+  ): { nestedTypesList: string; infoMessage?: string } {
+    const nestedTypes = new Set<string>();
+
+    potentialTypeErrors.forEach((typeError) => {
+      // Exclude so nested types don't try to resolve ExpressionRef | BindingRef
+      if (typeError.type.type !== "template") {
+        typeError.errors.forEach((error) => {
+          if (error.expected) {
+            // Split by separate types if union
+            String(error.expected)
+              .split(" | ")
+              .forEach((val) => nestedTypes.add(val.trim()));
+          }
+        });
+      }
+    });
+
+    // Display list of expected types as a union
+
+    let nestedTypesList =
+      Array.from(nestedTypes).slice(0, MAX_VALID_SHOWN).join(" | ") +
+      (nestedTypes.size > MAX_VALID_SHOWN
+        ? ` | ... +${nestedTypes.size - MAX_VALID_SHOWN}`
+        : "");
+
+    const docsURL = this.config.urlMapping;
+
+    // Support passing in a URL for matching type
+    if (docsURL && xlrNode.name && docsURL[xlrNode.name]) {
+      nestedTypesList = docsURL[xlrNode.name];
+    }
+
+    // Support supplemental info message
+    let infoMessage;
+
+    if (rootNode.value !== undefined) {
+      infoMessage = `Got: ${rootNode.value} and expected: ${nestedTypesList}\n`;
+    } else if (nestedTypesList) {
+      infoMessage = `Expected: ${nestedTypesList} | (binding/expression)`;
+    }
+
+    return { nestedTypesList, infoMessage };
   }
 
   private validateTemplate(
