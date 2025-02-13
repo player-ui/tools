@@ -4,7 +4,8 @@ import chalk from "chalk";
 import logSymbols from "log-symbols";
 import elegantSpinner from "elegant-spinner";
 import type { Task, TaskProgressRenderer } from "./task-runner";
-import { normalizePath } from "./fs";
+import { normalizePath, tryAndLoadSourceMap } from "./fs";
+import sourceMap, { RawSourceMap, SourceMapConsumer } from "source-map-js";
 
 /** Compare the ranges and return the one that starts of finishes first */
 function rangeComparator(first: Range, second: Range): number {
@@ -117,6 +118,39 @@ function formatDiagnostic(
   ].join(" ");
 }
 
+function mapDiagnosticBackToSourceLine(
+  diag: Diagnostic,
+  mapper: SourceMapConsumer | undefined
+):
+  | {
+      diagnostic: Diagnostic;
+      sourceFile: string;
+    }
+  | undefined {
+  const { line, character } = diag.range.start;
+  if (mapper && line && character >= 1) {
+    const sourceNode = mapper.originalPositionFor({
+      line,
+      column: character,
+    });
+    if (sourceNode.source) {
+      return {
+        diagnostic: {
+          ...diag,
+          range: {
+            ...diag.range,
+            start: {
+              line: sourceNode.line,
+              character: sourceNode.column,
+            },
+          },
+        },
+        sourceFile: sourceNode.source,
+      };
+    }
+  }
+}
+
 /** Format the results for printing on the console */
 export function formatDiagnosticResults(
   filePath: string,
@@ -134,6 +168,15 @@ export function formatDiagnosticResults(
     ...results.map((r) => getLineRange(r.range).length)
   );
 
+  //try and load map file
+  const mapFile = tryAndLoadSourceMap(filePath);
+  let sourceMapper: SourceMapConsumer | undefined;
+  if (mapFile) {
+    sourceMapper = new sourceMap.SourceMapConsumer(
+      JSON.parse(mapFile) as RawSourceMap
+    );
+  }
+
   let lines: string[] = results
     .map((diag) => {
       if (diag.severity === DiagnosticSeverity.Error) {
@@ -146,8 +189,14 @@ export function formatDiagnosticResults(
         count.trace += 1;
       }
 
+      const { diagnostic, sourceFile } = mapDiagnosticBackToSourceLine(
+        diag,
+        sourceMapper
+      ) ?? { diagnostic: diag, sourceFile: filePath };
       if (diag.severity && loglevel >= diag.severity) {
-        return linePrefix + formatDiagnostic(diag, longestLine + 1, filePath);
+        return (
+          linePrefix + formatDiagnostic(diagnostic, longestLine + 1, sourceFile)
+        );
       }
 
       return "";
@@ -211,7 +260,6 @@ export const validationRenderer: TaskProgressRenderer<
   onUpdate(ctx) {
     const { tasks } = ctx;
     const output: string[] = ["Validating content"];
-
     tasks.forEach((task) => {
       if (task.state === "completed" && task.output) {
         const formattedDiags = formatDiagnosticResults(

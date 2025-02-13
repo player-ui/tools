@@ -25,3 +25,14 @@ export const convertToFileGlob = (input: string[], glob: string): string[] => {
 export const normalizePath = (p: string): string => {
   return path.relative(process.cwd(), p);
 };
+
+/**
+ * Tries to load a source map file
+ */
+export const tryAndLoadSourceMap = (f: string): string | undefined => {
+  const mapFileName = f + ".map";
+  if (fs.existsSync(mapFileName)) {
+    return fs.readFileSync(mapFileName, "utf8");
+  }
+  return undefined;
+};
