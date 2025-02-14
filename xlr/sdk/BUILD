@@ -22,7 +22,6 @@ js_pipeline(
         ":node_modules/@player-tools/xlr",
         ":node_modules/@player-tools/xlr-converters",
         ":node_modules/@player-tools/xlr-utils",
-        "//:node_modules/vscode-languageserver-types",
         "//:node_modules/@types/fs-extra",
         "//:node_modules/@types/node",
         "//:node_modules/fs-extra",

@@ -1932,6 +1932,7 @@ exports[`Validation > Basic Validation By Name 1`] = `
       },
       "type": "property",
     },
+    "severity": 1,
     "type": "type",
   },
   {
@@ -2083,6 +2084,7 @@ exports[`Validation > Basic Validation By Name 1`] = `
       },
       "type": "object",
     },
+    "severity": 1,
     "type": "missing",
   },
   {
@@ -2234,6 +2236,7 @@ exports[`Validation > Basic Validation By Name 1`] = `
       },
       "type": "object",
     },
+    "severity": 1,
     "type": "missing",
   },
 ]
@@ -2391,6 +2394,7 @@ exports[`Validation > Basic Validation By Type (optimized) 1`] = `
       },
       "type": "property",
     },
+    "severity": 1,
     "type": "type",
   },
   {
@@ -2542,6 +2546,7 @@ exports[`Validation > Basic Validation By Type (optimized) 1`] = `
       },
       "type": "object",
     },
+    "severity": 1,
     "type": "missing",
   },
   {
@@ -2693,6 +2698,7 @@ exports[`Validation > Basic Validation By Type (optimized) 1`] = `
       },
       "type": "object",
     },
+    "severity": 1,
     "type": "missing",
   },
 ]
@@ -2850,6 +2856,7 @@ exports[`Validation > Basic Validation By Type (unoptimized) 1`] = `
       },
       "type": "property",
     },
+    "severity": 1,
     "type": "type",
   },
   {
@@ -3001,6 +3008,7 @@ exports[`Validation > Basic Validation By Type (unoptimized) 1`] = `
       },
       "type": "object",
     },
+    "severity": 1,
     "type": "missing",
   },
   {
@@ -3152,6 +3160,7 @@ exports[`Validation > Basic Validation By Type (unoptimized) 1`] = `
       },
       "type": "object",
     },
+    "severity": 1,
     "type": "missing",
   },
 ]

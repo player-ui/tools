@@ -85,7 +85,7 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
     expect(logSpy.mock.calls).toMatchInlineSnapshot(`
       [
         [
-          "[41m[37mERROR:[39m[49m cannot run the CLI in /Users/username/player/utilities/cli/src/__tests__",
+          "ERROR: cannot run the CLI in /Users/username/player/utilities/cli/src/__tests__",
         ],
         [
           "Please run the CLI in the root of the repository, /Users/username/Desktop/Projects/player",
@@ -286,7 +286,7 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
       expect(logSpy.mock.calls).toMatchInlineSnapshot(`
         [
           [
-            "[41m[37mERROR:[39m[49m cannot run the CLI in /Users/username/player/utilities/cli/src/__tests__",
+            "ERROR: cannot run the CLI in /Users/username/player/utilities/cli/src/__tests__",
           ],
           [
             "Please run the CLI in the root of the repository, /Users/username/Desktop/Projects/player",
@@ -343,13 +343,13 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
         ",
           ],
           [
-            "[41m[37mWARNINGS:[39m[49m",
+            "WARNINGS:",
           ],
           [
             "- Mismatch between the top-level and the nested @player-ui/@player-tools dependency.",
           ],
           [
-            "[42mRECOMMENDATIONS:[49m",
+            "RECOMMENDATIONS:",
           ],
           [
             "- The highest @player-ui/@player-tools version is 3.30.1 at the nested level. Please bump the top-level version, 3.11.0, to 3.30.1.",
@@ -430,7 +430,7 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
         ",
           ],
           [
-            "[41m[37mWARNINGS:[39m[49m",
+            "WARNINGS:",
           ],
           [
             "- There are multiple top-level @player-ui/@player-tools dependency versions.",
@@ -439,7 +439,7 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
             "- There are multiple nested @player-ui/@player-tools dependency versions.",
           ],
           [
-            "[42mRECOMMENDATIONS:[49m",
+            "RECOMMENDATIONS:",
           ],
           [
             "- Resolve all top-level @player-ui/@player-tools dependencies to the same version. Consider updating them to the latest player version you have, 4.37.3. When all top-level @player-ui/@player-tools dependencies are resolved, run the current CLI again to obtain recommendations about nested @player-ui/@player-tools dependencies.",
@@ -497,13 +497,13 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
         ",
           ],
           [
-            "[41m[37mWARNINGS:[39m[49m",
+            "WARNINGS:",
           ],
           [
             "- There are multiple nested @player-ui/@player-tools dependency versions.",
           ],
           [
-            "[42mRECOMMENDATIONS:[49m",
+            "RECOMMENDATIONS:",
           ],
           [
             "- The highest @player-ui/@player-tools version is 4.37.3 at the nested level. Please add resolutions for all nested @player-ui/@player-tools versions to this version or bump the nested versions to it.",
@@ -571,13 +571,13 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
         ",
           ],
           [
-            "[41m[37mWARNINGS:[39m[49m",
+            "WARNINGS:",
           ],
           [
             "- There are multiple nested @player-ui/@player-tools dependency versions.",
           ],
           [
-            "[42mRECOMMENDATIONS:[49m",
+            "RECOMMENDATIONS:",
           ],
           [
             "- The highest @player-ui/@player-tools version is 4.37.3 at the top level. Please add resolutions for all nested @player-ui/@player-tools versions to this version or bump the nested versions to it.",
@@ -646,13 +646,13 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
         ",
           ],
           [
-            "[41m[37mWARNINGS:[39m[49m",
+            "WARNINGS:",
           ],
           [
             "- There are multiple nested @player-ui/@player-tools dependency versions.",
           ],
           [
-            "[42mRECOMMENDATIONS:[49m",
+            "RECOMMENDATIONS:",
           ],
           [
             "- The highest @player-ui/@player-tools version is 4.37.3 at the nested level. Please bump the top-level version, 3.11.0, to 4.37.3.",
@@ -713,13 +713,13 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
         ",
           ],
           [
-            "[41m[37mWARNINGS:[39m[49m",
+            "WARNINGS:",
           ],
           [
             "- There are multiple top-level @player-ui/@player-tools dependency versions.",
           ],
           [
-            "[42mRECOMMENDATIONS:[49m",
+            "RECOMMENDATIONS:",
           ],
           [
             "- Resolve all top-level @player-ui/@player-tools dependencies to the same version. Consider updating them to the latest player version you have, 4.37.3. When all top-level @player-ui/@player-tools dependencies are resolved, run the current CLI again to obtain recommendations about nested @player-ui/@player-tools dependencies.",
@@ -788,13 +788,13 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
         ",
           ],
           [
-            "[41m[37mWARNINGS:[39m[49m",
+            "WARNINGS:",
           ],
           [
             "- There are multiple top-level @player-ui/@player-tools dependency versions.",
           ],
           [
-            "[42mRECOMMENDATIONS:[49m",
+            "RECOMMENDATIONS:",
           ],
           [
             "- Resolve all top-level @player-ui/@player-tools dependencies to the same version. Consider updating them to the latest player version you have, 4.37.3. When all top-level @player-ui/@player-tools dependencies are resolved, run the current CLI again to obtain recommendations about nested @player-ui/@player-tools dependencies.",
@@ -863,13 +863,13 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
         ",
           ],
           [
-            "[41m[37mWARNINGS:[39m[49m",
+            "WARNINGS:",
           ],
           [
             "- There are multiple top-level @player-ui/@player-tools dependency versions.",
           ],
           [
-            "[42mRECOMMENDATIONS:[49m",
+            "RECOMMENDATIONS:",
           ],
           [
             "- Resolve all top-level @player-ui/@player-tools dependencies to the same version. Consider updating them to the latest player version you have, 4.20.5. When all top-level @player-ui/@player-tools dependencies are resolved, run the current CLI again to obtain recommendations about nested @player-ui/@player-tools dependencies.",

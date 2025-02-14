@@ -16,8 +16,8 @@ import {
   resolveReferenceNode,
   computeEffectiveObject,
 } from "@player-tools/xlr-utils";
+import { ValidationSeverity } from "./types";
 import type { ValidationMessage } from "./types";
-import { DiagnosticSeverity } from "vscode-languageserver-types";
 
 export interface XLRValidatorConfig {
   /** URL mapping for supplemental documentation */
@@ -58,6 +58,7 @@ export class XLRValidator {
           node: rootNode,
           message: `Expected an object but got an "${rootNode.type}"`,
           expected: rootNode.type,
+          severity: ValidationSeverity.Error,
         });
       }
     } else if (xlrNode.type === "array") {
@@ -69,6 +70,7 @@ export class XLRValidator {
           node: rootNode,
           message: `Expected an array but got an "${rootNode.type}"`,
           expected: rootNode.type,
+          severity: ValidationSeverity.Error,
         });
       }
     } else if (xlrNode.type === "template") {
@@ -118,7 +120,7 @@ export class XLRValidator {
         type: "value",
         node: rootNode,
         message: message.trim(),
-        severity: DiagnosticSeverity.Error,
+        severity: ValidationSeverity.Error,
       });
 
       if (infoMessage) {
@@ -126,7 +128,7 @@ export class XLRValidator {
           type: "value",
           node: rootNode,
           message: infoMessage,
-          severity: DiagnosticSeverity.Information,
+          severity: ValidationSeverity.Info,
         });
       }
     } else if (xlrNode.type === "and") {
@@ -151,6 +153,7 @@ export class XLRValidator {
           type: "unknown",
           node: rootNode,
           message: `Type "${xlrNode.ref}" is not defined in provided bundles`,
+          severity: ValidationSeverity.Error,
         });
       } else {
         validationIssues.push(
@@ -170,6 +173,7 @@ export class XLRValidator {
             node: rootNode.parent as Node,
             message: `Expected "${xlrNode.const}" but got "${rootNode.value}"`,
             expected: xlrNode.const,
+            severity: ValidationSeverity.Error,
           });
         } else {
           validationIssues.push({
@@ -177,6 +181,7 @@ export class XLRValidator {
             node: rootNode.parent as Node,
             message: `Expected type "${xlrNode.type}" but got "${rootNode.type}"`,
             expected: xlrNode.type,
+            severity: ValidationSeverity.Error,
           });
         }
       }
@@ -231,7 +236,7 @@ export class XLRValidator {
       // Exclude so nested types don't try to resolve ExpressionRef | BindingRef
       if (typeError.type.type !== "template") {
         typeError.errors.forEach((error) => {
-          if (error.expected) {
+          if (error.type === "type" && error.expected) {
             // Split by separate types if union
             String(error.expected)
               .split(" | ")
@@ -278,6 +283,7 @@ export class XLRValidator {
         node: node.parent as Node,
         message: `Expected type "${xlrNode.type}" but got "${typeof node}"`,
         expected: xlrNode.type,
+        severity: ValidationSeverity.Error,
       };
     }
 
@@ -289,6 +295,7 @@ export class XLRValidator {
         node: node.parent as Node,
         message: `Does not match expected format: ${xlrNode.format}`,
         expected: xlrNode.format,
+        severity: ValidationSeverity.Error,
       };
     }
   }
@@ -314,6 +321,7 @@ export class XLRValidator {
           type: "missing",
           node,
           message: `Property "${prop}" missing from type "${xlrNode.name}"`,
+          severity: ValidationSeverity.Error,
         });
       }
 
@@ -335,6 +343,7 @@ export class XLRValidator {
         message: `Unexpected properties on "${xlrNode.name}": ${extraKeys.join(
           ", "
         )}`,
+        severity: ValidationSeverity.Error,
       });
     } else {
       issues.push(

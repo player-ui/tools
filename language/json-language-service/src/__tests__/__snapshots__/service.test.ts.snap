@@ -168,7 +168,7 @@ exports[`player language service > validation > throws AssetWrapper errors 1`] =
     "severity": 2,
   },
   {
-    "message": "View Validation Error - value: Received unexpected types for type: 'AssetWrapperOrSwitch'",
+    "message": "View Validation Error - value: Does not match any of the expected types for type: 'AssetWrapperOrSwitch'",
     "range": {
       "end": {
         "character": 16,

@@ -1,5 +1,6 @@
 import type { NodeType } from "@player-tools/xlr";
-import type { ValidationMessage, XLRSDK } from "@player-tools/xlr-sdk";
+import type { ValidationMessage } from "@player-tools/xlr-sdk";
+import { ValidationSeverity, XLRSDK } from "@player-tools/xlr-sdk";
 import type { CompletionItem } from "vscode-languageserver-types";
 import {
   CompletionItemKind,
@@ -43,6 +44,16 @@ const findErrorNode = (rootNode: ASTNode, nodeToFind: Node): ASTNode => {
 };
 
 /**
+ * Translates an SDK severity level to an LSP severity level
+ * Relies on both levels having the values associated to the underlying levels
+ */
+const translateSeverity = (
+  severity: ValidationSeverity
+): DiagnosticSeverity => {
+  return severity as DiagnosticSeverity;
+};
+
+/**
  * Create Validation walkers
  */
 function createValidationVisitor(
@@ -77,7 +88,7 @@ function createValidationVisitor(
             message: !(nodesWithErrors.has(issue.node) && isError(issue))
               ? `Asset Validation Error - ${issue.type}: ${issue.message}`
               : issue.message,
-            severity: issue.severity ?? DiagnosticSeverity.Error,
+            severity: translateSeverity(issue.severity),
           });
           if (isError(issue)) {
             nodesWithErrors.add(issue.node);
@@ -108,7 +119,7 @@ function createValidationVisitor(
             message: !(nodesWithErrors.has(issue.node) && isError(issue))
               ? `View Validation Error - ${issue.type}: ${issue.message}`
               : issue.message,
-            severity: issue.severity ?? DiagnosticSeverity.Error,
+            severity: translateSeverity(issue.severity),
           });
           if (isError(issue)) {
             nodesWithErrors.add(issue.node);
