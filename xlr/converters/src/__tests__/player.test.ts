@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { setupTestEnv } from "@player-tools/xlr-utils";
+import { setupTestEnv } from "@player-tools/test-utils";
 import { TsConverter } from "..";
 
 test("Player Types Export", () => {

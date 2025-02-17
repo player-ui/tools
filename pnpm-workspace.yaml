@@ -19,4 +19,5 @@ packages:
   - "devtools/messenger"
   - "devtools/client"
   - "common/static-xlrs"
+  - "common/test-utils"
   - "cli"

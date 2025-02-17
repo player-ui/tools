@@ -36,6 +36,7 @@ devtools/common/node_modules
 devtools/flipper/node_modules
 devtools/ui/node_modules
 common/static-xlrs/node_modules
+common/test-utils/node_modules
 cli/node_modules
 
 # Devtools plugins test environment

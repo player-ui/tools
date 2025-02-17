@@ -1,0 +1,7 @@
+{
+    "name": "@player-tools/test-utils",
+    "version": "0.0.0-PLACEHOLDER",
+    "sideEffects": false,
+    "main": "src/index.ts"
+  }
+  

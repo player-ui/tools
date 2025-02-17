@@ -9,18 +9,12 @@ tsup_config(name = "tsup_config")
 vitest_config(name = "vitest_config")
 
 js_pipeline(
-    package_name = "@player-tools/xlr-converters",
+    private = True,
+    package_name = "@player-tools/test-utils",
     peer_deps = [
         "//:node_modules/typescript",
     ],
-    test_deps = [
-        "//:node_modules",
-        "//:vitest_config",
-        "//:node_modules/@typescript/vfs",
-        ":node_modules/@player-tools/test-utils",
-    ],
     deps = [
-        ":node_modules/@player-tools/xlr",
-        ":node_modules/@player-tools/xlr-utils",
+        "//:node_modules/@typescript/vfs",
     ],
 )
