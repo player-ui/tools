@@ -46,6 +46,7 @@ deps = [
     "//:node_modules/log-update",
     "//:node_modules/mkdirp",
     "//:node_modules/react",
+    "//:node_modules/source-map-js",
     "//:node_modules/tapable-ts",
     "//:node_modules/tslib",
     "//:node_modules/typescript",

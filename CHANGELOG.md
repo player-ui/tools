@@ -1,3 +1,23 @@
+# 0.9.1-next.2 (Thu Feb 13 2025)
+
+### Release Notes
+
+#### Use Source Maps for Validation Errors ([#191](https://github.com/player-ui/tools/pull/191))
+
+Use source maps, if available, to map validation errors back to authored content. If not available, the location in the compiled content will be used to point to the error.
+
+---
+
+#### 🐛 Bug Fix
+
+- Use Source Maps for Validation Errors [#191](https://github.com/player-ui/tools/pull/191) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### Authors: 1
+
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
 # 0.9.1-next.1 (Fri Jan 24 2025)
 
 ### Release Notes
