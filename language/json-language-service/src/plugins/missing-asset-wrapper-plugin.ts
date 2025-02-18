@@ -34,6 +34,9 @@ export class MissingAssetWrapperPlugin implements PlayerLanguageServicePlugin {
     languageService.hooks.onValidateEnd.tap(
       this.name,
       (diagnostics, { addFixableViolation, documentContext }) => {
+        // Just be naive here
+        // If there's an error for "expected asset" + an unexpected `id` and `type`, replace that with our own
+
         let filteredDiags = diagnostics;
 
         const expectedAssetDiags = filteredDiags.filter((d) => {
@@ -43,6 +46,15 @@ export class MissingAssetWrapperPlugin implements PlayerLanguageServicePlugin {
 
           if (!originalNode) {
             return false;
+          }
+
+          const isAssetWrapperOrSwitch =
+            documentContext.PlayerContent.getXLRNode?.name ===
+            "AssetWrapperOrSwitch";
+
+          // If it's missing, then it should return the proper diagnostics
+          if (!isAssetWrapperOrSwitch) {
+            return true;
           }
 
           const hasAssetProperty =
