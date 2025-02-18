@@ -34,17 +34,27 @@ export class MissingAssetWrapperPlugin implements PlayerLanguageServicePlugin {
     languageService.hooks.onValidateEnd.tap(
       this.name,
       (diagnostics, { addFixableViolation, documentContext }) => {
-        // Just be naive here
-        // If there's an error for "expected asset" + an unexpected `id` and `type`, replace that with our own
-
         let filteredDiags = diagnostics;
 
-        const expectedAssetDiags = diagnostics.filter(
-          (d) =>
-            d.message.includes(
-              `Does not match any of the expected types for type: 'AssetWrapperOrSwitch'`
-            ) || d.message.startsWith("Expected property: asset")
-        );
+        const expectedAssetDiags = filteredDiags.filter((d) => {
+          const originalNode = documentContext.PlayerContent.getNodeFromOffset(
+            documentContext.document.offsetAt(d.range.start)
+          );
+
+          if (!originalNode) {
+            return false;
+          }
+
+          const hasAssetProperty =
+            originalNode.jsonNode.type === "object" &&
+            originalNode.jsonNode.children?.some(
+              (child) =>
+                child.type === "property" &&
+                child.children?.[0]?.value === "asset"
+            );
+
+          return !hasAssetProperty;
+        });
 
         expectedAssetDiags.forEach((d) => {
           const originalNode = documentContext.PlayerContent.getNodeFromOffset(
