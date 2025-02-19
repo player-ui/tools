@@ -39,34 +39,12 @@ export class MissingAssetWrapperPlugin implements PlayerLanguageServicePlugin {
 
         let filteredDiags = diagnostics;
 
-        const expectedAssetDiags = filteredDiags.filter((d) => {
-          const originalNode = documentContext.PlayerContent.getNodeFromOffset(
-            documentContext.document.offsetAt(d.range.start)
-          );
-
-          if (!originalNode) {
-            return false;
-          }
-
-          const isAssetWrapperOrSwitch =
-            documentContext.PlayerContent.getXLRNode?.name ===
-            "AssetWrapperOrSwitch";
-
-          // If it's missing, then it should return the proper diagnostics
-          if (!isAssetWrapperOrSwitch) {
-            return true;
-          }
-
-          const hasAssetProperty =
-            originalNode.jsonNode.type === "object" &&
-            originalNode.jsonNode.children?.some(
-              (child) =>
-                child.type === "property" &&
-                child.children?.[0]?.value === "asset"
-            );
-
-          return !hasAssetProperty;
-        });
+        const expectedAssetDiags = diagnostics.filter(
+          (d) =>
+            d.message.includes(
+              `Does not match any of the expected types for type: 'AssetWrapperOrSwitch'`
+            ) || d.message.startsWith("Expected property: asset")
+        );
 
         expectedAssetDiags.forEach((d) => {
           const originalNode = documentContext.PlayerContent.getNodeFromOffset(

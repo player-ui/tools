@@ -30,7 +30,6 @@ import {
   FlowStateASTNodeImpl,
 } from "./types";
 import { convertErrorsToDiags } from "./jsonParseErrors";
-import { NodeType } from "@player-tools/xlr";
 
 /** Check if the property is a string */
 function isStringProperty(
@@ -55,26 +54,6 @@ export class PlayerContent {
     this.root = root;
     this.jsonNodeToNode = jsonToNodeMap;
     this.syntaxErrors = errors;
-  }
-
-  getXLRNode(node: ASTNode, type: NodeType): ASTNode | undefined {
-    // Check if the current node is of the specified XLR node type by comparing their types
-    if (node.type === type.type) {
-      return node;
-    }
-
-    // Recursively check for matches
-    if (node instanceof ObjectASTNodeImpl) {
-      for (const child of node.properties) {
-        const match = this.getXLRNode(child, type);
-        if (match) {
-          return match;
-        }
-      }
-    }
-
-    // Return undefined if no matching node is found
-    return undefined;
   }
 
   getNodeFromOffset(offset: number): ASTNode | undefined {
