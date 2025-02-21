@@ -232,9 +232,12 @@ export class XLRValidator {
   ): { nestedTypesList: string; infoMessage?: string } {
     const nestedTypes = new Set<string>();
 
+    // First, try to extract types from potential type errors
     potentialTypeErrors.forEach((typeError) => {
-      // Exclude so nested types don't try to resolve ExpressionRef | BindingRef
-      if (typeError.type.type !== "template") {
+      if (typeError.type.type === "template") {
+        // If it's BindingRef | ExpressionRef return something more readable"
+        nestedTypes.add("(binding or expression)");
+      } else {
         typeError.errors.forEach((error) => {
           if (error.type === "type" && error.expected) {
             // Split by separate types if union
@@ -246,8 +249,16 @@ export class XLRValidator {
       }
     });
 
-    // Display list of expected types as a union
+    // If no types found from errors, try using or types from xlrNode
+    if (nestedTypes.size === 0) {
+      xlrNode.or.forEach((type) => {
+        const typeName =
+          type.name ?? type.title ?? type.type ?? "<unnamed type>";
+        nestedTypes.add(typeName);
+      });
+    }
 
+    // Display list of expected types as a union
     let nestedTypesList =
       Array.from(nestedTypes).slice(0, MAX_VALID_SHOWN).join(" | ") +
       (nestedTypes.size > MAX_VALID_SHOWN
@@ -267,7 +278,7 @@ export class XLRValidator {
     if (rootNode.value !== undefined) {
       infoMessage = `Got: ${rootNode.value} and expected: ${nestedTypesList}\n`;
     } else if (nestedTypesList) {
-      infoMessage = `Expected: ${nestedTypesList} | (binding/expression)`;
+      infoMessage = `Expected: ${nestedTypesList}`;
     }
 
     return { nestedTypesList, infoMessage };
@@ -422,6 +433,9 @@ export class XLRValidator {
     let firstElement = types[0];
     let effectiveType: ObjectType | OrType;
 
+    // Capture the original top-level type name if exists
+    const topLevelTypeName = types[0].name;
+
     if (firstElement.type === "ref") {
       firstElement = this.getRefType(firstElement);
     }
@@ -467,18 +481,38 @@ export class XLRValidator {
         } else {
           effectiveType = {
             ...effectiveType,
-            or: effectiveType.or.map((y) =>
-              this.computeIntersectionType([y, typeToApply])
-            ),
+            or: effectiveType.or.map((y) => {
+              const intersectedType = this.computeIntersectionType([
+                y,
+                typeToApply,
+              ]);
+
+              // If the intersected type doesn't have a name, use the top-level type name
+              if (!intersectedType.name && topLevelTypeName) {
+                intersectedType.name = topLevelTypeName;
+              }
+
+              return intersectedType;
+            }),
           };
         }
       } else if (typeToApply.type === "or") {
         if (effectiveType.type === "object") {
           effectiveType = {
             ...typeToApply,
-            or: typeToApply.or.map((y) =>
-              this.computeIntersectionType([y, effectiveType])
-            ),
+            or: typeToApply.or.map((y) => {
+              const intersectedType = this.computeIntersectionType([
+                y,
+                effectiveType,
+              ]);
+
+              // If the intersected type doesn't have a name, use the top-level type name
+              if (!intersectedType.name && topLevelTypeName) {
+                intersectedType.name = topLevelTypeName;
+              }
+
+              return intersectedType;
+            }),
           };
         } else {
           throw new Error("unimplemented operation or x or projection");
@@ -489,6 +523,15 @@ export class XLRValidator {
         );
       }
     });
+
+    // If the final effective type is an or type and doesn't have a name, use the top-level type name
+    if (
+      effectiveType.type === "or" &&
+      !effectiveType.name &&
+      topLevelTypeName
+    ) {
+      effectiveType.name = topLevelTypeName;
+    }
 
     return effectiveType;
   }

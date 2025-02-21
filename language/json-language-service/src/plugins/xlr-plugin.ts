@@ -19,9 +19,7 @@ import type { ASTNode, ObjectASTNode } from "../parser";
 import type { EnhancedDocumentContextWithPosition } from "../types";
 
 function isError(issue: ValidationMessage): boolean {
-  return (
-    issue.severity === undefined || issue.severity === DiagnosticSeverity.Error
-  );
+  return issue.severity === DiagnosticSeverity.Error;
 }
 
 /** BFS search to find a JSONC node in children of some AST Node */
