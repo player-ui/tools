@@ -276,7 +276,7 @@ export class XLRValidator {
     let infoMessage;
 
     if (rootNode.value !== undefined) {
-      infoMessage = `Got: ${rootNode.value} and expected: ${nestedTypesList}\n`;
+      infoMessage = `Got: ${rootNode.value} and expected: ${nestedTypesList}`;
     } else if (nestedTypesList) {
       infoMessage = `Expected: ${nestedTypesList}`;
     }

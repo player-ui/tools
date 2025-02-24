@@ -265,3 +265,108 @@ describe("Or Type Validation", () => {
     );
   });
 });
+
+describe("generateNestedTypesInfo Test", () => {
+  test("Test with potentialTypeErrors", () => {
+    const sdk = new XLRSDK();
+    sdk.loadDefinitionsFromModule(Types);
+    sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
+    const validator = new XLRValidator(sdk.getType);
+
+    const potentialTypeErrors = [
+      {
+        type: { type: "string" },
+        errors: [
+          {
+            type: "type",
+            node: {} as any,
+            message: "Expected string",
+            severity: 1,
+            expected: "string",
+          },
+        ],
+      },
+    ];
+
+    const xlrNode = {
+      type: "or",
+      or: [{ type: "string" }, { type: "number" }],
+    } as OrType;
+
+    const rootNode = {
+      type: "boolean",
+      value: true,
+    } as any;
+
+    const result = (validator as any).generateNestedTypesInfo(
+      potentialTypeErrors,
+      xlrNode,
+      rootNode
+    );
+
+    expect(result.nestedTypesList).toBe("string");
+    expect(result.infoMessage).toBe("Got: true and expected: string");
+  });
+
+  test("Works with urlMapping", () => {
+    const sdk = new XLRSDK();
+    sdk.loadDefinitionsFromModule(Types);
+    sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
+    const validator = new XLRValidator(sdk.getType, {
+      urlMapping: {
+        MyType: "https://example.com/mytype",
+      },
+    });
+
+    const potentialTypeErrors: any[] = [];
+
+    const xlrNode = {
+      type: "or",
+      name: "MyType",
+      or: [{ type: "string" }, { type: "number" }],
+    } as OrType;
+
+    const rootNode = {
+      type: "boolean",
+      value: true,
+    } as any;
+
+    const result = (validator as any).generateNestedTypesInfo(
+      potentialTypeErrors,
+      xlrNode,
+      rootNode
+    );
+
+    expect(result.nestedTypesList).toBe("https://example.com/mytype");
+    expect(result.infoMessage).toBe(
+      "Got: true and expected: https://example.com/mytype"
+    );
+  });
+
+  test("Without rootNode value", () => {
+    const sdk = new XLRSDK();
+    sdk.loadDefinitionsFromModule(Types);
+    sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
+    const validator = new XLRValidator(sdk.getType);
+
+    const potentialTypeErrors: any[] = [];
+
+    const xlrNode = {
+      type: "or",
+      or: [{ type: "string" }, { type: "number" }],
+    } as OrType;
+
+    const rootNode = {
+      type: "boolean",
+    } as any;
+
+    const result = (validator as any).generateNestedTypesInfo(
+      potentialTypeErrors,
+      xlrNode,
+      rootNode
+    );
+
+    expect(result.nestedTypesList).toBe("string | number");
+    expect(result.infoMessage).toBe("Expected: string | number");
+  });
+});
