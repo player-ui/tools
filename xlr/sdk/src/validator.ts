@@ -230,8 +230,9 @@ export class XLRValidator {
     xlrNode: OrType,
     rootNode: Node
   ): { nestedTypesList: string; infoMessage?: string } {
-    const nestedTypes = new Array<string>();
+    const nestedTypes = new Set<string>();
 
+    // TODO: Optimize to get literal value or name as fallback
     // First, try to extract types from potential type errors
     potentialTypeErrors.forEach((typeError) => {
       if (typeError.type.type !== "template") {
@@ -240,26 +241,30 @@ export class XLRValidator {
             // Split by separate types if union
             String(error.expected)
               .split(" | ")
-              .forEach((val) => nestedTypes.push(val.trim()));
+              .forEach((val) => nestedTypes.add(val.trim()));
           }
         });
       }
     });
 
     // If no types found from errors, try using or types from xlrNode
-    if (nestedTypes.length === 0) {
+    if (nestedTypes.size === 0) {
       xlrNode.or.forEach((type) => {
         const typeName =
           type.name ?? type.title ?? type.type ?? "<unnamed type>";
-        nestedTypes.push(typeName);
+        nestedTypes.add(typeName);
       });
     }
 
+    const nestedTypesArray = [...nestedTypes];
+
     // Display list of expected types as a union
     let nestedTypesList =
-      nestedTypes.slice(0, MAX_VALID_SHOWN).join(" | ") +
-      (nestedTypes.length > MAX_VALID_SHOWN
-        ? ` | +${nestedTypes.length - MAX_VALID_SHOWN} ... ${nestedTypes.pop()}`
+      nestedTypesArray.slice(0, MAX_VALID_SHOWN).join(" | ") +
+      (nestedTypesArray.length > MAX_VALID_SHOWN
+        ? ` | +${
+            nestedTypesArray.length - MAX_VALID_SHOWN
+          } ... ${nestedTypesArray.pop()}`
         : "");
 
     const docsURL = this.config.urlMapping;

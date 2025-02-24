@@ -182,7 +182,7 @@ exports[`player language service > validation > throws AssetWrapper errors 1`] =
     "severity": 1,
   },
   {
-    "message": "View Validation Error - value: Expected: array | (binding/expression)",
+    "message": "View Validation Error - value: Expected: array",
     "range": {
       "end": {
         "character": 16,

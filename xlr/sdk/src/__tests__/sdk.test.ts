@@ -261,7 +261,7 @@ describe("Or Type Validation", () => {
       "Does not match any of the types: string | string | string | string"
     );
     expect(validationResult[1].message).toBe(
-      "Expected: apple | banana | carrot | deli-meat | (binding/expression)"
+      "Expected: apple | banana | carrot | deli-meat"
     );
   });
 });
