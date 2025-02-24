@@ -182,6 +182,20 @@ exports[`player language service > validation > throws AssetWrapper errors 1`] =
     "severity": 1,
   },
   {
+    "message": "Expected: AssetWrapper & object literal | StaticSwitch & object literal | DynamicSwitch & object literal",
+    "range": {
+      "end": {
+        "character": 16,
+        "line": 12,
+      },
+      "start": {
+        "character": 23,
+        "line": 8,
+      },
+    },
+    "severity": 3,
+  },
+  {
     "message": "Implicit Array -> "collection" assets is not supported.",
     "range": {
       "end": {
