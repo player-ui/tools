@@ -83,7 +83,7 @@ function createValidationVisitor(
         if (!(nodesWithErrors.has(issue.node) && isError(issue))) {
           ctx.addViolation({
             node: findErrorNode(assetNode, issue.node),
-            message: !(nodesWithErrors.has(issue.node) && isError(issue))
+            message: isError(issue)
               ? `Asset Validation Error - ${issue.type}: ${issue.message}`
               : issue.message,
             severity: translateSeverity(issue.severity),
@@ -114,7 +114,7 @@ function createValidationVisitor(
         if (!(nodesWithErrors.has(issue.node) && isError(issue))) {
           ctx.addViolation({
             node: findErrorNode(viewNode, issue.node),
-            message: !(nodesWithErrors.has(issue.node) && isError(issue))
+            message: isError(issue)
               ? `View Validation Error - ${issue.type}: ${issue.message}`
               : issue.message,
             severity: translateSeverity(issue.severity),

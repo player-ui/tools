@@ -57,7 +57,6 @@ export class XLRValidator {
           type: "type",
           node: rootNode,
           message: `Expected an object but got an "${rootNode.type}"`,
-          expected: rootNode.type,
           severity: ValidationSeverity.Error,
         });
       }
@@ -69,7 +68,6 @@ export class XLRValidator {
           type: "type",
           node: rootNode,
           message: `Expected an array but got an "${rootNode.type}"`,
-          expected: rootNode.type,
           severity: ValidationSeverity.Error,
         });
       }
@@ -232,7 +230,7 @@ export class XLRValidator {
   ): { nestedTypesList: string; infoMessage?: string } {
     const nestedTypes = new Set<string>();
 
-    // TODO: Optimize to get literal value or name as fallback
+    // TODO: Create a recursive function that returns value or xlrNode info
     // First, try to extract types from potential type errors
     potentialTypeErrors.forEach((typeError) => {
       if (typeError.type.type !== "template") {
@@ -247,7 +245,7 @@ export class XLRValidator {
       }
     });
 
-    // If no types found from errors, try using or types from xlrNode
+    // If no types found from errors, try using type from xlrNode
     if (nestedTypes.size === 0) {
       xlrNode.or.forEach((type) => {
         const typeName =

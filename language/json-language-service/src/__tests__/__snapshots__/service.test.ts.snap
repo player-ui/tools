@@ -182,7 +182,7 @@ exports[`player language service > validation > throws AssetWrapper errors 1`] =
     "severity": 1,
   },
   {
-    "message": "View Validation Error - value: Expected: array",
+    "message": "Expected: AssetWrapper & object literal | StaticSwitch & object literal | DynamicSwitch & object literal",
     "range": {
       "end": {
         "character": 16,

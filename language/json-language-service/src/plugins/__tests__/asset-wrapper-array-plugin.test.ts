@@ -57,7 +57,7 @@ describe("asset-wrapper-array-plugin", () => {
     expect(diags?.map((d) => d.message)).toMatchInlineSnapshot(`
       [
         "View Validation Error - value: Does not match any of the expected types for type: 'AssetWrapperOrSwitch'",
-        "View Validation Error - value: Expected: array",
+        "Expected: AssetWrapper & object literal | StaticSwitch & object literal | DynamicSwitch & object literal",
         "Implicit Array -> "collection" assets is not supported.",
       ]
     `);
@@ -79,7 +79,7 @@ describe("asset-wrapper-array-plugin", () => {
           "severity": 1,
         },
         {
-          "message": "View Validation Error - value: Expected: array",
+          "message": "Expected: AssetWrapper & object literal | StaticSwitch & object literal | DynamicSwitch & object literal",
           "range": {
             "end": {
               "character": 7,
