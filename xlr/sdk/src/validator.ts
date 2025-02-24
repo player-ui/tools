@@ -265,6 +265,7 @@ export class XLRValidator {
           } ... ${nestedTypesArray.pop()}`
         : "");
 
+    // TODO: Be able to pass the validator's config to the SDK
     const docsURL = this.config.urlMapping;
 
     // Support passing in a URL for matching type
