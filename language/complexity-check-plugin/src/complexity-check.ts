@@ -79,7 +79,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
 
       let diagnostic: Diagnostic = {
         message: `${message}`,
-        severity: DiagnosticSeverity.Information,
+        severity: DiagnosticSeverity.Hint,
         range: diagnosticRange,
       };
 
@@ -121,7 +121,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
 
               this.verboseDetails.push({
                 message: `state exp (+${this.scoreCriteria.expInActionState} x ${numExp.valueNode.children.length}): ${this.contentScore}`,
-                severity: DiagnosticSeverity.Information,
+                severity: DiagnosticSeverity.Hint,
                 range: toRange(ctx.document, flowState),
               });
             } else {
@@ -129,7 +129,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
 
               this.verboseDetails.push({
                 message: `state exp (+${this.scoreCriteria.expInActionState}): ${this.contentScore}`,
-                severity: DiagnosticSeverity.Information,
+                severity: DiagnosticSeverity.Hint,
                 range: toRange(ctx.document, flowState),
               });
             }
@@ -150,7 +150,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
 
               this.verboseDetails.push({
                 message: `found a template parent (+${this.scoreCriteria.template}): ${this.contentScore}`,
-                severity: DiagnosticSeverity.Information,
+                severity: DiagnosticSeverity.Hint,
                 range: toRange(ctx.document, assetNode),
               });
 
@@ -185,20 +185,20 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
             }
             this.verboseDetails.push({
               message: `assetNode (${this.scoreCriteria.assetNode} +${typeWeights} for ${assetType}): ${this.contentScore}`,
-              severity: DiagnosticSeverity.Information,
+              severity: DiagnosticSeverity.Hint,
               range: toRange(ctx.document, assetNode),
             });
           } else {
             this.verboseDetails.push({
               message: `assetNode (+${this.scoreCriteria.assetNode} - ${assetType} complexity type not found): ${this.contentScore}`,
-              severity: DiagnosticSeverity.Information,
+              severity: DiagnosticSeverity.Hint,
               range: toRange(ctx.document, assetNode),
             });
           }
         } else
           this.verboseDetails.push({
             message: `assetNode (+${this.scoreCriteria.assetNode}): ${this.contentScore}`,
-            severity: DiagnosticSeverity.Information,
+            severity: DiagnosticSeverity.Hint,
             range: toRange(ctx.document, assetNode),
           });
       },
@@ -227,20 +227,20 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
             }
             this.verboseDetails.push({
               message: `viewNode (${this.scoreCriteria.viewNode} +${viewComplexity} for ${viewType}): ${this.contentScore}`,
-              severity: DiagnosticSeverity.Information,
+              severity: DiagnosticSeverity.Hint,
               range: toRange(ctx.document, viewNode),
             });
           } else {
             this.verboseDetails.push({
               message: `viewNode (+${this.scoreCriteria.viewNode} - ${viewType} complexity type not found): ${this.contentScore}`,
-              severity: DiagnosticSeverity.Information,
+              severity: DiagnosticSeverity.Hint,
               range: toRange(ctx.document, viewNode),
             });
           }
         } else
           this.verboseDetails.push({
             message: `viewNode (+${this.scoreCriteria.viewNode}): ${this.contentScore}`,
-            severity: DiagnosticSeverity.Information,
+            severity: DiagnosticSeverity.Hint,
             range: toRange(ctx.document, viewNode),
           });
       },
@@ -253,7 +253,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
 
               this.verboseDetails.push({
                 message: `model - get: ${binding} (+${this.scoreCriteria.modelGet}): ${this.contentScore}`,
-                severity: DiagnosticSeverity.Information,
+                severity: DiagnosticSeverity.Hint,
                 range: toRange(ctx.document, stringNode),
               });
 
@@ -264,7 +264,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
 
               this.verboseDetails.push({
                 message: `model - set: ${binding} (+${this.scoreCriteria.modelSet}: ${this.contentScore}`,
-                severity: DiagnosticSeverity.Information,
+                severity: DiagnosticSeverity.Hint,
                 range: toRange(ctx.document, stringNode),
               });
 
@@ -277,7 +277,7 @@ export class ComplexityCheck implements PlayerLanguageServicePlugin {
 
             this.verboseDetails.push({
               message: `model - evaluate: ${str} (+${this.scoreCriteria.modelEvaluate}): ${this.contentScore}`,
-              severity: DiagnosticSeverity.Information,
+              severity: DiagnosticSeverity.Hint,
               range: toRange(ctx.document, stringNode),
             });
 
