@@ -1,3 +1,45 @@
+# 0.10.0-next.0 (Wed Feb 26 2025)
+
+### Release Notes
+
+#### [XLR] Provide better type introspection messages ([#189](https://github.com/player-ui/tools/pull/189))
+
+This ticket adds functionality to introspect the parent type and display the expected nested types when `-v info` is passed in (`yarn run player dsl compile -v info`).
+
+By default, the error messages will remain how they were, like this:
+```
+  ✖   1996:52  Asset Validation Error - value: Does not match any of the expected types for type: 'SomeType' path/to/source
+```
+
+New additional info supported using -v info:
+```
+  ✖   1996:52  Asset Validation Error - value: Does not match any of the expected types for type: 'SomeType' path/to/source
+  ℹ   1996:52  Got: blue and expected: green | red path/to/source
+```
+
+For types that generate several types (20+), the info message will truncate at 20 and display the remaining number:
+```
+  ✖   1996:52  Asset Validation Error - value: Does not match any of the expected types for type: 'SomeType' path/to/source
+  ℹ   1996:52  Got: blue and expected: item 19 | item 20 | +8 ... item 28 path/to/source
+```
+
+###  Other changes
+
+This PR fixes an issue for the DiagnosticSeverity used in the Complexity Check Plugin, which has been updated from `info` -> `trace` which was the original intent.
+
+---
+
+#### 🚀 Enhancement
+
+- [XLR] Provide better type introspection messages [#189](https://github.com/player-ui/tools/pull/189) ([@kharrop](https://github.com/kharrop) [@KetanReddy](https://github.com/KetanReddy))
+
+#### Authors: 2
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
 # 0.9.1-next.2 (Thu Feb 13 2025)
 
 ### Release Notes
