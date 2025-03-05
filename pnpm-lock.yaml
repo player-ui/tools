@@ -469,6 +469,8 @@ importers:
 
   common/static-xlrs: {}
 
+  common/test-utils: {}
+
   devtools/client:
     dependencies:
       '@player-tools/devtools-messenger':
@@ -598,6 +600,9 @@ importers:
 
   xlr/converters:
     dependencies:
+      '@player-tools/test-utils':
+        specifier: workspace:*
+        version: link:../../common/test-utils
       '@player-tools/xlr':
         specifier: workspace:*
         version: link:../types
@@ -625,6 +630,9 @@ importers:
 
   xlr/utils:
     dependencies:
+      '@player-tools/test-utils':
+        specifier: workspace:*
+        version: link:../../common/test-utils
       '@player-tools/xlr':
         specifier: workspace:*
         version: link:../types
