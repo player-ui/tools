@@ -75,7 +75,7 @@ test("works if already in a template array", async () => {
   });
 });
 
-test("Template Order is preserved", async () => {
+test("Template order is preserved", async () => {
   const element = (
     <Collection id="view-1">
       <Collection.Values>
@@ -178,6 +178,33 @@ test("Template Order is preserved", async () => {
             },
           ],
         },
+      },
+    ],
+  });
+});
+
+test("Template placement is passed in", async () => {
+  const element = (
+    <obj>
+      <property name="foo">
+        <array>
+          <value>Foo</value>
+          <Template dynamic data={b`foo.output`} placement="append">
+            <value>bar</value>
+          </Template>
+        </array>
+      </property>
+    </obj>
+  );
+  expect((await render(element)).jsonValue).toStrictEqual({
+    foo: ["Foo"],
+    template: [
+      {
+        data: "foo.output",
+        placement: "append",
+        dynamic: true,
+        value: "bar",
+        output: "foo",
       },
     ],
   });
