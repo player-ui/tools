@@ -18,9 +18,10 @@ export interface TemplateContextType {
   depth: number;
 }
 
-export const TemplateContext = React.createContext<TemplateContextType>({
-  depth: 0,
-});
+export const TemplateContext: React.Context<TemplateContextType> =
+  React.createContext<TemplateContextType>({
+    depth: 0,
+  });
 
 export interface TemplateProps {
   /** The source binding */
@@ -34,6 +35,9 @@ export interface TemplateProps {
 
   /** boolean that specifies whether template should recompute when data changes */
   dynamic?: boolean;
+
+  /** Placement method */
+  placement?: "append" | "prepend";
 }
 
 /** Add a template instance to the object */
@@ -134,9 +138,10 @@ const getParentProperty = (node: JsonNode): PropertyNode | undefined => {
 };
 
 /** A template allows users to dynamically map over an array of data */
-export const Template = (props: TemplateProps) => {
+export const Template = (props: TemplateProps): React.JSX.Element => {
   const baseContext = React.useContext(TemplateContext);
   const dynamicProp = props.dynamic ?? false;
+  const placementProp = props.placement ?? false;
   const [outputProp, setOutputProp] = React.useState<string | undefined>(
     props.output
   );
@@ -216,6 +221,11 @@ export const Template = (props: TemplateProps) => {
                 {dynamicProp && (
                   <property name="dynamic">
                     {toJsonElement(dynamicProp)}
+                  </property>
+                )}
+                {placementProp && (
+                  <property name="placement">
+                    {toJsonElement(placementProp)}
                   </property>
                 )}
               </object>
