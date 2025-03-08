@@ -180,6 +180,19 @@ export const Template = (props: TemplateProps): React.JSX.Element => {
         prefix = true;
       }
 
+      if (
+        !templateObj.properties.find(
+          (prop) => prop.keyNode.value === "placement"
+        )
+      ) {
+        templateObj.properties.push(
+          new PropertyNode(
+            new ValueNode("placement"),
+            new ValueNode(prefix ? "prepend" : "append")
+          )
+        );
+      }
+
       const containingSlot = proxyRef.current.parent?.parent;
       let insertionIndex = undefined;
       if (
