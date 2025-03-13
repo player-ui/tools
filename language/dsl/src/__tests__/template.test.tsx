@@ -26,6 +26,7 @@ test("finds output property based on array context", async () => {
         data: "foo.output",
         value: "bar",
         output: "foo",
+        placement: "append",
       },
     ],
   });
@@ -53,6 +54,7 @@ test("finds dynamic property in a template", async () => {
         dynamic: true,
         value: "bar",
         output: "foo",
+        placement: "append",
       },
     ],
   });
@@ -105,7 +107,8 @@ test("Template order is preserved", async () => {
       </Collection.Values>
     </Collection>
   );
-  expect((await render(element)).jsonValue).toStrictEqual({
+
+  const expectedOutput = {
     id: "view-1",
     type: "collection",
     values: [
@@ -131,6 +134,7 @@ test("Template order is preserved", async () => {
                   value: "Dynamic Item _index_",
                 },
               },
+              placement: "prepend",
             },
           ],
           values: [
@@ -175,23 +179,28 @@ test("Template order is preserved", async () => {
                   value: "Dynamic Item _index_",
                 },
               },
+              placement: "append",
             },
           ],
         },
       },
     ],
-  });
+  };
+
+  expect(JSON.stringify((await render(element)).jsonValue)).toBe(
+    JSON.stringify(expectedOutput)
+  );
 });
 
-test("Template placement is passed in", async () => {
+test("Template placement is inferred as prepend", async () => {
   const element = (
     <obj>
       <property name="foo">
         <array>
-          <value>Foo</value>
-          <Template dynamic data={b`foo.output`} placement="append">
+          <Template dynamic data={b`foo.output`}>
             <value>bar</value>
           </Template>
+          <value>Foo</value>
         </array>
       </property>
     </obj>
@@ -201,7 +210,63 @@ test("Template placement is passed in", async () => {
     template: [
       {
         data: "foo.output",
+        placement: "prepend",
+        dynamic: true,
+        value: "bar",
+        output: "foo",
+      },
+    ],
+  });
+});
+
+test("Template placement is inferred as append", async () => {
+  const element = (
+    <obj>
+      <property name="foo">
+        <array>
+          <value>Foo</value>
+          <Template dynamic data={b`foo.output`}>
+            <value>bar</value>
+          </Template>
+        </array>
+      </property>
+    </obj>
+  );
+
+  expect((await render(element)).jsonValue).toStrictEqual({
+    foo: ["Foo"],
+    template: [
+      {
+        data: "foo.output",
         placement: "append",
+        dynamic: true,
+        value: "bar",
+        output: "foo",
+      },
+    ],
+  });
+});
+
+test("Template with explicit placement is respected", async () => {
+  const element = (
+    <obj>
+      <property name="foo">
+        <array>
+          <value>Foo</value>
+          <Template dynamic data={b`foo.output`} placement="prepend">
+            <value>bar</value>
+          </Template>
+        </array>
+      </property>
+    </obj>
+  );
+
+  expect((await render(element)).jsonValue).toStrictEqual({
+    foo: ["Foo"],
+    template: [
+      {
+        data: "foo.output",
+        placement: "prepend",
         dynamic: true,
         value: "bar",
         output: "foo",
@@ -261,6 +326,7 @@ test("template will delete empty arrays related to the template only", async () 
       {
         data: "foo.bar",
         output: "values",
+        placement: "prepend",
         value: {
           asset: {
             id: "values-_index_",
@@ -296,25 +362,26 @@ test("template will delete empty arrays related to the template only", async () 
           actions: [],
           id: "values-2",
           type: "collection",
-          template: [
-            {
-              data: "foo.bar",
-              output: "values",
-              value: {
-                asset: {
-                  id: "values-2-values-_index_",
-                  type: "text",
-                  value: "Template Value 3",
-                },
-              },
-            },
-          ],
           values: [
             {
               asset: {
                 id: "values-2-values-0",
                 type: "text",
                 value: "This should not be deleted by template",
+              },
+            },
+          ],
+          template: [
+            {
+              data: "foo.bar",
+              output: "values",
+              placement: "append",
+              value: {
+                asset: {
+                  id: "values-2-values-_index_",
+                  type: "text",
+                  value: "Template Value 3",
+                },
               },
             },
           ],
@@ -325,7 +392,7 @@ test("template will delete empty arrays related to the template only", async () 
 });
 
 describe("template auto id", () => {
-  test("s1mple", async () => {
+  test("simple", async () => {
     const element = (
       <Collection>
         <Collection.Values>
@@ -342,15 +409,6 @@ describe("template auto id", () => {
     expect(actual).toStrictEqual({
       id: "root",
       type: "collection",
-      values: [
-        {
-          asset: {
-            id: "static",
-            type: "text",
-            value: "Value 1",
-          },
-        },
-      ],
       template: [
         {
           data: "foo.bar",
@@ -361,6 +419,16 @@ describe("template auto id", () => {
               type: "text",
               value: "Template Value",
             },
+          },
+          placement: "prepend",
+        },
+      ],
+      values: [
+        {
+          asset: {
+            id: "static",
+            type: "text",
+            value: "Value 1",
           },
         },
       ],
@@ -390,15 +458,6 @@ describe("template auto id", () => {
     expect(actual).toStrictEqual({
       id: "root",
       type: "collection",
-      values: [
-        {
-          asset: {
-            id: "static",
-            type: "text",
-            value: "Value 1",
-          },
-        },
-      ],
       template: [
         {
           data: "foo.bar",
@@ -421,6 +480,16 @@ describe("template auto id", () => {
               ],
               type: "collection",
             },
+          },
+          placement: "prepend",
+        },
+      ],
+      values: [
+        {
+          asset: {
+            id: "static",
+            type: "text",
+            value: "Value 1",
           },
         },
       ],

@@ -141,7 +141,6 @@ const getParentProperty = (node: JsonNode): PropertyNode | undefined => {
 export const Template = (props: TemplateProps): React.JSX.Element => {
   const baseContext = React.useContext(TemplateContext);
   const dynamicProp = props.dynamic ?? false;
-  const placementProp = props.placement ?? false;
   const [outputProp, setOutputProp] = React.useState<string | undefined>(
     props.output
   );
@@ -203,6 +202,38 @@ export const Template = (props: TemplateProps): React.JSX.Element => {
     }
   }, [proxyRef, outputProp, outputElement.items]);
 
+  // Determine placement based on position in the array
+  let inferredPlacement: "append" | "prepend" | undefined;
+
+  if (
+    proxyRef.current &&
+    proxyRef.current.parent &&
+    proxyRef.current.parent.type === "array"
+  ) {
+    const parentArray = proxyRef.current.parent;
+    const proxyIndex = parentArray.items.indexOf(proxyRef.current);
+
+    // Check if there are any non-proxy items before this proxy
+    const hasNonProxyBefore = parentArray.items
+      .slice(0, proxyIndex)
+      .some((item) => item.type !== "proxy");
+
+    const hasNonProxyAfter = parentArray.items
+      .slice(proxyIndex + 1)
+      .some((item) => item.type !== "proxy");
+
+    if (hasNonProxyBefore) {
+      inferredPlacement = "append";
+    } else if (hasNonProxyAfter) {
+      inferredPlacement = "prepend";
+    } else {
+      inferredPlacement = undefined;
+    }
+  }
+
+  // Use the explicitly provided placement or the inferred one
+  const resolvedPlacement = props.placement || inferredPlacement;
+
   return (
     <proxy ref={proxyRef}>
       <>
@@ -223,9 +254,9 @@ export const Template = (props: TemplateProps): React.JSX.Element => {
                     {toJsonElement(dynamicProp)}
                   </property>
                 )}
-                {placementProp && (
+                {resolvedPlacement && (
                   <property name="placement">
-                    {toJsonElement(placementProp)}
+                    {toJsonElement(resolvedPlacement)}
                   </property>
                 )}
               </object>
