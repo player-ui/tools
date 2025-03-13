@@ -1,5 +1,5 @@
 import { test, expect, describe } from "vitest";
-import { setupTestEnv } from "../test-helpers";
+import { setupTestEnv } from "@player-tools/test-utils";
 import { decorateNode } from "../annotations";
 
 describe("Annotations", () => {

@@ -15,7 +15,10 @@ export interface SetupReturnType {
 /**
  * Setups a virtual TS environment for tests
  */
-export function setupTestEnv(sourceCode: string, mockFileName = "filename.ts") {
+export function setupTestEnv(
+  sourceCode: string,
+  mockFileName = "filename.ts"
+): SetupReturnType {
   const fsMap = tsvfs.createDefaultMapFromNodeModules({}, ts);
   fsMap.set(mockFileName, sourceCode);
 
