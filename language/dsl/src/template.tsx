@@ -40,6 +40,70 @@ export interface TemplateProps {
   placement?: "append" | "prepend";
 }
 
+/**
+ * Represents the position information for template insertion
+ */
+interface PositionInfo {
+  placement: "append" | "prepend" | undefined;
+  insertionIndex: number | undefined;
+}
+
+/**
+ * Determines placement based on its proxy node and uses that for AST parity
+ */
+function determinePositionInfo(proxyNode: ProxyNode | null): PositionInfo {
+  const result: PositionInfo = {
+    placement: undefined,
+    insertionIndex: undefined,
+  };
+
+  if (!proxyNode || !proxyNode.parent) {
+    return result;
+  }
+
+  if (proxyNode.parent.type === "array") {
+    const parentArray = proxyNode.parent;
+    const proxyIndex = parentArray.items.indexOf(proxyNode);
+
+    // Check if there are any non-proxy items before this proxy
+    const hasNonProxyBefore = parentArray.items
+      .slice(0, proxyIndex)
+      .some((item) => item.type !== "proxy");
+
+    const hasNonProxyAfter = parentArray.items
+      .slice(proxyIndex + 1)
+      .some((item) => item.type !== "proxy");
+
+    if (hasNonProxyBefore) {
+      result.placement = "append";
+    } else if (hasNonProxyAfter) {
+      result.placement = "prepend";
+    }
+  }
+
+  const containingSlot = proxyNode.parent?.parent;
+  if (
+    containingSlot &&
+    containingSlot.type === "property" &&
+    containingSlot.keyNode.type === "value"
+  ) {
+    const parentObject = getParentObject(proxyNode);
+    if (parentObject) {
+      const index = parentObject.properties.findIndex((properties) => {
+        return properties.keyNode.value === containingSlot.keyNode.value;
+      });
+
+      // Assigns AST ordering based on placement
+      if (index !== -1) {
+        result.insertionIndex =
+          result.placement === "prepend" ? index : index + 1;
+      }
+    }
+  }
+
+  return result;
+}
+
 /** Add a template instance to the object */
 function addTemplateToObject(
   obj: ObjectNode,
@@ -170,27 +234,7 @@ export const Template = (props: TemplateProps): React.JSX.Element => {
         return;
       }
 
-      let prefix = false;
-      if (
-        proxyRef.current.parent &&
-        proxyRef.current.parent.type === "array" &&
-        proxyRef.current.parent.items[0].type === "proxy"
-      ) {
-        prefix = true;
-      }
-
-      const containingSlot = proxyRef.current.parent?.parent;
-      let insertionIndex = undefined;
-      if (
-        containingSlot &&
-        containingSlot.type === "property" &&
-        containingSlot.keyNode.type === "value"
-      ) {
-        insertionIndex = parentObject.properties.findIndex((properties) => {
-          return properties.keyNode.value === containingSlot.keyNode.value;
-        });
-        insertionIndex = prefix ? insertionIndex : insertionIndex + 1;
-      }
+      const { insertionIndex } = determinePositionInfo(proxyRef.current);
 
       // remove the template when unmounted
       return addTemplateToObject(
@@ -202,34 +246,10 @@ export const Template = (props: TemplateProps): React.JSX.Element => {
     }
   }, [proxyRef, outputProp, outputElement.items]);
 
-  // Determine placement based on position in the array
-  let inferredPlacement: "append" | "prepend" | undefined;
-
-  if (
-    proxyRef.current &&
-    proxyRef.current.parent &&
-    proxyRef.current.parent.type === "array"
-  ) {
-    const parentArray = proxyRef.current.parent;
-    const proxyIndex = parentArray.items.indexOf(proxyRef.current);
-
-    // Check if there are any non-proxy items before this proxy
-    const hasNonProxyBefore = parentArray.items
-      .slice(0, proxyIndex)
-      .some((item) => item.type !== "proxy");
-
-    const hasNonProxyAfter = parentArray.items
-      .slice(proxyIndex + 1)
-      .some((item) => item.type !== "proxy");
-
-    if (hasNonProxyBefore) {
-      inferredPlacement = "append";
-    } else if (hasNonProxyAfter) {
-      inferredPlacement = "prepend";
-    } else {
-      inferredPlacement = undefined;
-    }
-  }
+  // Get position information for the template
+  const { placement: inferredPlacement } = determinePositionInfo(
+    proxyRef.current
+  );
 
   // Use the explicitly provided placement or the inferred one
   const resolvedPlacement = props.placement || inferredPlacement;
