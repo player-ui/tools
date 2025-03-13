@@ -44,8 +44,8 @@ export interface TemplateProps {
  * Represents the position information for template insertion
  */
 interface PositionInfo {
-  placement: "append" | "prepend" | undefined;
-  insertionIndex: number | undefined;
+  placement?: "append" | "prepend";
+  insertionIndex?: number;
 }
 
 /**
