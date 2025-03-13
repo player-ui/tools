@@ -36,7 +36,7 @@ export interface TemplateProps {
   /** boolean that specifies whether template should recompute when data changes */
   dynamic?: boolean;
 
-  /** Placement method */
+  /** Specifies the expanded template placement in relation to existing elements*/
   placement?: "append" | "prepend";
 }
 
