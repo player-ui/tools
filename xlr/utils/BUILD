@@ -17,9 +17,9 @@ js_pipeline(
     test_deps = [
         "//:node_modules",
         "//:vitest_config",
+        ":node_modules/@player-tools/test-utils",
     ],
     deps = [
         ":node_modules/@player-tools/xlr",
-        "//:node_modules/@typescript/vfs",
     ],
 )
