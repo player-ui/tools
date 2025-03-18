@@ -80,3 +80,5 @@ ios/*/*/Resources/**/*.js
 .ios-build-number
 
 .bazelrc.local
+build-info.sh
+.qodo
