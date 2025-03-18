@@ -38,6 +38,25 @@ commands:
       - run: |
           source ~/.bashrc
           npx auto shipit --only-graduate-with-release-label -vv
+      # Add PR comment for canary builds with the same message that Auto generates for the PR body
+      - run:
+          name: Add PR comment for canary builds
+          command: |
+            if [ -n "$CIRCLE_PULL_REQUEST" ]; then
+              # Extract PR number from CIRCLE_PULL_REQUEST URL
+              PR_NUMBER=$(echo $CIRCLE_PULL_REQUEST | grep -o '[0-9]*$')
+              
+              if [ "$IS_CANARY" = "1" ]; then
+                echo "Detected canary build"
+                
+                # Use Auto's comment command to add the PR comment
+                npx auto comment --pr $PR_NUMBER --context "Canary Release"
+              else
+                echo "Not a canary build, skipping PR comment"
+              fi
+            else
+              echo "Not a PR build, skipping PR comment"
+            fi
   check_branch_status:
     description: "Check if the branch is clean after the build"
     steps:
@@ -158,7 +177,7 @@ workflows:
           filters:
             branches:
               ignore:
-                -  /pull\/.*/
+                - /pull\/.*/
           requires:
             - bazelrc
 
@@ -198,7 +217,6 @@ workflows:
                 - /pull\/.*./
           requires:
             - build-fork
-
 
   build_and_test_main:
     when:
