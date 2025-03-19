@@ -1,4 +1,5 @@
 /** @jsx createElement */
+/** @jsxFrag Fragment */
 import { createElement, Fragment } from "../jsx-runtime.js";
 import { describe, test, expect } from "vitest";
 import { binding as b, expression as e } from "../tagged-templates.js";

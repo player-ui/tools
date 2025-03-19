@@ -1,10 +1,9 @@
 /** @jsx createElement */
+/** @jsxFrag Fragment */
 import { createElement, Fragment } from "../jsx-runtime";
-import { describe, test, expect, vi } from "vitest";
-import { render, renderToAST } from "../render";
+import { describe, test, expect } from "vitest";
+import { render } from "../render";
 import { binding as b, expression as e } from "../tagged-templates";
-import { createObjectNode, createArrayNode, createPropertyNode, createValueNode } from "../nodes";
-import type { ASTNode, JsonType, RefObject } from "../types";
 
 describe("render function", () => {
     test("render() with primitive values", () => {
