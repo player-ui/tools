@@ -21,13 +21,13 @@ It's an option to `@player-tools/dsl` for scenarios where the user requires comp
 
 ```bash
 # Using npm
-npm install @player-tools/dsl-lite
+npm install player-ui-jsx
 
 # Using yarn
-yarn add @player-tools/dsl-lite
+yarn add player-ui-jsx
 
 # Using pnpm
-pnpm add @player-tools/dsl-lite
+pnpm add player-ui-jsx
 ```
 
 ## Usage
@@ -35,8 +35,8 @@ pnpm add @player-tools/dsl-lite
 ### Basic Example
 
 ```tsx
-import { Asset } from "@player-tools/dsl-lite";
-import { Text } from "@player-ui/reference-assets-plugin-components";
+import { render } from "player-ui-jsx";
+import { Text, Asset } from "player-ui-jsx/components";
 
 const MyView = () => (
   <Asset id="my-text" type="text">
@@ -52,8 +52,8 @@ console.log(jsonValue);
 ### Using Hooks
 
 ```tsx
-import { useRef, useContext, render, Asset } from "@player-tools/dsl-lite";
-import { Text } from "@player-ui/reference-assets-plugin-components";
+import { useRef, useContext, render } from "player-ui-jsx";
+import { Text, Asset } from "player-ui-jsx/components";
 
 const MyComponent = () => {
   // Create a ref to access the AST node
@@ -72,14 +72,14 @@ const { jsonValue } = render(<MyComponent />);
 ### Using Expressions and Bindings
 
 ```tsx
-import { expression, binding, render, Asset } from "@player-tools/dsl-lite";
-import { Text } from "@player-ui/reference-assets-plugin-components";
+import { expression, binding, render } from "player-ui-jsx";
+import { Text, Asset } from "player-ui-jsx/components";
 
 const DynamicContent = () => (
   <>
     <Asset id="dynamic-text" type="text">
-      <text>hello, {binding`user.name`}!</text>
-    </asset>
+      <Text>Hello, {binding`user.name`}!</Text>
+    </Asset>
     <Asset
       id="conditional"
       type="text"
@@ -121,8 +121,8 @@ const { jsonValue } = render(<DynamicContent />);
 Create your own reusable components:
 
 ```tsx
-import { binding, Asset } from "@player-tools/dsl-lite";
-import { Text } from "@player-ui/reference-assets-plugin-components";
+import { binding } from "player-ui-jsx";
+import { Asset, Text } from "player-ui-jsx/components";
 
 interface ButtonProps {
   id: string;

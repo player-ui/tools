@@ -372,15 +372,15 @@ function renderIntrinsic(type: string, props: IntrinsicElementProps): ASTNode {
           isStringConcatenation: true,
           children: Array.isArray(children)
             ? children.map((c) => ({
-                type: c.type,
-                props: c.props,
-              }))
+              type: c.type,
+              props: c.props,
+            }))
             : [
-                {
-                  type: (children as any).type,
-                  props: (children as any).props,
-                },
-              ],
+              {
+                type: (children as any).type,
+                props: (children as any).props,
+              },
+            ],
         } as unknown as JsonType);
 
         // Attach ref if provided

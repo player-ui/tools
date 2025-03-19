@@ -122,9 +122,8 @@ export function expression(
     if (e instanceof Error) {
       let message: string;
       if (isErrorWithLocation(e)) {
-        message = `${e} in expression: \r\n ${
-          result.slice(0, e.index + 1) + "\u2588" + result.slice(e.index + 1)
-        }`;
+        message = `${e} in expression: \r\n ${result.slice(0, e.index + 1) + "\u2588" + result.slice(e.index + 1)
+          }`;
       } else {
         message = `${e} in expression ${result}`;
       }
