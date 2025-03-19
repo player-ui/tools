@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-key */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /** @jsx createElement */
 /** @jsxFrag Fragment */
 import { createElement, Fragment } from "../jsx-runtime";
@@ -34,7 +36,7 @@ describe("render function", () => {
     const { jsonValue } = render(element);
     expect(jsonValue).toEqual({
       name: "John",
-      age: 30
+      age: 30,
     });
   });
 
@@ -61,9 +63,9 @@ describe("render function", () => {
         name: "John",
         address: {
           city: "New York",
-          zip: "10001"
-        }
-      }
+          zip: "10001",
+        },
+      },
     });
   });
 
@@ -108,8 +110,8 @@ describe("render function", () => {
     expect(jsonValue).toEqual({
       items: [
         { id: 1, name: "Item 1" },
-        { id: 2, name: "Item 2", tags: ["tag1", "tag2"] }
-      ]
+        { id: 2, name: "Item 2", tags: ["tag1", "tag2"] },
+      ],
     });
   });
 
@@ -128,7 +130,7 @@ describe("render function", () => {
     expect(jsonValue).toEqual({
       first: "First Value",
       second: "Second Value",
-      third: "Third Value"
+      third: "Third Value",
     });
   });
 
@@ -149,7 +151,7 @@ describe("render function", () => {
     expect(jsonValue).toEqual({
       a: "A",
       b: "B",
-      c: "C"
+      c: "C",
     });
   });
 
@@ -179,7 +181,7 @@ describe("render function", () => {
     const { jsonValue } = render(element);
     expect(jsonValue).toEqual({
       binding: "{{user.name}}",
-      expression: "@[isValid && user.age > 18]@"
+      expression: "@[isValid && user.age > 18]@",
     });
   });
 
@@ -200,7 +202,7 @@ describe("render function", () => {
     expect(jsonValue).toEqual({
       name: "John",
       age: 25,
-      isAdult: true
+      isAdult: true,
     });
   });
 
@@ -224,25 +226,25 @@ describe("render function", () => {
     expect(jsonValue).toEqual({
       name: "John",
       email: "john@example.com",
-      role: "admin"
+      role: "admin",
     });
   });
 
   test("render() with direct properties in object", () => {
-    const element = (
-      <obj id="user-1" type="user" active={true} />
-    );
+    // eslint-disable-next-line react/no-unknown-property
+    const element = <obj id="user-1" type="user" active={true} />;
 
     const { jsonValue } = render(element);
     expect(jsonValue).toEqual({
       id: "user-1",
       type: "user",
-      active: true
+      active: true,
     });
   });
 
   test("render() with direct properties in array", () => {
     const element = (
+      // eslint-disable-next-line react/no-unknown-property
       <array id="items" sortable={true}>
         <value value={1} />
         <value value={2} />
@@ -275,7 +277,7 @@ describe("render function", () => {
 
     const { jsonValue } = render(element);
     expect(jsonValue).toEqual({
-      test: ["first", "second"]
+      test: ["first", "second"],
     });
   });
 
@@ -336,7 +338,7 @@ describe("Edge cases", () => {
       circular: {
         name: "Circular",
         self: null, // Circular reference is set to null
-      }
+      },
     });
   });
 
@@ -368,22 +370,22 @@ describe("Edge cases", () => {
             name: "B",
             ref: {
               name: "C",
-              ref: null // Circular reference back to A breaks here
-            }
-          }
+              ref: null, // Circular reference back to A breaks here
+            },
+          },
         },
         objB: {
           name: "B",
           ref: {
             name: "C",
-            ref: null // Another reference break
-          }
+            ref: null, // Another reference break
+          },
         },
         objC: {
           name: "C",
-          ref: null // Another reference break
-        }
-      }
+          ref: null, // Another reference break
+        },
+      },
     });
   });
 
@@ -402,7 +404,7 @@ describe("Edge cases", () => {
     const { jsonValue } = render(element);
     expect(jsonValue).toEqual({
       id: "test",
-      name: "Test Object"
+      name: "Test Object",
     });
   });
 
@@ -472,7 +474,7 @@ describe("Additional edge cases", () => {
     expect(jsonValue).toEqual({
       shared1: "value1",
       shared2: "value2",
-      unique: "unique value"
+      unique: "unique value",
     });
   });
 
@@ -490,23 +492,13 @@ describe("Additional edge cases", () => {
     );
 
     const { jsonValue } = render(element);
-    expect(jsonValue).toEqual([
-      "string",
-      42,
-      true,
-      null,
-      { nested: "object" }
-    ]);
+    expect(jsonValue).toEqual(["string", 42, true, null, { nested: "object" }]);
   });
 
   test("handle null in array children", () => {
     const array = [<value value="one" />, null, <value value="two" />];
 
-    const element = (
-      <array>
-        {array}
-      </array>
-    );
+    const element = <array>{array}</array>;
 
     const { jsonValue } = render(element);
     // null items should be filtered out
@@ -526,7 +518,7 @@ describe("Additional edge cases", () => {
     const { jsonValue } = render(element);
     expect(jsonValue).toEqual({
       key1: "value1",
-      key2: "value2"
+      key2: "value2",
     });
   });
-}); 
+});
