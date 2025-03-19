@@ -67,7 +67,9 @@ export function createPropertyNode(
  * @param value - Optional value
  * @returns Value AST node
  */
-export function createValueNode(value?: JsonType | TaggedTemplateValue): ValueASTNode {
+export function createValueNode(
+  value?: JsonType | TaggedTemplateValue
+): ValueASTNode {
   return {
     kind: "value",
     value: isTaggedTemplateValue(value) ? value.toRefString() : value,
@@ -111,7 +113,9 @@ function processValue(value: JsonType | unknown): unknown {
 
     // Now populate the array with processed items
     for (let i = 0; i < value.length; i++) {
-      const processedItem = isASTNode(value[i]) ? toJSON(value[i]) : processValue(value[i]);
+      const processedItem = isASTNode(value[i])
+        ? toJSON(value[i])
+        : processValue(value[i]);
       (result as unknown[]).push(processedItem);
     }
   } else {
@@ -125,7 +129,9 @@ function processValue(value: JsonType | unknown): unknown {
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
       const val = value[key as keyof typeof value];
-      (result as Record<string, unknown>)[key] = isASTNode(val) ? toJSON(val) : processValue(val);
+      (result as Record<string, unknown>)[key] = isASTNode(val)
+        ? toJSON(val)
+        : processValue(val);
     }
   }
 

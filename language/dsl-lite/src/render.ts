@@ -362,19 +362,25 @@ function renderIntrinsic(type: string, props: IntrinsicElementProps): ASTNode {
     case "value": {
       // Special case for string concatenation pattern - if the value node has children that are all value nodes
       // we need to handle this specially to ensure they are concatenated
-      if (children && props.value === undefined && isValueConcatenation(children)) {
+      if (
+        children &&
+        props.value === undefined &&
+        isValueConcatenation(children)
+      ) {
         // Create a value node with a special marker to indicate string concatenation
         const valueNode = createValueNode({
           isStringConcatenation: true,
           children: Array.isArray(children)
-            ? children.map(c => ({
-              type: c.type,
-              props: c.props
-            }))
-            : [{
-              type: (children as any).type,
-              props: (children as any).props
-            }]
+            ? children.map((c) => ({
+                type: c.type,
+                props: c.props,
+              }))
+            : [
+                {
+                  type: (children as any).type,
+                  props: (children as any).props,
+                },
+              ],
         } as unknown as JsonType);
 
         // Attach ref if provided
@@ -534,11 +540,15 @@ function astNodeToJSON(node: ASTNode): JsonType {
   switch (node.kind) {
     case "value": {
       // Special case for string concatenation pattern
-      if (node.value && typeof node.value === "object" && (node.value as any).isStringConcatenation) {
+      if (
+        node.value &&
+        typeof node.value === "object" &&
+        (node.value as any).isStringConcatenation
+      ) {
         const concatChildren = (node.value as any).children;
         if (Array.isArray(concatChildren)) {
           // Process each child value element and convert to string
-          const stringValues = concatChildren.map(child => {
+          const stringValues = concatChildren.map((child) => {
             if (child.props.value !== undefined) {
               if (isTaggedTemplateValue(child.props.value)) {
                 return child.props.value.toString();
@@ -570,12 +580,19 @@ function astNodeToJSON(node: ASTNode): JsonType {
 
         // Check if we can convert all values to strings and concatenate
         const allValuesStringable = childValues.every(
-          (v) => typeof v === "string" || v === null || v === undefined || typeof v === "number" || typeof v === "boolean"
+          (v) =>
+            typeof v === "string" ||
+            v === null ||
+            v === undefined ||
+            typeof v === "number" ||
+            typeof v === "boolean"
         );
 
         if (allValuesStringable) {
           // Convert null/undefined to empty strings for concatenation
-          const stringValues = childValues.map(v => v == null ? "" : String(v));
+          const stringValues = childValues.map((v) =>
+            v == null ? "" : String(v)
+          );
           return stringValues.join("");
         }
 
