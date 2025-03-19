@@ -7,6 +7,7 @@ import {
   type JsonType,
   isTaggedTemplateValue,
   isASTNode,
+  TaggedTemplateValue,
 } from "./types";
 
 /**
@@ -66,10 +67,10 @@ export function createPropertyNode(
  * @param value - Optional value
  * @returns Value AST node
  */
-export function createValueNode(value?: JsonType): ValueASTNode {
+export function createValueNode(value?: JsonType | TaggedTemplateValue): ValueASTNode {
   return {
     kind: "value",
-    value,
+    value: isTaggedTemplateValue(value) ? value.toRefString() : value,
     props: new Map(),
     parent: null,
     children: [],
@@ -95,37 +96,40 @@ function processValue(value: JsonType | unknown): unknown {
     return processValueCache.get(value);
   }
 
-  // Temporary value to break circular references
-  processValueCache.set(value, null);
-
+  // Create the result object/array first so we can establish references before recursing
   let result: unknown;
 
-  try {
-    if (isTaggedTemplateValue(value)) {
-      result = value.toRefString();
-    } else if (Array.isArray(value)) {
-      result = value.map((item) =>
-        isASTNode(item) ? toJSON(item) : processValue(item)
-      );
-    } else {
-      const processed: Record<string, unknown> = {};
-
-      const keys = Object.keys(value);
-      for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-        const val = value[key as keyof typeof value];
-        processed[key] = isASTNode(val) ? toJSON(val) : processValue(val);
-      }
-
-      result = processed;
-    }
-
+  if (isTaggedTemplateValue(value)) {
+    result = value.toRefString();
     processValueCache.set(value, result);
     return result;
-  } catch (error) {
-    processValueCache.delete(value);
-    throw error;
+  } else if (Array.isArray(value)) {
+    // Create the array first
+    result = [];
+    // Store the reference immediately for circular reference handling
+    processValueCache.set(value, result);
+
+    // Now populate the array with processed items
+    for (let i = 0; i < value.length; i++) {
+      const processedItem = isASTNode(value[i]) ? toJSON(value[i]) : processValue(value[i]);
+      (result as unknown[]).push(processedItem);
+    }
+  } else {
+    // For objects, create empty object first
+    result = {};
+    // Store the reference immediately for circular reference handling
+    processValueCache.set(value, result);
+
+    // Now populate the object with processed properties
+    const keys = Object.keys(value);
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const val = value[key as keyof typeof value];
+      (result as Record<string, unknown>)[key] = isASTNode(val) ? toJSON(val) : processValue(val);
+    }
   }
+
+  return result;
 }
 
 /**

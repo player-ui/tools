@@ -360,9 +360,55 @@ function renderIntrinsic(type: string, props: IntrinsicElementProps): ASTNode {
     }
 
     case "value": {
+      // Special case for string concatenation pattern - if the value node has children that are all value nodes
+      // we need to handle this specially to ensure they are concatenated
+      if (children && props.value === undefined && isValueConcatenation(children)) {
+        // Create a value node with a special marker to indicate string concatenation
+        const valueNode = createValueNode({
+          isStringConcatenation: true,
+          children: Array.isArray(children)
+            ? children.map(c => ({
+              type: c.type,
+              props: c.props
+            }))
+            : [{
+              type: (children as any).type,
+              props: (children as any).props
+            }]
+        } as unknown as JsonType);
+
+        // Attach ref if provided
+        if (ref) {
+          ref.current = valueNode;
+        }
+
+        return valueNode;
+      }
+
+      // Handle value props first (normal case)
       const valueNode = createValueNode(
         (props.value !== undefined ? props.value : children) as JsonType
       );
+
+      // Handle JSX children for the <value> element
+      if (children && props.value === undefined) {
+        if (Array.isArray(children)) {
+          // Create child nodes for each item
+          for (let i = 0; i < children.length; i++) {
+            const child = children[i];
+            if (child != null) {
+              const childNode = renderToAST(child, valueNode);
+              valueNode.children.push(childNode);
+              childNode.parent = valueNode;
+            }
+          }
+        } else {
+          // Create a child node for a single item
+          const childNode = renderToAST(children, valueNode);
+          valueNode.children.push(childNode);
+          childNode.parent = valueNode;
+        }
+      }
 
       // Attach ref if provided
       if (ref) {
@@ -377,8 +423,30 @@ function renderIntrinsic(type: string, props: IntrinsicElementProps): ASTNode {
   }
 }
 
+/**
+ * Check if the children of a value element represent a string concatenation pattern
+ * @param children - Children to check
+ * @returns True if all children are value elements with string values
+ */
+function isValueConcatenation(children: any): boolean {
+  // First check if we have an array of children
+  if (!Array.isArray(children)) {
+    return false;
+  }
+
+  // Then check if all children are value elements
+  return children.every(
+    (child) =>
+      child &&
+      child.$$typeof === Symbol.for("jsx.element") &&
+      child.type === "value"
+  );
+}
+
 // Use a Map for memo cache for faster lookups
 const processNodeValueCache = new WeakMap<object, JsonType>();
+// Set to track objects currently being processed (for better circular ref detection)
+const processingSet = new WeakSet<object>();
 
 /**
  * Process values, recursively handling TaggedTemplateValue and nested objects
@@ -400,45 +468,61 @@ function processNodeValue(value: unknown): JsonType {
     return processNodeValueCache.get(value) as JsonType;
   }
 
+  // Detect circular reference - if we're already processing this object
+  if (processingSet.has(value)) {
+    return null; // Break the circular reference
+  }
+
+  // Handle JSX elements - process them through renderToAST
+  if (isJSXElement(value)) {
+    const node = renderToAST(value);
+    return astNodeToJSON(node);
+  }
+
   // Handle TaggedTemplateValue objects
   if (isTaggedTemplateValue(value)) {
     return value.toString();
   }
 
-  // Set a temp value to handle circular references
-  processNodeValueCache.set(value, null);
+  // Mark this object as being processed
+  processingSet.add(value);
 
-  // Handle arrays
-  if (Array.isArray(value)) {
-    const result = value.map(processNodeValue);
-    processNodeValueCache.set(value, result);
-    return result;
-  }
-
-  // Handle objects (recursively process each property)
-  if (typeof value === "object") {
-    // Check if it's an AST node
-    if ("kind" in value) {
-      const result = astNodeToJSON(value as ASTNode);
+  try {
+    // Handle arrays
+    if (Array.isArray(value)) {
+      const result = value.map(processNodeValue);
       processNodeValueCache.set(value, result);
       return result;
     }
 
-    // Otherwise process each property recursively
-    const result: Record<string, JsonType> = {};
+    // Handle objects (recursively process each property)
+    if (typeof value === "object") {
+      // Check if it's an AST node
+      if ("kind" in value) {
+        const result = astNodeToJSON(value as ASTNode);
+        processNodeValueCache.set(value, result);
+        return result;
+      }
 
-    const keys = Object.keys(value) as Array<keyof typeof value>;
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
-      result[key] = processNodeValue(value[key]);
+      // Otherwise process each property recursively
+      const result: Record<string, JsonType> = {};
+
+      const keys = Object.keys(value) as Array<keyof typeof value>;
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        result[key] = processNodeValue(value[key]);
+      }
+
+      processNodeValueCache.set(value, result);
+      return result;
     }
 
-    processNodeValueCache.set(value, result);
-    return result;
+    // Default fallback (should never reach here)
+    return value;
+  } finally {
+    // Remove from the processing set when done
+    processingSet.delete(value);
   }
-
-  // Default fallback (should never reach here)
-  return value;
 }
 
 /**
@@ -449,6 +533,24 @@ function processNodeValue(value: unknown): JsonType {
 function astNodeToJSON(node: ASTNode): JsonType {
   switch (node.kind) {
     case "value": {
+      // Special case for string concatenation pattern
+      if (node.value && typeof node.value === "object" && (node.value as any).isStringConcatenation) {
+        const concatChildren = (node.value as any).children;
+        if (Array.isArray(concatChildren)) {
+          // Process each child value element and convert to string
+          const stringValues = concatChildren.map(child => {
+            if (child.props.value !== undefined) {
+              if (isTaggedTemplateValue(child.props.value)) {
+                return child.props.value.toString();
+              }
+              return String(child.props.value);
+            }
+            return "";
+          });
+          return stringValues.join("");
+        }
+      }
+
       // Process the value recursively to handle all cases
       if (node.value !== undefined) {
         return processNodeValue(node.value);
@@ -456,14 +558,34 @@ function astNodeToJSON(node: ASTNode): JsonType {
 
       // Handle children
       if (node.children.length > 0) {
-        const childValues = node.children.map(astNodeToJSON);
+        // First, fully process all children to their JSON values
+        const childValues = node.children.map((child) => {
+          // Force process JSX elements first
+          if (isJSXElement(child)) {
+            const childNode = renderToAST(child);
+            return astNodeToJSON(childNode);
+          }
+          return astNodeToJSON(child);
+        });
 
-        // Optimize string concatenation
-        if (childValues.every((v) => typeof v === "string")) {
-          return childValues.join("");
+        // Check if we can convert all values to strings and concatenate
+        const allValuesStringable = childValues.every(
+          (v) => typeof v === "string" || v === null || v === undefined || typeof v === "number" || typeof v === "boolean"
+        );
+
+        if (allValuesStringable) {
+          // Convert null/undefined to empty strings for concatenation
+          const stringValues = childValues.map(v => v == null ? "" : String(v));
+          return stringValues.join("");
         }
 
-        return childValues[0];
+        // If there's only one child, return it directly
+        if (childValues.length === 1) {
+          return childValues[0];
+        }
+
+        // Otherwise return the array of values
+        return childValues;
       }
 
       return null;
