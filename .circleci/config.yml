@@ -35,9 +35,25 @@ commands:
 
       - run: echo "//registry.npmjs.com/:_authToken=$NPM_TOKEN" >> ~/.npmrc
       - run: echo -e $GPG_KEY | gpg --import --batch
-      - run: |
-          source ~/.bashrc
-          npx auto shipit --only-graduate-with-release-label -vv
+      - run:
+          name: Post version comment
+          command: |
+            source ~/.bashrc
+
+            PACKAGE_VERSION=$(npx auto shipit --quiet)         
+
+            BUILD_INFO="### Build Info
+
+            Your PR was successfully deployed by [CircleCI #$CIRCLE_BUILD_NUM](https://circleci.com/gh/player-ui/tools/$CIRCLE_BUILD_NUM) on \`$(date -u)\` with this version:"
+            BUILD_INFO="$BUILD_INFO 
+
+            \`\`\`
+            $PACKAGE_VERSION
+            \`\`\`"
+
+            # Post the build info as a comment to the PR
+            npx auto comment --pr $PR_NUMBER --context "Build Info" --message "$BUILD_INFO"
+
   check_branch_status:
     description: "Check if the branch is clean after the build"
     steps:
@@ -158,7 +174,7 @@ workflows:
           filters:
             branches:
               ignore:
-                -  /pull\/.*/
+                - /pull\/.*/
           requires:
             - bazelrc
 
@@ -198,7 +214,6 @@ workflows:
                 - /pull\/.*./
           requires:
             - build-fork
-
 
   build_and_test_main:
     when:
