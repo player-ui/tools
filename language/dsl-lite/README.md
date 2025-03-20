@@ -35,8 +35,8 @@ pnpm add player-ui-jsx
 ### Basic Example
 
 ```tsx
-import { render } from "player-ui-jsx";
-import { Text, Asset } from "player-ui-jsx/components";
+import { Asset } from "@player-tools/dsl-lite";
+import { Text } from "@player-ui/reference-assets-plugin-components";
 
 const MyView = () => (
   <Asset id="my-text" type="text">
@@ -52,8 +52,8 @@ console.log(jsonValue);
 ### Using Hooks
 
 ```tsx
-import { useRef, useContext, render } from "player-ui-jsx";
-import { Text, Asset } from "player-ui-jsx/components";
+import { useRef, useContext, render, Asset } from "@player-tools/dsl-lite";
+import { Text } from "@player-ui/reference-assets-plugin-components";
 
 const MyComponent = () => {
   // Create a ref to access the AST node
@@ -72,14 +72,14 @@ const { jsonValue } = render(<MyComponent />);
 ### Using Expressions and Bindings
 
 ```tsx
-import { expression, binding, render } from "player-ui-jsx";
-import { Text, Asset } from "player-ui-jsx/components";
+import { expression, binding, render, Asset } from "@player-tools/dsl-lite";
+import { Text } from "@player-ui/reference-assets-plugin-components";
 
 const DynamicContent = () => (
   <>
     <Asset id="dynamic-text" type="text">
-      <Text>Hello, {binding`user.name`}!</Text>
-    </Asset>
+      <text>hello, {binding`user.name`}!</text>
+    </asset>
     <Asset
       id="conditional"
       type="text"
@@ -121,8 +121,8 @@ const { jsonValue } = render(<DynamicContent />);
 Create your own reusable components:
 
 ```tsx
-import { binding } from "player-ui-jsx";
-import { Asset, Text } from "player-ui-jsx/components";
+import { binding, Asset } from "@player-tools/dsl-lite";
+import { Text } from "@player-ui/reference-assets-plugin-components";
 
 interface ButtonProps {
   id: string;
