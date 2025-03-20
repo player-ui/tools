@@ -51,26 +51,8 @@ commands:
             $PACKAGE_VERSION
             \`\`\`"
 
-            # Debug information
-            echo "PR_NUMBER: ${PR_NUMBER:-not set}"
-            echo "PACKAGE_VERSION: ${PACKAGE_VERSION:-not set}"
-            echo "CIRCLE_BRANCH: ${CIRCLE_BRANCH:-not set}"
-
-            if [ -n "$PR_NUMBER" ]; then
-              echo "Posting comment to PR #$PR_NUMBER"
-              # Use set +e to prevent the command from failing the build if it errors
-              set +e
-              npx auto comment --pr $PR_NUMBER --context "Build Info" --message "$BUILD_INFO"
-              COMMENT_EXIT_CODE=$?
-              set -e
-              
-              if [ $COMMENT_EXIT_CODE -ne 0 ]; then
-                echo "Warning: Failed to post comment to PR, but continuing build"
-                echo "This is expected for merge builds where PR_NUMBER is no longer valid"
-              fi
-            else
-              echo "No PR number found. This is normal for merge builds. Skipping comment posting."
-            fi
+            # Post the build info as a comment to the PR
+            npx auto comment --context "Build Info" --message "$BUILD_INFO" || true
 
   check_branch_status:
     description: "Check if the branch is clean after the build"
