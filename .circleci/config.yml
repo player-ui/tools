@@ -51,8 +51,13 @@ commands:
             $PACKAGE_VERSION
             \`\`\`"
 
-            # Post the build info as a comment to the PR
-            npx auto comment --pr $PR_NUMBER --context "Build Info" --message "$BUILD_INFO"
+            # Only post the comment if PR_NUMBER is available
+            if [ -n "$PR_NUMBER" ]; then
+              # Post the build info as a comment to the PR
+              npx auto comment --pr $PR_NUMBER --context "Build Info" --message "$BUILD_INFO"
+            else
+              echo "No PR number found. Skipping comment posting."
+            fi
 
   check_branch_status:
     description: "Check if the branch is clean after the build"
