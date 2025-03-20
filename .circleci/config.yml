@@ -52,7 +52,7 @@ commands:
             \`\`\`"
 
             # Post the build info as a comment to the PR
-            npx auto comment --pr $PR_NUMBER --context "Build Info" --message "$BUILD_INFO"
+            npx auto comment --context "Build Info" --message "$BUILD_INFO" || true
 
   check_branch_status:
     description: "Check if the branch is clean after the build"
