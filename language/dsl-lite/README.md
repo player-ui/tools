@@ -21,13 +21,13 @@ It's an option to `@player-tools/dsl` for scenarios where the user requires comp
 
 ```bash
 # Using npm
-npm install player-ui-jsx
+npm install @player-tools/dsl-lite
 
 # Using yarn
-yarn add player-ui-jsx
+yarn add @player-tools/dsl-lite
 
 # Using pnpm
-pnpm add player-ui-jsx
+pnpm add @player-tools/dsl-lite
 ```
 
 ## Usage
