@@ -14,6 +14,7 @@ js_pipeline(
         "//:vitest_config",
     ],
     deps = [
+        "//:node_modules/@player-ui/player",
         "//:node_modules/@player-ui/types",
         "//:node_modules/typescript",
     ],

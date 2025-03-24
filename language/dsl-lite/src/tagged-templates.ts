@@ -4,6 +4,7 @@ import {
   type TemplateRefOptions,
   type TaggedTemplateValue,
 } from "./types";
+import { parseExpression, isErrorWithLocation } from "@player-ui/player";
 
 /**
  * Tagged template for creating binding expressions
@@ -96,38 +97,6 @@ export function expression(
   strings: TemplateStringsArray,
   ...expressions: Array<unknown>
 ): TaggedTemplateValue {
-  /**
-   * Validates expression syntax with balanced parentheses
-   * @throws Error if parentheses are unbalanced
-   */
-  const validateSyntax = (expr: string): void => {
-    let openParens = 0;
-    // Use position counter to match original behavior exactly
-    let position = 0;
-
-    // Validation loop using position counter
-    for (const char of expr) {
-      if (char === "(") openParens++;
-      if (char === ")") openParens--;
-      position++;
-
-      if (openParens < 0) {
-        throw new Error(
-          `Error: Unexpected ) at character ${position} in expression: \n ${expr.slice(
-            0,
-            position
-          )}█${expr.slice(position)}`
-        );
-      }
-    }
-
-    if (openParens > 0) {
-      throw new Error(
-        `Error: Expected ) at character ${position} in expression: \n ${expr}█`
-      );
-    }
-  };
-
   let result = "";
   const len = strings.length;
 
@@ -146,7 +115,24 @@ export function expression(
     }
   }
 
-  validateSyntax(result);
+  /** Try to parse the expression as valid */
+  try {
+    parseExpression(result);
+  } catch (e) {
+    if (e instanceof Error) {
+      let message: string;
+      if (isErrorWithLocation(e)) {
+        message = `${e} in expression: \r\n ${
+          result.slice(0, e.index + 1) + "\u2588" + result.slice(e.index + 1)
+        }`;
+      } else {
+        message = `${e} in expression ${result}`;
+      }
+      throw new Error(message);
+    }
+
+    throw new Error(`Unknown problem parsing expression ${e}`);
+  }
 
   return {
     [TaggedTemplateValueSymbol]: true,
