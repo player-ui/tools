@@ -21,6 +21,9 @@ export type {
   ValueASTNode,
 } from "./types.js";
 
+// Re-export hooks
+export { createContext, useContext } from "./hooks.js";
+
 // Re-export tagged-template utilities
 export { binding, expression } from "./tagged-templates.js";
 
