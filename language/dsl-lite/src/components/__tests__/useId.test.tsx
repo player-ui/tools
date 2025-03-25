@@ -1,8 +1,8 @@
 /** @jsx createElement */
-import { createElement } from "../jsx-runtime";
+import { createElement } from "../../jsx-runtime";
 import { test, expect } from "vitest";
-import { IdProvider, useId } from "../components/useId.js";
-import { render } from "../render.js";
+import { IdProvider, useId } from "../useId.js";
+import { render } from "../../render.js";
 
 test("uses provided id", () => {
   const Component = () => {

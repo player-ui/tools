@@ -12,11 +12,15 @@ interface AssetProps {
   type: string;
   id?: string;
   children?: JSXElement | JSXElement[];
+  [key: string]:
+    | JsonType
+    | TaggedTemplateValue
+    | JSXElement
+    | JSXElement[]
+    | undefined;
 }
 
-export function Asset(
-  props: AssetProps & { [key: string]: JsonType | TaggedTemplateValue }
-) {
+export function Asset(props: AssetProps): JSXElement {
   const idContext = useId();
   const assetId = props.id || idContext.getId();
 

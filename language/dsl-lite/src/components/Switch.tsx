@@ -25,7 +25,7 @@ function CaseWrapper({
   idx,
   switchType,
 }: {
-  children?: JSXElement;
+  children?: JSXElement | JSXElement[];
   idx: number;
   switchType: "staticSwitch" | "dynamicSwitch";
 }) {
@@ -46,7 +46,10 @@ export function Case(props: CaseProps) {
   );
 }
 
-export function Switch(props: { isDynamic?: boolean; children?: JSXElement }) {
+export function Switch(props: {
+  isDynamic?: boolean;
+  children?: JSXElement | JSXElement[];
+}) {
   const switchType = props.isDynamic ? "dynamicSwitch" : "staticSwitch";
 
   return (
