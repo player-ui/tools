@@ -1,0 +1,6 @@
+{
+  "name": "@player-tools/dsl-lite",
+  "version": "0.0.0-PLACEHOLDER",
+  "main": "src/index.ts",
+  "description": "A lightweight JSX runtime implementation for writing Player UI experiences using familiar React-like syntax."
+}
