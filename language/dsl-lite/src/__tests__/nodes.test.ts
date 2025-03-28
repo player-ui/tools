@@ -233,7 +233,6 @@ test("prioritizes object and array children over value children", () => {
 
   expect(toJSON(propNode)).toEqual({ key: "value" });
 });
-});
 
 describe("Circular reference handling", () => {
   test("maintains circular references in objects and arrays", () => {
