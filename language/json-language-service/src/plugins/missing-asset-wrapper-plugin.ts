@@ -42,13 +42,13 @@ export class MissingAssetWrapperPlugin implements PlayerLanguageServicePlugin {
         const expectedAssetDiags = diagnostics.filter(
           (d) =>
             d.message.includes(
-              `Does not match any of the expected types for type: 'AssetWrapperOrSwitch'`
-            ) || d.message.startsWith("Expected property: asset")
+              `Does not match any of the expected types for type: 'AssetWrapperOrSwitch'`,
+            ) || d.message.startsWith("Expected property: asset"),
         );
 
         expectedAssetDiags.forEach((d) => {
           const originalNode = documentContext.PlayerContent.getNodeFromOffset(
-            documentContext.document.offsetAt(d.range.start)
+            documentContext.document.offsetAt(d.range.start),
           );
 
           const objectNode = getObjectTarget(originalNode);
@@ -61,7 +61,7 @@ export class MissingAssetWrapperPlugin implements PlayerLanguageServicePlugin {
             // We"ll suppress these for now since they are bound to be wrong until they"re wrapped in an asset
             const associatedDiags = filteredDiags.filter((nestedDiag) => {
               const diagNode = documentContext.PlayerContent.getNodeFromOffset(
-                documentContext.document.offsetAt(nestedDiag.range.start)
+                documentContext.document.offsetAt(nestedDiag.range.start),
               );
 
               return objectNode.properties.some((p) => p.keyNode === diagNode);
@@ -84,13 +84,13 @@ export class MissingAssetWrapperPlugin implements PlayerLanguageServicePlugin {
             });
 
             filteredDiags = filteredDiags.filter(
-              (filteredD) => !associatedDiags.includes(filteredD)
+              (filteredD) => !associatedDiags.includes(filteredD),
             );
           }
         });
 
         return filteredDiags;
-      }
+      },
     );
   }
 }

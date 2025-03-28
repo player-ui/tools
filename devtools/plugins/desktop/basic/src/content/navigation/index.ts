@@ -5,7 +5,7 @@ const transitions = Object.entries(VIEWS_IDS).reduce(
     ...acc,
     [value]: key,
   }),
-  {} as Record<string, string>
+  {} as Record<string, string>,
 );
 
 export const navigation = {
@@ -21,7 +21,7 @@ export const navigation = {
           transitions,
         },
       }),
-      {} as Record<string, unknown>
+      {} as Record<string, unknown>,
     ),
   },
 };

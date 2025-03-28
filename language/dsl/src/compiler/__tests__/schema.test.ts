@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { SchemaGenerator, makeBindingsForObject } from "../schema";
+import { SchemaGenerator } from "../schema";
 
 const BasicDataType = {
   type: "StringType",
@@ -20,7 +20,7 @@ test("generates proper schema", () => {
           item1: BasicDataType,
         },
       ],
-    })
+    }),
   ).toStrictEqual({
     ROOT: {
       foo: {
@@ -75,7 +75,7 @@ test("Edge Case - two artificial array nodes", () => {
           },
         ],
       },
-    })
+    }),
   ).toMatchInlineSnapshot(`
     {
       "ROOT": {

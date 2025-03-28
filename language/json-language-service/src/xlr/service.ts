@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { XLRSDK } from "@player-tools/xlr-sdk";
 import type { ArrayType, NodeType, ObjectType } from "@player-tools/xlr";
 import type { ASTNode } from "../parser";
@@ -37,7 +36,7 @@ export class XLRService {
 
   private walker(
     n: ASTNode,
-    path: ASTNode[]
+    path: ASTNode[],
   ):
     | {
         /** name of type */
@@ -68,7 +67,7 @@ export class XLRService {
       if (n.type === "state") {
         if (n.stateType?.valueNode?.value) {
           const flowStateType = mapFlowStateToType(
-            n.stateType?.valueNode?.value
+            n.stateType?.valueNode?.value,
           );
           if (flowStateType) {
             return { name: flowStateType, path };
@@ -98,7 +97,7 @@ export class XLRService {
   }
 
   public getTypeInfoAtPosition(
-    node: ASTNode | undefined
+    node: ASTNode | undefined,
   ): XLRContext | undefined {
     if (!node) return;
 
@@ -173,7 +172,7 @@ export class XLRService {
       }
 
       const newObjectTypes = newPointers.filter(
-        (n) => n.type === "object"
+        (n) => n.type === "object",
       ) as ObjectType[];
       if (newObjectTypes.length > 0) {
         nearestObjectTypes = newObjectTypes;

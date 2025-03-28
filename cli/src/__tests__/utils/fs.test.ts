@@ -37,7 +37,7 @@ test("does not add glob if path is not a directory", () => {
   } as any);
   const result = convertToFileGlob(
     ["./src/main/tsx/**/*.tsx"],
-    "**/*.(tsx|jsx|js|ts)"
+    "**/*.(tsx|jsx|js|ts)",
   );
   expect(result[0]).toStrictEqual("./src/main/tsx/**/*.tsx");
   expect(fsSpy).toHaveBeenCalledWith("./src/main/tsx/**/*.tsx");
@@ -50,7 +50,7 @@ test("directory glob handling on windows", () => {
   (path as any).sep = "\\";
   const result = convertToFileGlob(
     [["src", "main", "tsx"].join("\\")],
-    "**/*.(tsx|jsx|js|ts)"
+    "**/*.(tsx|jsx|js|ts)",
   );
   expect(result[0]).toStrictEqual("src\\main\\tsx/**/*.(tsx|jsx|js|ts)");
   expect(fsSpy).toHaveBeenCalledWith("src\\main\\tsx");

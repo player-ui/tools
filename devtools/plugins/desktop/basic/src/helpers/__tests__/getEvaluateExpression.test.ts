@@ -8,7 +8,7 @@ vi.mock("uuid", () => ({
 
 const getMockExpressionEvaluator = (
   evaluate: ReturnType<typeof vi.fn>,
-  throwError = false
+  throwError = false,
 ): any => {
   class MockExpressionEvaluator {
     interceptor: Record<string, any> = {};
@@ -49,7 +49,7 @@ describe("getEvaluateExpression", () => {
     const mockEvaluate = vi.fn().mockReturnValue(2);
     const mockExpressionEvaluator = getMockExpressionEvaluator(mockEvaluate);
     const evaluateExpression = getEvaluateExpression(
-      new WeakRef(mockExpressionEvaluator)
+      new WeakRef(mockExpressionEvaluator),
     );
     const expression = "1 + 1";
     const expected: Evaluation = {
@@ -67,10 +67,10 @@ describe("getEvaluateExpression", () => {
     const mockEvaluate = vi.fn();
     const mockExpressionEvaluator = getMockExpressionEvaluator(
       mockEvaluate,
-      true
+      true,
     );
     const evaluateExpression = getEvaluateExpression(
-      new WeakRef(mockExpressionEvaluator)
+      new WeakRef(mockExpressionEvaluator),
     );
     const expression = "invalid expression";
     const expected: Evaluation = {
@@ -89,10 +89,10 @@ describe("getEvaluateExpression", () => {
     const mockEvaluate = vi.fn();
     const mockExpressionEvaluator = getMockExpressionEvaluator(
       mockEvaluate,
-      false
+      false,
     );
     const evaluateExpression = getEvaluateExpression(
-      new WeakRef(mockExpressionEvaluator)
+      new WeakRef(mockExpressionEvaluator),
     );
     const expression = "trigger hook error";
 

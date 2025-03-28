@@ -1,7 +1,4 @@
-import {
-  ReactPlayerPlugin,
-  useReactPlayer,
-} from "@player-ui/react";
+import { ReactPlayerPlugin, useReactPlayer } from "@player-ui/react";
 import { ReferenceAssetsPlugin } from "@player-ui/reference-assets-plugin-react";
 import { BasicWevDevtoolsPlugin } from "@player-tools/devtools-basic-web-plugin";
 import { ProfilerPlugin } from "@player-tools/devtools-profiler-web-plugin";

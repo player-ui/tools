@@ -18,7 +18,7 @@ describe("language-service", () => {
       {
         line: 0,
         character: 1,
-      }
+      },
     );
 
     expect(completions).toMatchInlineSnapshot(`
@@ -174,11 +174,11 @@ describe("language-service", () => {
         {
           line: 0,
           character: 0,
-        }
+        },
       );
 
       expect(
-        symbolDisplayToString(info?.displayParts as ts.SymbolDisplayPart[])
+        symbolDisplayToString(info?.displayParts as ts.SymbolDisplayPart[]),
       ).toMatchInlineSnapshot(`"function trim(arg: unknown): unknown"`);
     });
   });

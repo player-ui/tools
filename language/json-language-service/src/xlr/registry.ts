@@ -26,7 +26,7 @@ export class PlayerXLRRegistry extends BasicXLRRegistry {
         source: "registry.ts",
         type: "or",
         or: realNames.map(
-          (partialMatchID) => super.get(partialMatchID) as NamedType
+          (partialMatchID) => super.get(partialMatchID) as NamedType,
         ),
       };
     }
@@ -83,14 +83,14 @@ export class PlayerXLRRegistry extends BasicXLRRegistry {
       const equal = metaDataArrays.every(
         (metaData) =>
           metaData?.plugin === firstElement?.plugin &&
-          metaData?.capability === firstElement?.capability
+          metaData?.capability === firstElement?.capability,
       );
       if (equal) {
         return firstElement;
       }
 
       throw Error(
-        `Error: can't determine accurate info for type ${id} as it is provided by multiple plugins/capabilities`
+        `Error: can't determine accurate info for type ${id} as it is provided by multiple plugins/capabilities`,
       );
     }
 

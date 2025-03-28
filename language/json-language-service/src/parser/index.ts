@@ -15,7 +15,7 @@ export interface PlayerContentProvider {
 /** traverse a node and call the visitor for each nested item */
 export async function walk(
   node: ASTNode,
-  visitor: (n: ASTNode) => Promise<boolean>
+  visitor: (n: ASTNode) => Promise<boolean>,
 ): Promise<void> {
   const queue: ASTNode[] = [node];
   let stop = false;
@@ -26,7 +26,6 @@ export async function walk(
       queue.push(...nodeToVisit.children);
     }
 
-    /* eslint-disable-next-line no-await-in-loop */
     stop = nodeToVisit ? await visitor(nodeToVisit) : true;
   }
 }

@@ -37,7 +37,7 @@ describe("useCommunicationLayer", () => {
     const { result } = renderHook(() => useCommunicationLayer());
     expect(flipperClient.start).not.toHaveBeenCalled();
     expect(consoleWarnSpy).toHaveBeenCalledWith(
-      "The Flipper connection is disabled. If you want to enable it, use the Player UI extension popup."
+      "The Flipper connection is disabled. If you want to enable it, use the Player UI extension popup.",
     );
     expect(result.current).toMatchInlineSnapshot(`
       {

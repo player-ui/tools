@@ -136,7 +136,7 @@ export function resolveConditional(conditional: ConditionalType): NodeType {
     conditional.genericTokens.forEach((token) => {
       genericMap.set(
         token.symbol,
-        token.default ?? token.constraints ?? { type: "any" }
+        token.default ?? token.constraints ?? { type: "any" },
       );
     });
 
@@ -151,7 +151,7 @@ export function resolveConditional(conditional: ConditionalType): NodeType {
  */
 export function resolveReferenceNode(
   genericReference: RefNode,
-  typeToFill: NodeType
+  typeToFill: NodeType,
 ): NodeType {
   const genericArgs = genericReference.genericArguments;
   const genericMap: Map<string, NodeType> = new Map();
@@ -161,7 +161,7 @@ export function resolveReferenceNode(
     typeToFill.genericTokens.forEach((token, index) => {
       genericMap.set(
         token.symbol,
-        genericArgs[index] ?? token.default ?? token.constraints
+        genericArgs[index] ?? token.default ?? token.constraints,
       );
     });
   }
@@ -173,7 +173,7 @@ export function resolveReferenceNode(
   if (isGenericNodeType(filledInNode) && genericArgs?.length) {
     if (genericArgs.length < filledInNode.genericTokens.length) {
       filledInNode.genericTokens = filledInNode.genericTokens.slice(
-        genericArgs?.length
+        genericArgs?.length,
       );
     } else if (genericArgs.length === filledInNode.genericTokens.length) {
       filledInNode.genericTokens = [];
@@ -201,7 +201,7 @@ export function resolveReferenceNode(
 export function computeEffectiveObject(
   base: ObjectType,
   operand: ObjectType,
-  errorOnOverlap = true
+  errorOnOverlap = true,
 ): ObjectType {
   const baseObjectName = base.name ?? base.title ?? "object literal";
   const operandObjectName = operand.name ?? operand.title ?? "object literal";
@@ -221,11 +221,11 @@ export function computeEffectiveObject(
       if (
         !computeExtends(
           newObject.properties[property].node,
-          operand.properties[property].node
+          operand.properties[property].node,
         )
       ) {
         throw new Error(
-          `Can't compute effective type for ${baseObjectName} and ${operandObjectName} because of conflicting properties ${property}`
+          `Can't compute effective type for ${baseObjectName} and ${operandObjectName} because of conflicting properties ${property}`,
         );
       }
     }

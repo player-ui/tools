@@ -12,10 +12,10 @@ import {
 
 test("tsStripOptionalType", () => {
   const input: ts.TypeNode = ts.factory.createKeywordTypeNode(
-    ts.SyntaxKind.StringKeyword
+    ts.SyntaxKind.StringKeyword,
   );
   const expected: ts.TypeNode = ts.factory.createKeywordTypeNode(
-    ts.SyntaxKind.StringKeyword
+    ts.SyntaxKind.StringKeyword,
   );
   const actual = tsStripOptionalType(input);
   expect(actual).toEqual(expected);
@@ -31,7 +31,7 @@ describe("isExportedDeclaration", () => {
         }
       `,
       ts.ScriptTarget.Latest,
-      true
+      true,
     );
     const node = source.statements[0] as ts.Statement;
 
@@ -48,7 +48,7 @@ describe("isExportedDeclaration", () => {
           }
         `,
       ts.ScriptTarget.Latest,
-      true
+      true,
     );
     const node = source.statements[0] as ts.Statement;
 

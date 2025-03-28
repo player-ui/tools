@@ -46,7 +46,7 @@ test("works with JSX", async () => {
   );
 
   expect((await render(element)).jsonValue).toStrictEqual(
-    expectedBasicCollection
+    expectedBasicCollection,
   );
 });
 
@@ -57,7 +57,7 @@ test("works for any json props", async () => {
     other: "",
   };
   expect(
-    (await render(<object>{toJsonProperties(testObj)}</object>)).jsonValue
+    (await render(<object>{toJsonProperties(testObj)}</object>)).jsonValue,
   ).toStrictEqual(testObj);
 });
 
@@ -67,7 +67,7 @@ test("works for BindingTemplateInstances and ExpressionTemplateInstances", async
     page_experience: e`foo.bar.GetDataResult`,
   };
   expect(
-    (await render(<object>{toJsonProperties(testObj)}</object>)).jsonValue
+    (await render(<object>{toJsonProperties(testObj)}</object>)).jsonValue,
   ).toStrictEqual(expectedTemplateInstanceObjects);
 });
 
@@ -103,7 +103,7 @@ test("flattens fragments", async () => {
   );
 
   expect((await render(element)).jsonValue).toStrictEqual(
-    expectedBasicCollection
+    expectedBasicCollection,
   );
 });
 
@@ -124,15 +124,15 @@ test("can ignore json props", async () => {
     other: "",
   };
   expect(
-    (await render(<object>{toJsonProperties(testObj)}</object>)).jsonValue
+    (await render(<object>{toJsonProperties(testObj)}</object>)).jsonValue,
   ).toStrictEqual(processedTestObj);
   expect(
     (
       await render(
         <object>
           {toJsonProperties(testObj, { propertiesToSkip: ["foo"] })}
-        </object>
+        </object>,
       )
-    ).jsonValue
+    ).jsonValue,
   ).toStrictEqual(unprocessedTestObj);
 });

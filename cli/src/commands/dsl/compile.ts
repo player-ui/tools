@@ -6,10 +6,7 @@ import mkdirp from "mkdirp";
 import logSymbols from "log-symbols";
 import figures from "figures";
 import chalk from "chalk";
-import type {
-  CompilationResult,
-  DefaultCompilerContentType,
-} from "@player-tools/dsl";
+import type { CompilationResult } from "@player-tools/dsl";
 import { fingerprintContent as fallbackFingerprint } from "@player-tools/dsl";
 import { BaseCommand } from "../../utils/base-command";
 import { convertToFileGlob, normalizePath } from "../../utils/fs";
@@ -83,7 +80,7 @@ export default class DSLCompile extends BaseCommand {
       convertToFileGlob([input], "**/*.(tsx|jsx|js|ts)"),
       {
         expandDirectories: true,
-      }
+      },
     );
 
     const results = {
@@ -102,9 +99,9 @@ export default class DSLCompile extends BaseCommand {
 
     /** Compile a file from the DSL format into JSON */
     const compileFile = async (
-      file: string
+      file: string,
     ): Promise<CompilationResult | undefined> => {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const requiredModule = require(path.resolve(file));
       const defaultExport = requiredModule.default;
 
@@ -117,7 +114,7 @@ export default class DSLCompile extends BaseCommand {
       const { type: contentType, extension: ext } =
         (await context.hooks.identifyContentType.call(
           file,
-          preProcessedValue
+          preProcessedValue,
         )) || {
           type: fallbackFingerprint(preProcessedValue, file) || "unknown",
           extension: ".json",
@@ -134,20 +131,20 @@ export default class DSLCompile extends BaseCommand {
           ...path.parse(relativePath),
           base: undefined,
           ext,
-        })
+        }),
       );
 
       this.log(
         `${logSymbols.info} Compiling %s ${figures.arrowRight} %s as type %s`,
         normalizePath(file),
         normalizePath(outputFile),
-        contentType
+        contentType,
       );
 
       const compileResult = await context.hooks.compileContent.call(
         { type: contentType },
         preProcessedValue,
-        file
+        file,
       );
 
       if (compileResult) {
@@ -165,7 +162,7 @@ export default class DSLCompile extends BaseCommand {
       } else {
         this.log(
           `${logSymbols.error} Error compiling %s, no result was returned by compiler`,
-          normalizePath(file)
+          normalizePath(file),
         );
         throw new Error(`Error compiling file ${normalizePath(file)}`);
       }
@@ -187,7 +184,7 @@ export default class DSLCompile extends BaseCommand {
         results.exitCode = 100;
         this.log("");
         this.log(
-          chalk.red(`${logSymbols.error} Error compiling ${file}: ${e.stack}`)
+          chalk.red(`${logSymbols.error} Error compiling ${file}: ${e.stack}`),
         );
         compilerResults.push({
           state: "completed",
@@ -201,7 +198,7 @@ export default class DSLCompile extends BaseCommand {
     if (!skipValidation) {
       console.log("");
       const hasOutput = compilerResults.some(
-        (r) => r.output?.contentType === "flow"
+        (r) => r.output?.contentType === "flow",
       );
       if (hasOutput) {
         await Validate.run([

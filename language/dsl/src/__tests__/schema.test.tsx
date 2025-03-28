@@ -37,20 +37,18 @@ describe("Schema Bindings Generate Properly", () => {
     expect(schema.main.sub2.toRefString()).toStrictEqual("{{main.sub2}}");
     expect(schema.main.sub2[0].toRefString()).toStrictEqual("{{main.sub2.0}}");
     expect(schema.main.sub2._index_.toRefString()).toStrictEqual(
-      "{{main.sub2._index_}}"
+      "{{main.sub2._index_}}",
     );
 
     expect(schema.main.sub2[0].val.toRefString()).toStrictEqual(
-      "{{main.sub2.0.val}}"
+      "{{main.sub2.0.val}}",
     );
-    expect(
-      // eslint-disable-next-line dot-notation
-      schema.main.sub2["_index_"].toRefString()
-    ).toStrictEqual("{{main.sub2._index_}}");
-    expect(
-      // eslint-disable-next-line dot-notation
-      schema.main.sub2["_index_"].val.toRefString()
-    ).toStrictEqual("{{main.sub2._index_.val}}");
+    expect(schema.main.sub2["_index_"].toRefString()).toStrictEqual(
+      "{{main.sub2._index_}}",
+    );
+    expect(schema.main.sub2["_index_"].val.toRefString()).toStrictEqual(
+      "{{main.sub2._index_.val}}",
+    );
   });
 
   test("is able to serialize to a schema object", () => {
@@ -191,7 +189,7 @@ describe("Schema Bindings Generate Properly", () => {
     const results = g.toSchema(badObj);
     expect(mockLogger.warn).toHaveBeenCalledTimes(1);
     expect(mockLogger.warn).toHaveBeenCalledWith(
-      "WARNING: Generated two intermediate types with the name: subType that are of different shapes, using artificial type subType2"
+      "WARNING: Generated two intermediate types with the name: subType that are of different shapes, using artificial type subType2",
     );
     expect(results).toMatchInlineSnapshot(`
     {
@@ -292,7 +290,7 @@ describe("Schema Bindings Generate Properly", () => {
     const content = await render(
       <obj>
         <property name="test">{schema.main.sub.a}</property>
-      </obj>
+      </obj>,
     );
 
     expect(content.jsonValue).toMatchInlineSnapshot(`
@@ -332,7 +330,7 @@ describe("Schema Bindings Generate Properly", () => {
     expect(schema.main.sub.c.enum).toStrictEqual(["A", "B", "C"]);
     // make sure iterable method is still there and works
     expect(
-      schema.main.sub.c.enum.every((it: any) => typeof it === "string")
+      schema.main.sub.c.enum.every((it: any) => typeof it === "string"),
     ).toStrictEqual(true);
   });
 });

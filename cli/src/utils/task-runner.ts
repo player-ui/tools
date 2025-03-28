@@ -1,7 +1,6 @@
 import logUpdate from "log-update";
 import { DiagnosticSeverity } from "vscode-languageserver-types";
 
-/* eslint-disable no-param-reassign */
 interface BaseTask<Results, Data> {
   /** The state of the task */
   state: "idle" | "pending";
@@ -123,7 +122,7 @@ export const createTaskRunner = <R, D>({
             (t as CompletedTask<R, D>).error = e;
           }
         }
-      })
+      }),
     );
     ended = true;
     clearInterval(paintInterval);

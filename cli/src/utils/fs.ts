@@ -15,7 +15,9 @@ export const convertToFileGlob = (input: string[], glob: string): string[] => {
       if (fs.statSync(i).isDirectory()) {
         return forcePathSeparatorToPosix(path.join(i, glob));
       }
-    } catch (e: any) {}
+    } catch (e: any) {
+      /* empty */
+    }
 
     return forcePathSeparatorToPosix(i);
   });

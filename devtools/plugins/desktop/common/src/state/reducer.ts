@@ -11,7 +11,7 @@ import { dset } from "dset/merge";
 
 const containsInteraction = (
   interactions: DevtoolsPluginsStore["interactions"],
-  interaction: DevtoolsPluginsStore["interactions"][number]
+  interaction: DevtoolsPluginsStore["interactions"][number],
 ) => {
   return interactions.filter((i) => dequal(i, interaction)).length > 0;
 };
@@ -19,7 +19,7 @@ const containsInteraction = (
 /** devtools plugin state reducer */
 export const reducer = (
   state: DevtoolsPluginsStore,
-  transaction: Transaction<ExtensionSupportedEvents>
+  transaction: Transaction<ExtensionSupportedEvents>,
 ): DevtoolsPluginsStore => {
   switch (transaction.type) {
     case "PLAYER_DEVTOOLS_PLAYER_INIT":
@@ -44,7 +44,7 @@ export const reducer = (
           dset(
             draft,
             ["plugins", transaction.payload.pluginID, "flow", "data"],
-            transaction.payload.data
+            transaction.payload.data,
           );
         } catch {
           console.error("error setting data:", transaction.payload.data);
@@ -62,13 +62,14 @@ export const reducer = (
 
         dset(draft, ["interactions"], [...draft.interactions, transaction]);
       });
-    case "PLAYER_DEVTOOLS_SELECTED_PLAYER_CHANGE":
+    case "PLAYER_DEVTOOLS_SELECTED_PLAYER_CHANGE": {
       const { playerID } = transaction.payload;
 
       if (!playerID) return state;
       return produce(state, (draft) => {
         dset(draft, "currentPlayer", playerID);
       });
+    }
     default:
       return state;
   }

@@ -24,12 +24,12 @@ let flipperConnection: FlipperPluginConnection | null = null;
 /** Adds a Flipper client and starts the connection */
 export const startFlipperConnection = (
   setLayerCallbacks: (
-    value: React.SetStateAction<IntoArrays<CommunicationLayerMethods>>
-  ) => void
+    value: React.SetStateAction<IntoArrays<CommunicationLayerMethods>>,
+  ) => void,
 ) => {
   const listeners: Array<
     (
-      message: TransactionMetadata & MessengerEvent<ExtensionSupportedEvents>
+      message: TransactionMetadata & MessengerEvent<ExtensionSupportedEvents>,
     ) => void
   > = [];
 
@@ -60,7 +60,7 @@ export const startFlipperConnection = (
   }
 
   const sendMessage: CommunicationLayerMethods["sendMessage"] = async (
-    message
+    message,
   ) => {
     flipperConnection?.send("message::plugin", message);
   };
@@ -82,7 +82,7 @@ export const useCommunicationLayer = (): Pick<
   "sendMessage" | "addListener" | "removeListener"
 > => {
   const flipperConnectionIsActive = localStorage.getItem(
-    "player-ui-devtools-flipper-active"
+    "player-ui-devtools-flipper-active",
   );
 
   const [layerCallbacks, setLayerCallbacks] = useState<Callbacks>({
@@ -96,7 +96,7 @@ export const useCommunicationLayer = (): Pick<
       startFlipperConnection(setLayerCallbacks);
     } else {
       console.warn(
-        "The Flipper connection is disabled. If you want to enable it, use the Player UI extension popup."
+        "The Flipper connection is disabled. If you want to enable it, use the Player UI extension popup.",
       );
     }
 

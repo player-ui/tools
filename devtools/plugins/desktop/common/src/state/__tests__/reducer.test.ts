@@ -1,4 +1,4 @@
-import { describe, expect, test, vi, beforeEach, afterEach } from "vitest";
+import { describe, expect, test } from "vitest";
 import { reducer } from "../reducer";
 import {
   DevtoolsPluginsStore,
@@ -205,7 +205,7 @@ describe("reducer", () => {
   test("handles PLAYER_DEVTOOLS_SELECTED_PLAYER_CHANGE", () => {
     const newState = reducer(
       INITIAL_STATE,
-      mockDevtoolSelectedPlayerChangeInteractionTransaction
+      mockDevtoolSelectedPlayerChangeInteractionTransaction,
     );
     expect(newState).toMatchInlineSnapshot(`
       {
@@ -223,7 +223,7 @@ describe("reducer", () => {
     expect(result.plugins.test.flow.data).toEqual({ foo: "bar" });
     expect(result.messages).toHaveLength(1);
     expect(result.messages[0].type).toEqual(
-      "PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE"
+      "PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE",
     );
   });
 
@@ -235,7 +235,7 @@ describe("reducer", () => {
     };
     const result = reducer(
       transaction,
-      mockPluginDataChangeTransactionWithNull
+      mockPluginDataChangeTransactionWithNull,
     );
 
     expect(result.messages).toHaveLength(1);
@@ -250,7 +250,7 @@ describe("reducer", () => {
     };
     const result = reducer(
       transaction,
-      mockPluginDataChangeTransactionWithUndefined
+      mockPluginDataChangeTransactionWithUndefined,
     );
 
     expect(result.messages).toHaveLength(1);

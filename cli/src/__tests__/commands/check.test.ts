@@ -72,14 +72,14 @@ beforeEach(() => {
 
   cwdSpy.mockReturnValue("/Users/username/Desktop/Projects/player");
   child_processSpy.mockReturnValue(
-    "/Users/username/Desktop/Projects/player" as any
+    "/Users/username/Desktop/Projects/player" as any,
   );
 });
 
 describe("checks @player-ui/@player-tools versions and outputs warnings/recommendations", () => {
   test("should issue error message due to not being run in the root directory", async () => {
     cwdSpy.mockReturnValue(
-      "/Users/username/player/utilities/cli/src/__tests__"
+      "/Users/username/player/utilities/cli/src/__tests__",
     );
     await runCommand([]);
     expect(logSpy.mock.calls).toMatchInlineSnapshot(`
@@ -160,7 +160,7 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
       ]);
 
       vi.spyOn(fse, "readFileSync").mockReturnValueOnce(
-        JSON.stringify(arbitraryPlayerVersions[0])
+        JSON.stringify(arbitraryPlayerVersions[0]),
       );
       await runCommand([]);
       expect(logSpy.mock.calls).toMatchInlineSnapshot(`
@@ -206,7 +206,7 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
         ...mockNestedDependencies.single,
       ]);
       vi.spyOn(fse, "readFileSync").mockReturnValueOnce(
-        JSON.stringify(arbitraryPlayerVersions[0])
+        JSON.stringify(arbitraryPlayerVersions[0]),
       );
       await runCommand([]);
       expect(logSpy.mock.calls).toMatchInlineSnapshot(`
@@ -280,7 +280,7 @@ describe("checks @player-ui/@player-tools versions and outputs warnings/recommen
   describe("invalid versions", () => {
     test("should issue error message due to not being run in the root directory", async () => {
       cwdSpy.mockReturnValue(
-        "/Users/username/player/utilities/cli/src/__tests__"
+        "/Users/username/player/utilities/cli/src/__tests__",
       );
       await runCommand([]);
       expect(logSpy.mock.calls).toMatchInlineSnapshot(`

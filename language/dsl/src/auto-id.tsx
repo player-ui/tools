@@ -18,7 +18,7 @@ export const IDSuffixProvider = (
   props: WithChildren<{
     /** The suffix to append */
     suffix: string;
-  }>
+  }>,
 ) => {
   const currentPrefix = useGetIdPrefix();
 
@@ -41,7 +41,7 @@ export const IDProvider = (
   props: WithChildren<{
     /** The new id to use  */
     id?: string;
-  }>
+  }>,
 ) => {
   if (props.id) {
     return (
@@ -51,7 +51,6 @@ export const IDProvider = (
     );
   }
 
-  // eslint-disable-next-line react/jsx-no-useless-fragment
   return <>{props.children}</>;
 };
 
@@ -67,7 +66,7 @@ export const useIndexInSlot = (ref: React.RefObject<JsonNode>) => {
 
     if (ref.current && slotContext?.ref.current?.valueNode?.type === "array") {
       const allChildren = flattenNodes(
-        slotContext.ref.current.valueNode.children
+        slotContext.ref.current.valueNode.children,
       );
       const foundIndex = allChildren.indexOf(ref.current);
 
@@ -88,14 +87,13 @@ export const IDSuffixIndexProvider = (
 
     /** if the suffix is in a template, the id to use */
     templateIndex?: string;
-  }>
+  }>,
 ) => {
   const slotIndex = useIndexInSlot(props.wrapperRef);
 
   const stopIndex = React.useContext(IndexSuffixStopContext);
 
   if (stopIndex) {
-    // eslint-disable-next-line react/jsx-no-useless-fragment
     return <>{props.children}</>;
   }
 
@@ -116,7 +114,7 @@ export const OptionalIDSuffixProvider = (
 
     /** if the suffix is in a template, the id to use */
     templateIndex?: string;
-  }>
+  }>,
 ) => {
   const slotContext = React.useContext(SlotContext);
 
@@ -131,7 +129,6 @@ export const OptionalIDSuffixProvider = (
     );
   }
 
-  // eslint-disable-next-line react/jsx-no-useless-fragment
   return <>{props.children}</>;
 };
 

@@ -11,7 +11,7 @@ test("can be used as a react child element", async () => {
       <object>
         <property name="expression">{e`test()`}</property>
         <property name="binding">{b`foo.bar`}</property>
-      </object>
+      </object>,
     )
   ).jsonValue;
 
@@ -26,7 +26,7 @@ test("Works when used as a child asset", async () => {
     await render(
       <Collection>
         <Collection.Label>{b`foo.bar`}</Collection.Label>
-      </Collection>
+      </Collection>,
     )
   ).jsonValue;
 
@@ -52,7 +52,7 @@ test("Works as a switch child", async () => {
             <Switch.Case>Testing 123 {b`foo.bar`}</Switch.Case>
           </Switch>
         </Collection.Label>
-      </Collection>
+      </Collection>,
     )
   ).jsonValue;
 

@@ -25,11 +25,11 @@ import { toJsonProperties } from "../../utils";
 
 // #region - Asset Types
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ActionRoles = [
   "primary",
   "secondary",
   "tertiary",
-  "upsell",
   "back",
   "link",
 ] as const;
@@ -174,7 +174,7 @@ const TextModifier = (props: {
 
     if (objParent?.type === "object") {
       const existingModifierArray = objParent.properties.find(
-        (p) => p.keyNode.value === "modifiers" && p.valueNode?.type === "array"
+        (p) => p.keyNode.value === "modifiers" && p.valueNode?.type === "array",
       );
 
       const newModifierLength = existingModifierArray
@@ -187,18 +187,18 @@ const TextModifier = (props: {
       modifierObject.properties.push(
         new PropertyNode(new ValueNode("value"), new ValueNode(props.value)),
         new PropertyNode(new ValueNode("type"), new ValueNode(props.type)),
-        new PropertyNode(new ValueNode("name"), new ValueNode(newModifierName))
+        new PropertyNode(new ValueNode("name"), new ValueNode(newModifierName)),
       );
 
       if (existingModifierArray) {
         (existingModifierArray.valueNode as ArrayNode)?.items.push(
-          modifierObject
+          modifierObject,
         );
       } else {
         const modifiers = new ArrayNode();
         modifiers.items.push(modifierObject);
         objParent.properties.push(
-          new PropertyNode(new ValueNode("modifiers"), modifiers)
+          new PropertyNode(new ValueNode("modifiers"), modifiers),
         );
       }
 
@@ -224,7 +224,7 @@ export const Collection = (props: AssetPropsWithChildren<CollectionAsset>) => {
 
 /** an asset to test setting keys on arrays  */
 export const ArrayProp = (
-  props: AssetPropsWithChildren<AssetWithArrayProp>
+  props: AssetPropsWithChildren<AssetWithArrayProp>,
 ) => {
   return <Asset type="assetWithArray" {...props} />;
 };
@@ -262,7 +262,7 @@ export const Input = (
   props: Omit<AssetPropsWithChildren<InputAsset>, "binding"> & {
     /** A binding type */
     binding?: BindingTemplateInstance;
-  }
+  },
 ) => {
   const { binding, children, ...rest } = props;
 
@@ -411,7 +411,7 @@ export const Choice = (
   props: Omit<AssetPropsWithChildren<ChoiceAsset>, "binding"> & {
     /** The binding */
     binding: BindingTemplateInstance;
-  }
+  },
 ) => {
   const { binding, children, ...rest } = props;
   return (
@@ -451,7 +451,7 @@ const ChoiceItem = (
         id?: string;
       }
     >
-  >
+  >,
 ) => {
   const { children, id, ...rest } = props;
 

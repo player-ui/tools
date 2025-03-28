@@ -17,7 +17,7 @@ export interface SetupReturnType {
  */
 export function setupTestEnv(
   sourceCode: string,
-  mockFileName = "filename.ts"
+  mockFileName = "filename.ts",
 ): SetupReturnType {
   const fsMap = tsvfs.createDefaultMapFromNodeModules({}, ts);
   fsMap.set(mockFileName, sourceCode);
@@ -34,7 +34,7 @@ export function setupTestEnv(
   return {
     sf: host.compilerHost.getSourceFile(
       mockFileName,
-      ts.ScriptTarget.ES5
+      ts.ScriptTarget.ES5,
     ) as ts.SourceFile,
     tc: program.getTypeChecker(),
   };

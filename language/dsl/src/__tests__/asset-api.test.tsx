@@ -146,7 +146,7 @@ describe("components", () => {
           <Text.Modifier value="important" type="tag">
             Bar
           </Text.Modifier>
-        </Text>
+        </Text>,
       );
 
       expect(element.jsonValue).toMatchInlineSnapshot(`
@@ -179,7 +179,7 @@ describe("components", () => {
 
     test("converts a text string into refs", async () => {
       const element = await render(
-        <Text>Label {b`foo.bar`.toString()} End</Text>
+        <Text>Label {b`foo.bar`.toString()} End</Text>,
       );
 
       expect(element.jsonValue).toStrictEqual({
@@ -193,7 +193,7 @@ describe("components", () => {
       const element = await render(
         <Input binding={b`foo.bar.baz`}>
           <Input.Label>Input Label</Input.Label>
-        </Input>
+        </Input>,
       );
 
       expect(element.jsonValue).toStrictEqual({
@@ -216,7 +216,7 @@ describe("components", () => {
       const element = await render(
         <Input id="custom-id" applicability={b`foo.bar.baz`}>
           <Input.Label>Input Label</Input.Label>
-        </Input>
+        </Input>,
       );
 
       expect(element.jsonValue).toStrictEqual({
@@ -237,7 +237,7 @@ describe("components", () => {
       const element = await render(
         <Input id="custom-id" applicability={false}>
           <Input.Label>Input Label</Input.Label>
-        </Input>
+        </Input>,
       );
 
       expect(element.jsonValue).toStrictEqual({
@@ -406,7 +406,7 @@ describe("allows other props to be added to a slot", () => {
         <Input.Label customLabelProp="custom label slot value">
           Input Label
         </Input.Label>
-      </Input>
+      </Input>,
     );
 
     expect(element.jsonValue).toStrictEqual({
@@ -433,7 +433,7 @@ describe("allows other props to be added to a slot", () => {
             </Switch.Case>
           </Switch>
         </Input.Label>
-      </Input>
+      </Input>,
     );
 
     expect(element.jsonValue).toStrictEqual({

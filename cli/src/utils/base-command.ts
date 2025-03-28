@@ -48,7 +48,7 @@ export abstract class BaseCommand extends Command {
 
   private async resolveConfig(
     conf?: PlayerConfigFileShape,
-    relativePath?: string
+    relativePath?: string,
   ): Promise<PlayerConfigResolvedShape> {
     let config: PlayerConfigResolvedShape = {
       ...(conf ?? {}),
@@ -89,7 +89,7 @@ export abstract class BaseCommand extends Command {
 
         const presetConfig = await this.resolveConfig(preset);
         config.plugins = [...presetConfig.plugins, ...config.plugins];
-      }) ?? []
+      }) ?? [],
     );
 
     // Go through each plugin and load/create it
@@ -128,7 +128,7 @@ export abstract class BaseCommand extends Command {
               ? PluginExport
               : new PluginExport(pluginArgs);
           config.plugins.push(pluginInstance);
-        })
+        }),
       );
     }
 
@@ -156,7 +156,6 @@ export abstract class BaseCommand extends Command {
 
     const { plugins } = await this.getPlayerConfig();
     for (let i = 0; i < plugins.length; i++) {
-      // eslint-disable-next-line no-await-in-loop
       await plugins[i].onCreateLanguageService?.(lsp as any, exp);
     }
 
@@ -171,7 +170,6 @@ export abstract class BaseCommand extends Command {
     });
     const { plugins } = await this.getPlayerConfig();
     for (let i = 0; i < plugins.length; i++) {
-      // eslint-disable-next-line no-await-in-loop
       await plugins[i].onCreateDSLCompiler?.(compiler);
     }
 
@@ -179,12 +177,11 @@ export abstract class BaseCommand extends Command {
   }
 
   async getXLRTransforms(
-    format: ExportTypes
+    format: ExportTypes,
   ): Promise<Array<TransformFunction>> {
     const transforms: Array<TransformFunction> = [];
     const { plugins } = await this.getPlayerConfig();
     for (let i = 0; i < plugins.length; i++) {
-      // eslint-disable-next-line no-await-in-loop
       await plugins[i].onConvertXLR?.(format, transforms);
     }
 
@@ -193,12 +190,11 @@ export abstract class BaseCommand extends Command {
 
   async createCompilerContext(): Promise<CompilationContext> {
     const compilerContext = new CompilationContext(
-      await this.createDSLCompiler()
+      await this.createDSLCompiler(),
     );
     const { plugins } = await this.getPlayerConfig();
 
     for (let i = 0; i < plugins.length; i++) {
-      // eslint-disable-next-line no-await-in-loop
       await plugins[i].createCompilerContext?.(compilerContext);
     }
 

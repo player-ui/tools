@@ -14,7 +14,7 @@ export function toArray<T>(val: T | Array<T>): Array<T> {
 export function toJsonElement(
   value: any,
   indexOrKey?: number | string,
-  options?: toJsonOptions
+  options?: toJsonOptions,
 ): React.ReactElement {
   const indexProp = typeof indexOrKey === "number" ? { key: indexOrKey } : null;
 
@@ -56,7 +56,7 @@ export function toJsonElement(
 /** Create a fragment for the properties */
 export function toJsonProperties(
   value: Record<string, any>,
-  options: toJsonOptions = { propertiesToSkip: ["applicability"] }
+  options: toJsonOptions = { propertiesToSkip: ["applicability"] },
 ) {
   return Object.keys(value).map((key) => {
     return (
@@ -81,7 +81,7 @@ export function normalizeText(options: {
 
   if (
     nodeArr.every(
-      (n) => React.isValidElement(n) && n.type !== TemplateStringComponent
+      (n) => React.isValidElement(n) && n.type !== TemplateStringComponent,
     )
   ) {
     return node;
@@ -92,7 +92,7 @@ export function normalizeText(options: {
   }
 
   throw new Error(
-    `Tried to convert node to Text Asset, but no Component was supplied.`
+    `Tried to convert node to Text Asset, but no Component was supplied.`,
   );
 }
 
@@ -115,7 +115,7 @@ export function normalizeToCollection(options: {
   ) {
     if (!CollectionComp) {
       throw new Error(
-        `Tried to convert array to a collection asset, but no Component was given.`
+        `Tried to convert array to a collection asset, but no Component was given.`,
       );
     }
 
@@ -137,7 +137,7 @@ export function flattenChildren(children: React.ReactNode): ReactChildArray {
   return childrenArray.reduce((flatChildren: ReactChildArray, child) => {
     if ((child as React.ReactElement<any>).type === React.Fragment) {
       return flatChildren.concat(
-        flattenChildren((child as React.ReactElement<any>).props.children)
+        flattenChildren((child as React.ReactElement<any>).props.children),
       );
     }
 
@@ -152,7 +152,9 @@ export function flattenChildren(children: React.ReactNode): ReactChildArray {
  * used in an esm environment
  */
 export function mergeRefs<T = any>(
-  refs: Array<React.MutableRefObject<T> | React.LegacyRef<T> | undefined | null>
+  refs: Array<
+    React.MutableRefObject<T> | React.LegacyRef<T> | undefined | null
+  >,
 ): React.RefCallback<T> {
   return (value) => {
     refs.forEach((ref) => {
@@ -168,7 +170,7 @@ export function mergeRefs<T = any>(
 /** Generates object reference properties from the provided object */
 export function getObjectReferences<
   OriginalPropertiesObject extends Record<string, unknown>,
-  ReferencesPropertyObject extends Record<string, unknown>
+  ReferencesPropertyObject extends Record<string, unknown>,
 >(propertiesObject: OriginalPropertiesObject): ReferencesPropertyObject {
   const result: any = {};
 
