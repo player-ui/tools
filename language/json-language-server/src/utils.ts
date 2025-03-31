@@ -5,7 +5,7 @@ import { ResponseError } from "vscode-languageserver";
 function cancel() {
   return new ResponseError(
     -32800 /* ErrorCodes.RequestCancelled */,
-    "Request cancelled"
+    "Request cancelled",
   );
 }
 
@@ -13,7 +13,7 @@ function cancel() {
 export async function runAndCatch<T>(
   func: () => Promise<T> | T,
   token: CancellationToken,
-  errorVal: T
+  errorVal: T,
 ): Promise<T | ResponseError<any>> {
   if (token.isCancellationRequested) {
     return cancel();

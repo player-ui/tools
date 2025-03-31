@@ -10,6 +10,7 @@ test("works with nested expressions", () => {
 
 test("throws errors for syntactically wrong expressions", () => {
   expect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const exp = e`something(1,2`;
   }).toThrowErrorMatchingInlineSnapshot(`
     [Error: Error: Expected ) at character 13 in expression: 

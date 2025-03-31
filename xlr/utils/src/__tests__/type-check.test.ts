@@ -12,7 +12,7 @@ describe("isOptionalProperty", () => {
       }
     `,
       ts.ScriptTarget.Latest,
-      true
+      true,
     );
     const node = source.statements[0] as ts.InterfaceDeclaration;
     const prop = node.members[0] as ts.PropertySignature;
@@ -29,7 +29,7 @@ describe("isOptionalProperty", () => {
       }
     `,
       ts.ScriptTarget.Latest,
-      true
+      true,
     );
     const node = source.statements[0] as ts.InterfaceDeclaration;
     const prop = node.members[0] as ts.PropertySignature;

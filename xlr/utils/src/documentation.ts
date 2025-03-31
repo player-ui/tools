@@ -42,7 +42,7 @@ export function createTSDocString(node: NodeType): Array<SymbolDisplayPart> {
           kind: SymbolDisplayPartKind.punctuation as any,
           text: node.type === "and" ? " & " : " | ",
         },
-      ]
+      ],
     ).flat();
   }
 
@@ -90,7 +90,7 @@ export function createTSDocString(node: NodeType): Array<SymbolDisplayPart> {
             kind: SymbolDisplayPartKind.punctuation as any,
             text: ", ",
           },
-        ]
+        ],
       ).flat(),
       {
         kind: SymbolDisplayPartKind.punctuation as any,
@@ -137,7 +137,7 @@ export function createTSDocString(node: NodeType): Array<SymbolDisplayPart> {
             kind: SymbolDisplayPartKind.punctuation as any,
             text: ", ",
           },
-        ]
+        ],
       ).flat(),
       {
         kind: SymbolDisplayPartKind.punctuation as any,
@@ -232,7 +232,7 @@ export function createTSDocString(node: NodeType): Array<SymbolDisplayPart> {
 
 /** Convert the TS SymbolDisplayParts into a single string */
 export function symbolDisplayToString(
-  displayParts: Array<SymbolDisplayPart>
+  displayParts: Array<SymbolDisplayPart>,
 ): string {
   return displayPartsToString(displayParts);
 }

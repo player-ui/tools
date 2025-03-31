@@ -64,11 +64,11 @@ export function isPropertyCompletion(node: ASTNode): boolean {
 /** Search the object for a property with the given name */
 export function getProperty<T extends ASTNode>(
   obj: T,
-  name: string
+  name: string,
 ): PropertyASTNode | undefined {
   if ("properties" in obj) {
     return (obj as ObjectASTNode).properties.find(
-      (p) => p.keyNode.value === name
+      (p) => p.keyNode.value === name,
     );
   }
 }
@@ -76,11 +76,11 @@ export function getProperty<T extends ASTNode>(
 /** Get the LSP Location of an AST node in a document */
 export function getLSLocationOfNode(
   document: TextDocument,
-  node: ASTNode
+  node: ASTNode,
 ): Location {
   const nodeRange = Range.create(
     document.positionAt(node.jsonNode.offset),
-    document.positionAt(node.jsonNode.offset + node.jsonNode.length)
+    document.positionAt(node.jsonNode.offset + node.jsonNode.length),
   );
 
   return Location.create(document.uri, nodeRange);
@@ -103,7 +103,7 @@ function getDepth(node: ASTNode): number {
 export function formatLikeNode(
   document: TextDocument,
   originalNode: ASTNode,
-  replacement: Record<string, unknown>
+  replacement: Record<string, unknown>,
 ): string {
   const { indent } = detectIndent(document.getText());
   const depth = getDepth(originalNode);
@@ -116,7 +116,7 @@ export function formatLikeNode(
 
 /** Maps the string identifying the FlowType to the named type */
 export function mapFlowStateToType(
-  flowType: string | undefined
+  flowType: string | undefined,
 ): string | undefined {
   let flowXLR;
   switch (flowType) {

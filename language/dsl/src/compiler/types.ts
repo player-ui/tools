@@ -90,7 +90,7 @@ export type DefaultCompilerContentType =
 
 /** Helper function to determine whether a content type is compiler default */
 export function isDefaultCompilerContentType(
-  t: string
+  t: string,
 ): t is DefaultCompilerContentType {
   return DefaultCompilerContentTypes.includes(t as DefaultCompilerContentType);
 }

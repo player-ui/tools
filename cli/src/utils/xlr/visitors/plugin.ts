@@ -13,7 +13,7 @@ import { PLAYER_PLUGIN_INTERFACE_NAME } from "../consts";
  */
 function getUnderlyingNode(
   element: ts.TypeQueryNode | ts.TypeReferenceNode,
-  checker: ts.TypeChecker
+  checker: ts.TypeChecker,
 ): TopLevelNode | undefined {
   let referencedSymbol;
   if (ts.isTypeReferenceNode(element)) {
@@ -47,7 +47,7 @@ function getUnderlyingNode(
 function fixExpressionArgNames(
   sourceNode: ts.VariableStatement,
   generatedTypeRef: NamedType<RefNode>,
-  checker: ts.TypeChecker
+  checker: ts.TypeChecker,
 ): NamedType {
   const typeRefCopy = { ...generatedTypeRef };
   const { initializer } = sourceNode.declarationList.declarations[0];
@@ -79,7 +79,6 @@ function fixExpressionArgNames(
     paramsNode.elementTypes?.forEach((gArg, index) => {
       const functionArg = arrowFunction.parameters?.[index + offset];
       if (!gArg.name && functionArg) {
-        // eslint-disable-next-line no-param-reassign
         gArg.name = functionArg.name.getText();
       }
     });
@@ -95,7 +94,7 @@ function fixExpressionArgNames(
 function runPlayerPostProcessing(
   node: TopLevelNode,
   xlr: NamedType,
-  checker: ts.TypeChecker
+  checker: ts.TypeChecker,
 ): NamedType {
   if (
     xlr.type === "ref" &&
@@ -115,7 +114,7 @@ function generateXLR(
   node: ts.Node,
   checker: ts.TypeChecker,
   converter: TsConverter,
-  outputDirectory: string
+  outputDirectory: string,
 ): string {
   if (ts.isTypeReferenceNode(node) || ts.isTypeQueryNode(node)) {
     const varDecl = getUnderlyingNode(node, checker);
@@ -125,12 +124,12 @@ function generateXLR(
       capabilityDescription = runPlayerPostProcessing(
         varDecl,
         capabilityDescription,
-        checker
+        checker,
       );
       const capabilityName = capabilityDescription?.name ?? "error";
       fs.writeFileSync(
         path.join(outputDirectory, `${capabilityName}.json`),
-        JSON.stringify(capabilityDescription, undefined, 4)
+        JSON.stringify(capabilityDescription, undefined, 4),
       );
       return capabilityName;
     }
@@ -173,7 +172,7 @@ export function pluginVisitor(args: VisitorProps): Manifest | undefined {
             const nameProperty = node.members.find(
               (member) =>
                 ts.isPropertyDeclaration(member) &&
-                member.name?.getText() === "name"
+                member.name?.getText() === "name",
             ) as ts.PropertyDeclaration | undefined;
             if (nameProperty && nameProperty.initializer) {
               capabilities.pluginName = nameProperty.initializer
@@ -195,7 +194,7 @@ export function pluginVisitor(args: VisitorProps): Manifest | undefined {
                 if (ts.isTupleTypeNode(exportedCapabilities)) {
                   const capabilityNames = exportedCapabilities.elements.map(
                     (element) =>
-                      generateXLR(element, checker, converter, outputDirectory)
+                      generateXLR(element, checker, converter, outputDirectory),
                   );
 
                   provides.set(capabilityType, capabilityNames);
@@ -207,7 +206,7 @@ export function pluginVisitor(args: VisitorProps): Manifest | undefined {
                     exportedCapabilities,
                     checker,
                     converter,
-                    outputDirectory
+                    outputDirectory,
                   );
                   provides.set(capabilityType, [capabilityName]);
                 } else {

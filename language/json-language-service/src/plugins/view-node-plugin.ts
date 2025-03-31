@@ -37,7 +37,7 @@ interface DocumentViewInfo {
 /** create a visitor to handle view nodes */
 const createValidationVisitor = (
   ctx: ValidationContext,
-  viewInfo: DocumentViewInfo
+  viewInfo: DocumentViewInfo,
 ): ASTVisitor => {
   return {
     FlowStateNode: (flowState) => {
@@ -116,7 +116,7 @@ const getViewInfo = (ctx: DocumentContext): DocumentViewInfo => {
       flow.valueNode?.states?.forEach((state) => {
         if (state.valueNode?.stateType?.valueNode?.value === "VIEW") {
           const ref = state.valueNode.properties.find(
-            (p) => p.keyNode.value === "ref"
+            (p) => p.keyNode.value === "ref",
           );
           if (ref?.valueNode?.type === "string") {
             const refVal = ref.valueNode.value;

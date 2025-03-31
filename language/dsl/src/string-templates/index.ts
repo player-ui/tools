@@ -18,7 +18,7 @@ export interface TemplateInstanceRefStringOptions {
   /** Convert the value to a reference nested in the given context */
   toRefString: (
     options: TemplateRefStringOptions | undefined,
-    value: string
+    value: string,
   ) => string;
 }
 
@@ -55,13 +55,13 @@ export const TemplateStringComponent = (props: {
     {
       value: props.value,
     },
-    null
+    null,
   );
 };
 
 /** The generic template string handler */
 const createTemplateInstance = (
-  options: TemplateInstanceRefStringOptions
+  options: TemplateInstanceRefStringOptions,
 ): TemplateStringType => {
   const value = options.strings.reduce((sum, next, i) => {
     const element = options.other[i];
@@ -109,7 +109,7 @@ const createTemplateInstance = (
     {
       value: toString(),
     },
-    null
+    null,
   ) as TemplateStringType;
 
   return {
@@ -137,15 +137,15 @@ const addBindingIndexes = (binding: string): string => {
 
 /** Creating an instance of a handler for bindings */
 const createBindingTemplateInstance = (
-  options: Omit<TemplateInstanceRefStringOptions, "toRefString">
+  options: Omit<TemplateInstanceRefStringOptions, "toRefString">,
 ): BindingTemplateInstance => {
   const templateInstance = createTemplateInstance({
     ...options,
     strings: options.strings.map((element: string) =>
-      addBindingIndexes(element)
+      addBindingIndexes(element),
     ),
     other: options.other.map((element) =>
-      typeof element === "string" ? addBindingIndexes(element) : element
+      typeof element === "string" ? addBindingIndexes(element) : element,
     ),
     toRefString: (context, value) => {
       return `{{${value}}}`;
@@ -159,7 +159,7 @@ const createBindingTemplateInstance = (
 
 /** Creating an instance of a handler for bindings */
 const createExpressionTemplateInstance = (
-  options: Omit<TemplateInstanceRefStringOptions, "toRefString">
+  options: Omit<TemplateInstanceRefStringOptions, "toRefString">,
 ) => {
   const templateInstance = createTemplateInstance({
     ...options,
@@ -206,7 +206,7 @@ export const expression = (
 
 /** Check if a value is a template string */
 export const isTemplateStringInstance = (
-  val: unknown
+  val: unknown,
 ): val is ExpressionTemplateInstance | BindingTemplateInstance => {
   return (
     val !== null &&
@@ -217,7 +217,7 @@ export const isTemplateStringInstance = (
 
 /** Check if a value is a binding */
 export const isBindingTemplateInstance = (
-  val: unknown
+  val: unknown,
 ): val is BindingTemplateInstance => {
   return (
     val !== null &&

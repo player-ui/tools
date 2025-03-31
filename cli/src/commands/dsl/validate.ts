@@ -49,7 +49,7 @@ export default class Validate extends BaseCommand {
       filePath ?? ".",
       (fName: string) => {
         return existsSync(fName);
-      }
+      },
     );
 
     if (!configFileLocation) {
@@ -63,7 +63,7 @@ export default class Validate extends BaseCommand {
 
     if (configContent.error) {
       this.warn(
-        ts.flattenDiagnosticMessageText(configContent.error.messageText, "\n")
+        ts.flattenDiagnosticMessageText(configContent.error.messageText, "\n"),
       );
 
       return;
@@ -73,7 +73,7 @@ export default class Validate extends BaseCommand {
     const parsedConfigContent = ts.parseJsonConfigFileContent(
       configContent.config,
       ts.sys,
-      basePath
+      basePath,
     );
 
     if (parsedConfigContent.errors.length > 0) {
@@ -82,7 +82,7 @@ export default class Validate extends BaseCommand {
           .map((d) => {
             return ts.flattenDiagnosticMessageText(d.messageText, "\n");
           })
-          .join("\n\n")}`
+          .join("\n\n")}`,
       );
     }
 
@@ -96,7 +96,7 @@ export default class Validate extends BaseCommand {
       convertToFileGlob(inputFiles, "**/*.(tsx|jsx|js|ts)"),
       {
         expandDirectories: true,
-      }
+      },
     );
 
     const TSConfig = this.getTSConfig() ?? DEFAULT_COMPILER_OPTIONS;
@@ -125,7 +125,7 @@ export default class Validate extends BaseCommand {
         [ts.DiagnosticCategory.Warning]: {},
         [ts.DiagnosticCategory.Message]: {},
         [ts.DiagnosticCategory.Suggestion]: {},
-      } as Record<ts.DiagnosticCategory, Record<string, ts.Diagnostic[]>>
+      } as Record<ts.DiagnosticCategory, Record<string, ts.Diagnostic[]>>,
     );
 
     const diagnosticCategories = [
@@ -144,11 +144,11 @@ export default class Validate extends BaseCommand {
           if (diagnostic.file) {
             const { line, character } = ts.getLineAndCharacterOfPosition(
               diagnostic.file,
-              diagnostic.start ?? 0
+              diagnostic.start ?? 0,
             );
             const message = ts.flattenDiagnosticMessageText(
               diagnostic.messageText,
-              "\n"
+              "\n",
             );
 
             let logSymbol = logSymbols.info;
@@ -169,11 +169,11 @@ export default class Validate extends BaseCommand {
             }
 
             this.log(
-              `  ${logSymbol} (${line + 1},${character + 1}): ${message}`
+              `  ${logSymbol} (${line + 1},${character + 1}): ${message}`,
             );
           } else {
             this.log(
-              ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n")
+              ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n"),
             );
           }
         });
@@ -181,14 +181,14 @@ export default class Validate extends BaseCommand {
     });
 
     const errorsCount = Object.keys(
-      groupedDiagnostics[ts.DiagnosticCategory.Error]
+      groupedDiagnostics[ts.DiagnosticCategory.Error],
     ).length;
 
     if (errorsCount) {
       this.log(
         `Type or syntax errors found in ${errorsCount} file${
           errorsCount > 1 ? "s" : ""
-        }, exiting program`
+        }, exiting program`,
       );
       if (severity === "error") {
         this.exit(1);

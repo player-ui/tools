@@ -28,7 +28,7 @@ const createValidationVisitor = (ctx: ValidationContext): ASTVisitor => {
 
     FlowStateNode: (flowState) => {
       const transitions = flowState.properties.find(
-        (p) => p.keyNode.value === "transitions"
+        (p) => p.keyNode.value === "transitions",
       );
 
       let flowNode = flowState.parent;
@@ -127,7 +127,7 @@ export class NavStatePlugin implements PlayerLanguageServicePlugin {
         const { value } = ctx.node;
 
         const flowProp = flowNode?.states.find(
-          (n) => n.keyNode.value === value
+          (n) => n.keyNode.value === value,
         );
 
         if (flowProp) {

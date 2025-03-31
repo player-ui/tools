@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from "react";
 import React from "react";
 import type { ArrayNode, JsonNode, ObjectNode } from "react-json-reconciler";
-import { flattenNodes, PropertyNode } from "react-json-reconciler";
+import { flattenNodes } from "react-json-reconciler";
 import { SlotContext } from ".";
 import { IDSuffixProvider, OptionalIDSuffixProvider } from "./auto-id";
 import type {

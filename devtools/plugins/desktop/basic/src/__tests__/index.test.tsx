@@ -50,7 +50,7 @@ describe("BasicWevDevtoolPlugins", () => {
     expect(plugin.name).toBe(PLUGIN_ID);
     expect(plugin.logs).toEqual([]);
     expect(plugin.data).toEqual({});
-    expect(plugin.flow).toBeUndefined;
+    expect(plugin.flow).toBeUndefined();
     expect(plugin.expressionEvaluator).toBeUndefined();
     expect(plugin.view).toBeUndefined();
     expect(plugin.dataController).toBeUndefined();

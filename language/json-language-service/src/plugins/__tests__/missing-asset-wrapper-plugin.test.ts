@@ -36,8 +36,8 @@ const simpleAssetWrapperDocument = toTextDocument(
       ],
     },
     null,
-    2
-  )
+    2,
+  ),
 );
 
 describe("missing-asset-wrapper", () => {
@@ -53,7 +53,7 @@ describe("missing-asset-wrapper", () => {
 
   test("adds validation for the asset wrapper", async () => {
     const validations = await service.validateTextDocument(
-      simpleAssetWrapperDocument
+      simpleAssetWrapperDocument,
     );
 
     expect(validations).toHaveLength(2);
@@ -67,7 +67,7 @@ describe("missing-asset-wrapper", () => {
 
   test("fixes the violation", async () => {
     const diags = await service.validateTextDocument(
-      simpleAssetWrapperDocument
+      simpleAssetWrapperDocument,
     );
 
     expect(diags).toMatchInlineSnapshot(`
@@ -107,7 +107,7 @@ describe("missing-asset-wrapper", () => {
       simpleAssetWrapperDocument,
       {
         diagnostics: diags ?? [],
-      }
+      },
     );
 
     expect(actions).toMatchInlineSnapshot(`
@@ -149,7 +149,7 @@ describe("missing-asset-wrapper", () => {
 
     const appliedAction = TextDocument.applyEdits(
       simpleAssetWrapperDocument,
-      editActions ?? []
+      editActions ?? [],
     );
 
     expect(appliedAction).toStrictEqual(
@@ -183,8 +183,8 @@ describe("missing-asset-wrapper", () => {
           ],
         },
         null,
-        2
-      )
+        2,
+      ),
     );
   });
 });

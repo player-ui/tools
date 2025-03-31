@@ -10,8 +10,8 @@ test("parses simple content", () => {
       1,
       JSON.stringify({
         views: [{ id: "foo" }],
-      })
-    )
+      }),
+    ),
   );
 
   expect(document.root.type).toBe("content");

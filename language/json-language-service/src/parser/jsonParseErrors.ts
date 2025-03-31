@@ -54,16 +54,16 @@ export function prettyPrintParseErrorCode(code: ParseErrorCode): string {
 /** Convert any JSON parsing errors to LSP diagnostics */
 export function convertErrorsToDiags(
   document: TextDocument,
-  errors: Array<ParseError>
+  errors: Array<ParseError>,
 ): Array<Diagnostic> {
   return errors.map((parseError) => {
     return Diagnostic.create(
       Range.create(
         document.positionAt(parseError.offset),
-        document.positionAt(parseError.offset + parseError.length)
+        document.positionAt(parseError.offset + parseError.length),
       ),
       prettyPrintParseErrorCode(parseError.error as any as ParseErrorCode),
-      DiagnosticSeverity.Error
+      DiagnosticSeverity.Error,
     );
   });
 }

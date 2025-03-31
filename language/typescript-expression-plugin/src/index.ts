@@ -31,7 +31,7 @@ class Plugin implements ts.server.PluginModule {
         tags: ["e", "expr", "expression"],
         enableForStringWithSubstitutions: true,
       },
-      { logger }
+      { logger },
     );
   }
 

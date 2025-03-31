@@ -110,7 +110,7 @@ export class TsConverter {
   }
 
   public convertTopLevelNode(
-    node: TopLevelNode
+    node: TopLevelNode,
   ): NamedType | NamedTypeWithGenerics {
     const sourceFile = node.parent as ts.SourceFile;
     const { fileName } = sourceFile;
@@ -130,7 +130,7 @@ export class TsConverter {
 
   /** Converts a single type/interface declaration to XLRs */
   public convertDeclaration(
-    node: TopLevelDeclaration
+    node: TopLevelDeclaration,
   ): ObjectType | NodeTypeWithGenerics<ObjectType> {
     if (ts.isTypeAliasDeclaration(node)) {
       let genericTokens;
@@ -164,7 +164,7 @@ export class TsConverter {
         return this.handleHeritageClauses(
           node.heritageClauses,
           baseObject as ObjectType,
-          this.context.typeChecker
+          this.context.typeChecker,
         ) as NamedType<ObjectType>;
       }
 
@@ -172,7 +172,7 @@ export class TsConverter {
     }
 
     this.context.throwError(
-      `Error: type node is not an Interface or a Type, can't convert as Declaration`
+      `Error: type node is not an Interface or a Type, can't convert as Declaration`,
     );
   }
 
@@ -189,7 +189,7 @@ export class TsConverter {
         ) {
           resultingNode = this.resolveFunctionCall(
             variable.initializer,
-            node.parent
+            node.parent,
           );
         } else {
           resultingNode = this.tsLiteralToType(variable.initializer);
@@ -210,7 +210,7 @@ export class TsConverter {
     }
 
     this.context.throwError(
-      `Error: Multi-variable declaration on line ${node.pos} is not supported for conversion`
+      `Error: Multi-variable declaration on line ${node.pos} is not supported for conversion`,
     );
   }
 
@@ -218,7 +218,7 @@ export class TsConverter {
   public convertTsTypeNode(node: ts.TypeNode): NodeType {
     if (this.context.cache.convertedNodes.has(node)) {
       const cachedType = this.context.cache.convertedNodes.get(
-        node
+        node,
       ) as NodeType;
       // return deep copy of node so modifications don't effect referenced to the original
       return JSON.parse(JSON.stringify(cachedType));
@@ -273,7 +273,7 @@ export class TsConverter {
         this.context.throwError(
           `Parenthesis type not understood. Length ${
             children.length
-          }, Is Type Node: ${ts.SyntaxKind[element.kind]}`
+          }, Is Type Node: ${ts.SyntaxKind[element.kind]}`,
         );
       }
 
@@ -413,11 +413,11 @@ export class TsConverter {
             optional: param.questionToken ? true : undefined,
             default: param.initializer
               ? this.convertTsTypeNode(
-                  param.initializer as unknown as ts.TypeNode
+                  param.initializer as unknown as ts.TypeNode,
                 )
               : undefined,
           };
-        }
+        },
       );
 
       let returnType;
@@ -443,7 +443,7 @@ export class TsConverter {
         const accessor = node.indexType.literal.getText().replace(/["']/g, "");
         if (!baseObject) {
           this.context.throwError(
-            `Error: Couldn't resolve index access on property ${accessor} on type ${node.objectType.typeName.getText()}`
+            `Error: Couldn't resolve index access on property ${accessor} on type ${node.objectType.typeName.getText()}`,
           );
         } else if (baseObject.type === "object") {
           if (Object.keys(baseObject.properties ?? {}).includes(accessor)) {
@@ -457,7 +457,7 @@ export class TsConverter {
           return { ...baseObject, property: accessor };
         } else {
           this.context.throwError(
-            `Error: Index access on non object/ref type ${baseObject.type}`
+            `Error: Index access on non object/ref type ${baseObject.type}`,
           );
         }
       }
@@ -477,7 +477,7 @@ export class TsConverter {
       }
 
       this.context.throwError(
-        `Error: could not solve IndexedAccessType: ${node.getFullText()}`
+        `Error: could not solve IndexedAccessType: ${node.getFullText()}`,
       );
     }
 
@@ -486,14 +486,14 @@ export class TsConverter {
       const syntheticType = this.context.typeChecker.typeToTypeNode(
         effectiveType,
         node,
-        ts.NodeBuilderFlags.NoTruncation
+        ts.NodeBuilderFlags.NoTruncation,
       );
       if (syntheticType) {
         return this.tsNodeToType(syntheticType);
       }
 
       this.context.throwError(
-        `Error: could not synthesize type for ${node.getText()}`
+        `Error: could not synthesize type for ${node.getText()}`,
       );
     }
 
@@ -502,7 +502,7 @@ export class TsConverter {
     }
 
     this.context.throwError(
-      `Unimplemented type ${ts.SyntaxKind[node.kind]} at ${node.getText()}`
+      `Unimplemented type ${ts.SyntaxKind[node.kind]} at ${node.getText()}`,
     );
   }
 
@@ -552,7 +552,7 @@ export class TsConverter {
       node.elements.forEach((element) => {
         if (ts.isSpreadElement(element)) {
           const arrayReference = this.resolveLiteralReference(
-            element.expression
+            element.expression,
           ) as ArrayType;
           arrayElements.push(...(arrayReference.const ?? []));
         } else {
@@ -582,7 +582,7 @@ export class TsConverter {
           };
         } else if (ts.isSpreadAssignment(property)) {
           const spreadValue = this.resolveLiteralReference(
-            property.expression
+            property.expression,
           ) as ObjectType;
           ret.properties = {
             ...ret.properties,
@@ -601,7 +601,7 @@ export class TsConverter {
     this.context.throwError(
       `Literal type not understood ${
         ts.SyntaxKind[node.kind]
-      } at ${node.getText()}`
+      } at ${node.getText()}`,
     );
   }
 
@@ -625,23 +625,23 @@ export class TsConverter {
         expressionReference.initializer
       ) {
         return this.convertVariable(
-          expressionReference.parent.parent as ts.VariableStatement
+          expressionReference.parent.parent as ts.VariableStatement,
         );
       }
 
       this.context.throwError(
-        `Error: Can't resolve non-variable declaration ${expressionReference?.getText()}`
+        `Error: Can't resolve non-variable declaration ${expressionReference?.getText()}`,
       );
     }
 
     this.context.throwError(
-      `Error: Can't resolve non-identifier reference in literal ${expression.getText()}`
+      `Error: Can't resolve non-identifier reference in literal ${expression.getText()}`,
     );
   }
 
   private resolveFunctionCall(
     functionCall: ts.CallExpression | ts.ArrowFunction,
-    document: ts.Node
+    document: ts.Node,
   ): NodeType {
     if (ts.isArrowFunction(functionCall)) {
       const declaredReturnType = (functionCall.parent as ts.VariableDeclaration)
@@ -657,7 +657,7 @@ export class TsConverter {
     let syntheticNode = this.context.typeChecker.typeToTypeNode(
       functionReturnType,
       document,
-      undefined
+      undefined,
     );
 
     // Synthetic node loses parameter location information, and text making it unable
@@ -695,7 +695,7 @@ export class TsConverter {
         }
 
         this.context.throwError(
-          `Error: could not get referenced type ${syntheticNode.getText()}`
+          `Error: could not get referenced type ${syntheticNode.getText()}`,
         );
       }
 
@@ -703,12 +703,12 @@ export class TsConverter {
     }
 
     this.context.throwError(
-      `Error: could not determine effective return type of ${functionCall.getText()}`
+      `Error: could not determine effective return type of ${functionCall.getText()}`,
     );
   }
 
   private tsObjectMembersToProperties(
-    node: ts.InterfaceDeclaration | ts.TypeLiteralNode
+    node: ts.InterfaceDeclaration | ts.TypeLiteralNode,
   ): Pick<ObjectType, "properties" | "additionalProperties"> {
     const ret: Pick<ObjectType, "properties" | "additionalProperties"> = {
       properties: {},
@@ -729,7 +729,7 @@ export class TsConverter {
         const param = member.parameters[0];
         if (param.type?.kind !== ts.SyntaxKind.StringKeyword) {
           this.context.throwError(
-            "Will not convert non-string index signature"
+            "Will not convert non-string index signature",
           );
         }
 
@@ -742,7 +742,7 @@ export class TsConverter {
   }
 
   private tsTupleToType(
-    node: ts.TupleTypeNode
+    node: ts.TupleTypeNode,
   ): Pick<TupleType, "elementTypes" | "additionalItems" | "minItems"> {
     if (node.elements.length === 0) {
       return { elementTypes: [], additionalItems: false, minItems: 0 };
@@ -778,12 +778,12 @@ export class TsConverter {
     });
 
     const additionalItems = rest
-      ? this.convertTsTypeNode((rest.type as ts.ArrayTypeNode).elementType) ??
-        AnyTypeNode
+      ? (this.convertTsTypeNode((rest.type as ts.ArrayTypeNode).elementType) ??
+        AnyTypeNode)
       : false;
 
     const firstOptional = elementTypes.findIndex(
-      (element) => element.optional === true
+      (element) => element.optional === true,
     );
     const minItems = firstOptional === -1 ? elements.length : firstOptional;
 
@@ -799,7 +799,7 @@ export class TsConverter {
   private handleHeritageClauses(
     clauses: ts.NodeArray<ts.HeritageClause>,
     baseObject: ObjectType,
-    typeChecker: ts.TypeChecker
+    typeChecker: ts.TypeChecker,
   ): ObjectType {
     let newProperties: { [x: string]: ObjectProperty } = {};
     const additionalPropertiesCollector: Array<NodeType> = [];
@@ -820,7 +820,7 @@ export class TsConverter {
 
           if (!parentDeclarations?.[0]) {
             this.context.throwError(
-              `Error: Unable to get underlying interface for extending class ${parent.getFullText()}`
+              `Error: Unable to get underlying interface for extending class ${parent.getFullText()}`,
             );
           }
 
@@ -853,11 +853,11 @@ export class TsConverter {
             typeToApply = this.resolveGenerics(
               typeToApply as NodeTypeWithGenerics,
               parentInterface.typeParameters,
-              parent.typeArguments
+              parent.typeArguments,
             ) as NamedType<ObjectType>;
           } else if (isGenericNodeType(baseObject)) {
             baseObject.genericTokens.push(
-              ...((typeToApply as NodeTypeWithGenerics).genericTokens ?? [])
+              ...((typeToApply as NodeTypeWithGenerics).genericTokens ?? []),
             );
           }
         }
@@ -895,7 +895,7 @@ export class TsConverter {
   private resolveGenerics(
     baseInterface: NodeTypeWithGenerics,
     typeParameters: ts.NodeArray<ts.TypeParameterDeclaration>,
-    typeArguments?: ts.NodeArray<ts.TypeNode>
+    typeArguments?: ts.NodeArray<ts.TypeNode>,
   ): NodeTypeWithGenerics | NodeType {
     // map type args to generics
     if (typeArguments && typeArguments.length === 0) return baseInterface;
@@ -909,7 +909,7 @@ export class TsConverter {
       } else {
         // might need to do some error checking here if there is no type to fill in
         typeToProcess = ts.factory.createKeywordTypeNode(
-          ts.SyntaxKind.AnyKeyword
+          ts.SyntaxKind.AnyKeyword,
         );
       }
 
@@ -923,7 +923,7 @@ export class TsConverter {
   }
 
   private generateGenerics(
-    params: ts.NodeArray<ts.TypeParameterDeclaration> | undefined
+    params: ts.NodeArray<ts.TypeParameterDeclaration> | undefined,
   ): Array<ParamTypeNode> {
     const genericArray: Array<ParamTypeNode> = [];
 
@@ -964,10 +964,10 @@ export class TsConverter {
     if (isTypeReferenceGeneric(node, this.context.typeChecker)) {
       if (ts.isIndexedAccessTypeNode(node.parent)) {
         const genericSymbol = this.context.typeChecker.getSymbolAtLocation(
-          node.typeName
+          node.typeName,
         );
         const typeParameters = this.generateGenerics(
-          genericSymbol?.declarations as unknown as ts.NodeArray<ts.TypeParameterDeclaration>
+          genericSymbol?.declarations as unknown as ts.NodeArray<ts.TypeParameterDeclaration>,
         );
         const typeParameter = typeParameters[0];
         if (typeParameter) {
@@ -991,7 +991,7 @@ export class TsConverter {
       return {
         type: "array",
         elementType: typeArgs
-          ? this.convertTsTypeNode(typeArgs[0]) ?? AnyTypeNode
+          ? (this.convertTsTypeNode(typeArgs[0]) ?? AnyTypeNode)
           : AnyTypeNode,
         ...decorateNode(node),
       };
@@ -1023,7 +1023,7 @@ export class TsConverter {
           return this.resolveGenerics(
             genericType as NamedTypeWithGenerics,
             genericParams,
-            genericArgs
+            genericArgs,
           );
         }
 
@@ -1033,7 +1033,7 @@ export class TsConverter {
       }
 
       this.context.throwError(
-        `Can't find referenced type ${refName}, is it available in the current package or node_modules?`
+        `Can't find referenced type ${refName}, is it available in the current package or node_modules?`,
       );
     }
 
@@ -1042,7 +1042,7 @@ export class TsConverter {
 
   private makeMappedType(
     refName: MappedType,
-    node: ts.NodeWithTypeArguments
+    node: ts.NodeWithTypeArguments,
   ): ObjectType {
     if (refName === "Pick" || refName === "Omit" || refName === "Exclude") {
       const baseType = node.typeArguments?.[0] as ts.TypeNode;
@@ -1054,18 +1054,18 @@ export class TsConverter {
         if (baseObj.type === "or") {
           return applyExcludeToNodeType(
             baseObj as OrType,
-            this.convertTsTypeNode(modifiers)
+            this.convertTsTypeNode(modifiers),
           ) as ObjectType;
         }
 
         throw new ConversionError(
-          "Error: Can't solve Exclude type on non-union node"
+          "Error: Can't solve Exclude type on non-union node",
         );
       } else {
         return applyPickOrOmitToNodeType(
           baseObj,
           refName,
-          getStringLiteralsFromUnion(modifiers)
+          getStringLiteralsFromUnion(modifiers),
         ) as ObjectType;
       }
     }
@@ -1096,7 +1096,7 @@ export class TsConverter {
           genericArgs.push(convertedNode);
         } else {
           this.context.throwError(
-            `Conversion Error: Couldn't convert type argument in type ${node.getText()}`
+            `Conversion Error: Couldn't convert type argument in type ${node.getText()}`,
           );
         }
       });

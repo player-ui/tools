@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import type { InitializeParams } from "vscode-languageserver";
 import {
   createConnection,
@@ -84,7 +83,7 @@ connection.onInitialize((params: InitializeParams) => {
   // Does the client support the `workspace/configuration` request?
   // If not, we will fall back using global settings
   hasConfigurationCapability = Boolean(
-    capabilities.workspace && Boolean(capabilities.workspace.configuration)
+    capabilities.workspace && Boolean(capabilities.workspace.configuration),
   );
 
   fileLog("Initialized Player LSP Server");
@@ -111,14 +110,14 @@ connection.onCompletion(async (textDocumentPosition, token) => {
       if (document !== undefined) {
         return service.getCompletionsAtPosition(
           document,
-          textDocumentPosition.position
+          textDocumentPosition.position,
         );
       }
 
       return null;
     },
     token,
-    null
+    null,
   );
 });
 
@@ -133,12 +132,12 @@ connection.onHover(async (hoverParams, token) => {
       return null;
     },
     token,
-    null
+    null,
   );
 });
 
 connection.onCompletionResolve((item, token) =>
-  runAndCatch(() => service.resolveCompletionItem(item), token, item)
+  runAndCatch(() => service.resolveCompletionItem(item), token, item),
 );
 
 connection.onDocumentFormatting((formattingParams, token) =>
@@ -153,8 +152,8 @@ connection.onDocumentFormatting((formattingParams, token) =>
       return undefined;
     },
     token,
-    null
-  )
+    null,
+  ),
 );
 
 connection.onDocumentRangeFormatting((formattingParams, token) =>
@@ -166,15 +165,15 @@ connection.onDocumentRangeFormatting((formattingParams, token) =>
         return service.formatTextDocument(
           document,
           formattingParams.options,
-          formattingParams.range
+          formattingParams.range,
         );
       }
 
       return undefined;
     },
     token,
-    null
-  )
+    null,
+  ),
 );
 
 connection.onDefinition((definitionParams, token) =>
@@ -185,15 +184,15 @@ connection.onDefinition((definitionParams, token) =>
       if (document !== undefined) {
         return service.getDefinitionAtPosition(
           document,
-          definitionParams.position
+          definitionParams.position,
         );
       }
 
       return undefined;
     },
     token,
-    null
-  )
+    null,
+  ),
 );
 
 connection.onInitialized(() => {
@@ -201,7 +200,7 @@ connection.onInitialized(() => {
     // Register for all configuration changes.
     connection.client.register(
       DidChangeConfigurationNotification.type,
-      undefined
+      undefined,
     );
   }
 });
@@ -231,7 +230,7 @@ connection.onNotification(
       console.log("Updating asset type bundles");
       service.setAssetTypes(assetBundles);
     }
-  }
+  },
 );
 
 fileLog("Starting Player LSP Server");

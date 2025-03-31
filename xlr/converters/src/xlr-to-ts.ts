@@ -92,11 +92,11 @@ export class TSWriter {
               this.context.factory.createIdentifier(refName),
               type.extends.genericArguments
                 ? (type.extends.genericArguments.map((node) =>
-                    this.convertTypeNode(node)
+                    this.convertTypeNode(node),
                   ) as any)
-                : undefined
+                : undefined,
             ),
-          ]
+          ],
         ),
       ];
     }
@@ -118,7 +118,7 @@ export class TSWriter {
         typeName,
         tsNode.members,
         generics,
-        customPrimitiveHeritageClass
+        customPrimitiveHeritageClass,
       );
     } else {
       finalNode = this.makeTypeDeclaration(typeName, tsNode, generics);
@@ -136,7 +136,7 @@ export class TSWriter {
       return this.context.factory.createIntersectionTypeNode(
         type.and.map((element) => {
           return this.convertTypeNode(element);
-        })
+        }),
       );
     }
 
@@ -144,20 +144,22 @@ export class TSWriter {
       return this.context.factory.createUnionTypeNode(
         type.or.map((element) => {
           return this.convertTypeNode(element);
-        })
+        }),
       );
     }
 
     if (type.type === "array") {
       if (type.const) {
         return this.context.factory.createTupleTypeNode(
-          type.const.map((element) => this.convertTypeNode(element as NodeType))
+          type.const.map((element) =>
+            this.convertTypeNode(element as NodeType),
+          ),
         );
       }
 
       return this.context.factory.createTypeReferenceNode(
         this.context.factory.createIdentifier("Array"),
-        [this.convertTypeNode(type.elementType)]
+        [this.convertTypeNode(type.elementType)],
       );
     }
 
@@ -190,7 +192,7 @@ export class TSWriter {
     }
 
     this.context.throwError(
-      `Unable to convert node type: ${(type as any).type}`
+      `Unable to convert node type: ${(type as any).type}`,
     );
   }
 
@@ -200,14 +202,14 @@ export class TSWriter {
       xlrNode.genericArguments.forEach((genericArg) => {
         if (genericArg.name) {
           const additionalType = this.convertNamedTypeNode(
-            genericArg as NamedType
+            genericArg as NamedType,
           );
           this.additionalTypes.set(genericArg.name, additionalType);
         } else if (genericArg.type === "and") {
           genericArg.and.forEach((type) => {
             if (type.name) {
               const additionalType = this.convertNamedTypeNode(
-                type as NamedType
+                type as NamedType,
               );
               this.additionalTypes.set(type.name, additionalType);
             }
@@ -216,7 +218,7 @@ export class TSWriter {
           genericArg.or.forEach((type) => {
             if (type.name) {
               const additionalType = this.convertNamedTypeNode(
-                type as NamedType
+                type as NamedType,
               );
               this.additionalTypes.set(type.name, additionalType);
             }
@@ -241,52 +243,52 @@ export class TSWriter {
       xlrNode.type === "null"
     ) {
       return this.context.factory.createLiteralTypeNode(
-        this.createLiteralTypeNode(xlrNode)
+        this.createLiteralTypeNode(xlrNode),
       );
     }
 
     switch (xlrNode.type) {
       case "string":
         return this.context.factory.createKeywordTypeNode(
-          ts.SyntaxKind.StringKeyword
+          ts.SyntaxKind.StringKeyword,
         );
       case "number":
         return this.context.factory.createKeywordTypeNode(
-          ts.SyntaxKind.NumberKeyword
+          ts.SyntaxKind.NumberKeyword,
         );
       case "boolean":
         return this.context.factory.createKeywordTypeNode(
-          ts.SyntaxKind.BooleanKeyword
+          ts.SyntaxKind.BooleanKeyword,
         );
       case "any":
         return this.context.factory.createKeywordTypeNode(
-          ts.SyntaxKind.AnyKeyword
+          ts.SyntaxKind.AnyKeyword,
         );
       case "unknown":
         return this.context.factory.createKeywordTypeNode(
-          ts.SyntaxKind.UnknownKeyword
+          ts.SyntaxKind.UnknownKeyword,
         );
       case "never":
         return this.context.factory.createKeywordTypeNode(
-          ts.SyntaxKind.NeverKeyword
+          ts.SyntaxKind.NeverKeyword,
         );
       case "undefined":
         return this.context.factory.createKeywordTypeNode(
-          ts.SyntaxKind.UndefinedKeyword
+          ts.SyntaxKind.UndefinedKeyword,
         );
       case "void":
         return this.context.factory.createKeywordTypeNode(
-          ts.SyntaxKind.VoidKeyword
+          ts.SyntaxKind.VoidKeyword,
         );
       default:
         this.context.throwError(
-          `Unknown primitive type ${(xlrNode as any).type}`
+          `Unknown primitive type ${(xlrNode as any).type}`,
         );
     }
   }
 
   private createLiteralTypeNode(
-    xlrNode: NodeType
+    xlrNode: NodeType,
   ): ts.NullLiteral | ts.BooleanLiteral | ts.LiteralExpression {
     if (xlrNode.type === "boolean") {
       return xlrNode.const
@@ -298,7 +300,7 @@ export class TSWriter {
       return xlrNode.const
         ? this.context.factory.createNumericLiteral(xlrNode.const)
         : this.context.throwError(
-            "Can't make literal type out of non constant number"
+            "Can't make literal type out of non constant number",
           );
     }
 
@@ -306,7 +308,7 @@ export class TSWriter {
       return xlrNode.const
         ? this.context.factory.createStringLiteral(xlrNode.const, true)
         : this.context.throwError(
-            "Can't make literal type out of non constant string"
+            "Can't make literal type out of non constant string",
           );
     }
 
@@ -327,12 +329,12 @@ export class TSWriter {
             e.optional
               ? this.context.factory.createToken(ts.SyntaxKind.QuestionToken)
               : undefined,
-            this.convertTypeNode(e.type)
+            this.convertTypeNode(e.type),
           );
         }
 
         return this.convertTypeNode(e.type);
-      })
+      }),
     );
   }
 
@@ -348,12 +350,12 @@ export class TSWriter {
             ? this.context.factory.createToken(ts.SyntaxKind.QuestionToken)
             : undefined,
           this.convertTypeNode(e.type),
-          e.default ? this.createLiteralTypeNode(e.default) : undefined
+          e.default ? this.createLiteralTypeNode(e.default) : undefined,
         );
       }),
       xlrNode.returnType
         ? this.convertTypeNode(xlrNode.returnType)
-        : this.context.factory.createToken(ts.SyntaxKind.VoidKeyword)
+        : this.context.factory.createToken(ts.SyntaxKind.VoidKeyword),
     );
   }
 
@@ -362,7 +364,7 @@ export class TSWriter {
     const valueType = this.convertTypeNode(xlrNode.valueType);
     return this.context.factory.createTypeReferenceNode(
       this.context.factory.createIdentifier("Record"),
-      [keyType, valueType]
+      [keyType, valueType],
     );
   }
 
@@ -376,7 +378,7 @@ export class TSWriter {
       leftCheck,
       rightCheck,
       trueValue,
-      falseValue
+      falseValue,
     );
   }
 
@@ -394,10 +396,10 @@ export class TSWriter {
               required
                 ? undefined
                 : this.context.factory.createToken(ts.SyntaxKind.QuestionToken),
-              this.convertTypeNode(node)
+              this.convertTypeNode(node),
             ),
-            node
-          )
+            node,
+          ),
         ),
     ];
 
@@ -412,12 +414,12 @@ export class TSWriter {
               "key",
               undefined, // question token
               this.context.factory.createKeywordTypeNode(
-                ts.SyntaxKind.StringKeyword
-              )
+                ts.SyntaxKind.StringKeyword,
+              ),
             ),
           ],
-          this.convertTypeNode(additionalProperties)
-        )
+          this.convertTypeNode(additionalProperties),
+        ),
       );
     }
 
@@ -430,7 +432,7 @@ export class TSWriter {
 
     if (templateSegments.length % 2 === 0) {
       templateHead = this.context.factory.createTemplateHead(
-        templateSegments[0]
+        templateSegments[0],
       );
       templateSegments.splice(0, 1);
     } else {
@@ -451,7 +453,7 @@ export class TSWriter {
           regexTemplateType = ts.SyntaxKind.BooleanKeyword;
         } else {
           this.context.throwError(
-            `Can't make template literal type from regex ${regexSegment}`
+            `Can't make template literal type from regex ${regexSegment}`,
           );
         }
 
@@ -467,9 +469,9 @@ export class TSWriter {
 
         return this.context.factory.createTemplateLiteralTypeSpan(
           this.context.factory.createKeywordTypeNode(regexTemplateType),
-          stringTemplateType
+          stringTemplateType,
         );
-      })
+      }),
     );
   }
 
@@ -477,7 +479,7 @@ export class TSWriter {
     if (node) {
       if (node.type === "object" && node.name) {
         const additionalType = this.convertNamedTypeNode(
-          node as NamedType<ObjectType>
+          node as NamedType<ObjectType>,
         );
         this.additionalTypes.set(node.name, additionalType);
         return this.context.factory.createTypeReferenceNode(node.name);
@@ -491,7 +493,7 @@ export class TSWriter {
 
   private makeAnnotations<T extends ts.Node>(
     tsNode: T,
-    xlrAnnotations: Annotations
+    xlrAnnotations: Annotations,
   ) {
     let comment = xlrAnnotations.description;
     if (!comment) {
@@ -511,19 +513,19 @@ export class TSWriter {
       tsNode,
       ts.SyntaxKind.MultiLineCommentTrivia,
       comment,
-      true
+      true,
     );
   }
 
   private createTypeParameters(
-    genericXLRNode: NodeTypeWithGenerics
+    genericXLRNode: NodeTypeWithGenerics,
   ): Array<ts.TypeParameterDeclaration> {
     return genericXLRNode.genericTokens.map((generic) => {
       return this.context.factory.createTypeParameterDeclaration(
         undefined,
         generic.symbol,
         this.createGenericArgumentNode(generic.constraints),
-        this.createGenericArgumentNode(generic.default)
+        this.createGenericArgumentNode(generic.default),
       );
     });
   }
@@ -532,31 +534,31 @@ export class TSWriter {
     name: string,
     node: ts.NodeArray<ts.TypeElement>,
     generics: Array<ts.TypeParameterDeclaration> | undefined,
-    heritageClass: ts.HeritageClause[] | undefined
+    heritageClass: ts.HeritageClause[] | undefined,
   ) {
     return this.context.factory.createInterfaceDeclaration(
       this.context.factory.createModifiersFromModifierFlags(
-        ts.ModifierFlags.Export
+        ts.ModifierFlags.Export,
       ),
       this.context.factory.createIdentifier(name),
       generics, // type parameters
       heritageClass, // heritage
-      node
+      node,
     );
   }
 
   private makeTypeDeclaration(
     name: string,
     node: ts.TypeNode,
-    generics: Array<ts.TypeParameterDeclaration> | undefined
+    generics: Array<ts.TypeParameterDeclaration> | undefined,
   ) {
     return this.context.factory.createTypeAliasDeclaration(
       this.context.factory.createModifiersFromModifierFlags(
-        ts.ModifierFlags.Export
+        ts.ModifierFlags.Export,
       ),
       this.context.factory.createIdentifier(name),
       generics, // type parameters
-      node
+      node,
     );
   }
 }

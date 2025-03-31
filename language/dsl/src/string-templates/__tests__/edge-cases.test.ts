@@ -1,4 +1,4 @@
-import { test, expect, describe } from "vitest";
+import { test, expect } from "vitest";
 import { isTemplateStringInstance } from "..";
 
 test("isTemplateStringInstance with null", () => {

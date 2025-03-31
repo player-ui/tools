@@ -33,7 +33,7 @@ describe("Loading XLRs", () => {
     const sdk = new XLRSDK();
     await sdk.loadDefinitionsFromModule(
       ReferenceAssetsWebPluginManifest,
-      EXCLUDE
+      EXCLUDE,
     );
     await sdk.loadDefinitionsFromModule(Types);
 
@@ -116,7 +116,7 @@ describe("Validation", () => {
     const inputAsset = sdk.getType("InputAsset", { optimize: false });
     expect(inputAsset).toBeDefined();
     expect(
-      sdk.validateByType(inputAsset as NamedType, mockAsset)
+      sdk.validateByType(inputAsset as NamedType, mockAsset),
     ).toMatchSnapshot();
   });
 
@@ -140,7 +140,7 @@ describe("Validation", () => {
     const inputAsset = sdk.getType("InputAsset");
     expect(inputAsset).toBeDefined();
     expect(
-      sdk.validateByType(inputAsset as NamedType, mockAsset)
+      sdk.validateByType(inputAsset as NamedType, mockAsset),
     ).toMatchSnapshot();
   });
 });
@@ -217,7 +217,7 @@ describe("Export Test", () => {
       {
         pluginFilter: "Types",
       },
-      [transformFunction]
+      [transformFunction],
     );
     expect(results[0][0]).toBe("out.d.ts");
     expect(results[0][1]).toMatchSnapshot();
@@ -258,10 +258,10 @@ describe("Or Type Validation", () => {
     // Expected error and info messages
     expect(validationResult).toHaveLength(2);
     expect(validationResult[0].message).toBe(
-      "Does not match any of the types: string | string | string | string"
+      "Does not match any of the types: string | string | string | string",
     );
     expect(validationResult[1].message).toBe(
-      "Expected: apple | banana | carrot | deli-meat"
+      "Expected: apple | banana | carrot | deli-meat",
     );
   });
 });
@@ -301,7 +301,7 @@ describe("generateNestedTypesInfo Test", () => {
     const result = (validator as any).generateNestedTypesInfo(
       potentialTypeErrors,
       xlrNode,
-      rootNode
+      rootNode,
     );
 
     expect(result.nestedTypesList).toBe("string");
@@ -334,12 +334,12 @@ describe("generateNestedTypesInfo Test", () => {
     const result = (validator as any).generateNestedTypesInfo(
       potentialTypeErrors,
       xlrNode,
-      rootNode
+      rootNode,
     );
 
     expect(result.nestedTypesList).toBe("https://example.com/mytype");
     expect(result.infoMessage).toBe(
-      "Got: true and expected: https://example.com/mytype"
+      "Got: true and expected: https://example.com/mytype",
     );
   });
 
@@ -363,7 +363,7 @@ describe("generateNestedTypesInfo Test", () => {
     const result = (validator as any).generateNestedTypesInfo(
       potentialTypeErrors,
       xlrNode,
-      rootNode
+      rootNode,
     );
 
     expect(result.nestedTypesList).toBe("string | number");

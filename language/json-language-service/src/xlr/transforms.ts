@@ -1,10 +1,5 @@
-/* eslint-disable guard-for-in */
-/* eslint-disable no-restricted-syntax */
-
 import type {
   ArrayType,
-  NamedType,
-  NodeType,
   OrType,
   RefType,
   TransformFunction,
@@ -19,7 +14,6 @@ import { isPrimitiveTypeNode } from "@player-tools/xlr-utils";
 export const applyCommonProps: TransformFunction = (node, capability) => {
   return simpleTransformGenerator("object", ["Assets", "Views"], (xlrNode) => {
     if (!xlrNode.properties.applicability) {
-      // eslint-disable-next-line no-param-reassign
       xlrNode.properties.applicability = {
         required: false,
         node: {
@@ -41,7 +35,6 @@ export const applyCommonProps: TransformFunction = (node, capability) => {
     }
 
     if (!xlrNode.properties._comment) {
-      // eslint-disable-next-line no-param-reassign
       xlrNode.properties._comment = {
         required: false,
         node: {
@@ -60,7 +53,7 @@ export const applyCommonProps: TransformFunction = (node, capability) => {
  */
 export const applyAssetWrapperOrSwitch: TransformFunction = (
   node,
-  capability
+  capability,
 ) => {
   return simpleTransformGenerator("ref", ["Assets", "Views"], (xlrNode) => {
     if (xlrNode.ref.includes("AssetWrapper")) {
@@ -119,7 +112,7 @@ export const applyValueRefs: TransformFunction = (node, capability) => {
       }
 
       return xlrNode;
-    }
+    },
   )(node, capability);
 };
 
@@ -171,6 +164,6 @@ export const applyTemplateProperty: TransformFunction = (node, capability) => {
       }
 
       return xlrNode;
-    }
+    },
   )(node, capability);
 };

@@ -51,7 +51,7 @@ export class SchemaGenerator {
     createSchemaNode: new SyncWaterfallHook<
       [
         node: Schema.DataType,
-        originalProperty: Record<string | symbol, unknown>
+        originalProperty: Record<string | symbol, unknown>,
       ]
     >(),
   };
@@ -78,7 +78,7 @@ export class SchemaGenerator {
       const subType = schema[property] as SchemaNode;
       newSchema.ROOT[property] = this.hooks.createSchemaNode.call(
         this.processChild(property, subType),
-        subType as any
+        subType as any,
       );
     });
 
@@ -95,7 +95,7 @@ export class SchemaGenerator {
         const subType = (child as any)[property] as SchemaNode;
         typeDef[property] = this.hooks.createSchemaNode.call(
           this.processChild(property, subType),
-          subType as any
+          subType as any,
         );
       });
       newSchema[name] = typeDef;
@@ -119,7 +119,7 @@ export class SchemaGenerator {
     if (Array.isArray(subType)) {
       if (subType.length > 1) {
         this.logger.warn(
-          `Type ${property} has multiple types in array, should only contain one top level object type. Only taking first defined type`
+          `Type ${property} has multiple types in array, should only contain one top level object type. Only taking first defined type`,
         );
       }
 
@@ -136,12 +136,12 @@ export class SchemaGenerator {
 
     if (this.generatedDataTypes.has(intermediateType.type)) {
       const generatedType = this.generatedDataTypes.get(
-        intermediateType.type
+        intermediateType.type,
       ) as GeneratedDataType;
       if (
         !dequal(
           child,
-          this.generatedDataTypes.get(intermediateType.type)?.node as object
+          this.generatedDataTypes.get(intermediateType.type)?.node as object,
         )
       ) {
         generatedType.count += 1;
@@ -150,7 +150,7 @@ export class SchemaGenerator {
           type: `${intermediateType.type}${generatedType.count}`,
         };
         this.logger.warn(
-          `WARNING: Generated two intermediate types with the name: ${intermediateType.type} that are of different shapes, using artificial type ${newIntermediateType.type}`
+          `WARNING: Generated two intermediate types with the name: ${intermediateType.type} that are of different shapes, using artificial type ${newIntermediateType.type}`,
         );
         intermediateType = newIntermediateType;
         this.children.pop();
@@ -195,8 +195,8 @@ export type MakeBindingRefable<T> = {
   [P in keyof T]: T[P] extends object[]
     ? MakeArrayIntoIndexRef<T[P]>
     : T[P] extends unknown[]
-    ? T[P]
-    : MakeBindingRefable<T[P]>;
+      ? T[P]
+      : MakeBindingRefable<T[P]>;
 } & BindingTemplateInstance;
 
 /**
@@ -204,7 +204,7 @@ export type MakeBindingRefable<T> = {
  */
 export function makeBindingsForObject<Type>(
   obj: Type,
-  arrayAccessorKeys = ["_index_"]
+  arrayAccessorKeys = ["_index_"],
 ): MakeBindingRefable<Type> {
   /** Proxy to track binding callbacks */
   const accessor = (paths: string[]) => {

@@ -2,7 +2,7 @@ import type { NamedType, NodeType } from ".";
 
 export type TransformFunction = (
   input: NamedType<NodeType> | NodeType,
-  capabilityType: string
+  capabilityType: string,
 ) => NamedType | NodeType;
 
 export interface Capability {

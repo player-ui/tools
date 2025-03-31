@@ -43,12 +43,12 @@ describe("binding-plugin", () => {
           },
         },
         null,
-        2
-      )
+        2,
+      ),
     );
     const completions = await service.getCompletionsAtPosition(
       testDocument,
-      Position.create(5, 18)
+      Position.create(5, 18),
     );
 
     expect(completions.items).toHaveLength(2);

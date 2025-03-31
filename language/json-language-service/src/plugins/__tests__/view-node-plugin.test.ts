@@ -50,7 +50,7 @@ describe("duplicate-id-plugin", () => {
             },
           },
         },
-      })
+      }),
     );
 
     const validations = await service.validateTextDocument(textDocument);
@@ -93,13 +93,13 @@ describe("duplicate-id-plugin", () => {
           },
         },
         null,
-        2
-      )
+        2,
+      ),
     );
 
     const completions = await service.getCompletionsAtPosition(
       textDocument,
-      Position.create(3, 13)
+      Position.create(3, 13),
     );
 
     expect(completions.items?.map((i) => i.label)).toContain("view-1");
@@ -135,13 +135,13 @@ describe("duplicate-id-plugin", () => {
           },
         },
         null,
-        2
-      )
+        2,
+      ),
     );
 
     const completions = await service.getCompletionsAtPosition(
       textDocument,
-      Position.create(13, 15)
+      Position.create(13, 15),
     );
 
     expect(completions.items?.map((i) => i.label)).toContain("view-1");

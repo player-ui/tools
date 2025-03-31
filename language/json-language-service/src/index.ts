@@ -90,7 +90,7 @@ export class PlayerLanguageService {
           documentContext: DocumentContext;
           /** A callback for adding a new fixable rule */
           addFixableViolation: (diag: Diagnostic, violation: Violation) => void;
-        }
+        },
       ],
       Record<string, any>
     >;
@@ -124,7 +124,7 @@ export class PlayerLanguageService {
           documentContext: DocumentContext;
           /** A callback for adding a new fixable rule */
           addFixableViolation: (diag: Diagnostic, violation: Violation) => void;
-        }
+        },
       ]
     >(),
 
@@ -195,7 +195,7 @@ export class PlayerLanguageService {
 
   private async getJSONPositionInfo(
     ctx: DocumentContext,
-    position: Position
+    position: Position,
   ): Promise<{
     /** the node at the given node */
     node?: ASTNode;
@@ -210,7 +210,7 @@ export class PlayerLanguageService {
 
   private async updateSourceWithPosition(
     document: TextDocument,
-    position: Position
+    position: Position,
   ): Promise<EnhancedDocumentContextWithPosition | undefined> {
     const ctx = await this.updateSource(document);
 
@@ -237,7 +237,7 @@ export class PlayerLanguageService {
   async formatTextDocument(
     document: TextDocument,
     options: FormattingOptions,
-    range?: Range
+    range?: Range,
   ): Promise<Array<TextEdit> | undefined> {
     const formattingOptions: JSONFormattingOptions = {
       tabSize: options.tabSize,
@@ -259,16 +259,16 @@ export class PlayerLanguageService {
         return TextEdit.replace(
           Range.create(
             document.positionAt(edit.offset),
-            document.positionAt(edit.offset + edit.length)
+            document.positionAt(edit.offset + edit.length),
           ),
-          edit.content
+          edit.content,
         );
-      }
+      },
     );
   }
 
   async validateTextDocument(
-    document: TextDocument
+    document: TextDocument,
   ): Promise<Array<Diagnostic> | undefined> {
     const ctx = await this.updateSource(document);
     this.fixableViolationsForDocument.delete(document.uri);
@@ -283,7 +283,7 @@ export class PlayerLanguageService {
     /** Add a matching violation fix to the original diagnostic */
     const addFixableViolation = (
       diagnostic: Diagnostic,
-      violation: Violation
+      violation: Violation,
     ) => {
       if (!this.fixableViolationsForDocument.has(document.uri)) {
         this.fixableViolationsForDocument.set(document.uri, new Map());
@@ -334,7 +334,7 @@ export class PlayerLanguageService {
             await visitor[visitorProp]?.(node as any);
           } catch (e: any) {
             ctx.log?.error(
-              `Error running rules for ${visitorProp}: ${e.message}, Stack ${e.stack}`
+              `Error running rules for ${visitorProp}: ${e.message}, Stack ${e.stack}`,
             );
           }
         });
@@ -351,7 +351,7 @@ export class PlayerLanguageService {
 
   async getCompletionsAtPosition(
     document: TextDocument,
-    position: Position
+    position: Position,
   ): Promise<CompletionList> {
     const ctxWithPos = await this.updateSourceWithPosition(document, position);
 
@@ -372,14 +372,14 @@ export class PlayerLanguageService {
   }
 
   async resolveCompletionItem(
-    completionItem: CompletionItem
+    completionItem: CompletionItem,
   ): Promise<CompletionItem> {
     return completionItem;
   }
 
   async getHoverInfoAtPosition(
     document: TextDocument,
-    position: Position
+    position: Position,
   ): Promise<Hover | undefined | null> {
     const context = await this.updateSourceWithPosition(document, position);
 
@@ -392,10 +392,10 @@ export class PlayerLanguageService {
 
   async getCodeActionsInRange(
     document: TextDocument,
-    context: CodeActionContext
+    context: CodeActionContext,
   ): Promise<CodeAction[]> {
     const diagsForDocument = this.fixableViolationsForDocument.get(
-      document.uri
+      document.uri,
     );
 
     if (
@@ -411,7 +411,7 @@ export class PlayerLanguageService {
 
     diagsForDocument.forEach((violation, diagnostic) => {
       const matching = context.diagnostics.find((diag) =>
-        containsRange(diagnostic.range, diag.range)
+        containsRange(diagnostic.range, diag.range),
       );
       const fixedAction = violation.fix?.();
 
@@ -435,7 +435,7 @@ export class PlayerLanguageService {
 
   public async getDefinitionAtPosition(
     document: TextDocument,
-    position: Position
+    position: Position,
   ): Promise<Location | undefined | null> {
     const context = await this.updateSourceWithPosition(document, position);
 
@@ -448,7 +448,7 @@ export class PlayerLanguageService {
 
   public addXLRTransforms(transforms: Record<string, TransformFunction>): void {
     Object.entries(transforms).forEach(([name, fn]) =>
-      this.XLRService.XLRSDK.addTransformFunction(name, fn)
+      this.XLRService.XLRSDK.addTransformFunction(name, fn),
     );
   }
 
@@ -466,7 +466,7 @@ export class PlayerLanguageService {
         this.XLRService.XLRSDK.loadDefinitionsFromDisk(
           file,
           DEFAULT_FILTERS,
-          TRANSFORM_FUNCTIONS
+          TRANSFORM_FUNCTIONS,
         );
       }
     });
@@ -481,10 +481,10 @@ export class PlayerLanguageService {
           return this.XLRService.XLRSDK.loadDefinitionsFromModule(
             m,
             DEFAULT_FILTERS,
-            TRANSFORM_FUNCTIONS
+            TRANSFORM_FUNCTIONS,
           );
         }
-      })
+      }),
     );
   }
 }

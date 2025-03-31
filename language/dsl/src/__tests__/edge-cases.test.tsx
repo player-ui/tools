@@ -46,7 +46,7 @@ test("works with a Component that returns a Fragment of items", async () => {
       <Collection.Values>
         <NestedItems />
       </Collection.Values>
-    </Collection>
+    </Collection>,
   );
 
   expect(contentWithFragment.jsonValue).toStrictEqual(expected);
@@ -58,7 +58,7 @@ test("works with a Component that returns a Fragment of items", async () => {
         <Input />
         <Text>After Input</Text>
       </Collection.Values>
-    </Collection>
+    </Collection>,
   );
 
   expect(contentWithoutFragment.jsonValue).toStrictEqual(expected);
@@ -76,7 +76,7 @@ test("handles invalid expressions", async () => {
   };
 
   await expect(render(<App />)).rejects.toThrow(
-    'Unclosed quote after "" at character 9'
+    'Unclosed quote after "" at character 9',
   );
 });
 

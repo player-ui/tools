@@ -69,7 +69,7 @@ export const WrapperComponent = ({
           dset(
             draft,
             ["plugins", id, "flow", "data", "displayFlameGraph"],
-            false
+            false,
           );
         });
 
@@ -93,7 +93,7 @@ export const WrapperComponent = ({
           dset(
             draft,
             ["plugins", id, "flow", "data", "displayFlameGraph"],
-            true
+            true,
           );
         });
 
@@ -106,7 +106,7 @@ export const WrapperComponent = ({
         dispatch(transaction);
       }
     },
-    [dispatch, id, state]
+    [dispatch, id, state],
   );
 
   // Process interactions

@@ -15,7 +15,7 @@ export function isInRange(position: Position, location: NodeLocation) {
 /** Find the closest marked token at the given position */
 export function getTokenAtPosition(
   node: ExpressionNode,
-  position: Position
+  position: Position,
 ): ExpressionNode | undefined {
   if (node.type === "CallExpression") {
     const anyArgs = node.args.find((arg) => {
@@ -84,7 +84,7 @@ export function convertExprToValue(exprNode: ExpressionNode): any {
 
 /** ExpressionNode -> JSONC Node */
 export function convertExprToJSONNode(
-  exprNode: ExpressionNode
+  exprNode: ExpressionNode,
 ): Node | undefined {
   const val = convertExprToValue(exprNode);
   if (val === undefined) {

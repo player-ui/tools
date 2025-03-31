@@ -51,7 +51,6 @@ export default class DependencyVersionsCheck extends BaseCommand {
     };
   }
 
-  /* eslint-disable complexity */
   async run(): Promise<{
     /** the status code */
     exitCode: number;
@@ -74,10 +73,10 @@ export default class DependencyVersionsCheck extends BaseCommand {
     const currentDirectory = process.cwd();
     if (localGithubRepoRoot !== currentDirectory) {
       console.log(
-        `${chalkNegative("ERROR:")} cannot run the CLI in ${currentDirectory}`
+        `${chalkNegative("ERROR:")} cannot run the CLI in ${currentDirectory}`,
       );
       console.log(
-        `Please run the CLI in the root of the repository, ${localGithubRepoRoot}`
+        `Please run the CLI in the root of the repository, ${localGithubRepoRoot}`,
       );
       results.exitCode = NOT_RUN_AT_REPO_ROOT_EXIT_CODE;
       this.exit(results.exitCode);
@@ -87,37 +86,37 @@ export default class DependencyVersionsCheck extends BaseCommand {
     const { verbose, path, ignore } = await this.getOptions();
 
     console.log(
-      "Consider using the --help flag for more information about this command."
+      "Consider using the --help flag for more information about this command.",
     );
 
     if (!verbose) {
       console.log(
-        "For more comprehensive logging, consider adding the -v flag."
+        "For more comprehensive logging, consider adding the -v flag.",
       );
     }
 
     if (!path) {
       console.log(
-        "For logging with full path to the dependency rather than with '➡', consider adding the -p flag."
+        "For logging with full path to the dependency rather than with '➡', consider adding the -p flag.",
       );
     }
 
     if (ignore) {
       console.log(
-        "All output based on the versions/dependencies yielded after eliminating the patterns specified by the -i flag."
+        "All output based on the versions/dependencies yielded after eliminating the patterns specified by the -i flag.",
       );
     } else {
       console.log(
-        "To add string pattern(s) for files to exclude, consider adding them after the -i flag."
+        "To add string pattern(s) for files to exclude, consider adding them after the -i flag.",
       );
     }
 
     console.log(
-      "Inspecting the @player-ui/@player-tools dependencies in the current repository..."
+      "Inspecting the @player-ui/@player-tools dependencies in the current repository...",
     );
 
     let packageJsons = glob.sync(
-      "**/node_modules/{@player,@player-language,@web-player}/*/package.json"
+      "**/node_modules/{@player,@player-language,@web-player}/*/package.json",
     );
 
     if (ignore) {
@@ -127,7 +126,7 @@ export default class DependencyVersionsCheck extends BaseCommand {
       // and not the file as a simple string.
       packageJsons = packageJsons.filter((packageJson) => {
         return !ignore.some((patternToIgnore) =>
-          packageJson.includes(patternToIgnore)
+          packageJson.includes(patternToIgnore),
         );
       });
     }
@@ -228,7 +227,7 @@ export default class DependencyVersionsCheck extends BaseCommand {
     function printTable(
       versionToDependencyMap: DependencyMap,
       sortedVersions: string[],
-      table: Table
+      table: Table,
     ) {
       sortedVersions.forEach(function (version) {
         const dependencies = versionToDependencyMap[version];
@@ -270,7 +269,7 @@ export default class DependencyVersionsCheck extends BaseCommand {
       printTable(
         versionToTopLevelDependencyMap,
         sortedTopLevelVersions,
-        topLevelDependenciesTable
+        topLevelDependenciesTable,
       );
     }
 
@@ -279,7 +278,7 @@ export default class DependencyVersionsCheck extends BaseCommand {
       printTable(
         versionToNestedDependencyMap,
         sortedNestedVersions,
-        nestedDependenciesTable
+        nestedDependenciesTable,
       );
     }
 
@@ -291,19 +290,19 @@ export default class DependencyVersionsCheck extends BaseCommand {
     ) {
       if (singleVersionsMatch) {
         console.log(
-          "Unique top-level and nested @player-ui/@player-tools versions match. "
+          "Unique top-level and nested @player-ui/@player-tools versions match. ",
         );
       }
 
       if (!topLevelVersionsExist && nestedVersions.length === 1) {
         console.log(
-          `No top-level @player-ui/@player-tools dependencies exist. Only a single nested @player-ui/@player-tools version exists, ${nestedVersions[0]}`
+          `No top-level @player-ui/@player-tools dependencies exist. Only a single nested @player-ui/@player-tools version exists, ${nestedVersions[0]}`,
         );
       }
 
       if (!nestedVersionsExist && topLevelVersions.length === 1) {
         console.log(
-          `No nested @player-ui/@player-tools dependencies exist. Only a single top-level @player-ui/@player-tools version exists, ${topLevelVersions[0]}`
+          `No nested @player-ui/@player-tools dependencies exist. Only a single top-level @player-ui/@player-tools version exists, ${topLevelVersions[0]}`,
         );
       }
 
@@ -312,7 +311,7 @@ export default class DependencyVersionsCheck extends BaseCommand {
       }
 
       console.log(
-        "There are no issues related to @player-ui/@player-tools dependency versioning. You are good to go! "
+        "There are no issues related to @player-ui/@player-tools dependency versioning. You are good to go! ",
       );
       this.exit(results.exitCode);
       return results;
@@ -321,48 +320,48 @@ export default class DependencyVersionsCheck extends BaseCommand {
     console.log(chalkNegative("WARNINGS:"));
     if (multipleTopLevelVersionsDetected) {
       console.log(
-        "- There are multiple top-level @player-ui/@player-tools dependency versions."
+        "- There are multiple top-level @player-ui/@player-tools dependency versions.",
       );
     }
 
     if (multipleNestedVersionsDetected) {
       console.log(
-        "- There are multiple nested @player-ui/@player-tools dependency versions."
+        "- There are multiple nested @player-ui/@player-tools dependency versions.",
       );
     }
 
     if (singleVersionsMismatch) {
       console.log(
-        "- Mismatch between the top-level and the nested @player-ui/@player-tools dependency."
+        "- Mismatch between the top-level and the nested @player-ui/@player-tools dependency.",
       );
     }
 
     console.log(chalkPositive("RECOMMENDATIONS:"));
     if (multipleTopLevelVersionsDetected) {
       console.log(
-        `- Resolve all top-level @player-ui/@player-tools dependencies to the same version. Consider updating them to the latest player version you have, ${highestTopLevelVersion}. When all top-level @player-ui/@player-tools dependencies are resolved, run the current CLI again to obtain recommendations about nested @player-ui/@player-tools dependencies.`
+        `- Resolve all top-level @player-ui/@player-tools dependencies to the same version. Consider updating them to the latest player version you have, ${highestTopLevelVersion}. When all top-level @player-ui/@player-tools dependencies are resolved, run the current CLI again to obtain recommendations about nested @player-ui/@player-tools dependencies.`,
       );
     } else if (highestTopLevelVersion && highestNestedVersion) {
       // highestTopLevelVersion && highestNestedVersion defined means: single top-level version, one or more nested versions
       if (cmp(highestTopLevelVersion, highestNestedVersion) >= 1) {
         // when only a single top-level version is detected, it is simply the highest
         console.log(
-          `- The highest @player-ui/@player-tools version is ${highestTopLevelVersion} at the top level. Please add resolutions for all nested @player-ui/@player-tools versions to this version or bump the nested versions to it.`
+          `- The highest @player-ui/@player-tools version is ${highestTopLevelVersion} at the top level. Please add resolutions for all nested @player-ui/@player-tools versions to this version or bump the nested versions to it.`,
         );
       } else {
         console.log(
-          `- The highest @player-ui/@player-tools version is ${highestNestedVersion} at the nested level. Please bump the top-level version, ${highestTopLevelVersion}, to ${highestNestedVersion}.`
+          `- The highest @player-ui/@player-tools version is ${highestNestedVersion} at the nested level. Please bump the top-level version, ${highestTopLevelVersion}, to ${highestNestedVersion}.`,
         );
         if (multipleNestedVersionsDetected) {
           console.log(
-            `- Also, please add resolutions or bump the versions for nested @player-ui/@player-tools dependencies whose version is not ${highestNestedVersion}.`
+            `- Also, please add resolutions or bump the versions for nested @player-ui/@player-tools dependencies whose version is not ${highestNestedVersion}.`,
           );
         }
       }
     } else if (highestNestedVersion && multipleNestedVersionsDetected) {
       // no top-level version defined, multiple nested versions
       console.log(
-        `- The highest @player-ui/@player-tools version is ${highestNestedVersion} at the nested level. Please add resolutions for all nested @player-ui/@player-tools versions to this version or bump the nested versions to it.`
+        `- The highest @player-ui/@player-tools version is ${highestNestedVersion} at the nested level. Please add resolutions for all nested @player-ui/@player-tools versions to this version or bump the nested versions to it.`,
       );
     }
 

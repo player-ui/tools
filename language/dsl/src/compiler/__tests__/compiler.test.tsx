@@ -10,7 +10,7 @@ test("treats jsx as view", async () => {
   const result = await compiler.serialize(
     <object>
       <property name="foo">bar</property>
-    </object>
+    </object>,
   );
   expect(result).toBeDefined();
   expect(result?.value).toStrictEqual({

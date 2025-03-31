@@ -20,7 +20,7 @@ describe("docs", () => {
     };
 
     expect(createDocString(type1)).toMatchInlineSnapshot(
-      `"string | Array<string>"`
+      `"string | Array<string>"`,
     );
   });
 
@@ -51,7 +51,7 @@ describe("docs", () => {
     };
 
     expect(createDocString(type1)).toMatchInlineSnapshot(
-      `"function testABC(a: string, b: Array<string>): string"`
+      `"function testABC(a: string, b: Array<string>): string"`,
     );
   });
 
@@ -80,7 +80,7 @@ describe("docs", () => {
     };
 
     expect(createDocString(type1)).toMatchInlineSnapshot(
-      `"[a: string, Array<string>]"`
+      `"[a: string, Array<string>]"`,
     );
   });
 
@@ -110,7 +110,7 @@ describe("docs", () => {
     };
 
     expect(createDocString(type1)).toMatchInlineSnapshot(
-      `""abc" | 123 | true | Array<string>"`
+      `""abc" | 123 | true | Array<string>"`,
     );
   });
 });

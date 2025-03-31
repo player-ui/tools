@@ -38,8 +38,8 @@ describe("nav-state-plugin", () => {
           },
         },
         null,
-        2
-      )
+        2,
+      ),
     );
 
     const diags = await service.validateTextDocument(testDocument);
@@ -95,8 +95,8 @@ describe("nav-state-plugin", () => {
           },
         },
         null,
-        2
-      )
+        2,
+      ),
     );
     const diags = await service.validateTextDocument(testDocument);
 

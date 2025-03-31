@@ -18,7 +18,7 @@ export function fileVisitor(args: VisitorProps): Manifest | undefined {
   convertedTypes.data.types.forEach((type) => {
     fs.writeFileSync(
       path.join(outputDirectory, `${type.name}.json`),
-      JSON.stringify(type, undefined, 4)
+      JSON.stringify(type, undefined, 4),
     );
   });
   capabilities.capabilities = new Map([

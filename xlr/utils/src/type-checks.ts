@@ -18,7 +18,7 @@ export function isOptionalProperty(node: ts.PropertySignature): boolean {
  * Returns if the node is an Interface or Type with Generics
  */
 export function isGenericInterfaceDeclaration(
-  node: ts.InterfaceDeclaration
+  node: ts.InterfaceDeclaration,
 ): boolean {
   const length = node.typeParameters?.length;
   return length ? length > 0 : false;
@@ -28,7 +28,7 @@ export function isGenericInterfaceDeclaration(
  * Returns if the node is an Type Declaration with Generics
  */
 export function isGenericTypeDeclaration(
-  node: ts.TypeAliasDeclaration
+  node: ts.TypeAliasDeclaration,
 ): boolean {
   const length = node.typeParameters?.length;
   return length ? length > 0 : false;
@@ -39,7 +39,7 @@ export function isGenericTypeDeclaration(
  */
 export function isTypeReferenceGeneric(
   node: ts.TypeReferenceNode,
-  typeChecker: ts.TypeChecker
+  typeChecker: ts.TypeChecker,
 ): boolean {
   const symbol = typeChecker.getSymbolAtLocation(node.typeName);
   if (symbol && symbol.declarations) {
@@ -57,7 +57,7 @@ export type TopLevelDeclaration =
  * Returns if the node is an interface or a type declaration
  */
 export function isTopLevelDeclaration(
-  node: ts.Node
+  node: ts.Node,
 ): node is TopLevelDeclaration {
   return (
     node.kind === ts.SyntaxKind.InterfaceDeclaration ||
@@ -82,7 +82,7 @@ export function isTopLevelNode(node: ts.Node): node is TopLevelNode {
  * Returns if the NodeType has generic tokens
  */
 export function isGenericNodeType<T extends NodeType = NodeType>(
-  nt: NodeType
+  nt: NodeType,
 ): nt is NodeTypeWithGenerics<T> {
   return (nt as NodeTypeWithGenerics).genericTokens?.length > 0;
 }
@@ -91,7 +91,7 @@ export function isGenericNodeType<T extends NodeType = NodeType>(
  * Returns if the named type has generic tokens
  */
 export function isGenericNamedType<T extends NamedType = NamedType>(
-  nt: NodeType
+  nt: NodeType,
 ): nt is NamedTypeWithGenerics<T> {
   return (nt as NamedTypeWithGenerics).genericTokens?.length > 0;
 }

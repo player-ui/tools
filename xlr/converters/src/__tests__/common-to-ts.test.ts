@@ -146,13 +146,13 @@ describe("Type Exports", () => {
       "",
       ts.ScriptTarget.ES2017,
       false, // setParentNodes
-      ts.ScriptKind.TS
+      ts.ScriptKind.TS,
     );
 
     const nodeText = printer.printNode(
       ts.EmitHint.Unspecified,
       tsNode,
-      resultFile
+      resultFile,
     );
 
     expect(nodeText).toMatchSnapshot();
@@ -184,13 +184,13 @@ describe("Type Exports", () => {
       "",
       ts.ScriptTarget.ES2017,
       false, // setParentNodes
-      ts.ScriptKind.TS
+      ts.ScriptKind.TS,
     );
 
     const nodeText = printer.printNode(
       ts.EmitHint.Unspecified,
       tsNode,
-      resultFile
+      resultFile,
     );
 
     expect(nodeText).toMatchSnapshot();
@@ -239,13 +239,13 @@ describe("Type Exports", () => {
       "",
       ts.ScriptTarget.ES2017,
       false, // setParentNodes
-      ts.ScriptKind.TS
+      ts.ScriptKind.TS,
     );
 
     const nodeText = printer.printNode(
       ts.EmitHint.Unspecified,
       tsNode,
-      resultFile
+      resultFile,
     );
 
     expect(nodeText).toMatchSnapshot();
@@ -287,13 +287,13 @@ describe("Type Exports", () => {
       "",
       ts.ScriptTarget.ES2017,
       false, // setParentNodes
-      ts.ScriptKind.TS
+      ts.ScriptKind.TS,
     );
 
     const nodeText = printer.printNode(
       ts.EmitHint.Unspecified,
       tsNode,
-      resultFile
+      resultFile,
     );
 
     expect(nodeText).toMatchSnapshot();
@@ -337,13 +337,13 @@ describe("Type Exports", () => {
       "",
       ts.ScriptTarget.ES2017,
       false, // setParentNodes
-      ts.ScriptKind.TS
+      ts.ScriptKind.TS,
     );
 
     const nodeText = printer.printNode(
       ts.EmitHint.Unspecified,
       tsNode,
-      resultFile
+      resultFile,
     );
 
     expect(nodeText).toMatchSnapshot();

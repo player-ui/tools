@@ -9,7 +9,7 @@ import { produce } from "immer";
 /** Extension state reducer */
 export const reducer = (
   state: ExtensionState,
-  transaction: Transaction<ExtensionSupportedEvents>
+  transaction: Transaction<ExtensionSupportedEvents>,
 ): ExtensionState => {
   switch (transaction.type) {
     case "PLAYER_DEVTOOLS_PLAYER_INIT":
@@ -22,7 +22,7 @@ export const reducer = (
         dset(
           draft,
           ["current", "plugin"],
-          draft.current.plugin || plugins[Object.keys(plugins)[0]].id
+          draft.current.plugin || plugins[Object.keys(plugins)[0]].id,
         );
 
         dset(draft, ["players", sender, "plugins"], plugins);
@@ -46,7 +46,7 @@ export const reducer = (
         dset(
           draft,
           ["players", sender, "plugins", pluginID, "flow", "data"],
-          data
+          data,
         );
       });
     case "MESSENGER_EVENT_BATCH":

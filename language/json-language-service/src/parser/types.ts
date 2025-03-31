@@ -186,7 +186,7 @@ export class PropertyASTNodeImpl
   constructor(
     jsonNode: Node,
     parent: ASTNode | undefined,
-    keyNode: StringASTNode
+    keyNode: StringASTNode,
   ) {
     super(jsonNode, parent);
     this.keyNode = keyNode;

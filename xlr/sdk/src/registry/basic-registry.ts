@@ -39,7 +39,7 @@ export class BasicXLRRegistry implements XLRRegistry {
     }
 
     const providedCapabilities = pluginsCapabilities.get(
-      capability
+      capability,
     ) as string[];
     providedCapabilities.push(type.name);
   }
