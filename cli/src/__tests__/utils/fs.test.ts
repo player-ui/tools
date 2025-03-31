@@ -28,7 +28,9 @@ test("glob file on posix system for directory", () => {
   } as any);
   const result = convertToFileGlob(["./src/main/tsx"], "**/*.(tsx|jsx|js|ts)");
   expect(result[0]).toStrictEqual("src/main/tsx/**/*.(tsx|jsx|js|ts)");
-  expect(fsSpy).toHaveBeenCalledWith("./src/main/tsx");
+  expect(fsSpy).toHaveBeenCalledWith("./src/main/tsx", {
+    throwIfNoEntry: false,
+  });
 });
 
 test("does not add glob if path is not a directory", () => {
@@ -40,7 +42,9 @@ test("does not add glob if path is not a directory", () => {
     "**/*.(tsx|jsx|js|ts)",
   );
   expect(result[0]).toStrictEqual("./src/main/tsx/**/*.tsx");
-  expect(fsSpy).toHaveBeenCalledWith("./src/main/tsx/**/*.tsx");
+  expect(fsSpy).toHaveBeenCalledWith("./src/main/tsx/**/*.tsx", {
+    throwIfNoEntry: false,
+  });
 });
 
 test("directory glob handling on windows", () => {
@@ -53,5 +57,7 @@ test("directory glob handling on windows", () => {
     "**/*.(tsx|jsx|js|ts)",
   );
   expect(result[0]).toStrictEqual("src\\main\\tsx/**/*.(tsx|jsx|js|ts)");
-  expect(fsSpy).toHaveBeenCalledWith("src\\main\\tsx");
+  expect(fsSpy).toHaveBeenCalledWith("src\\main\\tsx", {
+    throwIfNoEntry: false,
+  });
 });
