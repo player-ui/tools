@@ -43,7 +43,7 @@ const fragmentCache = new WeakMap<JSXElement, ASTNode>();
  */
 export function renderToAST(
   element: JSXElement | JSXElement[] | JsonType | ASTNode | null | undefined,
-  parent?: ASTNode
+  parent?: ASTNode,
 ): ASTNode {
   if (element == null) {
     return createValueNode(null);
@@ -102,7 +102,7 @@ export function renderToAST(
             // Create property node directly from the JSX property element
             const propNode = createPropertyNode(
               child.props.name,
-              child.props.value
+              child.props.value,
             );
             parent.children.push(propNode);
             propNode.parent = parent;
@@ -149,7 +149,7 @@ export function renderToAST(
     return renderComponent(
       type as JSXComponent<Record<string, unknown>>,
       props,
-      parent
+      parent,
     );
   }
 
@@ -167,7 +167,7 @@ export function renderToAST(
 function renderComponent<P extends Record<string, unknown>>(
   Component: JSXComponent<P>,
   props: P | null,
-  parent?: ASTNode
+  parent?: ASTNode,
 ): ASTNode {
   const result = Component(props || ({} as P));
 
@@ -206,7 +206,7 @@ function renderIntrinsic(type: string, props: IntrinsicElementProps): ASTNode {
               if (child && child.$$typeof && child.type === "property") {
                 const propNode = createPropertyNode(
                   child.props.name,
-                  child.props.value
+                  child.props.value,
                 );
                 objNode.children.push(propNode);
                 propNode.parent = objNode;
@@ -221,7 +221,7 @@ function renderIntrinsic(type: string, props: IntrinsicElementProps): ASTNode {
           } else if (children.props.children) {
             const childNode = renderToAST(
               children.props.children as JSXElement,
-              objNode
+              objNode,
             );
             if (childNode && childNode !== objNode) {
               objNode.children.push(childNode);
@@ -231,7 +231,7 @@ function renderIntrinsic(type: string, props: IntrinsicElementProps): ASTNode {
         } else if (
           Array.isArray(children) &&
           children.some(
-            (child) => child && child.$$typeof && child.type === Fragment
+            (child) => child && child.$$typeof && child.type === Fragment,
           )
         ) {
           for (let i = 0; i < children.length; i++) {
@@ -247,7 +247,7 @@ function renderIntrinsic(type: string, props: IntrinsicElementProps): ASTNode {
                   ) {
                     const propNode = createPropertyNode(
                       fragChild.props.name,
-                      fragChild.props.value
+                      fragChild.props.value,
                     );
                     objNode.children.push(propNode);
                     propNode.parent = objNode;
@@ -262,7 +262,7 @@ function renderIntrinsic(type: string, props: IntrinsicElementProps): ASTNode {
               } else if (child.props.children != null) {
                 const childNode = renderToAST(
                   child.props.children as JSXElement,
-                  objNode
+                  objNode,
                 );
                 if (childNode && childNode !== objNode) {
                   objNode.children.push(childNode);
@@ -393,7 +393,7 @@ function renderIntrinsic(type: string, props: IntrinsicElementProps): ASTNode {
 
       // Handle value props first (normal case)
       const valueNode = createValueNode(
-        (props.value !== undefined ? props.value : children) as JsonType
+        (props.value !== undefined ? props.value : children) as JsonType,
       );
 
       // Handle JSX children for the <value> element
@@ -445,7 +445,7 @@ function isValueConcatenation(children: any): boolean {
     (child) =>
       child &&
       child.$$typeof === Symbol.for("jsx.element") &&
-      child.type === "value"
+      child.type === "value",
   );
 }
 
@@ -585,13 +585,13 @@ function astNodeToJSON(node: ASTNode): JsonType {
             v === null ||
             v === undefined ||
             typeof v === "number" ||
-            typeof v === "boolean"
+            typeof v === "boolean",
         );
 
         if (allValuesStringable) {
           // Convert null/undefined to empty strings for concatenation
           const stringValues = childValues.map((v) =>
-            v == null ? "" : String(v)
+            v == null ? "" : String(v),
           );
           return stringValues.join("");
         }

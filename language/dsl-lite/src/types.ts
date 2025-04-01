@@ -7,7 +7,7 @@ export type JsonType =
   | { [key: string]: JsonType };
 
 export const TaggedTemplateValueSymbol: unique symbol = Symbol(
-  "TaggedTemplateValue"
+  "TaggedTemplateValue",
 );
 
 export interface TemplateRefOptions {
@@ -22,7 +22,7 @@ export interface TaggedTemplateValue {
 }
 
 export function isTaggedTemplateValue(
-  value: unknown
+  value: unknown,
 ): value is TaggedTemplateValue {
   return (
     typeof value === "object" &&
@@ -71,7 +71,7 @@ export function isASTNode(value: unknown): value is ASTNode {
       (value.kind === "obj" ||
         value.kind === "array" ||
         value.kind === "property" ||
-        value.kind === "value")
+        value.kind === "value"),
   );
 }
 

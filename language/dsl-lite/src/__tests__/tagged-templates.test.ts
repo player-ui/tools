@@ -10,7 +10,7 @@ describe("binding", () => {
   test("returns string ref versions", () => {
     expect(b`foo.bar.baz`.toRefString()).toBe("{{foo.bar.baz}}");
     expect(b`foo.bar.${b`foo.bar`}`.toRefString()).toBe(
-      "{{foo.bar.{{foo.bar}}}}"
+      "{{foo.bar.{{foo.bar}}}}",
     );
   });
 
@@ -20,13 +20,13 @@ describe("binding", () => {
 
     const expr = e`test() == "foo"`;
     expect(b`${expr}.${expr}`.toValue()).toBe(
-      '`test() == "foo"`.`test() == "foo"`'
+      '`test() == "foo"`.`test() == "foo"`',
     );
   });
 
   test("works when in a string", () => {
     expect(`This is a ${b`foo.bar`} reference.`).toBe(
-      "This is a {{foo.bar}} reference."
+      "This is a {{foo.bar}} reference.",
     );
   });
 
@@ -38,11 +38,11 @@ describe("binding", () => {
   test("should provide unique identifiers for each _index_ provided for the binding in the template", () => {
     const segments = ["some", "_index_", "data", "_index_", "foo", "_index_"];
     expect(b`${segments.join(".")}`.toValue()).toBe(
-      "some._index_.data._index1_.foo._index2_"
+      "some._index_.data._index1_.foo._index2_",
     );
 
     expect(b`${segments.join(".")}`.toRefString()).toBe(
-      "{{some._index_.data._index1_.foo._index2_}}"
+      "{{some._index_.data._index1_.foo._index2_}}",
     );
   });
 
@@ -57,11 +57,11 @@ describe("binding", () => {
     const segments = ["some", "_index_", "data", "_index_", "foo", "_index_"];
 
     const expressionNestedBindings = e`test(${b`${segments.join(
-      "."
+      ".",
     )}`})`.toValue();
 
     expect(expressionNestedBindings).toBe(
-      "test({{some._index_.data._index1_.foo._index2_}})"
+      "test({{some._index_.data._index1_.foo._index2_}})",
     );
   });
 
@@ -77,11 +77,11 @@ describe("binding", () => {
     ];
 
     const expressionNestedBindings = e`test(${b`${segments.join(
-      "."
+      ".",
     )}`} == true, ${b`some._index_.data`} = ${b`some._index_.other._index_.data`})`.toValue();
 
     expect(expressionNestedBindings).toBe(
-      "test({{some._index_.data._index1_.foo._index2_.bar}} == true, {{some._index_.data}} = {{some._index_.other._index1_.data}})"
+      "test({{some._index_.data._index1_.foo._index2_.bar}} == true, {{some._index_.data}} = {{some._index_.other._index1_.data}})",
     );
   });
 });

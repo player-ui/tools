@@ -16,7 +16,7 @@ import {
  * @returns Object AST node
  */
 export function createObjectNode(
-  props: Map<string, JsonType> = new Map()
+  props: Map<string, JsonType> = new Map(),
 ): ObjectASTNode {
   return {
     kind: "obj",
@@ -32,7 +32,7 @@ export function createObjectNode(
  * @returns Array AST node
  */
 export function createArrayNode(
-  props: Map<string, JsonType> = new Map()
+  props: Map<string, JsonType> = new Map(),
 ): ArrayASTNode {
   return {
     kind: "array",
@@ -50,7 +50,7 @@ export function createArrayNode(
  */
 export function createPropertyNode(
   name: string,
-  value?: JsonType
+  value?: JsonType,
 ): PropertyASTNode {
   return {
     kind: "property",
@@ -68,7 +68,7 @@ export function createPropertyNode(
  * @returns Value AST node
  */
 export function createValueNode(
-  value?: JsonType | TaggedTemplateValue
+  value?: JsonType | TaggedTemplateValue,
 ): ValueASTNode {
   return {
     kind: "value",
@@ -262,7 +262,7 @@ const VALID_TAGS = new Set(["obj", "array", "property", "value"]);
 export function createElement(type: string): ASTNode {
   if (!VALID_TAGS.has(type)) {
     throw new Error(
-      `Unsupported JSX tag: ${type}. Supported tags: obj, array, property, value.`
+      `Unsupported JSX tag: ${type}. Supported tags: obj, array, property, value.`,
     );
   }
 

@@ -1,7 +1,7 @@
 import type { FragmentProps, JSXElement } from "./types";
 
 export function Fragment(
-  props: FragmentProps
+  props: FragmentProps,
 ): JSXElement | JSXElement[] | undefined {
   return props.children;
 }
