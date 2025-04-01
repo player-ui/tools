@@ -13,8 +13,16 @@ import {
   isJSXElement,
   JSXComponent,
   IntrinsicElementProps,
+  Context,
 } from "./types";
 import { Fragment } from "./jsx-runtime";
+import {
+  getCurrentComponent,
+  popContext,
+  pushContext,
+  resetHookState,
+  setCurrentComponent,
+} from "./hooks";
 
 /**
  * Render a JSX tree to JSON
@@ -25,6 +33,8 @@ export function render(element: JSXElement): {
   jsonValue: JsonType;
   jsonNode: ASTNode;
 } {
+  resetHookState();
+
   const jsonNode = renderToAST(element);
 
   const jsonValue = astNodeToJSON(jsonNode);
@@ -144,6 +154,37 @@ export function renderToAST(
     return result;
   }
 
+  // Handle context providers
+  if (
+    type &&
+    typeof type === "function" &&
+    "$$typeof" in type &&
+    type.$$typeof === Symbol.for("jsx.provider") &&
+    "_context" in type
+  ) {
+    const providerType = type as unknown as { _context: Context<unknown> };
+
+    // Push context value to stack
+    pushContext(providerType._context, props.value);
+
+    try {
+      // Render children with this context
+      return renderToAST(props.children as JSXElement, parent);
+    } finally {
+      // Pop context even if rendering fails
+      popContext();
+    }
+  }
+
+  // Handle component functions
+  if (typeof type === "function") {
+    return renderComponent(
+      type as JSXComponent<Record<string, unknown>>,
+      props,
+      parent,
+    );
+  }
+
   // Handle component functions
   if (typeof type === "function") {
     return renderComponent(
@@ -169,10 +210,20 @@ function renderComponent<P extends Record<string, unknown>>(
   props: P | null,
   parent?: ASTNode,
 ): ASTNode {
-  const result = Component(props || ({} as P));
+  // Set up for hooks
+  const prevComponent = getCurrentComponent();
+  setCurrentComponent(Component);
 
-  // Render the result
-  return renderToAST(result, parent);
+  try {
+    // Execute component function with provided props
+    const result = Component(props ?? ({} as P));
+
+    // Render the result
+    return renderToAST(result, parent);
+  } finally {
+    // Always restore hook state even if rendering failed
+    setCurrentComponent(prevComponent);
+  }
 }
 
 /**
@@ -377,8 +428,8 @@ function renderIntrinsic(type: string, props: IntrinsicElementProps): ASTNode {
               }))
             : [
                 {
-                  type: (children as any).type,
-                  props: (children as any).props,
+                  type: children.type,
+                  props: children.props,
                 },
               ],
         } as unknown as JsonType);
@@ -434,7 +485,7 @@ function renderIntrinsic(type: string, props: IntrinsicElementProps): ASTNode {
  * @param children - Children to check
  * @returns True if all children are value elements with string values
  */
-function isValueConcatenation(children: any): boolean {
+function isValueConcatenation(children: JSXElement | JSXElement[]): boolean {
   // First check if we have an array of children
   if (!Array.isArray(children)) {
     return false;
@@ -543,8 +594,9 @@ function astNodeToJSON(node: ASTNode): JsonType {
       if (
         node.value &&
         typeof node.value === "object" &&
-        (node.value as any).isStringConcatenation
+        (node.value as { isStringConcatenation: boolean }).isStringConcatenation
       ) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const concatChildren = (node.value as any).children;
         if (Array.isArray(concatChildren)) {
           // Process each child value element and convert to string
