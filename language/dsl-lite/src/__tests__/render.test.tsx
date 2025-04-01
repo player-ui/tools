@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /** @jsx createElement */
 /** @jsxFrag Fragment */
@@ -496,6 +495,7 @@ describe("Additional edge cases", () => {
   });
 
   test("handle null in array children", () => {
+    // eslint-disable-next-line react/jsx-key
     const array = [<value value="one" />, null, <value value="two" />];
 
     const element = <array>{array}</array>;
