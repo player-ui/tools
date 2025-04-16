@@ -7,10 +7,7 @@ import type {
   DocumentContext,
 } from "@player-tools/json-language-service";
 
-/**
- * Value types that can be used in metrics or features
- */
-export type MetricsValue =
+export type StatsValue =
   | Record<string, any>
   | number
   | string
@@ -27,11 +24,31 @@ export interface MetricsOutputConfig {
   /** Custom properties to include at the root level of the output */
   rootProperties?: Record<string, any>;
 
-  /** Content-specific metrics */
-  metrics?: Record<string, MetricsValue>;
+  /** Content-specific stats */
+  stats?: Record<string, StatsValue>;
 
   /** Content-specific features */
   features?: Record<string, any>;
+}
+
+export function extractDiagnostics<T>(
+  pattern: RegExp,
+  parser: (value: string) => T,
+): (diagnostics: Diagnostic[]) => T | undefined {
+  return (diagnostics: Diagnostic[]): T | undefined => {
+    for (const diagnostic of diagnostics) {
+      const match = diagnostic.message.match(pattern);
+      if (match && match[1]) {
+        try {
+          return parser(match[1]);
+        } catch (e) {
+          console.warn(`Failed to parse diagnostic value: ${match[1]}`, e);
+          return undefined;
+        }
+      }
+    }
+    return undefined;
+  };
 }
 
 /**
@@ -43,7 +60,7 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
   private outputDir: string;
   private fileName: string;
   private rootProperties: Record<string, any>;
-  private metrics: Record<string, MetricsValue>;
+  private stats: Record<string, StatsValue>;
   private features: Record<string, any>;
 
   // In-memory storage of all results
@@ -53,7 +70,7 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     this.outputDir = options.outputDir || "target";
     this.fileName = options.fileName || "output";
     this.rootProperties = options.rootProperties || {};
-    this.metrics = options.metrics || {};
+    this.stats = options.stats || {};
     this.features = options.features || {};
 
     // Initialize with root properties including timestamp
@@ -104,7 +121,7 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     const result: Record<string, any> = {};
 
     // Process each metric
-    Object.entries(this.metrics).forEach(([key, value]) => {
+    Object.entries(this.stats).forEach(([key, value]) => {
       result[key] = this.processValue(value, diagnostics, documentContext);
     });
 
@@ -125,7 +142,7 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     return result;
   }
 
-  generateFile(
+  private generateFile(
     diagnostics: Diagnostic[],
     documentContext: DocumentContext,
   ): string {
@@ -136,12 +153,12 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     // Get the file path from the document URI
     const filePath = documentContext.document.uri;
 
-    // Generate metrics and features using registered plugins
-    const metrics = this.generateMetrics(diagnostics, documentContext);
+    // Generate metrics
+    const stats = this.generateMetrics(diagnostics, documentContext);
     const features = this.generateFeatures(diagnostics, documentContext);
 
     this.aggregatedResults.content[filePath] = {
-      metrics,
+      stats,
       features: Object.keys(features).length > 0 ? features : {},
     };
 
@@ -155,10 +172,4 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
 
     return outputFilePath;
   }
-}
-
-export function createMetricsOutputPlugin(
-  options?: MetricsOutputConfig,
-): MetricsOutput {
-  return new MetricsOutput(options);
 }

@@ -8,7 +8,7 @@ import {
 } from "@player-tools/static-xlrs";
 import { PlayerLanguageService } from "@player-tools/json-language-service";
 
-import { MetricsOutput } from "../metrics-output";
+import { MetricsOutput, extractDiagnostics } from "../metrics-output";
 import { ComplexityCheck } from "@player-tools/complexity-check-plugin";
 
 describe("WriteMetricsPlugin", () => {
@@ -45,25 +45,12 @@ describe("WriteMetricsPlugin", () => {
           assetId: "asldkj343k1lskdf",
           testRun: true,
         },
-        metrics: {
-          complexity: (diagnostics) => {
-            const prefix = "Content complexity is ";
-
-            // Find the complexity diagnostic message
-            const complexityDiagnostic = diagnostics.find((diag) =>
-              diag.message.includes(prefix),
-            );
-
-            let score = 0;
-            if (complexityDiagnostic) {
-              score = parseInt(
-                complexityDiagnostic.message.split(prefix)[1],
-                10,
-              );
-            }
-
-            return score;
-          },
+        stats: {
+          complexity: extractDiagnostics(
+            /Content complexity is (\d+)/,
+            (value) => parseInt(value, 10),
+          ),
+          customStat: () => Math.random(), // This will be evaluated once per file
         },
         features: {
           dslEnabled: () => true,
@@ -217,11 +204,9 @@ describe("WriteMetricsPlugin", () => {
     expect(jsonContent.content).toHaveProperty("path/to/file/1.json");
     expect(jsonContent.content).toHaveProperty("path/to/file/2.json");
 
-    // Verify the metrics structure for the first file
-    expect(jsonContent.content["path/to/file/1.json"]).toHaveProperty(
-      "metrics",
-    );
-    expect(jsonContent.content["path/to/file/1.json"].metrics).toHaveProperty(
+    // Verify the stats structure for the first file
+    expect(jsonContent.content["path/to/file/1.json"]).toHaveProperty("stats");
+    expect(jsonContent.content["path/to/file/1.json"].stats).toHaveProperty(
       "complexity",
       18,
     );
@@ -235,19 +220,17 @@ describe("WriteMetricsPlugin", () => {
       true,
     );
 
-    // Verify the metrics structure for the second file
-    expect(jsonContent.content["path/to/file/2.json"]).toHaveProperty(
-      "metrics",
-    );
-    expect(jsonContent.content["path/to/file/2.json"].metrics).toHaveProperty(
+    // Verify the stats structure for the second file
+    expect(jsonContent.content["path/to/file/2.json"]).toHaveProperty("stats");
+    expect(jsonContent.content["path/to/file/2.json"].stats).toHaveProperty(
       "complexity",
     );
 
     // The first document should have higher complexity than the second
     const complexity1 =
-      jsonContent.content["path/to/file/1.json"].metrics.complexity;
+      jsonContent.content["path/to/file/1.json"].stats.complexity;
     const complexity2 =
-      jsonContent.content["path/to/file/2.json"].metrics.complexity;
+      jsonContent.content["path/to/file/2.json"].stats.complexity;
     expect(complexity1).toBeGreaterThan(complexity2);
 
     // Log the full JSON content
