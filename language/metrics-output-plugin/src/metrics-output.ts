@@ -31,7 +31,10 @@ export interface MetricsOutputConfig {
   features?: Record<string, any>;
 }
 
-export function extractDiagnostics<T>(
+/**
+ * Extracts data from diagnostic messages using a pattern
+ */
+export function extractFromDiagnostics<T>(
   pattern: RegExp,
   parser: (value: string) => T,
 ): (diagnostics: Diagnostic[]) => T | undefined {
@@ -51,11 +54,140 @@ export function extractDiagnostics<T>(
   };
 }
 
+export type CountsByType = Record<string, number>;
+
+/**
+ * Gets a breakdown of asset types in the content
+ */
+export function getAssetTypesBreakdown(rootNode: any): CountsByType {
+  return analyzeNodesByProperty(rootNode, "type");
+}
+
+/**
+ * Helper function that returns assets by type
+ * Ready to use directly in metrics configuration
+ */
+export function getAssets(): (
+  diagnostics: Diagnostic[],
+  context: DocumentContext,
+) => CountsByType {
+  return (_, context) => {
+    const rootNode = context.PlayerContent.root;
+    if (!rootNode) return {};
+
+    return getAssetTypesBreakdown(rootNode);
+  };
+}
+
+/**
+ * Helper function that returns image references
+ * Ready to use directly in metrics configuration
+ */
+export function getImages(): (
+  diagnostics: Diagnostic[],
+  context: DocumentContext,
+) => string[] {
+  return (_, context) => {
+    const rootNode = context.PlayerContent.root;
+    if (!rootNode) return [];
+
+    return collectImageRefs(rootNode);
+  };
+}
+
+/**
+ * Internal function to analyze nodes by a specific property
+ */
+function analyzeNodesByProperty(
+  rootNode: any,
+  propertyKey: string,
+): CountsByType {
+  const countsByValue: CountsByType = {};
+
+  const processNode = (node: any): void => {
+    if (!node.children) return;
+
+    for (const child of node.children) {
+      if (child.keyNode?.value === propertyKey && child.valueNode?.value) {
+        const propertyValue = child.valueNode.value;
+        countsByValue[propertyValue] = (countsByValue[propertyValue] || 0) + 1;
+        break;
+      }
+    }
+
+    // Process child nodes
+    if (node.children && Array.isArray(node.children)) {
+      for (const child of node.children) {
+        processNode(child);
+      }
+    }
+  };
+
+  processNode(rootNode);
+  return countsByValue;
+}
+
+/**
+ * Internal function to collect image references
+ */
+function collectImageRefs(rootNode: any): string[] {
+  const imageRefs = new Set<string>();
+
+  const processNode = (node: any): void => {
+    // Check if this is an image asset
+    const isImageAsset = node.children?.some(
+      (child: any) =>
+        child.keyNode?.value === "type" && child.valueNode?.value === "image",
+    );
+
+    if (isImageAsset) {
+      // Find the metaData node
+      const metaDataNode = node.children?.find(
+        (child: any) => child.keyNode?.value === "metaData",
+      );
+
+      if (metaDataNode?.valueNode?.children) {
+        // Find the ref node within metaData
+        const refNode = metaDataNode.valueNode.children.find(
+          (child: any) => child.keyNode?.value === "ref",
+        );
+
+        if (refNode?.valueNode) {
+          // Get the reference value (could be string or object)
+          if (typeof refNode.valueNode.value === "string") {
+            imageRefs.add(refNode.valueNode.value);
+          } else if (refNode.valueNode.children) {
+            // For object references, add all string values
+            refNode.valueNode.children.forEach((child: any) => {
+              if (
+                child.valueNode &&
+                typeof child.valueNode.value === "string"
+              ) {
+                imageRefs.add(child.valueNode.value);
+              }
+            });
+          }
+        }
+      }
+    }
+
+    // Process child nodes
+    if (node.children && Array.isArray(node.children)) {
+      for (const child of node.children) {
+        processNode(child);
+      }
+    }
+  };
+
+  processNode(rootNode);
+  return Array.from(imageRefs);
+}
+
 /**
  * A plugin that writes diagnostic results to a JSON file in a specified output directory
  */
 export class MetricsOutput implements PlayerLanguageServicePlugin {
-  name = "write-output-plugin";
+  name = "metrics-output-plugin";
 
   private outputDir: string;
   private fileName: string;
@@ -88,7 +220,7 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
       (
         diagnostics: Diagnostic[],
         { documentContext }: { documentContext: DocumentContext },
-      ) => {
+      ): Diagnostic[] => {
         this.generateFile(diagnostics, documentContext);
         return diagnostics;
       },
@@ -96,9 +228,9 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
   }
 
   /**
-   * Process any value, executing it if it's a function
+   * Evaluates a value, executing it if it's a function
    */
-  private processValue(
+  private evaluateValue(
     value: any,
     diagnostics: Diagnostic[],
     documentContext: DocumentContext,
@@ -107,8 +239,8 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
       try {
         return value(diagnostics, documentContext);
       } catch (error) {
-        documentContext.log.error(`Error processing value: ${error}`);
-        return { error: `Value processing failed: ${error}` };
+        documentContext.log.error(`Error evaluating value: ${error}`);
+        return { error: `Value evaluation failed: ${error}` };
       }
     }
     return value;
@@ -122,7 +254,7 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
 
     // Process each metric
     Object.entries(this.stats).forEach(([key, value]) => {
-      result[key] = this.processValue(value, diagnostics, documentContext);
+      result[key] = this.evaluateValue(value, diagnostics, documentContext);
     });
 
     return result;
@@ -136,7 +268,7 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
 
     // Process each feature
     Object.entries(this.features).forEach(([key, value]) => {
-      result[key] = this.processValue(value, diagnostics, documentContext);
+      result[key] = this.evaluateValue(value, diagnostics, documentContext);
     });
 
     return result;

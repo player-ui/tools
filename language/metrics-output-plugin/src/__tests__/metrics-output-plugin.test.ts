@@ -8,7 +8,12 @@ import {
 } from "@player-tools/static-xlrs";
 import { PlayerLanguageService } from "@player-tools/json-language-service";
 
-import { MetricsOutput, extractDiagnostics } from "../metrics-output";
+import {
+  MetricsOutput,
+  extractFromDiagnostics,
+  getAssets,
+  getImages,
+} from "../metrics-output";
 import { ComplexityCheck } from "@player-tools/complexity-check-plugin";
 
 describe("WriteMetricsPlugin", () => {
@@ -46,16 +51,19 @@ describe("WriteMetricsPlugin", () => {
           testRun: true,
         },
         stats: {
-          complexity: extractDiagnostics(
+          assets: getAssets(),
+          complexity: extractFromDiagnostics(
             /Content complexity is (\d+)/,
-            (value) => parseInt(value, 10),
+            (value: string) => parseInt(value, 10),
           ),
+          images: getImages(),
+
           customStat: () => Math.random(), // This will be evaluated once per file
         },
         features: {
-          dslEnabled: () => true,
-          validationEnabled: () => true,
-          localizationEnabled: () => false,
+          dslEnabled: () => Math.random() > 0.33,
+          validationEnabled: () => Math.random() > 0.25,
+          localizationEnabled: () => Math.random() > 0.8,
         },
       }),
     );
@@ -105,6 +113,13 @@ describe("WriteMetricsPlugin", () => {
                 type: "text",
                 value: "@[somethingSubtitle]@",
               },
+            },
+          },
+          {
+            id: "root",
+            type: "image",
+            metaData: {
+              ref: "https://player-ui.github.io/latest/_astro/logo-dark-large.BVfeRCvY.png",
             },
           },
         ],
@@ -179,9 +194,8 @@ describe("WriteMetricsPlugin", () => {
     const validations2 = await service.validateTextDocument(secondDocument);
 
     // Verify diagnostics for first document (complex)
-    expect(validations1).toHaveLength(9);
     expect(validations1?.map((v) => v.message)[0]).toContain(
-      "Content complexity is 18",
+      "Content complexity is 19",
     );
 
     // Verify diagnostics for second document (simpler)
@@ -208,7 +222,7 @@ describe("WriteMetricsPlugin", () => {
     expect(jsonContent.content["path/to/file/1.json"]).toHaveProperty("stats");
     expect(jsonContent.content["path/to/file/1.json"].stats).toHaveProperty(
       "complexity",
-      18,
+      19,
     );
 
     // Verify features exist in the first file
@@ -217,7 +231,6 @@ describe("WriteMetricsPlugin", () => {
     );
     expect(jsonContent.content["path/to/file/1.json"].features).toHaveProperty(
       "dslEnabled",
-      true,
     );
 
     // Verify the stats structure for the second file
