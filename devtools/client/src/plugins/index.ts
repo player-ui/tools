@@ -1,8 +1,8 @@
 import DevtoolsUIAssetsPlugin from "@devtools-ui/plugin";
 import { PubSubPlugin } from "@player-ui/pubsub-plugin";
-import { CommonExpressionsPlugin } from '@player-ui/common-expressions-plugin';
-import { CommonTypesPlugin } from '@player-ui/common-types-plugin';
-import { DataChangeListenerPlugin } from '@player-ui/data-change-listener-plugin';
+import { CommonExpressionsPlugin } from "@player-ui/common-expressions-plugin";
+import { CommonTypesPlugin } from "@player-ui/common-types-plugin";
+import { DataChangeListenerPlugin } from "@player-ui/data-change-listener-plugin";
 import type { ReactPlayerPlugin } from "@player-ui/react";
 
 export const PUBSUB_PLUGIN = new PubSubPlugin();
