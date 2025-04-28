@@ -13,14 +13,14 @@ export class LSPPluginPlugin implements PlayerCLIPlugin {
     | Array<PlayerLanguageServicePlugin>;
 
   constructor(
-    plugin: PlayerLanguageServicePlugin | Array<PlayerLanguageServicePlugin>
+    plugin: PlayerLanguageServicePlugin | Array<PlayerLanguageServicePlugin>,
   ) {
     this.plugin = plugin;
   }
 
   async onCreateLanguageService(
     lsp: PlayerLanguageService,
-    exp: boolean
+    exp: boolean,
   ): Promise<void> {
     if (Array.isArray(this.plugin)) {
       this.plugin.forEach((p) => lsp.addLSPPlugin(p));

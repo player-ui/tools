@@ -20,7 +20,7 @@ describe("View", () => {
           ]}
         >
           <Info.Title>Cool Title</Info.Title>
-        </Info>
+        </Info>,
       )
     ).jsonValue;
 

@@ -46,7 +46,7 @@ const findErrorNode = (rootNode: ASTNode, nodeToFind: Node): ASTNode => {
  * Relies on both levels having the values associated to the underlying levels
  */
 const translateSeverity = (
-  severity: ValidationSeverity
+  severity: ValidationSeverity,
 ): DiagnosticSeverity => {
   return severity as DiagnosticSeverity;
 };
@@ -56,7 +56,7 @@ const translateSeverity = (
  */
 function createValidationVisitor(
   ctx: ValidationContext,
-  sdk: XLRSDK
+  sdk: XLRSDK,
 ): ASTVisitor {
   const nodesWithErrors = new Set<Node>();
 
@@ -77,7 +77,7 @@ function createValidationVisitor(
 
       const validationIssues = sdk.validateByName(
         expectedType,
-        assetNode.jsonNode
+        assetNode.jsonNode,
       );
       validationIssues.forEach((issue) => {
         if (!(nodesWithErrors.has(issue.node) && isError(issue))) {
@@ -108,7 +108,7 @@ function createValidationVisitor(
 
       const validationIssues = sdk.validateByName(
         expectedType,
-        viewNode.jsonNode
+        viewNode.jsonNode,
       );
       validationIssues.forEach((issue) => {
         if (!(nodesWithErrors.has(issue.node) && isError(issue))) {
@@ -130,7 +130,7 @@ function createValidationVisitor(
 
       if (!flowType) {
         throw new Error(
-          "Flow is not a registered type, can't validate content. Did you load a version of the base Player types?"
+          "Flow is not a registered type, can't validate content. Did you load a version of the base Player types?",
         );
       }
 
@@ -143,7 +143,7 @@ function createValidationVisitor(
       const assetType = sdk.getType("Asset");
       if (!assetType) {
         throw new Error(
-          "Asset is not a registered type, can't validate content. Did you load a version of the base Player types?"
+          "Asset is not a registered type, can't validate content. Did you load a version of the base Player types?",
         );
       }
 
@@ -156,7 +156,7 @@ function createValidationVisitor(
 
       const validationIssues = sdk.validateByType(
         flowType,
-        contentNode.jsonNode
+        contentNode.jsonNode,
       );
 
       validationIssues.forEach((issue) => {
@@ -174,7 +174,7 @@ function createValidationVisitor(
       const expectedType = "Navigation";
       const validationIssues = sdk.validateByName(
         expectedType,
-        navigationNode.jsonNode
+        navigationNode.jsonNode,
       );
       validationIssues.forEach((issue) => {
         if (!nodesWithErrors.has(issue.node) || issue.type === "missing") {
@@ -191,7 +191,7 @@ function createValidationVisitor(
       const expectedType = "NavigationFlow";
       const validationIssues = sdk.validateByName(
         expectedType,
-        flowNode.jsonNode
+        flowNode.jsonNode,
       );
       validationIssues.forEach((issue) => {
         if (!nodesWithErrors.has(issue.node) || issue.type === "missing") {
@@ -206,13 +206,13 @@ function createValidationVisitor(
     },
     FlowStateNode: (flowStateNode) => {
       const flowxlr = mapFlowStateToType(
-        flowStateNode.stateType?.valueNode?.value
+        flowStateNode.stateType?.valueNode?.value,
       );
 
       if (flowxlr) {
         const validationIssues = sdk.validateByName(
           flowxlr,
-          flowStateNode.jsonNode
+          flowStateNode.jsonNode,
         );
         validationIssues.forEach((issue) => {
           if (!nodesWithErrors.has(issue.node) || issue.type === "missing") {
@@ -239,14 +239,14 @@ function createValidationVisitor(
 /** Gets object completions */
 function getObjectCompletions(
   authoredNode: ASTNode,
-  potentialTypes: Array<NodeType>
+  potentialTypes: Array<NodeType>,
 ) {
   const completions: Array<CompletionItem> = [];
 
   const presentKeys = new Set();
   if ((authoredNode as ObjectASTNode).properties) {
     (authoredNode as ObjectASTNode).properties.forEach((propertyNode) =>
-      presentKeys.add(propertyNode.keyNode.value)
+      presentKeys.add(propertyNode.keyNode.value),
     );
   }
 
@@ -276,7 +276,7 @@ function getObjectCompletions(
 /** get value completions */
 function getPropertyCompletions(
   propertyName: string,
-  potentialTypes: Array<NodeType>
+  potentialTypes: Array<NodeType>,
 ) {
   const completions: Array<CompletionItem> = [];
   potentialTypes.forEach((nodeType) => {
@@ -300,13 +300,13 @@ function getPropertyCompletions(
 
 /** returns completions for object properties */
 function complete(
-  ctx: EnhancedDocumentContextWithPosition
+  ctx: EnhancedDocumentContextWithPosition,
 ): Array<CompletionItem> {
   if (ctx.XLR?.nearestObjects) {
     if (ctx.node.type === "string" && ctx.node?.parent?.type === "property") {
       return getPropertyCompletions(
         ctx.node.parent.keyNode.value,
-        ctx.XLR.nearestObjects
+        ctx.XLR.nearestObjects,
       );
     }
 
@@ -358,7 +358,7 @@ export class XLRPlugin implements PlayerLanguageServicePlugin {
   apply(service: PlayerLanguageService): void {
     service.hooks.validate.tap(this.name, async (ctx, validation) => {
       validation.useASTVisitor(
-        createValidationVisitor(validation, service.XLRService.XLRSDK)
+        createValidationVisitor(validation, service.XLRService.XLRSDK),
       );
     });
     service.hooks.complete.tap(this.name, async (ctx, completion) => {

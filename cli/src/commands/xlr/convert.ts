@@ -80,7 +80,7 @@ export default class XLRConvert extends BaseCommand {
     } catch (e: any) {
       console.log("");
       console.log(
-        chalk.red(`${logSymbols.error} Error exporting XLRs: ${e.message}`)
+        chalk.red(`${logSymbols.error} Error exporting XLRs: ${e.message}`),
       );
       this.exit(1);
     }

@@ -19,7 +19,7 @@ describe("complexity plugin", () => {
     service.addLSPPlugin(
       new ComplexityCheck({
         maxAcceptableComplexity: 60,
-      })
+      }),
     );
     await service.setAssetTypesFromModule([
       Types,
@@ -78,7 +78,7 @@ describe("complexity plugin", () => {
             },
           },
         },
-      })
+      }),
     );
 
     const validations = await service.validateTextDocument(textDocument);
@@ -176,7 +176,7 @@ describe("complexity plugin", () => {
             },
           },
         },
-      })
+      }),
     );
 
     const validations = await service.validateTextDocument(textDocument);
@@ -266,7 +266,7 @@ describe("complexity plugin", () => {
             },
           },
         },
-      })
+      }),
     );
 
     const validations = await service.validateTextDocument(textDocument);
@@ -293,7 +293,7 @@ describe("complexity plugin", () => {
       new ComplexityCheck({
         maxAcceptableComplexity: 60,
         typeWeights: { text: 1, info: 2, table: 5 },
-      })
+      }),
     );
     await customService.setAssetTypesFromModule([
       Types,
@@ -350,7 +350,7 @@ describe("complexity plugin", () => {
             },
           },
         },
-      })
+      }),
     );
 
     const validations = await customService.validateTextDocument(textDocument);
@@ -378,7 +378,7 @@ describe("complexity plugin", () => {
       new ComplexityCheck({
         maxAcceptableComplexity: 20,
         maxWarningLevel: 10,
-      })
+      }),
     );
     await customService.setAssetTypesFromModule([
       Types,
@@ -435,7 +435,7 @@ describe("complexity plugin", () => {
             },
           },
         },
-      })
+      }),
     );
 
     const validations = await customService.validateTextDocument(textDocument);
@@ -452,7 +452,7 @@ describe("complexity plugin", () => {
       "Content complexity is 18, Warning: 10"
     `);
     expect(validations?.map((v) => v.severity)[0]).toBe(
-      DiagnosticSeverity.Warning
+      DiagnosticSeverity.Warning,
     );
   });
 
@@ -467,7 +467,7 @@ describe("complexity plugin", () => {
         baseWeightOverrides: {
           assetNode: 4,
         },
-      })
+      }),
     );
     await customService.setAssetTypesFromModule([
       Types,
@@ -524,7 +524,7 @@ describe("complexity plugin", () => {
             },
           },
         },
-      })
+      }),
     );
 
     const validations = await customService.validateTextDocument(textDocument);
@@ -541,7 +541,7 @@ describe("complexity plugin", () => {
       "Content complexity is 24, Maximum: 20"
     `);
     expect(validations?.map((v) => v.severity)[0]).toBe(
-      DiagnosticSeverity.Error
+      DiagnosticSeverity.Error,
     );
   });
 });

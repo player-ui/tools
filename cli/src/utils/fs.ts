@@ -11,12 +11,9 @@ function forcePathSeparatorToPosix(input: string) {
 /** Check if an input is a directory, if it is, then swap it to a globbed path */
 export const convertToFileGlob = (input: string[], glob: string): string[] => {
   return input.map((i) => {
-    try {
-      if (fs.statSync(i).isDirectory()) {
-        return forcePathSeparatorToPosix(path.join(i, glob));
-      }
-    } catch (e: any) {}
-
+    if (fs.statSync(i, { throwIfNoEntry: false })?.isDirectory()) {
+      return forcePathSeparatorToPosix(path.join(i, glob));
+    }
     return forcePathSeparatorToPosix(i);
   });
 };

@@ -33,7 +33,7 @@ import { convertErrorsToDiags } from "./jsonParseErrors";
 
 /** Check if the property is a string */
 function isStringProperty(
-  node: PropertyASTNode
+  node: PropertyASTNode,
 ): node is PropertyASTNode<StringASTNode> {
   return node.valueNode?.type === "string";
 }
@@ -49,7 +49,7 @@ export class PlayerContent {
   constructor(
     root: ASTNode,
     errors: Array<Diagnostic>,
-    jsonToNodeMap: Map<Node, ASTNode>
+    jsonToNodeMap: Map<Node, ASTNode>,
   ) {
     this.root = root;
     this.jsonNodeToNode = jsonToNodeMap;
@@ -136,7 +136,7 @@ export function parse(document: TextDocument): PlayerContent {
         const keyNode = new StringASTNodeImpl(key);
         const property = new PropertyASTNodeImpl(prop, assetNode, keyNode);
         property.keyNode = new StringASTNodeImpl(key, property);
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+
         property.valueNode = parseUnknownNode(val, property);
 
         if (key.value === "id" && isStringProperty(property)) {
@@ -160,7 +160,7 @@ export function parse(document: TextDocument): PlayerContent {
   /** parse a node that we don't know about */
   function parseUnknownNode(
     node?: Node,
-    parent?: ASTNode
+    parent?: ASTNode,
   ): ASTNode | undefined {
     switch (node?.type) {
       case "string": {
@@ -396,7 +396,7 @@ export function parse(document: TextDocument): PlayerContent {
           const property = new PropertyASTNodeImpl(
             childProp,
             contentNode,
-            keyNode
+            keyNode,
           );
           property.keyNode = new StringASTNodeImpl(key, property);
 

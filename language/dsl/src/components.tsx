@@ -157,7 +157,7 @@ export const View = React.forwardRef<ObjectNode, AssetProps & ViewType>(
         {children}
       </Asset>
     );
-  }
+  },
 );
 
 View.displayName = "View";
@@ -213,7 +213,6 @@ export const Slot = (props: {
               <array>
                 {React.Children.map(children, (child, index) => {
                   return (
-                    // eslint-disable-next-line react/no-array-index-key
                     <React.Fragment key={`${props.name}-${index}`}>
                       {normalizeText({ node: child, TextComp })}
                     </React.Fragment>
@@ -260,7 +259,7 @@ export function createSlot<SlotProps = unknown>(options: {
     props: {
       /** An object to include in this property */
       children?: React.ReactNode;
-    } & SlotProps
+    } & SlotProps,
   ) => {
     const { children, ...other } = props;
     return (

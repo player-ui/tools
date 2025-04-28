@@ -25,7 +25,7 @@ describe("player language service", () => {
 "id": "foo",
 "views": [{"id":"view1"}]
 }
-`
+`,
       );
 
       const formatEdits = await service.formatTextDocument(document, {
@@ -35,7 +35,7 @@ describe("player language service", () => {
       expect(formatEdits).toHaveLength(8);
       const updatedDocument = TextDocument.applyEdits(
         document,
-        formatEdits ?? []
+        formatEdits ?? [],
       );
       expect(updatedDocument).toMatchInlineSnapshot(`
         "{
@@ -101,7 +101,7 @@ describe("player language service", () => {
             }
           }
         }
-        `
+        `,
       );
       const validationErrors = await service.validateTextDocument(document);
 
@@ -133,7 +133,7 @@ describe("player language service", () => {
 
 }
 }
-`
+`,
       );
 
       let completions = await service.getCompletionsAtPosition(document, {
@@ -174,7 +174,7 @@ describe("player language service", () => {
   }
  }
 }
-`
+`,
       );
 
       const completions = await service.getCompletionsAtPosition(document, {
@@ -236,7 +236,7 @@ describe("player language service", () => {
           }
         }
         
-`
+`,
       );
 
       const completions = await service.getCompletionsAtPosition(document, {
@@ -270,7 +270,7 @@ describe("player language service", () => {
     "BEGIN":""
   }
 }
-`
+`,
       );
 
       let docs = await service.getHoverInfoAtPosition(document, {

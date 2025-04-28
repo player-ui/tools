@@ -91,7 +91,7 @@ export function getSummary({
 function formatDiagnostic(
   diag: Diagnostic,
   longestLine: number,
-  fName: string
+  fName: string,
 ): string {
   let type: string;
 
@@ -120,7 +120,7 @@ function formatDiagnostic(
 
 function mapDiagnosticBackToSourceLine(
   diag: Diagnostic,
-  mapper: SourceMapConsumer | undefined
+  mapper: SourceMapConsumer | undefined,
 ):
   | {
       diagnostic: Diagnostic;
@@ -155,7 +155,7 @@ function mapDiagnosticBackToSourceLine(
 export function formatDiagnosticResults(
   filePath: string,
   results: Diagnostic[],
-  loglevel: DiagnosticSeverity
+  loglevel: DiagnosticSeverity,
 ) {
   const count = {
     errors: 0,
@@ -165,7 +165,7 @@ export function formatDiagnosticResults(
   };
   const linePrefix = "  ";
   const longestLine = Math.max(
-    ...results.map((r) => getLineRange(r.range).length)
+    ...results.map((r) => getLineRange(r.range).length),
   );
 
   //try and load map file
@@ -173,7 +173,7 @@ export function formatDiagnosticResults(
   let sourceMapper: SourceMapConsumer | undefined;
   if (mapFile) {
     sourceMapper = new sourceMap.SourceMapConsumer(
-      JSON.parse(mapFile) as RawSourceMap
+      JSON.parse(mapFile) as RawSourceMap,
     );
   }
 
@@ -191,7 +191,7 @@ export function formatDiagnosticResults(
 
       const { diagnostic, sourceFile } = mapDiagnosticBackToSourceLine(
         diag,
-        sourceMapper
+        sourceMapper,
       ) ?? { diagnostic: diag, sourceFile: filePath };
       if (diag.severity && loglevel >= diag.severity) {
         return (
@@ -265,7 +265,7 @@ export const validationRenderer: TaskProgressRenderer<
         const formattedDiags = formatDiagnosticResults(
           task.data?.file ? normalizePath(task.data.file) : "",
           sortDiagnostics(task.output),
-          ctx.loglevel
+          ctx.loglevel,
         );
 
         output.push(...formattedDiags.lines);
@@ -273,7 +273,7 @@ export const validationRenderer: TaskProgressRenderer<
         output.push(
           `${getTaskSymbol(task)} ${
             task.data?.file ? normalizePath(task.data.file) : ""
-          }`
+          }`,
         );
       }
     });
@@ -295,7 +295,7 @@ export const validationRenderer: TaskProgressRenderer<
         const formattedDiags = formatDiagnosticResults(
           t.data?.file ?? "",
           t.output,
-          ctx.loglevel
+          ctx.loglevel,
         );
 
         count.errors += formattedDiags.errors;

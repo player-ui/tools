@@ -28,8 +28,8 @@ const simpleDupIDDocument = toTextDocument(
       ],
     },
     null,
-    2
-  )
+    2,
+  ),
 );
 
 const dupIDDocumentWithTemplate = toTextDocument(
@@ -103,8 +103,8 @@ const dupIDDocumentWithTemplate = toTextDocument(
       },
     },
     null,
-    2
-  )
+    2,
+  ),
 );
 
 describe("duplicate-id-plugin", () => {
@@ -140,7 +140,7 @@ describe("duplicate-id-plugin", () => {
 
   test("finds templates with missing index segments", async () => {
     const validations = await service.validateTextDocument(
-      dupIDDocumentWithTemplate
+      dupIDDocumentWithTemplate,
     );
 
     expect(validations).toHaveLength(2);
@@ -164,7 +164,7 @@ describe("duplicate-id-plugin", () => {
 
     const appliedAction = TextDocument.applyEdits(
       simpleDupIDDocument,
-      editActions ?? []
+      editActions ?? [],
     );
 
     expect(appliedAction).toStrictEqual(
@@ -188,8 +188,8 @@ describe("duplicate-id-plugin", () => {
           ],
         },
         null,
-        2
-      )
+        2,
+      ),
     );
   });
 });

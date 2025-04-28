@@ -1,4 +1,3 @@
-/* eslint-disable no-bitwise */
 import ts from "typescript";
 import type {
   NamedType,
@@ -49,7 +48,7 @@ export function isNodeExported(node: ts.Node): boolean {
  */
 export function getReferencedType(
   node: ts.TypeReferenceNode,
-  typeChecker: ts.TypeChecker
+  typeChecker: ts.TypeChecker,
 ) {
   let symbol = typeChecker.getSymbolAtLocation(node.typeName);
 
@@ -82,7 +81,7 @@ export function getStringLiteralsFromUnion(node: ts.Node): Set<string> {
         }
 
         return "";
-      })
+      }),
     );
   }
 
@@ -98,7 +97,7 @@ export function getStringLiteralsFromUnion(node: ts.Node): Set<string> {
  */
 export function buildTemplateRegex(
   node: ts.TemplateLiteralTypeNode,
-  typeChecker: ts.TypeChecker
+  typeChecker: ts.TypeChecker,
 ): string {
   let regex = node.head.text;
   node.templateSpans.forEach((span) => {
@@ -106,7 +105,7 @@ export function buildTemplateRegex(
     let type = span.type.kind;
     if (ts.isTypeReferenceNode(span.type)) {
       let symbol = typeChecker.getSymbolAtLocation(
-        span.type.typeName
+        span.type.typeName,
       ) as ts.Symbol;
 
       if (
@@ -140,7 +139,7 @@ export function buildTemplateRegex(
  */
 export function fillInGenerics(
   xlrNode: NodeType,
-  generics?: Map<string, NodeType>
+  generics?: Map<string, NodeType>,
 ): NodeType {
   // Need to make sure not to set generics in passed in map to avoid using generics outside of tree
   let localGenerics: Map<string, NodeType>;
@@ -154,7 +153,7 @@ export function fillInGenerics(
         const genericValue = (token.default ?? token.constraints) as NodeType;
         localGenerics.set(
           token.symbol,
-          fillInGenerics(genericValue, localGenerics)
+          fillInGenerics(genericValue, localGenerics),
         );
       });
     }
@@ -167,7 +166,7 @@ export function fillInGenerics(
         ...(xlrNode.genericArguments
           ? {
               genericArguments: xlrNode.genericArguments.map((ga) =>
-                fillInGenerics(ga, localGenerics)
+                fillInGenerics(ga, localGenerics),
               ),
             }
           : {}),
@@ -183,7 +182,7 @@ export function fillInGenerics(
       ...(xlrNode.genericArguments
         ? {
             genericArguments: xlrNode.genericArguments.map((ga) =>
-              fillInGenerics(ga, localGenerics)
+              fillInGenerics(ga, localGenerics),
             ),
           }
         : {}),
@@ -287,7 +286,7 @@ export function fillInGenerics(
 export function applyPickOrOmitToNodeType(
   baseObject: NodeType,
   operation: "Pick" | "Omit",
-  properties: Set<string>
+  properties: Set<string>,
 ): NodeType | undefined {
   if (baseObject.type === "object") {
     const newObject = { ...baseObject };
@@ -322,7 +321,7 @@ export function applyPickOrOmitToNodeType(
     pointer = baseObject.or;
   } else {
     throw new Error(
-      `Error: Can not apply ${operation} to type ${baseObject.type}`
+      `Error: Can not apply ${operation} to type ${baseObject.type}`,
     );
   }
 
@@ -355,7 +354,7 @@ export function applyPickOrOmitToNodeType(
 /** Applies the TS `Partial` or `Required` type to an interface/union/intersection */
 export function applyPartialOrRequiredToNodeType(
   baseObject: NodeType,
-  modifier: boolean
+  modifier: boolean,
 ): NodeType {
   if (baseObject.type === "object") {
     const newObject = { ...baseObject };
@@ -368,14 +367,14 @@ export function applyPartialOrRequiredToNodeType(
 
   if (baseObject.type === "and") {
     const pickedTypes = baseObject.and.map((type) =>
-      applyPartialOrRequiredToNodeType(type, modifier)
+      applyPartialOrRequiredToNodeType(type, modifier),
     );
     return { ...baseObject, and: pickedTypes };
   }
 
   if (baseObject.type === "or") {
     const pickedTypes = baseObject.or.map((type) =>
-      applyPartialOrRequiredToNodeType(type, modifier)
+      applyPartialOrRequiredToNodeType(type, modifier),
     );
     return { ...baseObject, or: pickedTypes };
   }
@@ -383,14 +382,14 @@ export function applyPartialOrRequiredToNodeType(
   throw new Error(
     `Error: Can not apply ${modifier ? "Required" : "Partial"} to type ${
       baseObject.type
-    }`
+    }`,
   );
 }
 
 /** Applies the TS `Exclude` type to a union */
 export function applyExcludeToNodeType(
   baseObject: OrType,
-  filters: NodeType | OrType
+  filters: NodeType | OrType,
 ): NodeType {
   const remainingMembers = baseObject.or.filter((type) => {
     if (filters.type === "or") {

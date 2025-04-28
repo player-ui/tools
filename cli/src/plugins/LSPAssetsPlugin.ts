@@ -61,13 +61,13 @@ export class LSPAssetsPlugin implements PlayerCLIPlugin {
 
   async onCreateLanguageService(
     lsp: PlayerLanguageService,
-    exp: boolean
+    exp: boolean,
   ): Promise<void> {
     if (Array.isArray(this.config)) {
       await Promise.all(
         this.config.map((c) => {
           this.loadConfig(c, lsp);
-        })
+        }),
       );
     } else {
       await this.loadConfig(this.config, lsp);
@@ -76,7 +76,7 @@ export class LSPAssetsPlugin implements PlayerCLIPlugin {
 
   async loadConfig(
     config: LSPAssetPluginConfigTypes,
-    lsp: PlayerLanguageService
+    lsp: PlayerLanguageService,
   ): Promise<void> {
     if (config.type === "manifest" || config.type === undefined) {
       await lsp.setAssetTypes([config.path]);

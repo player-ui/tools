@@ -56,11 +56,12 @@ export type SwapKeysToType<T, K extends keyof T, NewType> = {
   [P in keyof T]: P extends K ? NewType : T[P];
 };
 
-export type WithTemplateTypes<T> = T extends Record<any, any>
-  ? {
-      [P in keyof T]: WithTemplateTypes<T[P]>;
-    }
-  : T | BindingTemplateInstance | ExpressionTemplateInstance;
+export type WithTemplateTypes<T> =
+  T extends Record<any, any>
+    ? {
+        [P in keyof T]: WithTemplateTypes<T[P]>;
+      }
+    : T | BindingTemplateInstance | ExpressionTemplateInstance;
 
 type ValidKeys = "exp" | "onStart" | "onEnd";
 
@@ -70,15 +71,15 @@ type DeepReplace<T, Old, New> = {
       ? New
       : DeepReplace<T[P], Old, New> // Set to new if one of the valid keys: replace with `? New` for all keys
     : T[P] extends (infer R)[] // Is this a Tuple or array
-    ? DeepReplace<R, Old, New>[] // Replace the type of the tuple/array
-    : T[P] extends object
-    ? DeepReplace<T[P], Old, New>
-    : Extract<T[P], Old> extends Old // Is this a union with the searched for type?
-    ?
-        | DeepReplace<Extract<T[P], object>, Old, New> // Replace all object types of the union
-        | Exclude<T[P], Old | object> // Get all types that are not objects (handled above) or Old (handled below
-        | New // Direct Replacement of Old
-    : T[P];
+      ? DeepReplace<R, Old, New>[] // Replace the type of the tuple/array
+      : T[P] extends object
+        ? DeepReplace<T[P], Old, New>
+        : Extract<T[P], Old> extends Old // Is this a union with the searched for type?
+          ?
+              | DeepReplace<Extract<T[P], object>, Old, New> // Replace all object types of the union
+              | Exclude<T[P], Old | object> // Get all types that are not objects (handled above) or Old (handled below
+              | New // Direct Replacement of Old
+          : T[P];
 };
 
 export type Navigation = DeepReplace<
@@ -99,16 +100,16 @@ type RemoveIndexSignature<T> = {
   [K in keyof T as string extends K
     ? never
     : number extends K
-    ? never
-    : symbol extends K
-    ? never
-    : K]: T[K];
+      ? never
+      : symbol extends K
+        ? never
+        : K]: T[K];
 };
 
 export type ValidationRefProps = RemoveIndexSignature<Validation.Reference>;
 
 export type DataTypeRefs<
-  DataTypeObjects extends Record<string, Schema.DataType>
+  DataTypeObjects extends Record<string, Schema.DataType>,
 > = {
   /** Property name with DataType object */
   [Property in Extract<keyof DataTypeObjects, string> as `${Property}Ref`]: {
@@ -118,7 +119,7 @@ export type DataTypeRefs<
 };
 
 export type ValidatorFunctionRefs<
-  ValidatorObjects extends { [key: string]: (...args: any[]) => any }
+  ValidatorObjects extends { [key: string]: (...args: any[]) => any },
 > = {
   /** Property name with validator ref object */
   [Property in Extract<keyof ValidatorObjects, string> as `${Property}Ref`]: {
@@ -131,7 +132,7 @@ export type ValidatorFunctionRefs<
 export type DataTypeReference<
   DataTypeProp = { [key: string]: Schema.DataType },
   ValidationRef = { [key: string]: Validation.Reference },
-  SymbolType = never
+  SymbolType = never,
 > =
   | (Omit<Schema.DataType, "type" | "validation"> & {
       /** Handled data type */

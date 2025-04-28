@@ -72,7 +72,7 @@ type SourceMapList = Array<{
 /** Given a list of source maps for all generated views, merge them into 1 */
 const mergeSourceMaps = (
   sourceMaps: SourceMapList,
-  generated: string
+  generated: string,
 ): string => {
   const generator = new SourceMapGenerator();
   sourceMaps.forEach(({ sourceMap, offsetIndexSearch, source }) => {
@@ -135,7 +135,7 @@ export class DSLCompiler {
   /** Convert an object (flow, view, schema, etc) into it's JSON representation */
   async serialize(
     value: unknown,
-    context?: SerializeContext
+    context?: SerializeContext,
   ): Promise<CompilerReturn> {
     if (typeof value !== "object" || value === null) {
       throw new Error("Unable to serialize non-object");
@@ -183,8 +183,8 @@ export class DSLCompiler {
                 .split("\n")
                 .find((line) =>
                   line.includes(
-                    `"id": "${(jsonValue as Record<string, string>).id}"`
-                  )
+                    `"id": "${(jsonValue as Record<string, string>).id}"`,
+                  ),
                 );
 
               if (searchIdLine) {
@@ -200,7 +200,7 @@ export class DSLCompiler {
           }
 
           return node;
-        }) ?? []
+        }) ?? [],
       )) as View[];
 
       // Go through the flow and sub out any view refs that are react elements w/ the right id
@@ -216,7 +216,7 @@ export class DSLCompiler {
                 React.isValidElement(flowNode.ref)
               ) {
                 const actualViewIndex = (value as Flow).views?.indexOf?.(
-                  flowNode.ref as any
+                  flowNode.ref as any,
                 );
 
                 if (actualViewIndex !== undefined && actualViewIndex > -1) {
@@ -236,19 +236,18 @@ export class DSLCompiler {
       }
 
       copiedValue.navigation = parseNavigationExpressions(
-        copiedValue.navigation
+        copiedValue.navigation,
       );
 
       if (value) {
-        const postProcessFlow = await this.hooks.postProcessFlow.call(
-          copiedValue
-        );
+        const postProcessFlow =
+          await this.hooks.postProcessFlow.call(copiedValue);
 
         return {
           value: postProcessFlow as JsonType,
           sourceMap: mergeSourceMaps(
             allSourceMaps,
-            JSON.stringify(copiedValue, null, 2)
+            JSON.stringify(copiedValue, null, 2),
           ),
         };
       }

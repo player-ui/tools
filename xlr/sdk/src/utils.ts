@@ -1,5 +1,3 @@
-/* eslint-disable guard-for-in */
-/* eslint-disable no-restricted-syntax */
 import type {
   NamedType,
   NodeTypeStrings,
@@ -12,7 +10,7 @@ import type {
 import { isGenericNamedType } from "@player-tools/xlr-utils";
 
 type TypedTransformFunction<T extends NodeTypeStrings = NodeTypeStrings> = (
-  input: NodeTypeMap[T]
+  input: NodeTypeMap[T],
 ) => NodeTypeMap[T];
 
 export type TransformFunctionMap = {
@@ -21,7 +19,7 @@ export type TransformFunctionMap = {
 
 const isMatchingCapability = (
   capability: string,
-  capabilitiesToMatch: string | Array<string>
+  capabilitiesToMatch: string | Array<string>,
 ): boolean => {
   if (Array.isArray(capabilitiesToMatch)) {
     return capabilitiesToMatch.includes(capability);
@@ -31,7 +29,7 @@ const isMatchingCapability = (
 };
 
 export function xlrTransformWalker(
-  transformMap: TransformFunctionMap
+  transformMap: TransformFunctionMap,
 ): (node: NodeType) => NodeType {
   const walker = (n: NamedType | NodeType): NodeType => {
     let node = { ...n };
@@ -105,7 +103,7 @@ export function xlrTransformWalker(
         ...(node.genericArguments
           ? {
               genericArguments: node.genericArguments?.map((arg) =>
-                walker(arg)
+                walker(arg),
               ),
             }
           : {}),
@@ -175,11 +173,11 @@ export function xlrTransformWalker(
  * Walks an XLR tree looking for the specified node type calls the supplied function when called
  */
 export function simpleTransformGenerator<
-  T extends NodeTypeStrings = NodeTypeStrings
+  T extends NodeTypeStrings = NodeTypeStrings,
 >(
   typeToTransform: T,
   capabilityToTransform: string | Array<string>,
-  functionToRun: TypedTransformFunction<T>
+  functionToRun: TypedTransformFunction<T>,
 ): TransformFunction {
   /** walker for an XLR tree to touch every node */
   return (n: NamedType | NodeType, capability: string) => {

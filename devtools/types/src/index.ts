@@ -72,11 +72,11 @@ export interface MessengerOptions<T extends BaseEvent<string, unknown>> {
   sendMessage: (message: MessengerEvent<T>) => Promise<void>;
   /** API to add a listener (e.g. window.addEventListener, browser.runtime.onMessage.addListener) */
   addListener: (
-    callback: (message: TransactionMetadata & MessengerEvent<T>) => void
+    callback: (message: TransactionMetadata & MessengerEvent<T>) => void,
   ) => void;
   /** API to remove a listener (e.g. window.removeEventListener, browser.runtime.onMessage.removeListener) */
   removeListener: (
-    callback: (message: TransactionMetadata & MessengerEvent<T>) => void
+    callback: (message: TransactionMetadata & MessengerEvent<T>) => void,
   ) => void;
   /** Callback to handle messages */
   messageCallback: (message: TransactionMetadata & MessengerEvent<T>) => void;

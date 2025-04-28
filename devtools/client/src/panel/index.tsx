@@ -133,11 +133,11 @@ export const Panel = ({
         currentFlow.current = value;
         reactPlayer.start(value);
       } else if (change === "data") {
-        dataController.current
-          ? dataController.current
-              .deref()
-              ?.set(value as Record<string, unknown>)
-          : reactPlayer.start(flow);
+        if (dataController.current) {
+          dataController.current.deref()?.set(value as Record<string, unknown>);
+        } else {
+          reactPlayer.start(flow);
+        }
       }
     }
   }, [reactPlayer, state]);
@@ -175,7 +175,7 @@ export const Panel = ({
                         onChange={(event) => selectPlugin(event.target.value)}
                       >
                         {Object.keys(
-                          state.players[state.current.player].plugins
+                          state.players[state.current.player].plugins,
                         ).map((pluginID) => (
                           <option key={pluginID} value={pluginID}>
                             {pluginID}

@@ -48,8 +48,8 @@ describe("asset-wrapper-array-plugin", () => {
           ],
         },
         null,
-        2
-      )
+        2,
+      ),
     );
 
     const diags = await service.validateTextDocument(textDocument);

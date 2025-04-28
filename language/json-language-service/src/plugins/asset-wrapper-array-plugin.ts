@@ -108,7 +108,7 @@ export class AssetWrapperArrayPlugin implements PlayerLanguageServicePlugin {
                       value: formatLikeNode(
                         documentInfo.document,
                         arrayNode,
-                        newAsset
+                        newAsset,
                       ),
                     },
                   };
@@ -117,7 +117,7 @@ export class AssetWrapperArrayPlugin implements PlayerLanguageServicePlugin {
             }
           },
         });
-      }
+      },
     );
   }
 }

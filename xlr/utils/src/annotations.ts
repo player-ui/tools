@@ -36,7 +36,7 @@ function parentIsNonObjectPath(node: ts.Node) {
  */
 function recurseTypeChain(
   node: ts.Node,
-  child: ts.Node | undefined
+  child: ts.Node | undefined,
 ): Array<string> {
   if (!node) {
     return [];
@@ -114,7 +114,7 @@ function extractTitle(node: ts.Node): Annotations {
  *
  */
 function stringifyDoc(
-  docString: undefined | string | ts.NodeArray<ts.JSDocComment>
+  docString: undefined | string | ts.NodeArray<ts.JSDocComment>,
 ): string | undefined {
   if (typeof docString === "undefined" || typeof docString === "string") {
     return docString;
@@ -191,18 +191,18 @@ function mergeAnnotations(nodes: Array<Annotations>): Annotations {
   const name = nodes.find((n) => n.name)?.name;
   const title = join(
     nodes.map((n) => n.title),
-    ", "
+    ", ",
   );
   const description = join(nodes.map((n) => n.description));
   const _default = join(nodes.map((n) => n.default));
   const comment = join(nodes.map((n) => n.comment));
   const examples = join(
     nodes.map((n) =>
-      Array.isArray(n.examples) ? join(n.examples) : n.examples
-    )
+      Array.isArray(n.examples) ? join(n.examples) : n.examples,
+    ),
   );
   const see = join(
-    nodes.map((n) => (Array.isArray(n.see) ? join(n.see) : n.see))
+    nodes.map((n) => (Array.isArray(n.see) ? join(n.see) : n.see)),
   );
   const meta = nodes.find((n) => n.meta)?.meta;
   return {

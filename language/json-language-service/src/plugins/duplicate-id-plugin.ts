@@ -83,7 +83,7 @@ const createValidationVisitor = (ctx: ValidationContext): ASTVisitor => {
       if (!view) {
         // not sure how you can get here
         throw new Error(
-          "Asset found but not within a view. Something is wrong"
+          "Asset found but not within a view. Something is wrong",
         );
       }
 
@@ -110,7 +110,7 @@ const createValidationVisitor = (ctx: ValidationContext): ASTVisitor => {
           expectedIndexElements.push(`_index${i === 0 ? "" : i}_`);
         }
         const missingIndexSegments = expectedIndexElements.filter(
-          (e) => !id.includes(e)
+          (e) => !id.includes(e),
         );
 
         if (missingIndexSegments.length !== 0) {
@@ -118,7 +118,7 @@ const createValidationVisitor = (ctx: ValidationContext): ASTVisitor => {
             node: assetNode,
             severity: DiagnosticSeverity.Error,
             message: `The id for this templated elements is missing the following index segments: ${missingIndexSegments.join(
-              ", "
+              ", ",
             )}`,
           });
         }

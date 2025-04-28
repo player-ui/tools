@@ -4,7 +4,7 @@ import type { DefaultCompilerContentType } from "./types";
 /** Basic way of identifying the type of file based on the default content export */
 export const fingerprintContent = (
   content: unknown,
-  filename?: string
+  filename?: string,
 ): DefaultCompilerContentType | undefined => {
   if (content !== null || content !== undefined) {
     if (React.isValidElement(content as any)) {

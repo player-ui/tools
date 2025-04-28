@@ -54,7 +54,7 @@ export function isNavigationNode(node?: ASTNode): node is NavigationASTNode {
 /** get the value for a given key in the object */
 export function getValForKey<T extends ObjectASTNode<any>>(
   node: T,
-  key: string
+  key: string,
 ): any {
   const prop = node.properties.find((k) => k.keyNode.value === key);
   return prop?.valueNode?.jsonNode.value;
@@ -69,7 +69,7 @@ export function getPropForValNode(node?: ASTNode): string | undefined {
 
 /** find the view node */
 export function getViewNode(
-  node: ASTNode
+  node: ASTNode,
 ): ViewASTNode | AssetASTNode | undefined {
   if (node.parent) {
     if (node.parent.type === "view") {

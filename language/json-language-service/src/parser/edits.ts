@@ -15,7 +15,7 @@ export function replaceString(node: StringASTNode, newText: string): NodeEdit {
 export function toRange(document: TextDocument, node: ASTNode): Range {
   return Range.create(
     document.positionAt(node.jsonNode.offset),
-    document.positionAt(node.jsonNode.offset + node.jsonNode.length)
+    document.positionAt(node.jsonNode.offset + node.jsonNode.length),
   );
 }
 

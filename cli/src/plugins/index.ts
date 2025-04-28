@@ -15,7 +15,7 @@ export interface PlayerCLIPlugin {
    */
   onCreateLanguageService?: (
     lsp: PlayerLanguageService,
-    exp: boolean
+    exp: boolean,
   ) => void | Promise<void>;
 
   /**
@@ -30,7 +30,7 @@ export interface PlayerCLIPlugin {
    */
   onConvertXLR?: (
     format: ExportTypes,
-    transforms: Array<TransformFunction>
+    transforms: Array<TransformFunction>,
   ) => void | Promise<void>;
 
   /**

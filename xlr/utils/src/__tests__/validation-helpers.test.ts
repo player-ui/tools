@@ -66,9 +66,9 @@ describe("computeEffectiveObject tests", () => {
     };
 
     expect(() =>
-      computeEffectiveObject(type1, type2, true)
+      computeEffectiveObject(type1, type2, true),
     ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Can't compute effective type for object literal and object literal because of conflicting properties foo]`
+      `[Error: Can't compute effective type for object literal and object literal because of conflicting properties foo]`,
     );
   });
 

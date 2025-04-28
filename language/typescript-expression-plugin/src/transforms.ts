@@ -40,5 +40,5 @@ export const toFunction = simpleTransformGenerator(
       parameters,
       returnType,
     } as FunctionType as any;
-  }
+  },
 );

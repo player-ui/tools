@@ -39,12 +39,12 @@ export const useExtensionState = ({
       ...communicationLayer,
       logger: console,
     }),
-    [dispatch, communicationLayer]
+    [dispatch, communicationLayer],
   );
 
   const messenger = useMemo(
     () => new Messenger(messengerOptions),
-    [messengerOptions]
+    [messengerOptions],
   );
 
   useEffect(() => {
@@ -75,7 +75,7 @@ export const useExtensionState = ({
         },
       });
     },
-    [dispatch]
+    [dispatch],
   );
 
   const selectPlugin = useCallback(
@@ -92,7 +92,7 @@ export const useExtensionState = ({
         },
       });
     },
-    [dispatch]
+    [dispatch],
   );
 
   /**
@@ -119,7 +119,7 @@ export const useExtensionState = ({
         ...(state.current.player ? { target: state.current.player } : {}),
       });
     },
-    [messenger]
+    [messenger],
   );
 
   return { state, selectPlayer, selectPlugin, handleInteraction };

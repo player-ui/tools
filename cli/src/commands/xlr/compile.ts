@@ -66,7 +66,7 @@ export default class XLRCompile extends BaseCommand {
     } catch (e: any) {
       console.log("");
       console.log(
-        chalk.red(`${logSymbols.error} Error compiling XLRs: ${e.message}`)
+        chalk.red(`${logSymbols.error} Error compiling XLRs: ${e.message}`),
       );
       console.log(chalk.red(`${e.stack}`));
       this.exit(1);
@@ -89,7 +89,7 @@ export default class XLRCompile extends BaseCommand {
     fileNames: string[],
     outputDirectory: string,
     options: ts.CompilerOptions,
-    mode: Mode = Mode.PLUGIN
+    mode: Mode = Mode.PLUGIN,
   ): void {
     // Build a program using the set of root file names in fileNames
     const program = ts.createProgram(fileNames, options);
@@ -124,7 +124,7 @@ export default class XLRCompile extends BaseCommand {
           });
         } else {
           throw new Error(
-            `Error: Option ${mode} not recognized. Valid options are: plugin or type`
+            `Error: Option ${mode} not recognized. Valid options are: plugin or type`,
           );
         }
 

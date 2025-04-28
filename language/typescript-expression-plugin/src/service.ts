@@ -52,7 +52,7 @@ export class ExpressionLanguageService implements TemplateLanguageService {
   private xlr: XLRSDK;
 
   constructor(
-    options?: { logger?: Logger } & Partial<ExpressionLanguageServiceConfig>
+    options?: { logger?: Logger } & Partial<ExpressionLanguageServiceConfig>,
   ) {
     this.logger = options?.logger;
     this._plugins = options?.plugins ?? [];
@@ -82,7 +82,7 @@ export class ExpressionLanguageService implements TemplateLanguageService {
     this.xlr.listTypes().forEach((type) => {
       const typeInfo = this.xlr.getTypeInfo(type.name);
       const source = this._plugins.find(
-        (value) => value.pluginName === typeInfo?.plugin
+        (value) => value.pluginName === typeInfo?.plugin,
       );
 
       if (
@@ -104,7 +104,7 @@ export class ExpressionLanguageService implements TemplateLanguageService {
 
   getCompletionsAtPosition(
     context: TemplateContext,
-    position: ts.LineAndCharacter
+    position: ts.LineAndCharacter,
   ): ts.CompletionInfo {
     const completionInfo: ts.CompletionInfo = {
       isGlobalCompletion: false,
@@ -155,7 +155,7 @@ export class ExpressionLanguageService implements TemplateLanguageService {
       const start = token.location?.start ?? { character: 0 };
       const wordFromStart = line.slice(start.character, position.character);
       const allCompletions = Array.from(this._expressions.keys()).filter(
-        (key) => key.startsWith(wordFromStart)
+        (key) => key.startsWith(wordFromStart),
       );
 
       allCompletions.forEach((c) => {
@@ -175,7 +175,7 @@ export class ExpressionLanguageService implements TemplateLanguageService {
   getCompletionEntryDetails(
     context: TemplateContext,
     position: ts.LineAndCharacter,
-    name: string
+    name: string,
   ): ts.CompletionEntryDetails {
     const expression = this._expressions.get(name);
 
@@ -198,7 +198,7 @@ export class ExpressionLanguageService implements TemplateLanguageService {
 
   getQuickInfoAtPosition(
     context: TemplateContext,
-    position: ts.LineAndCharacter
+    position: ts.LineAndCharacter,
   ): ts.QuickInfo | undefined {
     const parsed = parseExpression(context.text, { strict: false });
     const token = getTokenAtPosition(parsed, position);
@@ -210,7 +210,7 @@ export class ExpressionLanguageService implements TemplateLanguageService {
         const completionDetails = this.getCompletionEntryDetails(
           context,
           position,
-          expression.name
+          expression.name,
         );
 
         return {
@@ -226,7 +226,7 @@ export class ExpressionLanguageService implements TemplateLanguageService {
   private checkNode(
     context: TemplateContext,
     node: ExpressionNode,
-    xlrType: NodeType
+    xlrType: NodeType,
   ): ts.Diagnostic[] {
     const diagnostics: ts.Diagnostic[] = [];
     const asJsonNodeValue = convertExprToJSONNode(node);
@@ -250,7 +250,7 @@ export class ExpressionLanguageService implements TemplateLanguageService {
 
   private getDiagnosticsForNode(
     context: TemplateContext,
-    node: ExpressionNode
+    node: ExpressionNode,
   ): ts.Diagnostic[] {
     const diags: ts.Diagnostic[] = [];
 

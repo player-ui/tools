@@ -36,7 +36,7 @@ export class XLRValidator {
 
   constructor(
     resolveType: (id: string) => NamedType<NodeType> | undefined,
-    config?: XLRValidatorConfig
+    config?: XLRValidatorConfig,
   ) {
     this.config = config || {};
     this.resolveType = resolveType;
@@ -46,7 +46,7 @@ export class XLRValidator {
   /** Main entrypoint for validation */
   public validateType(
     rootNode: Node,
-    xlrNode: NodeType
+    xlrNode: NodeType,
   ): Array<ValidationMessage> {
     const validationIssues = new Array<ValidationMessage>();
     if (xlrNode.type === "object") {
@@ -111,7 +111,7 @@ export class XLRValidator {
       const { infoMessage } = this.generateNestedTypesInfo(
         potentialTypeErrors,
         xlrNode,
-        rootNode
+        rootNode,
       );
 
       validationIssues.push({
@@ -138,10 +138,10 @@ export class XLRValidator {
     } else if (xlrNode.type === "record") {
       rootNode.children?.forEach((child) => {
         validationIssues.push(
-          ...this.validateType(child.children?.[0] as Node, xlrNode.keyType)
+          ...this.validateType(child.children?.[0] as Node, xlrNode.keyType),
         );
         validationIssues.push(
-          ...this.validateType(child.children?.[1] as Node, xlrNode.valueType)
+          ...this.validateType(child.children?.[1] as Node, xlrNode.valueType),
         );
       });
     } else if (xlrNode.type === "ref") {
@@ -155,7 +155,7 @@ export class XLRValidator {
         });
       } else {
         validationIssues.push(
-          ...this.validateType(rootNode, refType as NamedType)
+          ...this.validateType(rootNode, refType as NamedType),
         );
       }
     } else if (isPrimitiveTypeNode(xlrNode)) {
@@ -206,12 +206,12 @@ export class XLRValidator {
       const resolvedConditional = resolveConditional(resolvedXLRNode);
       if (resolvedConditional === resolvedXLRNode) {
         throw Error(
-          `Unable to resolve conditional type at runtime: ${xlrNode.name}`
+          `Unable to resolve conditional type at runtime: ${xlrNode.name}`,
         );
       }
 
       validationIssues.push(
-        ...this.validateType(rootNode, resolvedConditional)
+        ...this.validateType(rootNode, resolvedConditional),
       );
     } else {
       throw Error(`Unknown type ${xlrNode.type}`);
@@ -226,7 +226,7 @@ export class XLRValidator {
       errors: Array<ValidationMessage>;
     }>,
     xlrNode: OrType,
-    rootNode: Node
+    rootNode: Node,
   ): { nestedTypesList: string; infoMessage?: string } {
     const nestedTypes = new Set<string>();
 
@@ -287,7 +287,7 @@ export class XLRValidator {
 
   private validateTemplate(
     node: Node,
-    xlrNode: TemplateLiteralType
+    xlrNode: TemplateLiteralType,
   ): ValidationMessage | undefined {
     if (node.type !== "string") {
       return {
@@ -315,7 +315,7 @@ export class XLRValidator {
   private validateArray(rootNode: Node, xlrNode: ArrayType) {
     const issues: Array<ValidationMessage> = [];
     rootNode.children?.forEach((child) =>
-      issues.push(...this.validateType(child, xlrNode.elementType))
+      issues.push(...this.validateType(child, xlrNode.elementType)),
     );
     return issues;
   }
@@ -324,7 +324,6 @@ export class XLRValidator {
     const issues: Array<ValidationMessage> = [];
     const objectProps = makePropertyMap(node);
 
-    // eslint-disable-next-line guard-for-in, no-restricted-syntax
     for (const prop in xlrNode.properties) {
       const expectedType = xlrNode.properties[prop];
       const valueNode = objectProps.get(prop);
@@ -339,21 +338,21 @@ export class XLRValidator {
 
       if (valueNode) {
         issues.push(
-          ...this.validateType(valueNode, expectedType.node as NamedType)
+          ...this.validateType(valueNode, expectedType.node as NamedType),
         );
       }
     }
 
     // Check if unknown keys are allowed and if they are - do the violate the constraint
     const extraKeys = Array.from(objectProps.keys()).filter(
-      (key) => xlrNode.properties[key] === undefined
+      (key) => xlrNode.properties[key] === undefined,
     );
     if (xlrNode.additionalProperties === false && extraKeys.length > 0) {
       issues.push({
         type: "value",
         node,
         message: `Unexpected properties on "${xlrNode.name}": ${extraKeys.join(
-          ", "
+          ", ",
         )}`,
         severity: ValidationSeverity.Error,
       });
@@ -362,9 +361,9 @@ export class XLRValidator {
         ...extraKeys.flatMap((key) =>
           this.validateType(
             objectProps.get(key) as Node,
-            xlrNode.additionalProperties as NodeType
-          )
-        )
+            xlrNode.additionalProperties as NodeType,
+          ),
+        ),
       );
     }
 
@@ -451,7 +450,7 @@ export class XLRValidator {
       };
     } else if (firstElement.type !== "or" && firstElement.type !== "object") {
       throw new Error(
-        `Can't compute a union with a non-object type ${firstElement.type} (${firstElement.name})`
+        `Can't compute a union with a non-object type ${firstElement.type} (${firstElement.name})`,
       );
     } else {
       effectiveType = firstElement;
@@ -520,7 +519,7 @@ export class XLRValidator {
         }
       } else {
         throw new Error(
-          `Can't compute a union with a non-object type ${typeToApply.type} (${typeToApply.name})`
+          `Can't compute a union with a non-object type ${typeToApply.type} (${typeToApply.name})`,
         );
       }
     });

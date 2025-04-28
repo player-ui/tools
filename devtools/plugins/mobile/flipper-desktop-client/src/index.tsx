@@ -17,17 +17,17 @@ type Events = {
 type Methods = {
   /** message sent */
   "message::flipper": (
-    message: MessengerEvent<ExtensionSupportedEvents>
+    message: MessengerEvent<ExtensionSupportedEvents>,
   ) => Promise<void>;
 };
 
 /** Flipper desktop plugin */
 export function plugin(
-  client: PluginClient<Events, Methods>
+  client: PluginClient<Events, Methods>,
 ): CommunicationLayerMethods {
   const listeners: Array<
     (
-      message: MessengerEvent<ExtensionSupportedEvents> & TransactionMetadata
+      message: MessengerEvent<ExtensionSupportedEvents> & TransactionMetadata,
     ) => void
   > = [];
 
@@ -43,15 +43,15 @@ export function plugin(
     },
     addListener: (
       listener: (
-        message: MessengerEvent<ExtensionSupportedEvents> & TransactionMetadata
-      ) => void
+        message: MessengerEvent<ExtensionSupportedEvents> & TransactionMetadata,
+      ) => void,
     ) => {
       listeners.push(listener);
     },
     removeListener: (
       listener: (
-        message: MessengerEvent<ExtensionSupportedEvents> & TransactionMetadata
-      ) => void
+        message: MessengerEvent<ExtensionSupportedEvents> & TransactionMetadata,
+      ) => void,
     ) => {
       const index = listeners.indexOf(listener);
       if (index > -1) {

@@ -87,7 +87,7 @@ export default class Validate extends BaseCommand {
 
           const validations =
             (await lsp.validateTextDocument(
-              TextDocument.create(`file://${f}`, "json", 1, contents)
+              TextDocument.create(`file://${f}`, "json", 1, contents),
             )) ?? [];
 
           return validations;

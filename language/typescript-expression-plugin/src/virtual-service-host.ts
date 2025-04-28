@@ -9,7 +9,7 @@ export default class VirtualServiceHost implements ts.LanguageServiceHost {
   constructor(
     typescript: typeof ts,
     compilerOptions: ts.CompilerOptions,
-    workspacePath: string
+    workspacePath: string,
   ) {
     this.typescript = typescript;
     this.compilerOptions = compilerOptions;

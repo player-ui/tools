@@ -23,7 +23,7 @@ export const usePluginState = ({
   playerID: string;
 }): [
   DevtoolsPluginsStore,
-  React.Dispatch<Transaction<ExtensionSupportedEvents>>
+  React.Dispatch<Transaction<ExtensionSupportedEvents>>,
 ] => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const lastMessageIndex = useRef<number>(-1);
@@ -48,7 +48,7 @@ export const usePluginState = ({
     if (state.messages.length > lastMessageIndex.current + 1) {
       const messages = state.messages.slice(
         lastMessageIndex.current + 1,
-        state.messages.length
+        state.messages.length,
       );
       lastMessageIndex.current = state.messages.length - 1;
       messages.forEach((message) => {

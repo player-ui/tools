@@ -58,7 +58,7 @@ export const WrapperComponent = ({
           dset(
             draft,
             ["plugins", pluginID, "flow", "data", "history"],
-            [...current, result]
+            [...current, result],
           );
         });
 
@@ -88,7 +88,9 @@ export const WrapperComponent = ({
           console.error("Error parsing new flow", e);
         }
 
-        newFlow && overrideFlow(newFlow);
+        if (newFlow) {
+          overrideFlow(newFlow);
+        }
       }
 
       if (type === INTERACTIONS.PLAYER_SELECTED && payload) {
@@ -104,7 +106,7 @@ export const WrapperComponent = ({
         });
       }
     },
-    [dispatch, expressionEvaluator, pluginID, state]
+    [dispatch, expressionEvaluator, pluginID, state],
   );
 
   useEffect(() => {

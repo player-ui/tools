@@ -128,7 +128,7 @@ describe("reducer", () => {
   test("PLAYER_DEVTOOLS_PLAYER_INIT", () => {
     const newState = reducer(
       INITIAL_EXTENSION_STATE,
-      mockPlayerInitTransaction
+      mockPlayerInitTransaction,
     );
 
     expect(newState).toMatchInlineSnapshot(`
@@ -178,7 +178,7 @@ describe("reducer", () => {
   test("PLAYER_DEVTOOLS_PLUGIN_FLOW_CHANGE", () => {
     const newState = reducer(
       INITIAL_EXTENSION_STATE,
-      mockPlayerFlowChangeTransaction
+      mockPlayerFlowChangeTransaction,
     );
 
     expect(newState).toMatchInlineSnapshot(`
@@ -226,7 +226,7 @@ describe("reducer", () => {
   test("PLAYER_DEVTOOLS_PLUGIN_DATA_CHANGE", () => {
     const newState = reducer(
       INITIAL_EXTENSION_STATE,
-      mockPluginDataChangeTransaction
+      mockPluginDataChangeTransaction,
     );
 
     expect(newState).toMatchInlineSnapshot(`
@@ -255,7 +255,7 @@ describe("reducer", () => {
   test("MESSENGER_EVENT_BATCH", () => {
     const newState = reducer(
       INITIAL_EXTENSION_STATE,
-      mockEventBatchTransaction
+      mockEventBatchTransaction,
     );
 
     expect(newState).toMatchInlineSnapshot(`
@@ -308,7 +308,7 @@ describe("reducer", () => {
   test("PLAYER_DEVTOOLS_PLAYER_STOPPED", () => {
     const newState = reducer(
       INITIAL_EXTENSION_STATE,
-      mockPlayerStoppedTransaction
+      mockPlayerStoppedTransaction,
     );
 
     expect(newState).toMatchInlineSnapshot(`
@@ -329,7 +329,7 @@ describe("reducer", () => {
   test("PLAYER_DEVTOOLS_PLAYER_SELECTED", () => {
     const newState = reducer(
       INITIAL_EXTENSION_STATE,
-      mockPlayerSelectedTransaction
+      mockPlayerSelectedTransaction,
     );
 
     expect(newState).toMatchInlineSnapshot(`
@@ -346,7 +346,7 @@ describe("reducer", () => {
   test("PLAYER_DEVTOOLS_PLUGIN_SELECTED", () => {
     const newState = reducer(
       INITIAL_EXTENSION_STATE,
-      mockPluginSelectedTransaction
+      mockPluginSelectedTransaction,
     );
 
     expect(newState).toMatchInlineSnapshot(`

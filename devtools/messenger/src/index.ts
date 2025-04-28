@@ -80,7 +80,7 @@ export class Messenger<T extends BaseEvent<string, unknown>> {
 
   /** callback to handle messages, here for instance binding */
   private handleMessage: (
-    message: TransactionMetadata & MessengerEvent<T>
+    message: TransactionMetadata & MessengerEvent<T>,
   ) => void;
 
   /** unique id */
@@ -94,7 +94,7 @@ export class Messenger<T extends BaseEvent<string, unknown>> {
     // start beacon interval:
     this.beaconInterval = setInterval(
       this.beacon.bind(this),
-      this.beaconIntervalMS
+      this.beaconIntervalMS,
     );
 
     // bind message handler:
@@ -107,7 +107,7 @@ export class Messenger<T extends BaseEvent<string, unknown>> {
   private log(message: string) {
     if (this.options.debug) {
       this.options.logger.log(
-        `[MESSENGER-${this.id}](${this.options.context}): ${message}`
+        `[MESSENGER-${this.id}](${this.options.context}): ${message}`,
       );
     }
   }
@@ -183,7 +183,7 @@ export class Messenger<T extends BaseEvent<string, unknown>> {
       this.addTransactionMetadata({
         type: "MESSENGER_BEACON",
         payload: null,
-      })
+      }),
     );
   }
 
@@ -252,7 +252,7 @@ export class Messenger<T extends BaseEvent<string, unknown>> {
         this.options.sendMessage(this.addTransactionMetadata(message));
 
         this.log(
-          `requesting lost messages from ${parsed.context}:${parsed.sender}`
+          `requesting lost messages from ${parsed.context}:${parsed.sender}`,
         );
 
         // set desync, so we don't request again:
@@ -276,7 +276,7 @@ export class Messenger<T extends BaseEvent<string, unknown>> {
     this.options.messageCallback(parsed);
 
     this.log(
-      `message received: ${(parsed as BaseEvent<string, unknown>).type}`
+      `message received: ${(parsed as BaseEvent<string, unknown>).type}`,
     );
   }
 
@@ -302,7 +302,7 @@ export class Messenger<T extends BaseEvent<string, unknown>> {
       this.log(
         `messages [0 - ${events.length - 1}] sent to ${parsed.context}:${
           parsed.sender
-        }`
+        }`,
       );
 
       const connection = this.getConnection(parsed.sender);
@@ -330,7 +330,7 @@ export class Messenger<T extends BaseEvent<string, unknown>> {
       type: "MESSENGER_EVENT_BATCH",
       payload: {
         events: missingEvents.map((event) =>
-          this.addTransactionMetadata(event)
+          this.addTransactionMetadata(event),
         ),
       },
       target: parsed.sender,
@@ -343,12 +343,12 @@ export class Messenger<T extends BaseEvent<string, unknown>> {
     this.log(
       `messages [0 - ${events.length - 1}] sent to ${parsed.context}:${
         parsed.sender
-      }`
+      }`,
     );
   }
 
   private handleDisconnectMessage(
-    parsed: TransactionMetadata & MessengerEvent<T>
+    parsed: TransactionMetadata & MessengerEvent<T>,
   ) {
     delete Messenger.connections[parsed.sender];
 
@@ -375,7 +375,7 @@ export class Messenger<T extends BaseEvent<string, unknown>> {
       this.log(
         `failed to send message: ${
           (parsed as BaseEvent<string, unknown>).type
-        } from ${this.id} to ${target || "all"}`
+        } from ${this.id} to ${target || "all"}`,
       );
     });
   }

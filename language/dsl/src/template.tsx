@@ -109,13 +109,13 @@ function addTemplateToObject(
   obj: ObjectNode,
   templateObj: ObjectNode,
   templateParentNodeType: string,
-  insertionIndex: number | undefined
+  insertionIndex: number | undefined,
 ): () => void {
   // find a template property
   // add one if none exists
 
   let templateProp = obj.properties.find(
-    (p) => p.keyNode.value === "template" && p.valueNode?.type === "array"
+    (p) => p.keyNode.value === "template" && p.valueNode?.type === "array",
   );
 
   if (!templateProp) {
@@ -124,20 +124,20 @@ function addTemplateToObject(
     obj.properties.splice(
       insertionIndex ?? obj.properties.length - 1,
       0,
-      templateProp
+      templateProp,
     );
   }
 
   const templateItems = templateProp.valueNode as ArrayNode;
 
   templateItems.items.push(templateObj);
-  // eslint-disable-next-line no-param-reassign
+
   templateObj.parent = templateItems;
 
   const templateParentProp = obj.properties.find(
     (p) =>
       p.keyNode.value === templateParentNodeType &&
-      p.valueNode?.type === "array"
+      p.valueNode?.type === "array",
   );
 
   if (templateParentProp) {
@@ -206,7 +206,7 @@ export const Template = (props: TemplateProps): React.JSX.Element => {
   const baseContext = React.useContext(TemplateContext);
   const dynamicProp = props.dynamic ?? false;
   const [outputProp, setOutputProp] = React.useState<string | undefined>(
-    props.output
+    props.output,
   );
   const proxyRef = React.useRef<ProxyNode>(null);
   const valueRef = React.useRef<ValueNode>(null);
@@ -241,7 +241,7 @@ export const Template = (props: TemplateProps): React.JSX.Element => {
         parentObject,
         templateObj,
         outputProp,
-        insertionIndex
+        insertionIndex,
       );
     }
   }, [proxyRef, outputProp, outputElement.items]);
@@ -282,7 +282,7 @@ export const Template = (props: TemplateProps): React.JSX.Element => {
               </object>
             </TemplateProvider>
           </OptionalIDSuffixProvider>,
-          outputElement
+          outputElement,
         )}
         <value ref={valueRef} value={undefined} />
       </>
