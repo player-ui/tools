@@ -188,7 +188,7 @@ test("Template order is preserved", async () => {
   };
 
   expect(JSON.stringify((await render(element)).jsonValue)).toBe(
-    JSON.stringify(expectedOutput)
+    JSON.stringify(expectedOutput),
   );
 });
 

@@ -248,7 +248,7 @@ export const Template = (props: TemplateProps): React.JSX.Element => {
 
   // Get position information for the template
   const { placement: inferredPlacement } = determinePositionInfo(
-    proxyRef.current
+    proxyRef.current,
   );
 
   // Use the explicitly provided placement or the inferred one
