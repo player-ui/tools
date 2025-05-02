@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 /*
 DSL JSX types that don't include React-specific or DOM-specific interfaces
 This provides the minimal global types needed for our JSX compiler
@@ -13,7 +11,7 @@ export interface EventBase {
 // The root node type for our AST
 export interface ASTNode {
   kind: string;
-  props: Map<string, any>;
+  props: Map<string, unknown>;
   parent: ASTNode | null;
   children: ASTNode[];
 }
@@ -30,10 +28,10 @@ export interface ArrayASTNode extends ASTNode {
 export interface PropertyASTNode extends ASTNode {
   kind: "property";
   name: string;
-  value?: any;
+  value?: unknown;
 }
 
 export interface ValueASTNode extends ASTNode {
   kind: "value";
-  value?: any;
+  value?: unknown;
 }
