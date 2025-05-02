@@ -8,12 +8,7 @@ import {
 } from "@player-tools/static-xlrs";
 import { PlayerLanguageService } from "@player-tools/json-language-service";
 
-import {
-  MetricsOutput,
-  extractFromDiagnostics,
-  getAssets,
-  getImages,
-} from "../metrics-output";
+import { MetricsOutput, extractFromDiagnostics } from "../metrics-output";
 import { ComplexityCheck } from "@player-tools/complexity-check-plugin";
 
 describe("WriteMetricsPlugin", () => {
@@ -47,21 +42,16 @@ describe("WriteMetricsPlugin", () => {
         outputDir: TEST_DIR,
         fileName: TEST_FILE.replace(".json", ""),
         rootProperties: {
-          assetId: "asldkj343k1lskdf",
           testRun: true,
         },
         stats: {
-          assets: getAssets(),
           complexity: extractFromDiagnostics(
             /Content complexity is (\d+)/,
             (value: string) => parseInt(value, 10),
           ),
-          images: getImages(),
-
           customStat: () => Math.random(), // This will be evaluated once per file
         },
         features: {
-          dslEnabled: () => Math.random() > 0.33,
           validationEnabled: () => Math.random() > 0.25,
           localizationEnabled: () => Math.random() > 0.8,
         },
@@ -211,7 +201,6 @@ describe("WriteMetricsPlugin", () => {
     // Verify basic structure - top level properties
     expect(jsonContent).toHaveProperty("timestamp", "2023-01-01T00:00:00.000Z");
     expect(jsonContent).toHaveProperty("testRun", true);
-    expect(jsonContent).toHaveProperty("assetId", "asldkj343k1lskdf");
     expect(jsonContent).toHaveProperty("content");
 
     // Check that both files are included in the content property
