@@ -11,9 +11,9 @@
     "dev:chrome": "sh setup.sh"
   },
   "dependencies": {
-    "@player-ui/pubsub-plugin": "0.7.3",
-    "@player-ui/react": "0.7.3",
-    "@player-ui/reference-assets-plugin-react": "0.7.3",
+    "@player-ui/pubsub-plugin": "0.11.0-next.4",
+    "@player-ui/react": "0.11.0-next.4",
+    "@player-ui/reference-assets-plugin-react": "0.11.0-next.4",
     "concurrently": "^8.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -21,7 +21,7 @@
     "tiny-uid": "^1.1.2"
   },
   "devDependencies": {
-    "@player-ui/types": "0.7.1",
+    "@player-ui/types": "0.11.0-next.4",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
