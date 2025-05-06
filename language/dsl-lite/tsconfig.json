@@ -23,6 +23,13 @@
     "importHelpers": true,
     "resolveJsonModule": true,
     "composite": true,
-    "lib": ["ESNext"]
+    "lib": ["ESNext"],
+    "paths": {
+      "react": ["./src/@types/index.d.ts"],
+      "react/jsx-runtime": ["./src/@types/jsx-runtime.d.ts"],
+      "react/jsx-dev-runtime": ["./src/@types/jsx-dev-runtime.d.ts"],
+      "react-dom": ["./src/@types/index.d.ts"]
+    },
+    "typeRoots": ["./src/@types", "./node_modules/@types"]
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type JsonType =
   | string
   | number
@@ -75,13 +76,17 @@ export function isASTNode(value: unknown): value is ASTNode {
   );
 }
 
-export interface JSXElement {
-  type:
+export type JSXElementConstructor<P> = (props: P) => JSXElement;
+
+export interface JSXElement<
+  P = any,
+  T extends string | JSXElementConstructor<any> =
     | string
-    | ((...args: unknown[]) => unknown)
-    | symbol
-    | { $$typeof: symbol; _context?: unknown };
-  props: Record<string, unknown>;
+    | JSXElementConstructor<any>,
+> {
+  type: T;
+  props: P;
+  key?: string;
   $$typeof: symbol;
 }
 
@@ -97,11 +102,9 @@ export function isJSXElement(value: unknown): value is JSXElement {
   );
 }
 
-export interface JSXComponent<P> {
+export interface JSXComponent<P = Record<string, unknown>> {
   (props: P): JSXElement;
-  // supports named slots
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface RefObject<T> {
@@ -119,3 +122,30 @@ export interface IntrinsicElementProps {
   value?: JsonType;
   [key: string]: unknown;
 }
+
+// Context types
+export interface Context<T> {
+  $$typeof: symbol;
+  _defaultValue: T;
+  Provider: Provider<T>;
+}
+
+export interface Provider<T> {
+  $$typeof: symbol;
+  _context: Context<T>;
+  (props: ProviderProps<T>): JSXElement;
+}
+
+// ProviderProps interface for TypeScript type checking
+export interface ProviderProps<T> {
+  value: T;
+  children?: JSXElement | JSXElement[];
+  [key: string]: unknown;
+}
+
+export interface ContextStackItem {
+  context: Context<any>;
+  value: any;
+}
+
+export type ComponentType<P = any> = (props: P) => JSXElement;
