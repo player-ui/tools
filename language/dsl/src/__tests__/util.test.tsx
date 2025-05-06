@@ -1,6 +1,6 @@
 import { test, expect, describe } from "vitest";
 import { getObjectReferences, wrapFunctionInType } from "../utils";
-import { Expression, ExpressionHandler } from "@player-ui/player";
+import { Binding, Expression, ExpressionHandler } from "@player-ui/player";
 import { binding, expression } from "../string-templates";
 
 describe("Testing the 'getObjectReferences' helper that creates same property references into a new object", () => {
@@ -27,9 +27,9 @@ describe("Testing the 'getObjectReferences' helper that creates same property re
   });
 });
 
-describe("DSL Generation Helper", () => {
+describe("DSL Expression Generation Helper", () => {
   test("Returns the correct serialization for bindings", () => {
-    const mockFunction: ExpressionHandler<[unknown], boolean> = (ctx, val) => {
+    const mockFunction: ExpressionHandler<[Binding], boolean> = (ctx, val) => {
       return false;
     };
 
@@ -42,20 +42,20 @@ describe("DSL Generation Helper", () => {
   });
 
   test("Returns the correct serialization for mixed values and bindings", () => {
-    const mockFunction: ExpressionHandler<
-      [unknown, string, number],
-      boolean
-    > = (ctx, val) => {
+    const mockFunction: ExpressionHandler<[string, string, number], boolean> = (
+      ctx,
+      val,
+    ) => {
       return false;
     };
 
     const mockFunctionDSL = wrapFunctionInType(mockFunction);
 
     const foo = binding`some.binding`;
-    const test = expression`${mockFunctionDSL(foo, "test", 1)} == true`;
+    const test = expression`${mockFunctionDSL(foo.toRefString(), "test", 1)} == true`;
 
     expect(test.toValue()).toEqual(
-      "mockFunction('some.binding', 'test', 1) == true",
+      "mockFunction('{{some.binding}}', 'test', 1) == true",
     );
   });
 
@@ -67,14 +67,14 @@ describe("DSL Generation Helper", () => {
     const mockFunctionDSL = wrapFunctionInType(mockFunction);
 
     const foo = binding`some.binding`;
-    const test = expression`${mockFunctionDSL([1, "2", foo.toRefString()])}`;
+    const test = expression`${mockFunctionDSL([1, "2", foo])}`;
 
     expect(test.toValue()).toEqual(
       "mockFunction([1, '2', '{{some.binding}}'])",
     );
   });
 
-  test("Can Pass dereferenced Binding", () => {
+  test("Can Dereferenced Binding", () => {
     const mockFunction: ExpressionHandler<[string], boolean> = (ctx, val) => {
       return false;
     };
@@ -87,7 +87,7 @@ describe("DSL Generation Helper", () => {
     expect(test.toValue()).toEqual("mockFunction('{{some.binding}}') == true");
   });
 
-  test("Can Pass nested Expressions", () => {
+  test("Can Pass Nested Expressions", () => {
     const mockFunction: ExpressionHandler<[Expression, number], boolean> = (ctx, val) => {
       return false;
     };

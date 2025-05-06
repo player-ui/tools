@@ -2,6 +2,7 @@ import * as React from "react";
 import {
   expression,
   ExpressionTemplateInstance,
+  isBindingTemplateInstance,
   isTemplateStringInstance,
   TemplateStringComponent,
 } from "./string-templates";
@@ -187,11 +188,11 @@ export function getObjectReferences<
   return result;
 }
 
-function parseArg(arg: unknown): any {
+function parseArg(arg: unknown, deref = false): any {
   if (isTemplateStringInstance(arg)) {
-    return `'${arg.toValue()}'`;
+    return `'${deref ? arg.toRefString() : arg.toValue()}'`;
   } else if (Array.isArray(arg)) {
-    return `[${arg.map(parseArg).join(", ")}]`;
+    return `[${arg.map((a) => parseArg(a, true)).join(", ")}]`;
   } else if (typeof arg === "string") {
     return `'${arg}'`;
   } else {
@@ -214,7 +215,7 @@ export function generateDSLFunction(
 export function wrapFunctionInType<T extends Array<unknown>, R>(
   fn: ExpressionHandler<T, R>,
 ): (...args: WithTemplateTypes<T>) => ExpressionTemplateInstance {
-  return (...args): ExpressionTemplateInstance => {
+  return (...args: WithTemplateTypes<T>): ExpressionTemplateInstance => {
     return generateDSLFunction(fn.name, args) as ExpressionTemplateInstance;
   };
 }
