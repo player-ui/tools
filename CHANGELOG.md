@@ -1,3 +1,23 @@
+# 0.10.1 (Tue May 06 2025)
+
+### Release Notes
+
+#### Fix deps for utils on non-published package ([#211](https://github.com/player-ui/tools/pull/211))
+
+Fix `@player-tools/xlr-utils` dependency on non-published package `@player-tools/test-utils` which is only needed as part of tests
+
+---
+
+#### 🐛 Bug Fix
+
+- Fix deps for utils on non-published package [#211](https://github.com/player-ui/tools/pull/211) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### Authors: 1
+
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
 # 0.10.0 (Fri Apr 25 2025)
 
 ### Release Notes
