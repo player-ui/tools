@@ -54,7 +54,6 @@ export function extractFromDiagnostics<T>(
   };
 }
 
-
 /**
  * A plugin that writes diagnostic results to a JSON file in a specified output directory
  */
@@ -71,8 +70,8 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
   private aggregatedResults: Record<string, any> = {};
 
   constructor(options: MetricsOutputConfig = {}) {
-    this.outputDir = options.outputDir || "target";
-    this.fileName = options.fileName || "output";
+    this.outputDir = options.outputDir || process.cwd();
+    this.fileName = options.fileName || "metrics";
     this.rootProperties = options.rootProperties || {};
     this.stats = options.stats || {};
     this.features = options.features || {};

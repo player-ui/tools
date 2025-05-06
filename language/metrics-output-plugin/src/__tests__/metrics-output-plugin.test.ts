@@ -49,11 +49,11 @@ describe("WriteMetricsPlugin", () => {
             /Content complexity is (\d+)/,
             (value: string) => parseInt(value, 10),
           ),
-          customStat: () => Math.random(), // This will be evaluated once per file
+          customStat: () => Math.random(),
         },
         features: {
-          validationEnabled: () => Math.random() > 0.25,
-          localizationEnabled: () => Math.random() > 0.8,
+          validationEnabled: true,
+          localizationEnabled: false,
         },
       }),
     );
@@ -218,9 +218,6 @@ describe("WriteMetricsPlugin", () => {
     expect(jsonContent.content["path/to/file/1.json"]).toHaveProperty(
       "features",
     );
-    expect(jsonContent.content["path/to/file/1.json"].features).toHaveProperty(
-      "dslEnabled",
-    );
 
     // Verify the stats structure for the second file
     expect(jsonContent.content["path/to/file/2.json"]).toHaveProperty("stats");
@@ -241,4 +238,79 @@ describe("WriteMetricsPlugin", () => {
       JSON.stringify(jsonContent, null, 2),
     );
   });
+});
+
+test("outputDir and fileName options work as expected", async () => {
+  // Setup custom output directory and filename
+  const customDir = path.resolve("custom_output_dir");
+  const customFileName = "custom_metrics";
+  const customFilePath = path.join(customDir, `${customFileName}.json`);
+
+  // Clean up any existing files from previous test runs
+  if (fs.existsSync(customFilePath)) {
+    fs.unlinkSync(customFilePath);
+  }
+  if (fs.existsSync(customDir)) {
+    fs.rmdirSync(customDir);
+  }
+
+  const customService = new PlayerLanguageService();
+
+  // Add complexity check plugin first
+  customService.addLSPPlugin(
+    new ComplexityCheck({
+      maxAcceptableComplexity: 60,
+    }),
+  );
+
+  // Add metrics output plugin with custom config
+  customService.addLSPPlugin(
+    new MetricsOutput({
+      outputDir: customDir,
+      fileName: customFileName,
+      rootProperties: {
+        customTest: true,
+      },
+    }),
+  );
+
+  await customService.setAssetTypesFromModule([
+    Types,
+    ReferenceAssetsWebPluginManifest,
+  ]);
+
+  // Create a simple test document
+  const document = TextDocument.create(
+    "path/to/test/file.json",
+    "json",
+    1,
+    JSON.stringify({
+      id: "testCustomConfig",
+      views: [
+        {
+          id: "simpleView",
+          type: "info",
+        },
+      ],
+    }),
+  );
+
+  await customService.validateTextDocument(document);
+
+  // Verify the custom output file was created in the expected location
+  expect(fs.existsSync(customFilePath)).toBe(true);
+
+  // Read and verify file content
+  const fileContent = fs.readFileSync(customFilePath, "utf-8");
+  const jsonContent = JSON.parse(fileContent);
+
+  // Verify custom root property
+  expect(jsonContent).toHaveProperty("customTest", true);
+
+  // Verify document content is present
+  expect(jsonContent.content).toHaveProperty("path/to/test/file.json");
+
+  // Clean up test files
+  fs.unlinkSync(customFilePath);
+  fs.rmdirSync(customDir);
 });
