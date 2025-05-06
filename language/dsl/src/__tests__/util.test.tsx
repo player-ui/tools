@@ -1,6 +1,6 @@
 import { test, expect, describe } from "vitest";
 import { getObjectReferences, wrapFunctionInType } from "../utils";
-import { ExpressionHandler } from "@player-ui/player";
+import { Expression, ExpressionHandler } from "@player-ui/player";
 import { binding, expression } from "../string-templates";
 
 describe("Testing the 'getObjectReferences' helper that creates same property references into a new object", () => {
@@ -57,5 +57,47 @@ describe("DSL Generation Helper", () => {
     expect(test.toValue()).toEqual(
       "mockFunction('some.binding', 'test', 1) == true",
     );
+  });
+
+  test("Returns the correct serialization for array items", () => {
+    const mockFunction: ExpressionHandler<[Array<unknown>], boolean> = (ctx, val) => {
+      return false;
+    };
+
+    const mockFunctionDSL = wrapFunctionInType(mockFunction);
+
+    const foo = binding`some.binding`;
+    const test = expression`${mockFunctionDSL([1, "2", foo.toRefString()])}`;
+
+    expect(test.toValue()).toEqual(
+      "mockFunction([1, '2', '{{some.binding}}'])",
+    );
+  });
+
+  test("Can Pass dereferenced Binding", () => {
+    const mockFunction: ExpressionHandler<[string], boolean> = (ctx, val) => {
+      return false;
+    };
+
+    const mockFunctionDSL = wrapFunctionInType(mockFunction);
+
+    const foo = binding`some.binding`;
+    const test = expression`${mockFunctionDSL(foo.toRefString())} == true`;
+
+    expect(test.toValue()).toEqual("mockFunction('{{some.binding}}') == true");
+  });
+
+  test("Can Pass nested Expressions", () => {
+    const mockFunction: ExpressionHandler<[Expression, number], boolean> = (ctx, val) => {
+      return false;
+    };
+
+    const mockFunctionDSL = wrapFunctionInType(mockFunction);
+
+    const foo = binding`foo.bar`;
+    const bar = expression`${foo} != 1`;
+    const test = expression`${mockFunctionDSL(bar, 1)}`;
+
+    expect(test.toValue()).toEqual("mockFunction('{{foo.bar}} != 1', 1)");
   });
 });
