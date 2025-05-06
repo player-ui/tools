@@ -1,9 +1,13 @@
 import * as React from "react";
 import {
+  binding,
+  expression,
+  ExpressionTemplateInstance,
   isTemplateStringInstance,
   TemplateStringComponent,
 } from "./string-templates";
 import type { toJsonOptions } from "./types";
+import { ExpressionHandler, withoutContext } from "@player-ui/player";
 
 /** Get an array version of the value */
 export function toArray<T>(val: T | Array<T>): Array<T> {
@@ -182,4 +186,30 @@ export function getObjectReferences<
   }
 
   return result;
+}
+
+export function generateDSLFunction(
+  name: string,
+  args: Array<unknown>,
+): ExpressionTemplateInstance {
+  const expressionArgs: Array<unknown> = [];
+  args.forEach((arg) => {
+    if (isTemplateStringInstance(arg)) {
+      expressionArgs.push(`'${arg.toValue()}'`);
+    } else if (typeof arg === "string"){
+      expressionArgs.push(`'${arg}'`);
+    } else {
+      expressionArgs.push(arg);
+    }
+  });
+
+  return expression`${name}(${expressionArgs.join(", ")})`;
+}
+
+export function wrapFunctionInType<T extends Array<unknown>, R>(
+  fn: ExpressionHandler<T, R>,
+): (...args: T) => ExpressionTemplateInstance {
+  return (...args): ExpressionTemplateInstance => {
+    return generateDSLFunction(fn.name, args) as ExpressionTemplateInstance;
+  };
 }
