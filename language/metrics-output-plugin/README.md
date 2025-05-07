@@ -10,19 +10,19 @@ An object containing the metrics data for each file in the project.
 
 ### `outputDir?`
 
-Determines which directory to write the file to. Defaults to `target`.
+Determines which directory to write the file to. Defaults to where the script is run.
 
 ### `fileName?`
 
-Determines the name of the file to write. Defaults to `output.json`.
+Determines the name of the file to write. Defaults to `metrics`.
 
 ### `rootProperties?`
 
-Any custom static to include at the root level of the output file.
+Any custom metadata to include at the root level of the output file.
 
 ## Output Format
 
-The plugin by default generates a JSON file with the following structure:
+The plugin by default generates a JSON file with the following example structure:
 
 ```json
 {
