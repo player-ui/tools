@@ -1,3 +1,108 @@
+# 0.10.1 (Tue May 06 2025)
+
+### Release Notes
+
+#### Fix deps for utils on non-published package ([#211](https://github.com/player-ui/tools/pull/211))
+
+Fix `@player-tools/xlr-utils` dependency on non-published package `@player-tools/test-utils` which is only needed as part of tests
+
+---
+
+#### 🐛 Bug Fix
+
+- Fix deps for utils on non-published package [#211](https://github.com/player-ui/tools/pull/211) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### Authors: 1
+
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
+# 0.10.0 (Fri Apr 25 2025)
+
+### Release Notes
+
+#### Add new plugins to devtools client ([#210](https://github.com/player-ui/tools/pull/210))
+
+* Updates `@player-ui` and `@devtools-ui` versions to latest
+* Adds a few new plugins to devtools client
+
+#### Update ESLint to v9 ([#207](https://github.com/player-ui/tools/pull/207))
+
+Internal - Update ESLint to v9
+
+#### Miscellaneous Cleanup ([#192](https://github.com/player-ui/tools/pull/192))
+
+- Move testing utilities out of `@player-tools/xlr-utils` to allow it to work on web, closing #152 
+- Deprecate `@player-tools/xlr-asset-docgen-webpack-plugin` as we've figured out a way to do this directly in our storybook, making this plugin not necessary anymore
+
+#### [XLR] Provide better type introspection messages ([#189](https://github.com/player-ui/tools/pull/189))
+
+This ticket adds functionality to introspect the parent type and display the expected nested types when `-v info` is passed in (`yarn run player dsl compile -v info`).
+
+By default, the error messages will remain how they were, like this:
+```
+  ✖   1996:52  Asset Validation Error - value: Does not match any of the expected types for type: 'SomeType' path/to/source
+```
+
+New additional info supported using -v info:
+```
+  ✖   1996:52  Asset Validation Error - value: Does not match any of the expected types for type: 'SomeType' path/to/source
+  ℹ   1996:52  Got: blue and expected: green | red path/to/source
+```
+
+For types that generate several types (20+), the info message will truncate at 20 and display the remaining number:
+```
+  ✖   1996:52  Asset Validation Error - value: Does not match any of the expected types for type: 'SomeType' path/to/source
+  ℹ   1996:52  Got: blue and expected: item 19 | item 20 | +8 ... item 28 path/to/source
+```
+
+###  Other changes
+
+This PR fixes an issue for the DiagnosticSeverity used in the Complexity Check Plugin, which has been updated from `info` -> `trace` which was the original intent.
+
+#### Use Source Maps for Validation Errors ([#191](https://github.com/player-ui/tools/pull/191))
+
+Use source maps, if available, to map validation errors back to authored content. If not available, the location in the compiled content will be used to point to the error.
+
+#### Add Check for Missing `_index_` Segments of Asset IDs in Templates ([#188](https://github.com/player-ui/tools/pull/188))
+
+Fix `DuplicateIDPlugin` validation plugin not checking for `_index_` elements in IDs of templated assets which would lead to duplicate ID issues at runtime.
+
+#### Add Support for Retaining `next` Release Information in Changelogs ([#185](https://github.com/player-ui/tools/pull/185))
+
+Keep information about `next` release in changelog
+
+#### Run `applyValueRefs` for Views and Transform `type` Properties ([#183](https://github.com/player-ui/tools/pull/183))
+
+Validation - Run `applyValueRefs` for Views and Transform `type` Properties
+
+---
+
+#### 🚀 Enhancement
+
+- [XLR] Provide better type introspection messages [#189](https://github.com/player-ui/tools/pull/189) ([@kharrop](https://github.com/kharrop) [@KetanReddy](https://github.com/KetanReddy))
+
+#### 🐛 Bug Fix
+
+- Add new plugins to devtools client [#210](https://github.com/player-ui/tools/pull/210) ([@adierkens](https://github.com/adierkens))
+- Update ESLint to v9 [#207](https://github.com/player-ui/tools/pull/207) ([@KetanReddy](https://github.com/KetanReddy))
+- PR Comment Version Fix [#205](https://github.com/player-ui/tools/pull/205) ([@kharrop](https://github.com/kharrop))
+- Adding latest version as a PR comment [#203](https://github.com/player-ui/tools/pull/203) ([@kharrop](https://github.com/kharrop))
+- Miscellaneous Cleanup [#192](https://github.com/player-ui/tools/pull/192) ([@KetanReddy](https://github.com/KetanReddy))
+- Use Source Maps for Validation Errors [#191](https://github.com/player-ui/tools/pull/191) ([@KetanReddy](https://github.com/KetanReddy))
+- Add Check for Missing `_index_` Segments of Asset IDs in Templates [#188](https://github.com/player-ui/tools/pull/188) ([@KetanReddy](https://github.com/KetanReddy))
+- Add Support for Retaining `next` Release Information in Changelogs [#185](https://github.com/player-ui/tools/pull/185) ([@KetanReddy](https://github.com/KetanReddy))
+- Run `applyValueRefs` for Views and Transform `type` Properties [#183](https://github.com/player-ui/tools/pull/183) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### Authors: 3
+
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
 # 0.10.0-next.0 (Wed Feb 26 2025)
 
 ### Release Notes
