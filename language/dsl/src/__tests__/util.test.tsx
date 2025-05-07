@@ -1,5 +1,5 @@
 import { test, expect, describe } from "vitest";
-import { getObjectReferences, wrapFunctionInType } from "../utils";
+import { getObjectReferences, mapExpressionHandlersToFunctions, wrapFunctionInType } from "../utils";
 import { Binding, Expression, ExpressionHandler } from "@player-ui/player";
 import { binding, expression } from "../string-templates";
 
@@ -60,7 +60,10 @@ describe("DSL Expression Generation Helper", () => {
   });
 
   test("Returns the correct serialization for array items", () => {
-    const mockFunction: ExpressionHandler<[Array<unknown>], boolean> = (ctx, val) => {
+    const mockFunction: ExpressionHandler<[Array<unknown>], boolean> = (
+      ctx,
+      val,
+    ) => {
       return false;
     };
 
@@ -88,7 +91,10 @@ describe("DSL Expression Generation Helper", () => {
   });
 
   test("Can Pass Nested Expressions", () => {
-    const mockFunction: ExpressionHandler<[Expression, number], boolean> = (ctx, val) => {
+    const mockFunction: ExpressionHandler<[Expression, number], boolean> = (
+      ctx,
+      val,
+    ) => {
       return false;
     };
 
@@ -99,5 +105,24 @@ describe("DSL Expression Generation Helper", () => {
     const test = expression`${mockFunctionDSL(bar, 1)}`;
 
     expect(test.toValue()).toEqual("mockFunction('{{foo.bar}} != 1', 1)");
+  });
+
+  test("Export Generator", () => {
+    const mockFunction: ExpressionHandler<[string, number], boolean> = (
+      ctx,
+      val,
+    ) => {
+      return false;
+    };
+    const expressionFunctions = { mockFunction };
+
+    const usableFunctions =
+      mapExpressionHandlersToFunctions<typeof expressionFunctions>(
+        expressionFunctions,
+      );
+
+    expect(usableFunctions.mockFunction("1", 0).toValue()).toMatch(
+      "mockFunction('1', 0)",
+    );
   });
 });

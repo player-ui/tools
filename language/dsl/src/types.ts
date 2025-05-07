@@ -9,6 +9,7 @@ import type {
   BindingTemplateInstance,
   ExpressionTemplateInstance,
 } from "./string-templates";
+import { ExpressionHandler } from "@player-ui/player";
 
 export type WithChildren<T = Record<string, unknown>> = T & {
   /** child nodes */
@@ -149,3 +150,15 @@ export interface DSLSchema<DataTypeRef = DataTypeReference> {
     | [DSLSchema<DataTypeRef>]
     | DSLSchema<DataTypeRef>;
 }
+
+type ExpressionHandlerToFunction<T extends ExpressionHandler> =
+  T extends ExpressionHandler<infer A>
+    ? (...args: A) => ExpressionTemplateInstance
+    : undefined;
+
+export type ExpressionArray<T> =
+  T extends Record<any, any>
+    ? {
+        [P in keyof T]: ExpressionHandlerToFunction<T[P]>;
+      }
+    : undefined;

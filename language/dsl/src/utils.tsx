@@ -6,7 +6,7 @@ import {
   isTemplateStringInstance,
   TemplateStringComponent,
 } from "./string-templates";
-import type { toJsonOptions, WithTemplateTypes } from "./types";
+import type { ExpressionArray, toJsonOptions, WithTemplateTypes } from "./types";
 import { ExpressionHandler } from "@player-ui/player";
 
 /** Get an array version of the value */
@@ -218,4 +218,17 @@ export function wrapFunctionInType<T extends Array<unknown>, R>(
   return (...args: WithTemplateTypes<T>): ExpressionTemplateInstance => {
     return generateDSLFunction(fn.name, args) as ExpressionTemplateInstance;
   };
+}
+
+/**
+ * Takes map of functions and wraps them in a DSL syntax generator
+ */
+export function mapExpressionHandlersToFunctions<
+  T extends Record<string, ExpressionHandler<any, any>>,
+>(functions: T): ExpressionArray<T> {
+  const result: any = {};
+  for (const fn of Object.values(functions)) {
+    result[fn.name] = wrapFunctionInType(fn);
+  }
+  return result;
 }
