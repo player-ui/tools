@@ -1,5 +1,9 @@
 import { test, expect, describe } from "vitest";
-import { getObjectReferences, mapExpressionHandlersToFunctions, wrapFunctionInType } from "../utils";
+import {
+  getObjectReferences,
+  mapExpressionHandlersToFunctions,
+  wrapFunctionInType,
+} from "../utils";
 import { Binding, Expression, ExpressionHandler } from "@player-ui/player";
 import { binding, expression } from "../string-templates";
 

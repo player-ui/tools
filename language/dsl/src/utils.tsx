@@ -2,11 +2,14 @@ import * as React from "react";
 import {
   expression,
   ExpressionTemplateInstance,
-  isBindingTemplateInstance,
   isTemplateStringInstance,
   TemplateStringComponent,
 } from "./string-templates";
-import type { ExpressionArray, toJsonOptions, WithTemplateTypes } from "./types";
+import type {
+  ExpressionArray,
+  toJsonOptions,
+  WithTemplateTypes,
+} from "./types";
 import { ExpressionHandler } from "@player-ui/player";
 
 /** Get an array version of the value */
