@@ -5,6 +5,7 @@ import type {
   Provider,
   JSXElement,
   ProviderProps,
+  RefObject,
 } from "./types";
 
 const componentKeys = new Map<ComponentType, string>();
@@ -67,6 +68,16 @@ export function popContext(): void {
  */
 export function getCurrentComponent(): ComponentType | null {
   return currentComponent;
+}
+
+/**
+ * Creates a mutable ref object with an initial value.
+ *
+ * This hook mimics React's useRef hook but is designed for use within
+ * the DSL context, allowing references to AST nodes instead of DOM elements.
+ */
+export function useRef<T>(initialValue: T | null = null): RefObject<T | null> {
+  return { current: initialValue };
 }
 
 export function resetHookState() {

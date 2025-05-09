@@ -108,7 +108,7 @@ export interface JSXComponent<P = Record<string, unknown>> {
 }
 
 export interface RefObject<T> {
-  current: T;
+  current: T | null;
 }
 
 export interface FragmentProps {
@@ -117,7 +117,7 @@ export interface FragmentProps {
 
 export interface IntrinsicElementProps {
   children?: JSXElement | JSXElement[];
-  ref?: RefObject<ASTNode>;
+  ref?: RefObject<ASTNode | null>;
   name?: string;
   value?: JsonType;
   [key: string]: unknown;
