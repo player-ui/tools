@@ -18,7 +18,7 @@ export interface MetricsOutputConfig {
   /** Directory where the output file will be written */
   outputDir?: string;
 
-  /** Name of the output file */
+  /** Name of the JSON output file */
   fileName?: string;
 
   /** Custom properties to include at the root level of the output */
@@ -55,6 +55,61 @@ export function extractFromDiagnostics<T>(
 }
 
 /**
+ * Extracts data from diagnostics with a specific source
+ * @param source The source identifier to filter diagnostics by
+ * @param diagnostics The diagnostics array to search through
+ * @param parser Optional custom parser function for processing diagnostic messages
+ * @returns A record containing extracted data (or empty object if none found)
+ */
+export function extractBySource(
+  source: string,
+  diagnostics: Diagnostic[],
+  parser?: (diagnostic: Diagnostic) => any,
+): Record<string, any> {
+  const filteredDiagnostics = diagnostics.filter(
+    (diagnostic) => diagnostic.source === source,
+  );
+  if (filteredDiagnostics.length === 0) {
+    return {}; // Return empty object instead of undefined
+  }
+
+  // Default parser that attempts to parse the message as JSON or returns the raw message
+  const defaultParser = (diagnostic: Diagnostic): any => {
+    try {
+      if (diagnostic.message) {
+        return JSON.parse(diagnostic.message);
+      }
+      return diagnostic.message || {};
+    } catch (e) {
+      return diagnostic.message || {};
+    }
+  };
+
+  const actualParser = parser || defaultParser;
+
+  // Collect all information from the specified source
+  const result: Record<string, any> = {};
+  for (const diagnostic of filteredDiagnostics) {
+    try {
+      const extractedData = actualParser(diagnostic);
+
+      if (typeof extractedData === "object" && extractedData !== null) {
+        // If object, merge with existing data
+        Object.assign(result, extractedData);
+      } else {
+        // Otherwise store as separate entries
+        const key = `entry_${Object.keys(result).length}`;
+        result[key] = extractedData;
+      }
+    } catch (e) {
+      console.warn(`Failed to process diagnostic from source ${source}:`, e);
+    }
+  }
+
+  return result; // Always returns an object, even if empty
+}
+
+/**
  * A plugin that writes diagnostic results to a JSON file in a specified output directory
  */
 export class MetricsOutput implements PlayerLanguageServicePlugin {
@@ -71,7 +126,13 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
 
   constructor(options: MetricsOutputConfig = {}) {
     this.outputDir = options.outputDir || process.cwd();
-    this.fileName = options.fileName || "metrics";
+
+    // Handle file name, stripping .json extension if provided
+    let fileName = options.fileName || "metrics";
+    if (fileName.endsWith(".json")) {
+      fileName = fileName.slice(0, -5); // Remove .json extension
+    }
+    this.fileName = fileName;
     this.rootProperties = options.rootProperties || {};
     this.stats = options.stats || {};
     this.features = options.features || {};
