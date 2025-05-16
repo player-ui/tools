@@ -16,7 +16,8 @@ describe("WriteMetricsPlugin", () => {
   const TEST_DIR = path.resolve("target");
   const TEST_FILE = "output.json";
   const TEST_FILE_PATH = path.join(TEST_DIR, TEST_FILE);
-  const PLUGIN_SOURCE = "@your-org/plugin-name";
+
+  const ASSET_COUNT_SYMBOL = Symbol("asset-count");
 
   const mockAssetCount = `{
       "action": 3,
@@ -62,7 +63,7 @@ describe("WriteMetricsPlugin", () => {
                 end: { line: 0, character: 1 },
               },
               severity: 1, // Information
-              data: Symbol("asset-count"),
+              data: ASSET_COUNT_SYMBOL, // Use the shared Symbol
             });
           },
         );
@@ -82,7 +83,7 @@ describe("WriteMetricsPlugin", () => {
             (value: string) => parseInt(value, 10),
           ),
           assets: (diagnostics) =>
-            extractByData(Symbol("asset-count"), diagnostics),
+            extractByData(ASSET_COUNT_SYMBOL, diagnostics), // Use the shared Symbol
           customStat: () => Math.random(),
         },
         features: {
@@ -100,15 +101,14 @@ describe("WriteMetricsPlugin", () => {
 
   afterEach(() => {
     vi.resetAllMocks();
-
-    // Clean up test files
     try {
       if (fs.existsSync(TEST_FILE_PATH)) {
         fs.unlinkSync(TEST_FILE_PATH);
       }
       fs.rmdirSync(TEST_DIR);
     } catch (e) {
-      // Ignore cleanup errors in tests
+      // This prevents test failures when cleanup can't complete but tests ran correctly
+      console.debug("Cleanup failed, but tests may still be valid:", e);
     }
   });
 
@@ -223,7 +223,7 @@ describe("WriteMetricsPlugin", () => {
     );
 
     // Verify the asset count diagnostic is present
-    expect(validations1?.some((v) => v.source === "asset-count")).toBe(true);
+    expect(validations1?.some((v) => v.data === ASSET_COUNT_SYMBOL)).toBe(true);
 
     // Verify diagnostics for second document (simpler)
     expect(validations2?.length).toBeGreaterThan(0);

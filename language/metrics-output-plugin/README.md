@@ -58,3 +58,41 @@ config.
   "customProperty2": "customValue2"
 }
 ```
+
+## Utility Functions
+
+The plugin provides utility functions to help extract and transform diagnostic data for your metrics.
+
+### extractFromDiagnostics
+
+Extracts data from diagnostic messages using a regex pattern.
+
+```typescript
+import { extractFromDiagnostics } from "@player-tools/metrics-output-plugin";
+
+// Usage in stats configuration
+const stats = {
+  // Extract complexity score from diagnostic messages that match "Complexity score: 42"
+  complexity: extractFromDiagnostics(/Complexity score: (\d+)/, Number),
+
+  // Extract JSON data from diagnostic messages
+  jsonData: extractFromDiagnostics(/JSON data: (.+)/, JSON.parse),
+};
+```
+
+### extractByData
+
+Extracts data from diagnostics that have a specific identifer that supports Symbols and strings.
+
+```typescript
+import { extractByData } from "@player-tools/metrics-output-plugin";
+
+const ASSET_COUNT_SYMBOL = Symbol("asset-count");
+
+// Usage in stats configuration
+const stats = {
+  // Extract data from diagnostics marked with a symbol
+  assets: (diagnostics) =>
+    extractByData(Symbol(ASSET_COUNT_SYMBOL), diagnostics),
+};
+```
