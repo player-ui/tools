@@ -55,22 +55,19 @@ export function extractFromDiagnostics<T>(
 }
 
 /**
- * Extracts data from diagnostics with a specific source
- * @param source The source identifier to filter diagnostics by
- * @param diagnostics The diagnostics array to search through
- * @param parser Optional custom parser function for processing diagnostic messages
- * @returns A record containing extracted data (or empty object if none found)
+ * Extracts data from diagnostics 
+
  */
-export function extractBySource(
-  source: string,
+export function extractByData(
+  data: string | symbol,
   diagnostics: Diagnostic[],
   parser?: (diagnostic: Diagnostic) => any,
 ): Record<string, any> {
   const filteredDiagnostics = diagnostics.filter(
-    (diagnostic) => diagnostic.source === source,
+    (diagnostic) => diagnostic.data === data,
   );
   if (filteredDiagnostics.length === 0) {
-    return {}; // Return empty object instead of undefined
+    return {};
   }
 
   // Default parser that attempts to parse the message as JSON or returns the raw message
@@ -102,7 +99,10 @@ export function extractBySource(
         result[key] = extractedData;
       }
     } catch (e) {
-      console.warn(`Failed to process diagnostic from source ${source}:`, e);
+      console.warn(
+        `Failed to process diagnostic from data ${String(data)}:`,
+        e,
+      );
     }
   }
 
@@ -130,7 +130,7 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     // Handle file name, stripping .json extension if provided
     let fileName = options.fileName || "metrics";
     if (fileName.endsWith(".json")) {
-      fileName = fileName.slice(0, -5); // Remove .json extension
+      fileName = fileName.split(".")[0]; // Remove extension
     }
     this.fileName = fileName;
     this.rootProperties = options.rootProperties || {};
@@ -163,10 +163,10 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
    * Evaluates a value, executing it if it's a function
    */
   private evaluateValue(
-    value: any,
+    value: StatsValue,
     diagnostics: Diagnostic[],
     documentContext: DocumentContext,
-  ): any {
+  ) {
     if (typeof value === "function") {
       try {
         return value(diagnostics, documentContext);

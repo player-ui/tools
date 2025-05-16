@@ -8,7 +8,7 @@ import {
 } from "@player-tools/static-xlrs";
 import { PlayerLanguageService } from "@player-tools/json-language-service";
 
-import { MetricsOutput, extractFromDiagnostics, extractBySource } from "..";
+import { MetricsOutput, extractFromDiagnostics, extractByData } from "..";
 import { ComplexityCheck } from "@player-tools/complexity-check-plugin";
 
 describe("WriteMetricsPlugin", () => {
@@ -16,6 +16,7 @@ describe("WriteMetricsPlugin", () => {
   const TEST_DIR = path.resolve("target");
   const TEST_FILE = "output.json";
   const TEST_FILE_PATH = path.join(TEST_DIR, TEST_FILE);
+  const PLUGIN_SOURCE = "@your-org/plugin-name";
 
   const mockAssetCount = `{
       "action": 3,
@@ -53,7 +54,7 @@ describe("WriteMetricsPlugin", () => {
         // Hook into the validate event
         languageService.hooks.validate.tap(
           "AssetCountDiagnostic",
-          async (documentContext, validationContext) => {
+          async (_context, validationContext) => {
             validationContext.addDiagnostic({
               message: `${mockAssetCount}`,
               range: {
@@ -61,7 +62,7 @@ describe("WriteMetricsPlugin", () => {
                 end: { line: 0, character: 1 },
               },
               severity: 1, // Information
-              source: "asset-count",
+              data: Symbol("asset-count"),
             });
           },
         );
@@ -80,7 +81,8 @@ describe("WriteMetricsPlugin", () => {
             /Content complexity is (\d+)/,
             (value: string) => parseInt(value, 10),
           ),
-          assets: (diagnostics) => extractBySource("asset-count", diagnostics),
+          assets: (diagnostics) =>
+            extractByData(Symbol("asset-count"), diagnostics),
           customStat: () => Math.random(),
         },
         features: {
