@@ -129,4 +129,29 @@ describe("DSL Expression Generation Helper", () => {
       "mockFunction('1', 0)",
     );
   });
+
+  test("Return Type Chaining", () => {
+    const mockFunction: ExpressionHandler<[string, number], string> = (
+      ctx,
+      val,
+    ) => {
+      return "false";
+    };
+
+    const mockFunction2: ExpressionHandler<[string], boolean> = (ctx, val) => {
+      return false;
+    };
+    const expressionFunctions = { mockFunction, mockFunction2 };
+
+    const usableFunctions =
+      mapExpressionHandlersToFunctions<typeof expressionFunctions>(
+        expressionFunctions,
+      );
+
+    expect(
+      usableFunctions
+        .mockFunction2(usableFunctions.mockFunction("1", 0).toValue())
+        .toValue(),
+    ).toMatch("mockFunction2('mockFunction('1', 0)')");
+  });
 });

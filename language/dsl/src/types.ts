@@ -57,12 +57,21 @@ export type SwapKeysToType<T, K extends keyof T, NewType> = {
   [P in keyof T]: P extends K ? NewType : T[P];
 };
 
+/**
+ * Note: have to explicitly handle boolean cases, otherwise boolean gets distributed to
+ * the union as true | false breaking the mapping.
+ */
 export type WithTemplateTypes<T> =
   T extends Record<any, any>
     ? {
         [P in keyof T]: WithTemplateTypes<T[P]>;
       }
-    : T | BindingTemplateInstance | ExpressionTemplateInstance;
+    : T extends boolean
+      ?
+          | boolean
+          | BindingTemplateInstance<boolean>
+          | ExpressionTemplateInstance<boolean>
+      : T | BindingTemplateInstance<T> | ExpressionTemplateInstance<T>;
 
 type ValidKeys = "exp" | "onStart" | "onEnd";
 
@@ -152,8 +161,8 @@ export interface DSLSchema<DataTypeRef = DataTypeReference> {
 }
 
 type ExpressionHandlerToFunction<T extends ExpressionHandler> =
-  T extends ExpressionHandler<infer A>
-    ? (...args: A) => ExpressionTemplateInstance
+  T extends ExpressionHandler<infer A, infer B>
+    ? (...args: WithTemplateTypes<A>) => ExpressionTemplateInstance<B>
     : undefined;
 
 export type ExpressionArray<T> =

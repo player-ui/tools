@@ -22,9 +22,11 @@ export interface TemplateInstanceRefStringOptions {
   ) => string;
 }
 
-const OpaqueIdentifier = Symbol("TemplateStringType");
+const OpaqueIdentifier: unique symbol = Symbol("TemplateStringType");
 
-export type TemplateStringType = React.ReactElement & {
+export type TemplateStringType<
+  T extends string | number | boolean | unknown = any,
+> = React.ReactElement & {
   /** An identifier to show that this is a template type */
   [OpaqueIdentifier]: true;
   /** The value of the template string when in another string */
@@ -33,14 +35,20 @@ export type TemplateStringType = React.ReactElement & {
   toValue: () => string;
   /** the dereferenced value when used in another */
   toRefString: (options?: TemplateRefStringOptions) => string;
+  /** Underlying type of this binding */
+  type: T;
 };
 
-export type BindingTemplateInstance = TemplateStringType & {
+export type BindingTemplateInstance<
+  DataType extends string | number | boolean | unknown = any,
+> = TemplateStringType<DataType> & {
   /** An identifier for a binding instance */
   __type: "binding";
 };
 
-export type ExpressionTemplateInstance = TemplateStringType & {
+export type ExpressionTemplateInstance<
+  ReturnType extends string | number | boolean | unknown = any,
+> = TemplateStringType<ReturnType> & {
   /** The identifier for an expression instance */
   __type: "expression";
 };
@@ -49,7 +57,9 @@ export type ExpressionTemplateInstance = TemplateStringType & {
 export const TemplateStringComponent = (props: {
   /** The string value of the child template string */
   value: string;
-}) => {
+}): React.ReactElement<{
+  value: string;
+}> => {
   return React.createElement(
     "value",
     {

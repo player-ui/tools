@@ -64,7 +64,7 @@ export function toJsonElement(
 export function toJsonProperties(
   value: Record<string, any>,
   options: toJsonOptions = { propertiesToSkip: ["applicability"] },
-) {
+): React.JSX.Element[] {
   return Object.keys(value).map((key) => {
     return (
       <property key={key} name={key}>
@@ -113,7 +113,7 @@ export function normalizeToCollection(options: {
 
   /** A collection asset */
   CollectionComp?: React.ComponentType<any>;
-}) {
+}): React.ReactNode {
   const { node, CollectionComp } = options;
 
   if (
@@ -203,10 +203,10 @@ function parseArg(arg: unknown, deref = false): any {
   }
 }
 
-export function generateDSLFunction(
+export function generateDSLFunction<R>(
   name: string,
   args: Array<unknown>,
-): ExpressionTemplateInstance {
+): ExpressionTemplateInstance<R> {
   const expressionArgs: Array<unknown> = [];
   args.forEach((arg) => {
     expressionArgs.push(parseArg(arg));
@@ -217,9 +217,9 @@ export function generateDSLFunction(
 
 export function wrapFunctionInType<T extends Array<unknown>, R>(
   fn: ExpressionHandler<T, R>,
-): (...args: WithTemplateTypes<T>) => ExpressionTemplateInstance {
-  return (...args: WithTemplateTypes<T>): ExpressionTemplateInstance => {
-    return generateDSLFunction(fn.name, args) as ExpressionTemplateInstance;
+): (...args: WithTemplateTypes<T>) => ExpressionTemplateInstance<R> {
+  return (...args: WithTemplateTypes<T>): ExpressionTemplateInstance<R> => {
+    return generateDSLFunction(fn.name, args);
   };
 }
 
