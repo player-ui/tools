@@ -166,9 +166,12 @@ describe("DSL Expression Generation Helper", () => {
     };
 
     const dataTypes = { LocalBazType };
+
+    type DTREF = DataTypeRefs<typeof dataTypes>
+
     const refableTypes = getObjectReferences<
       typeof dataTypes,
-      DataTypeRefs<typeof dataTypes>
+      DTREF
     >(dataTypes);
 
     const data = {

@@ -125,6 +125,8 @@ export type DataTypeRefs<
   [Property in Extract<keyof DataTypeObjects, string> as `${Property}Ref`]: {
     /** DataType name */
     type: Property;
+
+    default?: DataTypeObjects[Property] extends Schema.DataType<infer BaseType> ? BaseType : unknown
   };
 };
 
