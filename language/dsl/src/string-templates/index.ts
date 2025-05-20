@@ -34,7 +34,7 @@ export type TemplateStringType<
   /** the raw value of the template string */
   toValue: () => string;
   /** the dereferenced value when used in another */
-  toRefString: (options?: TemplateRefStringOptions) => string;
+  toRefString: (options?: TemplateRefStringOptions) => T;
   /** Underlying type of this binding */
   type: T;
 };

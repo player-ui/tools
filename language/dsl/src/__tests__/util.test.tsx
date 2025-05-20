@@ -6,13 +6,14 @@ import {
 } from "../utils";
 import { Binding, Expression, ExpressionHandler } from "@player-ui/player";
 import { binding, expression } from "../string-templates";
+import { LocalBazType } from "./helpers/mock-data-refs";
+import { DataTypeRefs } from "../types";
+import { makeBindingsForObject } from "../compiler/schema";
 
 describe("Testing the 'getObjectReferences' helper that creates same property references into a new object", () => {
   test("should return the object properties in referenced format", () => {
     const dataTypes = {
-      BooleanType: {
-        type: "BooleanType",
-      },
+      LocalBazType,
     };
 
     const validators = {
@@ -21,11 +22,12 @@ describe("Testing the 'getObjectReferences' helper that creates same property re
       },
     };
 
-    const dataReferences = getObjectReferences(dataTypes);
+    const dataReferences: DataTypeRefs<typeof dataTypes> =
+      getObjectReferences(dataTypes);
     const validatorReferences = getObjectReferences(validators);
 
-    expect(dataReferences.BooleanTypeRef).toStrictEqual({
-      type: "BooleanType",
+    expect(dataReferences.LocalBazTypeRef).toStrictEqual({
+      type: "LocalBazType",
     });
     expect(validatorReferences.requiredRef).toStrictEqual({ type: "required" });
   });
@@ -82,7 +84,7 @@ describe("DSL Expression Generation Helper", () => {
   });
 
   test("Can Dereferenced Binding", () => {
-    const mockFunction: ExpressionHandler<[string], boolean> = (ctx, val) => {
+    const mockFunction: ExpressionHandler<[boolean], boolean> = (ctx, val) => {
       return false;
     };
 
@@ -153,5 +155,38 @@ describe("DSL Expression Generation Helper", () => {
         .mockFunction2(usableFunctions.mockFunction("1", 0).toValue())
         .toValue(),
     ).toMatch("mockFunction2('mockFunction('1', 0)')");
+  });
+
+  test("Works with DSL Schema", () => {
+    const mockFunction: ExpressionHandler<[string, boolean], string> = (
+      ctx,
+      val,
+    ) => {
+      return "false";
+    };
+
+    const dataTypes = { LocalBazType };
+    const refableTypes = getObjectReferences<
+      typeof dataTypes,
+      DataTypeRefs<typeof dataTypes>
+    >(dataTypes);
+
+    const data = {
+      some: {
+        value: refableTypes.LocalBazTypeRef,
+      },
+    };
+
+    const schema = makeBindingsForObject(data);
+    const expressionFunctions = { mockFunction };
+
+    const usableFunctions =
+      mapExpressionHandlersToFunctions<typeof expressionFunctions>(
+        expressionFunctions,
+      );
+
+    expect(
+      usableFunctions.mockFunction("1", schema.some.value).toValue(),
+    ).toMatch("mockFunction('1', '{{some.value}}')");
   });
 });

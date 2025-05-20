@@ -10,6 +10,7 @@ import type {
   toJsonOptions,
   WithTemplateTypes,
 } from "./types";
+import { Schema } from "@player-ui/types";
 import { ExpressionHandler } from "@player-ui/player";
 
 /** Get an array version of the value */
@@ -174,11 +175,20 @@ export function mergeRefs<T = any>(
   };
 }
 
+type TypesToReferences<T extends Record<string, unknown>> =
+  T extends Record<any, Schema.DataType<infer Type>>
+    ? {
+        [P in keyof T]: Type;
+      }
+    : unknown;
+
 /** Generates object reference properties from the provided object */
 export function getObjectReferences<
   OriginalPropertiesObject extends Record<string, unknown>,
   ReferencesPropertyObject extends Record<string, unknown>,
->(propertiesObject: OriginalPropertiesObject): ReferencesPropertyObject {
+>(
+  propertiesObject: OriginalPropertiesObject,
+): TypesToReferences<ReferencesPropertyObject> {
   const result: any = {};
 
   for (const itemProp in propertiesObject) {
