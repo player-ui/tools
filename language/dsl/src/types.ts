@@ -126,7 +126,9 @@ export type DataTypeRefs<
     /** DataType name */
     type: Property;
 
-    default?: DataTypeObjects[Property] extends Schema.DataType<infer BaseType> ? BaseType : unknown
+    default?: DataTypeObjects[Property] extends Schema.DataType<infer BaseType>
+      ? BaseType
+      : unknown;
   };
 };
 

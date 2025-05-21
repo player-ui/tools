@@ -22,9 +22,16 @@ describe("Testing the 'getObjectReferences' helper that creates same property re
       },
     };
 
-    const dataReferences: DataTypeRefs<typeof dataTypes> =
-      getObjectReferences(dataTypes);
-    const validatorReferences = getObjectReferences(validators);
+    type DTREF = DataTypeRefs<typeof dataTypes>;
+
+    const dataReferences = getObjectReferences<typeof dataTypes, DTREF>(
+      dataTypes,
+    );
+
+    type VALREF = DataTypeRefs<typeof validators>;
+    const validatorReferences = getObjectReferences<typeof validators, VALREF>(
+      validators,
+    );
 
     expect(dataReferences.LocalBazTypeRef).toStrictEqual({
       type: "LocalBazType",
@@ -167,12 +174,11 @@ describe("DSL Expression Generation Helper", () => {
 
     const dataTypes = { LocalBazType };
 
-    type DTREF = DataTypeRefs<typeof dataTypes>
+    type DTREF = DataTypeRefs<typeof dataTypes>;
 
-    const refableTypes = getObjectReferences<
-      typeof dataTypes,
-      DTREF
-    >(dataTypes);
+    const refableTypes = getObjectReferences<typeof dataTypes, DTREF>(
+      dataTypes,
+    );
 
     const data = {
       some: {
@@ -189,7 +195,9 @@ describe("DSL Expression Generation Helper", () => {
       );
 
     expect(
-      usableFunctions.mockFunction("1", schema.some.value).toValue(),
+      usableFunctions
+        .mockFunction("1", schema.some.value.toRefString())
+        .toValue(),
     ).toMatch("mockFunction('1', '{{some.value}}')");
   });
 });

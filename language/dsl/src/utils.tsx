@@ -175,10 +175,9 @@ export function mergeRefs<T = any>(
   };
 }
 
-type TypesToReferences<T> =
-  {
-        [P in keyof T]: T[P] extends Schema.DataType<infer DT> ? DT : unknown
-    }
+type TypesToReferences<T> = {
+  [P in keyof T]: T[P] extends Schema.DataType<infer DT> ? DT : unknown;
+};
 
 /** Generates object reference properties from the provided object */
 export function getObjectReferences<
