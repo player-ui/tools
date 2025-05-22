@@ -91,9 +91,9 @@ export const not = (
  * @returns boolean
  */
 export const or = (
-  values: Array<
+  ...values: Array<
     BindingTemplateInstance<boolean> | ExpressionTemplateInstance<boolean>
-  >,
+  >
 ): ExpressionTemplateInstance<boolean> => {
   return e`${values.map(handleBindingOrExpression).join(" || ")}` as ExpressionTemplateInstance<boolean>;
 };
@@ -105,11 +105,11 @@ export const or = (
  * @returns boolean
  */
 export const nor = (
-  values: Array<
+  ...values: Array<
     BindingTemplateInstance<boolean> | ExpressionTemplateInstance<boolean>
-  >,
+  >
 ): ExpressionTemplateInstance<boolean> => {
-  return not(or(values));
+  return not(or(...values));
 };
 
 /**
@@ -119,9 +119,9 @@ export const nor = (
  * @returns boolean
  */
 export const and = (
-  values: Array<
+  ...values: Array<
     BindingTemplateInstance<boolean> | ExpressionTemplateInstance<boolean>
-  >,
+  >
 ): ExpressionTemplateInstance<boolean> => {
   return e`${values.map(handleBindingOrExpression).join(" && ")}` as ExpressionTemplateInstance<boolean>;
 };
@@ -133,9 +133,9 @@ export const and = (
  * @returns boolean
  */
 export const nand = (
-  values: Array<
+  ...values: Array<
     BindingTemplateInstance<boolean> | ExpressionTemplateInstance<boolean>
-  >,
+  >
 ): ExpressionTemplateInstance<boolean> => {
-  return not(and(values));
+  return not(and(...values));
 };

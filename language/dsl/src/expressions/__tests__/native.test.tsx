@@ -48,7 +48,7 @@ describe("and", () => {
   test("bindings", () => {
     const binding = b<boolean>`foo.bar`;
     const binding2 = b<boolean>`foo.baz`;
-    expect(and([binding, binding2]).toValue()).toStrictEqual(
+    expect(and(binding, binding2).toValue()).toStrictEqual(
       "{{foo.bar}} && {{foo.baz}}",
     );
   });
@@ -56,7 +56,7 @@ describe("and", () => {
   test("expressions", () => {
     const expression = e<boolean>`${b`foo.bar`} == true`;
     const expression2 = e<boolean>`${b`foo.baz`} == '1'`;
-    expect(and([expression, expression2]).toValue()).toStrictEqual(
+    expect(and(expression, expression2).toValue()).toStrictEqual(
       "({{foo.bar}} == true) && ({{foo.baz}} == '1')",
     );
   });
@@ -66,7 +66,7 @@ describe("or", () => {
   test("bindings", () => {
     const binding = b<boolean>`foo.bar`;
     const binding2 = b<boolean>`foo.baz`;
-    expect(or([binding, binding2]).toValue()).toStrictEqual(
+    expect(or(binding, binding2).toValue()).toStrictEqual(
       "{{foo.bar}} || {{foo.baz}}",
     );
   });
@@ -74,7 +74,7 @@ describe("or", () => {
   test("expressions", () => {
     const expression = e<boolean>`${b`foo.bar`} == true`;
     const expression2 = e<boolean>`${b`foo.baz`} == '1'`;
-    expect(or([expression, expression2]).toValue()).toStrictEqual(
+    expect(or(expression, expression2).toValue()).toStrictEqual(
       "({{foo.bar}} == true) || ({{foo.baz}} == '1')",
     );
   });
@@ -84,7 +84,7 @@ describe("nand", () => {
   test("bindings", () => {
     const binding = b<boolean>`foo.bar`;
     const binding2 = b<boolean>`foo.baz`;
-    expect(nand([binding, binding2]).toValue()).toStrictEqual(
+    expect(nand(binding, binding2).toValue()).toStrictEqual(
       "!({{foo.bar}} && {{foo.baz}})",
     );
   });
@@ -92,7 +92,7 @@ describe("nand", () => {
   test("expressions", () => {
     const expression = e<boolean>`${b`foo.bar`} == true`;
     const expression2 = e<boolean>`${b`foo.baz`} == '1'`;
-    expect(nand([expression, expression2]).toValue()).toStrictEqual(
+    expect(nand(expression, expression2).toValue()).toStrictEqual(
       "!(({{foo.bar}} == true) && ({{foo.baz}} == '1'))",
     );
   });
@@ -102,7 +102,7 @@ describe("nor", () => {
   test("bindings", () => {
     const binding = b<boolean>`foo.bar`;
     const binding2 = b<boolean>`foo.baz`;
-    expect(nor([binding, binding2]).toValue()).toStrictEqual(
+    expect(nor(binding, binding2).toValue()).toStrictEqual(
       "!({{foo.bar}} || {{foo.baz}})",
     );
   });
@@ -110,7 +110,7 @@ describe("nor", () => {
   test("expressions", () => {
     const expression = e<boolean>`${b`foo.bar`} == true`;
     const expression2 = e<boolean>`${b`foo.baz`} == '1'`;
-    expect(nor([expression, expression2]).toValue()).toStrictEqual(
+    expect(nor(expression, expression2).toValue()).toStrictEqual(
       "!(({{foo.bar}} == true) || ({{foo.baz}} == '1'))",
     );
   });
