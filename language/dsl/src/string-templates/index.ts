@@ -189,10 +189,10 @@ const createExpressionTemplateInstance = (
 };
 
 /** A tagged-template constructor for a binding  */
-export const binding = (
+export const binding = <T>(
   strings: TemplateStringsArray,
   ...nested: Array<TemplateStringType | string>
-): BindingTemplateInstance => {
+): BindingTemplateInstance<T> => {
   return createBindingTemplateInstance({
     strings,
     other: nested,
@@ -201,12 +201,12 @@ export const binding = (
 };
 
 /** A tagged-template constructor for an expression */
-export const expression = (
+export const expression = <T>(
   strings: TemplateStringsArray,
   ...nested: Array<
     ExpressionTemplateInstance | BindingTemplateInstance | string
   >
-): ExpressionTemplateInstance => {
+): ExpressionTemplateInstance<T> => {
   return createExpressionTemplateInstance({
     strings,
     other: nested,
