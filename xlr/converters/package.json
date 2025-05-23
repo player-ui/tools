@@ -4,7 +4,9 @@
   "main": "src/index.ts",
   "dependencies": {
     "@player-tools/xlr": "workspace:*",
-    "@player-tools/xlr-utils": "workspace:*",
-    "@player-tools/test-utils": "workspace:*"
+    "@player-tools/xlr-utils": "workspace:*"
+  },
+  "devDependencies": {
+        "@player-tools/test-utils": "workspace:*"
   }
 }
