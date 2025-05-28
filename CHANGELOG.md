@@ -1,3 +1,25 @@
+# 0.10.2 (Wed May 28 2025)
+
+### Release Notes
+
+#### Fix deps for utils for xlr converters package ([#215](https://github.com/player-ui/tools/pull/215))
+
+Fix `@player-tools/xlr-converters` dependency on non-published package `@player-tools/test-utils` which is only needed as part of tests.
+
+Related to https://github.com/player-ui/tools/pull/211
+
+---
+
+#### 🐛 Bug Fix
+
+- Fix deps for utils for xlr converters package [#215](https://github.com/player-ui/tools/pull/215) ([@kharrop](https://github.com/kharrop))
+
+#### Authors: 1
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+
+---
+
 # 0.10.1 (Tue May 06 2025)
 
 ### Release Notes
