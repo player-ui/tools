@@ -191,7 +191,7 @@ importers:
         version: 10.46.0(@types/node@18.19.34)(typescript@5.5.4)
       babel-loader:
         specifier: ^8.2.5
-        version: 8.3.0(@babel/core@7.24.7)(webpack@4.47.0)
+        version: 8.3.0(@babel/core@7.24.7)(webpack@4.47.0(webpack-cli@3.3.12))
       bundle-analyzer:
         specifier: ^0.0.6
         version: 0.0.6
@@ -221,7 +221,7 @@ importers:
         version: 3.1.8
       css-loader:
         specifier: ^3.6.0
-        version: 3.6.0(webpack@4.47.0)
+        version: 3.6.0(webpack@4.47.0(webpack-cli@3.3.12))
       dequal:
         specifier: ^2.0.2
         version: 2.0.3
@@ -326,7 +326,7 @@ importers:
         version: 1.0.4
       modify-source-webpack-plugin:
         specifier: ^4.1.0
-        version: 4.1.0(webpack@4.47.0)
+        version: 4.1.0(webpack@4.47.0(webpack-cli@3.3.12))
       oclif:
         specifier: ^4.4.2
         version: 4.13.6
@@ -398,7 +398,7 @@ importers:
         version: 1.0.1
       style-loader:
         specifier: ^1.3.0
-        version: 1.3.0(webpack@4.47.0)
+        version: 1.3.0(webpack@4.47.0(webpack-cli@3.3.12))
       tapable-ts:
         specifier: ^0.2.4
         version: 0.2.4
@@ -616,15 +616,16 @@ importers:
 
   xlr/converters:
     dependencies:
-      '@player-tools/test-utils':
-        specifier: workspace:*
-        version: link:../../common/test-utils
       '@player-tools/xlr':
         specifier: workspace:*
         version: link:../types
       '@player-tools/xlr-utils':
         specifier: workspace:*
         version: link:../utils
+    devDependencies:
+      '@player-tools/test-utils':
+        specifier: workspace:*
+        version: link:../../common/test-utils
 
   xlr/sdk:
     dependencies:
@@ -646,12 +647,13 @@ importers:
 
   xlr/utils:
     dependencies:
-      '@player-tools/test-utils':
-        specifier: workspace:*
-        version: link:../../common/test-utils
       '@player-tools/xlr':
         specifier: workspace:*
         version: link:../types
+    devDependencies:
+      '@player-tools/test-utils':
+        specifier: workspace:*
+        version: link:../../common/test-utils
 
 packages:
 
@@ -16865,7 +16867,7 @@ snapshots:
       tunnel: 0.0.6
       typed-rest-client: 1.8.11
 
-  babel-loader@8.3.0(@babel/core@7.24.7)(webpack@4.47.0):
+  babel-loader@8.3.0(@babel/core@7.24.7)(webpack@4.47.0(webpack-cli@3.3.12)):
     dependencies:
       '@babel/core': 7.24.7
       find-cache-dir: 3.3.2
@@ -17800,7 +17802,7 @@ snapshots:
     dependencies:
       postcss: 8.4.38
 
-  css-loader@3.6.0(webpack@4.47.0):
+  css-loader@3.6.0(webpack@4.47.0(webpack-cli@3.3.12)):
     dependencies:
       camelcase: 5.3.1
       cssesc: 3.0.0
@@ -21192,7 +21194,7 @@ snapshots:
 
   mkdirp@3.0.1: {}
 
-  modify-source-webpack-plugin@4.1.0(webpack@4.47.0):
+  modify-source-webpack-plugin@4.1.0(webpack@4.47.0(webpack-cli@3.3.12)):
     dependencies:
       loader-utils-webpack-v4: loader-utils@2.0.4
       schema-utils: 4.2.0
@@ -23673,7 +23675,7 @@ snapshots:
 
   strnum@1.0.5: {}
 
-  style-loader@1.3.0(webpack@4.47.0):
+  style-loader@1.3.0(webpack@4.47.0(webpack-cli@3.3.12)):
     dependencies:
       loader-utils: 2.0.4
       schema-utils: 2.7.1
@@ -23810,7 +23812,7 @@ snapshots:
       ansi-escapes: 4.3.2
       supports-hyperlinks: 2.3.0
 
-  terser-webpack-plugin@1.4.5(webpack@4.47.0):
+  terser-webpack-plugin@1.4.5(webpack@4.47.0(webpack-cli@3.3.12)):
     dependencies:
       cacache: 12.0.4
       find-cache-dir: 2.1.0
@@ -24536,7 +24538,7 @@ snapshots:
       node-libs-browser: 2.2.1
       schema-utils: 1.0.0
       tapable: 1.1.3
-      terser-webpack-plugin: 1.4.5(webpack@4.47.0)
+      terser-webpack-plugin: 1.4.5(webpack@4.47.0(webpack-cli@3.3.12))
       watchpack: 1.7.5
       webpack-sources: 1.4.3
     optionalDependencies:
