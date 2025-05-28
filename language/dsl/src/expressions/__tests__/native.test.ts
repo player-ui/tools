@@ -9,7 +9,7 @@ import {
   nor,
   not,
   or,
-} from "../../";
+} from "../..";
 
 describe("assign", () => {
   test("string", () => {
