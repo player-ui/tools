@@ -1,3 +1,15 @@
+# 0.11.0 (Tue Jun 03 2025)
+
+#### 🚀 Enhancement
+
+- Update Template DSL to support placement prop [#196](https://github.com/player-ui/tools/pull/196) ([@kharrop](https://github.com/kharrop))
+
+#### Authors: 1
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+
+---
+
 # 0.10.2 (Wed May 28 2025)
 
 ### Release Notes
