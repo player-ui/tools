@@ -1,6 +1,7 @@
 import { test, expect, describe } from "vitest";
 import {
   getObjectReferences,
+  makeFunctionByName,
   mapExpressionHandlersToFunctions,
   wrapFunctionInType,
 } from "../utils";
@@ -48,7 +49,7 @@ describe("DSL Expression Generation Helper", () => {
 
     const mockFunctionDSL = wrapFunctionInType(mockFunction);
 
-    const foo = binding`some.binding`;
+    const foo = binding<string>`some.binding`;
     const test = expression`${mockFunctionDSL(foo)} == true`;
 
     expect(test.toValue()).toEqual("mockFunction('some.binding') == true");
@@ -64,7 +65,7 @@ describe("DSL Expression Generation Helper", () => {
 
     const mockFunctionDSL = wrapFunctionInType(mockFunction);
 
-    const foo = binding`some.binding`;
+    const foo = binding<string>`some.binding`;
     const test = expression`${mockFunctionDSL(foo.toRefString(), "test", 1)} == true`;
 
     expect(test.toValue()).toEqual(
@@ -97,7 +98,7 @@ describe("DSL Expression Generation Helper", () => {
 
     const mockFunctionDSL = wrapFunctionInType(mockFunction);
 
-    const foo = binding`some.binding`;
+    const foo = binding<boolean>`some.binding`;
     const test = expression`${mockFunctionDSL(foo.toRefString())} == true`;
 
     expect(test.toValue()).toEqual("mockFunction('{{some.binding}}') == true");
@@ -114,10 +115,20 @@ describe("DSL Expression Generation Helper", () => {
     const mockFunctionDSL = wrapFunctionInType(mockFunction);
 
     const foo = binding`foo.bar`;
-    const bar = expression`${foo} != 1`;
+    const bar = expression<string>`${foo} != 1`;
     const test = expression`${mockFunctionDSL(bar, 1)}`;
 
     expect(test.toValue()).toEqual("mockFunction('{{foo.bar}} != 1', 1)");
+  });
+
+  test("Mock a function by name and args", () => {
+    const testFunction = makeFunctionByName<[string, number, boolean], void>(
+      "testFunction",
+    );
+
+    expect(testFunction("1", 0, false).toValue()).toMatch(
+      "testFunction('1', 0, false)",
+    );
   });
 
   test("Export Generator", () => {

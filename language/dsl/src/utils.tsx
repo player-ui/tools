@@ -210,7 +210,7 @@ function parseArg(arg: unknown, deref = false): any {
   }
 }
 
-export function generateDSLFunction<R>(
+function generateDSLFunction<R>(
   name: string,
   args: Array<unknown>,
 ): ExpressionTemplateInstance<R> {
@@ -222,11 +222,26 @@ export function generateDSLFunction<R>(
   return expression`${name}(${expressionArgs.join(", ")})`;
 }
 
+/**
+ * Convert an single ExpressionHandler function to a DSL expression function
+ */
 export function wrapFunctionInType<T extends Array<unknown>, R>(
   fn: ExpressionHandler<T, R>,
 ): (...args: WithTemplateTypes<T>) => ExpressionTemplateInstance<R> {
   return (...args: WithTemplateTypes<T>): ExpressionTemplateInstance<R> => {
     return generateDSLFunction(fn.name, args);
+  };
+}
+
+/**
+ * Create a DSL Expression generation function by name and args specified by
+ * generic parameters
+ */
+export function makeFunctionByName<T extends Array<unknown>, R>(
+  name: string,
+): (...args: WithTemplateTypes<T>) => ExpressionTemplateInstance<R> {
+  return (...args: WithTemplateTypes<T>): ExpressionTemplateInstance<R> => {
+    return generateDSLFunction(name, args);
   };
 }
 
