@@ -18,9 +18,10 @@ export interface TemplateContextType {
   depth: number;
 }
 
-export const TemplateContext = React.createContext<TemplateContextType>({
-  depth: 0,
-});
+export const TemplateContext: React.Context<TemplateContextType> =
+  React.createContext<TemplateContextType>({
+    depth: 0,
+  });
 
 export interface TemplateProps {
   /** The source binding */
@@ -34,6 +35,73 @@ export interface TemplateProps {
 
   /** boolean that specifies whether template should recompute when data changes */
   dynamic?: boolean;
+
+  /** Specifies the expanded template placement in relation to existing elements*/
+  placement?: "append" | "prepend";
+}
+
+/**
+ * Represents the position information for template insertion
+ */
+interface PositionInfo {
+  placement?: "append" | "prepend";
+  insertionIndex?: number;
+}
+
+/**
+ * Determines placement based on its proxy node and uses that for AST parity
+ */
+function determinePositionInfo(proxyNode: ProxyNode | null): PositionInfo {
+  const result: PositionInfo = {
+    placement: undefined,
+    insertionIndex: undefined,
+  };
+
+  if (!proxyNode || !proxyNode.parent) {
+    return result;
+  }
+
+  if (proxyNode.parent.type === "array") {
+    const parentArray = proxyNode.parent;
+    const proxyIndex = parentArray.items.indexOf(proxyNode);
+
+    // Check if there are any non-proxy items before this proxy
+    const hasNonProxyBefore = parentArray.items
+      .slice(0, proxyIndex)
+      .some((item) => item.type !== "proxy");
+
+    const hasNonProxyAfter = parentArray.items
+      .slice(proxyIndex + 1)
+      .some((item) => item.type !== "proxy");
+
+    if (hasNonProxyBefore) {
+      result.placement = "append";
+    } else if (hasNonProxyAfter) {
+      result.placement = "prepend";
+    }
+  }
+
+  const containingSlot = proxyNode.parent?.parent;
+  if (
+    containingSlot &&
+    containingSlot.type === "property" &&
+    containingSlot.keyNode.type === "value"
+  ) {
+    const parentObject = getParentObject(proxyNode);
+    if (parentObject) {
+      const index = parentObject.properties.findIndex((properties) => {
+        return properties.keyNode.value === containingSlot.keyNode.value;
+      });
+
+      // Assigns AST ordering based on placement
+      if (index !== -1) {
+        result.insertionIndex =
+          result.placement === "prepend" ? index : index + 1;
+      }
+    }
+  }
+
+  return result;
 }
 
 /** Add a template instance to the object */
@@ -134,7 +202,7 @@ const getParentProperty = (node: JsonNode): PropertyNode | undefined => {
 };
 
 /** A template allows users to dynamically map over an array of data */
-export const Template = (props: TemplateProps) => {
+export const Template = (props: TemplateProps): React.JSX.Element => {
   const baseContext = React.useContext(TemplateContext);
   const dynamicProp = props.dynamic ?? false;
   const [outputProp, setOutputProp] = React.useState<string | undefined>(
@@ -166,27 +234,7 @@ export const Template = (props: TemplateProps) => {
         return;
       }
 
-      let prefix = false;
-      if (
-        proxyRef.current.parent &&
-        proxyRef.current.parent.type === "array" &&
-        proxyRef.current.parent.items[0].type === "proxy"
-      ) {
-        prefix = true;
-      }
-
-      const containingSlot = proxyRef.current.parent?.parent;
-      let insertionIndex = undefined;
-      if (
-        containingSlot &&
-        containingSlot.type === "property" &&
-        containingSlot.keyNode.type === "value"
-      ) {
-        insertionIndex = parentObject.properties.findIndex((properties) => {
-          return properties.keyNode.value === containingSlot.keyNode.value;
-        });
-        insertionIndex = prefix ? insertionIndex : insertionIndex + 1;
-      }
+      const { insertionIndex } = determinePositionInfo(proxyRef.current);
 
       // remove the template when unmounted
       return addTemplateToObject(
@@ -197,6 +245,14 @@ export const Template = (props: TemplateProps) => {
       );
     }
   }, [proxyRef, outputProp, outputElement.items]);
+
+  // Get position information for the template
+  const { placement: inferredPlacement } = determinePositionInfo(
+    proxyRef.current,
+  );
+
+  // Use the explicitly provided placement or the inferred one
+  const resolvedPlacement = props.placement || inferredPlacement;
 
   return (
     <proxy ref={proxyRef}>
@@ -216,6 +272,11 @@ export const Template = (props: TemplateProps) => {
                 {dynamicProp && (
                   <property name="dynamic">
                     {toJsonElement(dynamicProp)}
+                  </property>
+                )}
+                {resolvedPlacement && (
+                  <property name="placement">
+                    {toJsonElement(resolvedPlacement)}
                   </property>
                 )}
               </object>

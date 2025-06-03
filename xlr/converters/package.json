@@ -7,6 +7,6 @@
     "@player-tools/xlr-utils": "workspace:*"
   },
   "devDependencies": {
-        "@player-tools/test-utils": "workspace:*"
+    "@player-tools/test-utils": "workspace:*"
   }
 }
