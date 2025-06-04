@@ -35,12 +35,15 @@ commands:
 
       - run: echo "//registry.npmjs.com/:_authToken=$NPM_TOKEN" >> ~/.npmrc
       - run: echo -e $GPG_KEY | gpg --import --batch
+      - run: |
+          source ~/.bashrc
+          npx auto shipit --only-graduate-with-release-label -vv
       - run:
           name: Post version comment
           command: |
             source ~/.bashrc
 
-            PACKAGE_VERSION=$(npx auto shipit --quiet)         
+            PACKAGE_VERSION=$(npx auto shipit --dry-run --quiet)         
 
             BUILD_INFO="### Build Info
 

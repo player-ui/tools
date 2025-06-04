@@ -7,7 +7,7 @@ import type {
   DocumentContext,
 } from "@player-tools/json-language-service";
 
-export type StatsValue =
+export type MetricValue =
   | Record<string, any>
   | number
   | string
@@ -25,10 +25,10 @@ export interface MetricsOutputConfig {
   rootProperties?: Record<string, any>;
 
   /** Content-specific stats */
-  stats?: Record<string, StatsValue>;
+  stats?: Record<string, MetricValue>;
 
   /** Content-specific features */
-  features?: Record<string, any>;
+  features?: Record<string, MetricValue>;
 }
 
 /**
@@ -118,8 +118,8 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
   private outputDir: string;
   private fileName: string;
   private rootProperties: Record<string, any>;
-  private stats: Record<string, StatsValue>;
-  private features: Record<string, any>;
+  private stats: Record<string, MetricValue>;
+  private features: Record<string, MetricValue>;
 
   // In-memory storage of all results
   private aggregatedResults: Record<string, any> = {};
@@ -163,7 +163,7 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
    * Evaluates a value, executing it if it's a function
    */
   private evaluateValue(
-    value: StatsValue,
+    value: MetricValue,
     diagnostics: Diagnostic[],
     documentContext: DocumentContext,
   ) {

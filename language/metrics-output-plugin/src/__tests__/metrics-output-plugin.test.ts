@@ -87,7 +87,9 @@ describe("WriteMetricsPlugin", () => {
           customStat: () => Math.random(),
         },
         features: {
-          validationEnabled: true,
+          validationEnabled: (diagnostics) => {
+            return !diagnostics.some((d) => d.severity === 2);
+          },
           localizationEnabled: false,
         },
       }),
@@ -267,6 +269,11 @@ describe("WriteMetricsPlugin", () => {
     expect(jsonContent.content["path/to/file/1.json"]).toHaveProperty(
       "features",
     );
+
+    // Verify the function-based feature returns true
+    expect(
+      jsonContent.content["path/to/file/1.json"].features.validationEnabled,
+    ).toBe(true);
 
     // Verify the stats structure for the second file
     expect(jsonContent.content["path/to/file/2.json"]).toHaveProperty("stats");
