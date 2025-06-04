@@ -8,7 +8,7 @@ export const BarTypeRef: Language.DataTypeRef = {
   type: "BarType",
 };
 
-export const LocalBazType: Schema.DataType = {
+export const LocalBazType: Schema.DataType<boolean> = {
   type: "BazType",
   default: false,
   validation: [

@@ -1,9 +1,17 @@
 import * as React from "react";
 import {
+  expression,
+  ExpressionTemplateInstance,
   isTemplateStringInstance,
   TemplateStringComponent,
 } from "./string-templates";
-import type { toJsonOptions } from "./types";
+import type {
+  ExpressionArray,
+  toJsonOptions,
+  WithTemplateTypes,
+} from "./types";
+import { Schema } from "@player-ui/types";
+import { ExpressionHandler } from "@player-ui/player";
 
 /** Get an array version of the value */
 export function toArray<T>(val: T | Array<T>): Array<T> {
@@ -57,7 +65,7 @@ export function toJsonElement(
 export function toJsonProperties(
   value: Record<string, any>,
   options: toJsonOptions = { propertiesToSkip: ["applicability"] },
-) {
+): React.JSX.Element[] {
   return Object.keys(value).map((key) => {
     return (
       <property key={key} name={key}>
@@ -106,7 +114,7 @@ export function normalizeToCollection(options: {
 
   /** A collection asset */
   CollectionComp?: React.ComponentType<any>;
-}) {
+}): React.ReactNode {
   const { node, CollectionComp } = options;
 
   if (
@@ -167,11 +175,17 @@ export function mergeRefs<T = any>(
   };
 }
 
+type TypesToReferences<T> = {
+  [P in keyof T]: T[P] extends Schema.DataType<infer DT> ? DT : unknown;
+};
+
 /** Generates object reference properties from the provided object */
 export function getObjectReferences<
-  OriginalPropertiesObject extends Record<string, unknown>,
-  ReferencesPropertyObject extends Record<string, unknown>,
->(propertiesObject: OriginalPropertiesObject): ReferencesPropertyObject {
+  OriginalPropertiesObject,
+  ReferencesPropertyObject,
+>(
+  propertiesObject: OriginalPropertiesObject,
+): TypesToReferences<ReferencesPropertyObject> {
   const result: any = {};
 
   for (const itemProp in propertiesObject) {
@@ -181,5 +195,65 @@ export function getObjectReferences<
     }
   }
 
+  return result;
+}
+
+function parseArg(arg: unknown, deref = false): any {
+  if (isTemplateStringInstance(arg)) {
+    return `'${deref ? arg.toRefString() : arg.toValue()}'`;
+  } else if (Array.isArray(arg)) {
+    return `[${arg.map((a) => parseArg(a, true)).join(", ")}]`;
+  } else if (typeof arg === "string") {
+    return `'${arg}'`;
+  } else {
+    return arg;
+  }
+}
+
+function generateDSLFunction<R>(
+  name: string,
+  args: Array<unknown>,
+): ExpressionTemplateInstance<R> {
+  const expressionArgs: Array<unknown> = [];
+  args.forEach((arg) => {
+    expressionArgs.push(parseArg(arg));
+  });
+
+  return expression`${name}(${expressionArgs.join(", ")})`;
+}
+
+/**
+ * Convert an single ExpressionHandler function to a DSL expression function
+ */
+export function wrapFunctionInType<T extends Array<unknown>, R>(
+  fn: ExpressionHandler<T, R>,
+): (...args: WithTemplateTypes<T>) => ExpressionTemplateInstance<R> {
+  return (...args: WithTemplateTypes<T>): ExpressionTemplateInstance<R> => {
+    return generateDSLFunction(fn.name, args);
+  };
+}
+
+/**
+ * Create a DSL Expression generation function by name and args specified by
+ * generic parameters
+ */
+export function makeFunctionByName<T extends Array<unknown>, R>(
+  name: string,
+): (...args: WithTemplateTypes<T>) => ExpressionTemplateInstance<R> {
+  return (...args: WithTemplateTypes<T>): ExpressionTemplateInstance<R> => {
+    return generateDSLFunction(name, args);
+  };
+}
+
+/**
+ * Takes map of functions and wraps them in a DSL syntax generator
+ */
+export function mapExpressionHandlersToFunctions<
+  T extends Record<string, ExpressionHandler<any, any>>,
+>(functions: T): ExpressionArray<T> {
+  const result: any = {};
+  for (const fn of Object.values(functions)) {
+    result[fn.name] = wrapFunctionInType(fn);
+  }
   return result;
 }
