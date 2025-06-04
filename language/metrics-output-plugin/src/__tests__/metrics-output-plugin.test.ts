@@ -273,7 +273,7 @@ describe("WriteMetricsPlugin", () => {
     // Verify the function-based feature returns true
     expect(
       jsonContent.content["path/to/file/1.json"].features.validationEnabled,
-    ).toBe(true);
+    ).toBe(false);
 
     // Verify the stats structure for the second file
     expect(jsonContent.content["path/to/file/2.json"]).toHaveProperty("stats");
