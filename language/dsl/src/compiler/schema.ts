@@ -8,7 +8,7 @@ import type { BindingTemplateInstance } from "../string-templates";
 const bindingSymbol = Symbol("binding");
 
 /** Symbol to indicate that a schema node should be generated with a different name */
-export const SchemaTypeName = Symbol("Schema Rename");
+export const SchemaTypeName: unique symbol = Symbol("Schema Rename");
 
 interface SchemaChildren {
   /** Object property that will be used to create the intermediate type */
@@ -47,7 +47,15 @@ export class SchemaGenerator {
   private generatedDataTypes: Map<string, GeneratedDataType>;
   private logger: LoggingInterface;
 
-  public hooks = {
+  public hooks: {
+    createSchemaNode: SyncWaterfallHook<
+      [
+        node: Schema.DataType<unknown>,
+        originalProperty: Record<string | symbol, unknown>,
+      ],
+      Record<string, any>
+    >;
+  } = {
     createSchemaNode: new SyncWaterfallHook<
       [
         node: Schema.DataType,
@@ -197,14 +205,14 @@ export type MakeBindingRefable<T> = {
     : T[P] extends unknown[]
       ? T[P]
       : MakeBindingRefable<T[P]>;
-} & BindingTemplateInstance;
+} & BindingTemplateInstance<T>;
 
 /**
  * Adds bindings to an object so that the object can be directly used in JSX
  */
 export function makeBindingsForObject<Type>(
   obj: Type,
-  arrayAccessorKeys = ["_index_"],
+  arrayAccessorKeys: string[] = ["_index_"],
 ): MakeBindingRefable<Type> {
   /** Proxy to track binding callbacks */
   const accessor = (paths: string[]) => {
@@ -258,7 +266,7 @@ export function makeBindingsForObject<Type>(
 /**
  * Generates binding for an object property
  */
-export const getBindingFromObject = (obj: any) => {
+export const getBindingFromObject = (obj: any): BindingTemplateInstance => {
   const baseBindings = obj[bindingSymbol] as string[];
   if (!Array.isArray(baseBindings) || baseBindings.length === 0) {
     throw new Error(`Unable to get binding for ${obj}`);
@@ -270,13 +278,13 @@ export const getBindingFromObject = (obj: any) => {
 /**
  * Returns the binding string from an object path
  */
-export const getBindingStringFromObject = (obj: any) => {
+export const getBindingStringFromObject = (obj: any): string => {
   return getBindingFromObject(obj).toString();
 };
 
 /**
  * Returns the ref string from an object path
  */
-export const getRefStringFromObject = (obj: any) => {
+export const getRefStringFromObject = (obj: any): string => {
   return getBindingFromObject(obj).toRefString();
 };
