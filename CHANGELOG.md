@@ -1,3 +1,36 @@
+# 0.12.0 (Wed Jun 04 2025)
+
+### Release Notes
+
+#### DSL Expression Generation Functions and Testing Utilities ([#212](https://github.com/player-ui/tools/pull/212))
+
+Add helper functions to generate usable DSL expressions from Player expressions, allowing better ergonomics when using them in content.
+
+---
+
+#### 🚀 Enhancement
+
+- DSL Expression Generation Functions and Testing Utilities [#212](https://github.com/player-ui/tools/pull/212) ([@KetanReddy](https://github.com/KetanReddy) [@adierkens](https://github.com/adierkens))
+
+#### Authors: 2
+
+- Adam Dierkens ([@adierkens](https://github.com/adierkens))
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
+# 0.11.0 (Tue Jun 03 2025)
+
+#### 🚀 Enhancement
+
+- Update Template DSL to support placement prop [#196](https://github.com/player-ui/tools/pull/196) ([@kharrop](https://github.com/kharrop))
+
+#### Authors: 1
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+
+---
+
 # 0.10.2 (Wed May 28 2025)
 
 ### Release Notes
