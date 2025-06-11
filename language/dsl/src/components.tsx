@@ -157,7 +157,7 @@ export const View = React.forwardRef<ObjectNode, AssetProps & ViewType>(
         {children}
       </Asset>
     );
-  }
+  },
 );
 
 View.displayName = "View";
@@ -224,7 +224,7 @@ export function createSlot<SlotProps = unknown>(options: {
     props: {
       /** An object to include in this property */
       children?: React.ReactNode;
-    } & SlotProps
+    } & SlotProps,
   ) => {
     const { children, ...other } = props;
     return (
