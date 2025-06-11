@@ -194,7 +194,7 @@ export const Slot = (props: {
 
   return (
     <property ref={propRef} name={props.name}>
-      <ContextOnlySlot ref={propRef} {...props} />
+      <ContextOnlySlot propRef={propRef} {...props} />
     </property>
   );
 };
@@ -245,7 +245,7 @@ export const ContextOnlySlot = (props: {
   name: string;
 
   /** The ref to the property node */
-  ref: React.RefObject<PropertyNode>;
+  propRef: React.RefObject<PropertyNode>;
 
   /** if the slot is an array or single object */
   isArray?: boolean;
@@ -273,7 +273,7 @@ export const ContextOnlySlot = (props: {
       <IndexSuffixStopContext.Provider value={false}>
         <SlotContext.Provider
           value={{
-            ref: props.ref,
+            ref: props.propRef,
             propertyName: props.name,
             wrapInAsset: props.wrapInAsset ?? false,
             isArray: props.isArray ?? false,
