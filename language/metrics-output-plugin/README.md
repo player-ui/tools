@@ -4,9 +4,13 @@ Generate a file containing metrics data for each file in the project.
 
 ## Config
 
-### `metrics`
+### `stats`
 
-An object containing the metrics data for each file in the project.
+Assign stats related data for each file in the project.
+
+### `features`
+
+Assign custom feature data not necessarily tied to content, such as booleans/flags. 
 
 ### `outputDir?`
 
@@ -29,7 +33,7 @@ The plugin by default generates a JSON file with the following example structure
   "timestamp": "2023-05-24T12:34:56.789Z",
   "content": {
     "path/to/file/1.json": {
-      "metrics": {
+      "stats": {
         "complexity": 18
       },
       "features": {
@@ -37,7 +41,7 @@ The plugin by default generates a JSON file with the following example structure
       }
     },
     "path/to/file/2.json": {
-      "metrics": {
+      "stats": {
         "complexity": 10
       },
       "features": {
