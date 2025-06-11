@@ -157,7 +157,7 @@ export const View = React.forwardRef<ObjectNode, AssetProps & ViewType>(
         {children}
       </Asset>
     );
-  },
+  }
 );
 
 View.displayName = "View";
@@ -190,46 +190,11 @@ export const Slot = (props: {
   /** A component to create a collection asset is we get an array but need a single element */
   CollectionComp?: React.ComponentType;
 }) => {
-  const { TextComp, CollectionComp } = props;
-  const children = flattenChildren(props.children);
   const propRef = React.useRef<PropertyNode>(null);
 
   return (
     <property ref={propRef} name={props.name}>
-      <IDSuffixProvider suffix={props.name}>
-        <IndexSuffixStopContext.Provider value={false}>
-          <SlotContext.Provider
-            value={{
-              ref: propRef,
-              propertyName: props.name,
-              wrapInAsset: props.wrapInAsset ?? false,
-              isArray: props.isArray ?? false,
-              additionalProperties: props.additionalProperties,
-              TextComp,
-              CollectionComp,
-            }}
-          >
-            {props.isArray && (
-              <array>
-                {React.Children.map(children, (child, index) => {
-                  return (
-                    <React.Fragment key={`${props.name}-${index}`}>
-                      {normalizeText({ node: child, TextComp })}
-                    </React.Fragment>
-                  );
-                })}
-              </array>
-            )}
-
-            {!props.isArray &&
-              normalizeToCollection({
-                node: children,
-                TextComp,
-                CollectionComp,
-              })}
-          </SlotContext.Provider>
-        </IndexSuffixStopContext.Provider>
-      </IDSuffixProvider>
+      <ContextOnlySlot ref={propRef} {...props} />
     </property>
   );
 };
@@ -259,7 +224,7 @@ export function createSlot<SlotProps = unknown>(options: {
     props: {
       /** An object to include in this property */
       children?: React.ReactNode;
-    } & SlotProps,
+    } & SlotProps
   ) => {
     const { children, ...other } = props;
     return (
@@ -269,3 +234,74 @@ export function createSlot<SlotProps = unknown>(options: {
     );
   };
 }
+
+/**
+ * A context-only slot component that provides slot context to its children without creating
+ * a property node in the JSON output. Unlike the regular `Slot` component, this component
+ * is purely used for context propagation and doesn't wrap its children in a `<property>` tag.
+ */
+export const ContextOnlySlot = (props: {
+  /** The name of the slot */
+  name: string;
+
+  /** The ref to the property node */
+  ref: React.RefObject<PropertyNode>;
+
+  /** if the slot is an array or single object */
+  isArray?: boolean;
+
+  /** if each item should be wrapped in an asset */
+  wrapInAsset?: boolean;
+
+  /** Any children to render in the slot */
+  children?: React.ReactNode;
+
+  /** Other properties to add to the slot */
+  additionalProperties?: any;
+
+  /** A text component if we hit a string but expect an asset */
+  TextComp?: React.ComponentType;
+
+  /** A component to create a collection asset is we get an array but need a single element */
+  CollectionComp?: React.ComponentType;
+}) => {
+  const { TextComp, CollectionComp } = props;
+  const children = flattenChildren(props.children);
+
+  return (
+    <IDSuffixProvider suffix={props.name}>
+      <IndexSuffixStopContext.Provider value={false}>
+        <SlotContext.Provider
+          value={{
+            ref: props.ref,
+            propertyName: props.name,
+            wrapInAsset: props.wrapInAsset ?? false,
+            isArray: props.isArray ?? false,
+            additionalProperties: props.additionalProperties,
+            TextComp,
+            CollectionComp,
+          }}
+        >
+          {props.isArray && (
+            <array>
+              {React.Children.map(children, (child, index) => {
+                return (
+                  <React.Fragment key={`${props.name}-${index}`}>
+                    {normalizeText({ node: child, TextComp })}
+                  </React.Fragment>
+                );
+              })}
+            </array>
+          )}
+
+          {!props.isArray &&
+            normalizeToCollection({
+              node: children,
+              TextComp,
+              CollectionComp,
+            })}
+        </SlotContext.Provider>
+      </IndexSuffixStopContext.Provider>
+    </IDSuffixProvider>
+  );
+};
