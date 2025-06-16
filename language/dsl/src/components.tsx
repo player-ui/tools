@@ -194,7 +194,9 @@ export const Slot = (props: {
 
   return (
     <property ref={propRef} name={props.name}>
-      <ContextOnlySlot propRef={propRef} {...props} />
+      <IDSuffixProvider suffix={props.name}>
+        <ContextOnlySlot propRef={propRef} {...props} />
+      </IDSuffixProvider>
     </property>
   );
 };
@@ -269,39 +271,37 @@ export const ContextOnlySlot = (props: {
   const children = flattenChildren(props.children);
 
   return (
-    <IDSuffixProvider suffix={props.name}>
-      <IndexSuffixStopContext.Provider value={false}>
-        <SlotContext.Provider
-          value={{
-            ref: props.propRef,
-            propertyName: props.name,
-            wrapInAsset: props.wrapInAsset ?? false,
-            isArray: props.isArray ?? false,
-            additionalProperties: props.additionalProperties,
+    <IndexSuffixStopContext.Provider value={false}>
+      <SlotContext.Provider
+        value={{
+          ref: props.propRef,
+          propertyName: props.name,
+          wrapInAsset: props.wrapInAsset ?? false,
+          isArray: props.isArray ?? false,
+          additionalProperties: props.additionalProperties,
+          TextComp,
+          CollectionComp,
+        }}
+      >
+        {props.isArray && (
+          <array>
+            {React.Children.map(children, (child, index) => {
+              return (
+                <React.Fragment key={`${props.name}-${index}`}>
+                  {normalizeText({ node: child, TextComp })}
+                </React.Fragment>
+              );
+            })}
+          </array>
+        )}
+
+        {!props.isArray &&
+          normalizeToCollection({
+            node: children,
             TextComp,
             CollectionComp,
-          }}
-        >
-          {props.isArray && (
-            <array>
-              {React.Children.map(children, (child, index) => {
-                return (
-                  <React.Fragment key={`${props.name}-${index}`}>
-                    {normalizeText({ node: child, TextComp })}
-                  </React.Fragment>
-                );
-              })}
-            </array>
-          )}
-
-          {!props.isArray &&
-            normalizeToCollection({
-              node: children,
-              TextComp,
-              CollectionComp,
-            })}
-        </SlotContext.Provider>
-      </IndexSuffixStopContext.Provider>
-    </IDSuffixProvider>
+          })}
+      </SlotContext.Provider>
+    </IndexSuffixStopContext.Provider>
   );
 };
