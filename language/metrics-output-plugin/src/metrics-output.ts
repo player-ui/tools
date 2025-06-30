@@ -55,8 +55,7 @@ export function extractFromDiagnostics<T>(
 }
 
 /**
- * Extracts data from diagnostics 
-
+ * Extracts data from diagnostics
  */
 export function extractByData(
   data: string | symbol,
@@ -107,6 +106,17 @@ export function extractByData(
   }
 
   return result; // Always returns an object, even if empty
+}
+
+/**
+ * Normalizes a file path to use consistent separators and format
+ */
+function normalizePath(filePath: string): string {
+  // Convert backslashes to forward slashes for consistency
+  const normalized = filePath.replace(/\\/g, "/");
+
+  // Remove file:// protocol if present
+  return normalized.replace(/^file:\/\//, "");
 }
 
 /**
@@ -214,8 +224,8 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     const fullOutputDir = path.resolve(process.cwd(), this.outputDir);
     fs.mkdirSync(fullOutputDir, { recursive: true });
 
-    // Get the file path from the document URI
-    const filePath = documentContext.document.uri;
+    // Get the file path from the document URI and normalize it
+    const filePath = normalizePath(documentContext.document.uri);
 
     // Generate metrics
     const stats = this.generateMetrics(diagnostics, documentContext);
