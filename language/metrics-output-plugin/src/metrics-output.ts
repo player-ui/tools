@@ -153,6 +153,42 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
       ...this.rootProperties,
       content: {},
     };
+
+    // Load existing data if available
+    this.loadExistingData();
+  }
+
+  /**
+   * Loads existing data from the output file if it exists
+   */
+  private loadExistingData(): void {
+    const fullOutputDir = path.resolve(process.cwd(), this.outputDir);
+    const outputFilePath = path.join(fullOutputDir, `${this.fileName}.json`);
+
+    if (fs.existsSync(outputFilePath)) {
+      try {
+        const fileContent = fs.readFileSync(outputFilePath, "utf-8");
+        const existingData = JSON.parse(fileContent);
+
+        // Preserve the existing content
+        if (existingData.content) {
+          this.aggregatedResults.content = existingData.content;
+        }
+
+        // Preserve other root properties but keep our timestamp and rootProperties
+        Object.keys(existingData).forEach((key) => {
+          if (
+            key !== "timestamp" &&
+            key !== "content" &&
+            !Object.keys(this.rootProperties).includes(key)
+          ) {
+            this.aggregatedResults[key] = existingData[key];
+          }
+        });
+      } catch (error) {
+        console.warn(`Failed to load existing metrics file: ${error}`);
+      }
+    }
   }
 
   apply(service: PlayerLanguageService): void {
@@ -216,6 +252,24 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     return result;
   }
 
+  /**
+   * Reads the current content of the output file
+   */
+  private readCurrentFile(): Record<string, any> {
+    const fullOutputDir = path.resolve(process.cwd(), this.outputDir);
+    const outputFilePath = path.join(fullOutputDir, `${this.fileName}.json`);
+
+    if (fs.existsSync(outputFilePath)) {
+      try {
+        const fileContent = fs.readFileSync(outputFilePath, "utf-8");
+        return JSON.parse(fileContent);
+      } catch (error) {
+        console.warn(`Failed to read existing metrics file: ${error}`);
+      }
+    }
+    return {};
+  }
+
   private generateFile(
     diagnostics: Diagnostic[],
     documentContext: DocumentContext,
@@ -231,16 +285,47 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     const stats = this.generateMetrics(diagnostics, documentContext);
     const features = this.generateFeatures(diagnostics, documentContext);
 
-    this.aggregatedResults.content[filePath] = {
-      stats,
-      features: Object.keys(features).length > 0 ? features : {},
+    // Create content entry with stats and conditionally add features only if not empty
+    const contentEntry: Record<string, any> = { stats };
+
+    // Only add features if there are any
+    if (Object.keys(features).length > 0) {
+      contentEntry.features = features;
+    }
+
+    // Get the current file content
+    const currentFileContent = this.readCurrentFile();
+
+    // Create a new result object that merges existing content with new updates
+    const updatedResults = {
+      // Update timestamp
+      timestamp: new Date().toISOString(),
+
+      // Keep root properties from this instance
+      ...this.rootProperties,
+
+      // Preserve any other root properties from the current file
+      ...Object.entries(currentFileContent)
+        .filter(
+          ([key]) =>
+            key !== "timestamp" &&
+            key !== "content" &&
+            !Object.keys(this.rootProperties).includes(key),
+        )
+        .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {}),
+
+      // Merge content, preserving existing entries and updating the current one
+      content: {
+        ...(currentFileContent.content || {}),
+        [filePath]: contentEntry,
+      },
     };
 
-    // Write the aggregated results to a file
+    // Write the updated results to a file
     const outputFilePath = path.join(fullOutputDir, `${this.fileName}.json`);
     fs.writeFileSync(
       outputFilePath,
-      JSON.stringify(this.aggregatedResults, null, 2),
+      JSON.stringify(updatedResults, null, 2),
       "utf-8",
     );
 
