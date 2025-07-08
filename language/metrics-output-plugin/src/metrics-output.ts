@@ -7,12 +7,20 @@ import type {
   DocumentContext,
 } from "@player-tools/json-language-service";
 
+/**
+ * Function that will be called with diagnostics and document context
+ * @param diagnostics - Array of diagnostics from validation
+ * @param documentContext - Context of the current document
+ * @returns Any value that will be included in the metrics output
+ */
+export type MetricFunction = (...args: any[]) => any;
+
 export type MetricValue =
   | Record<string, any>
   | number
   | string
   | boolean
-  | ((diagnostics: Diagnostic[], documentContext: DocumentContext) => any);
+  | MetricFunction;
 
 export interface MetricsOutputConfig {
   /** Directory where the output file will be written */
@@ -21,14 +29,20 @@ export interface MetricsOutputConfig {
   /** Name of the JSON output file */
   fileName?: string;
 
-  /** Custom properties to include at the root level of the output */
-  rootProperties?: Record<string, any>;
+  /**
+   * Custom properties to include at the root level of the output
+   */
+  rootProperties?: Record<string, any> | MetricFunction;
 
-  /** Content-specific stats */
-  stats?: Record<string, MetricValue>;
+  /**
+   * Content-specific stats
+   */
+  stats?: Record<string, MetricValue> | MetricFunction;
 
-  /** Content-specific features */
-  features?: Record<string, MetricValue>;
+  /**
+   * Content-specific features
+   */
+  features?: Record<string, MetricValue> | MetricFunction;
 }
 
 /**
@@ -127,9 +141,9 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
 
   private outputDir: string;
   private fileName: string;
-  private rootProperties: Record<string, any>;
-  private stats: Record<string, MetricValue>;
-  private features: Record<string, MetricValue>;
+  private rootProperties: Record<string, any> | MetricFunction;
+  private stats: Record<string, MetricValue> | MetricFunction;
+  private features: Record<string, MetricValue> | MetricFunction;
 
   // In-memory storage of all results
   private aggregatedResults: Record<string, any> = {};
@@ -147,10 +161,13 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     this.stats = options.stats || {};
     this.features = options.features || {};
 
-    // Initialize with root properties including timestamp
+    // Initialize with root properties
     this.aggregatedResults = {
-      timestamp: new Date().toISOString(),
-      ...this.rootProperties,
+      ...this.evaluateRootProperties([], {
+        log: console,
+        document: { uri: "" } as any,
+        PlayerContent: {} as any,
+      }),
       content: {},
     };
 
@@ -175,12 +192,18 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
           this.aggregatedResults.content = existingData.content;
         }
 
-        // Preserve other root properties but keep our timestamp and rootProperties
+        // Get current root properties
+        const currentRootProps = this.evaluateRootProperties([], {
+          log: console,
+          document: { uri: "" } as any,
+          PlayerContent: {} as any,
+        });
+
+        // Preserve other root properties but keep our rootProperties
         Object.keys(existingData).forEach((key) => {
           if (
-            key !== "timestamp" &&
             key !== "content" &&
-            !Object.keys(this.rootProperties).includes(key)
+            !Object.keys(currentRootProps).includes(key)
           ) {
             this.aggregatedResults[key] = existingData[key];
           }
@@ -206,6 +229,28 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
   }
 
   /**
+   * Evaluates root properties, executing it if it's a function
+   */
+  private evaluateRootProperties(
+    diagnostics: Diagnostic[],
+    documentContext: DocumentContext,
+  ): Record<string, any> {
+    if (typeof this.rootProperties === "function") {
+      try {
+        const result = this.rootProperties(diagnostics, documentContext);
+        if (typeof result === "object" && result !== null) {
+          return result;
+        }
+        return { dynamicRootValue: result };
+      } catch (error) {
+        documentContext.log.error(`Error evaluating root properties: ${error}`);
+        return { error: `Root properties evaluation failed: ${error}` };
+      }
+    }
+    return this.rootProperties;
+  }
+
+  /**
    * Evaluates a value, executing it if it's a function
    */
   private evaluateValue(
@@ -228,9 +273,22 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     diagnostics: Diagnostic[],
     documentContext: DocumentContext,
   ): Record<string, any> {
-    const result: Record<string, any> = {};
+    // If stats is a function, evaluate it directly
+    if (typeof this.stats === "function") {
+      try {
+        const result = this.stats(diagnostics, documentContext);
+        if (typeof result === "object" && result !== null) {
+          return result;
+        }
+        return { dynamicStatsValue: result };
+      } catch (error) {
+        documentContext.log.error(`Error evaluating stats function: ${error}`);
+        return { error: `Stats function evaluation failed: ${error}` };
+      }
+    }
 
-    // Process each metric
+    // Otherwise process each metric in the record
+    const result: Record<string, any> = {};
     Object.entries(this.stats).forEach(([key, value]) => {
       result[key] = this.evaluateValue(value, diagnostics, documentContext);
     });
@@ -242,9 +300,24 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     diagnostics: Diagnostic[],
     documentContext: DocumentContext,
   ): Record<string, any> {
-    const result: Record<string, any> = {};
+    // If features is a function, evaluate it directly
+    if (typeof this.features === "function") {
+      try {
+        const result = this.features(diagnostics, documentContext);
+        if (typeof result === "object" && result !== null) {
+          return result;
+        }
+        return { dynamicFeaturesValue: result };
+      } catch (error) {
+        documentContext.log.error(
+          `Error evaluating features function: ${error}`,
+        );
+        return { error: `Features function evaluation failed: ${error}` };
+      }
+    }
 
-    // Process each feature
+    // Otherwise process each feature in the record
+    const result: Record<string, any> = {};
     Object.entries(this.features).forEach(([key, value]) => {
       result[key] = this.evaluateValue(value, diagnostics, documentContext);
     });
@@ -296,21 +369,22 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     // Get the current file content
     const currentFileContent = this.readCurrentFile();
 
+    // Evaluate root properties with current diagnostics and context
+    const currentRootProps = this.evaluateRootProperties(
+      diagnostics,
+      documentContext,
+    );
+
     // Create a new result object that merges existing content with new updates
     const updatedResults = {
-      // Update timestamp
-      timestamp: new Date().toISOString(),
-
-      // Keep root properties from this instance
-      ...this.rootProperties,
+      // Keep root properties from this instance, potentially dynamically generated
+      ...currentRootProps,
 
       // Preserve any other root properties from the current file
       ...Object.entries(currentFileContent)
         .filter(
           ([key]) =>
-            key !== "timestamp" &&
-            key !== "content" &&
-            !Object.keys(this.rootProperties).includes(key),
+            key !== "content" && !Object.keys(currentRootProps).includes(key),
         )
         .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {}),
 
