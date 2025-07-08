@@ -57,7 +57,13 @@ export function extractFromDiagnostics<T>(
       const match = diagnostic.message.match(pattern);
       if (match && match[1]) {
         try {
-          return parser(match[1]);
+          const result = parser(match[1]);
+          // Check if result is NaN (only relevant for numeric parsers)
+          if (typeof result === "number" && isNaN(result)) {
+            console.warn(`Failed to parse diagnostic value: ${match[1]}`);
+            return undefined;
+          }
+          return result;
         } catch (e) {
           console.warn(`Failed to parse diagnostic value: ${match[1]}`, e);
           return undefined;
