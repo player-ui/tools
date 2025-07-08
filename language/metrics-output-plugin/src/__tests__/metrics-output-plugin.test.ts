@@ -75,6 +75,7 @@ describe("WriteMetricsPlugin", () => {
         outputDir: TEST_DIR,
         fileName: TEST_FILE.replace(".json", ""),
         rootProperties: {
+          timestamp: new Date().toISOString(),
           testRun: true,
         },
         stats: {
@@ -88,7 +89,9 @@ describe("WriteMetricsPlugin", () => {
         },
         features: {
           validationEnabled: (diagnostics) => {
-            return !diagnostics.some((d) => d.severity === 2);
+            return !diagnostics.some(
+              (d: { severity: number }) => d.severity === 2,
+            );
           },
           localizationEnabled: false,
         },
