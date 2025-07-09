@@ -167,57 +167,13 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     this.stats = options.stats || {};
     this.features = options.features || {};
 
-    // Initialize with root properties
+    // Initialize with empty content
     this.aggregatedResults = {
-      ...this.evaluateRootProperties([], {
-        log: console,
-        document: { uri: "" } as any,
-        PlayerContent: {} as any,
-      }),
       content: {},
     };
 
-    // Load existing data if available
+    // Try to load existing metrics file
     this.loadExistingData();
-  }
-
-  /**
-   * Loads existing data from the output file if it exists
-   */
-  private loadExistingData(): void {
-    const fullOutputDir = path.resolve(process.cwd(), this.outputDir);
-    const outputFilePath = path.join(fullOutputDir, `${this.fileName}.json`);
-
-    if (fs.existsSync(outputFilePath)) {
-      try {
-        const fileContent = fs.readFileSync(outputFilePath, "utf-8");
-        const existingData = JSON.parse(fileContent);
-
-        // Preserve the existing content
-        if (existingData.content) {
-          this.aggregatedResults.content = existingData.content;
-        }
-
-        // Get current root properties
-        const currentRootProps = this.evaluateRootProperties([], {
-          log: console,
-          document: { uri: "" } as any,
-          PlayerContent: {} as any,
-        });
-
-        // Preserve other root properties but keep our rootProperties
-        Object.keys(existingData).forEach((key) => {
-          if (
-            key !== "content" &&
-            !Object.keys(currentRootProps).includes(key)
-          ) {
-            this.aggregatedResults[key] = existingData[key];
-          }
-        });
-      } catch (error) {
-        console.warn(`Failed to load existing metrics file: ${error}`);
-      }
-    }
   }
 
   apply(service: PlayerLanguageService): void {
@@ -232,6 +188,37 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
         return diagnostics;
       },
     );
+  }
+
+  /**
+   * Attempts to load existing metrics data from file
+   */
+  private loadExistingData(): void {
+    try {
+      const outputFilePath = path.join(
+        path.resolve(process.cwd(), this.outputDir),
+        `${this.fileName}.json`,
+      );
+
+      if (fs.existsSync(outputFilePath)) {
+        const fileContent = fs.readFileSync(outputFilePath, "utf-8");
+        try {
+          const existingData = JSON.parse(fileContent);
+
+          // Initialize with existing data
+          this.aggregatedResults = existingData;
+
+          // Ensure content property exists
+          if (!this.aggregatedResults.content) {
+            this.aggregatedResults.content = {};
+          }
+        } catch (error) {
+          console.warn(`Failed to parse existing metrics file: ${error}`);
+        }
+      }
+    } catch (error) {
+      console.warn(`Failed to load existing metrics file: ${error}`);
+    }
   }
 
   /**
@@ -331,24 +318,6 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     return result;
   }
 
-  /**
-   * Reads the current content of the output file
-   */
-  private readCurrentFile(): Record<string, any> {
-    const fullOutputDir = path.resolve(process.cwd(), this.outputDir);
-    const outputFilePath = path.join(fullOutputDir, `${this.fileName}.json`);
-
-    if (fs.existsSync(outputFilePath)) {
-      try {
-        const fileContent = fs.readFileSync(outputFilePath, "utf-8");
-        return JSON.parse(fileContent);
-      } catch (error) {
-        console.warn(`Failed to read existing metrics file: ${error}`);
-      }
-    }
-    return {};
-  }
-
   private generateFile(
     diagnostics: Diagnostic[],
     documentContext: DocumentContext,
@@ -364,48 +333,23 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     const stats = this.generateMetrics(diagnostics, documentContext);
     const features = this.generateFeatures(diagnostics, documentContext);
 
-    // Create content entry with stats and conditionally add features only if not empty
-    const contentEntry: Record<string, any> = { stats };
-
-    // Only add features if there are any
-    if (Object.keys(features).length > 0) {
-      contentEntry.features = features;
-    }
-
-    // Get the current file content
-    const currentFileContent = this.readCurrentFile();
-
-    // Evaluate root properties with current diagnostics and context
-    const currentRootProps = this.evaluateRootProperties(
-      diagnostics,
-      documentContext,
-    );
-
-    // Create a new result object that merges existing content with new updates
-    const updatedResults = {
-      // Keep root properties from this instance, potentially dynamically generated
-      ...currentRootProps,
-
-      // Preserve any other root properties from the current file
-      ...Object.entries(currentFileContent)
-        .filter(
-          ([key]) =>
-            key !== "content" && !Object.keys(currentRootProps).includes(key),
-        )
-        .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {}),
-
-      // Merge content, preserving existing entries and updating the current one
-      content: {
-        ...(currentFileContent.content || {}),
-        [filePath]: contentEntry,
-      },
+    // Update content for this file
+    this.aggregatedResults.content[filePath] = {
+      stats,
+      ...(Object.keys(features).length > 0 ? { features } : {}),
     };
 
-    // Write the updated results to a file
+    // Evaluate root properties with current diagnostics and context
+    const rootProps = this.evaluateRootProperties(diagnostics, documentContext);
+
+    // Apply root properties to the aggregated results
+    Object.assign(this.aggregatedResults, rootProps);
+
+    // Write the aggregated results to a file
     const outputFilePath = path.join(fullOutputDir, `${this.fileName}.json`);
     fs.writeFileSync(
       outputFilePath,
-      JSON.stringify(updatedResults, null, 2),
+      JSON.stringify(this.aggregatedResults, null, 2),
       "utf-8",
     );
 

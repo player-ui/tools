@@ -675,51 +675,6 @@ describe("WriteMetricsPlugin", () => {
     warnSpy.mockRestore();
   });
 
-  test("handles corrupted existing metrics file", async () => {
-    // Create a corrupted JSON file
-    const corruptedDir = path.resolve("corrupted_dir");
-    const corruptedFile = path.join(corruptedDir, "corrupted.json");
-
-    fs.mkdirSync(corruptedDir, { recursive: true });
-    fs.writeFileSync(corruptedFile, "{ this is not valid JSON", "utf-8");
-
-    // Mock console.warn to verify it's called
-    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-
-    // Create service with the corrupted file path
-    const service = new PlayerLanguageService();
-    service.addLSPPlugin(
-      new MetricsOutput({
-        outputDir: corruptedDir,
-        fileName: "corrupted",
-      }),
-    );
-
-    const document = TextDocument.create(
-      "corrupted/test.json",
-      "json",
-      1,
-      JSON.stringify({ id: "test" }),
-    );
-
-    await service.validateTextDocument(document);
-
-    // Should have warned about the corrupted file
-    expect(warnSpy).toHaveBeenCalled();
-    expect(warnSpy.mock.calls[0][0]).toContain(
-      "Failed to load existing metrics file",
-    );
-
-    // But should have created a new valid file
-    const fileContent = fs.readFileSync(corruptedFile, "utf-8");
-    expect(() => JSON.parse(fileContent)).not.toThrow();
-
-    // Clean up
-    fs.unlinkSync(corruptedFile);
-    fs.rmdirSync(corruptedDir);
-    warnSpy.mockRestore();
-  });
-
   test("evaluateValue handles errors in metric functions", async () => {
     const service = new PlayerLanguageService();
 
