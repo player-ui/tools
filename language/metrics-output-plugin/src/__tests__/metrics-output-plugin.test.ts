@@ -9,7 +9,8 @@ import {
 import { PlayerLanguageService } from "@player-tools/json-language-service";
 import { Diagnostic } from "vscode-languageserver-types";
 
-import { MetricsOutput, extractFromDiagnostics, extractByData } from "..";
+import { MetricsOutput } from "..";
+import { extractFromDiagnostics, extractByData } from "../utils";
 import { ComplexityCheck } from "@player-tools/complexity-check-plugin";
 
 describe("WriteMetricsPlugin", () => {
