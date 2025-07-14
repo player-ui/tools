@@ -1,16 +1,26 @@
 # Metrics Output Plugin
 
-Generate a file containing metrics data for each file in the project.
+A plugin used in the CLI (not to be used in an IDE) that generates a file that supports metrics data for each content-based file in a project.
 
 ## Config
 
-### `stats`
+### File-based metrics
+
+`stats`
 
 Assign stats related data for each file in the project.
 
-### `features`
+`features`
 
-Assign custom feature data not necessarily tied to content, such as booleans/flags. 
+Assign custom feature data not necessarily tied to content, such as booleans/flags.
+
+### Project-based metrics
+
+### `rootProperties?`
+
+Any custom metadata to include at the root level of the output file.
+
+### File-generation properties
 
 ### `outputDir?`
 
@@ -20,17 +30,12 @@ Determines which directory to write the file to. Defaults to where the script is
 
 Determines the name of the file to write. Defaults to `metrics`.
 
-### `rootProperties?`
-
-Any custom metadata to include at the root level of the output file.
-
 ## Output Format
 
 The plugin by default generates a JSON file with the following example structure:
 
 ```json
 {
-  "timestamp": "2023-05-24T12:34:56.789Z",
   "content": {
     "path/to/file/1.json": {
       "stats": {
@@ -89,14 +94,19 @@ const stats = {
 Extracts data from diagnostics that have a specific identifer that supports Symbols and strings.
 
 ```typescript
-import { extractByData } from "@player-tools/metrics-output-plugin";
-
+// An external LSP plugin
 const ASSET_COUNT_SYMBOL = Symbol("asset-count");
+```
+
+Usage:
+
+```typescript
+import { extractByData } from "@player-tools/metrics-output-plugin";
+import { ASSET_COUNT_SYMBOL } from "external-lsp-plugin";
 
 // Usage in stats configuration
 const stats = {
   // Extract data from diagnostics marked with a symbol
-  assets: (diagnostics) =>
-    extractByData(Symbol(ASSET_COUNT_SYMBOL), diagnostics),
+  assets: (diagnostics) => extractByData(ASSET_COUNT_SYMBOL, diagnostics),
 };
 ```

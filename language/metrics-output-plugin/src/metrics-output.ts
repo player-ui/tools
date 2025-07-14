@@ -57,7 +57,8 @@ function normalizePath(filePath: string): string {
 }
 
 /**
- * A plugin that writes diagnostic results to a JSON file in a specified output directory
+ * A plugin that writes diagnostic results to a JSON file in a specified output directory.
+ * NOTE: This plugin is designed for CLI usage only and should not be used in an IDE.
  */
 export class MetricsOutput implements PlayerLanguageServicePlugin {
   name = "metrics-output-plugin";
