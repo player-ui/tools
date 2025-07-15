@@ -1,3 +1,36 @@
+# 0.12.1-next.0 (Tue Jul 15 2025)
+
+### Release Notes
+
+#### Metrics Output Plugin ([#213](https://github.com/player-ui/tools/pull/213))
+
+Added new metrics output LSP plugin, to use it:
+  ```typescript
+  service.addLSPPlugin(
+      new MetricsOutput({
+         fileName: "stats",
+         stats: {
+          complexity: extractFromDiagnostics(
+            /Content complexity is (\d+)/,
+            (value: string) => parseInt(value, 10),
+          ),
+          customStat: () => Math.random(),
+        },
+      })
+  ```
+
+---
+
+#### 🐛 Bug Fix
+
+- Metrics Output Plugin [#213](https://github.com/player-ui/tools/pull/213) ([@kharrop](https://github.com/kharrop))
+
+#### Authors: 1
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+
+---
+
 # 0.12.0 (Wed Jun 04 2025)
 
 ### Release Notes
