@@ -585,6 +585,19 @@ importers:
         specifier: workspace:*
         version: link:../../common/static-xlrs
 
+  language/metrics-output-plugin:
+    dependencies:
+      '@player-tools/json-language-service':
+        specifier: workspace:*
+        version: link:../json-language-service
+    devDependencies:
+      '@player-tools/complexity-check-plugin':
+        specifier: workspace:*
+        version: link:../complexity-check-plugin
+      '@player-tools/static-xlrs':
+        specifier: workspace:*
+        version: link:../../common/static-xlrs
+
   language/typescript-expression-plugin:
     dependencies:
       '@player-tools/xlr':
