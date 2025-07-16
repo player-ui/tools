@@ -81,6 +81,7 @@
     "@vscode/vsce": "^2.23.0",
     "all-contributors-cli": "^6.20.0",
     "auto": "^10.37.2",
+    "auto-comment-plugin": "0.5.1",
     "babel-loader": "^8.2.5",
     "bundle-analyzer": "^0.0.6",
     "c8": "^7.10.0",
@@ -183,7 +184,6 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "plop": "^4.0.1",
-    "auto-comment-plugin": "0.5.1"
+    "plop": "^4.0.1"
   }
 }

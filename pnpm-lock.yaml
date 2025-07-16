@@ -189,6 +189,9 @@ importers:
       auto:
         specifier: ^10.37.2
         version: 10.46.0(@types/node@18.19.34)(typescript@5.5.4)
+      auto-comment-plugin:
+        specifier: 0.5.1
+        version: 0.5.1(@auto-it/core@11.1.6(@types/node@18.19.34)(typescript@5.5.4))
       babel-loader:
         specifier: ^8.2.5
         version: 8.3.0(@babel/core@7.24.7)(webpack@4.47.0(webpack-cli@3.3.12))
@@ -457,9 +460,6 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
     devDependencies:
-      auto-comment-plugin:
-        specifier: 0.5.1
-        version: 0.5.1(@auto-it/core@11.1.6(@types/node@18.19.34)(typescript@5.5.4))
       plop:
         specifier: ^4.0.1
         version: 4.0.1
