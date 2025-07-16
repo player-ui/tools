@@ -189,9 +189,6 @@ importers:
       auto:
         specifier: ^10.37.2
         version: 10.46.0(@types/node@18.19.34)(typescript@5.5.4)
-      auto-comment-plugin:
-        specifier: 0.5.0
-        version: 0.5.0(@auto-it/core@11.1.6(@types/node@18.19.34)(typescript@5.5.4))
       babel-loader:
         specifier: ^8.2.5
         version: 8.3.0(@babel/core@7.24.7)(webpack@4.47.0(webpack-cli@3.3.12))
@@ -460,6 +457,9 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
     devDependencies:
+      auto-comment-plugin:
+        specifier: 0.5.1
+        version: 0.5.1(@auto-it/core@11.1.6(@types/node@18.19.34)(typescript@5.5.4))
       plop:
         specifier: ^4.0.1
         version: 4.0.1
@@ -4422,8 +4422,8 @@ packages:
     resolution: {integrity: sha512-KbWgR8wOYRAPekEmMXrYYdc7BRyhn2Ftk7KWfMUnQ43hFdojWEFRxhhRUm3/OFEdPa1r0KAvTTg9YQK57xTe0g==, tarball: https://registry.npmjs.org/author-regex/-/author-regex-1.0.0.tgz}
     engines: {node: '>=0.8'}
 
-  auto-comment-plugin@0.5.0:
-    resolution: {integrity: sha512-BMTcXFyGypfQoaeyUrnsb16Xj7ojxvXTLVto74Su45n207UpsUa8DIGlcvUY1DJQbecBLoRlHnhNWvd2jTSRQA==, tarball: https://registry.npmjs.org/auto-comment-plugin/-/auto-comment-plugin-0.5.0.tgz}
+  auto-comment-plugin@0.5.1:
+    resolution: {integrity: sha512-PUe7tNj0xhxRoE3/mI7Xfvj4/ZRXg5KYO7aBS+Po9ihB5QSE5xieYdUUHnYY1uQvueXg+1dpCu2G+y5CJsd5Lw==, tarball: https://registry.npmjs.org/auto-comment-plugin/-/auto-comment-plugin-0.5.1.tgz}
     engines: {node: '>=20.0.0', pnpm: '>=10.13.1'}
     peerDependencies:
       '@auto-it/core': '>=10.0.0'
@@ -16837,7 +16837,7 @@ snapshots:
 
   author-regex@1.0.0: {}
 
-  auto-comment-plugin@0.5.0(@auto-it/core@11.1.6(@types/node@18.19.34)(typescript@5.5.4)):
+  auto-comment-plugin@0.5.1(@auto-it/core@11.1.6(@types/node@18.19.34)(typescript@5.5.4)):
     dependencies:
       '@auto-it/core': 11.1.6(@types/node@18.19.34)(typescript@5.5.4)
 
