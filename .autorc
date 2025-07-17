@@ -14,10 +14,7 @@
         "publishScript": "./scripts/release.sh"
       }
     ],
-    [
-      "release-info",
-      {}
-    ],
+    "./node_modules/auto-plugin-release-info/dist/index.js",
     "./scripts/delete-old-prerelease.js",
     "./scripts/next-changelogs.js"
   ]
