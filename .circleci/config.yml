@@ -37,7 +37,7 @@ commands:
       - run: echo -e $GPG_KEY | gpg --import --batch
       - run: |
           source ~/.bashrc
-          npm auto shipit --only-graduate-with-release-label -vv
+          npx auto shipit --only-graduate-with-release-label -vv
   check_branch_status:
     description: "Check if the branch is clean after the build"
     steps:
