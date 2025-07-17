@@ -14,7 +14,7 @@
         "publishScript": "./scripts/release.sh"
       }
     ],
-    "auto-plugin-canary-version",
+    "release-info",
     "./scripts/delete-old-prerelease.js",
     "./scripts/next-changelogs.js"
   ]
