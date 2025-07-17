@@ -12,6 +12,9 @@ importers:
 
   .:
     dependencies:
+      '@auto-it/core':
+        specifier: ^11.3.0
+        version: 11.3.0(@types/node@18.19.34)(typescript@5.5.4)
       '@auto-it/omit-release-notes':
         specifier: ^11.0.4
         version: 11.1.6(@types/node@18.19.34)(typescript@5.5.4)

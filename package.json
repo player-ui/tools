@@ -22,6 +22,7 @@
   },
   "packageManager": "pnpm@9.7.0",
   "dependencies": {
+    "@auto-it/core": "^11.3.0",
     "@auto-it/omit-release-notes": "^11.0.4",
     "@auto-it/version-file": "^11.0.4",
     "@babel/plugin-transform-react-jsx-source": "^7.23.3",
