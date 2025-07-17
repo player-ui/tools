@@ -14,7 +14,10 @@
         "publishScript": "./scripts/release.sh"
       }
     ],
-    "release-info",
+    [
+      "release-info",
+      {}
+    ],
     "./scripts/delete-old-prerelease.js",
     "./scripts/next-changelogs.js"
   ]
