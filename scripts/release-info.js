@@ -16,6 +16,8 @@ class ReleaseInfo {
 
     /** Optional note to include in the comment */
     this.note = options.note;
+
+    console.log("ReleaseInfo plugin initialized with context:", this.context);
   }
 
   /**
@@ -49,6 +51,9 @@ class ReleaseInfo {
    */
   async postVersionComment(auto, version) {
     // Post the comment
+    console.log(
+      `ReleaseInfo: Attempting to post comment with version: ${version}`,
+    );
     auto.logger.verbose.info(`Posting comment with version ${version}`);
 
     try {
@@ -71,8 +76,11 @@ class ReleaseInfo {
    * @param {Object} auto The Auto instance
    */
   apply(auto) {
+    console.log("ReleaseInfo plugin applied to Auto instance");
+
     // Handle all releases through afterRelease hook
     auto.hooks.afterRelease.tap(this.name, async (release) => {
+      console.log("ReleaseInfo: afterRelease hook triggered", release);
       try {
         // Handle both string version and release object
         let newVersion;
@@ -101,7 +109,12 @@ class ReleaseInfo {
 
         // Only post comments for canary releases
         if (isCanary) {
+          console.log(
+            "ReleaseInfo: Posting version comment for canary release...",
+          );
           await this.postVersionComment(auto, newVersion);
+        } else {
+          console.log("ReleaseInfo: Skipping non-canary release.");
         }
       } catch (error) {
         auto.logger.log.error("Failed to post comment");
