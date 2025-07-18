@@ -1,29 +1,29 @@
-import { Auto, IPlugin } from "@auto-it/core";
-
 /**
  * Auto plugin that posts a PR comment with version information when a release is created
  */
-export default class ReleaseInfo implements IPlugin {
-  /** The name of the plugin */
-  name = "release-info";
+class ReleaseInfo {
+  /**
+   * @param {Object} options - Plugin options
+   * @param {string} [options.context] - Comment context
+   * @param {string} [options.note] - Optional note to include in the comment
+   */
+  constructor(options = {}) {
+    /** The name of the plugin */
+    this.name = "release-info";
 
-  /** Comment context */
-  private context: string;
-
-  /** Optional note to include in the comment */
-  private note?: string;
-
-  constructor(options: { context?: string; note?: string } = {}) {
+    /** Comment context */
     this.context = options.context || "Release Info";
+
+    /** Optional note to include in the comment */
     this.note = options.note;
   }
 
   /**
    * Format the build info message with version information
-   * @param version The version string
-   * @returns Formatted markdown message
+   * @param {string} version The version string
+   * @returns {string} Formatted markdown message
    */
-  private formatVersionMessage(version: string): string {
+  formatVersionMessage(version) {
     const currentDate = new Date().toUTCString();
 
     let versionMessage = `### ${this.context}\n\n`;
@@ -43,10 +43,11 @@ export default class ReleaseInfo implements IPlugin {
 
   /**
    * Post a comment with version information
-   * @param auto The Auto instance
-   * @param version The version string
+   * @param {Object} auto The Auto instance
+   * @param {string} version The version string
+   * @returns {Promise<void>}
    */
-  private async postVersionComment(auto: Auto, version: string): Promise<void> {
+  async postVersionComment(auto, version) {
     // Post the comment
     auto.logger.verbose.info(`Posting comment with version ${version}`);
 
@@ -65,13 +66,16 @@ export default class ReleaseInfo implements IPlugin {
     }
   }
 
-  /** Apply the plugin to the Auto instance */
-  apply(auto: Auto): void {
+  /**
+   * Apply the plugin to the Auto instance
+   * @param {Object} auto The Auto instance
+   */
+  apply(auto) {
     // Handle all releases through afterRelease hook
     auto.hooks.afterRelease.tap(this.name, async (release) => {
       try {
         // Handle both string version and release object
-        let newVersion: string | undefined;
+        let newVersion;
 
         if (typeof release === "string") {
           newVersion = release;
@@ -105,3 +109,6 @@ export default class ReleaseInfo implements IPlugin {
     });
   }
 }
+
+// Export the plugin as default
+module.exports = ReleaseInfo;
