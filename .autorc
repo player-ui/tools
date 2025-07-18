@@ -14,7 +14,7 @@
         "publishScript": "./scripts/release.sh"
       }
     ],
-    "./bazel-bin/scripts/release-info.js",
+    "./scripts/release-info.js",
     "./scripts/delete-old-prerelease.js",
     "./scripts/next-changelogs.js"
   ]
