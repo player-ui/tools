@@ -78,9 +78,9 @@ class ReleaseInfo {
   apply(auto) {
     console.log("ReleaseInfo plugin applied to Auto instance");
 
-    // Handle all releases through afterRelease hook
-    auto.hooks.afterShipit.tap(this.name, async (releaseInfo) => {
-      console.log("ReleaseInfo: afterRelease hook triggered", releaseInfo);
+    // Handle all releases through afterShipIt hook
+    auto.hooks.afterShipIt.tap(this.name, async (releaseInfo) => {
+      console.log("ReleaseInfo: afterShipIt hook triggered", releaseInfo);
       try {
         // The releaseInfo object contains the newVersion property
         const { newVersion } = releaseInfo;
