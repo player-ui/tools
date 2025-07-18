@@ -79,17 +79,11 @@ class ReleaseInfo {
     console.log("ReleaseInfo plugin applied to Auto instance");
 
     // Handle all releases through afterRelease hook
-    auto.hooks.afterRelease.tap(this.name, async (release) => {
-      console.log("ReleaseInfo: afterRelease hook triggered", release);
+    auto.hooks.afterRelease.tapPromise(this.name, async (releaseInfo) => {
+      console.log("ReleaseInfo: afterRelease hook triggered", releaseInfo);
       try {
-        // Handle both string version and release object
-        let newVersion;
-
-        if (typeof release === "string") {
-          newVersion = release;
-        } else if (release && release.newVersion) {
-          newVersion = release.newVersion;
-        }
+        // The releaseInfo object contains the newVersion property
+        const { newVersion } = releaseInfo;
 
         if (!newVersion) {
           auto.logger.verbose.info(
@@ -118,6 +112,7 @@ class ReleaseInfo {
         }
       } catch (error) {
         auto.logger.log.error("Failed to post comment");
+        auto.logger.log.error(error);
       }
     });
   }
