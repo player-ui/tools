@@ -79,7 +79,7 @@ class ReleaseInfo {
     console.log("ReleaseInfo plugin applied to Auto instance");
 
     // Handle all releases through afterRelease hook
-    auto.hooks.afterRelease.tapPromise(this.name, async (releaseInfo) => {
+    auto.hooks.afterShipit.tap(this.name, async (releaseInfo) => {
       console.log("ReleaseInfo: afterRelease hook triggered", releaseInfo);
       try {
         // The releaseInfo object contains the newVersion property
