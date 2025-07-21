@@ -37,7 +37,7 @@ commands:
       - run: echo -e $GPG_KEY | gpg --import --batch
       - run: |
           source ~/.bashrc
-          npx auto shipit --only-graduate-with-release-label -vv
+          pnpm dlx auto --plugins=auto-plugin-release-info shipit --only-graduate-with-release-label -vv
   check_branch_status:
     description: "Check if the branch is clean after the build"
     steps:
@@ -60,10 +60,6 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{ { checksum "package.json" }}
-      - run:
-          name: Fetching Auto Plugins
-          command: |
-            pnpm dlx auto --plugins=auto-plugin-release-info
       - persist_to_workspace:
           root: .
           paths:
