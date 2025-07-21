@@ -63,7 +63,7 @@ jobs:
       - run:
           name: Install Auto Plugins
           command: |
-            pnpm install --save-dev auto-plugin-release-info
+            pnpm install auto-plugin-release-info -w
       - persist_to_workspace:
           root: .
           paths:
