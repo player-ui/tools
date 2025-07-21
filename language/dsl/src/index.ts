@@ -10,3 +10,4 @@ export * from "./compiler/schema";
 export * from "./compiler";
 export * from "./compiler/types";
 export * from "./expressions/native";
+export * from "./expressions/testing";
