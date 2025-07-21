@@ -37,7 +37,7 @@ commands:
       - run: echo -e $GPG_KEY | gpg --import --batch
       - run: |
           source ~/.bashrc
-          pnpm dlx auto --plugins=auto-plugin-release-info shipit --only-graduate-with-release-label -vv
+          pnpm dlx auto shipit --plugins=auto-plugin-release-info --only-graduate-with-release-label -vv
   check_branch_status:
     description: "Check if the branch is clean after the build"
     steps:
