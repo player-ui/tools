@@ -59,11 +59,11 @@ jobs:
 
       - restore_cache:
           keys:
-            - v1-dependencies-{ { checksum "package.json" }}
+            - v1-dependencies-{{ checksum "package.json" }}
       - run:
-          name: Install Auto Plugins
+          name: Fetching Auto Plugins
           command: |
-            pnpm dlx auto-plugin-release-info
+            pnpm dlx --package auto-release-info auto
       - persist_to_workspace:
           root: .
           paths:
