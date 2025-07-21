@@ -60,7 +60,10 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{ { checksum "package.json" }}
-
+      - run:
+          name: Install Auto Plugins
+          command: |
+            pnpm install --save-dev auto-plugin-release-info
       - persist_to_workspace:
           root: .
           paths:

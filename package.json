@@ -82,7 +82,7 @@
     "@vscode/vsce": "^2.23.0",
     "all-contributors-cli": "^6.20.0",
     "auto": "^11.0.4",
-    "auto-plugin-release-info": "^0.6.5",
+    "auto-plugin-release-info": "^0.6.8",
     "babel-loader": "^8.2.5",
     "bundle-analyzer": "^0.0.6",
     "c8": "^7.10.0",
