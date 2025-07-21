@@ -63,7 +63,7 @@ jobs:
       - run:
           name: Fetching Auto Plugins
           command: |
-            pnpm dlx auto-plugin-release-info auto
+            pnpm --package=auto-plugin-release-info dlx auto
       - persist_to_workspace:
           root: .
           paths:
