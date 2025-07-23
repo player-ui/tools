@@ -61,24 +61,22 @@ class ReleaseInfo {
       );
       // Get the appropriate message for this release context
       const message = this.getVersionMessage(newVersion, releaseContext);
+      // Check if we're in a PR context by checking if the comment function is available
+      if (!auto.comment) {
+        auto.logger.verbose.info(
+          "An instance of auto shipit was triggered outside of a PR context, skipping comment",
+        );
+        return;
+      }
+      // We have auto.comment, so we're in a PR context
       try {
-        // Check if we're in a PR context by checking if the comment function is available
-        if (!auto.comment) {
-          auto.logger.verbose.info(
-            "Comment function not available, skipping comment posting",
-          );
-          return;
-        }
-        // Post a comment since we're in a PR context
         await auto.comment({
           message,
           context: this.context,
         });
-        auto.logger.log("Successfully posted version comment");
+        auto.logger.verbose.info("Successfully posted version comment");
       } catch (error) {
-        auto.logger.verbose.info(
-          "Could not post comment - likely not in a PR context",
-        );
+        auto.logger.verbose.info("Error posting comment to PR:");
         if (error instanceof Error) {
           auto.logger.verbose.info(error.message);
         } else {
