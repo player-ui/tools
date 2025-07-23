@@ -18,13 +18,12 @@
   },
   "engines": {
     "node": "^20.14.0",
-    "pnpm": "^9.1.2"
+    "pnpm": "^9.7.0"
   },
-  "packageManager": "pnpm@9.1.2",
+  "packageManager": "pnpm@9.7.0",
   "dependencies": {
-    "@auto-it/core": "^11.3.0",
     "@auto-it/omit-release-notes": "^11.0.4",
-    "@auto-it/version-file": "^11.0.4",
+    "@auto-it/version-file": "^10.46.0",
     "@babel/plugin-transform-react-jsx-source": "^7.23.3",
     "@babel/preset-env": "^7.23.3",
     "@babel/preset-react": "^7.23.3",
@@ -44,14 +43,14 @@
     "@oclif/core": "1.9.0",
     "@oclif/errors": "^1.3.6",
     "@oclif/plugin-plugins": "^1.9.0",
-    "@player-ui/common-expressions-plugin": "0.12.0-next.1",
     "@player-ui/common-types-plugin": "0.12.0-next.1",
-    "@player-ui/data-change-listener-plugin": "0.12.0-next.1",
     "@player-ui/expression-plugin": "0.12.0-next.1",
     "@player-ui/player": "0.12.0-next.1",
     "@player-ui/pubsub-plugin": "0.12.0-next.1",
     "@player-ui/react": "0.12.0-next.1",
     "@player-ui/reference-assets-plugin-react": "0.12.0-next.1",
+    "@player-ui/common-expressions-plugin": "0.12.0-next.1",
+    "@player-ui/data-change-listener-plugin": "0.12.0-next.1",
     "@player-ui/types": "0.12.0-next.1",
     "@reduxjs/toolkit": "^1.6.1",
     "@rollup/plugin-image": "^2.1.1",
@@ -81,8 +80,7 @@
     "@vitest/coverage-v8": "^2.1.3",
     "@vscode/vsce": "^2.23.0",
     "all-contributors-cli": "^6.20.0",
-    "auto": "^11.0.4",
-    "auto-plugin-release-info": "^0.6.8",
+    "auto": "^10.37.2",
     "babel-loader": "^8.2.5",
     "bundle-analyzer": "^0.0.6",
     "c8": "^7.10.0",
@@ -175,7 +173,7 @@
   },
   "volta": {
     "node": "20.14.0",
-    "pnpm": "9.1.2"
+    "pnpm": "9.7.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": []
