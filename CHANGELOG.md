@@ -1,3 +1,23 @@
+# 0.12.1-next.1 (Mon Jul 28 2025)
+
+### Release Notes
+
+#### Adding Release Info Comment Functionality ([#217](https://github.com/player-ui/tools/pull/217))
+
+Adding a script that posts Release Info whenever a new version is made available.
+
+---
+
+#### 🐛 Bug Fix
+
+- Adding Release Info Comment Functionality [#217](https://github.com/player-ui/tools/pull/217) ([@kharrop](https://github.com/kharrop))
+
+#### Authors: 1
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+
+---
+
 # 0.12.1-next.0 (Tue Jul 15 2025)
 
 ### Release Notes
