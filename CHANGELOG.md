@@ -1,3 +1,29 @@
+# 0.12.1-next.2 (Tue Jul 29 2025)
+
+### Release Notes
+
+#### Fix Export of `testExpression` Function ([#218](https://github.com/player-ui/tools/pull/218))
+
+Fix export of `testExpression` function from `@player-tools/dsl` package
+
+#### Fixing release errors ([#219](https://github.com/player-ui/tools/pull/219))
+
+Using auto's `getPrNumberFromEnv` to verify that the release-version-info script will only run in PR contexts.
+
+---
+
+#### 🐛 Bug Fix
+
+- Fix Export of `testExpression` Function [#218](https://github.com/player-ui/tools/pull/218) ([@KetanReddy](https://github.com/KetanReddy))
+- Fixing release errors [#219](https://github.com/player-ui/tools/pull/219) ([@kharrop](https://github.com/kharrop))
+
+#### Authors: 2
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
 # 0.12.1-next.1 (Mon Jul 28 2025)
 
 ### Release Notes
