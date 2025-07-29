@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const core_1 = require("@auto-it/core");
 /**
  * Auto plugin that posts a PR comment with version information when a release is created
  */
@@ -61,8 +62,9 @@ class ReleaseInfo {
       );
       // Get the appropriate message for this release context
       const message = this.getVersionMessage(newVersion, releaseContext);
-      // Check if we're in a PR context by checking if the comment function is available
-      if (!auto.comment) {
+      // Check if we're in a PR context before attempting to comment
+      const prNumber = (0, core_1.getPrNumberFromEnv)();
+      if (!prNumber) {
         auto.logger.verbose.info(
           "Auto shipit was triggered outside of a PR context, skipping comment",
         );
