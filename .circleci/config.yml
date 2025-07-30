@@ -9,7 +9,7 @@ parameters:
     default: false
 
 orbs:
-  codecov: codecov/codecov@3.2.2
+  codecov: codecov/codecov@5.4.3
 
 executors:
   base:
@@ -116,7 +116,7 @@ jobs:
           bazel coverage --config=ci -- $BUNDLE_TARGETS
 
       - codecov/upload:
-          file: ./bazel-out/_coverage/_coverage_report.dat
+          files: ./bazel-out/_coverage/_coverage_report.dat
 
   maybe_release:
     executor: base
