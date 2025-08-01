@@ -2,17 +2,18 @@ module(name = "player-tools", version = "1.0")
 
 bazel_dep(name = "rules_player")
 
-git_override(
-    module_name = "rules_player",
-    commit = "fcabd1e11182fb55c0ea303793325541ffe698f5",
-    remote = "https://github.com/player-ui/rules_player.git",
+archive_override(
+  module_name = "rules_player",
+  strip_prefix = "rules_player-2.0.0",
+  urls = ["https://github.com/player-ui/rules_player/archive/refs/tags/v2.0.0.tar.gz"],
+  integrity = "sha256-xpjuz+HPnzovpdZoRnFuLipvhVDWFlLQzH1YSWsFrT0="
 )
 
 bazel_dep(name = "aspect_bazel_lib", version = "2.17.1")
 bazel_dep(name = "aspect_rules_js", version = "2.3.7")
-bazel_dep(name = "bazel_skylib", version = "1.7.1")
+bazel_dep(name = "bazel_skylib", version = "1.8.1")
 bazel_dep(name = "rules_pkg", version = "1.1.0")
-bazel_dep(name = "aspect_rules_ts", version = "3.6.0")
+bazel_dep(name = "aspect_rules_ts", version = "3.6.3")
 
 ####### Node.js version #########
 bazel_dep(name = "rules_nodejs", version = "6.4.0")
