@@ -18,9 +18,9 @@
   },
   "engines": {
     "node": "^20.14.0",
-    "pnpm": "^9.7.0"
+    "pnpm": "^10.13.1"
   },
-  "packageManager": "pnpm@9.7.0",
+  "packageManager": "pnpm@10.13.1",
   "dependencies": {
     "@auto-it/omit-release-notes": "^11.0.4",
     "@auto-it/version-file": "^10.46.0",
@@ -172,8 +172,8 @@
     "zip-folder": "^1.0.0"
   },
   "volta": {
-    "node": "20.14.0",
-    "pnpm": "9.7.0"
+    "node": "22.15.1",
+    "pnpm": "10.13.1"
   },
   "pnpm": {
     "onlyBuiltDependencies": []

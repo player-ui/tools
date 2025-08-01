@@ -257,33 +257,35 @@ export const Template = (props: TemplateProps): React.JSX.Element => {
   return (
     <proxy ref={proxyRef}>
       <>
-        {createPortal(
-          <OptionalIDSuffixProvider
-            wrapperRef={valueRef}
-            templateIndex={`_index${
-              baseContext.depth === 0 ? "" : baseContext.depth
-            }_`}
-          >
-            <TemplateProvider>
-              <object>
-                <property name="data">{props.data.toValue()}</property>
-                <property name="output">{outputProp}</property>
-                <property name="value">{props.children}</property>
-                {dynamicProp && (
-                  <property name="dynamic">
-                    {toJsonElement(dynamicProp)}
-                  </property>
-                )}
-                {resolvedPlacement && (
-                  <property name="placement">
-                    {toJsonElement(resolvedPlacement)}
-                  </property>
-                )}
-              </object>
-            </TemplateProvider>
-          </OptionalIDSuffixProvider>,
-          outputElement,
-        )}
+        {
+          createPortal(
+            <OptionalIDSuffixProvider
+              wrapperRef={valueRef}
+              templateIndex={`_index${
+                baseContext.depth === 0 ? "" : baseContext.depth
+              }_`}
+            >
+              <TemplateProvider>
+                <object>
+                  <property name="data">{props.data.toValue()}</property>
+                  <property name="output">{outputProp}</property>
+                  <property name="value">{props.children}</property>
+                  {dynamicProp && (
+                    <property name="dynamic">
+                      {toJsonElement(dynamicProp)}
+                    </property>
+                  )}
+                  {resolvedPlacement && (
+                    <property name="placement">
+                      {toJsonElement(resolvedPlacement)}
+                    </property>
+                  )}
+                </object>
+              </TemplateProvider>
+            </OptionalIDSuffixProvider>,
+            outputElement,
+          ) as any
+        }
         <value ref={valueRef} value={undefined} />
       </>
     </proxy>
