@@ -11,6 +11,7 @@ packages:
   - "language/dsl"
   - "language/complexity-check-plugin"
   - "language/metrics-output-plugin"
+  - "language/fluent"
   - "helpers"
   - "devtools/types"
   - "devtools/plugins/mobile/flipper-desktop-client"

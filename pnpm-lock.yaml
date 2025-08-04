@@ -566,6 +566,8 @@ importers:
 
   language/dsl: {}
 
+  language/fluent: {}
+
   language/json-language-server:
     dependencies:
       '@player-tools/json-language-service':
