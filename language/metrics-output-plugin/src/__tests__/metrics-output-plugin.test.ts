@@ -778,4 +778,103 @@ describe("WriteMetricsPlugin", () => {
     // Clean up
     fs.unlinkSync(outputPath);
   });
+
+  describe("Re-running validation", () => {
+    const MULTI_TEST_DIR = path.resolve("target_multi");
+    const MULTI_TEST_FILE = "multi_metrics.json";
+    const MULTI_TEST_PATH = path.join(MULTI_TEST_DIR, MULTI_TEST_FILE);
+
+    beforeEach(() => {
+      // Create test directory for multi-validation tests
+      if (!fs.existsSync(MULTI_TEST_DIR)) {
+        fs.mkdirSync(MULTI_TEST_DIR, { recursive: true });
+      }
+    });
+
+    afterEach(() => {
+      // Clean up test files
+      try {
+        if (fs.existsSync(MULTI_TEST_PATH)) {
+          fs.unlinkSync(MULTI_TEST_PATH);
+        }
+        if (fs.existsSync(MULTI_TEST_DIR)) {
+          fs.rmdirSync(MULTI_TEST_DIR);
+        }
+      } catch (e) {
+        console.debug("Test cleanup failed, but tests may still be valid:", e);
+      }
+    });
+
+    test("Auto-append: creates new file if none exists", async () => {
+      // Ensure no existing file
+      if (fs.existsSync(MULTI_TEST_PATH)) {
+        fs.unlinkSync(MULTI_TEST_PATH);
+      }
+
+      // Create service
+      const service = new PlayerLanguageService();
+      service.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: MULTI_TEST_DIR,
+          fileName: MULTI_TEST_FILE.replace(".json", ""),
+          stats: {
+            complexity: () => 20,
+          },
+        }),
+      );
+
+      await service.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+
+      // Validate a document
+      const doc = TextDocument.create("file:///new.json", "json", 1, "{}");
+      await service.validateTextDocument(doc);
+
+      // Check that new file was created
+      const result = JSON.parse(fs.readFileSync(MULTI_TEST_PATH, "utf-8"));
+      expect(result.content).toHaveProperty("/new.json");
+      expect(result.content["/new.json"].stats.complexity).toBe(20);
+    });
+
+    test("Auto-append: preserves existing metrics when file exists", async () => {
+      // Create an existing metrics file
+      const existingMetrics = {
+        content: {
+          "/stage1.json": { stats: { complexity: 10 } },
+        },
+        timestamp: "stage1-timestamp",
+      };
+      fs.writeFileSync(MULTI_TEST_PATH, JSON.stringify(existingMetrics));
+
+      // Create service
+      const service = new PlayerLanguageService();
+      service.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: MULTI_TEST_DIR,
+          fileName: MULTI_TEST_FILE.replace(".json", ""),
+          stats: {
+            complexity: () => 20,
+          },
+        }),
+      );
+
+      await service.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+
+      // Validate a document
+      const doc = TextDocument.create("file:///stage2.json", "json", 1, "{}");
+      await service.validateTextDocument(doc);
+
+      // Check that existing metrics were preserved and new metrics were added
+      const result = JSON.parse(fs.readFileSync(MULTI_TEST_PATH, "utf-8"));
+      expect(result.content).toHaveProperty("/stage1.json");
+      expect(result.content["/stage1.json"].stats.complexity).toBe(10);
+      expect(result.content).toHaveProperty("/stage2.json");
+      expect(result.content["/stage2.json"].stats.complexity).toBe(20);
+    });
+  });
 });

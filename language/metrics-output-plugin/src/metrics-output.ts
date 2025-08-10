@@ -72,6 +72,10 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
   // In-memory storage of all results
   private aggregatedResults: Record<string, any> = {};
 
+  private get outputFilePath(): string {
+    return path.resolve(this.outputDir, `${this.fileName}.json`);
+  }
+
   constructor(options: MetricsOutputConfig = {}) {
     this.outputDir = options.outputDir || process.cwd();
 
@@ -85,7 +89,11 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     this.stats = options.stats || {};
     this.features = options.features || {};
 
-    // Initialize with empty content
+    // Initialize based on if file already exists
+    this.initializeResults();
+  }
+
+  private initializeResults(): void {
     this.aggregatedResults = {
       content: {},
     };
@@ -99,10 +107,33 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
         diagnostics: Diagnostic[],
         { documentContext }: { documentContext: DocumentContext },
       ): Diagnostic[] => {
+        // If metrics file exists, load and append to it
+        if (fs.existsSync(this.outputFilePath)) {
+          this.loadExistingMetrics();
+        }
+
         this.generateFile(diagnostics, documentContext);
+
         return diagnostics;
       },
     );
+  }
+
+  private loadExistingMetrics(): void {
+    try {
+      const fileContent = fs.readFileSync(this.outputFilePath, "utf-8");
+      const existingMetrics = JSON.parse(fileContent);
+
+      this.aggregatedResults.content = {
+        ...existingMetrics.content,
+        ...this.aggregatedResults.content,
+      };
+    } catch (error) {
+      // If we can't parse existing file, continue with current state
+      console.warn(
+        `Warning: Could not parse existing metrics file ${this.outputFilePath}. Continuing with current metrics.`,
+      );
+    }
   }
 
   /**
