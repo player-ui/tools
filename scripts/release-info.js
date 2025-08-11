@@ -1,25 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-
-// Simple PR detection for CircleCI and other common CI systems
-function isPRContext() {
-  // CircleCI
-  if (process.env.CIRCLE_PR_NUMBER || process.env.CIRCLE_PULL_REQUEST) {
-    return true;
-  }
-
-  // GitHub Actions
-  if (process.env.GITHUB_EVENT_NAME === "pull_request") {
-    return true;
-  }
-
-  // Generic CI PR indicators
-  if (process.env.PULL_REQUEST || process.env.CI_PULL_REQUEST) {
-    return true;
-  }
-
-  return false;
-}
+const core_1 = require("@auto-it/core");
 
 /**
  * Auto plugin that posts a PR comment with version information when a release is created
@@ -92,23 +73,20 @@ class ReleaseInfo {
       // Get the appropriate message for this release context
       const message = this.getVersionMessage(newVersion, releaseContext);
 
-      // Check if we're in a PR context BEFORE attempting to call auto.comment
-      const inPRContext = isPRContext();
+      // Check if we're in a PR context before attempting to comment
+      const prNumber = (0, core_1.getPrNumberFromEnv)();
 
-      auto.logger.verbose.info(`Debug: PR context detected = ${inPRContext}`);
-      auto.logger.verbose.info(
-        `Debug: auto.comment function available = ${typeof auto.comment === "function"}`,
-      );
-      auto.logger.verbose.info(`Debug: Release context = ${releaseContext}`);
-
-      if (!inPRContext) {
-        auto.logger.verbose.info(
-          "Auto shipit was triggered outside of a PR context, skipping comment",
-        );
+      if (!prNumber) {
+        auto.logger.verbose.info("Not in PR context, skipping comment");
         return;
       }
 
-      // We have auto.comment, so we're in a PR context - try to post comment
+      if (!auto.comment) {
+        auto.logger.verbose.info("Auto comment not available, skipping");
+        return;
+      }
+
+      // Try to post comment
       try {
         await auto.comment({
           message,
@@ -116,25 +94,16 @@ class ReleaseInfo {
         });
         auto.logger.verbose.info("Successfully posted version comment");
       } catch (error) {
-        // Log the error but don't let it fail the build
-        auto.logger.verbose.info(
-          "Error posting comment to PR (continuing build):",
-        );
+        auto.logger.verbose.info("Comment posting failed, continuing build");
         if (error instanceof Error) {
           auto.logger.verbose.info(error.message);
-        } else {
-          auto.logger.verbose.info(String(error));
         }
-
-        // Don't re-throw the error - let the build continue
-        auto.logger.verbose.info(
-          "Comment posting failed but continuing with release",
-        );
       }
     });
   }
 }
 
+// Export in multiple formats for compatibility with different module loaders
 exports.default = ReleaseInfo;
 module.exports = ReleaseInfo;
 module.exports.default = ReleaseInfo;
