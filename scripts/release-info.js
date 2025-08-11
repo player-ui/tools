@@ -1,176 +1,37 @@
 "use strict";
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
-};
-var __copyProps = (to, from, except, desc) => {
-  if ((from && typeof from === "object") || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, {
-          get: () => from[key],
-          enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable,
-        });
-  }
-  return to;
-};
-var __toCommonJS = (mod) =>
-  __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+Object.defineProperty(exports, "__esModule", { value: true });
 
-// src/index.ts
-var index_exports = {};
-__export(index_exports, {
-  default: () => ReleaseInfo,
-});
-module.exports = __toCommonJS(index_exports);
-var import_core = require("@auto-it/core");
+// Simple PR detection for CircleCI and other common CI systems
+function isPRContext() {
+  // CircleCI
+  if (process.env.CIRCLE_PR_NUMBER || process.env.CIRCLE_PULL_REQUEST) {
+    return true;
+  }
 
-// src/ci-utils.ts
-function detectPRContext() {
-  return (
-    detectCircleCI() ||
-    detectGitHubActions() ||
-    detectJenkins() ||
-    detectTravisCI() ||
-    detectGeneric()
-  );
-}
-function detectCircleCI() {
-  const prNumber = process.env.CIRCLE_PR_NUMBER;
-  if (prNumber) {
-    return {
-      number: prNumber,
-      url: process.env.CIRCLE_PULL_REQUEST,
-      source: "CIRCLE_PR_NUMBER",
-    };
+  // GitHub Actions
+  if (process.env.GITHUB_EVENT_NAME === "pull_request") {
+    return true;
   }
-  const pullRequestUrl = process.env.CIRCLE_PULL_REQUEST;
-  if (pullRequestUrl) {
-    const prMatch = pullRequestUrl.match(/\/pull\/(\d+)(?:\/|$)/);
-    if (prMatch) {
-      return {
-        number: prMatch[1],
-        url: pullRequestUrl,
-        source: "CIRCLE_PULL_REQUEST",
-      };
-    }
+
+  // Generic CI PR indicators
+  if (process.env.PULL_REQUEST || process.env.CI_PULL_REQUEST) {
+    return true;
   }
-  const branch = process.env.CIRCLE_BRANCH;
-  if (branch == null ? void 0 : branch.startsWith("pull/")) {
-    const prMatch = branch.match(/pull\/(\d+)/);
-    if (prMatch) {
-      return {
-        number: prMatch[1],
-        source: "CIRCLE_BRANCH",
-      };
-    }
-  }
-  return null;
-}
-function detectGitHubActions() {
-  const eventName = process.env.GITHUB_EVENT_NAME;
-  const headRef = process.env.GITHUB_HEAD_REF;
-  if (eventName === "pull_request" && headRef) {
-    const githubRef = process.env.GITHUB_REF;
-    if (githubRef == null ? void 0 : githubRef.startsWith("refs/pull/")) {
-      const prMatch = githubRef.match(/refs\/pull\/(\d+)\//);
-      if (prMatch) {
-        return {
-          number: prMatch[1],
-          source: "GITHUB_REF",
-        };
-      }
-    }
-  }
-  return null;
-}
-function detectJenkins() {
-  const ghprbPullId = process.env.ghprbPullId;
-  if (ghprbPullId) {
-    return {
-      number: ghprbPullId,
-      url: process.env.ghprbPullLink,
-      source: "ghprbPullId",
-    };
-  }
-  const prNumber = process.env.PULL_REQUEST_NUMBER;
-  if (prNumber) {
-    return {
-      number: prNumber,
-      source: "PULL_REQUEST_NUMBER",
-    };
-  }
-  const changeId = process.env.CHANGE_ID;
-  if (changeId) {
-    return {
-      number: changeId,
-      source: "CHANGE_ID",
-    };
-  }
-  return null;
-}
-function detectTravisCI() {
-  const prNumber = process.env.TRAVIS_PULL_REQUEST;
-  if (prNumber && prNumber !== "false") {
-    return {
-      number: prNumber,
-      source: "TRAVIS_PULL_REQUEST",
-    };
-  }
-  return null;
-}
-function detectGeneric() {
-  const pullRequest = process.env.PULL_REQUEST;
-  if (pullRequest) {
-    if (/^\d+$/.test(pullRequest)) {
-      return {
-        number: pullRequest,
-        source: "PULL_REQUEST",
-      };
-    } else {
-      const prMatch = pullRequest.match(/\/pull\/(\d+)(?:\/|$)/);
-      if (prMatch) {
-        return {
-          number: prMatch[1],
-          url: pullRequest,
-          source: "PULL_REQUEST",
-        };
-      }
-    }
-  }
-  const ciPullRequest = process.env.CI_PULL_REQUEST;
-  if (ciPullRequest) {
-    if (/^\d+$/.test(ciPullRequest)) {
-      return {
-        number: ciPullRequest,
-        source: "CI_PULL_REQUEST",
-      };
-    } else {
-      const prMatch = ciPullRequest.match(/\/pull\/(\d+)(?:\/|$)/);
-      if (prMatch) {
-        return {
-          number: prMatch[1],
-          url: ciPullRequest,
-          source: "CI_PULL_REQUEST",
-        };
-      }
-    }
-  }
-  return null;
+
+  return false;
 }
 
-// src/index.ts
-var ReleaseInfo = class {
+/**
+ * Auto plugin that posts a PR comment with version information when a release is created
+ */
+class ReleaseInfo {
   constructor(options = {}) {
     /** The name of the plugin */
     this.name = "release-info";
     this.context = options.context || "Release Info";
     this.notes = options.notes || {};
   }
+
   /**
    * Get the appropriate message based on the release context
    * @param version The version string
@@ -178,74 +39,76 @@ var ReleaseInfo = class {
    * @returns Formatted markdown message for comments
    */
   getVersionMessage(version, releaseContext) {
-    const currentDate = /* @__PURE__ */ new Date().toUTCString();
-    let versionMessage = `### ${this.context}
+    const currentDate = new Date().toUTCString();
+    let versionMessage = `### ${this.context}\n\n`;
 
-`;
+    // Customize message based on release context
     switch (releaseContext) {
       case "canary":
-        versionMessage += `Your PR was successfully deployed on \`${currentDate}\` with this canary version:
-
-`;
+        versionMessage += `Your PR was successfully deployed on \`${currentDate}\` with this canary version:\n\n`;
         break;
       case "next":
-        versionMessage += `A new pre-release (next) version was published on \`${currentDate}\`:
-
-`;
+        versionMessage += `A new pre-release (next) version was published on \`${currentDate}\`:\n\n`;
         break;
       case "latest":
-        versionMessage += `A new stable version was released on \`${currentDate}\`:
-
-`;
+        versionMessage += `A new stable version was released on \`${currentDate}\`:\n\n`;
         break;
       default:
-        versionMessage += `A new version was released on \`${currentDate}\`:
-
-`;
+        versionMessage += `A new version was released on \`${currentDate}\`:\n\n`;
         break;
     }
+
     versionMessage += "```\n";
-    versionMessage += `${version}
-`;
+    versionMessage += `${version}\n`;
     versionMessage += "```";
+
+    // Add the context-specific note if provided
     const note = this.notes[releaseContext] || this.notes.default;
     if (note) {
       versionMessage += "\n\n";
       versionMessage += note;
     }
+
     return versionMessage;
   }
+
   /** Apply the plugin to the Auto instance */
   apply(auto) {
+    // Handle all releases through afterShipIt hook
     auto.hooks.afterShipIt.tap(this.name, async (release) => {
       const { newVersion, context: releaseContext } = release;
+
       if (!newVersion) {
         auto.logger.verbose.info(
           "No release version produced, skipping comment",
         );
         return;
       }
+
       auto.logger.verbose.info(
         `Processing ${releaseContext} release with version ${newVersion}`,
       );
+
+      // Get the appropriate message for this release context
       const message = this.getVersionMessage(newVersion, releaseContext);
-      const autoPrNumber = (0, import_core.getPrNumberFromEnv)();
-      const prContext = detectPRContext();
-      const prNumber =
-        autoPrNumber || (prContext == null ? void 0 : prContext.number);
+
+      // Check if we're in a PR context BEFORE attempting to call auto.comment
+      const inPRContext = isPRContext();
+
+      auto.logger.verbose.info(`Debug: PR context detected = ${inPRContext}`);
       auto.logger.verbose.info(
-        `Debug: Auto's getPrNumberFromEnv() = ${autoPrNumber}`,
-      );
-      auto.logger.verbose.info(
-        `Debug: CI detection found = ${prContext ? `${prContext.number} (via ${prContext.source})` : "none"}`,
+        `Debug: auto.comment function available = ${typeof auto.comment === "function"}`,
       );
       auto.logger.verbose.info(`Debug: Release context = ${releaseContext}`);
-      if (!prNumber) {
+
+      if (!inPRContext) {
         auto.logger.verbose.info(
-          `Auto shipit was triggered outside of a PR context (context: ${releaseContext}), skipping comment`,
+          "Auto shipit was triggered outside of a PR context, skipping comment",
         );
         return;
       }
+
+      // We have auto.comment, so we're in a PR context - try to post comment
       try {
         await auto.comment({
           message,
@@ -253,13 +116,25 @@ var ReleaseInfo = class {
         });
         auto.logger.verbose.info("Successfully posted version comment");
       } catch (error) {
-        auto.logger.verbose.info("Error posting comment to PR:");
+        // Log the error but don't let it fail the build
+        auto.logger.verbose.info(
+          "Error posting comment to PR (continuing build):",
+        );
         if (error instanceof Error) {
           auto.logger.verbose.info(error.message);
         } else {
           auto.logger.verbose.info(String(error));
         }
+
+        // Don't re-throw the error - let the build continue
+        auto.logger.verbose.info(
+          "Comment posting failed but continuing with release",
+        );
       }
     });
   }
-};
+}
+
+exports.default = ReleaseInfo;
+module.exports = ReleaseInfo;
+module.exports.default = ReleaseInfo;
