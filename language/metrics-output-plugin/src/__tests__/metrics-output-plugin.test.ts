@@ -1058,5 +1058,45 @@ describe("WriteMetricsPlugin", () => {
       const keys = Object.keys(parsed);
       expect(keys[keys.length - 1]).toBe("content");
     });
+
+    test("Gracefully handles malformed existing metrics file and logs warning", async () => {
+      // Seed an invalid JSON metrics file to trigger the parse error path
+      fs.writeFileSync(MULTI_TEST_PATH, "{ invalid-json ");
+
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const service = new PlayerLanguageService();
+      service.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: MULTI_TEST_DIR,
+          fileName: MULTI_TEST_FILE.replace(".json", ""),
+          stats: { metric: () => 99 },
+        }),
+      );
+
+      await service.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+
+      const doc = TextDocument.create(
+        "file:///malformed.json",
+        "json",
+        1,
+        "{}",
+      );
+      await service.validateTextDocument(doc);
+
+      // Should log a parse warning and still produce a valid metrics file
+      expect(warnSpy).toHaveBeenCalled();
+      const args = warnSpy.mock.calls[0][0] as string;
+      expect(args).toContain("Could not parse existing metrics file");
+
+      const parsed = JSON.parse(fs.readFileSync(MULTI_TEST_PATH, "utf-8"));
+      expect(parsed.content).toHaveProperty("/malformed.json");
+      expect(parsed.content["/malformed.json"].stats.metric).toBe(99);
+
+      warnSpy.mockRestore();
+    });
   });
 });
