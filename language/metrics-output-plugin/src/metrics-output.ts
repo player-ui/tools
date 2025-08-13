@@ -14,10 +14,7 @@ import type {
  * @param documentContext - Context of the current document
  * @returns Any value that will be included in the metrics output
  */
-export type MetricFunction = (
-  diagnostics: Diagnostic[],
-  documentContext: DocumentContext,
-) => unknown;
+export type MetricFunction = (...args: any[]) => any;
 
 export type MetricValue =
   | Record<string, unknown>
@@ -161,7 +158,7 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     value: MetricValue,
     diagnostics: Diagnostic[],
     documentContext: DocumentContext,
-  ): unknown {
+  ) {
     if (typeof value === "function") {
       try {
         return value(diagnostics, documentContext);
@@ -176,17 +173,13 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
   private generateMetrics(
     diagnostics: Diagnostic[],
     documentContext: DocumentContext,
-  ): Record<string, unknown> {
+  ): Record<string, any> {
     // If stats is a function, evaluate it directly
     if (typeof this.stats === "function") {
       try {
         const result = this.stats(diagnostics, documentContext);
-        if (
-          typeof result === "object" &&
-          result !== null &&
-          !Array.isArray(result)
-        ) {
-          return result as Record<string, unknown>;
+        if (typeof result === "object" && result !== null) {
+          return result;
         }
         return { dynamicStatsValue: result };
       } catch (error) {
@@ -196,7 +189,7 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     }
 
     // Otherwise process each metric in the record
-    const result: Record<string, unknown> = {};
+    const result: Record<string, any> = {};
     Object.entries(this.stats).forEach(([key, value]) => {
       result[key] = this.evaluateValue(value, diagnostics, documentContext);
     });
@@ -207,7 +200,7 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
   private generateFeatures(
     diagnostics: Diagnostic[],
     documentContext: DocumentContext,
-  ): Record<string, any> {
+  ): Record<string, unknown> {
     // If features is a function, evaluate it directly
     if (typeof this.features === "function") {
       try {
@@ -254,33 +247,18 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
       ...(Object.keys(features).length > 0 ? { features } : {}),
     };
 
-    // Evaluate root properties with current diagnostics and context
-    let rootProps: RootProps;
-    if (typeof this.rootProperties === "function") {
-      try {
-        const result = this.rootProperties(diagnostics, documentContext);
-        if (
-          typeof result === "object" &&
-          result !== null &&
-          !Array.isArray(result)
-        ) {
-          rootProps = result as Record<string, unknown>;
-        } else {
-          rootProps = { dynamicRootValue: result };
-        }
-      } catch (error) {
-        documentContext.log.error(`Error evaluating root properties: ${error}`);
-        rootProps = { error: `Root properties evaluation failed: ${error}` };
-      }
-    } else {
-      rootProps = this.rootProperties;
-    }
+    // Evaluate root properties
+    const rootProps =
+      typeof this.rootProperties === "function"
+        ? this.rootProperties(diagnostics, documentContext)
+        : this.rootProperties;
 
     // Single deep merge of root properties and content for this file
-    this.aggregatedResults = merge<MetricsReport>(this.aggregatedResults, {
-      ...rootProps,
-      content: { [filePath]: newEntry },
-    });
+    this.aggregatedResults = merge<MetricsReport>(
+      this.aggregatedResults,
+      rootProps,
+      { content: { [filePath]: newEntry } },
+    );
 
     // Write ordered output: all root properties first, then content last
     const outputFilePath = path.join(fullOutputDir, `${this.fileName}.json`);
