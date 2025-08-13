@@ -207,17 +207,13 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
   private generateFeatures(
     diagnostics: Diagnostic[],
     documentContext: DocumentContext,
-  ): Record<string, unknown> {
+  ): Record<string, any> {
     // If features is a function, evaluate it directly
     if (typeof this.features === "function") {
       try {
         const result = this.features(diagnostics, documentContext);
-        if (
-          typeof result === "object" &&
-          result !== null &&
-          !Array.isArray(result)
-        ) {
-          return result as Record<string, unknown>;
+        if (typeof result === "object" && result !== null) {
+          return result;
         }
         return { dynamicFeaturesValue: result };
       } catch (error) {
