@@ -403,6 +403,44 @@ describe("WriteMetricsPlugin", () => {
     fs.unlinkSync(outputPath);
   });
 
+  test("function-based rootProperties that returns a non-object", async () => {
+    const service = new PlayerLanguageService();
+
+    service.addLSPPlugin(
+      new MetricsOutput({
+        outputDir: TEST_DIR,
+        fileName: "non_object",
+        rootProperties: () => "This should be wrapped in an object",
+      }),
+    );
+
+    await service.setAssetTypesFromModule([
+      Types,
+      ReferenceAssetsWebPluginManifest,
+    ]);
+
+    const document = TextDocument.create(
+      "non/object/test.json",
+      "json",
+      1,
+      JSON.stringify({ id: "test" }),
+    );
+
+    await service.validateTextDocument(document);
+
+    const outputPath = path.join(TEST_DIR, "non_object.json");
+    expect(fs.existsSync(outputPath)).toBe(true);
+
+    const content = JSON.parse(fs.readFileSync(outputPath, "utf-8"));
+    expect(content).toHaveProperty(
+      "dynamicRootValue",
+      "This should be wrapped in an object",
+    );
+
+    // Clean up
+    fs.unlinkSync(outputPath);
+  });
+
   test("function-based stats work correctly", async () => {
     const service = new PlayerLanguageService();
 

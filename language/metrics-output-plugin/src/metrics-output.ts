@@ -247,11 +247,23 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
       ...(Object.keys(features).length > 0 ? { features } : {}),
     };
 
-    // Evaluate root properties
-    const rootProps =
-      typeof this.rootProperties === "function"
-        ? this.rootProperties(diagnostics, documentContext)
-        : this.rootProperties;
+    // Evaluate root properties with original behavior (wrap non-objects, catch errors)
+    let rootProps: RootProps;
+    if (typeof this.rootProperties === "function") {
+      try {
+        const result = this.rootProperties(diagnostics, documentContext);
+        if (typeof result === "object" && result !== null) {
+          rootProps = result as Record<string, any>;
+        } else {
+          rootProps = { dynamicRootValue: result };
+        }
+      } catch (error) {
+        documentContext.log.error(`Error evaluating root properties: ${error}`);
+        rootProps = { error: `Root properties evaluation failed: ${error}` };
+      }
+    } else {
+      rootProps = this.rootProperties as Record<string, any>;
+    }
 
     // Single deep merge of root properties and content for this file
     this.aggregatedResults = merge<MetricsReport>(
