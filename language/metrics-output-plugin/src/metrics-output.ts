@@ -264,14 +264,18 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     // Evaluate root properties with current diagnostics and context
     const rootProps = this.evaluateRootProperties(diagnostics, documentContext);
 
-    // Apply root properties to the aggregated results using deep merge
+    // Deep merge root properties into aggregated results (preserve existing, extend new)
     this.aggregatedResults = deepMerge(this.aggregatedResults, rootProps);
 
-    // Write the aggregated results to a file
+    // Write ordered output: all root properties first, then content last
     const outputFilePath = path.join(fullOutputDir, `${this.fileName}.json`);
+    const { content, ...root } = this.aggregatedResults as {
+      content: Record<string, unknown>;
+      [k: string]: unknown;
+    };
     fs.writeFileSync(
       outputFilePath,
-      JSON.stringify(this.aggregatedResults, null, 2),
+      JSON.stringify({ ...root, content }, null, 2),
       "utf-8",
     );
 

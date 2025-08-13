@@ -1013,5 +1013,50 @@ describe("WriteMetricsPlugin", () => {
         expect.objectContaining({ ci: true }),
       );
     });
+
+    test("New root property on second run keeps content as last key", async () => {
+      // First run writes initial root and first file entry
+      const service1 = new PlayerLanguageService();
+      service1.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: MULTI_TEST_DIR,
+          fileName: MULTI_TEST_FILE.replace(".json", ""),
+          rootProperties: { initialRoot: true },
+          stats: { metric: () => 1 },
+        }),
+      );
+
+      await service1.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+
+      const doc1 = TextDocument.create("file:///stage1.json", "json", 1, "{}");
+      await service1.validateTextDocument(doc1);
+
+      // Second run adds a new root property and a different file entry
+      const service2 = new PlayerLanguageService();
+      service2.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: MULTI_TEST_DIR,
+          fileName: MULTI_TEST_FILE.replace(".json", ""),
+          rootProperties: { newRoot: true },
+          stats: { metric: () => 2 },
+        }),
+      );
+
+      await service2.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+
+      const doc2 = TextDocument.create("file:///stage2.json", "json", 1, "{}");
+      await service2.validateTextDocument(doc2);
+
+      // Verify only that the last top-level key is "content"
+      const parsed = JSON.parse(fs.readFileSync(MULTI_TEST_PATH, "utf-8"));
+      const keys = Object.keys(parsed);
+      expect(keys[keys.length - 1]).toBe("content");
+    });
   });
 });
