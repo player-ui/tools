@@ -838,17 +838,20 @@ describe("WriteMetricsPlugin", () => {
       expect(result.content["/new.json"].stats.complexity).toBe(20);
     });
 
-    test("Auto-append: preserves existing metrics when file exists", async () => {
-      // Create an existing metrics file
+    test("Auto-append: if metrics.json exists, new file entries are appended and existing ones are preserved", async () => {
+      // Seed an existing metrics file (what already exists on disk)
       const existingMetrics = {
         content: {
-          "/stage1.json": { stats: { complexity: 10 } },
+          "/stage1.json": {
+            stats: { complexity: 10 },
+            features: { stable: true },
+          },
         },
         timestamp: "stage1-timestamp",
       };
       fs.writeFileSync(MULTI_TEST_PATH, JSON.stringify(existingMetrics));
 
-      // Create service
+      // Create service that will add a new file entry
       const service = new PlayerLanguageService();
       service.addLSPPlugin(
         new MetricsOutput({
@@ -856,6 +859,9 @@ describe("WriteMetricsPlugin", () => {
           fileName: MULTI_TEST_FILE.replace(".json", ""),
           stats: {
             complexity: () => 20,
+          },
+          features: {
+            stable: () => false,
           },
         }),
       );
@@ -865,16 +871,147 @@ describe("WriteMetricsPlugin", () => {
         ReferenceAssetsWebPluginManifest,
       ]);
 
-      // Validate a document
+      // Validate a different document to trigger append
       const doc = TextDocument.create("file:///stage2.json", "json", 1, "{}");
       await service.validateTextDocument(doc);
 
-      // Check that existing metrics were preserved and new metrics were added
+      // The resulting content should have the union of file entries with their respective data
       const result = JSON.parse(fs.readFileSync(MULTI_TEST_PATH, "utf-8"));
+      expect(result.content).toEqual({
+        "/stage1.json": {
+          stats: { complexity: 10 },
+          features: { stable: true },
+        },
+        "/stage2.json": {
+          stats: { complexity: 20 },
+          features: { stable: false },
+        },
+      });
+    });
+
+    test("Auto-append: root properties are preserved and new ones appended when file exists", async () => {
+      // Existing file with root metadata
+      const existingMetrics = {
+        content: {
+          "/stage1.json": { stats: { metric: 1 } },
+        },
+        root: {
+          metadata: {
+            project: { name: "metrics-service" },
+          },
+        },
+      };
+      fs.writeFileSync(MULTI_TEST_PATH, JSON.stringify(existingMetrics));
+
+      const service = new PlayerLanguageService();
+      service.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: MULTI_TEST_DIR,
+          fileName: MULTI_TEST_FILE.replace(".json", ""),
+          rootProperties: {
+            root: {
+              metadata: { project: { version: "1.0.0" } },
+              build: { ci: true },
+            },
+          },
+          stats: { metric: () => 42 },
+        }),
+      );
+
+      await service.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+
+      // Validate a document to trigger write
+      const doc = TextDocument.create("file:///stage2.json", "json", 1, "{}");
+      await service.validateTextDocument(doc);
+
+      const result = JSON.parse(fs.readFileSync(MULTI_TEST_PATH, "utf-8"));
+
+      // Root properties merge (preserve existing, append new)
+      expect(result.root.metadata.project).toEqual(
+        expect.objectContaining({ name: "metrics-service", version: "1.0.0" }),
+      );
+      expect(result.root.build).toEqual(expect.objectContaining({ ci: true }));
+
+      // Content includes both files with their own stats
       expect(result.content).toHaveProperty("/stage1.json");
-      expect(result.content["/stage1.json"].stats.complexity).toBe(10);
+      expect(result.content["/stage1.json"].stats.metric).toBe(1);
       expect(result.content).toHaveProperty("/stage2.json");
-      expect(result.content["/stage2.json"].stats.complexity).toBe(20);
+      expect(result.content["/stage2.json"].stats.metric).toBe(42);
+    });
+
+    test("Deep merge: nested objects are merged (preserve existing, extend new) across runs", async () => {
+      // Seed an existing metrics file with nested content and realistic root metadata
+      const existingMetrics = {
+        content: {
+          "/nested.json": {
+            stats: {
+              metrics: { warnings: 1, byType: { deprecations: 1 } },
+              nested: { x: 10 },
+            },
+          },
+        },
+        root: {
+          metadata: {
+            project: {
+              name: "metrics-service",
+              info: { repo: "tools" },
+            },
+          },
+        },
+      };
+      fs.writeFileSync(MULTI_TEST_PATH, JSON.stringify(existingMetrics));
+
+      // Create service which writes overlapping nested values
+      const service = new PlayerLanguageService();
+      service.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: MULTI_TEST_DIR,
+          fileName: MULTI_TEST_FILE.replace(".json", ""),
+          rootProperties: {
+            root: {
+              metadata: {
+                project: { info: { branch: "main" } },
+                build: { ci: true },
+              },
+            },
+          },
+          stats: {
+            metrics: () => ({ warnings: 2, byType: { errors: 1 } }), // overwrite primitive and extend nested
+            nested: () => ({ y: 20 }), // extend nested
+          },
+        }),
+      );
+
+      await service.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+
+      // Validate a document to trigger write for the same file path
+      const doc = TextDocument.create("file:///nested.json", "json", 1, "{}");
+      await service.validateTextDocument(doc);
+
+      // Verify deep merge result
+      const result = JSON.parse(fs.readFileSync(MULTI_TEST_PATH, "utf-8"));
+      expect(result.content["/nested.json"].stats).toEqual(
+        expect.objectContaining({
+          metrics: expect.objectContaining({
+            warnings: 2,
+            byType: expect.objectContaining({ deprecations: 1, errors: 1 }),
+          }),
+          nested: expect.objectContaining({ x: 10, y: 20 }),
+        }),
+      );
+      expect(result.root.metadata.project.name).toBe("metrics-service");
+      expect(result.root.metadata.project.info).toEqual(
+        expect.objectContaining({ repo: "tools", branch: "main" }),
+      );
+      expect(result.root.metadata.build).toEqual(
+        expect.objectContaining({ ci: true }),
+      );
     });
   });
 });

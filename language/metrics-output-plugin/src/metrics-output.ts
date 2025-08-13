@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
+import { merge as deepMerge } from "ts-deepmerge";
 import { Diagnostic } from "vscode-languageserver-types";
 import type {
   PlayerLanguageService,
@@ -124,10 +125,11 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
       const fileContent = fs.readFileSync(this.outputFilePath, "utf-8");
       const existingMetrics = JSON.parse(fileContent);
 
-      this.aggregatedResults.content = {
-        ...existingMetrics.content,
-        ...this.aggregatedResults.content,
-      };
+      // Recursively merge existing metrics with current aggregated results
+      this.aggregatedResults = deepMerge(
+        existingMetrics,
+        this.aggregatedResults,
+      );
     } catch (error) {
       // If we can't parse existing file, continue with current state
       console.warn(
@@ -248,17 +250,22 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     const stats = this.generateMetrics(diagnostics, documentContext);
     const features = this.generateFeatures(diagnostics, documentContext);
 
-    // Update content for this file
-    this.aggregatedResults.content[filePath] = {
+    // Update content for this file using deep merge to preserve existing nested data
+    const existingEntry = this.aggregatedResults.content[filePath] || {};
+    const newEntry = {
       stats,
       ...(Object.keys(features).length > 0 ? { features } : {}),
     };
+    this.aggregatedResults.content[filePath] = deepMerge(
+      existingEntry,
+      newEntry,
+    );
 
     // Evaluate root properties with current diagnostics and context
     const rootProps = this.evaluateRootProperties(diagnostics, documentContext);
 
-    // Apply root properties to the aggregated results
-    Object.assign(this.aggregatedResults, rootProps);
+    // Apply root properties to the aggregated results using deep merge
+    this.aggregatedResults = deepMerge(this.aggregatedResults, rootProps);
 
     // Write the aggregated results to a file
     const outputFilePath = path.join(fullOutputDir, `${this.fileName}.json`);

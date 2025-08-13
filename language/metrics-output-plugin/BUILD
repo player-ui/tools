@@ -23,5 +23,6 @@ js_pipeline(
         "//:node_modules/vscode-languageserver-types",
         "//:node_modules/vscode-languageserver-textdocument",
         "//:node_modules/typescript",
+        "//:node_modules/ts-deepmerge",
     ],
 )
