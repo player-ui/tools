@@ -1021,6 +1021,68 @@ describe("WriteMetricsPlugin", () => {
       expect(keys[keys.length - 1]).toBe("content");
     });
 
+    test("merges with existing metrics file (root and content)", async () => {
+      const service = new PlayerLanguageService();
+
+      const fileName = "preexisting_merge";
+      const outputPath = path.join(TEST_DIR, `${fileName}.json`);
+
+      // Seed an existing metrics file with root and nested content
+      fs.writeFileSync(
+        outputPath,
+        JSON.stringify(
+          {
+            rootKey: "keep-me",
+            content: {
+              "existing.json": {
+                stats: { existingStat: 1 },
+              },
+            },
+          },
+          null,
+          2,
+        ),
+        "utf-8",
+      );
+
+      service.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: TEST_DIR,
+          fileName,
+          rootProperties: { anotherRoot: true },
+          stats: { newStat: 2 },
+        }),
+      );
+
+      await service.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+
+      const doc = TextDocument.create(
+        "existing.json",
+        "json",
+        1,
+        JSON.stringify({ id: "ok" }),
+      );
+      await service.validateTextDocument(doc);
+
+      expect(fs.existsSync(outputPath)).toBe(true);
+      const parsed = JSON.parse(fs.readFileSync(outputPath, "utf-8"));
+
+      // Root deep-merged
+      expect(parsed.rootKey).toBe("keep-me");
+      expect(parsed.anotherRoot).toBe(true);
+
+      // Content deep-merged for same file
+      expect(parsed.content["existing.json"].stats).toMatchObject({
+        existingStat: 1,
+        newStat: 2,
+      });
+
+      fs.unlinkSync(outputPath);
+    });
+
     test("Gracefully handles malformed existing metrics file and logs warning", async () => {
       // Seed an invalid JSON metrics file to trigger the parse error path
       fs.writeFileSync(MULTI_TEST_PATH, "{ invalid-json ");
@@ -1055,6 +1117,7 @@ describe("WriteMetricsPlugin", () => {
       expect(args).toContain("Could not parse existing metrics file");
 
       const parsed = JSON.parse(fs.readFileSync(MULTI_TEST_PATH, "utf-8"));
+      // normalizePath removes file:// and backslashes; our test doc uses file:///malformed.json
       expect(parsed.content).toHaveProperty("/malformed.json");
       expect(parsed.content["/malformed.json"].stats.metric).toBe(99);
 
