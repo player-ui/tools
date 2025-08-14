@@ -779,6 +779,39 @@ describe("WriteMetricsPlugin", () => {
     fs.unlinkSync(outputPath);
   });
 
+  test("rootProperties function error is handled and recorded", async () => {
+    const service = new PlayerLanguageService();
+
+    service.addLSPPlugin(
+      new MetricsOutput({
+        outputDir: TEST_DIR,
+        fileName: "rootprops_error",
+        rootProperties: () => {
+          throw new Error("boom");
+        },
+        stats: { ok: 1 },
+      }),
+    );
+
+    await service.setAssetTypesFromModule([
+      Types,
+      ReferenceAssetsWebPluginManifest,
+    ]);
+
+    const doc = TextDocument.create("file:///err.json", "json", 1, "{}");
+    await service.validateTextDocument(doc);
+
+    const out = path.join(TEST_DIR, "rootprops_error.json");
+    expect(fs.existsSync(out)).toBe(true);
+
+    const json = JSON.parse(fs.readFileSync(out, "utf-8"));
+    // The catch assigns an error object at the root
+    expect(json).toHaveProperty("error");
+    expect(json.content).toHaveProperty("/err.json");
+
+    fs.unlinkSync(out);
+  });
+
   describe("Re-running validation", () => {
     const MULTI_TEST_DIR = path.resolve("target_multi");
     const MULTI_TEST_FILE = "multi_metrics.json";
