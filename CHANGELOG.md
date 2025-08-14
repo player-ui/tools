@@ -1,3 +1,31 @@
+# 0.12.1-next.3 (Thu Aug 14 2025)
+
+### Release Notes
+
+#### feat: Metrics Output Plugin should aggregate data ([#222](https://github.com/player-ui/tools/pull/222))
+
+Updating metrics output plugin so that the output file correctly updates and aggregates data if there are multiple times that validation occurs. This uses ts-deepmerge to ensure nested objects are merged correctly, and also groups all rootProperties before content.
+
+#### Bazel, Node, and PNPM upgrades ([#220](https://github.com/player-ui/tools/pull/220))
+
+- Update Build to Bazel 8 
+- Update to Node 22
+- Update to pnpm 10
+
+---
+
+#### 🐛 Bug Fix
+
+- feat: Metrics Output Plugin should aggregate data [#222](https://github.com/player-ui/tools/pull/222) ([@kharrop](https://github.com/kharrop))
+- Bazel, Node, and PNPM upgrades [#220](https://github.com/player-ui/tools/pull/220) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### Authors: 2
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
 # 0.12.1-next.2 (Tue Jul 29 2025)
 
 ### Release Notes

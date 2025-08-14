@@ -778,4 +778,612 @@ describe("WriteMetricsPlugin", () => {
     // Clean up
     fs.unlinkSync(outputPath);
   });
+
+  test("rootProperties function error is handled and recorded", async () => {
+    const service = new PlayerLanguageService();
+
+    service.addLSPPlugin(
+      new MetricsOutput({
+        outputDir: TEST_DIR,
+        fileName: "rootprops_error",
+        rootProperties: () => {
+          throw new Error("boom");
+        },
+        stats: { ok: 1 },
+      }),
+    );
+
+    await service.setAssetTypesFromModule([
+      Types,
+      ReferenceAssetsWebPluginManifest,
+    ]);
+
+    const doc = TextDocument.create("file:///err.json", "json", 1, "{}");
+    await service.validateTextDocument(doc);
+
+    const out = path.join(TEST_DIR, "rootprops_error.json");
+    expect(fs.existsSync(out)).toBe(true);
+
+    const json = JSON.parse(fs.readFileSync(out, "utf-8"));
+    // The catch assigns an error object at the root
+    expect(json).toHaveProperty("error");
+    expect(json.content).toHaveProperty("/err.json");
+
+    fs.unlinkSync(out);
+  });
+
+  test("defaults outputDir to process.cwd()", async () => {
+    const service = new PlayerLanguageService();
+    const tempDir = path.resolve("target_default");
+    if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
+
+    const cwdSpy = vi.spyOn(process, "cwd").mockReturnValue(tempDir);
+
+    service.addLSPPlugin(
+      new MetricsOutput({
+        // no outputDir on purpose
+        fileName: "default_dir",
+        stats: { a: 1 },
+      }),
+    );
+
+    await service.setAssetTypesFromModule([
+      Types,
+      ReferenceAssetsWebPluginManifest,
+    ]);
+
+    const doc = TextDocument.create("file:///default.json", "json", 1, "{}");
+    await service.validateTextDocument(doc);
+
+    const out = path.join(tempDir, "default_dir.json");
+    expect(fs.existsSync(out)).toBe(true);
+
+    // cleanup
+    fs.unlinkSync(out);
+    fs.rmdirSync(tempDir);
+    cwdSpy.mockRestore();
+  });
+
+  test("defaults fileName to 'metrics' when omitted", async () => {
+    const service = new PlayerLanguageService();
+    const tempDir = path.resolve("target_default_name");
+    if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
+
+    service.addLSPPlugin(
+      new MetricsOutput({
+        outputDir: tempDir, // no fileName on purpose
+        stats: { a: 1 },
+      }),
+    );
+
+    await service.setAssetTypesFromModule([
+      Types,
+      ReferenceAssetsWebPluginManifest,
+    ]);
+
+    const doc = TextDocument.create(
+      "file:///default-name.json",
+      "json",
+      1,
+      "{}",
+    );
+    await service.validateTextDocument(doc);
+
+    expect(fs.existsSync(path.join(tempDir, "metrics.json"))).toBe(true);
+
+    fs.unlinkSync(path.join(tempDir, "metrics.json"));
+    fs.rmdirSync(tempDir);
+  });
+
+  test("treats valid non-object existing metrics as empty", async () => {
+    const dir = path.resolve("target_non_object");
+    const name = "preexisting_non_object";
+    const outPath = path.join(dir, `${name}.json`);
+    fs.mkdirSync(dir, { recursive: true });
+
+    // Seed a valid JSON that is NOT an object → hits the else branch (': {}')
+    fs.writeFileSync(outPath, "123", "utf-8"); // could also be "true", "\"str\"", or "null"
+
+    const service = new PlayerLanguageService();
+    service.addLSPPlugin(
+      new MetricsOutput({
+        outputDir: dir,
+        fileName: name,
+        stats: { metric: 42 },
+      }),
+    );
+    await service.setAssetTypesFromModule([
+      Types,
+      ReferenceAssetsWebPluginManifest,
+    ]);
+
+    const doc = TextDocument.create("file:///x.json", "json", 1, "{}");
+    await service.validateTextDocument(doc);
+
+    const json = JSON.parse(fs.readFileSync(outPath, "utf-8"));
+    expect(json.content["/x.json"].stats.metric).toBe(42);
+    // No root pulled from preexisting since it wasn't an object
+    fs.unlinkSync(outPath);
+    fs.rmdirSync(dir);
+  });
+
+  describe("Re-running validation", () => {
+    const MULTI_TEST_DIR = path.resolve("target_multi");
+    const MULTI_TEST_FILE = "multi_metrics.json";
+    const MULTI_TEST_PATH = path.join(MULTI_TEST_DIR, MULTI_TEST_FILE);
+
+    beforeEach(() => {
+      // Create test directory for multi-validation tests
+      if (!fs.existsSync(MULTI_TEST_DIR)) {
+        fs.mkdirSync(MULTI_TEST_DIR, { recursive: true });
+      }
+    });
+
+    afterEach(() => {
+      // Clean up test files
+      try {
+        if (fs.existsSync(MULTI_TEST_PATH)) {
+          fs.unlinkSync(MULTI_TEST_PATH);
+        }
+        if (fs.existsSync(MULTI_TEST_DIR)) {
+          fs.rmdirSync(MULTI_TEST_DIR);
+        }
+      } catch (e) {
+        console.debug("Test cleanup failed, but tests may still be valid:", e);
+      }
+    });
+
+    test("Auto-append: creates new file if none exists", async () => {
+      // Ensure no existing file
+      if (fs.existsSync(MULTI_TEST_PATH)) {
+        fs.unlinkSync(MULTI_TEST_PATH);
+      }
+
+      // Create service
+      const service = new PlayerLanguageService();
+      service.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: MULTI_TEST_DIR,
+          fileName: MULTI_TEST_FILE.replace(".json", ""),
+          stats: {
+            complexity: () => 20,
+          },
+        }),
+      );
+
+      await service.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+
+      // Validate a document
+      const doc = TextDocument.create("file:///new.json", "json", 1, "{}");
+      await service.validateTextDocument(doc);
+
+      // Check that new file was created
+      const result = JSON.parse(fs.readFileSync(MULTI_TEST_PATH, "utf-8"));
+      expect(result.content).toHaveProperty("/new.json");
+      expect(result.content["/new.json"].stats.complexity).toBe(20);
+    });
+
+    test("Auto-append: if metrics.json exists, new file entries are appended and existing ones are preserved", async () => {
+      // Seed an existing metrics file (what already exists on disk)
+      const existingMetrics = {
+        content: {
+          "/stage1.json": {
+            stats: { complexity: 10 },
+            features: { stable: true },
+          },
+        },
+        timestamp: "stage1-timestamp",
+      };
+      fs.writeFileSync(MULTI_TEST_PATH, JSON.stringify(existingMetrics));
+
+      // Create service that will add a new file entry
+      const service = new PlayerLanguageService();
+      service.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: MULTI_TEST_DIR,
+          fileName: MULTI_TEST_FILE.replace(".json", ""),
+          stats: {
+            complexity: () => 20,
+          },
+          features: {
+            stable: () => false,
+          },
+        }),
+      );
+
+      await service.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+
+      // Validate a different document to trigger append
+      const doc = TextDocument.create("file:///stage2.json", "json", 1, "{}");
+      await service.validateTextDocument(doc);
+
+      // The resulting content should have the union of file entries with their respective data
+      const result = JSON.parse(fs.readFileSync(MULTI_TEST_PATH, "utf-8"));
+      expect(result.content).toEqual({
+        "/stage1.json": {
+          stats: { complexity: 10 },
+          features: { stable: true },
+        },
+        "/stage2.json": {
+          stats: { complexity: 20 },
+          features: { stable: false },
+        },
+      });
+    });
+
+    test("Auto-append: root properties are preserved and new ones appended when file exists", async () => {
+      // Existing file with root metadata
+      const existingMetrics = {
+        content: {
+          "/stage1.json": { stats: { metric: 1 } },
+        },
+        root: {
+          metadata: {
+            project: { name: "metrics-service" },
+          },
+        },
+      };
+      fs.writeFileSync(MULTI_TEST_PATH, JSON.stringify(existingMetrics));
+
+      const service = new PlayerLanguageService();
+      service.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: MULTI_TEST_DIR,
+          fileName: MULTI_TEST_FILE.replace(".json", ""),
+          rootProperties: {
+            root: {
+              metadata: { project: { version: "1.0.0" } },
+              build: { ci: true },
+            },
+          },
+          stats: { metric: () => 42 },
+        }),
+      );
+
+      await service.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+
+      // Validate a document to trigger write
+      const doc = TextDocument.create("file:///stage2.json", "json", 1, "{}");
+      await service.validateTextDocument(doc);
+
+      const result = JSON.parse(fs.readFileSync(MULTI_TEST_PATH, "utf-8"));
+
+      // Root properties merge (preserve existing, append new)
+      expect(result.root.metadata.project).toEqual(
+        expect.objectContaining({ name: "metrics-service", version: "1.0.0" }),
+      );
+      expect(result.root.build).toEqual(expect.objectContaining({ ci: true }));
+
+      // Content includes both files with their own stats
+      expect(result.content).toHaveProperty("/stage1.json");
+      expect(result.content["/stage1.json"].stats.metric).toBe(1);
+      expect(result.content).toHaveProperty("/stage2.json");
+      expect(result.content["/stage2.json"].stats.metric).toBe(42);
+    });
+
+    test("Auto-append:loads existing metrics and merges", async () => {
+      const service = new PlayerLanguageService();
+      const dir = path.resolve("target_existing_ok");
+      const name = "preexisting_ok";
+      const outPath = path.join(dir, `${name}.json`);
+
+      fs.mkdirSync(dir, { recursive: true });
+      // Seed a valid JSON object so parsed && typeof parsed === "object" is true
+      fs.writeFileSync(
+        outPath,
+        JSON.stringify(
+          {
+            root: true,
+            content: {
+              "/seed.json": { stats: { seeded: 1 } },
+            },
+          },
+          null,
+          2,
+        ),
+        "utf-8",
+      );
+
+      service.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: dir,
+          fileName: name, // matches the seeded file
+          stats: { added: 2 },
+        }),
+      );
+
+      await service.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+
+      const doc = TextDocument.create("file:///seed.json", "json", 1, "{}");
+      await service.validateTextDocument(doc);
+
+      const json = JSON.parse(fs.readFileSync(outPath, "utf-8"));
+      expect(json.root).toBe(true); // came from existing file
+      expect(json.content["/seed.json"].stats).toMatchObject({
+        seeded: 1,
+        added: 2,
+      });
+
+      fs.unlinkSync(outPath);
+      fs.rmdirSync(dir);
+    });
+
+    test("Deep merge: nested objects are merged (preserve existing, extend new) across runs", async () => {
+      // Seed an existing metrics file with nested content and realistic root metadata
+      const existingMetrics = {
+        content: {
+          "/nested.json": {
+            stats: {
+              metrics: { warnings: 1, byType: { deprecations: 1 } },
+              nested: { x: 10 },
+            },
+          },
+        },
+        root: {
+          metadata: {
+            project: {
+              name: "metrics-service",
+              info: { repo: "tools" },
+            },
+          },
+        },
+      };
+      fs.writeFileSync(MULTI_TEST_PATH, JSON.stringify(existingMetrics));
+
+      // Create service which writes overlapping nested values
+      const service = new PlayerLanguageService();
+      service.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: MULTI_TEST_DIR,
+          fileName: MULTI_TEST_FILE.replace(".json", ""),
+          rootProperties: {
+            root: {
+              metadata: {
+                project: { info: { branch: "main" } },
+                build: { ci: true },
+              },
+            },
+          },
+          stats: {
+            metrics: () => ({ warnings: 2, byType: { errors: 1 } }), // overwrite primitive and extend nested
+            nested: () => ({ y: 20 }), // extend nested
+          },
+        }),
+      );
+
+      await service.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+
+      // Validate a document to trigger write for the same file path
+      const doc = TextDocument.create("file:///nested.json", "json", 1, "{}");
+      await service.validateTextDocument(doc);
+
+      // Verify deep merge result
+      const result = JSON.parse(fs.readFileSync(MULTI_TEST_PATH, "utf-8"));
+      expect(result.content["/nested.json"].stats).toEqual(
+        expect.objectContaining({
+          metrics: expect.objectContaining({
+            warnings: 2,
+            byType: expect.objectContaining({ deprecations: 1, errors: 1 }),
+          }),
+          nested: expect.objectContaining({ x: 10, y: 20 }),
+        }),
+      );
+      expect(result.root.metadata.project.name).toBe("metrics-service");
+      expect(result.root.metadata.project.info).toEqual(
+        expect.objectContaining({ repo: "tools", branch: "main" }),
+      );
+      expect(result.root.metadata.build).toEqual(
+        expect.objectContaining({ ci: true }),
+      );
+    });
+
+    test("New root property on second run keeps content as last key", async () => {
+      // First run writes initial root and first file entry
+      const service1 = new PlayerLanguageService();
+      service1.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: MULTI_TEST_DIR,
+          fileName: MULTI_TEST_FILE.replace(".json", ""),
+          rootProperties: { initialRoot: true },
+          stats: { metric: () => 1 },
+        }),
+      );
+
+      await service1.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+
+      const doc1 = TextDocument.create("file:///stage1.json", "json", 1, "{}");
+      await service1.validateTextDocument(doc1);
+
+      // Second run adds a new root property and a different file entry
+      const service2 = new PlayerLanguageService();
+      service2.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: MULTI_TEST_DIR,
+          fileName: MULTI_TEST_FILE.replace(".json", ""),
+          rootProperties: { newRoot: true },
+          stats: { metric: () => 2 },
+        }),
+      );
+
+      await service2.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+
+      const doc2 = TextDocument.create("file:///stage2.json", "json", 1, "{}");
+      await service2.validateTextDocument(doc2);
+
+      // Verify only that the last top-level key is "content"
+      const parsed = JSON.parse(fs.readFileSync(MULTI_TEST_PATH, "utf-8"));
+      const keys = Object.keys(parsed);
+      expect(keys[keys.length - 1]).toBe("content");
+    });
+
+    test("merges with existing metrics file (root and content)", async () => {
+      const service = new PlayerLanguageService();
+
+      const fileName = "preexisting_merge";
+      const outputPath = path.join(TEST_DIR, `${fileName}.json`);
+
+      // Seed an existing metrics file with root and nested content
+      fs.writeFileSync(
+        outputPath,
+        JSON.stringify(
+          {
+            rootKey: "keep-me",
+            content: {
+              "existing.json": {
+                stats: { existingStat: 1 },
+              },
+            },
+          },
+          null,
+          2,
+        ),
+        "utf-8",
+      );
+
+      service.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: TEST_DIR,
+          fileName,
+          rootProperties: { anotherRoot: true },
+          stats: { newStat: 2 },
+        }),
+      );
+
+      await service.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+
+      const doc = TextDocument.create(
+        "existing.json",
+        "json",
+        1,
+        JSON.stringify({ id: "ok" }),
+      );
+      await service.validateTextDocument(doc);
+
+      expect(fs.existsSync(outputPath)).toBe(true);
+      const parsed = JSON.parse(fs.readFileSync(outputPath, "utf-8"));
+
+      // Root deep-merged
+      expect(parsed.rootKey).toBe("keep-me");
+      expect(parsed.anotherRoot).toBe(true);
+
+      // Content deep-merged for same file
+      expect(parsed.content["existing.json"].stats).toMatchObject({
+        existingStat: 1,
+        newStat: 2,
+      });
+
+      fs.unlinkSync(outputPath);
+    });
+
+    test("Gracefully handles malformed existing metrics file and logs warning", async () => {
+      // Seed an invalid JSON metrics file to trigger the parse error path
+      fs.writeFileSync(MULTI_TEST_PATH, "{ invalid-json ");
+
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const service = new PlayerLanguageService();
+      service.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: MULTI_TEST_DIR,
+          fileName: MULTI_TEST_FILE.replace(".json", ""),
+          stats: { metric: () => 99 },
+        }),
+      );
+
+      await service.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+
+      const doc = TextDocument.create(
+        "file:///malformed.json",
+        "json",
+        1,
+        "{}",
+      );
+      await service.validateTextDocument(doc);
+
+      // Should log a parse warning and still produce a valid metrics file
+      expect(warnSpy).toHaveBeenCalled();
+      const args = warnSpy.mock.calls[0][0] as string;
+      expect(args).toContain("Could not parse existing metrics file");
+
+      const parsed = JSON.parse(fs.readFileSync(MULTI_TEST_PATH, "utf-8"));
+      // normalizePath removes file:// and backslashes; our test doc uses file:///malformed.json
+      expect(parsed.content).toHaveProperty("/malformed.json");
+      expect(parsed.content["/malformed.json"].stats.metric).toBe(99);
+
+      warnSpy.mockRestore();
+    });
+
+    test("loads and merges an existing metrics file", async () => {
+      const service = new PlayerLanguageService();
+      const fileName = "pre_merge";
+      const outPath = path.join(TEST_DIR, `${fileName}.json`);
+
+      // Seed a valid existing metrics file
+      fs.writeFileSync(
+        outPath,
+        JSON.stringify(
+          {
+            rootKey: "keep",
+            content: {
+              "/pre.json": { stats: { preStat: 1 } },
+            },
+          },
+          null,
+          2,
+        ),
+        "utf-8",
+      );
+
+      service.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: TEST_DIR,
+          fileName,
+          stats: { newStat: 2 },
+        }),
+      );
+
+      await service.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+      const doc = TextDocument.create("file:///pre.json", "json", 1, "{}");
+      await service.validateTextDocument(doc);
+
+      const json = JSON.parse(fs.readFileSync(outPath, "utf-8"));
+      expect(json.rootKey).toBe("keep"); // came from existing file
+      expect(json.content["/pre.json"].stats).toMatchObject({
+        preStat: 1,
+        newStat: 2,
+      });
+
+      fs.unlinkSync(outPath);
+    });
+  });
 });
