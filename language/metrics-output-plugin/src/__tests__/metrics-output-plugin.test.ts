@@ -875,6 +875,38 @@ describe("WriteMetricsPlugin", () => {
     fs.rmdirSync(tempDir);
   });
 
+  test("treats valid non-object existing metrics as empty", async () => {
+    const dir = path.resolve("target_non_object");
+    const name = "preexisting_non_object";
+    const outPath = path.join(dir, `${name}.json`);
+    fs.mkdirSync(dir, { recursive: true });
+
+    // Seed a valid JSON that is NOT an object → hits the else branch (': {}')
+    fs.writeFileSync(outPath, "123", "utf-8"); // could also be "true", "\"str\"", or "null"
+
+    const service = new PlayerLanguageService();
+    service.addLSPPlugin(
+      new MetricsOutput({
+        outputDir: dir,
+        fileName: name,
+        stats: { metric: 42 },
+      }),
+    );
+    await service.setAssetTypesFromModule([
+      Types,
+      ReferenceAssetsWebPluginManifest,
+    ]);
+
+    const doc = TextDocument.create("file:///x.json", "json", 1, "{}");
+    await service.validateTextDocument(doc);
+
+    const json = JSON.parse(fs.readFileSync(outPath, "utf-8"));
+    expect(json.content["/x.json"].stats.metric).toBe(42);
+    // No root pulled from preexisting since it wasn't an object
+    fs.unlinkSync(outPath);
+    fs.rmdirSync(dir);
+  });
+
   describe("Re-running validation", () => {
     const MULTI_TEST_DIR = path.resolve("target_multi");
     const MULTI_TEST_FILE = "multi_metrics.json";
