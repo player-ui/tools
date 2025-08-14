@@ -812,6 +812,38 @@ describe("WriteMetricsPlugin", () => {
     fs.unlinkSync(out);
   });
 
+  test("defaults outputDir to process.cwd()", async () => {
+    const service = new PlayerLanguageService();
+    const tempDir = path.resolve("target_default");
+    if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
+
+    const cwdSpy = vi.spyOn(process, "cwd").mockReturnValue(tempDir);
+
+    service.addLSPPlugin(
+      new MetricsOutput({
+        // no outputDir on purpose
+        fileName: "default_dir",
+        stats: { a: 1 },
+      }),
+    );
+
+    await service.setAssetTypesFromModule([
+      Types,
+      ReferenceAssetsWebPluginManifest,
+    ]);
+
+    const doc = TextDocument.create("file:///default.json", "json", 1, "{}");
+    await service.validateTextDocument(doc);
+
+    const out = path.join(tempDir, "default_dir.json");
+    expect(fs.existsSync(out)).toBe(true);
+
+    // cleanup
+    fs.unlinkSync(out);
+    fs.rmdirSync(tempDir);
+    cwdSpy.mockRestore();
+  });
+
   describe("Re-running validation", () => {
     const MULTI_TEST_DIR = path.resolve("target_multi");
     const MULTI_TEST_FILE = "multi_metrics.json";
@@ -1193,6 +1225,52 @@ describe("WriteMetricsPlugin", () => {
       expect(parsed.content["/malformed.json"].stats.metric).toBe(99);
 
       warnSpy.mockRestore();
+    });
+
+    test("loads and merges an existing metrics file", async () => {
+      const service = new PlayerLanguageService();
+      const fileName = "pre_merge";
+      const outPath = path.join(TEST_DIR, `${fileName}.json`);
+
+      // Seed a valid existing metrics file
+      fs.writeFileSync(
+        outPath,
+        JSON.stringify(
+          {
+            rootKey: "keep",
+            content: {
+              "/pre.json": { stats: { preStat: 1 } },
+            },
+          },
+          null,
+          2,
+        ),
+        "utf-8",
+      );
+
+      service.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: TEST_DIR,
+          fileName,
+          stats: { newStat: 2 },
+        }),
+      );
+
+      await service.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+      const doc = TextDocument.create("file:///pre.json", "json", 1, "{}");
+      await service.validateTextDocument(doc);
+
+      const json = JSON.parse(fs.readFileSync(outPath, "utf-8"));
+      expect(json.rootKey).toBe("keep"); // came from existing file
+      expect(json.content["/pre.json"].stats).toMatchObject({
+        preStat: 1,
+        newStat: 2,
+      });
+
+      fs.unlinkSync(outPath);
     });
   });
 });
