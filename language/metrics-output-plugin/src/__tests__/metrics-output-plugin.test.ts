@@ -844,6 +844,37 @@ describe("WriteMetricsPlugin", () => {
     cwdSpy.mockRestore();
   });
 
+  test("defaults fileName to 'metrics' when omitted", async () => {
+    const service = new PlayerLanguageService();
+    const tempDir = path.resolve("target_default_name");
+    if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
+
+    service.addLSPPlugin(
+      new MetricsOutput({
+        outputDir: tempDir, // no fileName on purpose
+        stats: { a: 1 },
+      }),
+    );
+
+    await service.setAssetTypesFromModule([
+      Types,
+      ReferenceAssetsWebPluginManifest,
+    ]);
+
+    const doc = TextDocument.create(
+      "file:///default-name.json",
+      "json",
+      1,
+      "{}",
+    );
+    await service.validateTextDocument(doc);
+
+    expect(fs.existsSync(path.join(tempDir, "metrics.json"))).toBe(true);
+
+    fs.unlinkSync(path.join(tempDir, "metrics.json"));
+    fs.rmdirSync(tempDir);
+  });
+
   describe("Re-running validation", () => {
     const MULTI_TEST_DIR = path.resolve("target_multi");
     const MULTI_TEST_FILE = "multi_metrics.json";
@@ -1005,6 +1036,56 @@ describe("WriteMetricsPlugin", () => {
       expect(result.content["/stage1.json"].stats.metric).toBe(1);
       expect(result.content).toHaveProperty("/stage2.json");
       expect(result.content["/stage2.json"].stats.metric).toBe(42);
+    });
+
+    test("Auto-append:loads existing metrics and merges", async () => {
+      const service = new PlayerLanguageService();
+      const dir = path.resolve("target_existing_ok");
+      const name = "preexisting_ok";
+      const outPath = path.join(dir, `${name}.json`);
+
+      fs.mkdirSync(dir, { recursive: true });
+      // Seed a valid JSON object so parsed && typeof parsed === "object" is true
+      fs.writeFileSync(
+        outPath,
+        JSON.stringify(
+          {
+            root: true,
+            content: {
+              "/seed.json": { stats: { seeded: 1 } },
+            },
+          },
+          null,
+          2,
+        ),
+        "utf-8",
+      );
+
+      service.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: dir,
+          fileName: name, // matches the seeded file
+          stats: { added: 2 },
+        }),
+      );
+
+      await service.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+
+      const doc = TextDocument.create("file:///seed.json", "json", 1, "{}");
+      await service.validateTextDocument(doc);
+
+      const json = JSON.parse(fs.readFileSync(outPath, "utf-8"));
+      expect(json.root).toBe(true); // came from existing file
+      expect(json.content["/seed.json"].stats).toMatchObject({
+        seeded: 1,
+        added: 2,
+      });
+
+      fs.unlinkSync(outPath);
+      fs.rmdirSync(dir);
     });
 
     test("Deep merge: nested objects are merged (preserve existing, extend new) across runs", async () => {
