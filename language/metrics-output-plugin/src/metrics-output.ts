@@ -13,16 +13,30 @@ import type {
   MetricsFeatures,
   MetricsContent,
   MetricsReport,
-  MetricFunction,
   MetricValue,
 } from "./types";
 
 export interface MetricsOutputConfig {
+  /** Directory where the output file will be written */
   outputDir?: string;
+
+  /** Name of the JSON output file */
   fileName?: string;
-  rootProperties?: Record<string, any> | MetricFunction;
-  stats?: Record<string, MetricValue> | MetricFunction;
-  features?: Record<string, MetricValue> | MetricFunction;
+
+  /**
+   * Custom properties to include at the root level of the output
+   */
+  rootProperties?: MetricsRoot;
+
+  /**
+   * Content-specific stats
+   */
+  stats?: MetricsStats;
+
+  /**
+   * Content-specific features
+   */
+  features?: MetricsFeatures;
 }
 
 /**
@@ -48,9 +62,9 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
 
   private outputDir: string;
   private fileName: string;
-  private rootProperties: MetricsRoot | MetricFunction;
-  private stats: Record<string, MetricValue> | MetricFunction;
-  private features: Record<string, MetricValue> | MetricFunction;
+  private rootProperties: MetricsRoot;
+  private stats: MetricsStats;
+  private features: MetricsFeatures;
 
   // In-memory storage of all results
   private aggregatedResults: MetricsReport = {
@@ -116,8 +130,6 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
       );
     }
   }
-
-  // (rootProperties evaluation logic is inlined where used)
 
   /**
    * Evaluates a value, executing it if it's a function
@@ -223,7 +235,7 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
       ...(Object.keys(features).length > 0 ? { features } : {}),
     };
 
-    // Evaluate root properties with original behavior (wrap non-objects, catch errors)
+    // Evaluate root properties
     let rootProps: MetricsRoot;
     if (typeof this.rootProperties === "function") {
       try {
@@ -248,7 +260,7 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
       { content: { [filePath]: newEntry } },
     );
 
-    // Write ordered output: all root properties first, then content last
+    // Write ordered results: all root properties first, then content last
     const outputFilePath = path.join(fullOutputDir, `${this.fileName}.json`);
     const { content, ...root } = this.aggregatedResults;
     fs.writeFileSync(
