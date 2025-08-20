@@ -8,7 +8,7 @@ packages:
   - "language/typescript-expression-plugin"
   - "language/json-language-service"
   - "language/json-language-server"
-  - "language/dsl"
+  - "language/dsl/react"
   - "language/complexity-check-plugin"
   - "language/metrics-output-plugin"
   - "helpers"
