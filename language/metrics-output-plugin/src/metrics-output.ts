@@ -97,7 +97,7 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
         diagnostics: Diagnostic[],
         { documentContext }: { documentContext: DocumentContext },
       ): Diagnostic[] => {
-        // If metrics file exists, load and append to it
+        // If metrics file exists, load it
         if (fs.existsSync(this.outputFilePath)) {
           this.loadExistingMetrics();
         }
@@ -112,6 +112,12 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
   private loadExistingMetrics(): void {
     try {
       const fileContent = fs.readFileSync(this.outputFilePath, "utf-8");
+
+      // Handle empty file case - treat it as if no file exists
+      if (!fileContent.trim()) {
+        return;
+      }
+
       const parsed: unknown = JSON.parse(fileContent);
       const existingMetrics: Partial<MetricsReport> =
         parsed && typeof parsed === "object"
@@ -126,7 +132,7 @@ export class MetricsOutput implements PlayerLanguageServicePlugin {
     } catch (error) {
       // If we can't parse existing file, continue with current state
       console.warn(
-        `Warning: Could not parse existing metrics file ${this.outputFilePath}. Continuing with current metrics.`,
+        `Warning: Could not parse existing metrics file ${this.outputFilePath}. Continuing with current metrics. Error: ${error}`,
       );
     }
   }
