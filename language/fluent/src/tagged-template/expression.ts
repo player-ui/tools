@@ -1,9 +1,5 @@
-import {
-  isTaggedTemplateValue,
-  TAGGED_TEMPLATE_MARKER,
-  type TaggedTemplateValue,
-  type TemplateRefOptions,
-} from "../types";
+import { isTaggedTemplateValue, TAGGED_TEMPLATE_MARKER } from "../types";
+import type { TaggedTemplateValue, TemplateRefOptions } from "../types";
 
 /**
  * Tagged template for creating expression literals
