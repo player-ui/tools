@@ -414,6 +414,9 @@ importers:
       ts-loader:
         specifier: ^5.3.3
         version: 5.4.5(typescript@5.5.4)
+      ts-morph:
+        specifier: ^26.0.0
+        version: 26.0.0
       ts-node:
         specifier: ^10.4.0
         version: 10.9.2(@types/node@18.19.34)(typescript@5.5.4)
@@ -567,6 +570,12 @@ importers:
   language/dsl: {}
 
   language/fluent: {}
+
+  language/fluent-gen:
+    dependencies:
+      '@player-tools/fluent':
+        specifier: workspace:*
+        version: link:../fluent
 
   language/json-language-server:
     dependencies:
@@ -2753,6 +2762,14 @@ packages:
     resolution: {integrity: sha512-xTUt0NulylX27/zMx04ZYar/kr1raaiFTVvQ5feljQsiAgdm0WPj4S73/ye0fbslh+15QrIuDvfCXTek7pMY5A==, tarball: https://registry.npmjs.org/@inquirer/type/-/type-1.3.3.tgz}
     engines: {node: '>=18'}
 
+  '@isaacs/balanced-match@4.0.1':
+    resolution: {integrity: sha512-yzMTt9lEb8Gv7zRioUilSglI0c0smZ9k5D65677DLWLtWJaXIS3CqcGyUFByYKlnUj6TkjLVs54fBl6+TiGQDQ==, tarball: https://registry.npmjs.org/@isaacs/balanced-match/-/balanced-match-4.0.1.tgz}
+    engines: {node: 20 || >=22}
+
+  '@isaacs/brace-expansion@5.0.0':
+    resolution: {integrity: sha512-ZT55BDLV0yv0RBm2czMiZ+SqCGO7AvmOM3G/w2xhVPH+te0aKgFjmBvGlL1dH+ql2tgGO3MVrbb3jCKyvpgnxA==, tarball: https://registry.npmjs.org/@isaacs/brace-expansion/-/brace-expansion-5.0.0.tgz}
+    engines: {node: 20 || >=22}
+
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==, tarball: https://registry.npmjs.org/@isaacs/cliui/-/cliui-8.0.2.tgz}
     engines: {node: '>=12'}
@@ -3580,6 +3597,9 @@ packages:
   '@trysound/sax@0.2.0':
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==, tarball: https://registry.npmjs.org/@trysound/sax/-/sax-0.2.0.tgz}
     engines: {node: '>=10.13.0'}
+
+  '@ts-morph/common@0.27.0':
+    resolution: {integrity: sha512-Wf29UqxWDpc+i61k3oIOzcUfQt79PIT9y/MWfAGlrkjg6lBC1hwDECLXPVJAhWjiGbfBCxZd65F/LIZF3+jeJQ==, tarball: https://registry.npmjs.org/@ts-morph/common/-/common-0.27.0.tgz}
 
   '@tsconfig/node10@1.0.11':
     resolution: {integrity: sha512-DcRjDCujK/kCk/cUe8Xz8ZSpm8mS3mNNpta+jGCA6USEDfktlNvm1+IuZ9eTcDbNk41BHwpHHeW+N1lKCz4zOw==, tarball: https://registry.npmjs.org/@tsconfig/node10/-/node10-1.0.11.tgz}
@@ -4900,6 +4920,9 @@ packages:
     resolution: {integrity: sha512-xC759TpZ69d7HhfDp8m2WkRwEUiCkxY8Ee2OQH/3H6zmy2D/5Sm+zSTbPRa+V2QyjDtpMvjOIAOVjA2gp6N1kQ==, tarball: https://registry.npmjs.org/cockatiel/-/cockatiel-3.1.3.tgz}
     engines: {node: '>=16'}
 
+  code-block-writer@13.0.3:
+    resolution: {integrity: sha512-Oofo0pq3IKnsFtuHqSF7TqBfr71aeyZDVJ0HpmqB7FBM2qEigL0iPONSCZSO9pE9dZTAxANe5XHG9Uy0YMv8cg==, tarball: https://registry.npmjs.org/code-block-writer/-/code-block-writer-13.0.3.tgz}
+
   codemirror@6.0.1:
     resolution: {integrity: sha512-J8j+nZ+CdWmIeFIGXEFbFPtpiYacFMDR8GlHK3IyHQJMCaVRfGx9NT+Hxivv1ckLWPvNdZqndbr/7lVhrf/Svg==, tarball: https://registry.npmjs.org/codemirror/-/codemirror-6.0.1.tgz}
 
@@ -6001,6 +6024,10 @@ packages:
 
   fast-glob@3.3.2:
     resolution: {integrity: sha512-oX2ruAFQwf/Orj8m737Y5adxDQO0LAB7/S5MnxCdTNDd4p6BsyIVsv9JQsATbTSq8KHRpLwIHbVlUNatxd+1Ow==, tarball: https://registry.npmjs.org/fast-glob/-/fast-glob-3.3.2.tgz}
+    engines: {node: '>=8.6.0'}
+
+  fast-glob@3.3.3:
+    resolution: {integrity: sha512-7MptL8U0cqcFdzIzwOTHoilX9x5BrNqye7Z/LuC7kCMRio1EMSyqRK3BEAUD7sXRq4iT4AzTVuZdhgQ2TCvYLg==, tarball: https://registry.npmjs.org/fast-glob/-/fast-glob-3.3.3.tgz}
     engines: {node: '>=8.6.0'}
 
   fast-json-parse@1.0.3:
@@ -7756,6 +7783,10 @@ packages:
     resolution: {integrity: sha512-LPP/3KorzCwBxfeUuZmaR6bG2kdeHSbe0P2tY3FLRU4vYrjYz5hI4QZwV0njUx3jeuKe67YukQ1LSPZBKDqO/Q==, tarball: https://registry.npmjs.org/micromatch/-/micromatch-4.0.7.tgz}
     engines: {node: '>=8.6'}
 
+  micromatch@4.0.8:
+    resolution: {integrity: sha512-PXwfBhYu0hBCPw8Dn0E+WDYb7af3dSLVWKi3HGv84IdF4TyFoC0ysxFd0Goxw7nSv4T/PzEJQxsYsEiFCKo2BA==, tarball: https://registry.npmjs.org/micromatch/-/micromatch-4.0.8.tgz}
+    engines: {node: '>=8.6'}
+
   miller-rabin@4.0.1:
     resolution: {integrity: sha512-115fLhvZVqWwHPbClyntxEVfVDfl9DLLTuJvq3g2O/Oxi8AiNouAHvDSzHS0viUJc+V5vm3eq91Xwqn9dp4jRA==, tarball: https://registry.npmjs.org/miller-rabin/-/miller-rabin-4.0.1.tgz}
     hasBin: true
@@ -7802,6 +7833,10 @@ packages:
   minimatch@0.3.0:
     resolution: {integrity: sha512-WFX1jI1AaxNTZVOHLBVazwTWKaQjoykSzCBNXB72vDTCzopQGtyP91tKdFK5cv1+qMwPyiTu1HqUriqplI8pcA==, tarball: https://registry.npmjs.org/minimatch/-/minimatch-0.3.0.tgz}
     deprecated: Please update to minimatch 3.0.2 or higher to avoid a RegExp DoS issue
+
+  minimatch@10.0.3:
+    resolution: {integrity: sha512-IPZ167aShDZZUMdRk66cyQAW3qr0WzbHkPdMYa8bzZhlHhO3jALbKdxcaak7W9FfT2rZNpQuUu4Od7ILEpXSaw==, tarball: https://registry.npmjs.org/minimatch/-/minimatch-10.0.3.tgz}
+    engines: {node: 20 || >=22}
 
   minimatch@3.1.2:
     resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==, tarball: https://registry.npmjs.org/minimatch/-/minimatch-3.1.2.tgz}
@@ -8311,6 +8346,9 @@ packages:
 
   path-browserify@0.0.1:
     resolution: {integrity: sha512-BapA40NHICOS+USX9SN4tyhq+A2RrN/Ws5F0Z5aMHDp98Fl86lX8Oti8B7uN93L4Ifv4fHOEA+pQw87gmMO/lQ==, tarball: https://registry.npmjs.org/path-browserify/-/path-browserify-0.0.1.tgz}
+
+  path-browserify@1.0.1:
+    resolution: {integrity: sha512-b7uo2UCUOYZcnF/3ID0lulOJi/bafxa1xPe7ZPsammBSpjSWQkjNxlt635YGS2MiR9GjvuXCtz2emr3jbsz98g==, tarball: https://registry.npmjs.org/path-browserify/-/path-browserify-1.0.1.tgz}
 
   path-case@3.0.4:
     resolution: {integrity: sha512-qO4qCFjXqVTrcbPt/hQfhTQ+VhFsqNKOPtytgNKkKxSoEp3XPUQ8ObFuePylOIok5gjn69ry8XiULxCwot3Wfg==, tarball: https://registry.npmjs.org/path-case/-/path-case-3.0.4.tgz}
@@ -10251,6 +10289,9 @@ packages:
     engines: {node: '>=6.11.5'}
     peerDependencies:
       typescript: '*'
+
+  ts-morph@26.0.0:
+    resolution: {integrity: sha512-ztMO++owQnz8c/gIENcM9XfCEzgoGphTv+nKpYNM1bgsdOVC/jRZuEBf6N+mLLDNg68Kl+GgUZfOySaRiG1/Ug==, tarball: https://registry.npmjs.org/ts-morph/-/ts-morph-26.0.0.tgz}
 
   ts-nested-error@1.2.1:
     resolution: {integrity: sha512-hd5aYe8XfpWSCoh8vkV+JJmFY22Q2WtUIQIWEM3dYVKnEwMwyiRbxir/kRlTbZdGhoOeKqZ1ammPR/eiS7Tdgg==, tarball: https://registry.npmjs.org/ts-nested-error/-/ts-nested-error-1.2.1.tgz}
@@ -14549,6 +14590,12 @@ snapshots:
 
   '@inquirer/type@1.3.3': {}
 
+  '@isaacs/balanced-match@4.0.1': {}
+
+  '@isaacs/brace-expansion@5.0.0':
+    dependencies:
+      '@isaacs/balanced-match': 4.0.1
+
   '@isaacs/cliui@8.0.2':
     dependencies:
       string-width: 5.1.2
@@ -15760,6 +15807,12 @@ snapshots:
       '@testing-library/dom': 9.3.4
 
   '@trysound/sax@0.2.0': {}
+
+  '@ts-morph/common@0.27.0':
+    dependencies:
+      fast-glob: 3.3.3
+      minimatch: 10.0.3
+      path-browserify: 1.0.1
 
   '@tsconfig/node10@1.0.11': {}
 
@@ -17554,6 +17607,8 @@ snapshots:
 
   cockatiel@3.1.3: {}
 
+  code-block-writer@13.0.3: {}
+
   codemirror@6.0.1(@lezer/common@1.2.3):
     dependencies:
       '@codemirror/autocomplete': 6.16.2(@codemirror/language@6.10.2)(@codemirror/state@6.4.1)(@codemirror/view@6.28.1)(@lezer/common@1.2.3)
@@ -18954,6 +19009,14 @@ snapshots:
       glob-parent: 5.1.2
       merge2: 1.4.1
       micromatch: 4.0.7
+
+  fast-glob@3.3.3:
+    dependencies:
+      '@nodelib/fs.stat': 2.0.5
+      '@nodelib/fs.walk': 1.2.8
+      glob-parent: 5.1.2
+      merge2: 1.4.1
+      micromatch: 4.0.8
 
   fast-json-parse@1.0.3: {}
 
@@ -21117,6 +21180,11 @@ snapshots:
       braces: 3.0.3
       picomatch: 2.3.1
 
+  micromatch@4.0.8:
+    dependencies:
+      braces: 3.0.3
+      picomatch: 2.3.1
+
   miller-rabin@4.0.1:
     dependencies:
       bn.js: 4.12.0
@@ -21148,6 +21216,10 @@ snapshots:
     dependencies:
       lru-cache: 2.7.3
       sigmund: 1.0.1
+
+  minimatch@10.0.3:
+    dependencies:
+      '@isaacs/brace-expansion': 5.0.0
 
   minimatch@3.1.2:
     dependencies:
@@ -21773,6 +21845,8 @@ snapshots:
       yaml: 1.10.2
 
   path-browserify@0.0.1: {}
+
+  path-browserify@1.0.1: {}
 
   path-case@3.0.4:
     dependencies:
@@ -23987,6 +24061,11 @@ snapshots:
       typescript: 5.5.4
     transitivePeerDependencies:
       - supports-color
+
+  ts-morph@26.0.0:
+    dependencies:
+      '@ts-morph/common': 0.27.0
+      code-block-writer: 13.0.3
 
   ts-nested-error@1.2.1: {}
 

@@ -12,6 +12,7 @@ packages:
   - "language/complexity-check-plugin"
   - "language/metrics-output-plugin"
   - "language/fluent"
+  - "language/fluent-gen"
   - "helpers"
   - "devtools/types"
   - "devtools/plugins/mobile/flipper-desktop-client"
