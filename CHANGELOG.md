@@ -1,3 +1,23 @@
+# 0.12.1-next.4 (Thu Aug 28 2025)
+
+### Release Notes
+
+#### Metrics Output Plugin: Improved logging and exporting necessary types ([#224](https://github.com/player-ui/tools/pull/224))
+
+Improved logging to include actual error when metrics output plugin fails to parse pre-existing data, as well as remove warnings if the file exists but is empty. Also exporting a few types that should be used in other plugins.
+
+---
+
+#### 🐛 Bug Fix
+
+- Metrics Output Plugin: Improved logging and exporting necessary types [#224](https://github.com/player-ui/tools/pull/224) ([@kharrop](https://github.com/kharrop))
+
+#### Authors: 1
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+
+---
+
 # 0.12.1-next.3 (Thu Aug 14 2025)
 
 ### Release Notes
