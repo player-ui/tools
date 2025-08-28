@@ -1340,6 +1340,40 @@ describe("WriteMetricsPlugin", () => {
       warnSpy.mockRestore();
     });
 
+    test("Gracefully handles empty existing metrics file without warning", async () => {
+      // Seed an empty metrics file to test the empty file path
+      fs.writeFileSync(MULTI_TEST_PATH, "");
+
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const service = new PlayerLanguageService();
+      service.addLSPPlugin(
+        new MetricsOutput({
+          outputDir: MULTI_TEST_DIR,
+          fileName: MULTI_TEST_FILE.replace(".json", ""),
+          stats: { metric: () => 42 },
+        }),
+      );
+
+      await service.setAssetTypesFromModule([
+        Types,
+        ReferenceAssetsWebPluginManifest,
+      ]);
+
+      const doc = TextDocument.create("file:///empty.json", "json", 1, "{}");
+      await service.validateTextDocument(doc);
+
+      // Should NOT log any warnings for empty files
+      expect(warnSpy).not.toHaveBeenCalled();
+
+      // Should still produce a valid metrics file
+      const parsed = JSON.parse(fs.readFileSync(MULTI_TEST_PATH, "utf-8"));
+      expect(parsed.content).toHaveProperty("/empty.json");
+      expect(parsed.content["/empty.json"].stats.metric).toBe(42);
+
+      warnSpy.mockRestore();
+    });
+
     test("loads and merges an existing metrics file", async () => {
       const service = new PlayerLanguageService();
       const fileName = "pre_merge";
