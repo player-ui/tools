@@ -81,3 +81,7 @@ ios/*/*/Resources/**/*.js
 
 .bazelrc.local
 .qodo
+
+# Python
+__pycache__/
+*.pyc
