@@ -58,10 +58,7 @@ export class CompilationContext {
      * @param fileName - The relative name of the file
      * @returns true if the file should be skipped, false or undefined otherwise
      */
-    skipCompilation: new AsyncSeriesBailHook<
-      [string],
-      boolean
-    >(),
+    skipCompilation: new AsyncSeriesBailHook<[string], boolean>(),
   };
 
   /** A DSL compiler instance */

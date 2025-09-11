@@ -101,7 +101,6 @@ export default class DSLCompile extends BaseCommand {
     const compileFile = async (
       file: string,
     ): Promise<CompilationResult | undefined> => {
-      
       // Check if compilation should be skipped for this file
       const shouldSkip = await context.hooks.skipCompilation.call(file);
       if (shouldSkip) {
