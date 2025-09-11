@@ -22,6 +22,9 @@ export interface PlayerConfigResolvedShape {
 
     /** Flag to omit validating the resulting JSON */
     skipValidation?: boolean;
+
+    /** Array of file paths to skip during compilation */
+    skipFiles?: string[];
   };
 
   /** Options related to JSON and validation */

@@ -51,6 +51,17 @@ export class CompilationContext {
       [compileContentArgs, any, string],
       compilationResult
     >(),
+
+    /**
+     * Function for determining if a file should be skipped during compilation
+     *
+     * @param fileName - The relative name of the file
+     * @returns true if the file should be skipped, false or undefined otherwise
+     */
+    skipCompilation: new AsyncSeriesBailHook<
+      [string],
+      boolean
+    >(),
   };
 
   /** A DSL compiler instance */
