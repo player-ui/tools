@@ -1,3 +1,23 @@
+# 0.12.1-next.5 (Fri Sep 12 2025)
+
+### Release Notes
+
+#### [devtools] deep clone cached flow to avoid causing errors ([#227](https://github.com/player-ui/tools/pull/227))
+
+Fix issue where storing the `Flow` instance within Player UI Devtools state caused errors when consumers attempted to mutating the instance, even _after_ the Player has completed.
+
+---
+
+#### 🐛 Bug Fix
+
+- [devtools] deep clone cached flow to avoid causing errors [#227](https://github.com/player-ui/tools/pull/227) ([@sugarmanz](https://github.com/sugarmanz))
+
+#### Authors: 1
+
+- Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz))
+
+---
+
 # 0.12.1-next.4 (Thu Aug 28 2025)
 
 ### Release Notes
