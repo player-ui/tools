@@ -66,6 +66,7 @@ export default class DSLCompile extends BaseCommand {
       exp,
       severity: flags.severity,
       loglevel: flags.loglevel,
+      skipFiles: config.dsl?.skipFiles || [],
     };
   }
 
@@ -73,7 +74,7 @@ export default class DSLCompile extends BaseCommand {
     /** the status code */
     exitCode: number;
   }> {
-    const { input, output, skipValidation, exp, severity, loglevel } =
+    const { input, output, skipValidation, exp, severity, loglevel, skipFiles } =
       await this.getOptions();
 
     const files = await glob(
@@ -102,8 +103,13 @@ export default class DSLCompile extends BaseCommand {
       file: string,
     ): Promise<CompilationResult | undefined> => {
       // Check if compilation should be skipped for this file
-      const shouldSkip = await context.hooks.skipCompilation.call(file);
-      if (shouldSkip) {
+      const fileName = path.basename(file);
+      const shouldSkipByConfig = skipFiles.includes(fileName);
+      
+      // Check if any plugin wants to skip this file
+      const shouldSkipByPlugin = await context.hooks.skipCompilation.call(file);
+      
+      if (shouldSkipByConfig || shouldSkipByPlugin) {
         this.log(
           `${logSymbols.info} Skipping compilation for %s`,
           normalizePath(file),
