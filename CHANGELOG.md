@@ -1,3 +1,35 @@
+# 0.13.0-next.0 (Thu Sep 18 2025)
+
+### Release Notes
+
+#### feat: add hook to support skipCompilation for dsl compilation ([#228](https://github.com/player-ui/tools/pull/228))
+
+- Add a new hook `skipCompilation` for `player dsl compile`, allowing plugins to indicate files to skip dsl compilation step
+<!--
+  To include release notes in the automatic changelong, just add a level 1 markdown header below
+  and include any markdown notes to go into the changelog: https://intuit.github.io/auto/docs/generated/changelog#additional-release-notes
+
+  Example:
+
+  # Release Notes
+  Added new plugin, to use it:
+  ```typescript
+  const plugin = new Plugin(...)
+  ```
+-->
+
+---
+
+#### 🚀 Enhancement
+
+- feat: add hook to support skipCompilation for dsl compilation [#228](https://github.com/player-ui/tools/pull/228) ([@tiffany-meng](https://github.com/tiffany-meng))
+
+#### Authors: 1
+
+- [@tiffany-meng](https://github.com/tiffany-meng)
+
+---
+
 # 0.12.1-next.5 (Fri Sep 12 2025)
 
 ### Release Notes
