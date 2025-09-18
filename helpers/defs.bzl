@@ -1,8 +1,6 @@
+load("@aspect_rules_js//js:defs.bzl", "js_run_binary")
 load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
-load("@rules_python//python:py_library.bzl", "py_library")
-load("@rules_python//python:py_test.bzl", "py_test")
-load("@rules_python//python:packaging.bzl", "py_wheel", "py_package")
-load("@pypi//:requirements.bzl", "requirement")
+load("@rules_player//javascript:defs.bzl", "js_pipeline")
 
 COMMON_TEST_DEPS = [
     "//:node_modules/dlv",
@@ -33,119 +31,40 @@ def vitest_config(name):
         template = "//helpers:vitest.config.mts.tmpl",
     )
 
-
-def pytest_test(name, srcs, deps = [], args = [], **kwargs):
+def dsl_pipeline(package_name, deps, dsl_input, dsl_output):
     """
-        Call pytest for untit tests
-    """
-    py_test(
-        name = name,
-        srcs = [
-            "//helpers:pytest_wrapper.py",
-        ] + srcs,
-        main = "//helpers:pytest_wrapper.py",
-        args = [
-            "--capture=no",
-        ] + args + ["$(location :%s)" % x for x in srcs],
-        python_version = "PY3",
-        srcs_version = "PY3",
-        deps = deps + [
-            requirement("pytest"),
-        ],
-        **kwargs
-    )
-def pytest_lint(name, srcs, deps = [], args = [], **kwargs):
-    """
-        Call pytest with lint args
-    """
-    py_test(
-        name = name,
-        srcs = [
-            "//helpers:pytest_wrapper.py",
-        ] + srcs,
-        main = "//helpers:pytest_wrapper.py",
-        args = [
-            "--capture=no",
-            "--black",
-            "--pylint",
-            "--mypy",
-        ] + args + ["$(location :%s)" % x for x in srcs],
-        python_version = "PY3",
-        srcs_version = "PY3",
-        deps = deps + [
-            requirement("pytest"),
-            requirement("pytest-black"),
-            requirement("pytest-pylint"),
-            requirement("pytest-mypy"),
-        ],
-        **kwargs
-    )
-
-# temp macro for python pipeline while its being developed
-def python_pipeline(
-        name, 
-        deps = [], 
-        test_deps = []
-    ):
-
-    """
-    The main entry point for any python project. `python_pipeline` should be the only thing you need in your BUILD file.
-
-    Creates a python library, setups tests, and a whl publishing target
+    A macro that encapsulates the DSL compilation and js_pipeline rules.
 
     Args:
-        name: The name of the package including the scope (@test/bar).
-        test_entrypoint: Test Entrypoint (defaults to __tests__/test.py)
-        deps: build/runtime dependencies
-        test_deps: test dependencies
-        lint_deps: lint dependencies
+        package_name: The name of the package including the scope (@test/bar).
+        deps: The dependencies for the package.
+        dsl_input: A string representing the input directory for the DSL compilation.
+        dsl_output: A string representing the output directory for the DSL compilation.
     """
+    name = native.package_name().split("/")[-1]
+    binary_name = name + "_compile_dsl"
+    binary_target = ":" + binary_name
 
-    srcs = native.glob(include = ["src/**/*.py"], exclude = ["**/__tests__/**/*"])
-
-    library_name = name + "_library"
-    library_target = ":" + library_name
-
-    
-    py_library(
-        name = library_name,
-        srcs = srcs,
-        deps = deps
+    js_run_binary(
+        name = binary_name,
+        srcs = native.glob(["src/**/*"]) + ["package.json"] + deps,
+        args = [
+            "dsl",
+            "compile",
+            "-i",
+            dsl_input,
+            "-o",
+            dsl_output,
+            "--skip-validation",
+        ],
+        chdir = native.package_name(),
+        out_dirs = [dsl_output],
+        tool = "//cli:dsl_bin",
     )
 
-    test_name = name + "_test"
-
-    pytest_test(
-        name = test_name,
-        srcs = native.glob(["src/**/__tests__/**/*.py"]),
-        deps = [library_target] + test_deps
-    )
-
-    lint_name = name + "_lint"
-    pytest_lint(
-        name = lint_name,
-        srcs = srcs
-    )
-
-
-    package_name = name + "_pkg"
-    package_target = ":" + package_name
-
-    py_package(
-        name = package_name,
-        # Only include these Python packages.
-        packages = deps,
-        deps = [library_target],
-    )
-
-    wheel_name = name + "_whl"
-
-    py_wheel(
-        name = wheel_name,
-        distribution = name,
-        python_tag = "py3",
-        version = "{STABLE_VERSION}",
-        stamp = -1,
-        deps = [package_target],
-        strip_path_prefixes = [(native.package_name() + "/src")]
+    js_pipeline(
+        package_name = package_name,
+        srcs = [binary_target] + native.glob(["src/**/*"]),
+        deps = deps,
+        test_deps = COMMON_TEST_DEPS
     )

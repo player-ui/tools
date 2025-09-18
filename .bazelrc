@@ -15,6 +15,9 @@ common --remote_timeout=3600
 common --build_metadata=REPO_URL=https://github.com/player-ui/tools.git
 common --remote_cache_compression --remote_cache_async
 
+# Python config
+common --define=STABLE_VERSION=0.0.0 --incompatible_default_to_explicit_init_py
+
 # CI Config 
 common:ci --build_metadata=ROLE=CI
 common:ci --local_resources=cpu=4
