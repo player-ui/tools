@@ -3,7 +3,7 @@ load("@pypi//:requirements.bzl", "requirement")
 load("@build_constants//:constants.bzl", "VERSION")
 
 py_pipeline(
-  name = "player_tools_dsl",
+  name = "player_tools_xlr_types",
   deps = [],
   test_deps = [
     requirement("pytest"),
