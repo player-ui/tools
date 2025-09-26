@@ -474,7 +474,7 @@ importers:
         version: link:../language/json-language-service
       '@player-tools/xlr':
         specifier: workspace:*
-        version: link:../xlr/types
+        version: link:../xlr/types/javascript
       '@player-tools/xlr-converters':
         specifier: workspace:*
         version: link:../xlr/converters
@@ -576,7 +576,7 @@ importers:
     dependencies:
       '@player-tools/xlr':
         specifier: workspace:*
-        version: link:../../xlr/types
+        version: link:../../xlr/types/javascript
       '@player-tools/xlr-sdk':
         specifier: workspace:*
         version: link:../../xlr/sdk
@@ -605,7 +605,7 @@ importers:
     dependencies:
       '@player-tools/xlr':
         specifier: workspace:*
-        version: link:../../xlr/types
+        version: link:../../xlr/types/javascript
       '@player-tools/xlr-sdk':
         specifier: workspace:*
         version: link:../../xlr/sdk
@@ -621,7 +621,7 @@ importers:
     dependencies:
       '@player-tools/xlr':
         specifier: workspace:*
-        version: link:../types
+        version: link:../types/javascript
       '@player-tools/xlr-utils':
         specifier: workspace:*
         version: link:../utils
@@ -634,7 +634,7 @@ importers:
     dependencies:
       '@player-tools/xlr':
         specifier: workspace:*
-        version: link:../types
+        version: link:../types/javascript
       '@player-tools/xlr-converters':
         specifier: workspace:*
         version: link:../converters
@@ -646,13 +646,13 @@ importers:
         specifier: workspace:*
         version: link:../../common/static-xlrs
 
-  xlr/types: {}
+  xlr/types/javascript: {}
 
   xlr/utils:
     dependencies:
       '@player-tools/xlr':
         specifier: workspace:*
-        version: link:../types
+        version: link:../types/javascript
     devDependencies:
       '@player-tools/test-utils':
         specifier: workspace:*
