@@ -112,8 +112,7 @@ jobs:
             - v1-bazel-cache-core-main
 
       - run: |
-          BUNDLE_TARGETS=$(bazel query 'attr("name", "_eslint$|_vitest$", //...)' --output label 2>/dev/null | tr '\n' ' ')
-          bazel coverage --config=ci -- $BUNDLE_TARGETS
+          bazel coverage --config=ci //...
 
       - codecov/upload:
           files: ./bazel-out/_coverage/_coverage_report.dat
