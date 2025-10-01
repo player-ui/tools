@@ -1,18 +1,7 @@
 """Tests for validation.py classes"""
-import pytest
 import json
-import sys
-import os
-from typing import Dict, Any
 
-# Add parent directory to path
-import os
-import sys
-currentdir = os.path.dirname(os.path.realpath(__file__))
-parentdir = os.path.dirname(currentdir)
-sys.path.append(parentdir)
-
-from validation import Reference, CrossfieldReference
+from ..validation import Reference, CrossfieldReference
 
 
 class TestReference:

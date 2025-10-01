@@ -1,21 +1,9 @@
 """Tests for flow.py classes"""
-import pytest
 import json
-import sys
-import os
-from typing import Dict, Any
-
-# Add parent directory to path
-import os
-import sys
-currentdir = os.path.dirname(os.path.realpath(__file__))
-parentdir = os.path.dirname(currentdir)
-sys.path.append(parentdir)
-
-from flow import FlowResult, Flow
-from navigation import Navigation, NavigationFlowEndState
-from schema import Schema, SchemaNode
-from view import View
+from ..flow import FlowResult, Flow
+from ..navigation import Navigation, NavigationFlowEndState
+from ..schema import Schema, SchemaNode
+from ..view import View
 
 
 class TestFlowResult:

@@ -1,18 +1,7 @@
 """Tests for schema.py classes"""
-import pytest
 import json
-import sys
-import os
-from typing import Dict, Any, List
 
-# Add parent directory to path
-import os
-import sys
-currentdir = os.path.dirname(os.path.realpath(__file__))
-parentdir = os.path.dirname(currentdir)
-sys.path.append(parentdir)
-
-from schema import (
+from ..schema import (
     SchemaNode,
     SchemaDataType,
     SchemaRecordType,
@@ -21,7 +10,7 @@ from schema import (
     LanguageDataTypeRef,
     FormattingReference
 )
-from validation import Reference
+from ..validation import Reference
 
 
 class TestSchemaNode:

@@ -1,19 +1,8 @@
 """Tests for view.py classes"""
-import pytest
 import json
-import sys
-import os
-from typing import List
 
-# Add parent directory to path
-import os
-import sys
-currentdir = os.path.dirname(os.path.realpath(__file__))
-parentdir = os.path.dirname(currentdir)
-sys.path.append(parentdir)
-
-from view import Asset, View, AssetWrapper, Case, Switch, Template, Serializable, isPrivateProperty, _default_json_encoder, isInternalMethod
-from validation import CrossfieldReference
+from ..view import Asset, View, AssetWrapper, Case, Switch, Template, Serializable, isPrivateProperty, _default_json_encoder, isInternalMethod
+from ..validation import CrossfieldReference
 
 
 class TestAsset:

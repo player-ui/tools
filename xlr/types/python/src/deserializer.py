@@ -1,51 +1,24 @@
 """
 Deserialization utilities for XLR nodes.
 Converts JSON strings back into proper XLR node objects.
-
-Example:
-    Basic usage:
-        
-        from xlr.deserializer import deserialize_xlr_node
-        
-        json_str = '{"type": "string", "name": "MyString"}'
-        node = deserialize_xlr_node(json_str)
-        print(type(node).__name__)  # StringType
-        print(node.name)            # MyString
-
-    Complex nested structures:
-        
-        json_str = '''
-        {
-            "type": "object",
-            "name": "User",
-            "properties": {
-                "name": {
-                    "required": true,
-                    "node": {"type": "string"}
-                }
-            }
-        }
-        '''
-        node = deserialize_xlr_node(json_str)
-        print(node.properties["name"].required)  # True
 """
 
 import json
 from typing import Any, Dict, Union
-from nodes import (
-    
+from .nodes import (
+
     # Simple types
-    AnyType, UnknownType, UndefinedType, NullType, VoidType, StringType, 
+    AnyType, UnknownType, UndefinedType, NullType, VoidType, StringType,
     NumberType, BooleanType, NeverType, TemplateLiteralType,
-    
+
     # Complex types
-    RefType, ObjectType, ArrayType, TupleType, AndType, OrType, 
+    RefType, ObjectType, ArrayType, TupleType, AndType, OrType,
     RecordType, FunctionType, ConditionalType,
-    
+
     # Helper classes
     ObjectProperty, TupleMember, FunctionTypeParameters, ParamTypeNode,
     NamedType, NamedTypeWithGenerics,
-    
+
     # Type unions
     NodeType
 )
@@ -93,12 +66,12 @@ def _deserialize_object_hook(obj: Dict[str, Any]) -> Any:
         return _deserialize_function_type_parameter(obj)
     elif _is_param_type_node(obj):
         return _deserialize_param_type_node(obj)
-    
+
     # Handle main node types based on "type" field
     node_type = obj.get("type")
     if not node_type or not isinstance(node_type, str):
         return obj  # Not an XLR node, return as-is
-    
+
     try:
         return _deserialize_by_type(node_type, obj)
     except Exception as e:
@@ -128,11 +101,11 @@ def _deserialize_by_type(node_type: str, obj: Dict[str, Any]) -> NodeType:
         "function": _deserialize_function_type,
         "conditional": _deserialize_conditional_type,
     }
-    
+
     deserializer = type_map.get(node_type)
     if not deserializer:
         raise ValueError(f"Unknown node type: {node_type}")
-    
+
     return deserializer(obj)
 
 
@@ -268,22 +241,31 @@ def _deserialize_param_type_node(obj: Dict[str, Any]) -> ParamTypeNode:
 
 def _deserialize_named_type(obj: Dict[str, Any]) -> Union[NamedType, NamedTypeWithGenerics]:
     # Extract the base node data (everything except name, source, and genericTokens)
-    base_obj = {k: v for k, v in obj.items() if k not in ['name', 'typeName', 'source', 'genericTokens']}
-    
+    base_obj = {
+        k: v for k,
+        v in obj.items() if k not in ['name', 'typeName', 'source', 'genericTokens']
+    }
+
     # Extract annotation properties for the NamedType wrapper
     annotation_kwargs = _extract_annotation_props(obj)
     name = obj.get('name', obj.get('typeName', annotation_kwargs.get('name', "")))
-    if('name' in annotation_kwargs):
+    if 'name' in annotation_kwargs:
         del annotation_kwargs['name']
-    
+
     source = obj['source']
-    
+
     # Deserialize the base node using the object hook recursively
     # We need to be careful not to create infinite recursion
     base_node = _deserialize_object_hook(base_obj)
-    
+
     if 'genericTokens' in obj:
-        return NamedTypeWithGenerics(base_node, name, source, obj['genericTokens'], **annotation_kwargs)
+        return NamedTypeWithGenerics(
+            base_node,
+            name,
+            source,
+            obj['genericTokens'],
+            **annotation_kwargs
+        )
     else:
         return NamedType(base_node, name, source, **annotation_kwargs)
 
@@ -293,10 +275,14 @@ def _is_object_property(obj: Dict[str, Any]) -> bool:
     return 'required' in obj and 'node' in obj and 'type' not in obj
 
 def _is_tuple_member(obj: Dict[str, Any]) -> bool:
-    return 'type' in obj and ('name' in obj or 'optional' in obj) and not isinstance(obj.get('type'), str)
+    return 'type' in obj and \
+        ('name' in obj or 'optional' in obj) and \
+        not isinstance(obj.get('type'), str)
 
 def _is_function_type_parameter(obj: Dict[str, Any]) -> bool:
-    return 'name' in obj and 'type' in obj and ('optional' in obj or 'default' in obj) and not isinstance(obj.get('type'), str)
+    return 'name' in obj and 'type' in obj and \
+        ('optional' in obj or 'default' in obj) and \
+        not isinstance(obj.get('type'), str)
 
 def _is_param_type_node(obj: Dict[str, Any]) -> bool:
     return 'symbol' in obj and ('constraints' in obj or 'default' in obj)
@@ -308,7 +294,16 @@ def _is_named_type(obj: Dict[str, Any]) -> bool:
 # Property extraction helpers
 def _extract_annotation_props(obj: Dict[str, Any]) -> Dict[str, Any]:
     """Extract annotation properties from object."""
-    annotation_keys = ['name', 'title', 'description', 'examples', 'default', 'see', 'comment', 'meta']
+    annotation_keys = [
+        'name',
+        'title',
+        'description',
+        'examples',
+        'default',
+        'see',
+        'comment',
+        'meta'
+    ]
     return {k: v for k, v in obj.items() if k in annotation_keys}
 
 def _extract_common_props(obj: Dict[str, Any]) -> Dict[str, Any]:

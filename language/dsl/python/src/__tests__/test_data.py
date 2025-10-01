@@ -1,17 +1,7 @@
 """Tests for data.py classes"""
-import pytest
 import json
-import sys
-import os
 
-# Add parent directory to path
-import os
-import sys
-currentdir = os.path.dirname(os.path.realpath(__file__))
-parentdir = os.path.dirname(currentdir)
-sys.path.append(parentdir)
-
-from data import ExpressionObject
+from ..data import ExpressionObject
 
 
 class TestExpressionObject:

@@ -19,7 +19,8 @@ exports_files([
     ".editorconfig",
     ".all-contributorsrc",
     "README.md",
-    "requirements.txt"
+    "requirements.txt",
+    ".pylintrc"
 ])
 
 js_library(

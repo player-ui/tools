@@ -1,18 +1,6 @@
 """Tests for navigation.py classes"""
-import pytest
 import json
-import sys
-import os
-from typing import Dict, Any
-
-# Add parent directory to path
-import os
-import sys
-currentdir = os.path.dirname(os.path.realpath(__file__))
-parentdir = os.path.dirname(currentdir)
-sys.path.append(parentdir)
-
-from navigation import (
+from ..navigation import (
     Navigation, 
     CommentBase, 
     NavigationBaseState, 
@@ -24,9 +12,8 @@ from navigation import (
     NavigationFlowExternalState, 
     NavigationFlowFlowState,
     NavigationFlow,
-    NavigationFlowTransition
 )
-from data import ExpressionObject
+from ..data import ExpressionObject
 
 
 class TestNavigation:
