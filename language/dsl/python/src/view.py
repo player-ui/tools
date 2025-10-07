@@ -37,7 +37,7 @@ class Asset(Serializable):
         Returns the ID of the asset
         """
         return self.id
-    
+
     def _withSlot(self, name: str, obj: Any, wrapInAssetWrapper: bool = True, isArray = False):
         val = obj
         if wrapInAssetWrapper:
