@@ -10,6 +10,7 @@ py_pipeline(
   ],
   test_deps = [
     requirement("pytest"),
+    "//language/dsl/python:player_tools_dsl"
   ],
   lint_deps = [
     requirement("pytest"),

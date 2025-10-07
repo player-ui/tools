@@ -3,27 +3,8 @@ Python classes that represent Player View constructs
 """
 
 from typing import List, Optional, Union, Literal, Any
-from json import dumps
+from .utils import Serializable
 from .validation import CrossfieldReference
-
-
-def isPrivateProperty(string: str):
-    """
-    Checks if a key indicates a private property (starts with _ and doesn't end with __)
-    """
-    return string.startswith("_") and not string.endswith("__")
-
-def isInternalMethod(string: str):
-    """
-    Checks if a key indicates a private property (starts and ends with __)
-    """
-    return string.startswith("__") and string.endswith("__")
-
-def _default_json_encoder(obj):
-    if hasattr(obj, "serialize"):
-        return obj._serialize() # pylint: disable=protected-access
-    else:
-        return lambda o: o.__dict__
 
 def isAssetWrapperOrSwitch(obj: Any) -> bool:
     """
@@ -31,69 +12,6 @@ def isAssetWrapperOrSwitch(obj: Any) -> bool:
     """
     return isinstance(obj, (AssetWrapper, Switch))
 
-class Serializable():
-    """
-    Base class to allow for custom JSON serialization
-    """
-    # Map of properties that aren't valid Python properties to their serialized value
-    _propMap: dict[str, str]
-    # Types that should be handled by the base serialization logic
-    _jsonable = (int, list, str, dict)
-    # Keys that should be ignored during serialization
-    _ignored_json_keys = []
-
-    def _serialize(self):
-        _dict = dict()
-        for attr in dir(self):
-            value = getattr(self, attr)
-            key = attr
-
-            if isInternalMethod(attr) or key in getattr(self, "_ignored_json_keys", []):
-                continue
-            elif isinstance(value, self._jsonable) or value is None or hasattr(value, 'to_dict'):
-                pass
-            else:
-                continue
-
-            if self._propMap.get(key, None) is not None:
-                key = self._propMap[key]
-            elif(isPrivateProperty(attr) and not isInternalMethod(attr)):
-                key = attr.replace("_", "")
-
-            _dict[key] = value
-        return _dict
-
-    def serialize(self, **kw):
-        """
-        Serialize this and all children to JSON
-        """
-        indent = kw.pop("indent", 4)  # use indent key if passed otherwise 4.
-        _ignored_json_keys = kw.pop("ignored_keys", []) + ['_propMap', '_ignored_json_keys']
-        if _ignored_json_keys:
-            self._ignored_json_keys = _ignored_json_keys
-
-        return dumps(self, indent=indent, default=_default_json_encoder, **kw)
-
-    def __setitem__(self, property, data):
-        self.__dict__[property] = data
-
-    def __getitem__(self, property):
-        return self[property]
-
-    def _withSlot(self, name: str, obj: Any, wrapInAssetWrapper: bool = True, isArray = False):
-        val = obj
-        if wrapInAssetWrapper:
-            if isArray:
-                val = list(
-                    map(
-                        lambda asset: AssetWrapper(asset) if not isAssetWrapperOrSwitch(asset)
-                        else asset, obj
-                    )
-                )
-            else:
-                val = AssetWrapper(obj) if isAssetWrapperOrSwitch(obj) else obj
-        self[name] = val
-        return self
 
 class Asset(Serializable):
     """
@@ -119,6 +37,21 @@ class Asset(Serializable):
         Returns the ID of the asset
         """
         return self.id
+    
+    def _withSlot(self, name: str, obj: Any, wrapInAssetWrapper: bool = True, isArray = False):
+        val = obj
+        if wrapInAssetWrapper:
+            if isArray:
+                val = list(
+                    map(
+                        lambda asset: AssetWrapper(asset) if not isAssetWrapperOrSwitch(asset)
+                        else asset, obj
+                    )
+                )
+            else:
+                val = AssetWrapper(obj) if not isAssetWrapperOrSwitch(obj) else obj
+        self[name] = val
+        return self
 
 class View(Asset):
     """
@@ -136,7 +69,7 @@ class View(Asset):
         super().__init__(id, type)
         self.validation = validation if validation else []
 
-class AssetWrapper():
+class AssetWrapper(Serializable):
     """
     An object that contains an asset
     """
@@ -145,7 +78,7 @@ class AssetWrapper():
     def __init__(self, asset: Asset):
         self.asset = asset
 
-class SwitchCase():
+class SwitchCase(Serializable):
     """
     A single case statement to use in a switch
     """
@@ -163,16 +96,17 @@ class SwitchCase():
         self.asset = asset
         return self
 
-class Switch():
+class Switch(Serializable):
     """
     A switch can replace an asset with the applicable case on first render
     """
 
     dynamic: bool
-    cases: List[SwitchCase] = []
+    cases: List[SwitchCase]
 
-    def __init__(self, isDynamic = False):
+    def __init__(self, isDynamic = False, cases = None):
         self.dynamic = isDynamic
+        self.cases = cases if cases is not None else []
 
     def isDynamic(self, isDynamic):
         """
@@ -196,7 +130,7 @@ class Switch():
 AssetWrapperOrSwitch = Union[AssetWrapper, Switch]
 
 
-class Template():
+class Template(Serializable):
     """
     A template describes a mapping from a data array -> array of objects
     """

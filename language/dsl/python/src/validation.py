@@ -3,14 +3,14 @@ Python classes that represent Player Validation constructs
 """
 
 from typing import Any, Literal, Optional, Union, Dict
-
+from .utils import Serializable
 
 Severity = Literal['error', 'warning']
 Trigger = Literal['navigation', 'change', 'load']
 DisplayTarget = Literal['page', 'section', 'field']
 
 
-class Reference:
+class Reference(Serializable):
     """A reference to a validation object"""
 
     _type: str

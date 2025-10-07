@@ -1,0 +1,191 @@
+{
+    "source": "/home/circleci/.cache/bazel/_bazel_circleci/e8362d362e14c7d23506d1dfa3aea8b8/sandbox/processwrapper-sandbox/3907/execroot/_main/bazel-out/k8-fastbuild/bin/plugins/reference-assets/core/src/assets/choice/types.ts",
+    "name": "ChoiceAsset",
+    "type": "object",
+    "properties": {
+        "title": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "AssetWrapper<AnyTextAsset>",
+                "genericArguments": [
+                    {
+                        "type": "ref",
+                        "ref": "AnyTextAsset"
+                    }
+                ],
+                "title": "ChoiceAsset.title",
+                "description": "A text-like asset for the choice's label"
+            }
+        },
+        "note": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "AssetWrapper<AnyTextAsset>",
+                "genericArguments": [
+                    {
+                        "type": "ref",
+                        "ref": "AnyTextAsset"
+                    }
+                ],
+                "title": "ChoiceAsset.note",
+                "description": "Asset container for a note."
+            }
+        },
+        "binding": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "Binding",
+                "title": "ChoiceAsset.binding",
+                "description": "The location in the data-model to store the data"
+            }
+        },
+        "items": {
+            "required": false,
+            "node": {
+                "type": "array",
+                "elementType": {
+                    "source": "/home/circleci/.cache/bazel/_bazel_circleci/e8362d362e14c7d23506d1dfa3aea8b8/sandbox/processwrapper-sandbox/3907/execroot/_main/bazel-out/k8-fastbuild/bin/plugins/reference-assets/core/src/assets/choice/types.ts",
+                    "name": "ChoiceItem",
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "required": true,
+                            "node": {
+                                "type": "string",
+                                "title": "ChoiceItem.id",
+                                "description": "The id associated with the choice item"
+                            }
+                        },
+                        "label": {
+                            "required": false,
+                            "node": {
+                                "type": "ref",
+                                "ref": "AssetWrapper<AnyTextAsset>",
+                                "genericArguments": [
+                                    {
+                                        "type": "ref",
+                                        "ref": "AnyTextAsset"
+                                    }
+                                ],
+                                "title": "ChoiceItem.label",
+                                "description": "A text-like asset for the choice's label"
+                            }
+                        },
+                        "value": {
+                            "required": false,
+                            "node": {
+                                "source": "/home/circleci/.cache/bazel/_bazel_circleci/e8362d362e14c7d23506d1dfa3aea8b8/sandbox/processwrapper-sandbox/3907/execroot/_main/bazel-out/k8-fastbuild/bin/plugins/reference-assets/core/src/assets/choice/types.ts",
+                                "name": "ValueType",
+                                "type": "or",
+                                "or": [
+                                    {
+                                        "type": "string",
+                                        "title": "ValueType"
+                                    },
+                                    {
+                                        "type": "number",
+                                        "title": "ValueType"
+                                    },
+                                    {
+                                        "type": "boolean",
+                                        "title": "ValueType"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "title": "ChoiceItem.value",
+                                "description": "The value of the input from the data-model"
+                            }
+                        }
+                    },
+                    "additionalProperties": false,
+                    "title": "ChoiceItem",
+                    "genericTokens": [
+                        {
+                            "symbol": "AnyTextAsset",
+                            "constraints": {
+                                "type": "ref",
+                                "ref": "Asset"
+                            },
+                            "default": {
+                                "type": "ref",
+                                "ref": "Asset"
+                            }
+                        }
+                    ]
+                },
+                "title": "ChoiceAsset.items",
+                "description": "The options to select from"
+            }
+        },
+        "metaData": {
+            "required": false,
+            "node": {
+                "source": "/home/circleci/.cache/bazel/_bazel_circleci/e8362d362e14c7d23506d1dfa3aea8b8/sandbox/processwrapper-sandbox/3907/execroot/_main/bazel-out/k8-fastbuild/bin/node_modules/.aspect_rules_js/@player-ui+beacon-plugin@0.0.0/node_modules/@player-ui/beacon-plugin/types/beacon.d.ts",
+                "name": "BeaconMetaData",
+                "type": "object",
+                "properties": {
+                    "beacon": {
+                        "required": false,
+                        "node": {
+                            "source": "/home/circleci/.cache/bazel/_bazel_circleci/e8362d362e14c7d23506d1dfa3aea8b8/sandbox/processwrapper-sandbox/3907/execroot/_main/bazel-out/k8-fastbuild/bin/node_modules/.aspect_rules_js/@player-ui+beacon-plugin@0.0.0/node_modules/@player-ui/beacon-plugin/types/beacon.d.ts",
+                            "name": "BeaconDataType",
+                            "type": "or",
+                            "or": [
+                                {
+                                    "type": "string",
+                                    "title": "BeaconDataType"
+                                },
+                                {
+                                    "type": "record",
+                                    "keyType": {
+                                        "type": "string"
+                                    },
+                                    "valueType": {
+                                        "type": "any"
+                                    },
+                                    "title": "BeaconDataType"
+                                }
+                            ],
+                            "title": "BeaconMetaData.beacon",
+                            "description": "Additional data to send along with beacons"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "title": "ChoiceAsset.metaData",
+                "description": "Optional additional data"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "title": "ChoiceAsset",
+    "description": "A choice asset represents a single selection choice, often displayed as radio buttons in a web context.\nThis will allow users to test out more complex flows than just inputs + buttons.",
+    "genericTokens": [
+        {
+            "symbol": "AnyTextAsset",
+            "constraints": {
+                "type": "ref",
+                "ref": "Asset"
+            },
+            "default": {
+                "type": "ref",
+                "ref": "Asset"
+            }
+        }
+    ],
+    "extends": {
+        "type": "ref",
+        "ref": "Asset<\"choice\">",
+        "genericArguments": [
+            {
+                "type": "string",
+                "const": "choice"
+            }
+        ]
+    }
+}

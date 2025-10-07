@@ -262,15 +262,12 @@ class ClassGenerator:
             ),
             ast.ImportFrom(
                 module= f'{PLAYER_DSL_PACKAGE}.view',
-                names=[ast.alias(name='Asset', asname=None)],
+                names=[
+                    ast.alias(name='Asset', asname=None),
+                    ast.alias(name='Serializable', asname=None)
+                ],
                 level=0
             ),
-            # from lang.utils.serialize import Serializable
-            ast.ImportFrom(
-                module=f'{PLAYER_DSL_PACKAGE}.utils.serialize',
-                names=[ast.alias(name='Serializable', asname=None)],
-                level=0
-            )
         ]
 
         if self.type == "View":

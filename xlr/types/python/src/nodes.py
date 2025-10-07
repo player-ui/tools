@@ -2,7 +2,7 @@
 Python equivalent of TypeScript interfaces for XLR Nodes
 """
 
-from typing import Any, Dict, List, Optional, Union, Generic, TypeVar
+from typing import Any, Dict, List, Mapping, Optional, Union, Generic, TypeVar
 
 T = TypeVar('T', bound='TypeNode')
 
@@ -427,34 +427,34 @@ class ArrayType(ArrayNode, CommonTypeInfo, Annotations):
 class ConditionalNode(TypeNode):
     """Conditional node implementation"""
 
-    def __init__(self, check: Dict[str, 'NodeType'], value: Dict[str, 'NodeType']):
+    def __init__(self, check: Mapping[str, 'NodeType'], value: Mapping[str, 'NodeType']):
         super().__init__("conditional")
         self._check = check
         self._value = value
 
     @property
-    def check(self) -> Dict[str, 'NodeType']:
+    def check(self) -> Mapping[str, 'NodeType']:
         """The check arguments"""
         return self._check
 
     @check.setter
-    def check(self, value: Dict[str, 'NodeType']) -> None:
+    def check(self, value: Mapping[str, 'NodeType']) -> None:
         self._check = value
 
     @property
-    def value(self) -> Dict[str, 'NodeType']:
+    def value(self) -> Mapping[str, 'NodeType']:
         """The resulting values to use"""
         return self._value
 
     @value.setter
-    def value(self, value: Dict[str, 'NodeType']) -> None:
+    def value(self, value: Mapping[str, 'NodeType']) -> None:
         self._value = value
 
 
 class ConditionalType(ConditionalNode, Annotations):
     """Conditional type with annotations"""
 
-    def __init__(self, check: Dict[str, 'NodeType'], value: Dict[str, 'NodeType'], **kwargs):
+    def __init__(self, check: Mapping[str, 'NodeType'], value: Mapping[str, 'NodeType'], **kwargs):
         ConditionalNode.__init__(self, check, value)
         Annotations.__init__(self, **kwargs)
 

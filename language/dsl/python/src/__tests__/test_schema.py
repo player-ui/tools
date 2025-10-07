@@ -444,3 +444,4 @@ class TestFormattingReference:
         assert new_ref.type == original_ref.type
         assert new_ref.get_additional_prop("country_code") == "+1"
         assert new_ref.get_additional_prop("format") == "(XXX) XXX-XXXX"
+

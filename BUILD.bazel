@@ -20,7 +20,8 @@ exports_files([
     ".all-contributorsrc",
     "README.md",
     "requirements.txt",
-    ".pylintrc"
+    ".pylintrc",
+    ".coveragerc"
 ])
 
 js_library(

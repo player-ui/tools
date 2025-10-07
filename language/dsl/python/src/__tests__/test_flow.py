@@ -245,3 +245,4 @@ class TestFlow:
         assert "_schema" in parsed_data
         assert parsed_data["_data"] == data
         assert parsed_data["_additional_props"]["custom_prop"] == "custom"
+

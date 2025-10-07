@@ -588,3 +588,4 @@ class TestNavigationFlow:
         assert data["_on_start"] == "init()"
         assert "_states" in data
         assert len(data["_states"]) == 2
+

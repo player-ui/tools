@@ -94,3 +94,4 @@ class TestExpressionObject:
         
         assert obj2.exp == original_expression
         assert obj1.exp == obj2.exp
+

@@ -392,3 +392,4 @@ class TestCrossfieldReference:
         # Test with complex binding reference  
         ref3 = CrossfieldReference(type="validation", ref="form.sections.personal.firstName")
         assert ref3.ref == "form.sections.personal.firstName"
+
