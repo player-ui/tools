@@ -5,7 +5,7 @@ common --experimental_generate_llvm_lcov
 
 # honor the setting of `skipLibCheck` in the tsconfig.json file
 common --@aspect_rules_ts//ts:skipLibCheck=honor_tsconfig
-
+startup --host_jvm_args=-DBAZEL_TRACK_SOURCE_DIRECTORIES=1
 # Cache Config
 common --bes_results_url=https://app.buildbuddy.io/invocation/
 common --bes_backend=grpcs://remote.buildbuddy.io
