@@ -25,8 +25,8 @@ done
 
 # Python Publishing
 
-readonly PKG_PYPI_LABELS=`bazel query --output=label 'kind("py_wheel", //...) - attr("tags", "\[.*do-not-publish.*\]", //...)'`
+readonly PKG_PYPI_LABELS=`bazel query --output=label 'kind("py_wheel rule", //...) - attr("tags", "\[.*do-not-publish.*\]", //...)'`
 
 for pkg in $PKG_PYPI_LABELS ; do
-  TWINE_USERNAME=$PYPI_USER TWINE_PASSWORD=$TEST_PYPI_TOKEN bazel run --config=release ${pkg}:whl.publish -- --repository testpypi 
+  TWINE_USERNAME=$PYPI_USER TWINE_PASSWORD=$TEST_PYPI_TOKEN bazel run --config=release ${pkg}.publish -- --repository testpypi 
 done
