@@ -2,7 +2,6 @@
 import json
 from ..navigation import (
     Navigation, 
-    CommentBase, 
     NavigationBaseState, 
     NavigationFlowTransitionableState,
     NavigationFlowViewState, 
@@ -73,44 +72,6 @@ class TestNavigation:
         assert data["_begin"] == "start"
         assert "_flows" in data
 
-
-class TestCommentBase:
-    """Test cases for CommentBase class"""
-
-    def test_instantiation_default(self):
-        """Test CommentBase can be instantiated with default parameters"""
-        obj = CommentBase()
-        assert obj is not None
-        assert obj.comment is None
-
-    def test_instantiation_with_comment(self):
-        """Test CommentBase can be instantiated with comment"""
-        comment_text = "This is a test comment"
-        obj = CommentBase(comment=comment_text)
-        assert obj.comment == comment_text
-
-    def test_comment_property_getter(self):
-        """Test comment property getter"""
-        comment_text = "Test comment"
-        obj = CommentBase(comment=comment_text)
-        assert obj.comment == comment_text
-
-    def test_comment_property_setter(self):
-        """Test comment property setter"""
-        obj = CommentBase()
-        new_comment = "New comment"
-        obj.comment = new_comment
-        assert obj.comment == new_comment
-
-    def test_json_serialization(self):
-        """Test JSON serialization"""
-        obj = CommentBase(comment="Test comment")
-        json_str = json.dumps(obj.__dict__)
-        assert json_str is not None
-        data = json.loads(json_str)
-        assert data["_comment"] == "Test comment"
-
-
 class TestNavigationBaseState:
     """Test cases for NavigationBaseState class"""
 
@@ -121,7 +82,6 @@ class TestNavigationBaseState:
         assert state.state_type == "TEST"
         assert state.on_start is None
         assert state.on_end is None
-        assert state.comment is None
 
     def test_instantiation_full(self):
         """Test NavigationBaseState can be instantiated with all parameters"""
@@ -130,14 +90,12 @@ class TestNavigationBaseState:
             state_type="FULL",
             on_start="start_expr",
             on_end=exp_obj,
-            comment="Test state",
             custom_prop="custom_value"
         )
         
         assert state.state_type == "FULL"
         assert state.on_start == "start_expr"
         assert state.on_end == exp_obj
-        assert state.comment == "Test state"
 
     def test_properties_getters_setters(self):
         """Test all property getters and setters"""
@@ -163,7 +121,6 @@ class TestNavigationBaseState:
         state = NavigationBaseState(
             state_type="TEST",
             on_start="start_expr",
-            comment="Test comment"
         )
         
         json_str = json.dumps(state.__dict__, default=lambda o: o.__dict__)
@@ -171,7 +128,6 @@ class TestNavigationBaseState:
         data = json.loads(json_str)
         assert data["_state_type"] == "TEST"
         assert data["_on_start"] == "start_expr"
-        assert data["_comment"] == "Test comment"
 
 
 class TestNavigationFlowTransitionableState:
@@ -302,7 +258,6 @@ class TestNavigationFlowEndState:
         """Test JSON serialization"""
         state = NavigationFlowEndState(
             outcome="completed",
-            comment="End of flow"
         )
         
         json_str = json.dumps(state.__dict__, default=lambda o: o.__dict__)

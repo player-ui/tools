@@ -39,23 +39,7 @@ class Navigation:
 
 NavigationFlowTransition = Dict[str, str]
 
-class CommentBase:
-    """Base class for objects that can have comments"""
-
-    def __init__(self, comment: Optional[str] = None):
-        self._comment = comment
-
-    @property
-    def comment(self) -> Optional[str]:
-        """Add comments that will not be processing, but are useful for code explanation"""
-        return self._comment
-
-    @comment.setter
-    def comment(self, value: Optional[str]) -> None:
-        self._comment = value
-
-
-class NavigationBaseState(CommentBase, Generic[T]):
+class NavigationBaseState(Generic[T]):
     """The base representation of a state within a Flow"""
 
     def __init__(
@@ -63,10 +47,9 @@ class NavigationBaseState(CommentBase, Generic[T]):
         state_type: T,
         on_start: Optional[Union[str, List[str], ExpressionObject]] = None,
         on_end: Optional[Union[str, List[str], ExpressionObject]] = None,
-        comment: Optional[str] = None,
         **kwargs: Any
     ):
-        super().__init__(comment)
+        super().__init__()
         self._state_type = state_type
         self._on_start = on_start
         self._on_end = on_end
@@ -109,10 +92,9 @@ class NavigationFlowTransitionableState(NavigationBaseState[T]):
         transitions: NavigationFlowTransition,
         on_start: Optional[Union[str, List[str], ExpressionObject]] = None,
         on_end: Optional[Union[str, List[str], ExpressionObject]] = None,
-        comment: Optional[str] = None,
         **kwargs: Any
     ):
-        super().__init__(state_type, on_start, on_end, comment, **kwargs)
+        super().__init__(state_type, on_start, on_end, **kwargs)
         self._transitions = transitions
 
     @property
@@ -135,10 +117,9 @@ class NavigationFlowViewState(NavigationFlowTransitionableState[Literal['VIEW']]
         attributes: Optional[Dict[str, Any]] = None,
         on_start: Optional[Union[str, List[str], ExpressionObject]] = None,
         on_end: Optional[Union[str, List[str], ExpressionObject]] = None,
-        comment: Optional[str] = None,
         **kwargs: Any
     ):
-        super().__init__('VIEW', transitions, on_start, on_end, comment, **kwargs)
+        super().__init__('VIEW', transitions, on_start, on_end, **kwargs)
         self._ref = ref
         self._attributes = attributes or {}
 
@@ -169,10 +150,9 @@ class NavigationFlowEndState(NavigationBaseState[Literal['END']]):
         outcome: str,
         on_start: Optional[Union[str, List[str], ExpressionObject]] = None,
         on_end: Optional[Union[str, List[str], ExpressionObject]] = None,
-        comment: Optional[str] = None,
         **kwargs: Any
     ):
-        super().__init__('END', on_start, on_end, comment, **kwargs)
+        super().__init__('END', on_start, on_end, **kwargs)
         self._outcome = outcome
 
     @property
@@ -197,10 +177,9 @@ class NavigationFlowActionState(NavigationFlowTransitionableState[Literal['ACTIO
         transitions: NavigationFlowTransition,
         on_start: Optional[Union[str, List[str], ExpressionObject]] = None,
         on_end: Optional[Union[str, List[str], ExpressionObject]] = None,
-        comment: Optional[str] = None,
         **kwargs: Any
     ):
-        super().__init__('ACTION', transitions, on_start, on_end, comment, **kwargs)
+        super().__init__('ACTION', transitions, on_start, on_end, **kwargs)
         self._exp = exp
 
     @property
@@ -226,10 +205,9 @@ class NavigationFlowAsyncActionState(NavigationFlowTransitionableState[Literal['
         transitions: NavigationFlowTransition,
         on_start: Optional[Union[str, List[str], ExpressionObject]] = None,
         on_end: Optional[Union[str, List[str], ExpressionObject]] = None,
-        comment: Optional[str] = None,
         **kwargs: Any
     ):
-        super().__init__('ASYNC_ACTION', transitions, on_start, on_end, comment, **kwargs)
+        super().__init__('ASYNC_ACTION', transitions, on_start, on_end, **kwargs)
         self._exp = exp
         self._await = await_result
 
@@ -268,10 +246,9 @@ class NavigationFlowExternalState(NavigationFlowTransitionableState[Literal['EXT
         transitions: NavigationFlowTransition,
         on_start: Optional[Union[str, List[str], ExpressionObject]] = None,
         on_end: Optional[Union[str, List[str], ExpressionObject]] = None,
-        comment: Optional[str] = None,
         **kwargs: Any
     ):
-        super().__init__('EXTERNAL', transitions, on_start, on_end, comment, **kwargs)
+        super().__init__('EXTERNAL', transitions, on_start, on_end, **kwargs)
         self._ref = ref
 
     @property
@@ -293,10 +270,9 @@ class NavigationFlowFlowState(NavigationFlowTransitionableState[Literal['FLOW']]
         transitions: NavigationFlowTransition,
         on_start: Optional[Union[str, List[str], ExpressionObject]] = None,
         on_end: Optional[Union[str, List[str], ExpressionObject]] = None,
-        comment: Optional[str] = None,
         **kwargs: Any
     ):
-        super().__init__('FLOW', transitions, on_start, on_end, comment, **kwargs)
+        super().__init__('FLOW', transitions, on_start, on_end, **kwargs)
         self._ref = ref
 
     @property
