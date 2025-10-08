@@ -114,6 +114,9 @@ jobs:
       - run: |
           bazel coverage --config=ci //...
 
+      - store_test_results:
+          path: _test_results
+
       - codecov/upload:
           files: ./bazel-out/_coverage/_coverage_report.dat
 
