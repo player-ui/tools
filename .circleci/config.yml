@@ -86,7 +86,7 @@ jobs:
       - attach_workspace:
           at: ~/tools
       # Python files don't have a build step so we only need to actually build the JS files
-      - run: bazel build -- $(bazel query "kind(npm_package, //...)" --output label 2>/dev/null | tr '\n' ' '))
+      - run: bazel build -- $(bazel query "kind(npm_package, //...)" --output label 2>/dev/null | tr '\n' ' ')
 
       - save_cache:
           paths:
