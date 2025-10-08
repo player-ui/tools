@@ -85,8 +85,8 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/tools
-
-      - run: bazel build --config=ci -- //...
+      # Python files don't have a build step so we only need to actually build the JS files
+      - run: bazel build -- $(bazel query "kind(npm_package, //...)" --output label 2>/dev/null | tr '\n' ' '))
 
       - save_cache:
           paths:
@@ -112,7 +112,7 @@ jobs:
             - v1-bazel-cache-core-main
 
       - run: |
-          bazel coverage --config=ci //...
+          bazel coverage --config=ci -- $(bazel query "kind(js_test, //...) + kind(py_test, //...)" --output label 2>/dev/null | tr '\n' ' ')
 
       - store_test_results:
           path: _test_results
