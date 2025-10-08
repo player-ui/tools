@@ -38,7 +38,7 @@ if __name__ == "__main__":
         capabilities = manifest['capabilities']
 
         #Generate Assets
-        assets = capabilities['Assets']
+        assets = capabilities.get('Assets',[])
         for asset in assets:
             with open(join(input, asset+".json"), "r", encoding="utf-8") as f:
                 asset_json = f.read()
@@ -46,7 +46,7 @@ if __name__ == "__main__":
                 generate_python_classes(asset_ast, "asset", output)
 
         # Generate Views
-        views = capabilities['Views']
+        views = capabilities.get('Views',[])
         for view in views:
             with open(join(input, view+".json"), "r", encoding="utf-8") as f:
                 asset_json = f.read()
