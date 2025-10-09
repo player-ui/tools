@@ -78,7 +78,7 @@ export class BasicWevDevtoolsPlugin implements ReactPlayerPlugin {
 
     // Flow
     player.hooks.onStart.tap(this.name, (f) => {
-      this.flow = f;
+      this.flow = structuredClone(f);
     });
 
     // View

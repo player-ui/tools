@@ -1,3 +1,75 @@
+# 0.13.0-next.0 (Thu Sep 18 2025)
+
+### Release Notes
+
+#### feat: add hook to support skipCompilation for dsl compilation ([#228](https://github.com/player-ui/tools/pull/228))
+
+- Add a new hook `skipCompilation` for `player dsl compile`, allowing plugins to indicate files to skip dsl compilation step
+<!--
+  To include release notes in the automatic changelong, just add a level 1 markdown header below
+  and include any markdown notes to go into the changelog: https://intuit.github.io/auto/docs/generated/changelog#additional-release-notes
+
+  Example:
+
+  # Release Notes
+  Added new plugin, to use it:
+  ```typescript
+  const plugin = new Plugin(...)
+  ```
+-->
+
+---
+
+#### 🚀 Enhancement
+
+- feat: add hook to support skipCompilation for dsl compilation [#228](https://github.com/player-ui/tools/pull/228) ([@tiffany-meng](https://github.com/tiffany-meng))
+
+#### Authors: 1
+
+- [@tiffany-meng](https://github.com/tiffany-meng)
+
+---
+
+# 0.12.1-next.5 (Fri Sep 12 2025)
+
+### Release Notes
+
+#### [devtools] deep clone cached flow to avoid causing errors ([#227](https://github.com/player-ui/tools/pull/227))
+
+Fix issue where storing the `Flow` instance within Player UI Devtools state caused errors when consumers attempted to mutating the instance, even _after_ the Player has completed.
+
+---
+
+#### 🐛 Bug Fix
+
+- [devtools] deep clone cached flow to avoid causing errors [#227](https://github.com/player-ui/tools/pull/227) ([@sugarmanz](https://github.com/sugarmanz))
+
+#### Authors: 1
+
+- Jeremiah Zucker ([@sugarmanz](https://github.com/sugarmanz))
+
+---
+
+# 0.12.1-next.4 (Thu Aug 28 2025)
+
+### Release Notes
+
+#### Metrics Output Plugin: Improved logging and exporting necessary types ([#224](https://github.com/player-ui/tools/pull/224))
+
+Improved logging to include actual error when metrics output plugin fails to parse pre-existing data, as well as remove warnings if the file exists but is empty. Also exporting a few types that should be used in other plugins.
+
+---
+
+#### 🐛 Bug Fix
+
+- Metrics Output Plugin: Improved logging and exporting necessary types [#224](https://github.com/player-ui/tools/pull/224) ([@kharrop](https://github.com/kharrop))
+
+#### Authors: 1
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+
+---
+
 # 0.12.1-next.3 (Thu Aug 14 2025)
 
 ### Release Notes

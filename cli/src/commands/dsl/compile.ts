@@ -101,6 +101,17 @@ export default class DSLCompile extends BaseCommand {
     const compileFile = async (
       file: string,
     ): Promise<CompilationResult | undefined> => {
+      // Check if any plugin wants to skip this file
+      const shouldSkipCompilation = await context.hooks.skipCompilation.call(file);
+      
+      if (shouldSkipCompilation) {
+        this.log(
+          `${logSymbols.info} Skipping compilation for %s`,
+          normalizePath(file),
+        );
+        return;
+      }
+
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       const requiredModule = require(path.resolve(file));
       const defaultExport = requiredModule.default;

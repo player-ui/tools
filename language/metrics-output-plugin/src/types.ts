@@ -19,3 +19,8 @@ export type MetricsContent = {
 export type MetricsReport = MetricsRoot & {
   content: Record<string, MetricsContent>;
 };
+
+export type MetricItem = MetricsContent & {
+  file: string;
+  path?: string;
+};
