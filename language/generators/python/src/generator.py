@@ -372,14 +372,19 @@ class ClassGenerator:
         new_names: list[ast.expr] = []
         original_names: list[ast.expr] = []
         for prop_info in properties_info:
+            value = None
+            annotation = prop_info.type
+            if is_primitive_const(prop_info.node):
+                value = ast.Constant(value=prop_info.node.const) # type: ignore
+                annotation = COMMON_AST_NODES[prop_info.node.type] # type: ignore
             if prop_info.clean_name != prop_info.original_name:
                 new_names.append(ast.Constant(value=prop_info.clean_name))
                 original_names.append(ast.Constant(value=prop_info.original_name))
 
             annotation = ast.AnnAssign(
                 target=ast.Name(id=prop_info.clean_name, ctx=ast.Store()),
-                annotation=prop_info.type,
-                value=None,
+                annotation=annotation,
+                value=value,
                 simple=1
             )
             class_def.body.append(annotation)
@@ -403,10 +408,12 @@ class ClassGenerator:
 
         # Add ID parameter for Asset classes
         if is_asset:
-            args.append(ast.arg(arg='id', annotation=COMMON_AST_NODES['str']))
+            args.append(ast.arg(arg='id', annotation=COMMON_AST_NODES['string']))
 
         # Add parameters for each property
         for prop_info in properties_info:
+            if is_primitive_const(prop_info.node):
+                continue
             args.append(ast.arg(arg=prop_info.clean_name, annotation=prop_info.type))
             if prop_info.required:
                 defaults.append(None)
@@ -433,6 +440,8 @@ class ClassGenerator:
 
         # Add property assignments
         for prop_info in properties_info:
+            if is_primitive_const(prop_info.node):
+                continue
             assignment = ast.Assign(
                 targets=[
                     ast.Attribute(
@@ -452,6 +461,8 @@ class ClassGenerator:
         methods = []
         properties_info = self._get_properties_info(object_type)
         for prop_info in properties_info:
+            if is_primitive_const(prop_info.node):
+                continue
             # Generate method name: with + PascalCase property name
             method_name = f"with{prop_info.clean_name.replace('_', '').title()}"
 
@@ -696,14 +707,17 @@ class ClassGenerator:
 
     def _convert_xlr_to_ast(self, node: NodeType, prop_name: str) -> ast.expr:
         """Convert XLR type to Python type annotation (internal)."""
+
+        if is_primitive_const(node):
+            return ast.Constant(value=node.const) # type: ignore
         if is_string_type(node):
-            return COMMON_AST_NODES['str']
+            return COMMON_AST_NODES['string']
 
         elif is_number_type(node):
-            return COMMON_AST_NODES['int']  # or float, could be configurable
+            return COMMON_AST_NODES['number']
 
         elif is_boolean_type(node):
-            return COMMON_AST_NODES['bool']
+            return COMMON_AST_NODES['boolean']
 
         elif is_null_type(node) or is_unknown_type(node) or is_undefined_type(node):
             return COMMON_AST_NODES['None']
@@ -966,7 +980,7 @@ class ClassGenerator:
         if ref_name.startswith('AssetWrapper'):
             return COMMON_AST_NODES['Asset']
         elif ref_name in ('Expression', 'Binding'):
-            return COMMON_AST_NODES['str']
+            return COMMON_AST_NODES['string']
         else:
             # For other references, try to resolve to a generated class name
             # or use the ref name directly

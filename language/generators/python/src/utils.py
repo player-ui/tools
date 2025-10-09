@@ -9,9 +9,9 @@ from player_tools_xlr_types.nodes import NodeType
 
 
 COMMON_AST_NODES = {
-    'str': ast.Name(id='str', ctx=ast.Load()),
-    'int': ast.Name(id='int', ctx=ast.Load()),
-    'bool': ast.Name(id='bool', ctx=ast.Load()),
+    'string': ast.Name(id='str', ctx=ast.Load()),
+    'number': ast.Name(id='int', ctx=ast.Load()), # could be a float?
+    'boolean': ast.Name(id='bool', ctx=ast.Load()),
     'Any': ast.Name(id='Any', ctx=ast.Load()),
     'None': ast.Name(id='None', ctx=ast.Load()),
     'Asset': ast.Name(id='Asset', ctx=ast.Load()),

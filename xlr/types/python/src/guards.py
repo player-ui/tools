@@ -2,7 +2,7 @@
 Type Guard Functions that provide type narrowing capabilities for TypeScript-like type checking
 """
 
-from typing import List, TypeGuard, Any
+from typing import TypeGuard, Any, Union
 from .nodes import (
     AndType,
     AnyType,
@@ -166,6 +166,6 @@ def is_primitive_type(obj:Any) -> TypeGuard[PrimitiveTypes]:
         is_undefined_type(obj) or \
         is_void_type(obj)
 
-def is_primitive_const(obj:Any) -> TypeGuard[List[PrimitiveTypes]]:
+def is_primitive_const(obj:Any) -> TypeGuard[Union[StringType, NumberType, BooleanType]]:
     """ Type guard for Primitive nodes with const values."""
     return is_primitive_type(obj) and obj.const is not None
