@@ -21,7 +21,6 @@ exports_files([
     "README.md",
     "requirements.txt",
     ".pylintrc",
-    ".coveragerc"
 ])
 
 js_library(
