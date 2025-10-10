@@ -114,6 +114,16 @@ jobs:
       - run: |
           bazel coverage --config=ci -- $(bazel query "kind(js_test, //...) + kind(py_test, //...)" --output label 2>/dev/null | tr '\n' ' ')
 
+      - run:
+          when: always
+          command: |
+            RESULTS_DIR=_test_results
+            find -L ./bazel-testlogs -name test.xml | while read line
+            do
+              mkdir -p $RESULTS_DIR/$(dirname $line)
+              cp $line $RESULTS_DIR/$(dirname $line)
+            done
+
       - store_test_results:
           path: _test_results
 
