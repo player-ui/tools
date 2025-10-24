@@ -1,0 +1,46 @@
+{
+  "generator": {
+    "outputDir": "src/core/mocks/generated",
+    "useDefaults": true,
+    "addComments": true,
+    "customCommonFilePath": "../../../gen/common",
+    "naming": {
+      "factoryTransform": "(typeName) => typeName.charAt(0).toLowerCase() + typeName.replace(/Asset$/, '').slice(1)",
+      "transform": "(typeName) => typeName.charAt(0).toLowerCase() + typeName.replace(/Asset$/, '').slice(1)"
+    }
+  },
+  "targets": [
+    {
+      "file": "src/core/mocks/types/action.ts",
+      "types": ["ActionAsset"],
+      "outputFile": "src/core/mocks/generated/{type}.builder.ts"
+    },
+    {
+      "file": "src/core/mocks/types/collection.ts",
+      "types": ["Collection"],
+      "outputFile": "src/core/mocks/generated/{type}.builder.ts"
+    },
+    {
+      "file": "src/core/mocks/types/text.ts",
+      "types": ["TextAsset"],
+      "outputFile": "src/core/mocks/generated/{type}.builder.ts"
+    },
+    {
+      "file": "src/core/mocks/types/info.ts",
+      "types": ["InfoAsset"],
+      "outputFile": "src/core/mocks/generated/{type}.builder.ts"
+    },
+    {
+      "file": "src/core/mocks/types/input.ts",
+      "types": ["InputAsset"],
+      "outputFile": "src/core/mocks/generated/{type}.builder.ts"
+    },
+    {
+      "file": "src/core/mocks/types/choice.ts",
+      "types": ["ChoiceAsset", "ChoiceItem"],
+      "outputFile": "src/core/mocks/generated/{type}.builder.ts"
+    }
+  ],
+  "patterns": ["src/core/mocks/types/**"],
+  "plugins": ["./src/gen/plugin.mjs"]
+}
