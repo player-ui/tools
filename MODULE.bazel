@@ -4,9 +4,9 @@ bazel_dep(name = "rules_player")
 
 archive_override(
   module_name = "rules_player",
-  strip_prefix = "rules_player-2.0.0",
-  urls = ["https://github.com/player-ui/rules_player/archive/refs/tags/v2.0.0.tar.gz"],
-  integrity = "sha256-xpjuz+HPnzovpdZoRnFuLipvhVDWFlLQzH1YSWsFrT0="
+  strip_prefix = "rules_player-2.2.0",
+  urls = ["https://github.com/player-ui/rules_player/archive/refs/tags/v2.2.0.tar.gz"],
+  integrity = "sha256-DYyXFgCV+33a4/vrHWx3bP1VFku2DLaambwggKxeXVI="
 )
 
 bazel_dep(name = "aspect_bazel_lib", version = "2.17.1")

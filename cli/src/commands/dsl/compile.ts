@@ -102,8 +102,9 @@ export default class DSLCompile extends BaseCommand {
       file: string,
     ): Promise<CompilationResult | undefined> => {
       // Check if any plugin wants to skip this file
-      const shouldSkipCompilation = await context.hooks.skipCompilation.call(file);
-      
+      const shouldSkipCompilation =
+        await context.hooks.skipCompilation.call(file);
+
       if (shouldSkipCompilation) {
         this.log(
           `${logSymbols.info} Skipping compilation for %s`,
