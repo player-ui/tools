@@ -144,7 +144,7 @@ class ClassGenerator:
 
         # Generate main class (extends Asset)
         main_class = self._generate_main_class()
-        # Generate nested classes (extend Serializable)
+        # Generate nested classes (extend Slotable)
         for class_name in self.classes:
             object_type = self.classes_to_generate.get(class_name, None)
             if object_type is not None :
@@ -264,7 +264,7 @@ class ClassGenerator:
                 module= f'{PLAYER_DSL_PACKAGE}.view',
                 names=[
                     ast.alias(name='Asset', asname=None),
-                    ast.alias(name='Serializable', asname=None)
+                    ast.alias(name='Slotable', asname=None)
                 ],
                 level=0
             ),
@@ -345,7 +345,7 @@ class ClassGenerator:
         # Create class definition
         class_def = ast.ClassDef(
             name=class_name,
-            bases=[ast.Name(id='Serializable', ctx=ast.Load())],
+            bases=[ast.Name(id='Slotable', ctx=ast.Load())],
             keywords=[],
             decorator_list=[],
             body=[],

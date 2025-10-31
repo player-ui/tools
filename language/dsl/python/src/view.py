@@ -12,8 +12,27 @@ def isAssetWrapperOrSwitch(obj: Any) -> bool:
     """
     return isinstance(obj, (AssetWrapper, Switch))
 
+class Slotable(Serializable):
+    """
+    Allows Assets/Intermediate Classes to have slots
+    """
 
-class Asset(Serializable):
+    def _withSlot(self, name: str, obj: Any, wrapInAssetWrapper: bool = True, isArray = False):
+        val = obj
+        if wrapInAssetWrapper:
+            if isArray:
+                val = list(
+                    map(
+                        lambda asset: AssetWrapper(asset) if not isAssetWrapperOrSwitch(asset)
+                        else asset, obj
+                    )
+                )
+            else:
+                val = AssetWrapper(obj) if not isAssetWrapperOrSwitch(obj) else obj
+        self[name] = val
+        return self
+
+class Asset(Slotable):
     """
     An asset is the smallest unit of user interaction in a player View
     """
@@ -37,21 +56,6 @@ class Asset(Serializable):
         Returns the ID of the asset
         """
         return self.id
-
-    def _withSlot(self, name: str, obj: Any, wrapInAssetWrapper: bool = True, isArray = False):
-        val = obj
-        if wrapInAssetWrapper:
-            if isArray:
-                val = list(
-                    map(
-                        lambda asset: AssetWrapper(asset) if not isAssetWrapperOrSwitch(asset)
-                        else asset, obj
-                    )
-                )
-            else:
-                val = AssetWrapper(obj) if not isAssetWrapperOrSwitch(obj) else obj
-        self[name] = val
-        return self
 
 class View(Asset):
     """
