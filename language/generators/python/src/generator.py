@@ -781,9 +781,19 @@ class ClassGenerator:
 
         else:
             # Handle Union types
-            union_types = [
-                self._convert_xlr_to_ast(or_type, prop_name) for or_type in node.or_types
-            ]
+            union_types = []
+
+            for type in node.or_types:
+                if not is_primitive_const(type):
+                    union_types.append(self._convert_xlr_to_ast(type, prop_name))
+                else:
+                    union_types.append(
+                        ast.Subscript(
+                            value=COMMON_AST_NODES['Literal'],
+                            slice=ast.Tuple(elts=[ast.Constant(type.const)], ctx=ast.Load()),
+                            ctx=ast.Load()
+                        )
+                    )
 
             if len(union_types) == 1:
                 return union_types[0]
