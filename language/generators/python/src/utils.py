@@ -33,3 +33,22 @@ class PropertyInfo(NamedTuple):
     node: NodeType
     required: bool
     type: ast.expr
+
+def clean_property_name(prop_name: str) -> str:
+    """Clean property name by removing quotes and replacing hyphens."""
+    return prop_name.replace('"', '').replace('\'','').replace('-', '_')
+
+def generate_class_name(prop_name: str) -> str:
+    """Generate class name from property name."""
+    return clean_property_name(prop_name).replace('_', "").title()
+
+def ast_to_source(module: ast.Module) -> str:
+    """Convert AST module to source code string."""
+    # Fix line numbers and column offsets
+    for node in ast.walk(module):
+        if not hasattr(node, 'lineno'):
+            node.lineno = 1 # type: ignore
+        if not hasattr(node, 'col_offset'):
+            node.col_offset = 0 # type: ignore
+
+    return ast.unparse(module)

@@ -39,8 +39,14 @@ from player_tools_xlr_types.guards import (
     is_unknown_type
 )
 
-from .utils import COMMON_AST_NODES, PropertyInfo, PLAYER_DSL_PACKAGE
-
+from .utils import (
+    COMMON_AST_NODES,
+    PropertyInfo,
+    PLAYER_DSL_PACKAGE,
+    clean_property_name,
+    generate_class_name,
+    ast_to_source
+)
 
 def generate_python_classes(
         named_object_type: NamedType[ObjectType],
@@ -92,11 +98,6 @@ class ClassGenerator:
         # Collect all nested ObjectTypes that need separate classes
         self._collect_nested_objects(named_object_type, '')
 
-    @staticmethod
-    def _clean_property_name(prop_name: str) -> str:
-        """Clean property name by removing quotes and replacing hyphens."""
-        return prop_name.replace('"', '').replace('\'','').replace('-', '_')
-
     def _get_properties_info(self, object_type: ObjectType) -> List[PropertyInfo]:
         """Pre-process property information to avoid repeated work."""
 
@@ -111,7 +112,7 @@ class ClassGenerator:
                 node.title = prop_obj.node.title
                 node.description = prop_obj.node.description
 
-            clean_name = self._clean_property_name(original_name)
+            clean_name = clean_property_name(original_name)
             python_type = self._convert_xlr_to_ast(node, clean_name)
             type = self._make_optional_type(python_type) if not prop_obj.required else python_type
 
@@ -155,7 +156,7 @@ class ClassGenerator:
         module.body.append(main_class)
 
         # Convert AST to source code
-        source_code = self._ast_to_source(module)
+        source_code = ast_to_source(module)
 
         # Write to file
         filename = f"{self.named_object_type.name}.py"
@@ -202,7 +203,7 @@ class ClassGenerator:
                 self.classes_to_generate[class_name] = node
         else:
             class_name = (
-                self._generate_class_name(node.title.split(".")[-1]) \
+                generate_class_name(node.title.split(".")[-1]) \
                     if node.title
                     else parent_prop
                 ).title()
@@ -214,10 +215,6 @@ class ClassGenerator:
         for prop_name, prop_obj in node.properties.items():
             prop_node = prop_obj.node
             self._collect_nested_objects(prop_node, prop_name)
-
-    def _generate_class_name(self, prop_name: str) -> str:
-        """Generate class name from property name."""
-        return self._clean_property_name(prop_name).replace('_', "").title()
 
     def _create_super_call(self, is_asset: bool) -> ast.Expr:
         """Create super().__init__() call for both Asset and Serializable classes."""
@@ -745,7 +742,7 @@ class ClassGenerator:
         elif is_object_type(node):
             # Use the generated class name
             class_name: str = node.name if is_named_type(node) \
-                else self._generate_class_name(prop_name)
+                else generate_class_name(prop_name)
             escaped_class_name = "'"+class_name+"'"
             return ast.Name(id=escaped_class_name, ctx=ast.Load())
 
@@ -894,7 +891,7 @@ class ClassGenerator:
     def _generate_merged_class_name(self, base_name: str, object_types: List[NodeType]) -> str:
         """Generate a unique class name for merged object types."""
         # Clean the base name
-        clean_base = self._clean_property_name(base_name).replace('_', '').title()
+        clean_base = clean_property_name(base_name).replace('_', '').title()
 
         # Try to create a meaningful name from the merged types
         type_names = []
@@ -995,14 +992,3 @@ class ClassGenerator:
             # For other references, try to resolve to a generated class name
             # or use the ref name directly
             return ast.Name(id=ref_name, ctx=ast.Load())
-
-    def _ast_to_source(self, module: ast.Module) -> str:
-        """Convert AST module to source code string."""
-        # Fix line numbers and column offsets
-        for node in ast.walk(module):
-            if not hasattr(node, 'lineno'):
-                node.lineno = 1 # type: ignore
-            if not hasattr(node, 'col_offset'):
-                node.col_offset = 0 # type: ignore
-
-        return ast.unparse(module)
