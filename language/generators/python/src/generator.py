@@ -405,7 +405,11 @@ class ClassGenerator:
 
         # Add ID parameter for Asset classes
         if is_asset:
-            args.append(ast.arg(arg='id', annotation=COMMON_AST_NODES['string']))
+            args.append(ast.arg(arg='id', annotation=ast.Subscript(
+            value=COMMON_AST_NODES['Optional'],
+            slice=COMMON_AST_NODES['string'],
+            ctx=ast.Load()
+        )))
 
         # Add parameters for each property
         for prop_info in properties_info:
