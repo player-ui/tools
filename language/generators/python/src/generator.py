@@ -396,37 +396,40 @@ class ClassGenerator:
     def _generate_init_method(self, object_type: ObjectType, is_asset: bool) -> ast.FunctionDef:
         """Generate __init__ method for the class using cached property info."""
         properties_info = self._get_properties_info(object_type)
-
         properties_info.sort(key=lambda x: x.required, reverse=True)
 
         # Build arguments list
-        args = [ast.arg(arg='self', annotation=None)]
-        defaults = []
+        required_args, optional_args= [ast.arg(arg='self', annotation=None)], []
+        defaults: List[Any] = [None]
 
         # Add ID parameter for Asset classes
         if is_asset:
-            args.append(ast.arg(arg='id', annotation=ast.Subscript(
+            optional_args.append(ast.arg(arg='id', annotation=ast.Subscript(
             value=COMMON_AST_NODES['Optional'],
             slice=COMMON_AST_NODES['string'],
             ctx=ast.Load()
         )))
-            defaults.append(COMMON_AST_NODES['None'])
 
         # Add parameters for each property
         for prop_info in properties_info:
             if is_primitive_const(prop_info.node):
                 continue
-            args.append(ast.arg(arg=prop_info.clean_name, annotation=prop_info.type))
             if prop_info.required:
+                required_args.append(ast.arg(arg=prop_info.clean_name, annotation=prop_info.type))
                 defaults.append(None)
             else:
+                optional_args.append(ast.arg(arg=prop_info.clean_name, annotation=prop_info.type))
                 defaults.append(COMMON_AST_NODES['None'])
+
+        # Add default for ID
+        defaults.insert(len(required_args), COMMON_AST_NODES['None'])
+
         # Create function definition
         init_def = ast.FunctionDef(
             name='__init__',
             args=ast.arguments(
                 posonlyargs=[],
-                args=args,
+                args=required_args + optional_args,
                 vararg=None,
                 kwonlyargs=[],
                 kw_defaults=[],
@@ -714,19 +717,14 @@ class ClassGenerator:
             return ast.Constant(value=node.const) # type: ignore
         if is_string_type(node):
             return COMMON_AST_NODES['string']
-
         elif is_number_type(node):
             return COMMON_AST_NODES['number']
-
         elif is_boolean_type(node):
             return COMMON_AST_NODES['boolean']
-
         elif is_null_type(node) or is_unknown_type(node) or is_undefined_type(node):
             return COMMON_AST_NODES['None']
-
         elif is_any_type(node):
             return COMMON_AST_NODES['Any']
-
         elif is_array_type(node):
             element_type = self._convert_xlr_to_ast(node.elementType, prop_name)
             return ast.Subscript(
@@ -743,23 +741,18 @@ class ClassGenerator:
                 slice=ast.Tuple(elts=[key_type, value_type], ctx=ast.Load()),
                 ctx=ast.Load()
             )
-
         elif is_object_type(node):
             # Use the generated class name
             class_name: str = node.name if is_named_type(node) \
                 else generate_class_name(prop_name)
             escaped_class_name = "'"+class_name+"'"
             return ast.Name(id=escaped_class_name, ctx=ast.Load())
-
         elif is_or_type(node):
             return self._handle_or_type(node, prop_name)
-
         elif is_and_type(node):
             return self._handle_and_type(node, prop_name)
-
         elif is_ref_type(node):
             return self._handle_ref_type(node)
-
         else:
             return COMMON_AST_NODES['Any']
 
