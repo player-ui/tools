@@ -21,14 +21,20 @@ class Slotable(Serializable):
         val = obj
         if wrapInAssetWrapper:
             if isArray:
-                val = list(
-                    map(
-                        lambda asset: AssetWrapper(asset) if not isAssetWrapperOrSwitch(asset)
-                        else asset, obj
-                    )
-                )
+                val = []
+                for index, asset in enumerate(obj):
+                    wrapped = AssetWrapper(asset) if not isAssetWrapperOrSwitch(asset) else asset
+                    # Set parent relationship and generate ID for the asset
+                    actual_asset = wrapped.asset if isinstance(wrapped, AssetWrapper) else None
+                    if actual_asset and isinstance(actual_asset, Asset):
+                        actual_asset._setParent(self, name, index) #pylint: disable=protected-access
+                    val.append(wrapped)
             else:
                 val = AssetWrapper(obj) if not isAssetWrapperOrSwitch(obj) else obj
+                # Set parent relationship and generate ID for the asset
+                actual_asset = val.asset if isinstance(val, AssetWrapper) else None
+                if actual_asset and isinstance(actual_asset, Asset):
+                    actual_asset._setParent(self, name, None) #pylint: disable=protected-access
         self[name] = val
         return self
 
@@ -39,10 +45,45 @@ class Asset(Slotable):
 
     id: str
     type: str
+    _parent: Optional[Slotable]
+    _slot_name: Optional[str]
+    _slot_index: Optional[int]
 
-    def __init__(self, id:str, type:str) -> None:
-        self.id = id
+    def __init__(self, id: Optional[str], type: str) -> None:
         self.type = type
+        self._parent = None
+        self._slot_name = None
+        self._slot_index = None
+        # Generate ID if not provided
+        if id is None:
+            self.id = self._generateID()
+        else:
+            self.id = id
+
+    def _setParent(self, parent: Slotable, slot_name: str, slot_index: Optional[int]):
+        """
+        Sets the parent relationship and regenerates the ID
+        """
+        self._parent = parent
+        self._slot_name = slot_name
+        self._slot_index = slot_index
+        # Regenerate ID based on parent context
+        self.id = self._generateID()
+
+    def _generateID(self) -> str:
+        """
+        Generates an ID based on parent ID, slot name, type, and array index
+        """
+        if self._parent is None:
+            return "root"
+        # Get parent ID - if parent is an Asset, use its ID, otherwise use "root"
+        parent_id = getattr(self._parent, 'id', 'root')
+        parts = [parent_id, self._slot_name, self.type]
+
+        if self._slot_index is not None:
+            parts.insert(2,str(self._slot_index))
+
+        return "-".join(parts)
 
     def withID(self, id: str):
         """
@@ -66,7 +107,7 @@ class View(Asset):
     validation: Union[List[CrossfieldReference],None]
 
     def __init__(self,
-                 id: str,
+                 id: Optional[str],
                  type: str,
                  validation: Optional[List[CrossfieldReference]] = None
                 ) -> None:

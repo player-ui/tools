@@ -32,7 +32,7 @@ class Serializable():
     # Types that should be handled by the base serialization logic
     _jsonable = (int, list, str, dict, NoneType)
     # Keys that should be ignored during serialization
-    _ignored_json_keys = ['_propMap', '_ignored_json_keys']
+    _ignored_json_keys = ['_propMap', '_ignored_json_keys', '_parent', "_slot_name", "_slot_index"]
 
     def _serialize(self):
         _dict = dict()
