@@ -410,6 +410,7 @@ class ClassGenerator:
             slice=COMMON_AST_NODES['string'],
             ctx=ast.Load()
         )))
+            defaults.append(COMMON_AST_NODES['None'])
 
         # Add parameters for each property
         for prop_info in properties_info:
