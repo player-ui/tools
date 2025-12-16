@@ -17,7 +17,7 @@
     "test": "bazel test -- $(bazel query \"kind(nodejs_test, //...)\" --output label 2>/dev/null | tr '\\n' ' ')"
   },
   "engines": {
-    "node": "^20.14.0",
+    "node": "^22.21.1",
     "pnpm": "^10.13.1"
   },
   "packageManager": "pnpm@10.13.1",
@@ -173,7 +173,7 @@
     "zip-folder": "^1.0.0"
   },
   "volta": {
-    "node": "22.15.1",
+    "node": "22.21.1",
     "pnpm": "10.13.1"
   },
   "pnpm": {
