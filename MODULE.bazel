@@ -2,12 +2,19 @@ module(name = "player-tools", version = "1.0")
 
 bazel_dep(name = "rules_player")
 
-archive_override(
-  module_name = "rules_player",
-  strip_prefix = "rules_player-2.0.0",
-  urls = ["https://github.com/player-ui/rules_player/archive/refs/tags/v2.0.0.tar.gz"],
-  integrity = "sha256-xpjuz+HPnzovpdZoRnFuLipvhVDWFlLQzH1YSWsFrT0="
+git_override(
+    module_name = "rules_player",
+    remote = "https://github.com/player-ui/rules_player.git",
+    commit = "6be94c8df03d78959b29ebadb8f3c90ad89192e8"
 )
+
+
+#archive_override(
+#  module_name = "rules_player",
+#  strip_prefix = "rules_player-2.0.0",
+#  urls = ["https://github.com/player-ui/rules_player/archive/refs/tags/v2.0.0.tar.gz"],
+# integrity = "sha256-xpjuz+HPnzovpdZoRnFuLipvhVDWFlLQzH1YSWsFrT0="
+#)
 
 bazel_dep(name = "aspect_bazel_lib", version = "2.17.1")
 bazel_dep(name = "aspect_rules_js", version = "2.3.7")
@@ -30,7 +37,6 @@ npm.npm_translate_lock(
         "//:package.json",
     ],
     npmrc = "//:.npmrc",
-    verify_node_modules_ignored = "//:.bazelignore",
     npm_package_target_name = "{dirname}"
 )
 
@@ -45,3 +51,30 @@ rules_ts_ext = use_extension(
 rules_ts_ext.deps()
 
 use_repo(rules_ts_ext, "npm_typescript")
+
+####### Python Setup #########
+bazel_dep(name = "rules_python", version = "1.6.1")
+bazel_dep(name = "platforms", version = "0.0.11")
+
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(
+    configure_coverage_tool = True,
+    python_version = "3.13",
+)
+
+use_repo(python, "python_3_13")
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+
+pip.parse(
+    hub_name = "pypi",
+    python_version = "3.13",
+    requirements_lock = "//:requirements.txt",
+)
+
+use_repo(pip, "pypi")
+
+build_constants = use_repo_rule("@rules_player//distribution:defs.bzl", "build_constants")
+build_constants(
+    name = "build_constants",
+    version_file = "//:VERSION",
+)

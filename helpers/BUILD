@@ -5,6 +5,7 @@ exports_files([
     "tsup.config.ts.tmpl",
     "vitest.config.mts.tmpl",
     "defs.bzl",
+    "pytest_wrapper.py"
 ])
 
 js_library(

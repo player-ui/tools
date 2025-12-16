@@ -85,8 +85,8 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/tools
-
-      - run: bazel build --config=ci -- //...
+      # Python files don't have a build step so we only need to actually build the JS files
+      - run: bazel build -- $(bazel query "kind(npm_package, //...)" --output label 2>/dev/null | tr '\n' ' ')
 
       - save_cache:
           paths:
@@ -112,8 +112,20 @@ jobs:
             - v1-bazel-cache-core-main
 
       - run: |
-          BUNDLE_TARGETS=$(bazel query 'attr("name", "_eslint$|_vitest$", //...)' --output label 2>/dev/null | tr '\n' ' ')
-          bazel coverage --config=ci -- $BUNDLE_TARGETS
+          bazel coverage --config=ci -- $(bazel query "kind(js_test, //...) + kind(py_test, //...)" --output label 2>/dev/null | tr '\n' ' ')
+
+      - run:
+          when: always
+          command: |
+            RESULTS_DIR=_test_results
+            find -L ./bazel-testlogs -name test.xml | while read line
+            do
+              mkdir -p $RESULTS_DIR/$(dirname $line)
+              cp $line $RESULTS_DIR/$(dirname $line)
+            done
+
+      - store_test_results:
+          path: _test_results
 
       - codecov/upload:
           files: ./bazel-out/_coverage/_coverage_report.dat

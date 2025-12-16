@@ -22,3 +22,11 @@ fi
 for pkg in $PKG_NPM_LABELS ; do
   bazel run --config=release -- ${pkg}.npm-publish --access public --tag ${NPM_TAG}
 done
+
+# Python Publishing
+
+readonly PKG_PYPI_LABELS=`bazel query --output=label 'kind("py_wheel rule", //...) - attr("tags", "\[.*do-not-publish.*\]", //...)'`
+
+for pkg in $PKG_PYPI_LABELS ; do
+  TWINE_USERNAME=$PYPI_USER TWINE_PASSWORD=$PYPI_TOKEN bazel run --config=release ${pkg}.publish --
+done

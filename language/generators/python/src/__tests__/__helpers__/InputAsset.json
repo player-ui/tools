@@ -1,0 +1,109 @@
+{
+    "source": "/home/circleci/.cache/bazel/_bazel_circleci/e8362d362e14c7d23506d1dfa3aea8b8/sandbox/processwrapper-sandbox/3907/execroot/_main/bazel-out/k8-fastbuild/bin/plugins/reference-assets/core/src/assets/input/types.ts",
+    "name": "InputAsset",
+    "type": "object",
+    "properties": {
+        "label": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "AssetWrapper<AnyTextAsset>",
+                "genericArguments": [
+                    {
+                        "type": "ref",
+                        "ref": "AnyTextAsset"
+                    }
+                ],
+                "title": "InputAsset.label",
+                "description": "Asset container for a field label."
+            }
+        },
+        "note": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "AssetWrapper<AnyTextAsset>",
+                "genericArguments": [
+                    {
+                        "type": "ref",
+                        "ref": "AnyTextAsset"
+                    }
+                ],
+                "title": "InputAsset.note",
+                "description": "Asset container for a note."
+            }
+        },
+        "binding": {
+            "required": true,
+            "node": {
+                "type": "ref",
+                "ref": "Binding",
+                "title": "InputAsset.binding",
+                "description": "The location in the data-model to store the data"
+            }
+        },
+        "metaData": {
+            "required": false,
+            "node": {
+                "type": "object",
+                "properties": {
+                    "beacon": {
+                        "required": false,
+                        "node": {
+                            "source": "/home/circleci/.cache/bazel/_bazel_circleci/e8362d362e14c7d23506d1dfa3aea8b8/sandbox/processwrapper-sandbox/3907/execroot/_main/bazel-out/k8-fastbuild/bin/node_modules/.aspect_rules_js/@player-ui+beacon-plugin@0.0.0/node_modules/@player-ui/beacon-plugin/types/beacon.d.ts",
+                            "name": "BeaconDataType",
+                            "type": "or",
+                            "or": [
+                                {
+                                    "type": "string",
+                                    "title": "BeaconDataType"
+                                },
+                                {
+                                    "type": "record",
+                                    "keyType": {
+                                        "type": "string"
+                                    },
+                                    "valueType": {
+                                        "type": "any"
+                                    },
+                                    "title": "BeaconDataType"
+                                }
+                            ],
+                            "title": "InputAsset.metaData.beacon",
+                            "description": "Additional data to beacon when this input changes"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "title": "InputAsset.metaData",
+                "description": "Optional additional data"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "title": "InputAsset",
+    "description": "This is the most generic way of gathering data. The input is bound to a data model using the 'binding' property.\nPlayers can get field type information from the 'schema' definition, thus to decide the input controls for visual rendering.",
+    "genericTokens": [
+        {
+            "symbol": "AnyTextAsset",
+            "constraints": {
+                "type": "ref",
+                "ref": "Asset"
+            },
+            "default": {
+                "type": "ref",
+                "ref": "Asset"
+            }
+        }
+    ],
+    "extends": {
+        "type": "ref",
+        "ref": "Asset<\"input\">",
+        "genericArguments": [
+            {
+                "type": "string",
+                "const": "input"
+            }
+        ]
+    }
+}
