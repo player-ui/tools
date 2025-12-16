@@ -1,3 +1,44 @@
+# 0.13.0-next.1 (Tue Dec 16 2025)
+
+### Release Notes
+
+#### Fix Builds and Update Dependencies ([#232](https://github.com/player-ui/tools/pull/232))
+
+Use latest docker image for build and use latest Node 22 LTS
+
+#### Feature: Python XLR/DSL Support and DSL Class Generator ([#231](https://github.com/player-ui/tools/pull/231))
+
+Welcome Python to Player Tools 🎉. There are three new packages published from this repository all in support for generating Player content via Python classes. 
+
+- `player_tools_xlr_types` - Classes to represent XLR ASTs in Python and a de-serialization utility to read in XLRs from a manifest file.
+- `player_tools_dsl` - Basic DSL constructs represented as Python classes and content serialization logic.
+- `player_tools_dsl_generator` - DSL class generation using XLRs. 
+
+Currently Python support should be considered in Alpha as it is not at feature parity with the React based DSL. Notable things still under development are:
+
+- Native Schema Support
+- Native Binding/Expression Support
+- Expression Helper Generation
+- Data Type Generation 
+
+Stay tuned for updates on those!
+
+---
+
+#### 🚀 Enhancement
+
+- Feature: Python XLR/DSL Support and DSL Class Generator [#231](https://github.com/player-ui/tools/pull/231) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### 🐛 Bug Fix
+
+- Fix Builds and Update Dependencies [#232](https://github.com/player-ui/tools/pull/232) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### Authors: 1
+
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
 # 0.13.0-next.0 (Thu Sep 18 2025)
 
 ### Release Notes
