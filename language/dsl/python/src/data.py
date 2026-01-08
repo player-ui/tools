@@ -3,7 +3,7 @@ Python classes that represent Player Data constructs
 """
 
 from typing import List, Optional, Union, TypeVar
-
+from .utils import Serializable
 T = TypeVar('T', bound=str)
 
 # Future: Build out Expression/Binding template functionality once PEP 750 is available
@@ -12,7 +12,7 @@ ExpressionRef = str
 Binding = str
 BindingRef = str
 
-class ExpressionObject:
+class ExpressionObject(Serializable):
     """An object with an expression in it"""
 
     def __init__(self, exp: Optional[Union[str, List[str]]] = None):

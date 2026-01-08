@@ -4,10 +4,11 @@ Python classes that represent Player Navigation constructs
 
 from typing import Any, Dict, Generic, List, Literal, Optional, TypeVar, Union
 from .data import Expression, ExpressionObject
+from .utils import Serializable
 
 T = TypeVar('T', bound=str)
 
-class Navigation:
+class Navigation(Serializable):
     """The navigation section of the flow describes a State Machine for the user."""
 
     def __init__(self, begin: str, **flows: Union[str, 'NavigationFlow']):
@@ -39,7 +40,7 @@ class Navigation:
 
 NavigationFlowTransition = Dict[str, str]
 
-class NavigationBaseState(Generic[T]):
+class NavigationBaseState(Generic[T], Serializable):
     """The base representation of a state within a Flow"""
 
     def __init__(
@@ -296,7 +297,7 @@ NavigationFlowState = Union[
 ]
 
 
-class NavigationFlow:
+class NavigationFlow(Serializable):
     """A state machine in the navigation"""
 
     def __init__(
