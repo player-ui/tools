@@ -1,0 +1,59 @@
+load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library", "kt_jvm_test")
+load("@rules_kotlin//kotlin:lint.bzl", "ktlint_config", "ktlint_fix", "ktlint_test")
+
+package(default_visibility = ["//visibility:public"])
+
+ktlint_config(
+    name = "ktlint_config",
+    editorconfig = ".editorconfig",
+)
+
+kt_jvm_library(
+    name = "kotlin-dsl-generator",
+    srcs = glob(["src/main/kotlin/**/*.kt"]),
+    kotlinc_opts = "//:kt_opts",
+    deps = [
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
+        "@maven//:org_jetbrains_kotlinx_kotlinx_serialization_json",
+    ],
+)
+
+kt_jvm_test(
+    name = "kotlin-dsl-generator-test",
+    srcs = glob(["src/test/kotlin/**/*.kt"]),
+    data = glob(["src/test/kotlin/**/fixtures/*.json"]),
+    kotlinc_opts = "//:kt_opts",
+    args = [
+        "--select-class=com.intuit.playertools.fluent.generator.XlrDeserializerTest",
+        "--select-class=com.intuit.playertools.fluent.generator.TypeMapperTest",
+        "--select-class=com.intuit.playertools.fluent.generator.ClassGeneratorTest",
+        "--select-class=com.intuit.playertools.fluent.generator.GeneratorIntegrationTest",
+    ],
+    main_class = "org.junit.platform.console.ConsoleLauncher",
+    deps = [
+        ":kotlin-dsl-generator",
+        "@maven//:io_kotest_kotest_assertions_core",
+        "@maven//:io_kotest_kotest_assertions_json",
+        "@maven//:io_kotest_kotest_runner_junit5",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
+        "@maven//:org_junit_platform_junit_platform_console",
+    ],
+)
+
+ktlint_test(
+    name = "ktlint",
+    srcs = glob([
+        "src/main/kotlin/**/*.kt",
+        "src/test/kotlin/**/*.kt",
+    ]),
+    config = ":ktlint_config",
+)
+
+ktlint_fix(
+    name = "ktlint_fix",
+    srcs = glob([
+        "src/main/kotlin/**/*.kt",
+        "src/test/kotlin/**/*.kt",
+    ]),
+    config = ":ktlint_config",
+)
