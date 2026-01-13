@@ -567,9 +567,35 @@ importers:
         specifier: workspace:*
         version: link:../../common/static-xlrs
 
+  language/dsl/fluent:
+    devDependencies:
+      '@player-tools/fluent-generator':
+        specifier: workspace:*
+        version: link:../../generators/fluent
+      '@player-tools/xlr':
+        specifier: workspace:*
+        version: link:../../../xlr/types/javascript
+      '@player-tools/xlr-converters':
+        specifier: workspace:*
+        version: link:../../../xlr/converters
+
   language/dsl/react: {}
 
-  language/fluent: {}
+  language/generators/fluent:
+    dependencies:
+      '@player-tools/xlr':
+        specifier: workspace:*
+        version: link:../../../xlr/types/javascript
+      '@player-tools/xlr-utils':
+        specifier: workspace:*
+        version: link:../../../xlr/utils
+    devDependencies:
+      '@player-tools/test-utils':
+        specifier: workspace:*
+        version: link:../../../common/test-utils
+      '@player-tools/xlr-converters':
+        specifier: workspace:*
+        version: link:../../../xlr/converters
 
   language/json-language-server:
     dependencies:

@@ -507,6 +507,11 @@ export class TsConverter {
   }
 
   private tsLiteralToType(node: ts.Expression): NodeType {
+    // Handle "as const" assertions by unwrapping to the inner expression
+    if (ts.isAsExpression(node)) {
+      return this.tsLiteralToType(node.expression);
+    }
+
     if (ts.isNumericLiteral(node)) {
       return {
         type: "number",
