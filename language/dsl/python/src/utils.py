@@ -39,7 +39,9 @@ class Serializable():
         for attr in dir(self):
             value = getattr(self, attr)
             key = attr
-            if isInternalMethod(attr) or key in getattr(self, "_ignored_json_keys", []):
+            if value is None:
+                continue
+            elif isInternalMethod(attr) or key in getattr(self, "_ignored_json_keys", []):
                 continue
             elif isinstance(value, (self._jsonable, Serializable)) or hasattr(value, 'to_dict'):
                 if self._propMap.get(key, None) is not None:
