@@ -1,25 +1,25 @@
 package com.intuit.playertools.fluent.generator
 
-import com.intuit.playertools.fluent.generator.xlr.AnyType
-import com.intuit.playertools.fluent.generator.xlr.ArrayType
-import com.intuit.playertools.fluent.generator.xlr.BooleanType
-import com.intuit.playertools.fluent.generator.xlr.NeverType
-import com.intuit.playertools.fluent.generator.xlr.NodeType
-import com.intuit.playertools.fluent.generator.xlr.NullType
-import com.intuit.playertools.fluent.generator.xlr.NumberType
-import com.intuit.playertools.fluent.generator.xlr.ObjectType
-import com.intuit.playertools.fluent.generator.xlr.OrType
-import com.intuit.playertools.fluent.generator.xlr.ParamTypeNode
-import com.intuit.playertools.fluent.generator.xlr.RecordType
-import com.intuit.playertools.fluent.generator.xlr.RefType
-import com.intuit.playertools.fluent.generator.xlr.StringType
-import com.intuit.playertools.fluent.generator.xlr.UndefinedType
-import com.intuit.playertools.fluent.generator.xlr.UnknownType
-import com.intuit.playertools.fluent.generator.xlr.VoidType
-import com.intuit.playertools.fluent.generator.xlr.isAssetRef
-import com.intuit.playertools.fluent.generator.xlr.isAssetWrapperRef
-import com.intuit.playertools.fluent.generator.xlr.isBindingRef
-import com.intuit.playertools.fluent.generator.xlr.isExpressionRef
+import com.intuit.playertools.xlr.AnyType
+import com.intuit.playertools.xlr.ArrayType
+import com.intuit.playertools.xlr.BooleanType
+import com.intuit.playertools.xlr.NeverType
+import com.intuit.playertools.xlr.NodeType
+import com.intuit.playertools.xlr.NullType
+import com.intuit.playertools.xlr.NumberType
+import com.intuit.playertools.xlr.ObjectType
+import com.intuit.playertools.xlr.OrType
+import com.intuit.playertools.xlr.ParamTypeNode
+import com.intuit.playertools.xlr.RecordType
+import com.intuit.playertools.xlr.RefType
+import com.intuit.playertools.xlr.StringType
+import com.intuit.playertools.xlr.UndefinedType
+import com.intuit.playertools.xlr.UnknownType
+import com.intuit.playertools.xlr.VoidType
+import com.intuit.playertools.xlr.isAssetRef
+import com.intuit.playertools.xlr.isAssetWrapperRef
+import com.intuit.playertools.xlr.isBindingRef
+import com.intuit.playertools.xlr.isExpressionRef
 
 /*
  * Maps XLR types to Kotlin type information for code generation.
@@ -39,7 +39,7 @@ data class KotlinTypeInfo(
     val builderType: String? = null,
     val isNestedObject: Boolean = false,
     val nestedObjectName: String? = null,
-    val description: String? = null
+    val description: String? = null,
 )
 
 /**
@@ -47,7 +47,7 @@ data class KotlinTypeInfo(
  */
 data class TypeMapperContext(
     val genericTokens: Map<String, ParamTypeNode> = emptyMap(),
-    val parentPropertyPath: String = ""
+    val parentPropertyPath: String = "",
 )
 
 /**
@@ -59,12 +59,12 @@ object TypeMapper {
      */
     fun mapToKotlinType(
         node: NodeType,
-        context: TypeMapperContext = TypeMapperContext()
+        context: TypeMapperContext = TypeMapperContext(),
     ): KotlinTypeInfo =
         when (node) {
-            is StringType -> mapStringType(node)
-            is NumberType -> mapNumberType(node)
-            is BooleanType -> mapBooleanType(node)
+            is StringType -> mapPrimitiveType("String", node.description)
+            is NumberType -> mapPrimitiveType("Number", node.description)
+            is BooleanType -> mapPrimitiveType("Boolean", node.description)
             is NullType -> KotlinTypeInfo("Nothing?", isNullable = true)
             is AnyType -> KotlinTypeInfo("Any?", isNullable = true)
             is UnknownType -> KotlinTypeInfo("Any?", isNullable = true)
@@ -79,41 +79,26 @@ object TypeMapper {
             else -> KotlinTypeInfo("Any?", isNullable = true)
         }
 
-    private fun mapStringType(node: StringType): KotlinTypeInfo =
+    private fun mapPrimitiveType(
+        typeName: String,
+        description: String?,
+    ): KotlinTypeInfo =
         KotlinTypeInfo(
-            typeName = "String",
+            typeName = typeName,
             isNullable = true,
-            description = node.description
+            description = description,
         )
 
-    private fun mapNumberType(node: NumberType): KotlinTypeInfo =
-        KotlinTypeInfo(
-            typeName = "Number",
-            isNullable = true,
-            description = node.description
-        )
-
-    private fun mapBooleanType(node: BooleanType): KotlinTypeInfo =
-        KotlinTypeInfo(
-            typeName = "Boolean",
-            isNullable = true,
-            description = node.description
-        )
-
-    private fun mapRefType(node: RefType, context: TypeMapperContext): KotlinTypeInfo {
+    private fun mapRefType(
+        node: RefType,
+        context: TypeMapperContext,
+    ): KotlinTypeInfo {
         val ref = node.ref
 
         // Check for generic token
-        if (context.genericTokens.containsKey(ref)) {
-            val token = context.genericTokens[ref]!!
-            val defaultType = token.default
-            if (defaultType != null) {
-                return mapToKotlinType(defaultType, context)
-            }
-            val constraintType = token.constraints
-            if (constraintType != null) {
-                return mapToKotlinType(constraintType, context)
-            }
+        context.genericTokens[ref]?.let { token ->
+            token.default?.let { return mapToKotlinType(it, context) }
+            token.constraints?.let { return mapToKotlinType(it, context) }
         }
 
         // Check for AssetWrapper
@@ -123,7 +108,7 @@ object TypeMapper {
                 isNullable = true,
                 isAssetWrapper = true,
                 builderType = "FluentBuilder<*>",
-                description = node.description
+                description = node.description,
             )
         }
 
@@ -133,7 +118,7 @@ object TypeMapper {
                 typeName = "FluentBuilder<*>",
                 isNullable = true,
                 builderType = "FluentBuilder<*>",
-                description = node.description
+                description = node.description,
             )
         }
 
@@ -143,7 +128,7 @@ object TypeMapper {
                 typeName = "Binding<*>",
                 isNullable = true,
                 isBinding = true,
-                description = node.description
+                description = node.description,
             )
         }
 
@@ -153,7 +138,7 @@ object TypeMapper {
                 typeName = "TaggedValue<*>",
                 isNullable = true,
                 isExpression = true,
-                description = node.description
+                description = node.description,
             )
         }
 
@@ -161,21 +146,27 @@ object TypeMapper {
         return KotlinTypeInfo(
             typeName = "Any?",
             isNullable = true,
-            description = node.description
+            description = node.description,
         )
     }
 
-    private fun mapObjectType(node: ObjectType, context: TypeMapperContext): KotlinTypeInfo {
+    private fun mapObjectType(
+        node: ObjectType,
+        context: TypeMapperContext,
+    ): KotlinTypeInfo {
         // Inline objects become nested classes
         return KotlinTypeInfo(
             typeName = "Map<String, Any?>",
             isNullable = true,
             isNestedObject = true,
-            description = node.description
+            description = node.description,
         )
     }
 
-    private fun mapArrayType(node: ArrayType, context: TypeMapperContext): KotlinTypeInfo {
+    private fun mapArrayType(
+        node: ArrayType,
+        context: TypeMapperContext,
+    ): KotlinTypeInfo {
         val elementTypeInfo = mapToKotlinType(node.elementType, context)
 
         val listTypeName =
@@ -191,11 +182,14 @@ object TypeMapper {
             isArray = true,
             elementType = elementTypeInfo,
             isAssetWrapper = elementTypeInfo.isAssetWrapper,
-            description = node.description
+            description = node.description,
         )
     }
 
-    private fun mapOrType(node: OrType, context: TypeMapperContext): KotlinTypeInfo {
+    private fun mapOrType(
+        node: OrType,
+        context: TypeMapperContext,
+    ): KotlinTypeInfo {
         // Check if all types are primitives with const values (literal union)
         val types = node.orTypes
 
@@ -204,18 +198,21 @@ object TypeMapper {
         return KotlinTypeInfo(
             typeName = "Any?",
             isNullable = true,
-            description = node.description
+            description = node.description,
         )
     }
 
-    private fun mapRecordType(node: RecordType, context: TypeMapperContext): KotlinTypeInfo {
+    private fun mapRecordType(
+        node: RecordType,
+        context: TypeMapperContext,
+    ): KotlinTypeInfo {
         val keyTypeInfo = mapToKotlinType(node.keyType, context)
         val valueTypeInfo = mapToKotlinType(node.valueType, context)
 
         return KotlinTypeInfo(
             typeName = "Map<${keyTypeInfo.typeName}, ${valueTypeInfo.typeName}>",
             isNullable = true,
-            description = node.description
+            description = node.description,
         )
     }
 
@@ -230,7 +227,19 @@ object TypeMapper {
     fun makeNonNullable(typeName: String): String = typeName.removeSuffix("?")
 
     /**
+     * Kotlin hard keywords that must be escaped with backticks when used as identifiers.
+     */
+    private val KOTLIN_KEYWORDS =
+        setOf(
+            "as", "break", "class", "continue", "do", "else", "false", "for", "fun",
+            "if", "in", "interface", "is", "null", "object", "package", "return",
+            "super", "this", "throw", "true", "try", "typealias", "typeof", "val",
+            "var", "when", "while",
+        )
+
+    /**
      * Convert a property name to a valid Kotlin identifier.
+     * Escapes Kotlin keywords with backticks and handles invalid characters.
      */
     fun toKotlinIdentifier(name: String): String {
         // Replace invalid characters
@@ -240,11 +249,11 @@ object TypeMapper {
                 .replace(".", "_")
                 .replace(" ", "_")
 
-        // If starts with digit, prefix with underscore
-        return if (cleaned.first().isDigit()) {
-            "_$cleaned"
-        } else {
-            cleaned
+        return when {
+            cleaned.isEmpty() -> "_unnamed_"
+            cleaned.first().isDigit() -> "_$cleaned"
+            cleaned in KOTLIN_KEYWORDS -> "`$cleaned`"
+            else -> cleaned
         }
     }
 

@@ -28,12 +28,12 @@ java -cp "$(bazel-bin/language/generators/kotlin/kotlin-dsl-generator.jar)" \
 
 ### Arguments
 
-| Argument | Short | Required | Description |
-|----------|-------|----------|-------------|
-| `--input` | `-i` | Yes | Path to XLR JSON file or directory |
-| `--output` | `-o` | Yes | Output directory for generated files |
-| `--package` | `-p` | Yes | Package name for generated classes |
-| `--help` | `-h` | No | Show help message |
+| Argument    | Short | Required | Description                          |
+| ----------- | ----- | -------- | ------------------------------------ |
+| `--input`   | `-i`  | Yes      | Path to XLR JSON file or directory   |
+| `--output`  | `-o`  | Yes      | Output directory for generated files |
+| `--package` | `-p`  | Yes      | Package name for generated classes   |
+| `--help`    | `-h`  | No       | Show help message                    |
 
 ### Examples
 
@@ -90,48 +90,48 @@ The generator accepts XLR JSON schemas. XLR is Player-UI's cross-language type r
 
 ```json
 {
-  "name": "ActionAsset",
-  "type": "object",
-  "title": "ActionAsset",
-  "description": "User actions can be represented in several places.",
-  "properties": {
-    "value": {
-      "required": true,
-      "node": {
-        "type": "string",
-        "title": "ActionAsset.value",
-        "description": "The transition value of the action"
-      }
+    "name": "ActionAsset",
+    "type": "object",
+    "title": "ActionAsset",
+    "description": "User actions can be represented in several places.",
+    "properties": {
+        "value": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "title": "ActionAsset.value",
+                "description": "The transition value of the action"
+            }
+        },
+        "label": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "AssetWrapper"
+            }
+        }
     },
-    "label": {
-      "required": false,
-      "node": {
+    "extends": {
         "type": "ref",
-        "ref": "AssetWrapper"
-      }
+        "ref": "Asset"
     }
-  },
-  "extends": {
-    "type": "ref",
-    "ref": "Asset"
-  }
 }
 ```
 
 ### Supported XLR Types
 
-| XLR Type | Kotlin Type |
-|----------|-------------|
-| `string` | `String` |
-| `number` | `Number` |
-| `boolean` | `Boolean` |
-| `object` | Nested config class |
-| `array` | `List<T>` |
-| `ref` to `Asset` | `FluentBuilderBase<*>` |
+| XLR Type                | Kotlin Type                           |
+| ----------------------- | ------------------------------------- |
+| `string`                | `String`                              |
+| `number`                | `Number`                              |
+| `boolean`               | `Boolean`                             |
+| `object`                | Nested config class                   |
+| `array`                 | `List<T>`                             |
+| `ref` to `Asset`        | `FluentBuilderBase<*>`                |
 | `ref` to `AssetWrapper` | `FluentBuilderBase<*>` (auto-wrapped) |
-| `ref` to `Binding` | `Binding<*>` |
-| `ref` to `Expression` | `TaggedValue<*>` |
-| `or` (union) | `Any?` |
+| `ref` to `Binding`      | `Binding<*>`                          |
+| `ref` to `Expression`   | `TaggedValue<*>`                      |
+| `or` (union)            | `Any?`                                |
 
 ## Generated Output
 
@@ -139,17 +139,17 @@ The generator accepts XLR JSON schemas. XLR is Player-UI's cross-language type r
 
 ```json
 {
-  "name": "TextAsset",
-  "type": "object",
-  "properties": {
-    "value": {
-      "required": true,
-      "node": {
-        "type": "string",
-        "description": "The text to display"
-      }
+    "name": "TextAsset",
+    "type": "object",
+    "properties": {
+        "value": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "description": "The text to display"
+            }
+        }
     }
-  }
 }
 ```
 
@@ -195,16 +195,16 @@ fun text(init: TextBuilder.() -> Unit = {}) = TextBuilder().apply(init)
 
 ### Property Types
 
-| XLR Property | Generated Code |
-|--------------|----------------|
-| String | `var prop: String?` with binding/expression overloads |
-| Number | `var prop: Number?` with binding/expression overloads |
-| Boolean | `var prop: Boolean?` with binding/expression overloads |
-| AssetWrapper ref | `var prop: FluentBuilderBase<*>?` with `fun prop(builder)` |
-| Asset array | `var prop: List<FluentBuilderBase<*>>?` with `fun prop(vararg)` |
-| Nested object | Nested config class with `fun prop(init: Config.() -> Unit)` |
-| Binding ref | `var prop: Binding<*>?` |
-| Expression ref | `var prop: TaggedValue<*>?` |
+| XLR Property     | Generated Code                                                  |
+| ---------------- | --------------------------------------------------------------- |
+| String           | `var prop: String?` with binding/expression overloads           |
+| Number           | `var prop: Number?` with binding/expression overloads           |
+| Boolean          | `var prop: Boolean?` with binding/expression overloads          |
+| AssetWrapper ref | `var prop: FluentBuilderBase<*>?` with `fun prop(builder)`      |
+| Asset array      | `var prop: List<FluentBuilderBase<*>>?` with `fun prop(vararg)` |
+| Nested object    | Nested config class with `fun prop(init: Config.() -> Unit)`    |
+| Binding ref      | `var prop: Binding<*>?`                                         |
+| Expression ref   | `var prop: TaggedValue<*>?`                                     |
 
 ### Nested Objects
 

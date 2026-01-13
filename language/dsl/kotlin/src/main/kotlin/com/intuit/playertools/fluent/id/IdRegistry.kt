@@ -1,11 +1,16 @@
 package com.intuit.playertools.fluent.id
 
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicInteger
+
 /**
- * Global registry for tracking generated asset IDs and ensuring uniqueness.
+ * Thread-safe global registry for tracking generated asset IDs and ensuring uniqueness.
  * When an ID collision is detected, a numeric suffix (-1, -2, etc.) is appended.
+ * Call [reset] between flow builds to clear the ID namespace.
  */
 object GlobalIdRegistry {
-    private val registered = mutableSetOf<String>()
+    private val registered: MutableSet<String> = ConcurrentHashMap.newKeySet()
+    private val suffixCounters = ConcurrentHashMap<String, AtomicInteger>()
 
     /**
      * Registers an ID and returns a unique version.
@@ -15,19 +20,19 @@ object GlobalIdRegistry {
      * @return A unique ID (either baseId or baseId-N where N is a number)
      */
     fun ensureUnique(baseId: String): String {
-        if (baseId !in registered) {
-            registered.add(baseId)
+        // Try to add the base ID directly first
+        if (registered.add(baseId)) {
             return baseId
         }
 
-        var suffix = 1
-        var candidate = "$baseId-$suffix"
-        while (candidate in registered) {
-            suffix++
-            candidate = "$baseId-$suffix"
+        // ID exists, use atomic counter for suffix generation
+        val counter = suffixCounters.computeIfAbsent(baseId) { AtomicInteger(0) }
+        while (true) {
+            val candidate = "$baseId-${counter.incrementAndGet()}"
+            if (registered.add(candidate)) {
+                return candidate
+            }
         }
-        registered.add(candidate)
-        return candidate
     }
 
     /**
@@ -38,9 +43,13 @@ object GlobalIdRegistry {
     /**
      * Clears all registered IDs. Should be called between flow builds
      * to reset the ID namespace.
+     *
+     * Note: This method is not atomic with respect to ongoing registrations.
+     * Ensure no concurrent registrations are happening when calling reset.
      */
     fun reset() {
         registered.clear()
+        suffixCounters.clear()
     }
 
     /**

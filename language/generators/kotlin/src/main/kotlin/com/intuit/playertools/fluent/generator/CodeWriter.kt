@@ -52,7 +52,11 @@ class CodeWriter {
      * Add a block of code with automatic indentation.
      * Opens with the given line, increases indent, runs the block, decreases indent, closes with closing line.
      */
-    fun block(openLine: String, closeLine: String = "}", block: CodeWriter.() -> Unit) {
+    fun block(
+        openLine: String,
+        closeLine: String = "}",
+        block: CodeWriter.() -> Unit,
+    ) {
         line(openLine)
         indent()
         block()
@@ -68,7 +72,7 @@ class CodeWriter {
         annotations: List<String> = emptyList(),
         superClass: String? = null,
         typeParams: String? = null,
-        block: CodeWriter.() -> Unit
+        block: CodeWriter.() -> Unit,
     ) {
         annotations.forEach { line(it) }
         val classDecl =
@@ -91,7 +95,7 @@ class CodeWriter {
     fun objectBlock(
         name: String,
         annotations: List<String> = emptyList(),
-        block: CodeWriter.() -> Unit
+        block: CodeWriter.() -> Unit,
     ) {
         annotations.forEach { line(it) }
         block("object $name {", "}", block)
@@ -105,7 +109,7 @@ class CodeWriter {
         params: String = "",
         returnType: String? = null,
         modifiers: List<String> = emptyList(),
-        block: CodeWriter.() -> Unit
+        block: CodeWriter.() -> Unit,
     ) {
         val modifierStr = if (modifiers.isNotEmpty()) modifiers.joinToString(" ") + " " else ""
         val returnStr = if (returnType != null) ": $returnType" else ""
@@ -120,7 +124,7 @@ class CodeWriter {
         type: String,
         modifiers: List<String> = emptyList(),
         getter: (CodeWriter.() -> Unit)? = null,
-        setter: (CodeWriter.() -> Unit)? = null
+        setter: (CodeWriter.() -> Unit)? = null,
     ) {
         val modifierStr = if (modifiers.isNotEmpty()) modifiers.joinToString(" ") + " " else ""
         line("${modifierStr}var $name: $type")
@@ -152,7 +156,7 @@ class CodeWriter {
         type: String,
         getterExpr: String,
         setterExpr: String,
-        modifiers: List<String> = emptyList()
+        modifiers: List<String> = emptyList(),
     ) {
         val modifierStr = if (modifiers.isNotEmpty()) modifiers.joinToString(" ") + " " else ""
         line("${modifierStr}var $name: $type")
@@ -169,7 +173,7 @@ class CodeWriter {
         name: String,
         type: String,
         value: String,
-        modifiers: List<String> = emptyList()
+        modifiers: List<String> = emptyList(),
     ) {
         val modifierStr = if (modifiers.isNotEmpty()) modifiers.joinToString(" ") + " " else ""
         line("${modifierStr}val $name: $type = $value")
@@ -178,7 +182,11 @@ class CodeWriter {
     /**
      * Add an override val property.
      */
-    fun overrideVal(name: String, type: String, value: String) {
+    fun overrideVal(
+        name: String,
+        type: String,
+        value: String,
+    ) {
         line("override val $name: $type = $value")
     }
 

@@ -1,20 +1,20 @@
 package com.intuit.playertools.fluent.generator
 
-import com.intuit.playertools.fluent.generator.xlr.AnyType
-import com.intuit.playertools.fluent.generator.xlr.ArrayType
-import com.intuit.playertools.fluent.generator.xlr.BooleanType
-import com.intuit.playertools.fluent.generator.xlr.NeverType
-import com.intuit.playertools.fluent.generator.xlr.NullType
-import com.intuit.playertools.fluent.generator.xlr.NumberType
-import com.intuit.playertools.fluent.generator.xlr.ObjectType
-import com.intuit.playertools.fluent.generator.xlr.OrType
-import com.intuit.playertools.fluent.generator.xlr.ParamTypeNode
-import com.intuit.playertools.fluent.generator.xlr.RecordType
-import com.intuit.playertools.fluent.generator.xlr.RefType
-import com.intuit.playertools.fluent.generator.xlr.StringType
-import com.intuit.playertools.fluent.generator.xlr.UndefinedType
-import com.intuit.playertools.fluent.generator.xlr.UnknownType
-import com.intuit.playertools.fluent.generator.xlr.VoidType
+import com.intuit.playertools.xlr.AnyType
+import com.intuit.playertools.xlr.ArrayType
+import com.intuit.playertools.xlr.BooleanType
+import com.intuit.playertools.xlr.NeverType
+import com.intuit.playertools.xlr.NullType
+import com.intuit.playertools.xlr.NumberType
+import com.intuit.playertools.xlr.ObjectType
+import com.intuit.playertools.xlr.OrType
+import com.intuit.playertools.xlr.ParamTypeNode
+import com.intuit.playertools.xlr.RecordType
+import com.intuit.playertools.xlr.RefType
+import com.intuit.playertools.xlr.StringType
+import com.intuit.playertools.xlr.UndefinedType
+import com.intuit.playertools.xlr.UnknownType
+import com.intuit.playertools.xlr.VoidType
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 
@@ -153,7 +153,7 @@ class TypeMapperTest :
                 it("maps array of AssetWrapper to List<FluentBuilder<*>>") {
                     val result =
                         TypeMapper.mapToKotlinType(
-                            ArrayType(elementType = RefType(ref = "AssetWrapper<TextAsset>"))
+                            ArrayType(elementType = RefType(ref = "AssetWrapper<TextAsset>")),
                         )
                     result.typeName shouldBe "List<FluentBuilder<*>>"
                     result.isArray shouldBe true
@@ -164,7 +164,7 @@ class TypeMapperTest :
                 it("maps array of Asset to List<FluentBuilder<*>>") {
                     val result =
                         TypeMapper.mapToKotlinType(
-                            ArrayType(elementType = RefType(ref = "Asset"))
+                            ArrayType(elementType = RefType(ref = "Asset")),
                         )
                     result.typeName shouldBe "List<FluentBuilder<*>>"
                     result.isArray shouldBe true
@@ -183,7 +183,7 @@ class TypeMapperTest :
                 it("maps union type to Any?") {
                     val result =
                         TypeMapper.mapToKotlinType(
-                            OrType(orTypes = listOf(StringType(), NumberType()))
+                            OrType(orTypes = listOf(StringType(), NumberType())),
                         )
                     result.typeName shouldBe "Any?"
                     result.isNullable shouldBe true
@@ -194,7 +194,7 @@ class TypeMapperTest :
                 it("maps record type to Map<K, V>") {
                     val result =
                         TypeMapper.mapToKotlinType(
-                            RecordType(keyType = StringType(), valueType = NumberType())
+                            RecordType(keyType = StringType(), valueType = NumberType()),
                         )
                     result.typeName shouldBe "Map<String, Number>"
                     result.isNullable shouldBe true
@@ -203,7 +203,7 @@ class TypeMapperTest :
                 it("maps record with complex value type") {
                     val result =
                         TypeMapper.mapToKotlinType(
-                            RecordType(keyType = StringType(), valueType = BooleanType())
+                            RecordType(keyType = StringType(), valueType = BooleanType()),
                         )
                     result.typeName shouldBe "Map<String, Boolean>"
                 }
@@ -215,8 +215,8 @@ class TypeMapperTest :
                         TypeMapperContext(
                             genericTokens =
                                 mapOf(
-                                    "T" to ParamTypeNode(symbol = "T", default = StringType())
-                                )
+                                    "T" to ParamTypeNode(symbol = "T", default = StringType()),
+                                ),
                         )
                     val result = TypeMapper.mapToKotlinType(RefType(ref = "T"), context)
                     result.typeName shouldBe "String"
@@ -227,8 +227,8 @@ class TypeMapperTest :
                         TypeMapperContext(
                             genericTokens =
                                 mapOf(
-                                    "T" to ParamTypeNode(symbol = "T", constraints = NumberType())
-                                )
+                                    "T" to ParamTypeNode(symbol = "T", constraints = NumberType()),
+                                ),
                         )
                     val result = TypeMapper.mapToKotlinType(RefType(ref = "T"), context)
                     result.typeName shouldBe "Number"

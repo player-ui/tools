@@ -1,7 +1,7 @@
 package com.intuit.playertools.fluent.generator
 
-import com.intuit.playertools.fluent.generator.xlr.XlrDeserializer
-import com.intuit.playertools.fluent.generator.xlr.XlrDocument
+import com.intuit.playertools.xlr.XlrDeserializer
+import com.intuit.playertools.xlr.XlrDocument
 import java.io.File
 
 /**
@@ -9,7 +9,7 @@ import java.io.File
  */
 data class GeneratorConfig(
     val packageName: String,
-    val outputDir: File
+    val outputDir: File,
 )
 
 /**
@@ -18,7 +18,7 @@ data class GeneratorConfig(
 data class GeneratorResult(
     val className: String,
     val filePath: File,
-    val code: String
+    val code: String,
 )
 
 /**
@@ -34,7 +34,7 @@ data class GeneratorResult(
  * ```
  */
 class Generator(
-    private val config: GeneratorConfig
+    private val config: GeneratorConfig,
 ) {
     /**
      * Generate Kotlin builders from a list of XLR JSON files.
@@ -55,7 +55,10 @@ class Generator(
     /**
      * Generate a Kotlin builder from XLR JSON content.
      */
-    fun generateFromJson(jsonContent: String, sourceName: String = "Unknown"): GeneratorResult {
+    fun generateFromJson(
+        jsonContent: String,
+        sourceName: String = "Unknown",
+    ): GeneratorResult {
         val document = XlrDeserializer.deserialize(jsonContent)
         return generateFromDocument(document)
     }
@@ -81,7 +84,7 @@ class Generator(
         return GeneratorResult(
             className = generatedClass.className,
             filePath = outputFile,
-            code = generatedClass.code
+            code = generatedClass.code,
         )
     }
 
@@ -98,7 +101,10 @@ class Generator(
          * Generate Kotlin builder code from XLR JSON without creating a Generator instance.
          * Useful for one-off generation or testing.
          */
-        fun generateCode(jsonContent: String, packageName: String): String {
+        fun generateCode(
+            jsonContent: String,
+            packageName: String,
+        ): String {
             val document = XlrDeserializer.deserialize(jsonContent)
             return ClassGenerator.generate(document, packageName).code
         }
@@ -106,7 +112,10 @@ class Generator(
         /**
          * Generate Kotlin builder code from an XLR document without creating a Generator instance.
          */
-        fun generateCode(document: XlrDocument, packageName: String): String =
+        fun generateCode(
+            document: XlrDocument,
+            packageName: String,
+        ): String =
             ClassGenerator
                 .generate(document, packageName)
                 .code

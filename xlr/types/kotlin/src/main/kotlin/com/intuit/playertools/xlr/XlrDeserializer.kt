@@ -1,4 +1,4 @@
-package com.intuit.playertools.fluent.generator.xlr
+package com.intuit.playertools.xlr
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -14,11 +14,10 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
-/*
+/**
  * XLR JSON deserializer.
  * Parses XLR JSON schemas into Kotlin type definitions.
  */
-
 object XlrDeserializer {
     private val json =
         Json {
@@ -47,7 +46,7 @@ object XlrDeserializer {
             additionalProperties = obj["additionalProperties"],
             genericTokens = obj["genericTokens"]?.jsonArray?.map { parseParamTypeNode(it.jsonObject) },
             title = obj["title"]?.jsonPrimitive?.contentOrNull,
-            description = obj["description"]?.jsonPrimitive?.contentOrNull
+            description = obj["description"]?.jsonPrimitive?.contentOrNull,
         )
 
     /**
@@ -83,7 +82,7 @@ object XlrDeserializer {
             "template" -> parseTemplateLiteralType(obj)
             "conditional" -> parseConditionalType(obj)
             "function" -> parseFunctionType(obj)
-            else -> throw IllegalArgumentException("Unknown type: $type")
+            else -> throw IllegalArgumentException("Unknown type: $type in object: $obj")
         }
     }
 
@@ -92,7 +91,7 @@ object XlrDeserializer {
             const = obj["const"]?.jsonPrimitive?.contentOrNull,
             enum = obj["enum"]?.jsonArray?.map { it.jsonPrimitive.content },
             title = obj["title"]?.jsonPrimitive?.contentOrNull,
-            description = obj["description"]?.jsonPrimitive?.contentOrNull
+            description = obj["description"]?.jsonPrimitive?.contentOrNull,
         )
 
     private fun parseNumberType(obj: JsonObject): NumberType =
@@ -100,50 +99,50 @@ object XlrDeserializer {
             const = obj["const"]?.jsonPrimitive?.doubleOrNull,
             enum = obj["enum"]?.jsonArray?.map { it.jsonPrimitive.double },
             title = obj["title"]?.jsonPrimitive?.contentOrNull,
-            description = obj["description"]?.jsonPrimitive?.contentOrNull
+            description = obj["description"]?.jsonPrimitive?.contentOrNull,
         )
 
     private fun parseBooleanType(obj: JsonObject): BooleanType =
         BooleanType(
             const = obj["const"]?.jsonPrimitive?.booleanOrNull,
             title = obj["title"]?.jsonPrimitive?.contentOrNull,
-            description = obj["description"]?.jsonPrimitive?.contentOrNull
+            description = obj["description"]?.jsonPrimitive?.contentOrNull,
         )
 
     private fun parseNullType(obj: JsonObject): NullType =
         NullType(
             title = obj["title"]?.jsonPrimitive?.contentOrNull,
-            description = obj["description"]?.jsonPrimitive?.contentOrNull
+            description = obj["description"]?.jsonPrimitive?.contentOrNull,
         )
 
     private fun parseAnyType(obj: JsonObject): AnyType =
         AnyType(
             title = obj["title"]?.jsonPrimitive?.contentOrNull,
-            description = obj["description"]?.jsonPrimitive?.contentOrNull
+            description = obj["description"]?.jsonPrimitive?.contentOrNull,
         )
 
     private fun parseUnknownType(obj: JsonObject): UnknownType =
         UnknownType(
             title = obj["title"]?.jsonPrimitive?.contentOrNull,
-            description = obj["description"]?.jsonPrimitive?.contentOrNull
+            description = obj["description"]?.jsonPrimitive?.contentOrNull,
         )
 
     private fun parseUndefinedType(obj: JsonObject): UndefinedType =
         UndefinedType(
             title = obj["title"]?.jsonPrimitive?.contentOrNull,
-            description = obj["description"]?.jsonPrimitive?.contentOrNull
+            description = obj["description"]?.jsonPrimitive?.contentOrNull,
         )
 
     private fun parseVoidType(obj: JsonObject): VoidType =
         VoidType(
             title = obj["title"]?.jsonPrimitive?.contentOrNull,
-            description = obj["description"]?.jsonPrimitive?.contentOrNull
+            description = obj["description"]?.jsonPrimitive?.contentOrNull,
         )
 
     private fun parseNeverType(obj: JsonObject): NeverType =
         NeverType(
             title = obj["title"]?.jsonPrimitive?.contentOrNull,
-            description = obj["description"]?.jsonPrimitive?.contentOrNull
+            description = obj["description"]?.jsonPrimitive?.contentOrNull,
         )
 
     private fun parseRefType(obj: JsonObject): RefType =
@@ -152,7 +151,7 @@ object XlrDeserializer {
             genericArguments = obj["genericArguments"]?.jsonArray?.map { parseNode(it) },
             property = obj["property"]?.jsonPrimitive?.contentOrNull,
             title = obj["title"]?.jsonPrimitive?.contentOrNull,
-            description = obj["description"]?.jsonPrimitive?.contentOrNull
+            description = obj["description"]?.jsonPrimitive?.contentOrNull,
         )
 
     private fun parseObjectType(obj: JsonObject): ObjectType =
@@ -161,7 +160,7 @@ object XlrDeserializer {
             extends = obj["extends"]?.let { parseRefType(it.jsonObject) },
             additionalProperties = obj["additionalProperties"],
             title = obj["title"]?.jsonPrimitive?.contentOrNull,
-            description = obj["description"]?.jsonPrimitive?.contentOrNull
+            description = obj["description"]?.jsonPrimitive?.contentOrNull,
         )
 
     private fun parseArrayType(obj: JsonObject): ArrayType {
@@ -171,7 +170,7 @@ object XlrDeserializer {
         return ArrayType(
             elementType = parseNode(elementType),
             title = obj["title"]?.jsonPrimitive?.contentOrNull,
-            description = obj["description"]?.jsonPrimitive?.contentOrNull
+            description = obj["description"]?.jsonPrimitive?.contentOrNull,
         )
     }
 
@@ -183,14 +182,14 @@ object XlrDeserializer {
             minItems = obj["minItems"]?.jsonPrimitive?.int ?: 0,
             additionalItems = obj["additionalItems"],
             title = obj["title"]?.jsonPrimitive?.contentOrNull,
-            description = obj["description"]?.jsonPrimitive?.contentOrNull
+            description = obj["description"]?.jsonPrimitive?.contentOrNull,
         )
 
     private fun parseTupleMember(obj: JsonObject): TupleMember =
         TupleMember(
             name = obj["name"]?.jsonPrimitive?.contentOrNull,
             type = parseNode(obj["type"] ?: throw IllegalArgumentException("TupleMember missing 'type'")),
-            optional = obj["optional"]?.jsonPrimitive?.booleanOrNull
+            optional = obj["optional"]?.jsonPrimitive?.booleanOrNull,
         )
 
     private fun parseRecordType(obj: JsonObject): RecordType =
@@ -198,28 +197,28 @@ object XlrDeserializer {
             keyType = parseNode(obj["keyType"] ?: throw IllegalArgumentException("Record missing 'keyType'")),
             valueType = parseNode(obj["valueType"] ?: throw IllegalArgumentException("Record missing 'valueType'")),
             title = obj["title"]?.jsonPrimitive?.contentOrNull,
-            description = obj["description"]?.jsonPrimitive?.contentOrNull
+            description = obj["description"]?.jsonPrimitive?.contentOrNull,
         )
 
     private fun parseOrType(obj: JsonObject): OrType =
         OrType(
             orTypes = obj["or"]?.jsonArray?.map { parseNode(it) } ?: emptyList(),
             title = obj["title"]?.jsonPrimitive?.contentOrNull,
-            description = obj["description"]?.jsonPrimitive?.contentOrNull
+            description = obj["description"]?.jsonPrimitive?.contentOrNull,
         )
 
     private fun parseAndType(obj: JsonObject): AndType =
         AndType(
             andTypes = obj["and"]?.jsonArray?.map { parseNode(it) } ?: emptyList(),
             title = obj["title"]?.jsonPrimitive?.contentOrNull,
-            description = obj["description"]?.jsonPrimitive?.contentOrNull
+            description = obj["description"]?.jsonPrimitive?.contentOrNull,
         )
 
     private fun parseTemplateLiteralType(obj: JsonObject): TemplateLiteralType =
         TemplateLiteralType(
             format = obj["format"]?.jsonPrimitive?.content ?: "",
             title = obj["title"]?.jsonPrimitive?.contentOrNull,
-            description = obj["description"]?.jsonPrimitive?.contentOrNull
+            description = obj["description"]?.jsonPrimitive?.contentOrNull,
         )
 
     private fun parseConditionalType(obj: JsonObject): ConditionalType =
@@ -227,7 +226,7 @@ object XlrDeserializer {
             check = obj["check"]?.jsonObject?.mapValues { parseNode(it.value) } ?: emptyMap(),
             value = obj["value"]?.jsonObject?.mapValues { parseNode(it.value) } ?: emptyMap(),
             title = obj["title"]?.jsonPrimitive?.contentOrNull,
-            description = obj["description"]?.jsonPrimitive?.contentOrNull
+            description = obj["description"]?.jsonPrimitive?.contentOrNull,
         )
 
     private fun parseFunctionType(obj: JsonObject): FunctionType =
@@ -237,7 +236,7 @@ object XlrDeserializer {
                     ?: emptyList(),
             returnType = obj["returnType"]?.let { parseNode(it) },
             title = obj["title"]?.jsonPrimitive?.contentOrNull,
-            description = obj["description"]?.jsonPrimitive?.contentOrNull
+            description = obj["description"]?.jsonPrimitive?.contentOrNull,
         )
 
     private fun parseFunctionParameter(obj: JsonObject): FunctionParameter =
@@ -245,7 +244,7 @@ object XlrDeserializer {
             name = obj["name"]?.jsonPrimitive?.content ?: "",
             type = parseNode(obj["type"] ?: throw IllegalArgumentException("Parameter missing 'type'")),
             optional = obj["optional"]?.jsonPrimitive?.booleanOrNull,
-            default = obj["default"]?.let { parseNode(it) }
+            default = obj["default"]?.let { parseNode(it) },
         )
 
     private fun parseProperties(element: JsonElement?): Map<String, ObjectProperty> {
@@ -254,7 +253,7 @@ object XlrDeserializer {
             val propObj = propElement.jsonObject
             ObjectProperty(
                 required = propObj["required"]?.jsonPrimitive?.boolean ?: false,
-                node = parseNode(propObj["node"] ?: throw IllegalArgumentException("Property missing 'node'"))
+                node = parseNode(propObj["node"] ?: throw IllegalArgumentException("Property missing 'node'")),
             )
         }
     }
@@ -263,6 +262,6 @@ object XlrDeserializer {
         ParamTypeNode(
             symbol = obj["symbol"]?.jsonPrimitive?.content ?: "",
             constraints = obj["constraints"]?.let { parseNode(it) },
-            default = obj["default"]?.let { parseNode(it) }
+            default = obj["default"]?.let { parseNode(it) },
         )
 }

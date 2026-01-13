@@ -12,14 +12,14 @@ class GeneratorIntegrationTest :
             val classLoader = GeneratorIntegrationTest::class.java.classLoader
             val resource =
                 classLoader.getResource(
-                    "com/intuit/playertools/fluent/generator/fixtures/$name"
+                    "com/intuit/playertools/fluent/generator/fixtures/$name",
                 )
             return if (resource != null) {
                 resource.readText()
             } else {
                 val file =
                     File(
-                        "language/generators/kotlin/src/test/kotlin/com/intuit/playertools/fluent/generator/fixtures/$name"
+                        "language/generators/kotlin/src/test/kotlin/com/intuit/playertools/fluent/generator/fixtures/$name",
                     )
                 file.readText()
             }
@@ -110,7 +110,7 @@ class GeneratorIntegrationTest :
             it("can generate code from XLR document") {
                 val json = loadFixture("TextAsset.json")
                 val document =
-                    com.intuit.playertools.fluent.generator.xlr.XlrDeserializer
+                    com.intuit.playertools.xlr.XlrDeserializer
                         .deserialize(json)
                 val code = Generator.generateCode(document, "com.test")
 

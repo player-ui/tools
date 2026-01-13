@@ -1,9 +1,9 @@
 package com.intuit.playertools.fluent.generator
 
-import com.intuit.playertools.fluent.generator.xlr.ObjectProperty
-import com.intuit.playertools.fluent.generator.xlr.RefType
-import com.intuit.playertools.fluent.generator.xlr.StringType
-import com.intuit.playertools.fluent.generator.xlr.XlrDocument
+import com.intuit.playertools.xlr.ObjectProperty
+import com.intuit.playertools.xlr.RefType
+import com.intuit.playertools.xlr.StringType
+import com.intuit.playertools.xlr.XlrDocument
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
@@ -24,17 +24,17 @@ class ClassGeneratorTest :
                                     "value" to
                                         ObjectProperty(
                                             required = false,
-                                            node = StringType()
-                                        )
+                                            node = StringType(),
+                                        ),
                                 ),
                             extends =
                                 RefType(
                                     ref = "Asset<text>",
                                     genericArguments =
                                         listOf(
-                                            StringType(const = "text")
-                                        )
-                                )
+                                            StringType(const = "text"),
+                                        ),
+                                ),
                         )
 
                     val result = ClassGenerator.generate(document, "com.test")
@@ -60,9 +60,9 @@ class ClassGeneratorTest :
                                     "text" to
                                         ObjectProperty(
                                             required = false,
-                                            node = StringType()
-                                        )
-                                )
+                                            node = StringType(),
+                                        ),
+                                ),
                         )
 
                     val result = ClassGenerator.generate(document, "com.test")
@@ -82,9 +82,9 @@ class ClassGeneratorTest :
                                     "label" to
                                         ObjectProperty(
                                             required = false,
-                                            node = RefType(ref = "AssetWrapper<TextAsset>")
-                                        )
-                                )
+                                            node = RefType(ref = "AssetWrapper<TextAsset>"),
+                                        ),
+                                ),
                         )
 
                     val result = ClassGenerator.generate(document, "com.test")
@@ -100,7 +100,7 @@ class ClassGeneratorTest :
                         XlrDocument(
                             name = "TestAsset",
                             source = "test",
-                            properties = emptyMap()
+                            properties = emptyMap(),
                         )
 
                     val result = ClassGenerator.generate(document, "com.example")
@@ -117,7 +117,7 @@ class ClassGeneratorTest :
                         XlrDocument(
                             name = "SimpleAsset",
                             source = "test",
-                            properties = emptyMap()
+                            properties = emptyMap(),
                         )
 
                     val result = ClassGenerator.generate(document, "com.test")
@@ -134,7 +134,7 @@ class ClassGeneratorTest :
                             name = "DocAsset",
                             source = "test",
                             properties = emptyMap(),
-                            description = "This is a documented asset"
+                            description = "This is a documented asset",
                         )
 
                     val result = ClassGenerator.generate(document, "com.test")
@@ -180,7 +180,7 @@ class ClassGeneratorTest :
                         classBlock(
                             name = "MyClass",
                             annotations = listOf("@Annotation"),
-                            superClass = "BaseClass()"
+                            superClass = "BaseClass()",
                         ) {
                             line("val x = 1")
                         }
@@ -210,7 +210,7 @@ class ClassGeneratorTest :
                             name = "value",
                             type = "String?",
                             getterExpr = "storage[\"value\"] as? String",
-                            setterExpr = "storage[\"value\"] = value"
+                            setterExpr = "storage[\"value\"] = value",
                         )
                     }
 

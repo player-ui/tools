@@ -1,13 +1,8 @@
-package com.intuit.playertools.fluent.generator.xlr
+package com.intuit.playertools.xlr
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
-
-/*
- * XLR (Cross Language Representation) type definitions for Kotlin.
- * These types mirror the XLR type system used for defining Player-UI asset schemas.
- */
 
 /**
  * Annotations that can be attached to any XLR type.
@@ -21,7 +16,7 @@ data class Annotations(
     val default: JsonElement? = null,
     val see: JsonElement? = null,
     val comment: String? = null,
-    val meta: Map<String, String>? = null
+    val meta: Map<String, String>? = null,
 )
 
 /**
@@ -41,7 +36,7 @@ data class StringType(
     val const: String? = null,
     val enum: List<String>? = null,
     val title: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) : NodeType
 
 /**
@@ -54,7 +49,7 @@ data class NumberType(
     val const: Double? = null,
     val enum: List<Double>? = null,
     val title: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) : NodeType
 
 /**
@@ -66,7 +61,7 @@ data class BooleanType(
     override val type: String = "boolean",
     val const: Boolean? = null,
     val title: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) : NodeType
 
 /**
@@ -77,7 +72,7 @@ data class BooleanType(
 data class NullType(
     override val type: String = "null",
     val title: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) : NodeType
 
 /**
@@ -88,7 +83,7 @@ data class NullType(
 data class AnyType(
     override val type: String = "any",
     val title: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) : NodeType
 
 /**
@@ -99,7 +94,7 @@ data class AnyType(
 data class UnknownType(
     override val type: String = "unknown",
     val title: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) : NodeType
 
 /**
@@ -110,7 +105,7 @@ data class UnknownType(
 data class UndefinedType(
     override val type: String = "undefined",
     val title: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) : NodeType
 
 /**
@@ -121,7 +116,7 @@ data class UndefinedType(
 data class VoidType(
     override val type: String = "void",
     val title: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) : NodeType
 
 /**
@@ -132,7 +127,7 @@ data class VoidType(
 data class NeverType(
     override val type: String = "never",
     val title: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) : NodeType
 
 /**
@@ -146,7 +141,7 @@ data class RefType(
     val genericArguments: List<NodeType>? = null,
     val property: String? = null,
     val title: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) : NodeType
 
 /**
@@ -155,7 +150,7 @@ data class RefType(
 @Serializable
 data class ObjectProperty(
     val required: Boolean,
-    val node: NodeType
+    val node: NodeType,
 )
 
 /**
@@ -169,7 +164,7 @@ data class ObjectType(
     val extends: RefType? = null,
     val additionalProperties: JsonElement? = null,
     val title: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) : NodeType
 
 /**
@@ -181,7 +176,7 @@ data class ArrayType(
     override val type: String = "array",
     val elementType: NodeType,
     val title: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) : NodeType
 
 /**
@@ -191,7 +186,7 @@ data class ArrayType(
 data class TupleMember(
     val name: String? = null,
     val type: NodeType,
-    val optional: Boolean? = null
+    val optional: Boolean? = null,
 )
 
 /**
@@ -205,7 +200,7 @@ data class TupleType(
     val minItems: Int,
     val additionalItems: JsonElement? = null,
     val title: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) : NodeType
 
 /**
@@ -218,7 +213,7 @@ data class RecordType(
     val keyType: NodeType,
     val valueType: NodeType,
     val title: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) : NodeType
 
 /**
@@ -231,7 +226,7 @@ data class OrType(
     @SerialName("or")
     val orTypes: List<NodeType>,
     val title: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) : NodeType
 
 /**
@@ -244,7 +239,7 @@ data class AndType(
     @SerialName("and")
     val andTypes: List<NodeType>,
     val title: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) : NodeType
 
 /**
@@ -256,7 +251,7 @@ data class TemplateLiteralType(
     override val type: String = "template",
     val format: String,
     val title: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) : NodeType
 
 /**
@@ -269,7 +264,7 @@ data class ConditionalType(
     val check: Map<String, NodeType>,
     val value: Map<String, NodeType>,
     val title: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) : NodeType
 
 /**
@@ -280,7 +275,7 @@ data class FunctionParameter(
     val name: String,
     val type: NodeType,
     val optional: Boolean? = null,
-    val default: NodeType? = null
+    val default: NodeType? = null,
 )
 
 /**
@@ -293,7 +288,7 @@ data class FunctionType(
     val parameters: List<FunctionParameter>,
     val returnType: NodeType? = null,
     val title: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) : NodeType
 
 /**
@@ -303,21 +298,21 @@ data class FunctionType(
 data class ParamTypeNode(
     val symbol: String,
     val constraints: NodeType? = null,
-    val default: NodeType? = null
+    val default: NodeType? = null,
 )
 
 /**
  * Named type wrapper that adds name and source information to any node type.
+ * Note: The node property is transient and must be set after deserialization if needed.
  */
 @Serializable
 data class NamedType<T : NodeType>(
     val name: String,
     val source: String,
-    val genericTokens: List<ParamTypeNode>? = null
-) {
+    val genericTokens: List<ParamTypeNode>? = null,
     @kotlinx.serialization.Transient
-    lateinit var node: T
-}
+    val node: T? = null,
+)
 
 /**
  * Complete XLR document representing a named object type (asset definition).
@@ -332,7 +327,7 @@ data class XlrDocument(
     val additionalProperties: JsonElement? = null,
     val genericTokens: List<ParamTypeNode>? = null,
     val title: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) {
     fun toObjectType(): ObjectType =
         ObjectType(
@@ -341,6 +336,6 @@ data class XlrDocument(
             extends = extends,
             additionalProperties = additionalProperties,
             title = title,
-            description = description
+            description = description,
         )
 }

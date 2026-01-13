@@ -10,9 +10,13 @@ ktlint_config(
 
 kt_jvm_library(
     name = "kotlin-dsl-generator",
-    srcs = glob(["src/main/kotlin/**/*.kt"]),
+    srcs = glob(
+        ["src/main/kotlin/**/*.kt"],
+        exclude = ["src/main/kotlin/**/xlr/*.kt"],
+    ),
     kotlinc_opts = "//:kt_opts",
     deps = [
+        "//xlr/types/kotlin:xlr-types",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
         "@maven//:org_jetbrains_kotlinx_kotlinx_serialization_json",
     ],
@@ -32,6 +36,7 @@ kt_jvm_test(
     main_class = "org.junit.platform.console.ConsoleLauncher",
     deps = [
         ":kotlin-dsl-generator",
+        "//xlr/types/kotlin:xlr-types",
         "@maven//:io_kotest_kotest_assertions_core",
         "@maven//:io_kotest_kotest_assertions_json",
         "@maven//:io_kotest_kotest_runner_junit5",
@@ -42,18 +47,24 @@ kt_jvm_test(
 
 ktlint_test(
     name = "ktlint",
-    srcs = glob([
-        "src/main/kotlin/**/*.kt",
-        "src/test/kotlin/**/*.kt",
-    ]),
+    srcs = glob(
+        [
+            "src/main/kotlin/**/*.kt",
+            "src/test/kotlin/**/*.kt",
+        ],
+        exclude = ["src/main/kotlin/**/xlr/*.kt"],
+    ),
     config = ":ktlint_config",
 )
 
 ktlint_fix(
     name = "ktlint_fix",
-    srcs = glob([
-        "src/main/kotlin/**/*.kt",
-        "src/test/kotlin/**/*.kt",
-    ]),
+    srcs = glob(
+        [
+            "src/main/kotlin/**/*.kt",
+            "src/test/kotlin/**/*.kt",
+        ],
+        exclude = ["src/main/kotlin/**/xlr/*.kt"],
+    ),
     config = ":ktlint_config",
 )

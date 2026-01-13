@@ -1,17 +1,17 @@
 package com.intuit.playertools.fluent.generator
 
-import com.intuit.playertools.fluent.generator.xlr.ArrayType
-import com.intuit.playertools.fluent.generator.xlr.BooleanType
-import com.intuit.playertools.fluent.generator.xlr.ObjectType
-import com.intuit.playertools.fluent.generator.xlr.OrType
-import com.intuit.playertools.fluent.generator.xlr.RecordType
-import com.intuit.playertools.fluent.generator.xlr.RefType
-import com.intuit.playertools.fluent.generator.xlr.StringType
-import com.intuit.playertools.fluent.generator.xlr.XlrDeserializer
-import com.intuit.playertools.fluent.generator.xlr.extractAssetTypeConstant
-import com.intuit.playertools.fluent.generator.xlr.isAssetWrapperRef
-import com.intuit.playertools.fluent.generator.xlr.isBindingRef
-import com.intuit.playertools.fluent.generator.xlr.isExpressionRef
+import com.intuit.playertools.xlr.ArrayType
+import com.intuit.playertools.xlr.BooleanType
+import com.intuit.playertools.xlr.ObjectType
+import com.intuit.playertools.xlr.OrType
+import com.intuit.playertools.xlr.RecordType
+import com.intuit.playertools.xlr.RefType
+import com.intuit.playertools.xlr.StringType
+import com.intuit.playertools.xlr.XlrDeserializer
+import com.intuit.playertools.xlr.extractAssetTypeConstant
+import com.intuit.playertools.xlr.isAssetWrapperRef
+import com.intuit.playertools.xlr.isBindingRef
+import com.intuit.playertools.xlr.isExpressionRef
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldBeNull
@@ -209,7 +209,7 @@ class XlrDeserializerTest :
                     val extendsRef =
                         RefType(
                             ref = "Asset<\"action\">",
-                            genericArguments = listOf(StringType(const = "action"))
+                            genericArguments = listOf(StringType(const = "action")),
                         )
                     extractAssetTypeConstant(extendsRef) shouldBe "action"
 

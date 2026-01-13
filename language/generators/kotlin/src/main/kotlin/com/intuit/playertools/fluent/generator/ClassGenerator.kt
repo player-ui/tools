@@ -1,12 +1,12 @@
 package com.intuit.playertools.fluent.generator
 
-import com.intuit.playertools.fluent.generator.xlr.ObjectProperty
-import com.intuit.playertools.fluent.generator.xlr.ObjectType
-import com.intuit.playertools.fluent.generator.xlr.ParamTypeNode
-import com.intuit.playertools.fluent.generator.xlr.XlrDocument
-import com.intuit.playertools.fluent.generator.xlr.extractAssetTypeConstant
-import com.intuit.playertools.fluent.generator.xlr.isAssetWrapperRef
-import com.intuit.playertools.fluent.generator.xlr.isObjectType
+import com.intuit.playertools.xlr.ObjectProperty
+import com.intuit.playertools.xlr.ObjectType
+import com.intuit.playertools.xlr.ParamTypeNode
+import com.intuit.playertools.xlr.XlrDocument
+import com.intuit.playertools.xlr.extractAssetTypeConstant
+import com.intuit.playertools.xlr.isAssetWrapperRef
+import com.intuit.playertools.xlr.isObjectType
 
 /**
  * Information about a property for code generation.
@@ -21,7 +21,7 @@ data class PropertyInfo(
     val isAssetWrapper: Boolean,
     val isArray: Boolean,
     val isNestedObject: Boolean,
-    val nestedObjectClassName: String? = null
+    val nestedObjectClassName: String? = null,
 )
 
 /**
@@ -30,7 +30,7 @@ data class PropertyInfo(
 data class GeneratedClass(
     val className: String,
     val code: String,
-    val nestedClasses: List<GeneratedClass> = emptyList()
+    val nestedClasses: List<GeneratedClass> = emptyList(),
 )
 
 /**
@@ -38,7 +38,7 @@ data class GeneratedClass(
  */
 class ClassGenerator(
     private val document: XlrDocument,
-    private val packageName: String
+    private val packageName: String,
 ) {
     private val genericTokens: Map<String, ParamTypeNode> =
         document.genericTokens
@@ -46,7 +46,6 @@ class ClassGenerator(
             ?: emptyMap()
 
     private val nestedClasses = mutableListOf<GeneratedClass>()
-    private var nestedClassCounter = 0
 
     // Main builder class name (e.g., "ActionBuilder"), used as prefix for nested classes
     private val mainBuilderName: String =
@@ -65,7 +64,7 @@ class ClassGenerator(
     fun generate(): GeneratedClass {
         val className =
             TypeMapper.toBuilderClassName(
-                document.name.removeSuffix("Asset")
+                document.name.removeSuffix("Asset"),
             )
         val dslFunctionName = TypeMapper.toDslFunctionName(document.name)
         val assetType = extractAssetTypeConstant(document.extends)
@@ -87,7 +86,7 @@ class ClassGenerator(
                 classBlock(
                     name = className,
                     annotations = listOf("@FluentDslMarker"),
-                    superClass = "FluentBuilderBase<Map<String, Any?>>()"
+                    superClass = "FluentBuilderBase<Map<String, Any?>>()",
                 ) {
                     // Properties section
                     generateDefaultsProperty(assetType)
@@ -130,7 +129,7 @@ class ClassGenerator(
         return GeneratedClass(
             className = className,
             code = code,
-            nestedClasses = nestedClasses
+            nestedClasses = nestedClasses,
         )
     }
 
@@ -189,19 +188,23 @@ class ClassGenerator(
             name = "id",
             type = "String?",
             getterExpr = "peek(\"id\") as? String",
-            setterExpr = "set(\"id\", value)"
+            setterExpr = "set(\"id\", value)",
         )
     }
 
     private fun collectProperties(): List<PropertyInfo> = cachedProperties
 
-    private fun createPropertyInfo(name: String, prop: ObjectProperty): PropertyInfo {
+    private fun createPropertyInfo(
+        name: String,
+        prop: ObjectProperty,
+        allowNestedGeneration: Boolean = true,
+    ): PropertyInfo {
         val context = TypeMapperContext(genericTokens = genericTokens)
         val typeInfo = TypeMapper.mapToKotlinType(prop.node, context)
         val kotlinName = TypeMapper.toKotlinIdentifier(name)
 
         // Check if property node is a nested object that needs its own class
-        val isNestedObject = isObjectType(prop.node)
+        val isNestedObject = allowNestedGeneration && isObjectType(prop.node)
         val nestedClassName =
             if (isNestedObject) {
                 generateNestedClass(name, prop.node as ObjectType)
@@ -214,35 +217,23 @@ class ClassGenerator(
             kotlinName = kotlinName,
             typeInfo = typeInfo,
             required = prop.required,
-            hasBindingOverload = shouldHaveBindingOverload(prop),
-            hasExpressionOverload = shouldHaveExpressionOverload(prop),
+            hasBindingOverload = shouldHaveOverload(typeInfo.typeName) || typeInfo.isBinding,
+            hasExpressionOverload = shouldHaveOverload(typeInfo.typeName) || typeInfo.isExpression,
             isAssetWrapper = typeInfo.isAssetWrapper || isAssetWrapperRef(prop.node),
             isArray = typeInfo.isArray,
             isNestedObject = isNestedObject,
-            nestedObjectClassName = nestedClassName
+            nestedObjectClassName = nestedClassName,
         )
     }
 
-    private fun shouldHaveBindingOverload(prop: ObjectProperty): Boolean {
-        // Generate binding overload for string, number, boolean properties
-        val typeInfo = TypeMapper.mapToKotlinType(prop.node, TypeMapperContext(genericTokens))
-        return typeInfo.typeName in listOf("String", "Number", "Boolean") ||
-            typeInfo.isBinding
-    }
-
-    private fun shouldHaveExpressionOverload(prop: ObjectProperty): Boolean {
-        // Generate expression overload for string, number, boolean properties
-        val typeInfo = TypeMapper.mapToKotlinType(prop.node, TypeMapperContext(genericTokens))
-        return typeInfo.typeName in listOf("String", "Number", "Boolean") ||
-            typeInfo.isExpression
-    }
-
-    private fun generateNestedClass(propertyName: String, objectType: ObjectType): String {
+    private fun generateNestedClass(
+        propertyName: String,
+        objectType: ObjectType,
+    ): String {
         // Use main builder name as prefix to avoid class name conflicts across files
         // e.g., "ActionMetaDataConfig" instead of just "MetaDataConfig"
         val baseName = mainBuilderName.removeSuffix("Builder")
         val className = baseName + propertyName.replaceFirstChar { it.uppercase() } + "Config"
-        nestedClassCounter++
 
         val code =
             codeWriter {
@@ -251,7 +242,7 @@ class ClassGenerator(
                 classBlock(
                     name = className,
                     annotations = listOf("@FluentDslMarker"),
-                    superClass = "FluentBuilderBase<Map<String, Any?>>()"
+                    superClass = "FluentBuilderBase<Map<String, Any?>>()",
                 ) {
                     overrideVal("defaults", "Map<String, Any?>", "emptyMap()")
                     overrideVal("assetWrapperProperties", "Set<String>", "emptySet()")
@@ -260,7 +251,7 @@ class ClassGenerator(
 
                     // Generate properties for nested object
                     objectType.properties.forEach { (propName, propObj) ->
-                        val propInfo = createNestedPropertyInfo(propName, propObj)
+                        val propInfo = createPropertyInfo(propName, propObj, allowNestedGeneration = false)
                         generateProperty(propInfo)
                         blankLine()
                     }
@@ -275,25 +266,6 @@ class ClassGenerator(
         return className
     }
 
-    private fun createNestedPropertyInfo(name: String, prop: ObjectProperty): PropertyInfo {
-        val context = TypeMapperContext(genericTokens = genericTokens)
-        val typeInfo = TypeMapper.mapToKotlinType(prop.node, context)
-        val kotlinName = TypeMapper.toKotlinIdentifier(name)
-
-        return PropertyInfo(
-            originalName = name,
-            kotlinName = kotlinName,
-            typeInfo = typeInfo,
-            required = prop.required,
-            hasBindingOverload = typeInfo.typeName in listOf("String", "Number", "Boolean"),
-            hasExpressionOverload = typeInfo.typeName in listOf("String", "Number", "Boolean"),
-            isAssetWrapper = typeInfo.isAssetWrapper,
-            isArray = typeInfo.isArray,
-            isNestedObject = false,
-            nestedObjectClassName = null
-        )
-    }
-
     private fun CodeWriter.generateProperty(prop: PropertyInfo) {
         // Add property documentation
         prop.typeInfo.description?.let { kdoc(it) }
@@ -302,15 +274,19 @@ class ClassGenerator(
             prop.isNestedObject && prop.nestedObjectClassName != null -> {
                 generateNestedObjectProperty(prop)
             }
+
             prop.isAssetWrapper && prop.isArray -> {
                 generateAssetArrayProperty(prop)
             }
+
             prop.isAssetWrapper -> {
                 generateAssetWrapperProperty(prop)
             }
+
             prop.isArray -> {
                 generateArrayProperty(prop)
             }
+
             else -> {
                 generateSimpleProperty(prop)
             }
@@ -325,7 +301,7 @@ class ClassGenerator(
             name = prop.kotlinName,
             type = nullableType,
             getterExpr = "peek(\"${prop.originalName}\") as? $typeName",
-            setterExpr = "set(\"${prop.originalName}\", value)"
+            setterExpr = "set(\"${prop.originalName}\", value)",
         )
 
         // Generate binding overload
@@ -386,7 +362,7 @@ class ClassGenerator(
             name = prop.kotlinName,
             type = nullableType,
             getterExpr = "peek(\"${prop.originalName}\") as? $listType",
-            setterExpr = "set(\"${prop.originalName}\", value)"
+            setterExpr = "set(\"${prop.originalName}\", value)",
         )
 
         // Varargs function
@@ -399,7 +375,10 @@ class ClassGenerator(
     }
 
     private fun CodeWriter.generateNestedObjectProperty(prop: PropertyInfo) {
-        val className = prop.nestedObjectClassName!!
+        val className =
+            requireNotNull(prop.nestedObjectClassName) {
+                "nestedObjectClassName required for nested object property: ${prop.originalName}"
+            }
 
         line("var ${prop.kotlinName}: $className?")
         indent()
@@ -427,7 +406,7 @@ class ClassGenerator(
     private fun CodeWriter.generateDslFunction(
         functionName: String,
         className: String,
-        description: String?
+        description: String?,
     ) {
         description?.let { kdoc(it) }
         line("fun $functionName(init: $className.() -> Unit = {}) = $className().apply(init)")
@@ -435,10 +414,23 @@ class ClassGenerator(
 
     companion object {
         /**
+         * Primitive types that should have Binding and Expression overloads.
+         */
+        private val PRIMITIVE_OVERLOAD_TYPES = setOf("String", "Number", "Boolean")
+
+        /**
          * Generate Kotlin builder code from an XLR document.
          */
-        fun generate(document: XlrDocument, packageName: String): GeneratedClass =
+        fun generate(
+            document: XlrDocument,
+            packageName: String,
+        ): GeneratedClass =
             ClassGenerator(document, packageName)
                 .generate()
+
+        /**
+         * Check if a type should have binding/expression overloads.
+         */
+        internal fun shouldHaveOverload(typeName: String): Boolean = typeName in PRIMITIVE_OVERLOAD_TYPES
     }
 }

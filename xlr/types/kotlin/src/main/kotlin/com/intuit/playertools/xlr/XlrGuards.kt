@@ -1,6 +1,6 @@
-package com.intuit.playertools.fluent.generator.xlr
+package com.intuit.playertools.xlr
 
-/*
+/**
  * Type guard functions for XLR node types.
  * Provides convenient type checking and casting utilities.
  */
@@ -49,7 +49,9 @@ fun isFunctionType(node: NodeType): Boolean = node is FunctionType
 fun isPrimitiveType(node: NodeType): Boolean =
     when (node) {
         is StringType, is NumberType, is BooleanType, is NullType,
-        is AnyType, is UnknownType, is UndefinedType, is VoidType, is NeverType -> true
+        is AnyType, is UnknownType, is UndefinedType, is VoidType, is NeverType,
+        -> true
+
         else -> false
     }
 
