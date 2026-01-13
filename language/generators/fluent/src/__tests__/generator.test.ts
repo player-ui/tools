@@ -43,7 +43,7 @@ describe("FluentBuilderGenerator", () => {
       ) as NamedType<ObjectType>;
       expect(textAsset).toBeDefined();
 
-      const code = generateFluentBuilder(textAsset, "/output");
+      const code = generateFluentBuilder(textAsset);
       expect(code).toMatchSnapshot();
     });
 
@@ -67,7 +67,7 @@ describe("FluentBuilderGenerator", () => {
       ) as NamedType<ObjectType>;
       expect(inputAsset).toBeDefined();
 
-      const code = generateFluentBuilder(inputAsset, "/output");
+      const code = generateFluentBuilder(inputAsset);
       expect(code).toMatchSnapshot();
     });
 
@@ -92,7 +92,7 @@ describe("FluentBuilderGenerator", () => {
       ) as NamedType<ObjectType>;
       expect(counterAsset).toBeDefined();
 
-      const code = generateFluentBuilder(counterAsset, "/output");
+      const code = generateFluentBuilder(counterAsset);
       expect(code).toMatchSnapshot();
     });
   });
@@ -119,7 +119,7 @@ describe("FluentBuilderGenerator", () => {
       ) as NamedType<ObjectType>;
       expect(infoAsset).toBeDefined();
 
-      const code = generateFluentBuilder(infoAsset, "/output");
+      const code = generateFluentBuilder(infoAsset);
       expect(code).toMatchSnapshot();
     });
 
@@ -143,7 +143,7 @@ describe("FluentBuilderGenerator", () => {
       ) as NamedType<ObjectType>;
       expect(collectionAsset).toBeDefined();
 
-      const code = generateFluentBuilder(collectionAsset, "/output");
+      const code = generateFluentBuilder(collectionAsset);
       expect(code).toMatchSnapshot();
     });
   });
@@ -169,7 +169,7 @@ describe("FluentBuilderGenerator", () => {
       ) as NamedType<ObjectType>;
       expect(inputAsset).toBeDefined();
 
-      const code = generateFluentBuilder(inputAsset, "/output");
+      const code = generateFluentBuilder(inputAsset);
       expect(code).toMatchSnapshot();
     });
 
@@ -193,7 +193,7 @@ describe("FluentBuilderGenerator", () => {
       ) as NamedType<ObjectType>;
       expect(actionAsset).toBeDefined();
 
-      const code = generateFluentBuilder(actionAsset, "/output");
+      const code = generateFluentBuilder(actionAsset);
       expect(code).toMatchSnapshot();
     });
   });
@@ -222,7 +222,7 @@ describe("FluentBuilderGenerator", () => {
       ) as NamedType<ObjectType>;
       expect(actionAsset).toBeDefined();
 
-      const code = generateFluentBuilder(actionAsset, "/output");
+      const code = generateFluentBuilder(actionAsset);
       expect(code).toMatchSnapshot();
     });
 
@@ -253,7 +253,7 @@ describe("FluentBuilderGenerator", () => {
       ) as NamedType<ObjectType>;
       expect(actionAsset).toBeDefined();
 
-      const code = generateFluentBuilder(actionAsset, "/output");
+      const code = generateFluentBuilder(actionAsset);
       expect(code).toMatchSnapshot();
     });
   });
@@ -277,7 +277,7 @@ describe("FluentBuilderGenerator", () => {
       ) as NamedType<ObjectType>;
       expect(actionAsset).toBeDefined();
 
-      const code = generateFluentBuilder(actionAsset, "/output");
+      const code = generateFluentBuilder(actionAsset);
       expect(code).toMatchSnapshot();
     });
 
@@ -309,7 +309,7 @@ describe("FluentBuilderGenerator", () => {
       ) as NamedType<ObjectType>;
       expect(collectionAsset).toBeDefined();
 
-      const code = generateFluentBuilder(collectionAsset, "/output");
+      const code = generateFluentBuilder(collectionAsset);
       expect(code).toMatchSnapshot();
     });
   });
@@ -334,7 +334,7 @@ describe("FluentBuilderGenerator", () => {
       ) as NamedType<ObjectType>;
       expect(actionAsset).toBeDefined();
 
-      const code = generateFluentBuilder(actionAsset, "/output");
+      const code = generateFluentBuilder(actionAsset);
       expect(code).toMatchSnapshot();
     });
 
@@ -364,7 +364,7 @@ describe("FluentBuilderGenerator", () => {
       ) as NamedType<ObjectType>;
       expect(choiceAsset).toBeDefined();
 
-      const code = generateFluentBuilder(choiceAsset, "/output");
+      const code = generateFluentBuilder(choiceAsset);
       expect(code).toMatchSnapshot();
     });
   });
@@ -391,7 +391,7 @@ describe("FluentBuilderGenerator", () => {
       ) as NamedType<ObjectType>;
       expect(inputAsset).toBeDefined();
 
-      const code = generateFluentBuilder(inputAsset, "/output");
+      const code = generateFluentBuilder(inputAsset);
       expect(code).toMatchSnapshot();
     });
   });
@@ -414,7 +414,7 @@ describe("Improvements over old fluent-gen-ts", () => {
     const textAsset = types.find(
       (t) => t.name === "TextAsset",
     ) as NamedType<ObjectType>;
-    const code = generateFluentBuilder(textAsset, "/output");
+    const code = generateFluentBuilder(textAsset);
 
     // New generator adds TaggedTemplateValue support - OLD generator did NOT
     expect(code).toContain(
@@ -441,7 +441,7 @@ describe("Improvements over old fluent-gen-ts", () => {
     const actionAsset = types.find(
       (t) => t.name === "ActionAsset",
     ) as NamedType<ObjectType>;
-    const code = generateFluentBuilder(actionAsset, "/output");
+    const code = generateFluentBuilder(actionAsset);
 
     // New generator uses Asset | FluentBuilder<Asset> - OLD generator incorrectly used AssetWrapper
     expect(code).toContain("Asset | FluentBuilder<Asset, BaseBuildContext>");
@@ -466,7 +466,7 @@ describe("Improvements over old fluent-gen-ts", () => {
     const inputAsset = types.find(
       (t) => t.name === "InputAsset",
     ) as NamedType<ObjectType>;
-    const code = generateFluentBuilder(inputAsset, "/output");
+    const code = generateFluentBuilder(inputAsset);
 
     // Bindings should accept TaggedTemplateValue
     expect(code).toContain(
@@ -491,7 +491,7 @@ describe("Improvements over old fluent-gen-ts", () => {
     const actionAsset = types.find(
       (t) => t.name === "ActionAsset",
     ) as NamedType<ObjectType>;
-    const code = generateFluentBuilder(actionAsset, "/output");
+    const code = generateFluentBuilder(actionAsset);
 
     // Expressions should accept TaggedTemplateValue
     expect(code).toContain(
@@ -518,7 +518,7 @@ describe("Integration with Real Mock Types", () => {
       (t) => t.name === "TextAsset",
     ) as NamedType<ObjectType>;
 
-    const code = generateFluentBuilder(textAsset, "/output");
+    const code = generateFluentBuilder(textAsset);
 
     // Verify it has the expected parts
     expect(code).toContain("TextAssetBuilder");
@@ -549,7 +549,7 @@ describe("Integration with Real Mock Types", () => {
       (t) => t.name === "InfoAsset",
     ) as NamedType<ObjectType>;
 
-    const code = generateFluentBuilder(infoAsset, "/output");
+    const code = generateFluentBuilder(infoAsset);
 
     // Verify it has the expected parts
     expect(code).toContain("InfoAssetBuilder");
@@ -581,7 +581,7 @@ describe("Integration with Real Mock Types", () => {
       (t) => t.name === "InputAsset",
     ) as NamedType<ObjectType>;
 
-    const code = generateFluentBuilder(inputAsset, "/output");
+    const code = generateFluentBuilder(inputAsset);
 
     // Verify it has the expected parts
     expect(code).toContain("InputAssetBuilder");
@@ -614,7 +614,7 @@ describe("__arrayProperties__ generation", () => {
       (t) => t.name === "CollectionAsset",
     ) as NamedType<ObjectType>;
 
-    const code = generateFluentBuilder(collectionAsset, "/output");
+    const code = generateFluentBuilder(collectionAsset);
 
     // Must have __arrayProperties__ static property
     expect(code).toContain("__arrayProperties__");
@@ -647,7 +647,7 @@ describe("__arrayProperties__ generation", () => {
       (t) => t.name === "TextAsset",
     ) as NamedType<ObjectType>;
 
-    const code = generateFluentBuilder(textAsset, "/output");
+    const code = generateFluentBuilder(textAsset);
 
     // Should NOT have __arrayProperties__ since there are no arrays
     expect(code).not.toContain("__arrayProperties__");
@@ -672,7 +672,7 @@ describe("__arrayProperties__ generation", () => {
       (t) => t.name === "ActionAsset",
     ) as NamedType<ObjectType>;
 
-    const code = generateFluentBuilder(actionAsset, "/output");
+    const code = generateFluentBuilder(actionAsset);
 
     // validate is Array | string, the Array variant should still be detected
     expect(code).toContain("__arrayProperties__");
@@ -702,7 +702,7 @@ describe("Generator configuration", () => {
       fluentImportPath: "../../../gen/common.js",
     };
 
-    const code = generateFluentBuilder(textAsset, "/output", config);
+    const code = generateFluentBuilder(textAsset, config);
 
     expect(code).toContain('from "../../../gen/common.js"');
     expect(code).not.toContain('from "@player-tools/fluent"');
@@ -730,7 +730,7 @@ describe("Generator configuration", () => {
       typesImportPath: "../custom-types.js",
     };
 
-    const code = generateFluentBuilder(actionAsset, "/output", config);
+    const code = generateFluentBuilder(actionAsset, config);
 
     expect(code).toContain('from "../custom-types.js"');
     expect(code).not.toContain('from "@player-ui/types"');
@@ -758,7 +758,7 @@ describe("Generator configuration", () => {
         `../types/${typeName.toLowerCase()}.js`,
     };
 
-    const code = generateFluentBuilder(textAsset, "/output", config);
+    const code = generateFluentBuilder(textAsset, config);
 
     expect(code).toContain('from "../types/textasset.js"');
   });
@@ -794,7 +794,7 @@ describe("End-to-end: TypeScript → XLR → Builder → Built Object", () => {
     expect(textAsset).toBeDefined();
 
     // Step 3: Generate builder code
-    const code = generateFluentBuilder(textAsset, "/output");
+    const code = generateFluentBuilder(textAsset);
 
     // Step 4: Verify the generated code structure
     // The generated builder should have defaults for id and type
@@ -841,7 +841,7 @@ describe("End-to-end: TypeScript → XLR → Builder → Built Object", () => {
     expect(actionAsset).toBeDefined();
 
     // Step 3: Generate builder code
-    const code = generateFluentBuilder(actionAsset, "/output");
+    const code = generateFluentBuilder(actionAsset);
 
     // Step 4: Verify slot handling
     // The label slot should accept Asset | FluentBuilder, not AssetWrapper
@@ -876,7 +876,7 @@ describe("End-to-end: TypeScript → XLR → Builder → Built Object", () => {
     expect(collectionAsset).toBeDefined();
 
     // Step 3: Generate builder code
-    const code = generateFluentBuilder(collectionAsset, "/output");
+    const code = generateFluentBuilder(collectionAsset);
 
     // Step 4: Verify __arrayProperties__ is generated correctly
     expect(code).toContain("__arrayProperties__");
@@ -921,7 +921,7 @@ describe("End-to-end: TypeScript → XLR → Builder → Built Object", () => {
     expect(actionAsset).toBeDefined();
 
     // Step 3: Generate builder code
-    const code = generateFluentBuilder(actionAsset, "/output");
+    const code = generateFluentBuilder(actionAsset);
 
     // Step 4: Verify nested object handling
     // The confirmation property should have inline type with TaggedTemplateValue support
@@ -958,7 +958,7 @@ describe("End-to-end: TypeScript → XLR → Builder → Built Object", () => {
     expect(inputAsset).toBeDefined();
 
     // Step 3: Generate builder code
-    const code = generateFluentBuilder(inputAsset, "/output");
+    const code = generateFluentBuilder(inputAsset);
 
     // Step 4: Verify generic parameter handling
     expect(code).toContain("InputAssetBuilder<AnyTextAsset extends Asset");
@@ -990,7 +990,7 @@ describe("Edge Cases", () => {
     ) as NamedType<ObjectType>;
     expect(specialAsset).toBeDefined();
 
-    const code = generateFluentBuilder(specialAsset, "/output");
+    const code = generateFluentBuilder(specialAsset);
 
     expect(code).toContain("withNullValue(value: null)");
     expect(code).toContain("withUndefinedValue(value: undefined)");
@@ -1026,7 +1026,7 @@ describe("Edge Cases", () => {
     ) as NamedType<ObjectType>;
     expect(asset).toBeDefined();
 
-    const code = generateFluentBuilder(asset, "/output");
+    const code = generateFluentBuilder(asset);
 
     // Should handle intersection type
     expect(code).toContain("withCombined");
@@ -1053,7 +1053,7 @@ describe("Edge Cases", () => {
     ) as NamedType<ObjectType>;
     expect(actionAsset).toBeDefined();
 
-    const code = generateFluentBuilder(actionAsset, "/output");
+    const code = generateFluentBuilder(actionAsset);
 
     // The validate property is Array<Binding> | Binding - should be in __arrayProperties__
     expect(code).toContain("__arrayProperties__");
@@ -1079,7 +1079,7 @@ describe("Edge Cases", () => {
     ) as NamedType<ObjectType>;
     expect(dataAsset).toBeDefined();
 
-    const code = generateFluentBuilder(dataAsset, "/output");
+    const code = generateFluentBuilder(dataAsset);
 
     expect(code).toContain("withMetadata(value: Record<string, unknown>)");
     expect(code).toContain("withCounts(value: Record<string, number");
@@ -1105,7 +1105,7 @@ describe("Edge Cases", () => {
     ) as NamedType<ObjectType>;
     expect(complexAsset).toBeDefined();
 
-    const code = generateFluentBuilder(complexAsset, "/output");
+    const code = generateFluentBuilder(complexAsset);
 
     // Should handle the union and include in __arrayProperties__
     expect(code).toContain("withContent");
@@ -1132,7 +1132,7 @@ describe("Edge Cases", () => {
     ) as NamedType<ObjectType>;
     expect(sizeAsset).toBeDefined();
 
-    const code = generateFluentBuilder(sizeAsset, "/output");
+    const code = generateFluentBuilder(sizeAsset);
 
     // Should preserve literal union types
     expect(code).toContain('"small"');

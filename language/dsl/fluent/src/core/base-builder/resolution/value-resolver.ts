@@ -44,9 +44,34 @@ function extractObject<T extends Record<string, unknown>>(
 }
 
 /**
- * Main extraction function that handles any value type
- * Recursively extracts TaggedTemplateValue instances to their string representations
- * while preserving the structure of arrays and objects
+ * Recursively extracts values from a structure, converting TaggedTemplateValue instances
+ * to their string representations while preserving arrays and objects.
+ *
+ * **Return Type Note**: This function returns `unknown` because the input type is unknown
+ * and the transformation can change types (TaggedTemplateValue -> string). Callers should
+ * validate the returned value using type guards before using it.
+ *
+ * **Transformation Behavior**:
+ * - `TaggedTemplateValue` → `string` (via toString() or toValue())
+ * - Arrays → Arrays (elements recursively transformed)
+ * - Plain objects → Objects (properties recursively transformed)
+ * - FluentBuilder/AssetWrapper → passed through unchanged (resolved later)
+ * - Primitives → passed through unchanged
+ *
+ * @param value - The value to extract (may contain TaggedTemplateValue instances)
+ * @param options - Extraction options (propertyKey for special handling, visited for cycle detection)
+ * @returns The extracted value with TaggedTemplateValue instances converted to strings
+ *
+ * @example
+ * ```typescript
+ * const result = extractValue({ name: taggedTemplate`Hello` });
+ * // result is { name: "Hello" } but typed as unknown
+ *
+ * // Caller must validate:
+ * if (isPlainObject(result)) {
+ *   const name = result.name; // Use safely
+ * }
+ * ```
  */
 export function extractValue(
   value: unknown,

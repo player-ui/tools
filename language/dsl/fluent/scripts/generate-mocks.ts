@@ -118,7 +118,7 @@ function main(): void {
           },
         };
 
-        const code = generateFluentBuilder(assetType, outputDir, config);
+        const code = generateFluentBuilder(assetType, config);
         const fileName = `${toKebabCase(assetType.name)}.builder.ts`;
         const outputPath = join(outputDir, fileName);
 

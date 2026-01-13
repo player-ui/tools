@@ -20,6 +20,25 @@ export const BranchTypes = {
 } as const;
 
 /**
+ * Constants for internal storage keys
+ * Used by AuxiliaryStorage to store templates and switches
+ */
+export const StorageKeys = {
+  TEMPLATES: "__templates__",
+  SWITCHES: "__switches__",
+} as const;
+
+/**
+ * Constants for common property keys used in asset building
+ */
+export const PropertyKeys = {
+  ID: "id",
+  TYPE: "type",
+  VALUE: "value",
+  BINDING: "binding",
+} as const;
+
+/**
  * Core interface for all fluent builders
  * Provides build(), peek(), and has() methods for all builder types
  */

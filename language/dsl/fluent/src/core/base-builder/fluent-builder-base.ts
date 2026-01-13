@@ -1,10 +1,11 @@
 import type { template as easyDslTemplate } from "..";
-import type {
-  BaseBuildContext,
-  ConditionalValue,
-  SwitchMetadata,
+import {
+  type BaseBuildContext,
+  type ConditionalValue,
+  type SwitchMetadata,
+  FLUENT_BUILDER_SYMBOL,
+  StorageKeys,
 } from "./types";
-import { FLUENT_BUILDER_SYMBOL } from "./types";
 import { ValueStorage } from "./storage/value-storage";
 import { AuxiliaryStorage } from "./storage/auxiliary-storage";
 import { executeBuildPipeline } from "./resolution/pipeline";
@@ -264,7 +265,7 @@ export abstract class FluentBuilderBase<
    * Adds a template to this builder
    */
   public template(templateFn: ReturnType<typeof easyDslTemplate>): this {
-    this.auxiliaryStorage.push("__templates__", templateFn);
+    this.auxiliaryStorage.push(StorageKeys.TEMPLATES, templateFn);
     return this;
   }
 
@@ -275,7 +276,7 @@ export abstract class FluentBuilderBase<
     path: ReadonlyArray<string | number>,
     switchFnArgs: Parameters<typeof switch_>[0],
   ): this {
-    this.auxiliaryStorage.push<SwitchMetadata<C>>("__switches__", {
+    this.auxiliaryStorage.push<SwitchMetadata<C>>(StorageKeys.SWITCHES, {
       path,
       switchFn: switch_(switchFnArgs),
     });

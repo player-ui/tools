@@ -39,16 +39,36 @@ export interface GeneratorConfig {
 }
 
 /**
- * Information about a builder class to generate
+ * Information about a builder class to generate.
+ * Exported for consumers who need to extend or introspect the generator.
  */
-interface BuilderInfo {
+export interface BuilderInfo {
+  /** Original type name from XLR */
   name: string;
+  /** Generated class name (e.g., "TextAssetBuilder") */
   className: string;
+  /** Factory function name (e.g., "text") */
   factoryName: string;
+  /** The XLR ObjectType being generated */
   objectType: ObjectType;
+  /** Asset type string if this is an Asset (e.g., "text") */
   assetType?: string;
+  /** Generic parameters declaration if type is generic */
   genericParams?: string;
+  /** Whether this type extends Asset */
   isAsset: boolean;
+}
+
+/**
+ * Extracts the base type name from a ref string, handling nested generics.
+ * @example
+ * extractBaseName("MyType") // "MyType"
+ * extractBaseName("MyType<T>") // "MyType"
+ * extractBaseName("Map<string, Array<T>>") // "Map"
+ */
+function extractBaseName(ref: string): string {
+  const bracketIndex = ref.indexOf("<");
+  return bracketIndex === -1 ? ref : ref.substring(0, bracketIndex);
 }
 
 /**
@@ -56,7 +76,6 @@ interface BuilderInfo {
  */
 export class FluentBuilderGenerator {
   private readonly namedType: NamedType<ObjectType>;
-  private readonly outputDir: string;
   private readonly config: GeneratorConfig;
 
   /** Track nested types that need their own builders */
@@ -71,13 +90,8 @@ export class FluentBuilderGenerator {
   /** Track whether Asset type is needed for imports */
   private needsAssetImport = false;
 
-  constructor(
-    namedType: NamedType<ObjectType>,
-    outputDir: string,
-    config: GeneratorConfig = {},
-  ) {
+  constructor(namedType: NamedType<ObjectType>, config: GeneratorConfig = {}) {
     this.namedType = namedType;
-    this.outputDir = outputDir;
     this.config = config;
   }
 
@@ -229,7 +243,7 @@ export class FluentBuilderGenerator {
       }
     } else if (isRefType(node)) {
       // Track reference types that aren't built-in Player types
-      const baseName = node.ref.split("<")[0];
+      const baseName = extractBaseName(node.ref);
       const builtInTypes = [
         "Asset",
         "AssetWrapper",
@@ -535,7 +549,7 @@ ${methods}
     }
 
     // Other references - check if we have a builder for them
-    const baseName = ref.split("<")[0];
+    const baseName = extractBaseName(ref);
     if (this.nestedBuilders.has(baseName)) {
       return `${baseName} | FluentBuilder<${baseName}, BaseBuildContext>`;
     }
@@ -569,12 +583,14 @@ ${methods}
 
 /**
  * Generate fluent builder code from a NamedType<ObjectType>
+ * @param namedType - The XLR NamedType to generate a builder for
+ * @param config - Optional generator configuration
+ * @returns Generated TypeScript code for the fluent builder
  */
 export function generateFluentBuilder(
   namedType: NamedType<ObjectType>,
-  outputDir: string,
   config: GeneratorConfig = {},
 ): string {
-  const generator = new FluentBuilderGenerator(namedType, outputDir, config);
+  const generator = new FluentBuilderGenerator(namedType, config);
   return generator.generate();
 }

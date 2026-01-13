@@ -1,4 +1,8 @@
-import type { BaseBuildContext, SwitchMetadata } from "../../types";
+import {
+  type BaseBuildContext,
+  type SwitchMetadata,
+  StorageKeys,
+} from "../../types";
 import type { AuxiliaryStorage } from "../../storage/auxiliary-storage";
 import { isSwitchResult } from "../../guards";
 import { setValueAtPath } from "../path-resolver";
@@ -20,7 +24,9 @@ export function resolveSwitches<C extends BaseBuildContext>(
   nestedParentContext: C | undefined,
   arrayProperties: ReadonlySet<string>,
 ): void {
-  const switches = auxiliaryStorage.getArray<SwitchMetadata<C>>("__switches__");
+  const switches = auxiliaryStorage.getArray<SwitchMetadata<C>>(
+    StorageKeys.SWITCHES,
+  );
   if (switches.length === 0 || !nestedParentContext) {
     return;
   }

@@ -3,7 +3,14 @@
  * CLI entry point for fluent-generator
  */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "fs";
+import {
+  readFileSync,
+  writeFileSync,
+  mkdirSync,
+  existsSync,
+  accessSync,
+  constants,
+} from "fs";
 import { join } from "path";
 import type { NamedType, ObjectType } from "@player-tools/xlr";
 import { generateFluentBuilder } from "./generator";
@@ -84,6 +91,30 @@ function loadXlrType(
   return JSON.parse(content) as NamedType<ObjectType>;
 }
 
+/**
+ * Validates that the output directory can be created and is writable.
+ * Creates the directory if it doesn't exist.
+ */
+function validateOutputDirectory(outputDir: string): void {
+  if (!existsSync(outputDir)) {
+    try {
+      mkdirSync(outputDir, { recursive: true });
+    } catch (error) {
+      throw new Error(
+        `Cannot create output directory "${outputDir}": ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
+
+  try {
+    accessSync(outputDir, constants.W_OK);
+  } catch {
+    throw new Error(
+      `Output directory "${outputDir}" is not writable. Check permissions.`,
+    );
+  }
+}
+
 function writeBuilderFile(
   outputDir: string,
   typeName: string,
@@ -108,9 +139,8 @@ async function main(): Promise<void> {
   console.log(`Output: ${output}`);
   console.log();
 
-  if (!existsSync(output)) {
-    mkdirSync(output, { recursive: true });
-  }
+  // Validate output directory is writable before processing
+  validateOutputDirectory(output);
 
   console.log("Loading manifest...");
   const manifest = loadManifest(input);
@@ -134,7 +164,7 @@ async function main(): Promise<void> {
   for (const typeName of allTypes) {
     try {
       const xlrType = loadXlrType(input, typeName);
-      const code = generateFluentBuilder(xlrType, output);
+      const code = generateFluentBuilder(xlrType);
       writeBuilderFile(output, typeName, code);
       succeeded++;
     } catch (error) {

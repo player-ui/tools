@@ -1,6 +1,8 @@
 export {
   FLUENT_BUILDER_SYMBOL,
   BranchTypes,
+  StorageKeys,
+  PropertyKeys,
   type NestedContextParams,
   type NestedContextGenerator,
   type AssetMetadata,
@@ -59,3 +61,10 @@ export {
 export { FluentBuilderBase } from "./fluent-builder-base";
 
 export { createInspectMethod } from "./utils";
+
+export {
+  ErrorCodes,
+  FluentError,
+  createFluentError,
+  type ErrorCode,
+} from "./errors";

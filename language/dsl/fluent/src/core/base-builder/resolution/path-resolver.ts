@@ -1,5 +1,13 @@
 import type { ValuePath } from "../types";
-import { isAssetWrapperValue } from "../guards";
+import { isAssetWrapperValue, isPlainObject } from "../guards";
+
+/**
+ * Safely gets a value as a Record<string, unknown>, returning empty object if not.
+ * This avoids unsafe `as` assertions by using the isPlainObject type guard.
+ */
+function asRecordOrEmpty(value: unknown): Record<string, unknown> {
+  return isPlainObject(value) ? value : {};
+}
 
 /**
  * Sets a value at a nested path in an object
@@ -64,7 +72,7 @@ function setValueInAssetWrapperArray(
   if (restPath.length === 1) {
     arrayResult[nextKey] = value;
   } else {
-    const nestedObj = (arrayResult[nextKey] as Record<string, unknown>) ?? {};
+    const nestedObj = asRecordOrEmpty(arrayResult[nextKey]);
     setValueAtPath(nestedObj, restPath.slice(1), value);
     arrayResult[nextKey] = nestedObj;
   }
@@ -86,7 +94,7 @@ function setValueInArray(
   if (restPath.length === 1) {
     arrayResult[nextKey] = value;
   } else {
-    const nestedObj = (arrayResult[nextKey] as Record<string, unknown>) ?? {};
+    const nestedObj = asRecordOrEmpty(arrayResult[nextKey]);
     setValueAtPath(nestedObj, restPath.slice(1), value);
     arrayResult[nextKey] = nestedObj;
   }
@@ -102,7 +110,7 @@ function setValueInObject(
   restPath: ValuePath,
   value: unknown,
 ): void {
-  const nestedObj = (obj[currentKey] as Record<string, unknown>) ?? {};
+  const nestedObj = asRecordOrEmpty(obj[currentKey]);
   setValueAtPath(nestedObj, restPath, value);
   obj[currentKey] = nestedObj;
 }

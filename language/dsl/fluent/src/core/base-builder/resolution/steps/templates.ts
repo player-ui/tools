@@ -1,4 +1,4 @@
-import type { BaseBuildContext } from "../../types";
+import { type BaseBuildContext, StorageKeys } from "../../types";
 import type { AuxiliaryStorage } from "../../storage/auxiliary-storage";
 import type { template as easyDslTemplate } from "../../../index";
 
@@ -17,11 +17,21 @@ export function resolveTemplates<C extends BaseBuildContext>(
   result: Record<string, unknown>,
   context: C | undefined,
 ): void {
-  const templateFns =
-    auxiliaryStorage.getArray<ReturnType<typeof easyDslTemplate>>(
-      "__templates__",
-    );
-  if (templateFns.length === 0 || !context) {
+  const templateFns = auxiliaryStorage.getArray<
+    ReturnType<typeof easyDslTemplate>
+  >(StorageKeys.TEMPLATES);
+
+  if (templateFns.length === 0) {
+    return;
+  }
+
+  if (!context) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(
+        `resolveTemplates: ${templateFns.length} template(s) exist but no context provided. ` +
+          "Templates will be ignored. Pass a build context to .build() to enable template resolution.",
+      );
+    }
     return;
   }
 
