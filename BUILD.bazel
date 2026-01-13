@@ -101,3 +101,12 @@ tsconfig_to_swcconfig.t2s(
     stdout = ".swcrc",
     visibility = ["//:__subpackages__"],
 )
+
+# Kotlin compiler options for kotlin-dsl
+load("@rules_kotlin//kotlin:core.bzl", "kt_kotlinc_options")
+
+kt_kotlinc_options(
+    name = "kt_opts",
+    jvm_target = "21",
+    visibility = ["//visibility:public"],
+)
