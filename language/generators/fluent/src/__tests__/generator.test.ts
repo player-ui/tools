@@ -1140,3 +1140,177 @@ describe("Edge Cases", () => {
     expect(code).toContain('"large"');
   });
 });
+
+describe("Bug Fixes", () => {
+  describe("Issue #1: Malformed Generic Type Parameters", () => {
+    test("handles simple generic parameters", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+
+        export interface SimpleGeneric<T extends string = string, U extends number = number> extends Asset<"test"> {
+          prop1?: T;
+          prop2?: U;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const asset = types.find(
+        (t) => t.name === "SimpleGeneric",
+      ) as NamedType<ObjectType>;
+      const code = generateFluentBuilder(asset);
+
+      expect(code).toContain("SimpleGenericBuilder<T extends string");
+      expect(code).toContain("<T, U>");
+      // Should not have malformed syntax
+      expect(code).not.toContain("<T, U,");
+      expect(code).not.toContain("<T, U, BaseBuildContext>");
+    });
+
+    test("handles nested generic parameters with commas", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+        type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+        interface ListItemNoHelp<AnyAsset extends Asset = Asset> extends AssetWrapper<AnyAsset> {}
+        interface ListItem<AnyAsset extends Asset = Asset> extends ListItemNoHelp<AnyAsset> {
+          help?: { id: string; };
+        }
+
+        export interface ListAsset<
+          AnyAsset extends Asset = Asset,
+          ItemType extends ListItemNoHelp<AnyAsset> = ListItem<AnyAsset>
+        > extends Asset<"list"> {
+          values?: Array<ItemType>;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const listAsset = types.find(
+        (t) => t.name === "ListAsset",
+      ) as NamedType<ObjectType>;
+      const code = generateFluentBuilder(listAsset);
+
+      // Should produce <AnyAsset, ItemType>, not something malformed
+      expect(code).toContain("ListAssetBuilder<AnyAsset extends Asset");
+      expect(code).toContain("<AnyAsset, ItemType>");
+      // Should not have extra generic parameter in the class type usage
+      // The bug was producing things like <AnyAsset, ItemType, BaseBuildContext> as if
+      // BaseBuildContext was a third type parameter
+      expect(code).not.toMatch(
+        /ListAssetBuilder<AnyAsset,\s*ItemType,\s*BaseBuildContext>/,
+      );
+      // The method return type should just be <AnyAsset, ItemType>, not malformed
+      expect(code).toMatch(/:\s*ListAssetBuilder<AnyAsset,\s*ItemType>/);
+    });
+  });
+
+  describe("Issue #2: Quoted Property Names", () => {
+    test("generates valid method names for quoted properties", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+
+        export interface ImageAsset extends Asset<"image"> {
+          value?: string;
+          "mime-type"?: string;
+          'single-quoted'?: number;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const imageAsset = types.find(
+        (t) => t.name === "ImageAsset",
+      ) as NamedType<ObjectType>;
+      const code = generateFluentBuilder(imageAsset);
+
+      // Should generate valid method names without quotes
+      expect(code).toContain("withMimeType");
+      expect(code).toContain("withSingleQuoted");
+      // Should NOT have quotes in method names
+      expect(code).not.toContain("with'");
+      expect(code).not.toContain('with"');
+      // The set() call should also have clean property names
+      expect(code).toContain('this.set("mime-type"');
+      expect(code).toContain('this.set("single-quoted"');
+    });
+  });
+
+  describe("Issue #3: Missing Type Imports", () => {
+    test("imports types referenced in generic constraints and defaults", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+        type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+        export interface ListItemNoHelp<AnyAsset extends Asset = Asset>
+          extends AssetWrapper<AnyAsset> {}
+
+        export interface ListItem<AnyAsset extends Asset = Asset>
+          extends ListItemNoHelp<AnyAsset> {
+          help?: { id: string; };
+        }
+
+        export interface ListAsset<
+          AnyAsset extends Asset = Asset,
+          ItemType extends ListItemNoHelp<AnyAsset> = ListItem<AnyAsset>
+        > extends Asset<"list"> {
+          values?: Array<ItemType>;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const listAsset = types.find(
+        (t) => t.name === "ListAsset",
+      ) as NamedType<ObjectType>;
+      const code = generateFluentBuilder(listAsset);
+
+      // Should import types from generic constraints/defaults
+      // The import statement should include these types
+      expect(code).toMatch(/import type \{[^}]*ListItemNoHelp[^}]*\}/);
+      expect(code).toMatch(/import type \{[^}]*ListItem[^}]*\}/);
+    });
+
+    test("imports nested generic argument types", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+
+        export interface Wrapper<T> {
+          value: T;
+        }
+
+        export interface Nested<T> {
+          inner: T;
+        }
+
+        export interface ComplexGeneric<
+          T extends Wrapper<Nested<string>> = Wrapper<Nested<string>>
+        > extends Asset<"complex"> {
+          prop?: T;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const asset = types.find(
+        (t) => t.name === "ComplexGeneric",
+      ) as NamedType<ObjectType>;
+      const code = generateFluentBuilder(asset);
+
+      // Should import nested types from generic arguments
+      expect(code).toMatch(/import type \{[^}]*Wrapper[^}]*\}/);
+      expect(code).toMatch(/import type \{[^}]*Nested[^}]*\}/);
+    });
+  });
+});

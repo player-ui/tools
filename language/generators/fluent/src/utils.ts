@@ -69,16 +69,34 @@ export function isBindingRef(node: NodeType): boolean {
 }
 
 /**
+ * Sanitize a property name by removing surrounding quotes.
+ * TypeScript allows quoted property names like "mime-type" which may
+ * end up in XLR with quotes preserved.
+ *
+ * @example
+ * sanitizePropertyName("'mime-type'")  // "mime-type"
+ * sanitizePropertyName('"content-type"') // "content-type"
+ * sanitizePropertyName("normalProp")   // "normalProp"
+ */
+export function sanitizePropertyName(name: string): string {
+  return name.replace(/^['"]|['"]$/g, "");
+}
+
+/**
  * Convert a property name to PascalCase for method names.
- * Handles camelCase, kebab-case, and snake_case inputs.
+ * Handles camelCase, kebab-case, snake_case inputs, and quoted property names.
  *
  * @example
  * toPascalCase("myProperty")  // "MyProperty"
  * toPascalCase("my-property") // "MyProperty"
  * toPascalCase("my_property") // "MyProperty"
+ * toPascalCase("'mime-type'") // "MimeType"
  */
 export function toPascalCase(str: string): string {
-  return str
+  // First sanitize any quotes that may have been preserved from TypeScript source
+  const sanitized = sanitizePropertyName(str);
+
+  return sanitized
     .split(/[-_]/)
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join("");
@@ -192,16 +210,51 @@ export function containsArrayType(node: NodeType): boolean {
 }
 
 /**
+ * Split a string by commas, but only at the top level (ignoring commas inside angle brackets).
+ * This is needed for parsing generic parameter lists like "T extends Foo<A, B>, U = Bar<C, D>"
+ *
+ * @example
+ * splitAtTopLevelCommas("T extends Foo, U = Bar") // ["T extends Foo", "U = Bar"]
+ * splitAtTopLevelCommas("T extends Foo<A, B>, U") // ["T extends Foo<A, B>", "U"]
+ */
+export function splitAtTopLevelCommas(str: string): string[] {
+  const result: string[] = [];
+  let current = "";
+  let depth = 0;
+
+  for (const char of str) {
+    if (char === "<") {
+      depth++;
+      current += char;
+    } else if (char === ">") {
+      depth--;
+      current += char;
+    } else if (char === "," && depth === 0) {
+      result.push(current.trim());
+      current = "";
+    } else {
+      current += char;
+    }
+  }
+
+  if (current.trim()) {
+    result.push(current.trim());
+  }
+
+  return result;
+}
+
+/**
  * Extract generic usage string from generic params declaration
  * Converts "T extends Foo, U = Bar" to "<T, U>"
+ * Handles nested generics like "T extends Foo<A, B>, U = Bar<C, D>" correctly
  */
 export function extractGenericUsage(genericParams: string | undefined): string {
   if (!genericParams) {
     return "";
   }
 
-  const params = genericParams
-    .split(",")
+  const params = splitAtTopLevelCommas(genericParams)
     .map((p) => p.trim().split(" ")[0])
     .join(", ");
 

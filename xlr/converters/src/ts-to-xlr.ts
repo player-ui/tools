@@ -52,6 +52,36 @@ export function isMappedTypeNode(x: string): x is MappedType {
   return ["Pick", "Omit", "Required", "Partial", "Exclude"].includes(x);
 }
 
+/**
+ * Extract the property name from a PropertyName node, handling both
+ * identifier and string literal forms.
+ *
+ * TypeScript allows property names to be:
+ * - Identifiers: `propertyName`
+ * - String literals: `"property-name"` or `'property-name'`
+ * - Numeric literals: `123`
+ * - Computed: `[expression]`
+ *
+ * This function returns the unquoted string value for identifiers and string literals.
+ * For computed property names, falls back to getText().
+ */
+function getPropertyNameText(name: ts.PropertyName): string {
+  if (ts.isIdentifier(name)) {
+    return name.text;
+  }
+
+  if (ts.isStringLiteral(name)) {
+    return name.text; // .text already returns unquoted value
+  }
+
+  if (ts.isNumericLiteral(name)) {
+    return name.text;
+  }
+
+  // For computed property names, fall back to getText()
+  return name.getText();
+}
+
 export interface TSConverterContext {
   /** */
   customPrimitives: Array<string>;
@@ -579,8 +609,8 @@ export class TsConverter {
       } as ObjectType;
 
       node.properties.forEach((property) => {
-        if (ts.isPropertyAssignment(property)) {
-          const propertyName = property.name?.getText() as string;
+        if (ts.isPropertyAssignment(property) && property.name) {
+          const propertyName = getPropertyNameText(property.name);
           ret.properties[propertyName] = {
             required: true,
             node: this.tsLiteralToType(property.initializer),
@@ -722,7 +752,7 @@ export class TsConverter {
 
     node.members.forEach((member) => {
       if (ts.isPropertySignature(member) && member.type) {
-        const name = member.name.getText();
+        const name = getPropertyNameText(member.name);
         ret.properties[name] = {
           required: !isOptionalProperty(member),
           node: {

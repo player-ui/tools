@@ -101,6 +101,9 @@ export class FluentBuilderGenerator {
   generate(): string {
     const mainBuilder = this.createBuilderInfo(this.namedType);
 
+    // Collect types from generic constraints/defaults for import generation
+    this.collectTypesFromGenericTokens(this.namedType);
+
     // Collect all nested types that need builders
     this.collectNestedTypes(this.namedType);
 
@@ -135,7 +138,18 @@ export class FluentBuilderGenerator {
 
     let genericParams: string | undefined;
     if (isGenericNamedType(namedType)) {
+      // Deduplicate generic parameters by symbol name
+      // This handles cases where a type extends another generic type without
+      // passing type arguments, causing XLR to collect parameters from both
+      const seenParams = new Set<string>();
       genericParams = namedType.genericTokens
+        .filter((t) => {
+          if (seenParams.has(t.symbol)) {
+            return false;
+          }
+          seenParams.add(t.symbol);
+          return true;
+        })
         .map((t) => {
           let param = t.symbol;
           if (t.constraints) {
@@ -220,8 +234,15 @@ export class FluentBuilderGenerator {
   private collectNestedTypesFromNode(node: NodeType, parentName: string): void {
     if (isObjectType(node)) {
       if (isNamedType(node) && isComplexObjectType(node)) {
-        this.nestedBuilders.set(node.name, node);
-        this.collectNestedTypes(node);
+        // Skip if the nested type has the same name as the main type being built
+        // (would create duplicate NotificationBuilder for Notification<AnyAsset> view
+        // that has a 'notification' property of type Notification[])
+        if (node.name === this.namedType.name) {
+          this.referencedTypes.add(node.name);
+        } else {
+          this.nestedBuilders.set(node.name, node);
+          this.collectNestedTypes(node);
+        }
       } else if (!isNamedType(node) && isComplexObjectType(node)) {
         // Anonymous complex object - generate a builder for it
         const name = toPascalCase(parentName);
@@ -230,6 +251,12 @@ export class FluentBuilderGenerator {
       } else if (isNamedType(node)) {
         // Simple named type - just track for import
         this.referencedTypes.add(node.name);
+      } else {
+        // Anonymous non-complex object (inline type like { values?: Array<Header> })
+        // Need to recurse into properties to collect type references
+        for (const prop of Object.values(node.properties)) {
+          this.collectNestedTypesFromNode(prop.node, parentName);
+        }
       }
     } else if (isArrayType(node)) {
       this.collectNestedTypesFromNode(node.elementType, parentName);
@@ -254,6 +281,75 @@ export class FluentBuilderGenerator {
       ];
       if (!builtInTypes.includes(baseName)) {
         this.referencedTypes.add(baseName);
+      }
+    }
+  }
+
+  /**
+   * Collect type references from generic parameter constraints and defaults.
+   * This ensures types used in generics like "T extends Foo = Bar<X>" have
+   * Foo, Bar, and X added to referencedTypes for import generation.
+   */
+  private collectTypesFromGenericTokens(
+    namedType: NamedType<ObjectType>,
+  ): void {
+    if (!isGenericNamedType(namedType)) {
+      return;
+    }
+
+    for (const token of namedType.genericTokens) {
+      if (token.constraints) {
+        this.collectTypeReferencesFromNode(token.constraints);
+      }
+
+      if (token.default) {
+        this.collectTypeReferencesFromNode(token.default);
+      }
+    }
+  }
+
+  /**
+   * Recursively collect type references from any NodeType.
+   * This handles refs, arrays, unions, intersections, and objects.
+   */
+  private collectTypeReferencesFromNode(node: NodeType): void {
+    if (isRefType(node)) {
+      const baseName = extractBaseName(node.ref);
+      const builtInTypes = [
+        "Asset",
+        "AssetWrapper",
+        "Binding",
+        "Expression",
+        "Array",
+        "Record",
+      ];
+      if (!builtInTypes.includes(baseName)) {
+        this.referencedTypes.add(baseName);
+      }
+
+      // Also process generic arguments
+      if (node.genericArguments) {
+        for (const arg of node.genericArguments) {
+          this.collectTypeReferencesFromNode(arg);
+        }
+      }
+    } else if (isArrayType(node)) {
+      this.collectTypeReferencesFromNode(node.elementType);
+    } else if (isOrType(node)) {
+      for (const variant of node.or) {
+        this.collectTypeReferencesFromNode(variant);
+      }
+    } else if (isAndType(node)) {
+      for (const part of node.and) {
+        this.collectTypeReferencesFromNode(part);
+      }
+    } else if (isObjectType(node)) {
+      if (isNamedType(node)) {
+        this.referencedTypes.add(node.name);
+      }
+
+      for (const prop of Object.values(node.properties)) {
+        this.collectTypeReferencesFromNode(prop.node);
       }
     }
   }
@@ -361,19 +457,27 @@ ${methods}
       propType: NodeType;
       description: string;
     }> = [];
+    const seenProps = new Set<string>();
 
     // Add inherited Asset properties for asset types
-    if (isAsset) {
+    // Skip if the type explicitly declares the property (explicit takes precedence)
+    if (isAsset && !("id" in objectType.properties)) {
       // Add id property - all assets have an id
       properties.push({
         propName: "id",
         propType: { type: "string" },
         description: "A unique identifier for this asset",
       });
+      seenProps.add("id");
     }
 
     // Add properties from the object type
     for (const [propName, prop] of Object.entries(objectType.properties)) {
+      // Skip if we've already seen this property (deduplication)
+      if (seenProps.has(propName)) {
+        continue;
+      }
+      seenProps.add(propName);
       properties.push({
         propName,
         propType: prop.node,
@@ -573,11 +677,26 @@ ${methods}
       .map(([propName, prop]) => {
         const propType = this.transformType(prop.node, forParameter);
         const optional = prop.required ? "" : "?";
-        return `${propName}${optional}: ${propType}`;
+        // Quote property names that contain special characters (like hyphens)
+        const quotedName = this.needsQuoting(propName)
+          ? `"${propName}"`
+          : propName;
+        return `${quotedName}${optional}: ${propType}`;
       })
       .join("; ");
 
     return `{ ${props} }`;
+  }
+
+  /**
+   * Check if a property name needs to be quoted in TypeScript.
+   * Property names with special characters like hyphens must be quoted.
+   */
+  private needsQuoting(name: string): boolean {
+    // Valid unquoted property names match JavaScript identifier rules
+    // Must start with letter, underscore, or dollar sign
+    // Can contain letters, digits, underscores, or dollar signs
+    return !/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(name);
   }
 }
 
