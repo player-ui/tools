@@ -1,8 +1,6 @@
 """
 Common Serialization Utility
 """
-
-from types import NoneType
 from json import dumps
 
 def isPrivateProperty(string: str):
@@ -30,18 +28,23 @@ class Serializable():
     # Map of properties that aren't valid Python properties to their serialized value
     _propMap: dict[str, str] = {}
     # Types that should be handled by the base serialization logic
-    _jsonable = (int, list, str, dict, NoneType)
+    _jsonable = (int, list, str, dict)
     # Keys that should be ignored during serialization
-    _ignored_json_keys = ['_propMap', '_ignored_json_keys', '_parent', "_slot_name", "_slot_index"]
+    _ignored_json_keys = {
+        '_propMap', 
+        '_ignored_json_keys', 
+        '_parent', 
+        "_slot_name", 
+        "_slot_index", 
+        "_static_id"
+    }
 
     def _serialize(self):
         _dict = dict()
         for attr in dir(self):
             value = getattr(self, attr)
             key = attr
-            if value is None:
-                continue
-            elif isInternalMethod(attr) or key in getattr(self, "_ignored_json_keys", []):
+            if isInternalMethod(attr) or key in getattr(self, "_ignored_json_keys", []):
                 continue
             elif isinstance(value, (self._jsonable, Serializable)) or hasattr(value, 'to_dict'):
                 if self._propMap.get(key, None) is not None:
@@ -61,7 +64,7 @@ class Serializable():
         indent = kw.pop("indent", 4)  # use indent key if passed otherwise 4.
         _ignored_json_keys = kw.pop("ignored_keys", [])
         if _ignored_json_keys:
-            self._ignored_json_keys += _ignored_json_keys
+            self._ignored_json_keys.update(set(_ignored_json_keys)) # type: ignore
 
         return dumps(self, indent=indent, default=_default_json_encoder, **kw)
 

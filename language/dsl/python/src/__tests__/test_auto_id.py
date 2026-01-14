@@ -83,14 +83,14 @@ class TestAutoIDGeneration:
         assert asset.id == "my_custom_id"
 
     def test_asset_with_explicit_id_in_slot(self):
-        """Test that explicit ID is overridden when asset is placed in a slot"""
+        """Test that explicit ID isn't overridden when asset is placed in a slot"""
         parent = Collection(id="parent")
         child = Text(id="explicit_id")
         
         parent.withContent(child)
         
         # The ID should be regenerated based on parent context
-        assert child.id == "parent-content-text"
+        assert child.id == "explicit_id"
 
 
     def test_single_child_without_parent_id(self):
@@ -417,7 +417,7 @@ class TestAutoIDEdgeCases:
         """Test mixing explicit and auto-generated IDs in hierarchy"""
         root = Collection(id="root")
         middle = Collection()  # Auto-generated
-        leaf1 = Text(id="explicit_leaf")  # Will be overridden
+        leaf1 = Text(id="explicit_leaf")  # Explicit
         leaf2 = Action()  # Auto-generated
         
         root.withContent(middle)
@@ -426,7 +426,7 @@ class TestAutoIDEdgeCases:
         assert root.id == "root"
         assert middle.id == "root-content-collection"
         # Even though leaf1 had explicit ID, it gets overridden
-        assert leaf1.id == "root-content-collection-items-0-text"
+        assert leaf1.id == "explicit_leaf"
         assert leaf2.id == "root-content-collection-items-1-action"
 
 
