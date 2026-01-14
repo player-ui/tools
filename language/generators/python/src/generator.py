@@ -45,7 +45,8 @@ from .utils import (
     PLAYER_DSL_PACKAGE,
     clean_property_name,
     generate_class_name,
-    ast_to_source
+    ast_to_source,
+    generate_merged_class_name
 )
 
 def generate_python_classes(
@@ -452,7 +453,7 @@ class ClassGenerator:
                     value=ast.Call(
                         func=ast.Attribute(
                             value=ast.Name(
-                                id="self", 
+                                id="self",
                                 ctx=ast.Load()
                             ),
                             attr=f"with{prop_info.clean_name.replace('_', '').title()}",
@@ -892,7 +893,7 @@ class ClassGenerator:
 
         # Generate a class name for the merged type
         merged_class_name = name if name \
-            else self._generate_merged_class_name(prop_name, object_types)
+            else generate_merged_class_name(prop_name, object_types)
 
         # Add to classes to generate if not already present
         if merged_class_name not in self.classes:
@@ -901,26 +902,6 @@ class ClassGenerator:
 
         # Return AST reference to the merged class
         return ast.Name(id=merged_class_name, ctx=ast.Load())
-
-    def _generate_merged_class_name(self, base_name: str, object_types: List[NodeType]) -> str:
-        """Generate a unique class name for merged object types."""
-        # Clean the base name
-        clean_base = clean_property_name(base_name).replace('_', '').title()
-
-        # Try to create a meaningful name from the merged types
-        type_names = []
-        for obj_type in object_types:
-            if is_named_type(obj_type):
-                type_names.append(obj_type.name)
-            elif hasattr(obj_type, 'name') and obj_type.name:
-                type_names.append(obj_type.name)
-
-        if type_names:
-            merged_name = ''.join(type_names) + clean_base
-        else:
-            merged_name = f"Merged{clean_base}"
-
-        return merged_name
 
     def _handle_intersection_with_unions(
             self,

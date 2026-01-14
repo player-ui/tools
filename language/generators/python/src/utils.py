@@ -3,10 +3,10 @@ Generation Utilities
 """
 
 import ast
-from typing import NamedTuple
+from typing import List, NamedTuple
 
 from player_tools_xlr_types.nodes import NodeType
-
+from player_tools_xlr_types.guards import is_named_type
 
 COMMON_AST_NODES = {
     'string': ast.Name(id='str', ctx=ast.Load()),
@@ -52,3 +52,24 @@ def ast_to_source(module: ast.Module) -> str:
             node.col_offset = 0 # type: ignore
 
     return ast.unparse(module)
+
+
+def generate_merged_class_name(base_name: str, object_types: List[NodeType]) -> str:
+    """Generate a unique class name for merged object types."""
+    # Clean the base name
+    clean_base = clean_property_name(base_name).replace('_', '').title()
+
+    # Try to create a meaningful name from the merged types
+    type_names = []
+    for obj_type in object_types:
+        if is_named_type(obj_type):
+            type_names.append(obj_type.name)
+        elif hasattr(obj_type, 'name') and obj_type.name:
+            type_names.append(obj_type.name)
+
+    if type_names:
+        merged_name = ''.join(type_names) + clean_base
+    else:
+        merged_name = f"Merged{clean_base}"
+
+    return merged_name
