@@ -447,16 +447,32 @@ class ClassGenerator:
         for prop_info in properties_info:
             if is_primitive_const(prop_info.node):
                 continue
-            assignment = ast.Assign(
-                targets=[
-                    ast.Attribute(
-                        value=COMMON_AST_NODES['self'],
-                        attr=prop_info.clean_name,
-                        ctx=ast.Store()
+            if self._is_slot(prop_info.node):
+                assignment = ast.Expr(
+                    value=ast.Call(
+                        func=ast.Attribute(
+                            value=ast.Name(
+                                id="self", 
+                                ctx=ast.Load()
+                            ),
+                            attr=f"with{prop_info.clean_name.replace('_', '').title()}",
+                            ctx=ast.Load()
+                        ),
+                        args=[ast.Name(id=prop_info.clean_name, ctx=ast.Load())],
+                        keywords=[]
                     )
-                ],
-                value=ast.Name(id=prop_info.clean_name, ctx=ast.Load())
-            )
+                )
+            else:
+                assignment = ast.Assign(
+                    targets=[
+                        ast.Attribute(
+                            value=COMMON_AST_NODES['self'],
+                            attr=prop_info.clean_name,
+                            ctx=ast.Store()
+                        )
+                    ],
+                    value=ast.Name(id=prop_info.clean_name, ctx=ast.Load())
+                )
             init_def.body.append(assignment)
 
         return init_def
