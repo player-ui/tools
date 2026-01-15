@@ -1434,4 +1434,298 @@ describe("Bug Fixes", () => {
       expect(code).toMatch(/import type \{[^}]*Nested[^}]*\}/);
     });
   });
+
+  describe("Issue #4: Built-in TypeScript Types Should Not Be Imported", () => {
+    test("does not import Map type from source file", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+
+        export interface DataAsset extends Asset<"data"> {
+          errorsAndWarnings?: Map<string, Array<string>>;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const asset = types.find(
+        (t) => t.name === "DataAsset",
+      ) as NamedType<ObjectType>;
+      const code = generateFluentBuilder(asset);
+
+      // Map should NOT appear in imports - it's a built-in
+      expect(code).not.toMatch(/import type \{[^}]*\bMap\b[^}]*\}/);
+      // Should still generate the method correctly
+      expect(code).toContain("withErrorsAndWarnings");
+    });
+
+    test("does not import Set type from source file", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+
+        export interface CollectionAsset extends Asset<"collection"> {
+          uniqueIds?: Set<string>;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const asset = types.find(
+        (t) => t.name === "CollectionAsset",
+      ) as NamedType<ObjectType>;
+      const code = generateFluentBuilder(asset);
+
+      // Set should NOT appear in imports - it's a built-in
+      expect(code).not.toMatch(/import type \{[^}]*\bSet\b[^}]*\}/);
+      // Should still generate the method correctly
+      expect(code).toContain("withUniqueIds");
+    });
+
+    test("does not import WeakMap or WeakSet types", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+
+        export interface CacheAsset extends Asset<"cache"> {
+          weakCache?: WeakMap<object, string>;
+          weakSet?: WeakSet<object>;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const asset = types.find(
+        (t) => t.name === "CacheAsset",
+      ) as NamedType<ObjectType>;
+      const code = generateFluentBuilder(asset);
+
+      // WeakMap and WeakSet should NOT appear in imports
+      expect(code).not.toMatch(/import type \{[^}]*\bWeakMap\b[^}]*\}/);
+      expect(code).not.toMatch(/import type \{[^}]*\bWeakSet\b[^}]*\}/);
+    });
+
+    test("handles multiple built-in types in single property", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+
+        export interface ComplexAsset extends Asset<"complex"> {
+          data?: Map<string, Set<number>>;
+          metadata?: Record<string, Array<Promise<string>>>;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const asset = types.find(
+        (t) => t.name === "ComplexAsset",
+      ) as NamedType<ObjectType>;
+      const code = generateFluentBuilder(asset);
+
+      // None of the built-in types should appear in imports
+      expect(code).not.toMatch(/import type \{[^}]*\bMap\b[^}]*\}/);
+      expect(code).not.toMatch(/import type \{[^}]*\bSet\b[^}]*\}/);
+      expect(code).not.toMatch(/import type \{[^}]*\bRecord\b[^}]*\}/);
+      expect(code).not.toMatch(/import type \{[^}]*\bArray\b[^}]*\}/);
+      expect(code).not.toMatch(/import type \{[^}]*\bPromise\b[^}]*\}/);
+      // Should still generate the methods correctly
+      expect(code).toContain("withData");
+      expect(code).toContain("withMetadata");
+    });
+
+    test("does not import Date, Error, or RegExp types", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+
+        export interface EventAsset extends Asset<"event"> {
+          timestamp?: Date;
+          error?: Error;
+          pattern?: RegExp;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const asset = types.find(
+        (t) => t.name === "EventAsset",
+      ) as NamedType<ObjectType>;
+      const code = generateFluentBuilder(asset);
+
+      // Date, Error, RegExp should NOT appear in imports
+      expect(code).not.toMatch(/import type \{[^}]*\bDate\b[^}]*\}/);
+      expect(code).not.toMatch(/import type \{[^}]*\bError\b[^}]*\}/);
+      expect(code).not.toMatch(/import type \{[^}]*\bRegExp\b[^}]*\}/);
+    });
+
+    test("imports custom types used as generic arguments of built-in types", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+
+        export interface CustomData {
+          name: string;
+          value: number;
+        }
+
+        export interface CustomKey {
+          id: string;
+        }
+
+        export interface DataAsset extends Asset<"data"> {
+          /** Map with custom value type - should import CustomData but not Map */
+          dataMap?: Map<string, CustomData>;
+          /** Set with custom type - should import CustomKey but not Set */
+          keySet?: Set<CustomKey>;
+          /** Array with custom type - should import CustomData but not Array */
+          items?: Array<CustomData>;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const asset = types.find(
+        (t) => t.name === "DataAsset",
+      ) as NamedType<ObjectType>;
+      const code = generateFluentBuilder(asset);
+
+      // Built-in types should NOT appear in imports
+      expect(code).not.toMatch(/import type \{[^}]*\bMap\b[^}]*\}/);
+      expect(code).not.toMatch(/import type \{[^}]*\bSet\b[^}]*\}/);
+      expect(code).not.toMatch(/import type \{[^}]*\bArray\b[^}]*\}/);
+
+      // Custom types SHOULD appear in imports
+      expect(code).toMatch(/import type \{[^}]*\bCustomData\b[^}]*\}/);
+      expect(code).toMatch(/import type \{[^}]*\bCustomKey\b[^}]*\}/);
+
+      // Should still generate the methods correctly
+      expect(code).toContain("withDataMap");
+      expect(code).toContain("withKeySet");
+      expect(code).toContain("withItems");
+    });
+  });
+
+  describe("Issue #5: External Package Imports", () => {
+    test("imports types from external packages using externalTypes config", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+
+        export interface ExternalData {
+          name: string;
+        }
+
+        export interface MyAsset extends Asset<"my"> {
+          data?: ExternalData;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const asset = types.find(
+        (t) => t.name === "MyAsset",
+      ) as NamedType<ObjectType>;
+
+      // Configure ExternalData as coming from an external package
+      const externalTypes = new Map<string, string>();
+      externalTypes.set("ExternalData", "@player-tools/types");
+
+      const code = generateFluentBuilder(asset, { externalTypes });
+
+      // ExternalData should be imported from the package
+      expect(code).toContain(
+        'import type { ExternalData } from "@player-tools/types"',
+      );
+      // Should still generate the method correctly
+      expect(code).toContain("withData");
+    });
+
+    test("groups multiple types from same external package", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+
+        export interface TypeA {
+          value: string;
+        }
+
+        export interface TypeB {
+          count: number;
+        }
+
+        export interface MyAsset extends Asset<"my"> {
+          a?: TypeA;
+          b?: TypeB;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const asset = types.find(
+        (t) => t.name === "MyAsset",
+      ) as NamedType<ObjectType>;
+
+      // Configure both types as coming from the same external package
+      const externalTypes = new Map<string, string>();
+      externalTypes.set("TypeA", "@external/types");
+      externalTypes.set("TypeB", "@external/types");
+
+      const code = generateFluentBuilder(asset, { externalTypes });
+
+      // Both types should be imported from the same package in one statement
+      expect(code).toMatch(
+        /import type \{[^}]*TypeA[^}]*TypeB[^}]*\} from "@external\/types"/,
+      );
+    });
+
+    test("external types take precedence over sameFileTypes", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+
+        export interface SharedType {
+          value: string;
+        }
+
+        export interface MyAsset extends Asset<"my"> {
+          shared?: SharedType;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const asset = types.find(
+        (t) => t.name === "MyAsset",
+      ) as NamedType<ObjectType>;
+
+      // Configure SharedType as external (even though it would be in sameFileTypes)
+      const sameFileTypes = new Set<string>(["SharedType"]);
+      const externalTypes = new Map<string, string>();
+      externalTypes.set("SharedType", "@external/shared");
+
+      const code = generateFluentBuilder(asset, {
+        sameFileTypes,
+        externalTypes,
+      });
+
+      // SharedType should be imported from external package, not from same file
+      expect(code).toContain(
+        'import type { SharedType } from "@external/shared"',
+      );
+      // Should NOT be in the main type import
+      expect(code).not.toMatch(
+        /import type \{[^}]*MyAsset[^}]*SharedType[^}]*\} from/,
+      );
+    });
+  });
 });

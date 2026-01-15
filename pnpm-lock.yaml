@@ -589,6 +589,9 @@ importers:
       '@player-tools/xlr-utils':
         specifier: workspace:*
         version: link:../../../xlr/utils
+      ts-morph:
+        specifier: ^24.0.0
+        version: 24.0.0
     devDependencies:
       '@player-tools/test-utils':
         specifier: workspace:*
@@ -3751,6 +3754,9 @@ packages:
   '@trysound/sax@0.2.0':
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==, tarball: https://registry.npmjs.org/@trysound/sax/-/sax-0.2.0.tgz}
     engines: {node: '>=10.13.0'}
+
+  '@ts-morph/common@0.25.0':
+    resolution: {integrity: sha512-kMnZz+vGGHi4GoHnLmMhGNjm44kGtKUXGnOvrKmMwAuvNjM/PgKVGfUnL7IDvK7Jb2QQ82jq3Zmp04Gy+r3Dkg==, tarball: https://registry.npmjs.org/@ts-morph/common/-/common-0.25.0.tgz}
 
   '@ts-morph/common@0.28.1':
     resolution: {integrity: sha512-W74iWf7ILp1ZKNYXY5qbddNaml7e9Sedv5lvU1V8lftlitkc9Pq1A+jlH23ltDgWYeZFFEqGCD1Ies9hqu3O+g==, tarball: https://registry.npmjs.org/@ts-morph/common/-/common-0.28.1.tgz}
@@ -10582,6 +10588,9 @@ packages:
     peerDependencies:
       typescript: '*'
 
+  ts-morph@24.0.0:
+    resolution: {integrity: sha512-2OAOg/Ob5yx9Et7ZX4CvTCc0UFoZHwLEJ+dpDPSUi5TgwwlTlX47w+iFRrEwzUZwYACjq83cgjS/Da50Ga37uw==, tarball: https://registry.npmjs.org/ts-morph/-/ts-morph-24.0.0.tgz}
+
   ts-morph@27.0.2:
     resolution: {integrity: sha512-fhUhgeljcrdZ+9DZND1De1029PrE+cMkIP7ooqkLRTrRLTqcki2AstsyJm0vRNbTbVCNJ0idGlbBrfqc7/nA8w==, tarball: https://registry.npmjs.org/ts-morph/-/ts-morph-27.0.2.tgz}
 
@@ -16235,6 +16244,12 @@ snapshots:
       '@testing-library/dom': 9.3.4
 
   '@trysound/sax@0.2.0': {}
+
+  '@ts-morph/common@0.25.0':
+    dependencies:
+      minimatch: 9.0.4
+      path-browserify: 1.0.1
+      tinyglobby: 0.2.15
 
   '@ts-morph/common@0.28.1':
     dependencies:
@@ -24631,6 +24646,11 @@ snapshots:
       typescript: 5.5.4
     transitivePeerDependencies:
       - supports-color
+
+  ts-morph@24.0.0:
+    dependencies:
+      '@ts-morph/common': 0.25.0
+      code-block-writer: 13.0.3
 
   ts-morph@27.0.2:
     dependencies:

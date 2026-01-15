@@ -10,3 +10,16 @@ export {
   type BuilderInfo,
 } from "./generator";
 export * from "./utils";
+export { TypeDefinitionFinder } from "./type-definition-finder";
+export {
+  isNodeModulesPath,
+  extractPackageNameFromPath,
+  createRelativeImportPath,
+  resolveRelativeImportPath,
+} from "./path-utils";
+export {
+  categorizeTypes,
+  groupExternalTypesByPackage,
+  type TypeCategories,
+  type CategorizerOptions,
+} from "./type-categorizer";

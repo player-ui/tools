@@ -19,5 +19,6 @@ js_pipeline(
     deps = [
         ":node_modules/@player-tools/xlr",
         ":node_modules/@player-tools/xlr-utils",
+        ":node_modules/ts-morph",
     ],
 )

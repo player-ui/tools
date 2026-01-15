@@ -41,6 +41,12 @@ export interface GeneratorConfig {
    * Types not in this set will be imported from their own source files using typeImportPathGenerator.
    */
   sameFileTypes?: Set<string>;
+  /**
+   * Explicitly maps type names to their package names for external imports.
+   * Types in this map will be imported from the specified package (e.g., "@player-tools/types").
+   * This takes precedence over typeImportPathGenerator for the specified types.
+   */
+  externalTypes?: Map<string, string>;
 }
 
 /**
@@ -233,7 +239,12 @@ export class FluentBuilderGenerator {
     if (isObjectType(node)) {
       if (isNamedType(node)) {
         // Named types are defined elsewhere - track for import
-        if (node.name !== this.namedType.name) {
+        // Skip built-in types and the type being generated
+        if (
+          node.name !== this.namedType.name &&
+          !isBuiltinType(node.name) &&
+          !this.genericParamSymbols.has(node.name)
+        ) {
           this.trackReferencedType(node.name);
         }
       } else {
@@ -270,19 +281,32 @@ export class FluentBuilderGenerator {
 
   /**
    * Track a referenced type for import generation.
-   * Types defined in the same source file go to referencedTypes.
-   * Types from other files are grouped by their source file for separate imports.
+   * Priority: externalTypes > sameFileTypes > typeImportPathGenerator
+   * Types are categorized into:
+   * - referencedTypes: same file as main type
+   * - referencedTypesBySource: grouped by import path (local files or packages)
    */
   private trackReferencedType(typeName: string): void {
-    const sameFileTypes = this.config.sameFileTypes;
+    const { sameFileTypes, externalTypes, typeImportPathGenerator } =
+      this.config;
+
+    // Check if it's an explicitly configured external type
+    if (externalTypes?.has(typeName)) {
+      const packageName = externalTypes.get(typeName)!;
+      if (!this.referencedTypesBySource.has(packageName)) {
+        this.referencedTypesBySource.set(packageName, new Set());
+      }
+      this.referencedTypesBySource.get(packageName)!.add(typeName);
+      return;
+    }
 
     // If sameFileTypes is provided, check if this type is from the same file
     if (sameFileTypes) {
       if (sameFileTypes.has(typeName)) {
         this.referencedTypes.add(typeName);
-      } else if (this.config.typeImportPathGenerator) {
+      } else if (typeImportPathGenerator) {
         // Type is from a different file - group it by its import path
-        const importPath = this.config.typeImportPathGenerator(typeName);
+        const importPath = typeImportPathGenerator(typeName);
         if (!this.referencedTypesBySource.has(importPath)) {
           this.referencedTypesBySource.set(importPath, new Set());
         }
@@ -364,8 +388,11 @@ export class FluentBuilderGenerator {
       }
     } else if (isObjectType(node)) {
       if (isNamedType(node)) {
-        // Skip generic param symbols in named types
-        if (!this.genericParamSymbols.has(node.name)) {
+        // Skip generic param symbols and built-in types in named types
+        if (
+          !this.genericParamSymbols.has(node.name) &&
+          !isBuiltinType(node.name)
+        ) {
           this.referencedTypes.add(node.name);
         }
       }

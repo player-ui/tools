@@ -40,6 +40,7 @@ import {
   resolveConditional,
   applyExcludeToNodeType,
   isPrimitiveTypeNode,
+  isTypeScriptLibType,
 } from "@player-tools/xlr-utils";
 import { ConversionError } from "./types";
 
@@ -504,6 +505,18 @@ export class TsConverter {
           type: "or",
           or: [...elements.elementTypes.map((element) => element.type)],
         };
+      }
+
+      // Fallback: Use TypeChecker to resolve dynamic indexed access types
+      // This handles cases like T[keyof T], WeakKeyTypes[keyof WeakKeyTypes], etc.
+      const effectiveType = this.context.typeChecker.getTypeAtLocation(node);
+      const syntheticType = this.context.typeChecker.typeToTypeNode(
+        effectiveType,
+        node,
+        ts.NodeBuilderFlags.NoTruncation,
+      );
+      if (syntheticType) {
+        return this.tsNodeToType(syntheticType);
       }
 
       this.context.throwError(
@@ -1045,6 +1058,12 @@ export class TsConverter {
 
     if (isMappedTypeNode(refName)) {
       return this.makeMappedType(refName, node);
+    }
+
+    // Skip TypeScript built-in lib types (Map, Set, WeakMap, Promise, etc.)
+    // These should be treated as primitives, not expanded
+    if (isTypeScriptLibType(node, this.context.typeChecker)) {
+      return this.makeBasicRefNode(node);
     }
 
     // catch all for all other type references

@@ -11,9 +11,11 @@ import {
   accessSync,
   constants,
 } from "fs";
-import { join } from "path";
+import { join, dirname, relative } from "path";
 import type { NamedType, ObjectType } from "@player-tools/xlr";
-import { generateFluentBuilder } from "./generator";
+import { generateFluentBuilder, type GeneratorConfig } from "./generator";
+import { TypeDefinitionFinder } from "./type-definition-finder";
+import { isNodeModulesPath, extractPackageNameFromPath } from "./path-utils";
 
 interface Manifest {
   version: number;
@@ -67,6 +69,10 @@ Options:
   -i, --input   Directory containing manifest.json and XLR JSON files (required)
   -o, --output  Directory to write generated builder files (default: ./dist)
   -h, --help    Show this help message
+
+The generator automatically resolves type imports by analyzing the TypeScript
+source files referenced in the XLR types. Types from node_modules are imported
+from their package names (e.g., "@player-tools/types").
 `);
 }
 
@@ -131,6 +137,81 @@ function writeBuilderFile(
   console.log(`  Generated: ${fileName}`);
 }
 
+/**
+ * Converts a type name to kebab-case for file paths.
+ */
+function toKebabCase(name: string): string {
+  return name
+    .replace(/([A-Z])/g, "-$1")
+    .toLowerCase()
+    .replace(/^-/, "");
+}
+
+/**
+ * Converts an absolute source file path to a relative import path.
+ */
+function toRelativeImportPath(sourceFile: string, fromFile: string): string {
+  const relPath = relative(dirname(fromFile), sourceFile);
+  // Ensure the path starts with ./ or ../ for relative imports
+  let importPath = relPath.startsWith(".") ? relPath : `./${relPath}`;
+  // Convert .ts to .js for import paths
+  importPath = importPath.replace(/\.tsx?$/, ".js");
+  importPath = importPath.replace(/\.d\.ts$/, ".js");
+  return importPath;
+}
+
+/**
+ * Builds generator config by analyzing the XLR type's source file.
+ * Automatically resolves type imports including from node_modules.
+ */
+function buildGeneratorConfig(
+  xlrType: NamedType<ObjectType>,
+  finder: TypeDefinitionFinder,
+): GeneratorConfig {
+  const mainSourceFile = xlrType.source;
+
+  if (!mainSourceFile || !existsSync(mainSourceFile)) {
+    // No source file available - return minimal config
+    return {};
+  }
+
+  // Track external types and their packages
+  const externalTypes = new Map<string, string>();
+
+  // Build import path generator that uses TypeDefinitionFinder
+  const typeImportPathGenerator = (refTypeName: string): string => {
+    const sourceFile = finder.findTypeSourceFile(refTypeName, mainSourceFile);
+
+    if (!sourceFile) {
+      // Could not resolve - use fallback path
+      return `../types/${toKebabCase(refTypeName)}.js`;
+    }
+
+    // Check if it's from node_modules
+    if (isNodeModulesPath(sourceFile)) {
+      const packageName = extractPackageNameFromPath(sourceFile);
+      if (packageName) {
+        // Track for externalTypes config
+        externalTypes.set(refTypeName, packageName);
+        return packageName;
+      }
+    }
+
+    // Local file - return relative path
+    if (sourceFile !== mainSourceFile) {
+      return toRelativeImportPath(sourceFile, mainSourceFile);
+    }
+
+    // Same file - return main type path
+    return toRelativeImportPath(mainSourceFile, mainSourceFile);
+  };
+
+  return {
+    typeImportPathGenerator,
+    externalTypes,
+  };
+}
+
 async function main(): Promise<void> {
   const { input, output } = parseArgs();
 
@@ -158,21 +239,33 @@ async function main(): Promise<void> {
   console.log(`Processing ${allTypes.length} type(s)...`);
   console.log();
 
+  // Create a shared TypeDefinitionFinder for all types
+  const finder = new TypeDefinitionFinder();
+
   let succeeded = 0;
   let failed = 0;
 
-  for (const typeName of allTypes) {
-    try {
-      const xlrType = loadXlrType(input, typeName);
-      const code = generateFluentBuilder(xlrType);
-      writeBuilderFile(output, typeName, code);
-      succeeded++;
-    } catch (error) {
-      console.error(
-        `  Failed to generate ${typeName}: ${error instanceof Error ? error.message : String(error)}`,
-      );
-      failed++;
+  try {
+    for (const typeName of allTypes) {
+      try {
+        const xlrType = loadXlrType(input, typeName);
+
+        // Build config using TypeDefinitionFinder
+        const config = buildGeneratorConfig(xlrType, finder);
+
+        const code = generateFluentBuilder(xlrType, config);
+        writeBuilderFile(output, typeName, code);
+        succeeded++;
+      } catch (error) {
+        console.error(
+          `  Failed to generate ${typeName}: ${error instanceof Error ? error.message : String(error)}`,
+        );
+        failed++;
+      }
     }
+  } finally {
+    // Clean up TypeDefinitionFinder resources
+    finder.dispose();
   }
 
   console.log();
