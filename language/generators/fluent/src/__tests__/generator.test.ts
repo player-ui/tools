@@ -367,6 +367,31 @@ describe("FluentBuilderGenerator", () => {
       const code = generateFluentBuilder(choiceAsset);
       expect(code).toMatchSnapshot();
     });
+
+    test("generates builder for non-Asset type with complex properties", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+        type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+        export interface ChoiceItem {
+          id: string;
+          label?: AssetWrapper<Asset>;
+          value?: string | number | boolean | null;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const choiceItem = types.find(
+        (t) => t.name === "ChoiceItem",
+      ) as NamedType<ObjectType>;
+      expect(choiceItem).toBeDefined();
+
+      const code = generateFluentBuilder(choiceItem);
+      expect(code).toMatchSnapshot();
+    });
   });
 
   describe("Generic Types", () => {

@@ -2,60 +2,7 @@
 
 exports[`FluentBuilderGenerator > Array Types > generates builder for asset with array of complex objects 1`] = `
 "import type { ChoiceAsset, ChoiceItem } from "../types/choice-";
-import type { Asset } from "@player-ui/types";
 import { type FluentBuilder, type BaseBuildContext, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
-
-export interface ChoiceItemBuilderMethods {
-  /** Sets the id property */
-  withId(value: string | TaggedTemplateValue<string>): ChoiceItemBuilder;
-  /** Sets the label property */
-  withLabel(value: Asset | FluentBuilder<Asset, BaseBuildContext>): ChoiceItemBuilder;
-  /** Sets the value property */
-  withValue(value: string | TaggedTemplateValue<string> | number | TaggedTemplateValue<number> | boolean | TaggedTemplateValue<boolean> | null): ChoiceItemBuilder;
-}
-
-/**
- * A builder for ChoiceItem
- */
-export class ChoiceItemBuilder extends FluentBuilderBase<ChoiceItem> implements ChoiceItemBuilderMethods, FluentBuilder<ChoiceItem, BaseBuildContext> {
-  private static readonly defaults: Record<string, unknown> = {"id":""};
-
-  /** Sets the id property */
-  withId(value: string | TaggedTemplateValue<string>): ChoiceItemBuilder {
-    return this.set("id", value);
-  }
-
-  /** Sets the label property */
-  withLabel(value: Asset | FluentBuilder<Asset, BaseBuildContext>): ChoiceItemBuilder {
-    return this.set("label", value);
-  }
-
-  /** Sets the value property */
-  withValue(value: string | TaggedTemplateValue<string> | number | TaggedTemplateValue<number> | boolean | TaggedTemplateValue<boolean> | null): ChoiceItemBuilder {
-    return this.set("value", value);
-  }
-
-  /**
-   * Builds the final ChoiceItem object
-   * @param context - Optional build context for nested builders
-   */
-  build(context?: BaseBuildContext): ChoiceItem {
-    return this.buildWithDefaults(ChoiceItemBuilder.defaults, context);
-  }
-
-  [Symbol.for("nodejs.util.inspect.custom")](): string {
-    return createInspectMethod("ChoiceItemBuilder", this.values);
-  }
-}
-
-/**
- * Creates a new ChoiceItem builder
- * @param initial Optional initial values
- * @returns A fluent builder for ChoiceItem
- */
-export function choiceItem(initial?: Partial<ChoiceItem>): ChoiceItemBuilder {
-  return new ChoiceItemBuilder(initial);
-}
 
 export interface ChoiceAssetBuilderMethods {
   /** A unique identifier for this asset */
@@ -159,6 +106,64 @@ export class ActionAssetBuilder extends FluentBuilderBase<ActionAsset> implement
  */
 export function action(initial?: Partial<ActionAsset>): ActionAssetBuilder {
   return new ActionAssetBuilder(initial);
+}"
+`;
+
+exports[`FluentBuilderGenerator > Array Types > generates builder for non-Asset type with complex properties 1`] = `
+"import type { ChoiceItem } from "../types/choice-item";
+import type { Asset } from "@player-ui/types";
+import { type FluentBuilder, type BaseBuildContext, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+
+export interface ChoiceItemBuilderMethods {
+  /** Sets the id property */
+  withId(value: string | TaggedTemplateValue<string>): ChoiceItemBuilder;
+  /** Sets the label property */
+  withLabel(value: Asset | FluentBuilder<Asset, BaseBuildContext>): ChoiceItemBuilder;
+  /** Sets the value property */
+  withValue(value: string | TaggedTemplateValue<string> | number | TaggedTemplateValue<number> | boolean | TaggedTemplateValue<boolean> | null): ChoiceItemBuilder;
+}
+
+/**
+ * A builder for ChoiceItem
+ */
+export class ChoiceItemBuilder extends FluentBuilderBase<ChoiceItem> implements ChoiceItemBuilderMethods, FluentBuilder<ChoiceItem, BaseBuildContext> {
+  private static readonly defaults: Record<string, unknown> = {"id":""};
+
+  /** Sets the id property */
+  withId(value: string | TaggedTemplateValue<string>): ChoiceItemBuilder {
+    return this.set("id", value);
+  }
+
+  /** Sets the label property */
+  withLabel(value: Asset | FluentBuilder<Asset, BaseBuildContext>): ChoiceItemBuilder {
+    return this.set("label", value);
+  }
+
+  /** Sets the value property */
+  withValue(value: string | TaggedTemplateValue<string> | number | TaggedTemplateValue<number> | boolean | TaggedTemplateValue<boolean> | null): ChoiceItemBuilder {
+    return this.set("value", value);
+  }
+
+  /**
+   * Builds the final ChoiceItem object
+   * @param context - Optional build context for nested builders
+   */
+  build(context?: BaseBuildContext): ChoiceItem {
+    return this.buildWithDefaults(ChoiceItemBuilder.defaults, context);
+  }
+
+  [Symbol.for("nodejs.util.inspect.custom")](): string {
+    return createInspectMethod("ChoiceItemBuilder", this.values);
+  }
+}
+
+/**
+ * Creates a new ChoiceItem builder
+ * @param initial Optional initial values
+ * @returns A fluent builder for ChoiceItem
+ */
+export function choiceItem(initial?: Partial<ChoiceItem>): ChoiceItemBuilder {
+  return new ChoiceItemBuilder(initial);
 }"
 `;
 

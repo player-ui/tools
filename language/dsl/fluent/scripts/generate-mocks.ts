@@ -12,6 +12,9 @@ import {
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const CUSTOM_PRIMITIVES = ["Asset", "AssetWrapper", "Binding", "Expression"];
 
+// Non-Asset interfaces that should also have builders generated for testing
+const ADDITIONAL_BUILDER_INTERFACES = new Set(["ChoiceItem"]);
+
 function toKebabCase(str: string): string {
   return str
     .replace(/([A-Z])/g, "-$1")
@@ -64,6 +67,8 @@ function main(): void {
 
   // First pass: collect all types and their source files
   const typeToSourceFile = new Map<string, string>();
+  // Also collect types by source file (for sameFileTypes)
+  const sourceFileToTypes = new Map<string, Set<string>>();
 
   for (const filePath of typeFiles) {
     const sourceFile = program.getSourceFile(filePath);
@@ -73,11 +78,14 @@ function main(): void {
     const sourceFileName = basename(filePath, ".ts");
 
     // Map all types from this file
+    const typesInFile = new Set<string>();
     for (const t of result.data.types) {
       if ("name" in t) {
         typeToSourceFile.set(t.name, sourceFileName);
+        typesInFile.add(t.name);
       }
     }
+    sourceFileToTypes.set(sourceFileName, typesInFile);
   }
 
   const generatedBuilders: string[] = [];
@@ -95,18 +103,28 @@ function main(): void {
     try {
       const result = converter.convertSourceFile(sourceFile);
 
-      // Filter to Asset types only
-      const assetTypes = result.data.types.filter(
+      // Filter to Asset types and additional specified interfaces
+      const typesToGenerate = result.data.types.filter(
         (t): t is NamedType<ObjectType> => {
           if (t.type !== "object") return false;
           const obj = t as NamedType<ObjectType>;
-          return obj.extends?.ref.startsWith("Asset") ?? false;
+          // Include Asset types
+          if (obj.extends?.ref.startsWith("Asset")) return true;
+          // Include additional specified interfaces
+          if ("name" in obj && ADDITIONAL_BUILDER_INTERFACES.has(obj.name))
+            return true;
+          return false;
         },
       );
 
-      for (const assetType of assetTypes) {
+      // Get the source file name for this file
+      const currentSourceFileName = basename(filePath, ".ts");
+      const sameFileTypes = sourceFileToTypes.get(currentSourceFileName);
+
+      for (const typeToGen of typesToGenerate) {
         const config: GeneratorConfig = {
           fluentImportPath: "../../../gen/common.js",
+          sameFileTypes,
           typeImportPathGenerator: (typeName: string) => {
             // Look up which file this type is from
             const sourceFileName = typeToSourceFile.get(typeName);
@@ -118,8 +136,8 @@ function main(): void {
           },
         };
 
-        const code = generateFluentBuilder(assetType, config);
-        const fileName = `${toKebabCase(assetType.name)}.builder.ts`;
+        const code = generateFluentBuilder(typeToGen, config);
+        const fileName = `${toKebabCase(typeToGen.name)}.builder.ts`;
         const outputPath = join(outputDir, fileName);
 
         writeFileSync(outputPath, code, "utf-8");
