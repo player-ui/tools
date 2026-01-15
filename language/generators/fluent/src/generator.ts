@@ -24,6 +24,7 @@ import {
   getAssetTypeFromExtends,
   containsArrayType,
   extractGenericUsage,
+  isBuiltinType,
 } from "./utils";
 
 /**
@@ -90,6 +91,12 @@ export class FluentBuilderGenerator {
   /** Track whether Asset type is needed for imports */
   private needsAssetImport = false;
 
+  /** Track synthetic type names generated from property names (not real types that can be imported) */
+  private syntheticTypeNames = new Set<string>();
+
+  /** Track generic parameter symbols (e.g., T, U) that should not be imported */
+  private genericParamSymbols = new Set<string>();
+
   constructor(namedType: NamedType<ObjectType>, config: GeneratorConfig = {}) {
     this.namedType = namedType;
     this.config = config;
@@ -100,6 +107,9 @@ export class FluentBuilderGenerator {
    */
   generate(): string {
     const mainBuilder = this.createBuilderInfo(this.namedType);
+
+    // Collect generic parameter symbols first so we can exclude them from imports
+    this.collectGenericParamSymbols(this.namedType);
 
     // Collect types from generic constraints/defaults for import generation
     this.collectTypesFromGenericTokens(this.namedType);
@@ -181,15 +191,17 @@ export class FluentBuilderGenerator {
       : `../types/${this.getTypeFileName(mainBuilder.name)}`;
 
     // Collect all types to import from the same source file
-    // This includes: main type, nested builder types, and other referenced types
+    // This includes: main type, nested builder types (that aren't synthetic), and other referenced types
     const typesToImport = new Set<string>([mainBuilder.name]);
 
-    // Add all nested builder types
+    // Add nested builder types that aren't synthetic (i.e., real types from the source)
     Array.from(this.nestedBuilders.keys()).forEach((name) => {
-      typesToImport.add(name);
+      if (!this.syntheticTypeNames.has(name)) {
+        typesToImport.add(name);
+      }
     });
 
-    // Add all referenced types
+    // Add all referenced types (these are never synthetic)
     Array.from(this.referencedTypes).forEach((name) => {
       typesToImport.add(name);
     });
@@ -244,8 +256,9 @@ export class FluentBuilderGenerator {
           this.collectNestedTypes(node);
         }
       } else if (!isNamedType(node) && isComplexObjectType(node)) {
-        // Anonymous complex object - generate a builder for it
+        // Anonymous complex object - generate a builder for it with a synthetic name
         const name = toPascalCase(parentName);
+        this.syntheticTypeNames.add(name);
         this.nestedBuilders.set(name, node);
         this.collectNestedTypes(node);
       } else if (isNamedType(node)) {
@@ -269,19 +282,32 @@ export class FluentBuilderGenerator {
         this.collectNestedTypesFromNode(part, parentName);
       }
     } else if (isRefType(node)) {
-      // Track reference types that aren't built-in Player types
+      // Track reference types that aren't built-in or generic params
       const baseName = extractBaseName(node.ref);
-      const builtInTypes = [
-        "Asset",
-        "AssetWrapper",
-        "Binding",
-        "Expression",
-        "Array",
-        "Record",
-      ];
-      if (!builtInTypes.includes(baseName)) {
+      if (!isBuiltinType(baseName) && !this.genericParamSymbols.has(baseName)) {
         this.referencedTypes.add(baseName);
       }
+
+      // Also process generic arguments
+      if (node.genericArguments) {
+        for (const arg of node.genericArguments) {
+          this.collectNestedTypesFromNode(arg, parentName);
+        }
+      }
+    }
+  }
+
+  /**
+   * Collect generic parameter symbols (e.g., T, U) from the type definition.
+   * These should not be imported as they are type parameters, not concrete types.
+   */
+  private collectGenericParamSymbols(namedType: NamedType<ObjectType>): void {
+    if (!isGenericNamedType(namedType)) {
+      return;
+    }
+
+    for (const token of namedType.genericTokens) {
+      this.genericParamSymbols.add(token.symbol);
     }
   }
 
@@ -315,15 +341,8 @@ export class FluentBuilderGenerator {
   private collectTypeReferencesFromNode(node: NodeType): void {
     if (isRefType(node)) {
       const baseName = extractBaseName(node.ref);
-      const builtInTypes = [
-        "Asset",
-        "AssetWrapper",
-        "Binding",
-        "Expression",
-        "Array",
-        "Record",
-      ];
-      if (!builtInTypes.includes(baseName)) {
+      // Skip built-in types and generic param symbols
+      if (!isBuiltinType(baseName) && !this.genericParamSymbols.has(baseName)) {
         this.referencedTypes.add(baseName);
       }
 
@@ -345,7 +364,10 @@ export class FluentBuilderGenerator {
       }
     } else if (isObjectType(node)) {
       if (isNamedType(node)) {
-        this.referencedTypes.add(node.name);
+        // Skip generic param symbols in named types
+        if (!this.genericParamSymbols.has(node.name)) {
+          this.referencedTypes.add(node.name);
+        }
       }
 
       for (const prop of Object.values(node.properties)) {
@@ -602,17 +624,16 @@ ${methods}
     }
 
     // Object types - transform properties recursively
+    // Any nested object can accept either a raw object OR a FluentBuilder that produces it
     if (isObjectType(node)) {
       if (isNamedType(node)) {
-        // Named type - reference it or its builder
-        if (isComplexObjectType(node)) {
-          return `${node.name} | FluentBuilder<${node.name}, BaseBuildContext>`;
-        }
-        return node.name;
+        // Named type - accept raw type or a builder that produces it
+        return `${node.name} | FluentBuilder<${node.name}, BaseBuildContext>`;
       }
 
-      // Anonymous object - generate inline type with transformed properties
-      return this.generateInlineObjectType(node, forParameter);
+      // Anonymous object - accept inline type or a builder that produces it
+      const inlineType = this.generateInlineObjectType(node, forParameter);
+      return `${inlineType} | FluentBuilder<${inlineType}, BaseBuildContext>`;
     }
 
     // Handle other primitive types

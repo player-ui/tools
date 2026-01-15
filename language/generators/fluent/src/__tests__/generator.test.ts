@@ -933,6 +933,11 @@ describe("End-to-end: TypeScript → XLR → Builder → Built Object", () => {
     expect(code).toContain(
       "negativeLabel?: string | TaggedTemplateValue<string>",
     );
+
+    // Step 5: Verify complex nested objects accept both raw objects AND FluentBuilder
+    // Complex nested objects (3+ properties) should accept FluentBuilder alternative
+    expect(code).toContain("FluentBuilder<{");
+    expect(code).toContain("}, BaseBuildContext>");
   });
 
   test("generates working builder for generic asset", () => {
@@ -1138,6 +1143,97 @@ describe("Edge Cases", () => {
     expect(code).toContain('"small"');
     expect(code).toContain('"medium"');
     expect(code).toContain('"large"');
+  });
+});
+
+describe("Nested Objects Accept Raw or Builder", () => {
+  test("complex nested objects accept raw object OR FluentBuilder", () => {
+    const source = `
+      interface Asset<T extends string = string> {
+        id: string;
+        type: T;
+      }
+
+      export interface ActionAsset extends Asset<"action"> {
+        confirmation?: {
+          message: string;
+          affirmativeLabel: string;
+          negativeLabel?: string;
+          extra?: string;
+        };
+      }
+    `;
+
+    const types = convertTsToXLR(source);
+    const actionAsset = types.find(
+      (t) => t.name === "ActionAsset",
+    ) as NamedType<ObjectType>;
+    const code = generateFluentBuilder(actionAsset);
+
+    // Should accept both raw inline object AND FluentBuilder
+    expect(code).toContain("withConfirmation(value: {");
+    expect(code).toContain("| FluentBuilder<{");
+    expect(code).toContain("}, BaseBuildContext>");
+  });
+
+  test("any nested object accepts raw object OR FluentBuilder", () => {
+    const source = `
+      interface Asset<T extends string = string> {
+        id: string;
+        type: T;
+      }
+
+      export interface ActionAsset extends Asset<"action"> {
+        simple?: {
+          a: string;
+          b: string;
+        };
+      }
+    `;
+
+    const types = convertTsToXLR(source);
+    const actionAsset = types.find(
+      (t) => t.name === "ActionAsset",
+    ) as NamedType<ObjectType>;
+    const code = generateFluentBuilder(actionAsset);
+
+    // Any nested object should accept either raw object or FluentBuilder
+    expect(code).toContain("withSimple(value: {");
+    expect(code).toContain("| FluentBuilder<{");
+  });
+
+  test("named nested types accept raw object OR FluentBuilder", () => {
+    const source = `
+      interface Asset<T extends string = string> {
+        id: string;
+        type: T;
+      }
+      type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+      export interface Metadata {
+        beacon?: string;
+        role?: "primary" | "secondary";
+        skipValidation?: boolean;
+        extra?: string;
+      }
+
+      export interface ActionAsset extends Asset<"action"> {
+        value?: string;
+        label?: AssetWrapper<Asset>;
+        metaData?: Metadata;
+      }
+    `;
+
+    const types = convertTsToXLR(source);
+    const actionAsset = types.find(
+      (t) => t.name === "ActionAsset",
+    ) as NamedType<ObjectType>;
+    const code = generateFluentBuilder(actionAsset);
+
+    // Named complex types should accept both the type OR FluentBuilder
+    expect(code).toContain(
+      "withMetaData(value: Metadata | FluentBuilder<Metadata, BaseBuildContext>)",
+    );
   });
 });
 

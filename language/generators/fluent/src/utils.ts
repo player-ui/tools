@@ -260,3 +260,112 @@ export function extractGenericUsage(genericParams: string | undefined): string {
 
   return `<${params}>`;
 }
+
+/**
+ * Set of TypeScript built-in types that should never be imported.
+ * These are either global types or utility types provided by TypeScript.
+ */
+export const TYPESCRIPT_BUILTINS = new Set([
+  // Primitive wrappers
+  "String",
+  "Number",
+  "Boolean",
+  "Symbol",
+  "BigInt",
+
+  // Collections
+  "Array",
+  "Map",
+  "Set",
+  "WeakMap",
+  "WeakSet",
+  "ReadonlyArray",
+  "ReadonlyMap",
+  "ReadonlySet",
+
+  // Object types
+  "Object",
+  "Function",
+  "Date",
+  "RegExp",
+  "Error",
+  "Promise",
+  "PromiseLike",
+
+  // Utility types
+  "Partial",
+  "Required",
+  "Readonly",
+  "Pick",
+  "Omit",
+  "Exclude",
+  "Extract",
+  "NonNullable",
+  "Parameters",
+  "ConstructorParameters",
+  "ReturnType",
+  "InstanceType",
+  "ThisParameterType",
+  "OmitThisParameter",
+  "ThisType",
+  "Awaited",
+  "Record",
+
+  // Iterable types
+  "Iterable",
+  "Iterator",
+  "IterableIterator",
+  "Generator",
+  "AsyncIterator",
+  "AsyncIterable",
+  "AsyncIterableIterator",
+  "AsyncGenerator",
+  "GeneratorFunction",
+  "AsyncGeneratorFunction",
+
+  // Array-like types
+  "ArrayLike",
+  "ArrayBuffer",
+  "SharedArrayBuffer",
+  "DataView",
+  "TypedArray",
+  "Int8Array",
+  "Uint8Array",
+  "Uint8ClampedArray",
+  "Int16Array",
+  "Uint16Array",
+  "Int32Array",
+  "Uint32Array",
+  "Float32Array",
+  "Float64Array",
+  "BigInt64Array",
+  "BigUint64Array",
+
+  // Other built-ins
+  "JSON",
+  "Math",
+  "Console",
+  "Proxy",
+  "Reflect",
+  "WeakRef",
+  "FinalizationRegistry",
+]);
+
+/**
+ * Set of Player-specific built-in types that have special handling
+ * and should not be imported as regular types.
+ */
+export const PLAYER_BUILTINS = new Set([
+  "Asset",
+  "AssetWrapper",
+  "Binding",
+  "Expression",
+]);
+
+/**
+ * Check if a type name is a built-in type (TypeScript or Player-specific)
+ * that should not be imported.
+ */
+export function isBuiltinType(typeName: string): boolean {
+  return TYPESCRIPT_BUILTINS.has(typeName) || PLAYER_BUILTINS.has(typeName);
+}

@@ -664,7 +664,7 @@ export interface ActionAssetBuilderMethods {
   /** Sets the label property */
   withLabel(value: Asset | FluentBuilder<Asset, BaseBuildContext>): ActionAssetBuilder;
   /** Sets the metaData property */
-  withMetaData(value: ActionMetaData): ActionAssetBuilder;
+  withMetaData(value: ActionMetaData | FluentBuilder<ActionMetaData, BaseBuildContext>): ActionAssetBuilder;
 }
 
 /**
@@ -689,7 +689,7 @@ export class ActionAssetBuilder extends FluentBuilderBase<ActionAsset> implement
   }
 
   /** Sets the metaData property */
-  withMetaData(value: ActionMetaData): ActionAssetBuilder {
+  withMetaData(value: ActionMetaData | FluentBuilder<ActionMetaData, BaseBuildContext>): ActionAssetBuilder {
     return this.set("metaData", value);
   }
 
@@ -726,7 +726,7 @@ export interface ActionAssetBuilderMethods {
   /** Sets the value property */
   withValue(value: string | TaggedTemplateValue<string>): ActionAssetBuilder;
   /** Sets the confirmation property */
-  withConfirmation(value: { message: string | TaggedTemplateValue<string>; affirmativeLabel: string | TaggedTemplateValue<string>; negativeLabel?: string | TaggedTemplateValue<string> }): ActionAssetBuilder;
+  withConfirmation(value: { message: string | TaggedTemplateValue<string>; affirmativeLabel: string | TaggedTemplateValue<string>; negativeLabel?: string | TaggedTemplateValue<string> } | FluentBuilder<{ message: string | TaggedTemplateValue<string>; affirmativeLabel: string | TaggedTemplateValue<string>; negativeLabel?: string | TaggedTemplateValue<string> }, BaseBuildContext>): ActionAssetBuilder;
 }
 
 /**
@@ -746,7 +746,7 @@ export class ActionAssetBuilder extends FluentBuilderBase<ActionAsset> implement
   }
 
   /** Sets the confirmation property */
-  withConfirmation(value: { message: string | TaggedTemplateValue<string>; affirmativeLabel: string | TaggedTemplateValue<string>; negativeLabel?: string | TaggedTemplateValue<string> }): ActionAssetBuilder {
+  withConfirmation(value: { message: string | TaggedTemplateValue<string>; affirmativeLabel: string | TaggedTemplateValue<string>; negativeLabel?: string | TaggedTemplateValue<string> } | FluentBuilder<{ message: string | TaggedTemplateValue<string>; affirmativeLabel: string | TaggedTemplateValue<string>; negativeLabel?: string | TaggedTemplateValue<string> }, BaseBuildContext>): ActionAssetBuilder {
     return this.set("confirmation", value);
   }
 
@@ -781,7 +781,7 @@ export interface CollectionAssetBuilderMethods {
   /** A unique identifier for this asset */
   withId(value: string | TaggedTemplateValue<string>): CollectionAssetBuilder;
   /** Sets the modifiers property */
-  withModifiers(value: Array<CalloutModifier | TagModifier>): CollectionAssetBuilder;
+  withModifiers(value: Array<CalloutModifier | FluentBuilder<CalloutModifier, BaseBuildContext> | TagModifier | FluentBuilder<TagModifier, BaseBuildContext>>): CollectionAssetBuilder;
 }
 
 /**
@@ -797,7 +797,7 @@ export class CollectionAssetBuilder extends FluentBuilderBase<CollectionAsset> i
   }
 
   /** Sets the modifiers property */
-  withModifiers(value: Array<CalloutModifier | TagModifier>): CollectionAssetBuilder {
+  withModifiers(value: Array<CalloutModifier | FluentBuilder<CalloutModifier, BaseBuildContext> | TagModifier | FluentBuilder<TagModifier, BaseBuildContext>>): CollectionAssetBuilder {
     return this.set("modifiers", value);
   }
 
