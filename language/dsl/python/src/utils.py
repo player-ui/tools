@@ -21,6 +21,18 @@ def _default_json_encoder(obj):
     else:
         return lambda o: o.__dict__
 
+def isEmptyDictionary(obj):
+    """
+    checks if object is an empty dictionary
+    """
+    return isinstance(obj, dict) and obj == {}
+
+def shouldIgnoreKey(key, obj, ignored_keys):
+    """
+    checks if a key should be ignored during serialization
+    """
+    return isInternalMethod(key) or key in ignored_keys or isEmptyDictionary(obj)
+
 class Serializable():
     """
     Base class to allow for custom JSON serialization
@@ -44,7 +56,7 @@ class Serializable():
         for attr in dir(self):
             value = getattr(self, attr)
             key = attr
-            if isInternalMethod(attr) or key in getattr(self, "_ignored_json_keys", []):
+            if shouldIgnoreKey(key, value, getattr(self, "_ignored_json_keys", [])):
                 continue
             elif isinstance(value, (self._jsonable, Serializable)) or hasattr(value, 'to_dict'):
                 if self._propMap.get(key, None) is not None:
