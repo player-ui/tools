@@ -58,6 +58,9 @@ class Serializable():
             key = attr
             if shouldIgnoreKey(key, value, getattr(self, "_ignored_json_keys", [])):
                 continue
+            elif key in ["additional_props", "additional_nodes"] and isinstance(value, dict):
+                for subKey, subVal in value.items():
+                    _dict[subKey] = subVal
             elif isinstance(value, (self._jsonable, Serializable)) or hasattr(value, 'to_dict'):
                 if self._propMap.get(key, None) is not None:
                     key = self._propMap[key]
