@@ -1728,4 +1728,238 @@ describe("Bug Fixes", () => {
       );
     });
   });
+
+  describe("Issue #6: Generic Type Parameters Should Not Be Imported", () => {
+    test("does not import generic parameters from referenced type constraints", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+        type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+        export interface Bar<AnyAsset extends Asset = Asset> {
+          label: AssetWrapper<AnyAsset>;
+          info: AssetWrapper<AnyAsset>;
+        }
+
+        export interface DataVisualizationAsset<
+          MetadataType = DataBarsMetaData,
+          BarType extends Bar = SingleBar
+        > extends Asset<"dataViz"> {
+          metaData: MetadataType;
+          data: BarType[];
+        }
+
+        export interface DataBarsMetaData {
+          title: string;
+        }
+
+        export interface SingleBar extends Bar {
+          value: number;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const asset = types.find(
+        (t) => t.name === "DataVisualizationAsset",
+      ) as NamedType<ObjectType>;
+      const code = generateFluentBuilder(asset);
+
+      // Should NOT try to import AnyAsset (it's a generic param of Bar, not a concrete type)
+      expect(code).not.toMatch(/import type \{[^}]*\bAnyAsset\b[^}]*\}/);
+
+      // Should import actual types like Bar, SingleBar, DataBarsMetaData
+      expect(code).toMatch(/import type \{[^}]*\bBar\b[^}]*\}/);
+      expect(code).toMatch(/import type \{[^}]*\bSingleBar\b[^}]*\}/);
+      expect(code).toMatch(/import type \{[^}]*\bDataBarsMetaData\b[^}]*\}/);
+    });
+
+    test("does not import generic parameters from nested generic constraints", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+        type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+        export interface ListItemNoHelp<AnyAsset extends Asset = Asset>
+          extends AssetWrapper<AnyAsset> {}
+
+        export interface ListItem<AnyAsset extends Asset = Asset>
+          extends ListItemNoHelp<AnyAsset> {
+          help?: { id: string; };
+        }
+
+        export interface ListAsset<
+          AnyAsset extends Asset = Asset,
+          ItemType extends ListItemNoHelp = ListItem<AnyAsset>
+        > extends Asset<"list"> {
+          values?: Array<ItemType>;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const listAsset = types.find(
+        (t) => t.name === "ListAsset",
+      ) as NamedType<ObjectType>;
+      const code = generateFluentBuilder(listAsset);
+
+      // Should NOT try to import AnyAsset (it's a generic param)
+      expect(code).not.toMatch(/import type \{[^}]*\bAnyAsset\b[^}]*\}/);
+
+      // Should import actual types
+      expect(code).toMatch(/import type \{[^}]*\bListItemNoHelp\b[^}]*\}/);
+      expect(code).toMatch(/import type \{[^}]*\bListItem\b[^}]*\}/);
+    });
+  });
+
+  describe("Issue #7: Generic Constraints Should Not Include FluentBuilder", () => {
+    test("generates raw type names in generic constraints", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+
+        export interface Bar<AnyAsset extends Asset = Asset> {
+          label: string;
+        }
+
+        export interface DataVisualizationAsset<
+          BarType extends Bar = SingleBar
+        > extends Asset<"dataViz"> {
+          data: BarType[];
+        }
+
+        export interface SingleBar extends Bar {
+          value: number;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const asset = types.find(
+        (t) => t.name === "DataVisualizationAsset",
+      ) as NamedType<ObjectType>;
+      const code = generateFluentBuilder(asset);
+
+      // Constraint should be "extends Bar", NOT "extends Bar | FluentBuilder<Bar>"
+      expect(code).toContain("BarType extends Bar");
+      expect(code).not.toContain("BarType extends Bar | FluentBuilder");
+
+      // Default should be "= SingleBar", NOT "= SingleBar | FluentBuilder<SingleBar>"
+      expect(code).toContain("= SingleBar");
+      expect(code).not.toContain("= SingleBar | FluentBuilder");
+    });
+
+    test("generates multiple generic constraints without FluentBuilder", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+        type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+        export interface ListItemNoHelp<AnyAsset extends Asset = Asset>
+          extends AssetWrapper<AnyAsset> {}
+
+        export interface ListItem<AnyAsset extends Asset = Asset>
+          extends ListItemNoHelp<AnyAsset> {
+          help?: { id: string; };
+        }
+
+        export interface ListAsset<
+          AnyAsset extends Asset = Asset,
+          ItemType extends ListItemNoHelp = ListItem
+        > extends Asset<"list"> {
+          values?: Array<ItemType>;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const listAsset = types.find(
+        (t) => t.name === "ListAsset",
+      ) as NamedType<ObjectType>;
+      const code = generateFluentBuilder(listAsset);
+
+      // Both constraints should be raw types without FluentBuilder
+      expect(code).toContain("AnyAsset extends Asset");
+      expect(code).not.toContain("AnyAsset extends Asset | FluentBuilder");
+      expect(code).toContain("ItemType extends ListItemNoHelp");
+      expect(code).not.toContain(
+        "ItemType extends ListItemNoHelp | FluentBuilder",
+      );
+
+      // Defaults should also be raw types
+      expect(code).toContain("= Asset");
+      expect(code).toContain("= ListItem");
+      expect(code).not.toMatch(/=\s*Asset\s*\|\s*FluentBuilder/);
+      expect(code).not.toMatch(/=\s*ListItem\s*\|\s*FluentBuilder/);
+    });
+  });
+
+  describe("Issue #8: Embedded Type Arguments Should Be Preserved When Available", () => {
+    test("preserves embedded type arguments in extends ref string", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+
+        export interface LinkModifier extends Asset<"link"> {
+          url: string;
+        }
+
+        export interface FormattingAsset extends Asset<"format"> {
+          style: string;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const linkAsset = types.find(
+        (t) => t.name === "LinkModifier",
+      ) as NamedType<ObjectType>;
+      const code = generateFluentBuilder(linkAsset);
+
+      // Should have the correct asset type default
+      expect(code).toContain('"type":"link"');
+    });
+
+    test("handles union types with different modifiers", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+
+        export interface LinkModifier {
+          type: 'link';
+          url: string;
+        }
+
+        export interface FormatModifier {
+          type: 'format';
+          style: string;
+        }
+
+        export interface TextAsset extends Asset<"text"> {
+          value: string;
+          modifiers?: Array<LinkModifier | FormatModifier>;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const asset = types.find(
+        (t) => t.name === "TextAsset",
+      ) as NamedType<ObjectType>;
+      const code = generateFluentBuilder(asset);
+
+      // Should generate method for modifiers
+      expect(code).toContain("withModifiers");
+
+      // Should handle both modifier types in the union
+      expect(code).toContain("LinkModifier");
+      expect(code).toContain("FormatModifier");
+    });
+  });
 });

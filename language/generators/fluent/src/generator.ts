@@ -154,10 +154,13 @@ export class FluentBuilderGenerator {
         .map((t) => {
           let param = t.symbol;
           if (t.constraints) {
-            param += ` extends ${this.transformType(t.constraints)}`;
+            // Use raw type names for constraints (no FluentBuilder union)
+            // since constraints define type bounds, not parameter types
+            param += ` extends ${this.transformTypeForConstraint(t.constraints)}`;
           }
           if (t.default) {
-            param += ` = ${this.transformType(t.default)}`;
+            // Use raw type names for defaults as well
+            param += ` = ${this.transformTypeForConstraint(t.default)}`;
           }
           return param;
         })
@@ -270,9 +273,17 @@ export class FluentBuilderGenerator {
         this.trackReferencedType(baseName);
       }
 
-      // Also process generic arguments
+      // Also process generic arguments, but skip type parameters of the referenced type
       if (node.genericArguments) {
         for (const arg of node.genericArguments) {
+          // Skip if this argument appears to be a type parameter of the referenced type
+          // e.g., in ref="Bar<AnyAsset>", skip "AnyAsset" since it's Bar's type param
+          if (isRefType(arg)) {
+            const argName = extractBaseName(arg.ref);
+            if (this.isTypeParamOfRef(argName, node.ref)) {
+              continue;
+            }
+          }
           this.collectReferencedTypesFromNode(arg);
         }
       }
@@ -336,6 +347,55 @@ export class FluentBuilderGenerator {
   }
 
   /**
+   * Check if a type name appears to be a generic type parameter of the referenced type.
+   * This detects cases like ref="Bar<AnyAsset>" where "AnyAsset" is Bar's type parameter,
+   * not a concrete type to import.
+   *
+   * @param argName - The name of the type argument being checked
+   * @param parentRef - The parent ref string that contains the generic usage
+   * @returns true if argName appears to be a type parameter in parentRef
+   */
+  private isTypeParamOfRef(argName: string, parentRef: string): boolean {
+    // Extract the generic parameters portion from the ref string
+    // e.g., "Bar<AnyAsset>" -> "AnyAsset", "Map<K, V>" -> "K, V"
+    const genericMatch = parentRef.match(/<(.+)>/);
+    if (!genericMatch) {
+      return false;
+    }
+
+    const genericPart = genericMatch[1];
+
+    // Split by comma while respecting nested generics
+    // and check if argName matches any parameter
+    let depth = 0;
+    let current = "";
+    const params: string[] = [];
+
+    for (const char of genericPart) {
+      if (char === "<") {
+        depth++;
+        current += char;
+      } else if (char === ">") {
+        depth--;
+        current += char;
+      } else if (char === "," && depth === 0) {
+        params.push(current.trim());
+        current = "";
+      } else {
+        current += char;
+      }
+    }
+    if (current.trim()) {
+      params.push(current.trim());
+    }
+
+    // Check if argName matches any parameter exactly or is the base of a constrained param
+    return params.some(
+      (param) => param === argName || param.startsWith(`${argName} `),
+    );
+  }
+
+  /**
    * Collect type references from generic parameter constraints and defaults.
    * This ensures types used in generics like "T extends Foo = Bar<X>" have
    * Foo, Bar, and X added to referencedTypes for import generation.
@@ -370,9 +430,17 @@ export class FluentBuilderGenerator {
         this.trackReferencedType(baseName);
       }
 
-      // Also process generic arguments
+      // Also process generic arguments, but skip type parameters of the referenced type
       if (node.genericArguments) {
         for (const arg of node.genericArguments) {
+          // Skip if this argument appears to be a type parameter of the referenced type
+          // e.g., in ref="Bar<AnyAsset>", skip "AnyAsset" since it's Bar's type param
+          if (isRefType(arg)) {
+            const argName = extractBaseName(arg.ref);
+            if (this.isTypeParamOfRef(argName, node.ref)) {
+              continue;
+            }
+          }
           this.collectTypeReferencesFromNode(arg);
         }
       }
@@ -591,6 +659,58 @@ ${methods}
   }
 
   /**
+   * Transform a type for use in generic constraints and defaults.
+   * Unlike transformType(), this returns raw type names without FluentBuilder unions,
+   * since constraints define type bounds, not parameter types that accept builders.
+   *
+   * @param node - The type node to transform
+   * @returns The raw TypeScript type string
+   */
+  private transformTypeForConstraint(node: NodeType): string {
+    if (isRefType(node)) {
+      const baseName = extractBaseName(node.ref);
+
+      // Handle generic arguments
+      if (node.genericArguments && node.genericArguments.length > 0) {
+        const args = node.genericArguments.map((a) =>
+          this.transformTypeForConstraint(a),
+        );
+        return `${baseName}<${args.join(", ")}>`;
+      }
+
+      // Preserve embedded generics if present in the ref string
+      if (node.ref.includes("<")) {
+        return node.ref;
+      }
+
+      return baseName;
+    }
+
+    if (isObjectType(node) && isNamedType(node)) {
+      // Just the type name, no FluentBuilder union
+      return node.name;
+    }
+
+    if (isArrayType(node)) {
+      const elementType = this.transformTypeForConstraint(node.elementType);
+      return `Array<${elementType}>`;
+    }
+
+    if (isOrType(node)) {
+      const variants = node.or.map((v) => this.transformTypeForConstraint(v));
+      return variants.join(" | ");
+    }
+
+    if (isAndType(node)) {
+      const parts = node.and.map((p) => this.transformTypeForConstraint(p));
+      return parts.join(" & ");
+    }
+
+    // For primitives, use standard transformation (no FluentBuilder needed anyway)
+    return this.transformType(node, false);
+  }
+
+  /**
    * Transform an XLR type to a TypeScript type string
    * This is the core recursive transformation that adds TaggedTemplateValue support
    */
@@ -704,13 +824,20 @@ ${methods}
     // Accept both raw type or FluentBuilder that produces it
     const baseName = extractBaseName(ref);
 
-    // Handle generic arguments
+    // Handle structured generic arguments
     if (node.genericArguments && node.genericArguments.length > 0) {
       const args = node.genericArguments.map((a) =>
         this.transformType(a, forParameter),
       );
       const fullType = `${baseName}<${args.join(", ")}>`;
       return `${fullType} | FluentBuilder<${fullType}, BaseBuildContext>`;
+    }
+
+    // If ref contains embedded generics but genericArguments is empty, preserve them
+    // This handles cases like "SimpleModifier<'format'>" where the type argument
+    // is encoded in the ref string rather than in genericArguments array
+    if (ref.includes("<")) {
+      return `${ref} | FluentBuilder<${ref}, BaseBuildContext>`;
     }
 
     return `${baseName} | FluentBuilder<${baseName}, BaseBuildContext>`;
