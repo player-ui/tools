@@ -13,5 +13,8 @@
   "devDependencies": {
     "@player-tools/test-utils": "workspace:*",
     "@player-tools/xlr-converters": "workspace:*"
+  },
+  "peerDependencies": {
+    "@player-ui/types": ">=0.12.0"
   }
 }

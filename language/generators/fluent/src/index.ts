@@ -6,8 +6,11 @@
 
 export {
   generateFluentBuilder,
+  generateFluentBuilderWithWarnings,
   type GeneratorConfig,
   type BuilderInfo,
+  type GeneratorResult,
+  type UnexportedTypeInfo,
 } from "./generator";
 export * from "./utils";
 export { TypeDefinitionFinder } from "./type-definition-finder";

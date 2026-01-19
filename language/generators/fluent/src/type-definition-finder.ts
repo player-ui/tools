@@ -3,6 +3,16 @@ import { existsSync } from "fs";
 import { dirname, resolve } from "path";
 
 /**
+ * Information about an unexported type that was found
+ */
+export interface UnexportedTypeLocation {
+  /** The name of the type */
+  typeName: string;
+  /** The file where the type is declared (but not exported) */
+  filePath: string;
+}
+
+/**
  * Finds type definitions by searching through TypeScript source files.
  * Handles interfaces, type aliases, classes, and re-exported types.
  * Supports both local files and types from node_modules.
@@ -10,6 +20,7 @@ import { dirname, resolve } from "path";
 export class TypeDefinitionFinder {
   private project: Project | undefined;
   private readonly typeLocationCache = new Map<string, string | null>();
+  private readonly unexportedTypes = new Map<string, string>();
 
   /**
    * Finds the source file for a type by searching the codebase.
@@ -35,7 +46,7 @@ export class TypeDefinitionFinder {
           // Enable module resolution for node_modules support
           skipFileDependencyResolution: false,
           compilerOptions: {
-            moduleResolution: ts.ModuleResolutionKind.NodeJs,
+            moduleResolution: ts.ModuleResolutionKind.Node16,
             resolveJsonModule: true,
           },
         });
@@ -66,9 +77,16 @@ export class TypeDefinitionFinder {
     try {
       const sourceFile = this.project!.addSourceFileAtPath(filePath);
 
-      // Check if this file defines the type
+      // Check if this file defines and exports the type
       if (this.fileDefinesType(sourceFile, typeName)) {
         return filePath;
+      }
+
+      // Check if the file has the type but doesn't export it
+      const typeCheck = this.fileHasTypeDeclaration(sourceFile, typeName);
+      if (typeCheck.found && !typeCheck.exported) {
+        // Track this unexported type for warning
+        this.trackUnexportedType(typeName, typeCheck.filePath);
       }
 
       // Search through imports
@@ -175,20 +193,23 @@ export class TypeDefinitionFinder {
   }
 
   /**
-   * Checks if a source file defines a specific type.
+   * Checks if a source file defines and exports a specific type.
    * Handles interfaces, type aliases, classes, and re-exported types.
+   * Only returns true if the type is publicly exported.
    */
   private fileDefinesType(sourceFile: SourceFile, typeName: string): boolean {
-    // Check interfaces, type aliases, and classes
+    // Check exported interfaces, type aliases, and classes
     for (const decl of [
       ...sourceFile.getInterfaces(),
       ...sourceFile.getTypeAliases(),
       ...sourceFile.getClasses(),
     ]) {
-      if (decl.getName() === typeName) return true;
+      if (decl.getName() === typeName && decl.isExported()) {
+        return true;
+      }
     }
 
-    // Check exported types in export declarations
+    // Check exported types in export declarations (re-exports)
     for (const exportDecl of sourceFile.getExportDeclarations()) {
       for (const namedExport of exportDecl.getNamedExports()) {
         if (namedExport.getName() === typeName) return true;
@@ -234,11 +255,62 @@ export class TypeDefinitionFinder {
   }
 
   /**
+   * Get all types that were found to exist but are not exported.
+   * Call this after searching to get the list of types that need to be exported.
+   */
+  getUnexportedTypes(): UnexportedTypeLocation[] {
+    return Array.from(this.unexportedTypes.entries()).map(
+      ([typeName, filePath]) => ({
+        typeName,
+        filePath,
+      }),
+    );
+  }
+
+  /**
+   * Check if a file declares a type (regardless of export status).
+   * Used internally to track unexported types.
+   */
+  private fileHasTypeDeclaration(
+    sourceFile: SourceFile,
+    typeName: string,
+  ): { found: boolean; exported: boolean; filePath: string } {
+    const filePath = sourceFile.getFilePath();
+
+    // Check interfaces, type aliases, and classes
+    for (const decl of [
+      ...sourceFile.getInterfaces(),
+      ...sourceFile.getTypeAliases(),
+      ...sourceFile.getClasses(),
+    ]) {
+      if (decl.getName() === typeName) {
+        return {
+          found: true,
+          exported: decl.isExported(),
+          filePath,
+        };
+      }
+    }
+
+    return { found: false, exported: false, filePath };
+  }
+
+  /**
+   * Track an unexported type for later reporting.
+   */
+  private trackUnexportedType(typeName: string, filePath: string): void {
+    if (!this.unexportedTypes.has(typeName)) {
+      this.unexportedTypes.set(typeName, filePath);
+    }
+  }
+
+  /**
    * Disposes of internal resources and clears caches.
    * Should be called when the finder is no longer needed.
    */
   dispose(): void {
     this.typeLocationCache.clear();
+    this.unexportedTypes.clear();
     this.project = undefined;
   }
 }

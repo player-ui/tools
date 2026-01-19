@@ -889,7 +889,7 @@ exports[`Player Types Export 1`] = `
           "symbol": "T",
         },
       ],
-      "name": "SwitchCase",
+      "name": "SwitchCase<T>",
       "properties": {
         "asset": {
           "node": {
@@ -1055,7 +1055,7 @@ exports[`Player Types Export 1`] = `
                 "symbol": "T",
               },
             ],
-            "name": "StaticSwitch",
+            "name": "StaticSwitch<T>",
             "properties": {
               "staticSwitch": {
                 "node": {
@@ -1077,7 +1077,7 @@ exports[`Player Types Export 1`] = `
                         "symbol": "T",
                       },
                     ],
-                    "name": "SwitchCase",
+                    "name": "SwitchCase<T>",
                     "properties": {
                       "asset": {
                         "node": {
@@ -1125,7 +1125,7 @@ exports[`Player Types Export 1`] = `
                       "symbol": "T",
                     },
                   ],
-                  "name": "Switch",
+                  "name": "Switch<T>",
                   "source": "filename.ts",
                   "title": "StaticSwitch.staticSwitch",
                   "type": "array",
@@ -1182,7 +1182,7 @@ exports[`Player Types Export 1`] = `
                 "symbol": "T",
               },
             ],
-            "name": "DynamicSwitch",
+            "name": "DynamicSwitch<T>",
             "properties": {
               "dynamicSwitch": {
                 "node": {
@@ -1204,7 +1204,7 @@ exports[`Player Types Export 1`] = `
                         "symbol": "T",
                       },
                     ],
-                    "name": "SwitchCase",
+                    "name": "SwitchCase<T>",
                     "properties": {
                       "asset": {
                         "node": {
@@ -1252,7 +1252,7 @@ exports[`Player Types Export 1`] = `
                       "symbol": "T",
                     },
                   ],
-                  "name": "Switch",
+                  "name": "Switch<T>",
                   "source": "filename.ts",
                   "title": "DynamicSwitch.dynamicSwitch",
                   "type": "array",
@@ -1328,7 +1328,7 @@ exports[`Player Types Export 1`] = `
             "symbol": "T",
           },
         ],
-        "name": "StaticSwitch",
+        "name": "StaticSwitch<T>",
         "properties": {
           "staticSwitch": {
             "node": {
@@ -1350,7 +1350,7 @@ exports[`Player Types Export 1`] = `
                     "symbol": "T",
                   },
                 ],
-                "name": "SwitchCase",
+                "name": "SwitchCase<T>",
                 "properties": {
                   "asset": {
                     "node": {
@@ -1398,7 +1398,7 @@ exports[`Player Types Export 1`] = `
                   "symbol": "T",
                 },
               ],
-              "name": "Switch",
+              "name": "Switch<T>",
               "source": "filename.ts",
               "title": "StaticSwitch.staticSwitch",
               "type": "array",
@@ -1426,7 +1426,7 @@ exports[`Player Types Export 1`] = `
             "symbol": "T",
           },
         ],
-        "name": "DynamicSwitch",
+        "name": "DynamicSwitch<T>",
         "properties": {
           "dynamicSwitch": {
             "node": {
@@ -1448,7 +1448,7 @@ exports[`Player Types Export 1`] = `
                     "symbol": "T",
                   },
                 ],
-                "name": "SwitchCase",
+                "name": "SwitchCase<T>",
                 "properties": {
                   "asset": {
                     "node": {
@@ -1496,7 +1496,7 @@ exports[`Player Types Export 1`] = `
                   "symbol": "T",
                 },
               ],
-              "name": "Switch",
+              "name": "Switch<T>",
               "source": "filename.ts",
               "title": "DynamicSwitch.dynamicSwitch",
               "type": "array",
@@ -1549,7 +1549,7 @@ exports[`Player Types Export 1`] = `
                 "symbol": "T",
               },
             ],
-            "name": "SwitchCase",
+            "name": "SwitchCase<T>",
             "properties": {
               "asset": {
                 "node": {
@@ -1597,7 +1597,7 @@ exports[`Player Types Export 1`] = `
               "symbol": "T",
             },
           ],
-          "name": "Switch",
+          "name": "Switch<T>",
           "source": "filename.ts",
           "title": "StaticSwitch.staticSwitch",
           "type": "array",
@@ -1645,7 +1645,7 @@ exports[`Player Types Export 1`] = `
                 "symbol": "T",
               },
             ],
-            "name": "SwitchCase",
+            "name": "SwitchCase<T>",
             "properties": {
               "asset": {
                 "node": {
@@ -1693,7 +1693,7 @@ exports[`Player Types Export 1`] = `
               "symbol": "T",
             },
           ],
-          "name": "Switch",
+          "name": "Switch<T>",
           "source": "filename.ts",
           "title": "DynamicSwitch.dynamicSwitch",
           "type": "array",
@@ -5271,7 +5271,7 @@ Any reference to _index_ is replaced with the current iteration index.",
                       "type": "unknown",
                     },
                     "genericTokens": undefined,
-                    "name": "CrossfieldReference",
+                    "name": "Validation.CrossfieldReference",
                     "properties": {
                       "dataTarget": {
                         "node": {
@@ -6272,7 +6272,7 @@ Any reads for this property will result in this default value being written to t
                     },
                     "description": "A reference to a specific data format to use.
 If none is specified, will fallback to that of the base type",
-                    "name": "Reference",
+                    "name": "Formatting.Reference",
                     "properties": {
                       "type": {
                         "node": {
@@ -6313,7 +6313,7 @@ These will add to any base validations associated with the "type"",
                         "type": "unknown",
                       },
                       "description": "A reference to a validation object",
-                      "name": "Reference",
+                      "name": "Validation.Reference",
                       "properties": {
                         "dataTarget": {
                           "node": {
@@ -6441,7 +6441,7 @@ This will be used to lookup the proper handler",
           "description": "The schema for the supplied (or referenced data).
 This is used for validation, formatting, etc",
           "genericTokens": undefined,
-          "name": "Schema",
+          "name": "Schema.Schema",
           "properties": {
             "ROOT": {
               "node": {
@@ -6481,7 +6481,7 @@ Any reads for this property will result in this default value being written to t
                         "description": "A reference to a specific data format to use.
 If none is specified, will fallback to that of the base type",
                         "genericTokens": undefined,
-                        "name": "Reference",
+                        "name": "Formatting.Reference",
                         "properties": {
                           "type": {
                             "node": {
@@ -6524,7 +6524,7 @@ These will add to any base validations associated with the "type"",
                           },
                           "description": "A reference to a validation object",
                           "genericTokens": undefined,
-                          "name": "Reference",
+                          "name": "Validation.Reference",
                           "properties": {
                             "dataTarget": {
                               "node": {
@@ -6687,7 +6687,7 @@ This will be used to lookup the proper handler",
                 "symbol": "T",
               },
             ],
-            "name": "View",
+            "name": "View<T>",
             "source": "filename.ts",
             "title": "View",
             "type": "conditional",
@@ -6714,7 +6714,7 @@ This will be used to lookup the proper handler",
                               "type": "unknown",
                             },
                             "extends": undefined,
-                            "name": "CrossfieldReference",
+                            "name": "Validation.CrossfieldReference",
                             "properties": {
                               "dataTarget": {
                                 "node": {

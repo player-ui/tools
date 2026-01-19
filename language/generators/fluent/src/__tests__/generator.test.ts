@@ -525,7 +525,7 @@ describe("Improvements over old fluent-gen-ts", () => {
   });
 });
 
-describe("Integration with Real Mock Types", () => {
+describe("Integration with Complex Type Patterns", () => {
   test("generates builder for TextAsset", () => {
     const source = `
       interface Asset<T extends string = string> {
@@ -1961,5 +1961,132 @@ describe("Bug Fixes", () => {
       expect(code).toContain("LinkModifier");
       expect(code).toContain("FormatModifier");
     });
+  });
+});
+
+describe("Namespaced Types", () => {
+  test("preserves full qualified name for namespaced types in constraints", () => {
+    const source = `
+      interface Asset<T extends string = string> {
+        id: string;
+        type: T;
+      }
+
+      namespace Validation {
+        export interface CrossfieldReference {
+          field: string;
+          condition: string;
+        }
+      }
+
+      export interface InputAsset extends Asset<"input"> {
+        binding: string;
+        validation?: Validation.CrossfieldReference;
+      }
+    `;
+
+    const types = convertTsToXLR(source);
+    const inputAsset = types.find(
+      (t) => t.name === "InputAsset",
+    ) as NamedType<ObjectType>;
+    const code = generateFluentBuilder(inputAsset);
+
+    // Should preserve the full qualified name
+    expect(code).toContain("Validation.CrossfieldReference");
+  });
+
+  test("handles namespaced types in generic arguments", () => {
+    const source = `
+      interface Asset<T extends string = string> {
+        id: string;
+        type: T;
+      }
+
+      namespace Config {
+        export interface Settings {
+          enabled: boolean;
+        }
+      }
+
+      export interface AppAsset extends Asset<"app"> {
+        settings?: Config.Settings;
+        allSettings?: Array<Config.Settings>;
+      }
+    `;
+
+    const types = convertTsToXLR(source);
+    const appAsset = types.find(
+      (t) => t.name === "AppAsset",
+    ) as NamedType<ObjectType>;
+    const code = generateFluentBuilder(appAsset);
+
+    // Should preserve the namespace in type references
+    expect(code).toContain("Config.Settings");
+  });
+
+  test("imports namespace for namespaced types", () => {
+    const source = `
+      interface Asset<T extends string = string> {
+        id: string;
+        type: T;
+      }
+
+      namespace Types {
+        export interface Data {
+          value: string;
+        }
+      }
+
+      export interface DataAsset extends Asset<"data"> {
+        data?: Types.Data;
+      }
+    `;
+
+    const types = convertTsToXLR(source);
+    const dataAsset = types.find(
+      (t) => t.name === "DataAsset",
+    ) as NamedType<ObjectType>;
+
+    // Configure Types namespace as external
+    const externalTypes = new Map<string, string>();
+    externalTypes.set("Types", "@custom/types");
+
+    const code = generateFluentBuilder(dataAsset, { externalTypes });
+
+    // Should import the namespace
+    expect(code).toContain('import type { Types } from "@custom/types"');
+    // Should use the full qualified name in the code
+    expect(code).toContain("Types.Data");
+  });
+});
+
+describe("Generic Type Arguments Preservation", () => {
+  test("preserves string literal generic arguments in type names", () => {
+    const source = `
+      interface Asset<T extends string = string> {
+        id: string;
+        type: T;
+      }
+
+      export interface SimpleModifier<T extends string> {
+        type: T;
+        value: string;
+      }
+
+      export interface TextAsset extends Asset<"text"> {
+        value: string;
+        modifiers?: Array<SimpleModifier<"format"> | SimpleModifier<"link">>;
+      }
+    `;
+
+    const types = convertTsToXLR(source);
+    const textAsset = types.find(
+      (t) => t.name === "TextAsset",
+    ) as NamedType<ObjectType>;
+    const code = generateFluentBuilder(textAsset);
+
+    // Should preserve the generic arguments in the type
+    expect(code).toContain('SimpleModifier<"format">');
+    expect(code).toContain('SimpleModifier<"link">');
   });
 });

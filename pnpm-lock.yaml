@@ -589,10 +589,16 @@ importers:
       '@player-tools/xlr-utils':
         specifier: workspace:*
         version: link:../../../xlr/utils
+      '@player-ui/types':
+        specifier: '>=0.12.0'
+        version: 0.14.1
       ts-morph:
         specifier: ^24.0.0
         version: 24.0.0
     devDependencies:
+      '@player-tools/fluent':
+        specifier: workspace:*
+        version: link:../../dsl/fluent
       '@player-tools/test-utils':
         specifier: workspace:*
         version: link:../../../common/test-utils
@@ -3282,6 +3288,9 @@ packages:
 
   '@player-ui/types@0.12.0-next.1':
     resolution: {integrity: sha512-9rILZKIvu6lSGQZ7oVIqzwk7ap6clo7E4iutS0PUJoGkjlwsDEpGIDu1O7wiKRJNmYmY0GCL4JOJdglCFEJnRA==, tarball: https://registry.npmjs.org/@player-ui/types/-/types-0.12.0-next.1.tgz}
+
+  '@player-ui/types@0.14.1':
+    resolution: {integrity: sha512-AXBKPMLm+vhEvQeaevKiOSYXo5B6H0qga1iwEZhXAaZ0zOWqAv+bxEHVK87RVQpJAxRAqO64bsJ7G9LD9XGr3g==, tarball: https://registry.npmjs.org/@player-ui/types/-/types-0.14.1.tgz}
 
   '@player-ui/types@0.7.2-next.4':
     resolution: {integrity: sha512-wvKlmu+ZJSVT5fs/vHHwpv4KhgZmqinJBvHhttU4LHzqrEauaRcS/DVCItABXt6ABxhIakPInnxQtH1xCwdDyQ==, tarball: https://registry.npmjs.org/@player-ui/types/-/types-0.7.2-next.4.tgz}
@@ -15696,6 +15705,10 @@ snapshots:
       tslib: 2.6.3
 
   '@player-ui/types@0.12.0-next.1':
+    dependencies:
+      tslib: 2.6.3
+
+  '@player-ui/types@0.14.1':
     dependencies:
       tslib: 2.6.3
 

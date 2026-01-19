@@ -1001,9 +1001,11 @@ export class TsConverter {
 
   private resolveRefNode(node: ts.TypeReferenceNode): NodeType {
     let refName: string;
+    let namespace: string | undefined;
 
     if (node.typeName.kind === ts.SyntaxKind.QualifiedName) {
-      refName = `${node.typeName.left.getText()}.${node.typeName.right.getText()}`;
+      namespace = node.typeName.left.getText();
+      refName = node.typeName.right.getText();
     } else {
       refName = node.typeName.text;
     }
@@ -1070,19 +1072,39 @@ export class TsConverter {
     if (!this.context.customPrimitives.includes(refName)) {
       const typeInfo = getReferencedType(node, this.context.typeChecker);
       if (typeInfo) {
-        const genericType = this.convertTopLevelNode(typeInfo.declaration);
+        const convertedType = this.convertTopLevelNode(typeInfo.declaration);
         const genericParams = typeInfo.declaration.typeParameters;
         const genericArgs = node.typeArguments;
-        if (genericType && genericParams && genericArgs) {
-          return this.resolveGenerics(
-            genericType as NamedTypeWithGenerics,
+        if (convertedType && genericParams && genericArgs) {
+          const resolvedType = this.resolveGenerics(
+            convertedType as NamedTypeWithGenerics,
             genericParams,
             genericArgs,
           );
+
+          // Preserve full type name including generic arguments for instantiated generics
+          // e.g., SimpleModifier<"format"> should keep the name as "SimpleModifier<'format'>"
+          if ("name" in resolvedType && genericArgs.length > 0) {
+            const argsText = Array.from(genericArgs)
+              .map((arg) => arg.getText())
+              .join(", ");
+            const baseName = namespace ? `${namespace}.${refName}` : refName;
+            return { ...resolvedType, name: `${baseName}<${argsText}>` };
+          }
+
+          // Preserve full qualified name for namespaced types (e.g., Validation.CrossfieldReference)
+          if (namespace && "name" in resolvedType) {
+            return { ...resolvedType, name: `${namespace}.${refName}` };
+          }
+          return resolvedType;
         }
 
-        if (genericType) {
-          return genericType;
+        if (convertedType) {
+          // Preserve full qualified name for namespaced types (e.g., Validation.CrossfieldReference)
+          if (namespace && "name" in convertedType) {
+            return { ...convertedType, name: `${namespace}.${refName}` };
+          }
+          return convertedType;
         }
       }
 
@@ -1156,13 +1178,17 @@ export class TsConverter {
       });
     }
 
-    let ref;
-    if (
-      node.pos === -1 &&
-      ts.isTypeReferenceNode(node) &&
-      ts.isIdentifier(node.typeName)
-    ) {
-      ref = node.typeName.text;
+    let ref: string;
+
+    if (ts.isTypeReferenceNode(node)) {
+      // Handle qualified names (e.g., Validation.CrossfieldReference) - keep full path in ref
+      if (node.typeName.kind === ts.SyntaxKind.QualifiedName) {
+        ref = `${node.typeName.left.getText()}.${node.typeName.right.getText()}`;
+      } else if (node.pos === -1 && ts.isIdentifier(node.typeName)) {
+        ref = node.typeName.text;
+      } else {
+        ref = node.getText();
+      }
     } else {
       ref = node.getText();
     }
