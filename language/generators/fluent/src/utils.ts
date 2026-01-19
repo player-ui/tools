@@ -5,6 +5,7 @@ import type {
   StringType,
   NumberType,
   BooleanType,
+  TupleType,
 } from "@player-tools/xlr";
 
 import {
@@ -33,6 +34,13 @@ export {
   isRecordType,
   isNamedType,
 };
+
+/**
+ * Type guard for tuple type nodes
+ */
+export function isTupleType(node: NodeType): node is TupleType {
+  return node.type === "tuple";
+}
 
 /**
  * Check if a primitive type has a const value (literal type)

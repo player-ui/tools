@@ -405,5 +405,275 @@ describe("TypeTransformer", () => {
       expect(result).not.toContain('"normalProp"');
       expect(result).toContain("normalProp:");
     });
+
+    test("quotes property names with dots", () => {
+      const node: NodeType = {
+        type: "object",
+        properties: {
+          "data.path": { required: true, node: { type: "string" } },
+        },
+      };
+      const result = transformer.generateInlineObjectType(node, false);
+      expect(result).toContain('"data.path"');
+    });
+
+    test("quotes property names with spaces", () => {
+      const node: NodeType = {
+        type: "object",
+        properties: {
+          "my property": { required: true, node: { type: "string" } },
+        },
+      };
+      const result = transformer.generateInlineObjectType(node, false);
+      expect(result).toContain('"my property"');
+    });
+
+    test("does not quote reserved words (valid in TypeScript)", () => {
+      const node: NodeType = {
+        type: "object",
+        properties: {
+          class: { required: true, node: { type: "string" } },
+          default: { required: false, node: { type: "number" } },
+        },
+      };
+      const result = transformer.generateInlineObjectType(node, false);
+      // Reserved words are valid property names in TypeScript without quotes
+      expect(result).toContain("class:");
+      expect(result).toContain("default?:");
+      expect(result).not.toContain('"class"');
+      expect(result).not.toContain('"default"');
+    });
+  });
+
+  describe("Generic Parameter Handling (Edge Cases)", () => {
+    test("handles generic with extends constraint", () => {
+      context.addGenericParam("T");
+
+      const node: NodeType = { type: "ref", ref: "T" };
+      const result = transformer.transformTypeForConstraint(node);
+
+      // T is a generic param, should return as-is
+      expect(result).toBe("T");
+      expect(context.trackedTypes).not.toContain("T");
+    });
+
+    test("handles generic with extends and default", () => {
+      context.addGenericParam("T");
+      context.addGenericParam("U");
+
+      const node: NodeType = {
+        type: "ref",
+        ref: "Container",
+        genericArguments: [
+          { type: "ref", ref: "T" },
+          { type: "ref", ref: "U" },
+        ],
+      };
+      const result = transformer.transformTypeForConstraint(node);
+
+      expect(result).toBe("Container<T, U>");
+      expect(context.trackedTypes).not.toContain("T");
+      expect(context.trackedTypes).not.toContain("U");
+      expect(context.trackedTypes).toContain("Container");
+    });
+
+    test("handles Record with generic param value type in constraints", () => {
+      context.addGenericParam("T");
+      context.addGenericParam("U");
+
+      const node: NodeType = {
+        type: "record",
+        keyType: { type: "string" },
+        valueType: { type: "ref", ref: "U" },
+      };
+      const result = transformer.transformTypeForConstraint(node);
+
+      // Record falls through to transformType which adds FluentBuilder union for ref types
+      expect(result).toBe(
+        "Record<string, U | FluentBuilder<U, BaseBuildContext>>",
+      );
+    });
+
+    test("deduplicates identical generic parameters", () => {
+      context.addGenericParam("T");
+
+      // Using T in multiple places
+      const node: NodeType = {
+        type: "or",
+        or: [
+          { type: "ref", ref: "T" },
+          { type: "array", elementType: { type: "ref", ref: "T" } },
+        ],
+      };
+      const result = transformer.transformTypeForConstraint(node);
+
+      expect(result).toContain("T");
+    });
+  });
+
+  describe("Deeply Nested Object Types", () => {
+    test("handles deeply nested object types (5+ levels)", () => {
+      const node: NodeType = {
+        type: "object",
+        properties: {
+          level1: {
+            required: true,
+            node: {
+              type: "object",
+              properties: {
+                level2: {
+                  required: true,
+                  node: {
+                    type: "object",
+                    properties: {
+                      level3: {
+                        required: true,
+                        node: {
+                          type: "object",
+                          properties: {
+                            level4: {
+                              required: true,
+                              node: {
+                                type: "object",
+                                properties: {
+                                  level5: {
+                                    required: true,
+                                    node: { type: "string" },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
+
+      const result = transformer.generateInlineObjectType(node, false);
+      expect(result).toContain("level1:");
+      expect(result).toContain("level2:");
+      expect(result).toContain("level3:");
+      expect(result).toContain("level4:");
+      expect(result).toContain("level5:");
+      expect(result).toContain("string");
+    });
+  });
+
+  describe("Tuple Types", () => {
+    test("transforms basic tuple type", () => {
+      const node: NodeType = {
+        type: "tuple",
+        elementTypes: [
+          { type: { type: "string" } },
+          { type: { type: "number" } },
+          { type: { type: "boolean" } },
+        ],
+        minItems: 3,
+        additionalItems: false,
+      };
+      const result = transformer.transformType(node, false);
+      expect(result).toBe("[string, number, boolean]");
+    });
+
+    test("transforms tuple type with TaggedTemplateValue", () => {
+      const node: NodeType = {
+        type: "tuple",
+        elementTypes: [
+          { type: { type: "string" } },
+          { type: { type: "number" } },
+        ],
+        minItems: 2,
+        additionalItems: false,
+      };
+      const result = transformer.transformType(node, true);
+      expect(result).toBe(
+        "[string | TaggedTemplateValue<string>, number | TaggedTemplateValue<number>]",
+      );
+    });
+
+    test("transforms tuple type with optional elements", () => {
+      const node: NodeType = {
+        type: "tuple",
+        elementTypes: [
+          { type: { type: "string" } },
+          { type: { type: "number" }, optional: true },
+          { type: { type: "boolean" }, optional: true },
+        ],
+        minItems: 1,
+        additionalItems: false,
+      };
+      const result = transformer.transformType(node, false);
+      expect(result).toBe("[string, number?, boolean?]");
+    });
+
+    test("transforms tuple type with rest element", () => {
+      const node: NodeType = {
+        type: "tuple",
+        elementTypes: [
+          { type: { type: "string" } },
+          { type: { type: "number" } },
+        ],
+        minItems: 2,
+        additionalItems: { type: "boolean" },
+      };
+      const result = transformer.transformType(node, false);
+      expect(result).toBe("[string, number, ...boolean[]]");
+    });
+
+    test("transforms tuple type with ref elements", () => {
+      const node: NodeType = {
+        type: "tuple",
+        elementTypes: [
+          { type: { type: "ref", ref: "Asset" } },
+          { type: { type: "ref", ref: "CustomType" } },
+        ],
+        minItems: 2,
+        additionalItems: false,
+      };
+      const result = transformer.transformType(node, false);
+      expect(result).toBe(
+        "[Asset, CustomType | FluentBuilder<CustomType, BaseBuildContext>]",
+      );
+      expect(context.getNeedsAssetImport()).toBe(true);
+    });
+
+    test("transformTypeForConstraint handles tuple types", () => {
+      const node: NodeType = {
+        type: "tuple",
+        elementTypes: [
+          { type: { type: "string" } },
+          { type: { type: "ref", ref: "Item" } },
+        ],
+        minItems: 2,
+        additionalItems: false,
+      };
+      const result = transformer.transformTypeForConstraint(node);
+      // Constraints should not have FluentBuilder unions
+      expect(result).toBe("[string, Item]");
+    });
+  });
+
+  describe("Object additionalProperties Handling", () => {
+    test("ignores additionalProperties in object types", () => {
+      // additionalProperties (index signatures) are not supported in inline object generation
+      const node: NodeType = {
+        type: "object",
+        properties: {
+          name: { required: true, node: { type: "string" } },
+        },
+        additionalProperties: { type: "string" },
+      };
+
+      const result = transformer.generateInlineObjectType(node, false);
+      // Only explicit properties are included, additionalProperties is ignored
+      expect(result).toContain("name: string");
+      expect(result).not.toContain("[key:");
+    });
   });
 });

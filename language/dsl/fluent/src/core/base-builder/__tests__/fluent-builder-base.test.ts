@@ -2255,3 +2255,169 @@ describe("FluentBuilderBase - Nested Objects ID Generation", () => {
     }
   });
 });
+
+describe("FluentBuilderBase - Conditional Edge Cases", () => {
+  beforeEach(() => {
+    resetGlobalIdSet();
+  });
+
+  test("if() evaluates predicate during if() call", () => {
+    let predicateEvaluationCount = 0;
+
+    const builder = action()
+      .withValue("test")
+      .if(
+        () => {
+          predicateEvaluationCount++;
+          return true;
+        },
+        "metaData",
+        { role: "primary" },
+      );
+
+    // Predicate is evaluated during the if() call (not lazily during build)
+    expect(predicateEvaluationCount).toBe(1);
+
+    // Building should not re-evaluate the predicate
+    const previousCount = predicateEvaluationCount;
+    builder.build({ parentId: "test" });
+    expect(predicateEvaluationCount).toBe(previousCount);
+  });
+
+  test("if() handles value that is undefined", () => {
+    const includeMetaData = true;
+
+    const actionAsset = action()
+      .withValue("test")
+      .if(() => includeMetaData, "metaData", undefined)
+      .build({ parentId: "view-1" });
+
+    // When value is undefined, property should not be set
+    expect(actionAsset.metaData).toBeUndefined();
+  });
+
+  test("ifElse() evaluates predicate only once", () => {
+    let predicateEvaluationCount = 0;
+
+    const actionAsset = action()
+      .withValue("test")
+      .ifElse(
+        () => {
+          predicateEvaluationCount++;
+          return predicateEvaluationCount > 0;
+        },
+        "metaData",
+        { role: "primary" },
+        { role: "secondary" },
+      )
+      .build({ parentId: "view-1" });
+
+    // Predicate should be evaluated exactly once
+    expect(predicateEvaluationCount).toBe(1);
+    expect(actionAsset.metaData).toEqual({ role: "primary" });
+  });
+
+  test("ifElse() handles both values being functions", () => {
+    const isPrimary = true;
+
+    const actionAsset = action()
+      .withValue("test")
+      .ifElse(
+        () => isPrimary,
+        "label",
+        () => text().withValue("Primary Label"),
+        () => text().withValue("Secondary Label"),
+      )
+      .build({ parentId: "view-1" });
+
+    expect(actionAsset.label?.asset.value).toBe("Primary Label");
+  });
+
+  test("ifElse() evaluates only the chosen value function", () => {
+    let primaryFnCalled = false;
+    let secondaryFnCalled = false;
+
+    const isPrimary = true;
+
+    const actionAsset = action()
+      .withValue("test")
+      .ifElse(
+        () => isPrimary,
+        "label",
+        () => {
+          primaryFnCalled = true;
+          return text().withValue("Primary");
+        },
+        () => {
+          secondaryFnCalled = true;
+          return text().withValue("Secondary");
+        },
+      )
+      .build({ parentId: "view-1" });
+
+    // Only the chosen value function should be called
+    expect(primaryFnCalled).toBe(true);
+    expect(secondaryFnCalled).toBe(false);
+    expect(actionAsset.label?.asset.value).toBe("Primary");
+  });
+
+  test("if() works with complex predicate accessing builder state", () => {
+    const actionAsset = action()
+      .withValue("submit")
+      .if(
+        (builder) => {
+          const currentValue = builder.peek("value");
+          return currentValue === "submit";
+        },
+        "metaData",
+        { role: "primary" },
+      )
+      .build({ parentId: "view-1" });
+
+    expect(actionAsset.metaData).toEqual({ role: "primary" });
+  });
+
+  test("if() does not set property when predicate returns false with builder", () => {
+    const actionAsset = action()
+      .withValue("cancel")
+      .if(
+        (builder) => {
+          const currentValue = builder.peek("value");
+          return currentValue === "submit";
+        },
+        "metaData",
+        { role: "primary" },
+      )
+      .build({ parentId: "view-1" });
+
+    expect(actionAsset.metaData).toBeUndefined();
+  });
+
+  test("multiple if() calls are all evaluated", () => {
+    const conditions = {
+      first: true,
+      second: false,
+      third: true,
+    };
+
+    const actionAsset = action()
+      .withValue("test")
+      .if(() => conditions.first, "metaData", { role: "primary" })
+      .if(() => conditions.second, "accessibility", "Accessible button")
+      .build({ parentId: "view-1" });
+
+    expect(actionAsset.metaData).toEqual({ role: "primary" });
+    expect(actionAsset.accessibility).toBeUndefined();
+  });
+
+  test("if() with false predicate does not affect subsequent with calls", () => {
+    const actionAsset = action()
+      .if(() => false, "value", "shouldNotAppear")
+      .withValue("actualValue")
+      .withLabel(text().withValue("Label"))
+      .build({ parentId: "view-1" });
+
+    expect(actionAsset.value).toBe("actualValue");
+    expect(actionAsset.label?.asset.value).toBe("Label");
+  });
+});

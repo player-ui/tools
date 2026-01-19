@@ -313,6 +313,126 @@ describe("BuilderClassGenerator", () => {
       expect(code).toContain("__arrayProperties__");
       expect(code).toContain('"validate"');
     });
+
+    test("generates __arrayProperties__ with all array property names", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+        type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+        export interface CollectionAsset extends Asset<"collection"> {
+          values: Array<AssetWrapper<Asset>>;
+          actions: Array<AssetWrapper<Asset>>;
+          items: Array<string>;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const asset = types.find(
+        (t) => t.name === "CollectionAsset",
+      ) as NamedType<ObjectType>;
+      const info = createBuilderInfo(asset);
+
+      const code = generator.generateBuilderClass(info);
+
+      expect(code).toContain("__arrayProperties__");
+      expect(code).toContain('"values"');
+      expect(code).toContain('"actions"');
+      expect(code).toContain('"items"');
+    });
+
+    test("handles properties with union types containing arrays", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+
+        export interface FlexibleAsset extends Asset<"flexible"> {
+          data?: string | number | Array<string>;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const asset = types.find(
+        (t) => t.name === "FlexibleAsset",
+      ) as NamedType<ObjectType>;
+      const info = createBuilderInfo(asset);
+
+      const code = generator.generateBuilderClass(info);
+
+      // Should detect array within the union
+      expect(code).toContain("__arrayProperties__");
+      expect(code).toContain('"data"');
+    });
+  });
+
+  describe("Generic Class Generation", () => {
+    test("generates class with constrained generic parameters", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+
+        interface ConstraintType {
+          name: string;
+        }
+
+        export interface ConstrainedAsset<T extends ConstraintType = ConstraintType> extends Asset<"constrained"> {
+          data: T;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const asset = types.find(
+        (t) => t.name === "ConstrainedAsset",
+      ) as NamedType<ObjectType>;
+      const info: BuilderInfo = {
+        ...createBuilderInfo(asset),
+        genericParams: "T extends ConstraintType = ConstraintType",
+      };
+
+      const code = generator.generateBuilderClass(info);
+
+      expect(code).toContain(
+        "export class ConstrainedAssetBuilder<T extends ConstraintType = ConstraintType>",
+      );
+    });
+
+    test("generates interface with generic parameters", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+
+        export interface ParameterizedAsset<T, U extends string = "default"> extends Asset<"param"> {
+          first?: T;
+          second?: U;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const asset = types.find(
+        (t) => t.name === "ParameterizedAsset",
+      ) as NamedType<ObjectType>;
+      const info: BuilderInfo = {
+        ...createBuilderInfo(asset),
+        genericParams: 'T, U extends string = "default"',
+      };
+
+      const code = generator.generateBuilderClass(info);
+
+      expect(code).toContain(
+        'export interface ParameterizedAssetBuilderMethods<T, U extends string = "default">',
+      );
+      expect(code).toContain(
+        'export function parameterized<T, U extends string = "default">(',
+      );
+    });
   });
 
   describe("Interface Methods", () => {

@@ -409,3 +409,126 @@ describe("ID Registry with real-world scenarios", () => {
     expect(ids[3]).toBe("page-header-1");
   });
 });
+
+describe("Template Placeholder Handling", () => {
+  let registry: IDRegistry;
+
+  beforeEach(() => {
+    registry = new IDRegistry();
+  });
+
+  test("allows duplicate IDs ending with _index_", () => {
+    const id1 = registry.ensureUnique("list-_index_");
+    const id2 = registry.ensureUnique("list-_index_");
+    const id3 = registry.ensureUnique("list-_index_");
+
+    expect(id1).toBe("list-_index_");
+    expect(id2).toBe("list-_index_");
+    expect(id3).toBe("list-_index_");
+  });
+
+  test("allows duplicate IDs ending with _index1_", () => {
+    const id1 = registry.ensureUnique("nested-_index1_");
+    const id2 = registry.ensureUnique("nested-_index1_");
+
+    expect(id1).toBe("nested-_index1_");
+    expect(id2).toBe("nested-_index1_");
+  });
+
+  test("allows duplicate IDs ending with _row_", () => {
+    const id1 = registry.ensureUnique("table-_row_");
+    const id2 = registry.ensureUnique("table-_row_");
+
+    expect(id1).toBe("table-_row_");
+    expect(id2).toBe("table-_row_");
+  });
+
+  test("allows duplicate IDs ending with _item_", () => {
+    const id1 = registry.ensureUnique("list-_item_");
+    const id2 = registry.ensureUnique("list-_item_");
+
+    expect(id1).toBe("list-_item_");
+    expect(id2).toBe("list-_item_");
+  });
+
+  test("enforces uniqueness for IDs with placeholder in middle", () => {
+    const id1 = registry.ensureUnique("list-_index_-field");
+    const id2 = registry.ensureUnique("list-_index_-field");
+
+    // Should enforce uniqueness because placeholder is not at the end
+    expect(id1).toBe("list-_index_-field");
+    expect(id2).toBe("list-_index_-field-1");
+  });
+
+  test("enforces uniqueness for IDs with _index prefix but not template placeholder", () => {
+    // _index is not a valid placeholder, only _index_ is
+    const id1 = registry.ensureUnique("list-_index");
+    const id2 = registry.ensureUnique("list-_index");
+
+    expect(id1).toBe("list-_index");
+    expect(id2).toBe("list-_index-1");
+  });
+});
+
+describe("Registry Edge Cases", () => {
+  let registry: IDRegistry;
+
+  beforeEach(() => {
+    registry = new IDRegistry();
+  });
+
+  test("handles IDs with special characters", () => {
+    const id1 = registry.ensureUnique("id-with-special/chars");
+    const id2 = registry.ensureUnique("id-with-special/chars");
+
+    expect(id1).toBe("id-with-special/chars");
+    expect(id2).toBe("id-with-special/chars-1");
+  });
+
+  test("handles very long IDs", () => {
+    const longId = "a".repeat(500);
+    const id1 = registry.ensureUnique(longId);
+    const id2 = registry.ensureUnique(longId);
+
+    expect(id1).toBe(longId);
+    expect(id2).toBe(longId + "-1");
+  });
+
+  test("setEnabled(false) bypasses all checks", () => {
+    registry.setEnabled(false);
+
+    const id1 = registry.ensureUnique("test");
+    const id2 = registry.ensureUnique("test");
+    const id3 = registry.ensureUnique("test");
+
+    expect(id1).toBe("test");
+    expect(id2).toBe("test");
+    expect(id3).toBe("test");
+
+    // Also should not track them
+    registry.setEnabled(true);
+    const id4 = registry.ensureUnique("test");
+    expect(id4).toBe("test"); // First unique since registry was disabled
+  });
+
+  test("handles numeric-looking IDs", () => {
+    const id1 = registry.ensureUnique("123");
+    const id2 = registry.ensureUnique("123");
+
+    expect(id1).toBe("123");
+    expect(id2).toBe("123-1");
+  });
+
+  test("handles IDs with hyphens that look like collision suffixes", () => {
+    // First register "test-1" as a base ID
+    const id1 = registry.ensureUnique("test-1");
+    // Try to register "test" which would normally get "-1" suffix
+    const id2 = registry.ensureUnique("test");
+    const id3 = registry.ensureUnique("test");
+
+    expect(id1).toBe("test-1");
+    expect(id2).toBe("test");
+    // The registry uses a simple counter per base ID, so "test" -> "test-2" (not "test-1-1")
+    expect(id3).toBe("test-2");
+  });
+});

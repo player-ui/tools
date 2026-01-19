@@ -10,6 +10,7 @@ import {
   isAndType,
   isRecordType,
   isNamedType,
+  isTupleType,
   isPrimitiveConst,
   isBuiltinType,
   extractBaseName,
@@ -119,6 +120,23 @@ export class TypeTransformer {
       return `${inlineType} | FluentBuilder<${inlineType}, BaseBuildContext>`;
     }
 
+    // Tuple types - transform to TypeScript tuple syntax [T1, T2, ...]
+    if (isTupleType(node)) {
+      const elements = node.elementTypes.map((member) => {
+        const elementType = this.transformType(member.type, forParameter);
+        return member.optional ? `${elementType}?` : elementType;
+      });
+
+      // Handle rest elements (additionalItems)
+      // additionalItems is either false or a NodeType; truthy check suffices
+      if (node.additionalItems) {
+        const restType = this.transformType(node.additionalItems, forParameter);
+        elements.push(`...${restType}[]`);
+      }
+
+      return `[${elements.join(", ")}]`;
+    }
+
     // Handle other primitive types
     if (node.type === "null") return "null";
     if (node.type === "undefined") return "undefined";
@@ -212,6 +230,23 @@ export class TypeTransformer {
     if (isAndType(node)) {
       const parts = node.and.map((p) => this.transformTypeForConstraint(p));
       return parts.join(" & ");
+    }
+
+    // Tuple types - transform to TypeScript tuple syntax for constraints
+    if (isTupleType(node)) {
+      const elements = node.elementTypes.map((member) => {
+        const elementType = this.transformTypeForConstraint(member.type);
+        return member.optional ? `${elementType}?` : elementType;
+      });
+
+      // Handle rest elements (additionalItems)
+      // additionalItems is either false or a NodeType; truthy check suffices
+      if (node.additionalItems) {
+        const restType = this.transformTypeForConstraint(node.additionalItems);
+        elements.push(`...${restType}[]`);
+      }
+
+      return `[${elements.join(", ")}]`;
     }
 
     // For primitives, use standard transformation (no FluentBuilder needed anyway)

@@ -661,4 +661,155 @@ describe("Switch Integration with FluentBuilderBase", () => {
       expect(result.values?.[2]).not.toBeInstanceOf(Array);
     });
   });
+
+  describe("Case Index Offsets", () => {
+    test("first switch cases start at index 0", () => {
+      const builder = new TestAssetBuilder()
+        .value("original")
+        .switch(["value"], {
+          cases: [
+            {
+              case: expression`cond1`,
+              asset: new TestAssetBuilder().value("First"),
+            },
+            { case: true, asset: new TestAssetBuilder().value("Default") },
+          ],
+        });
+
+      const result = builder.build({ parentId: "test" });
+
+      // Case indices appear in generated IDs as staticSwitch-N
+      expect(result.value).toHaveProperty("staticSwitch");
+      if (
+        typeof result.value === "object" &&
+        result.value !== null &&
+        "staticSwitch" in result.value &&
+        Array.isArray(result.value.staticSwitch)
+      ) {
+        const cases = result.value.staticSwitch as Array<{
+          asset: { id: string };
+        }>;
+        expect(cases[0].asset.id).toContain("staticSwitch-0");
+        expect(cases[1].asset.id).toContain("staticSwitch-1");
+      }
+    });
+
+    test("second switch cases start after first switch", () => {
+      // When multiple switches exist on different properties,
+      // their case indices should be offset
+      const builder = new CollectionBuilder()
+        .withValues([new TestAssetBuilder().value("Item 1")])
+        .switch(["values", 0], {
+          cases: [
+            {
+              case: expression`cond1`,
+              asset: new TestAssetBuilder().value("First"),
+            },
+            {
+              case: expression`cond2`,
+              asset: new TestAssetBuilder().value("Second"),
+            },
+            { case: true, asset: new TestAssetBuilder().value("Third") },
+          ],
+        });
+
+      const result = builder.build({ parentId: "test" });
+
+      // With 3 cases in the first switch, indices 0-2 are used
+      if (
+        result.values &&
+        Array.isArray(result.values) &&
+        result.values[0] &&
+        typeof result.values[0] === "object" &&
+        "staticSwitch" in result.values[0] &&
+        Array.isArray(result.values[0].staticSwitch)
+      ) {
+        const cases = result.values[0].staticSwitch as Array<{
+          asset: { id: string };
+        }>;
+        expect(cases).toHaveLength(3);
+        expect(cases[0].asset.id).toContain("staticSwitch-0");
+        expect(cases[1].asset.id).toContain("staticSwitch-1");
+        expect(cases[2].asset.id).toContain("staticSwitch-2");
+      }
+    });
+
+    test("case indices appear in generated IDs", () => {
+      const builder = new TestAssetBuilder()
+        .value("original")
+        .switch(["value"], {
+          cases: [
+            { case: expression`a`, asset: new TestAssetBuilder().value("A") },
+            { case: expression`b`, asset: new TestAssetBuilder().value("B") },
+            { case: expression`c`, asset: new TestAssetBuilder().value("C") },
+            { case: expression`d`, asset: new TestAssetBuilder().value("D") },
+            { case: true, asset: new TestAssetBuilder().value("E") },
+          ],
+        });
+
+      const result = builder.build({ parentId: "test" });
+
+      if (
+        typeof result.value === "object" &&
+        result.value !== null &&
+        "staticSwitch" in result.value &&
+        Array.isArray(result.value.staticSwitch)
+      ) {
+        const cases = result.value.staticSwitch as Array<{
+          asset: { id: string };
+        }>;
+        expect(cases).toHaveLength(5);
+        expect(cases[0].asset.id).toBe("test-test-value-staticSwitch-0-test");
+        expect(cases[1].asset.id).toBe("test-test-value-staticSwitch-1-test");
+        expect(cases[2].asset.id).toBe("test-test-value-staticSwitch-2-test");
+        expect(cases[3].asset.id).toBe("test-test-value-staticSwitch-3-test");
+        expect(cases[4].asset.id).toBe("test-test-value-staticSwitch-4-test");
+      }
+    });
+
+    test("dynamic switch case indices follow same pattern", () => {
+      const builder = new TestAssetBuilder()
+        .value("original")
+        .switch(["value"], {
+          cases: [
+            {
+              case: expression`cond`,
+              asset: new TestAssetBuilder().value("A"),
+            },
+            { case: true, asset: new TestAssetBuilder().value("B") },
+          ],
+          isDynamic: true,
+        });
+
+      const result = builder.build({ parentId: "test" });
+
+      if (
+        typeof result.value === "object" &&
+        result.value !== null &&
+        "dynamicSwitch" in result.value &&
+        Array.isArray(result.value.dynamicSwitch)
+      ) {
+        const cases = result.value.dynamicSwitch as Array<{
+          asset: { id: string };
+        }>;
+        expect(cases[0].asset.id).toBe("test-test-value-dynamicSwitch-0-test");
+        expect(cases[1].asset.id).toBe("test-test-value-dynamicSwitch-1-test");
+      }
+    });
+  });
+
+  describe("Array Property Handling", () => {
+    test("wraps result in array for array-type properties", () => {
+      // When switching an entire array property, result should be wrapped
+      const builder = new CollectionBuilder().switch(["values"], {
+        cases: [{ case: true, asset: new TestAssetBuilder().value("Test") }],
+      });
+
+      const result = builder.build({ parentId: "test" });
+
+      // values should be an array containing the switch result
+      expect(result.values).toBeInstanceOf(Array);
+      expect(result.values).toHaveLength(1);
+    });
+  });
 });

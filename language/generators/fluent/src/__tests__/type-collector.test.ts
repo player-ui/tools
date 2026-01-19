@@ -427,5 +427,163 @@ describe("TypeCollector", () => {
         "Validation.CrossfieldReference",
       );
     });
+
+    test("collects types from nested namespaces (A.B.C)", () => {
+      const collector = createCollector("ComplexAsset");
+
+      const namedType: NamedType<ObjectType> = {
+        type: "object",
+        name: "ComplexAsset",
+        properties: {
+          deepRef: {
+            required: false,
+            node: { type: "ref", ref: "A.B.C.DeepType" },
+          },
+        },
+      };
+
+      collector.collectReferencedTypes(namedType);
+
+      expect(tracker.trackedNamespaces).toContain("A");
+      expect(namespaceMemberMap.get("B.C.DeepType")).toBe("A.B.C.DeepType");
+    });
+
+    test("handles namespace members with generics", () => {
+      const collector = createCollector("AdvancedAsset");
+
+      const namedType: NamedType<ObjectType> = {
+        type: "object",
+        name: "AdvancedAsset",
+        properties: {
+          config: {
+            required: false,
+            node: {
+              type: "ref",
+              ref: "Config.Options",
+              genericArguments: [{ type: "string" }],
+            },
+          },
+        },
+      };
+
+      collector.collectReferencedTypes(namedType);
+
+      expect(tracker.trackedNamespaces).toContain("Config");
+      expect(namespaceMemberMap.get("Options")).toBe("Config.Options");
+    });
+
+    test("tracks namespace imports separately from type imports", () => {
+      const collector = createCollector("MixedAsset");
+
+      const namedType: NamedType<ObjectType> = {
+        type: "object",
+        name: "MixedAsset",
+        properties: {
+          regular: {
+            required: false,
+            node: { type: "ref", ref: "RegularType" },
+          },
+          namespaced: {
+            required: false,
+            node: { type: "ref", ref: "NS.NamespacedType" },
+          },
+        },
+      };
+
+      collector.collectReferencedTypes(namedType);
+
+      expect(tracker.trackedTypes).toContain("RegularType");
+      expect(tracker.trackedTypes).not.toContain("NS.NamespacedType");
+      expect(tracker.trackedNamespaces).toContain("NS");
+    });
+  });
+
+  describe("Generic Arguments (Edge Cases)", () => {
+    test("collects types from nested generic arguments", () => {
+      const collector = createCollector("NestedGenericAsset");
+
+      const namedType: NamedType<ObjectType> = {
+        type: "object",
+        name: "NestedGenericAsset",
+        properties: {
+          nested: {
+            required: false,
+            node: {
+              type: "ref",
+              ref: "Outer",
+              genericArguments: [
+                {
+                  type: "ref",
+                  ref: "Middle",
+                  genericArguments: [{ type: "ref", ref: "Inner" }],
+                },
+              ],
+            },
+          },
+        },
+      };
+
+      collector.collectReferencedTypes(namedType);
+
+      expect(tracker.trackedTypes).toContain("Outer");
+      expect(tracker.trackedTypes).toContain("Middle");
+      expect(tracker.trackedTypes).toContain("Inner");
+    });
+
+    test("does not collect primitive type arguments", () => {
+      const collector = createCollector("PrimitiveGenericAsset");
+
+      const namedType: NamedType<ObjectType> = {
+        type: "object",
+        name: "PrimitiveGenericAsset",
+        properties: {
+          config: {
+            required: false,
+            node: {
+              type: "ref",
+              ref: "Container",
+              genericArguments: [{ type: "string" }, { type: "number" }],
+            },
+          },
+        },
+      };
+
+      collector.collectReferencedTypes(namedType);
+
+      expect(tracker.trackedTypes).toContain("Container");
+      expect(tracker.trackedTypes).not.toContain("string");
+      expect(tracker.trackedTypes).not.toContain("number");
+    });
+
+    test("does not collect generic parameter symbols as types to import", () => {
+      genericParamSymbols.add("T");
+      genericParamSymbols.add("U");
+
+      const collector = createCollector("GenericContainerAsset");
+
+      const namedType: NamedType<ObjectType> = {
+        type: "object",
+        name: "GenericContainerAsset",
+        properties: {
+          container: {
+            required: false,
+            node: {
+              type: "ref",
+              ref: "Container",
+              genericArguments: [
+                { type: "ref", ref: "T" },
+                { type: "ref", ref: "U" },
+              ],
+            },
+          },
+        },
+      };
+
+      collector.collectReferencedTypes(namedType);
+
+      expect(tracker.trackedTypes).toContain("Container");
+      expect(tracker.trackedTypes).not.toContain("T");
+      expect(tracker.trackedTypes).not.toContain("U");
+    });
   });
 });

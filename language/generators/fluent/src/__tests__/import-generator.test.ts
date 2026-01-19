@@ -280,4 +280,118 @@ describe("ImportGenerator", () => {
       expect(generator.getNeedsAssetImport()).toBe(false);
     });
   });
+
+  describe("Scoped Packages", () => {
+    test("handles scoped packages (@org/package)", () => {
+      const externalTypes = new Map<string, string>();
+      externalTypes.set("ScopedType", "@org/package");
+
+      generator = new ImportGenerator({ externalTypes });
+
+      generator.trackReferencedType("ScopedType");
+
+      const imports = generator.generateImports("MainType");
+
+      expect(imports).toContain(
+        'import type { ScopedType } from "@org/package"',
+      );
+    });
+
+    test("groups multiple types from same scoped package", () => {
+      const externalTypes = new Map<string, string>();
+      externalTypes.set("TypeA", "@my-org/shared-types");
+      externalTypes.set("TypeB", "@my-org/shared-types");
+      externalTypes.set("TypeC", "@my-org/shared-types");
+
+      generator = new ImportGenerator({ externalTypes });
+
+      generator.trackReferencedType("TypeA");
+      generator.trackReferencedType("TypeB");
+      generator.trackReferencedType("TypeC");
+
+      const imports = generator.generateImports("MainType");
+
+      // All types should be in one import statement
+      expect(imports).toMatch(
+        /import type \{[^}]*TypeA[^}]*\} from "@my-org\/shared-types"/,
+      );
+      expect(imports).toMatch(
+        /import type \{[^}]*TypeB[^}]*\} from "@my-org\/shared-types"/,
+      );
+    });
+
+    test("handles deeply scoped packages (@org/category/package)", () => {
+      const externalTypes = new Map<string, string>();
+      externalTypes.set("DeepType", "@org/category/package");
+
+      generator = new ImportGenerator({ externalTypes });
+
+      generator.trackReferencedType("DeepType");
+
+      const imports = generator.generateImports("MainType");
+
+      expect(imports).toContain(
+        'import type { DeepType } from "@org/category/package"',
+      );
+    });
+  });
+
+  describe("Deduplication", () => {
+    test("deduplicates imports from same source", () => {
+      generator = new ImportGenerator({
+        sameFileTypes: new Set(["TypeA"]),
+      });
+
+      // Track the same type multiple times
+      generator.trackReferencedType("TypeA");
+      generator.trackReferencedType("TypeA");
+      generator.trackReferencedType("TypeA");
+
+      const imports = generator.generateImports("MainType");
+
+      // TypeA should only appear once in the import
+      const typeAMatches = imports.match(/TypeA/g);
+      expect(typeAMatches?.length).toBe(1);
+    });
+
+    test("deduplicates external type imports", () => {
+      const externalTypes = new Map<string, string>();
+      externalTypes.set("ExternalType", "@external/types");
+
+      generator = new ImportGenerator({ externalTypes });
+
+      generator.trackReferencedType("ExternalType");
+      generator.trackReferencedType("ExternalType");
+
+      const imports = generator.generateImports("MainType");
+
+      // Should only have one import statement for ExternalType
+      const importStatements = imports
+        .split("\n")
+        .filter((line) => line.includes("ExternalType"));
+      expect(importStatements.length).toBe(1);
+    });
+  });
+
+  describe("Import Ordering", () => {
+    test("orders imports consistently", () => {
+      const externalTypes = new Map<string, string>();
+      externalTypes.set("ZType", "@z-package/types");
+      externalTypes.set("AType", "@a-package/types");
+      externalTypes.set("MType", "@m-package/types");
+
+      generator = new ImportGenerator({ externalTypes });
+
+      generator.trackReferencedType("ZType");
+      generator.trackReferencedType("AType");
+      generator.trackReferencedType("MType");
+
+      const imports = generator.generateImports("MainType");
+
+      // All imports should be present
+      expect(imports).toContain("@a-package/types");
+      expect(imports).toContain("@m-package/types");
+      expect(imports).toContain("@z-package/types");
+    });
+  });
 });

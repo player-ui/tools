@@ -447,3 +447,150 @@ describe("template context creation", () => {
     expect(nestedAsset.id).toBe("parent-item-_index1_-text");
   });
 });
+
+describe("Nested Index Handling", () => {
+  beforeEach(() => {
+    resetGlobalIdSet();
+  });
+
+  test("generates _index_ for depth 0", () => {
+    const context: BaseBuildContext = {
+      parentId: "list",
+      branch: { type: "template", depth: 0 },
+    };
+
+    const asset = text({ value: "item" }).build(context);
+    expect(asset.id).toBe("list-_index_-text");
+  });
+
+  test("generates _index1_ for depth 1", () => {
+    const context: BaseBuildContext = {
+      parentId: "list-item",
+      branch: { type: "template", depth: 1 },
+    };
+
+    const asset = text({ value: "nested" }).build(context);
+    expect(asset.id).toBe("list-item-_index1_-text");
+  });
+
+  test("generates _index2_ for depth 2", () => {
+    const context: BaseBuildContext = {
+      parentId: "list-item-nested",
+      branch: { type: "template", depth: 2 },
+    };
+
+    const asset = text({ value: "deeply-nested" }).build(context);
+    expect(asset.id).toBe("list-item-nested-_index2_-text");
+  });
+
+  test("handles template inside template (nested loops)", () => {
+    const outerContext: BaseBuildContext = {
+      parentId: "outer",
+    };
+
+    // Outer template creates depth 0
+    const outerTemplate = template({
+      data: "outerItems",
+      output: "items",
+      value: (ctx: BaseBuildContext) => {
+        expect(ctx.branch).toEqual({ type: "template", depth: 0 });
+
+        // Inner context would have depth 1
+        const innerContext: BaseBuildContext = {
+          parentId: `${ctx.parentId}-_index_`,
+          branch: { type: "template", depth: 1 },
+        };
+
+        // Simulating building an asset inside the nested template
+        const innerAsset = text({ value: "inner" }).build(innerContext);
+
+        // Inner asset should use _index1_
+        expect(innerAsset.id).toBe("outer-_index_-_index1_-text");
+
+        return {
+          id: ctx.parentId + "-_index_-outer",
+          type: "text" as const,
+          value: "outer item",
+        };
+      },
+    });
+
+    outerTemplate(outerContext);
+  });
+});
+
+describe("Output Inference", () => {
+  beforeEach(() => {
+    resetGlobalIdSet();
+  });
+
+  test("infers output from slot name with numeric suffix", () => {
+    const contextWithNumericSlot: BaseBuildContext = {
+      parentId: "parent",
+      branch: {
+        type: "slot",
+        name: "items-0",
+      },
+    };
+
+    const result = template({
+      data: "data.items",
+      // Output not specified - should be inferred from slot name
+      value: text({ value: "test" }),
+    })(contextWithNumericSlot);
+
+    expect(result.output).toBe("items");
+  });
+
+  test("infers output from slot name without numeric suffix", () => {
+    const contextWithSimpleSlot: BaseBuildContext = {
+      parentId: "parent",
+      branch: {
+        type: "slot",
+        name: "values",
+      },
+    };
+
+    const result = template({
+      data: "data.values",
+      // Output not specified - should be inferred from slot name
+      value: text({ value: "test" }),
+    })(contextWithSimpleSlot);
+
+    expect(result.output).toBe("values");
+  });
+
+  test("throws when output cannot be inferred and not provided", () => {
+    const contextWithTemplateType: BaseBuildContext = {
+      parentId: "parent",
+      branch: { type: "template", depth: 0 },
+    };
+
+    const templateFn = template({
+      data: "data.items",
+      // No output provided
+      value: text({ value: "test" }),
+    });
+
+    expect(() => templateFn(contextWithTemplateType)).toThrow(
+      "Template output must be provided or inferrable from context",
+    );
+  });
+
+  test("throws when context has no branch", () => {
+    const contextWithoutBranch: BaseBuildContext = {
+      parentId: "parent",
+      // No branch
+    };
+
+    const templateFn = template({
+      data: "data.items",
+      // No output provided
+      value: text({ value: "test" }),
+    });
+
+    expect(() => templateFn(contextWithoutBranch)).toThrow(
+      "Template output must be provided or inferrable from context",
+    );
+  });
+});
