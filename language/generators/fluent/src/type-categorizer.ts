@@ -1,4 +1,4 @@
-import { TypeDefinitionFinder } from "./type-definition-finder";
+import { TsMorphTypeDefinitionFinder } from "./ts-morph-type-finder";
 import {
   isNodeModulesPath,
   extractPackageNameFromPath,
@@ -31,20 +31,20 @@ export interface CategorizerOptions {
 /**
  * Categorizes referenced types into local, relative, and external imports.
  *
- * Uses TypeDefinitionFinder to resolve where each type is defined, then
+ * Uses TsMorphTypeDefinitionFinder to resolve where each type is defined, then
  * categorizes based on the resolved path:
  * - Same file as main → localTypes
  * - Different local file → relativeImports
  * - node_modules → externalTypes
  *
  * @param referencedTypes - Set of type names that need to be imported
- * @param finder - TypeDefinitionFinder instance for resolving type locations
+ * @param finder - TsMorphTypeDefinitionFinder instance for resolving type locations
  * @param options - Categorization options including main source file
  * @returns Categorized types for import generation
  */
 export function categorizeTypes(
   referencedTypes: Set<string>,
-  finder: TypeDefinitionFinder,
+  finder: TsMorphTypeDefinitionFinder,
   options: CategorizerOptions,
 ): TypeCategories {
   const { mainSourceFile, sameFileTypes } = options;

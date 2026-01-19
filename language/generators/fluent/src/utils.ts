@@ -369,3 +369,30 @@ export const PLAYER_BUILTINS = new Set([
 export function isBuiltinType(typeName: string): boolean {
   return TYPESCRIPT_BUILTINS.has(typeName) || PLAYER_BUILTINS.has(typeName);
 }
+
+/**
+ * Extracts the base type name from a ref string, handling nested generics.
+ * @example
+ * extractBaseName("MyType") // "MyType"
+ * extractBaseName("MyType<T>") // "MyType"
+ * extractBaseName("Map<string, Array<T>>") // "Map"
+ */
+export function extractBaseName(ref: string): string {
+  const bracketIndex = ref.indexOf("<");
+  return bracketIndex === -1 ? ref : ref.substring(0, bracketIndex);
+}
+
+/**
+ * Checks if a type name is a namespaced type (e.g., "Validation.CrossfieldReference").
+ * Returns the namespace and member name if it is, null otherwise.
+ */
+export function parseNamespacedType(
+  typeName: string,
+): { namespace: string; member: string } | null {
+  const dotIndex = typeName.indexOf(".");
+  if (dotIndex === -1) return null;
+  return {
+    namespace: typeName.substring(0, dotIndex),
+    member: typeName.substring(dotIndex + 1),
+  };
+}

@@ -13,11 +13,14 @@ export interface UnexportedTypeLocation {
 }
 
 /**
- * Finds type definitions by searching through TypeScript source files.
+ * Finds type definitions by searching through TypeScript source files using ts-morph.
  * Handles interfaces, type aliases, classes, and re-exported types.
  * Supports both local files and types from node_modules.
+ *
+ * Note: This is the ts-morph based implementation. For the TypeScript API based
+ * implementation, see TypeScriptTypeDefinitionFinder in type-resolver.ts.
  */
-export class TypeDefinitionFinder {
+export class TsMorphTypeDefinitionFinder {
   private project: Project | undefined;
   private readonly typeLocationCache = new Map<string, string | null>();
   private readonly unexportedTypes = new Map<string, string>();

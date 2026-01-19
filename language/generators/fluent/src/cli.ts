@@ -14,7 +14,7 @@ import {
 import { join, dirname, relative } from "path";
 import type { NamedType, ObjectType } from "@player-tools/xlr";
 import { generateFluentBuilder, type GeneratorConfig } from "./generator";
-import { TypeDefinitionFinder } from "./type-definition-finder";
+import { TsMorphTypeDefinitionFinder } from "./ts-morph-type-finder";
 import { isNodeModulesPath, extractPackageNameFromPath } from "./path-utils";
 
 interface Manifest {
@@ -166,7 +166,7 @@ function toRelativeImportPath(sourceFile: string, fromFile: string): string {
  */
 function buildGeneratorConfig(
   xlrType: NamedType<ObjectType>,
-  finder: TypeDefinitionFinder,
+  finder: TsMorphTypeDefinitionFinder,
 ): GeneratorConfig {
   const mainSourceFile = xlrType.source;
 
@@ -178,7 +178,7 @@ function buildGeneratorConfig(
   // Track external types and their packages
   const externalTypes = new Map<string, string>();
 
-  // Build import path generator that uses TypeDefinitionFinder
+  // Build import path generator that uses TsMorphTypeDefinitionFinder
   const typeImportPathGenerator = (refTypeName: string): string => {
     const sourceFile = finder.findTypeSourceFile(refTypeName, mainSourceFile);
 
@@ -239,8 +239,8 @@ async function main(): Promise<void> {
   console.log(`Processing ${allTypes.length} type(s)...`);
   console.log();
 
-  // Create a shared TypeDefinitionFinder for all types
-  const finder = new TypeDefinitionFinder();
+  // Create a shared TsMorphTypeDefinitionFinder for all types
+  const finder = new TsMorphTypeDefinitionFinder();
 
   let succeeded = 0;
   let failed = 0;
@@ -250,7 +250,7 @@ async function main(): Promise<void> {
       try {
         const xlrType = loadXlrType(input, typeName);
 
-        // Build config using TypeDefinitionFinder
+        // Build config using TsMorphTypeDefinitionFinder
         const config = buildGeneratorConfig(xlrType, finder);
 
         const code = generateFluentBuilder(xlrType, config);
@@ -264,7 +264,7 @@ async function main(): Promise<void> {
       }
     }
   } finally {
-    // Clean up TypeDefinitionFinder resources
+    // Clean up TsMorphTypeDefinitionFinder resources
     finder.dispose();
   }
 

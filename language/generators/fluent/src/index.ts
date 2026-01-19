@@ -11,9 +11,19 @@ export {
   type BuilderInfo,
   type GeneratorResult,
   type UnexportedTypeInfo,
+  type TypeScriptContext,
 } from "./generator";
 export * from "./utils";
-export { TypeDefinitionFinder } from "./type-definition-finder";
+export {
+  TsMorphTypeDefinitionFinder,
+  type UnexportedTypeLocation,
+} from "./ts-morph-type-finder";
+export {
+  createTypeScriptResolver,
+  isBuiltInDeclarationPath,
+  isDeclarationExported,
+  type TypeResolutionResult,
+} from "./type-resolver";
 export {
   isNodeModulesPath,
   extractPackageNameFromPath,
