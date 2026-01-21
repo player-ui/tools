@@ -5,6 +5,7 @@ export {
   FluentBuilderBase,
   type FluentBuilder,
   type BaseBuildContext,
+  type FluentPartial,
   createInspectMethod,
 } from "../core/base-builder/index.js";
 

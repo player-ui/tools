@@ -117,7 +117,7 @@ ${classMethods}
  * @param initial Optional initial values
  * @returns A fluent builder for ${name}
  */
-export function ${factoryName}${genericPart}(initial?: Partial<${name}${genericUsage}>): ${className}${genericUsage} {
+export function ${factoryName}${genericPart}(initial?: FluentPartial<${name}${genericUsage}>): ${className}${genericUsage} {
   return new ${className}${genericUsage}(initial);
 }`;
 

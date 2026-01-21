@@ -25,7 +25,9 @@ export class ValueStorage<T> {
 
   constructor(initial?: Partial<T>) {
     if (initial) {
-      this.values = { ...initial };
+      Object.entries(initial).forEach(([key, value]) => {
+        this.set(key as keyof T, value);
+      });
     }
   }
 

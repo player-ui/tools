@@ -20,6 +20,8 @@ export {
   type ValuePath,
   type SwitchMetadata,
   type ConditionalValue,
+  type FluentPartial,
+  type FluentPartialValue,
 } from "./types";
 
 export {

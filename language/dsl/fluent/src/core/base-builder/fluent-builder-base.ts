@@ -3,6 +3,7 @@ import {
   type BaseBuildContext,
   type ConditionalValue,
   type SwitchMetadata,
+  type FluentPartial,
   FLUENT_BUILDER_SYMBOL,
   StorageKeys,
 } from "./types";
@@ -34,10 +35,10 @@ export abstract class FluentBuilderBase<
 
   /**
    * Creates a new builder instance
-   * @param initial - Optional initial values
+   * @param initial - Optional initial values (accepts FluentPartial for TaggedTemplateValue support)
    */
-  constructor(initial?: Partial<T>) {
-    this.valueStorage = new ValueStorage(initial);
+  constructor(initial?: FluentPartial<T, C>) {
+    this.valueStorage = new ValueStorage(initial as Partial<T>);
     this.auxiliaryStorage = new AuxiliaryStorage();
   }
 

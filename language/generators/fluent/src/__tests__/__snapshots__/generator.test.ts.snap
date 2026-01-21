@@ -2,7 +2,7 @@
 
 exports[`FluentBuilderGenerator > Array Types > generates builder for asset with array of complex objects 1`] = `
 "import type { ChoiceAsset, ChoiceItem } from "../types/choice-";
-import { type FluentBuilder, type BaseBuildContext, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
 
 export interface ChoiceAssetBuilderMethods {
   /** A unique identifier for this asset */
@@ -53,14 +53,14 @@ export class ChoiceAssetBuilder extends FluentBuilderBase<ChoiceAsset> implement
  * @param initial Optional initial values
  * @returns A fluent builder for ChoiceAsset
  */
-export function choice(initial?: Partial<ChoiceAsset>): ChoiceAssetBuilder {
+export function choice(initial?: FluentPartial<ChoiceAsset>): ChoiceAssetBuilder {
   return new ChoiceAssetBuilder(initial);
 }"
 `;
 
 exports[`FluentBuilderGenerator > Array Types > generates builder for asset with array of primitives 1`] = `
 "import type { ActionAsset } from "../types/action-";
-import { type FluentBuilder, type BaseBuildContext, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
 
 export interface ActionAssetBuilderMethods {
   /** A unique identifier for this asset */
@@ -104,7 +104,7 @@ export class ActionAssetBuilder extends FluentBuilderBase<ActionAsset> implement
  * @param initial Optional initial values
  * @returns A fluent builder for ActionAsset
  */
-export function action(initial?: Partial<ActionAsset>): ActionAssetBuilder {
+export function action(initial?: FluentPartial<ActionAsset>): ActionAssetBuilder {
   return new ActionAssetBuilder(initial);
 }"
 `;
@@ -112,7 +112,7 @@ export function action(initial?: Partial<ActionAsset>): ActionAssetBuilder {
 exports[`FluentBuilderGenerator > Array Types > generates builder for non-Asset type with complex properties 1`] = `
 "import type { ChoiceItem } from "../types/choice-item";
 import type { Asset } from "@player-ui/types";
-import { type FluentBuilder, type BaseBuildContext, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
 
 export interface ChoiceItemBuilderMethods {
   /** Sets the id property */
@@ -162,7 +162,7 @@ export class ChoiceItemBuilder extends FluentBuilderBase<ChoiceItem> implements 
  * @param initial Optional initial values
  * @returns A fluent builder for ChoiceItem
  */
-export function choiceItem(initial?: Partial<ChoiceItem>): ChoiceItemBuilder {
+export function choiceItem(initial?: FluentPartial<ChoiceItem>): ChoiceItemBuilder {
   return new ChoiceItemBuilder(initial);
 }"
 `;
@@ -170,7 +170,7 @@ export function choiceItem(initial?: Partial<ChoiceItem>): ChoiceItemBuilder {
 exports[`FluentBuilderGenerator > Asset Wrapper (Slot) Types > generates builder for asset with AssetWrapper slots 1`] = `
 "import type { InfoAsset } from "../types/info-";
 import type { Asset } from "@player-ui/types";
-import { type FluentBuilder, type BaseBuildContext, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
 
 export interface InfoAssetBuilderMethods {
   /** A unique identifier for this asset */
@@ -228,7 +228,7 @@ export class InfoAssetBuilder extends FluentBuilderBase<InfoAsset> implements In
  * @param initial Optional initial values
  * @returns A fluent builder for InfoAsset
  */
-export function info(initial?: Partial<InfoAsset>): InfoAssetBuilder {
+export function info(initial?: FluentPartial<InfoAsset>): InfoAssetBuilder {
   return new InfoAssetBuilder(initial);
 }"
 `;
@@ -236,7 +236,7 @@ export function info(initial?: Partial<InfoAsset>): InfoAssetBuilder {
 exports[`FluentBuilderGenerator > Asset Wrapper (Slot) Types > generates builder for asset with array of AssetWrapper slots 1`] = `
 "import type { CollectionAsset } from "../types/collection-";
 import type { Asset } from "@player-ui/types";
-import { type FluentBuilder, type BaseBuildContext, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
 
 export interface CollectionAssetBuilderMethods {
   /** A unique identifier for this asset */
@@ -287,14 +287,14 @@ export class CollectionAssetBuilder extends FluentBuilderBase<CollectionAsset> i
  * @param initial Optional initial values
  * @returns A fluent builder for CollectionAsset
  */
-export function collection(initial?: Partial<CollectionAsset>): CollectionAssetBuilder {
+export function collection(initial?: FluentPartial<CollectionAsset>): CollectionAssetBuilder {
   return new CollectionAssetBuilder(initial);
 }"
 `;
 
 exports[`FluentBuilderGenerator > Basic Types > generates builder for asset with number and boolean properties 1`] = `
 "import type { CounterAsset } from "../types/counter-";
-import { type FluentBuilder, type BaseBuildContext, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
 
 export interface CounterAssetBuilderMethods {
   /** A unique identifier for this asset */
@@ -358,14 +358,14 @@ export class CounterAssetBuilder extends FluentBuilderBase<CounterAsset> impleme
  * @param initial Optional initial values
  * @returns A fluent builder for CounterAsset
  */
-export function counter(initial?: Partial<CounterAsset>): CounterAssetBuilder {
+export function counter(initial?: FluentPartial<CounterAsset>): CounterAssetBuilder {
   return new CounterAssetBuilder(initial);
 }"
 `;
 
 exports[`FluentBuilderGenerator > Basic Types > generates builder for asset with optional properties 1`] = `
 "import type { InputAsset } from "../types/input-";
-import { type FluentBuilder, type BaseBuildContext, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
 
 export interface InputAssetBuilderMethods {
   /** A unique identifier for this asset */
@@ -422,14 +422,14 @@ export class InputAssetBuilder extends FluentBuilderBase<InputAsset> implements 
  * @param initial Optional initial values
  * @returns A fluent builder for InputAsset
  */
-export function input(initial?: Partial<InputAsset>): InputAssetBuilder {
+export function input(initial?: FluentPartial<InputAsset>): InputAssetBuilder {
   return new InputAssetBuilder(initial);
 }"
 `;
 
 exports[`FluentBuilderGenerator > Basic Types > generates builder for simple asset with string property 1`] = `
 "import type { TextAsset } from "../types/text-";
-import { type FluentBuilder, type BaseBuildContext, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
 
 export interface TextAssetBuilderMethods {
   /** A unique identifier for this asset */
@@ -472,14 +472,14 @@ export class TextAssetBuilder extends FluentBuilderBase<TextAsset> implements Te
  * @param initial Optional initial values
  * @returns A fluent builder for TextAsset
  */
-export function text(initial?: Partial<TextAsset>): TextAssetBuilder {
+export function text(initial?: FluentPartial<TextAsset>): TextAssetBuilder {
   return new TextAssetBuilder(initial);
 }"
 `;
 
 exports[`FluentBuilderGenerator > Binding and Expression Types > generates builder for asset with Binding property 1`] = `
 "import type { InputAsset } from "../types/input-";
-import { type FluentBuilder, type BaseBuildContext, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
 
 export interface InputAssetBuilderMethods {
   /** A unique identifier for this asset */
@@ -529,14 +529,14 @@ export class InputAssetBuilder extends FluentBuilderBase<InputAsset> implements 
  * @param initial Optional initial values
  * @returns A fluent builder for InputAsset
  */
-export function input(initial?: Partial<InputAsset>): InputAssetBuilder {
+export function input(initial?: FluentPartial<InputAsset>): InputAssetBuilder {
   return new InputAssetBuilder(initial);
 }"
 `;
 
 exports[`FluentBuilderGenerator > Binding and Expression Types > generates builder for asset with Expression property 1`] = `
 "import type { ActionAsset } from "../types/action-";
-import { type FluentBuilder, type BaseBuildContext, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
 
 export interface ActionAssetBuilderMethods {
   /** A unique identifier for this asset */
@@ -586,7 +586,7 @@ export class ActionAssetBuilder extends FluentBuilderBase<ActionAsset> implement
  * @param initial Optional initial values
  * @returns A fluent builder for ActionAsset
  */
-export function action(initial?: Partial<ActionAsset>): ActionAssetBuilder {
+export function action(initial?: FluentPartial<ActionAsset>): ActionAssetBuilder {
   return new ActionAssetBuilder(initial);
 }"
 `;
@@ -594,7 +594,7 @@ export function action(initial?: Partial<ActionAsset>): ActionAssetBuilder {
 exports[`FluentBuilderGenerator > Generic Types > generates builder for asset with generic parameter 1`] = `
 "import type { InputAsset } from "../types/input-";
 import type { Asset } from "@player-ui/types";
-import { type FluentBuilder, type BaseBuildContext, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
 
 export interface InputAssetBuilderMethods<AnyTextAsset extends Asset = Asset> {
   /** A unique identifier for this asset */
@@ -651,7 +651,7 @@ export class InputAssetBuilder<AnyTextAsset extends Asset = Asset> extends Fluen
  * @param initial Optional initial values
  * @returns A fluent builder for InputAsset
  */
-export function input<AnyTextAsset extends Asset = Asset>(initial?: Partial<InputAsset<AnyTextAsset>>): InputAssetBuilder<AnyTextAsset> {
+export function input<AnyTextAsset extends Asset = Asset>(initial?: FluentPartial<InputAsset<AnyTextAsset>>): InputAssetBuilder<AnyTextAsset> {
   return new InputAssetBuilder<AnyTextAsset>(initial);
 }"
 `;
@@ -659,7 +659,7 @@ export function input<AnyTextAsset extends Asset = Asset>(initial?: Partial<Inpu
 exports[`FluentBuilderGenerator > Nested Object Types > generates builder for asset with named nested type 1`] = `
 "import type { ActionAsset, ActionMetaData } from "../types/action-";
 import type { Asset } from "@player-ui/types";
-import { type FluentBuilder, type BaseBuildContext, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
 
 export interface ActionAssetBuilderMethods {
   /** A unique identifier for this asset */
@@ -716,14 +716,14 @@ export class ActionAssetBuilder extends FluentBuilderBase<ActionAsset> implement
  * @param initial Optional initial values
  * @returns A fluent builder for ActionAsset
  */
-export function action(initial?: Partial<ActionAsset>): ActionAssetBuilder {
+export function action(initial?: FluentPartial<ActionAsset>): ActionAssetBuilder {
   return new ActionAssetBuilder(initial);
 }"
 `;
 
 exports[`FluentBuilderGenerator > Nested Object Types > generates builder for asset with nested object property 1`] = `
 "import type { ActionAsset } from "../types/action-";
-import { type FluentBuilder, type BaseBuildContext, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
 
 export interface ActionAssetBuilderMethods {
   /** A unique identifier for this asset */
@@ -773,14 +773,14 @@ export class ActionAssetBuilder extends FluentBuilderBase<ActionAsset> implement
  * @param initial Optional initial values
  * @returns A fluent builder for ActionAsset
  */
-export function action(initial?: Partial<ActionAsset>): ActionAssetBuilder {
+export function action(initial?: FluentPartial<ActionAsset>): ActionAssetBuilder {
   return new ActionAssetBuilder(initial);
 }"
 `;
 
 exports[`FluentBuilderGenerator > Union Types > generates builder for asset with discriminated union modifiers 1`] = `
 "import type { CollectionAsset, CalloutModifier, TagModifier } from "../types/collection-";
-import { type FluentBuilder, type BaseBuildContext, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
 
 export interface CollectionAssetBuilderMethods {
   /** A unique identifier for this asset */
@@ -824,14 +824,14 @@ export class CollectionAssetBuilder extends FluentBuilderBase<CollectionAsset> i
  * @param initial Optional initial values
  * @returns A fluent builder for CollectionAsset
  */
-export function collection(initial?: Partial<CollectionAsset>): CollectionAssetBuilder {
+export function collection(initial?: FluentPartial<CollectionAsset>): CollectionAssetBuilder {
   return new CollectionAssetBuilder(initial);
 }"
 `;
 
 exports[`FluentBuilderGenerator > Union Types > generates builder for asset with union property 1`] = `
 "import type { ActionAsset } from "../types/action-";
-import { type FluentBuilder, type BaseBuildContext, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
 
 export interface ActionAssetBuilderMethods {
   /** A unique identifier for this asset */
@@ -874,7 +874,7 @@ export class ActionAssetBuilder extends FluentBuilderBase<ActionAsset> implement
  * @param initial Optional initial values
  * @returns A fluent builder for ActionAsset
  */
-export function action(initial?: Partial<ActionAsset>): ActionAssetBuilder {
+export function action(initial?: FluentPartial<ActionAsset>): ActionAssetBuilder {
   return new ActionAssetBuilder(initial);
 }"
 `;

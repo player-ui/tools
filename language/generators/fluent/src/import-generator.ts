@@ -291,7 +291,7 @@ export class ImportGenerator implements TypeTracker, TypeTransformContext {
     }
 
     lines.push(
-      `import { type FluentBuilder, type BaseBuildContext, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "${fluentImportPath}";`,
+      `import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "${fluentImportPath}";`,
     );
 
     return lines.join("\n");
