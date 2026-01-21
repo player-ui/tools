@@ -109,15 +109,15 @@ export class TypeTransformer {
     // Any nested object can accept either a raw object OR a FluentBuilder that produces it
     if (isObjectType(node)) {
       if (isNamedType(node)) {
-        // Named type - accept raw type or a builder that produces it
+        // Named type - accept raw type, a builder that produces it, or a partial with nested builders
         // Resolve to full qualified name if it's a namespace member
         const typeName = this.resolveTypeName(node.name);
-        return `${typeName} | FluentBuilder<${typeName}, BaseBuildContext>`;
+        return `${typeName} | FluentBuilder<${typeName}, BaseBuildContext> | FluentPartial<${typeName}, BaseBuildContext>`;
       }
 
-      // Anonymous object - accept inline type or a builder that produces it
+      // Anonymous object - accept inline type, a builder that produces it, or a partial with nested builders
       const inlineType = this.generateInlineObjectType(node, forParameter);
-      return `${inlineType} | FluentBuilder<${inlineType}, BaseBuildContext>`;
+      return `${inlineType} | FluentBuilder<${inlineType}, BaseBuildContext> | FluentPartial<${inlineType}, BaseBuildContext>`;
     }
 
     // Tuple types - transform to TypeScript tuple syntax [T1, T2, ...]
@@ -293,7 +293,7 @@ export class TypeTransformer {
         this.transformType(a, forParameter),
       );
       const fullType = `${resolvedName}<${args.join(", ")}>`;
-      return `${fullType} | FluentBuilder<${fullType}, BaseBuildContext>`;
+      return `${fullType} | FluentBuilder<${fullType}, BaseBuildContext> | FluentPartial<${fullType}, BaseBuildContext>`;
     }
 
     // If ref contains embedded generics but genericArguments is empty, preserve them
@@ -304,10 +304,10 @@ export class TypeTransformer {
       const resolvedRef =
         this.resolveTypeName(extractBaseName(ref)) +
         ref.substring(ref.indexOf("<"));
-      return `${resolvedRef} | FluentBuilder<${resolvedRef}, BaseBuildContext>`;
+      return `${resolvedRef} | FluentBuilder<${resolvedRef}, BaseBuildContext> | FluentPartial<${resolvedRef}, BaseBuildContext>`;
     }
 
-    return `${resolvedName} | FluentBuilder<${resolvedName}, BaseBuildContext>`;
+    return `${resolvedName} | FluentBuilder<${resolvedName}, BaseBuildContext> | FluentPartial<${resolvedName}, BaseBuildContext>`;
   }
 
   /**

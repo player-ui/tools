@@ -168,7 +168,7 @@ describe("TypeTransformer", () => {
       const node: NodeType = { type: "ref", ref: "CustomType" };
       const result = transformer.transformType(node, false);
       expect(result).toBe(
-        "CustomType | FluentBuilder<CustomType, BaseBuildContext>",
+        "CustomType | FluentBuilder<CustomType, BaseBuildContext> | FluentPartial<CustomType, BaseBuildContext>",
       );
     });
 
@@ -180,7 +180,7 @@ describe("TypeTransformer", () => {
       };
       const result = transformer.transformType(node, true);
       expect(result).toBe(
-        "Container<string | TaggedTemplateValue<string>> | FluentBuilder<Container<string | TaggedTemplateValue<string>>, BaseBuildContext>",
+        "Container<string | TaggedTemplateValue<string>> | FluentBuilder<Container<string | TaggedTemplateValue<string>>, BaseBuildContext> | FluentPartial<Container<string | TaggedTemplateValue<string>>, BaseBuildContext>",
       );
     });
 
@@ -188,7 +188,7 @@ describe("TypeTransformer", () => {
       const node: NodeType = { type: "ref", ref: "SimpleModifier<'format'>" };
       const result = transformer.transformType(node, false);
       expect(result).toBe(
-        "SimpleModifier<'format'> | FluentBuilder<SimpleModifier<'format'>, BaseBuildContext>",
+        "SimpleModifier<'format'> | FluentBuilder<SimpleModifier<'format'>, BaseBuildContext> | FluentPartial<SimpleModifier<'format'>, BaseBuildContext>",
       );
     });
   });
@@ -358,6 +358,66 @@ describe("TypeTransformer", () => {
     });
   });
 
+  describe("FluentPartial Support for Nested Builders", () => {
+    test("includes FluentPartial for named object types", () => {
+      // Named types use ref, not object with name property
+      const node: NodeType = { type: "ref", ref: "Foo" };
+      const result = transformer.transformType(node, false);
+      expect(result).toBe(
+        "Foo | FluentBuilder<Foo, BaseBuildContext> | FluentPartial<Foo, BaseBuildContext>",
+      );
+    });
+
+    test("includes FluentPartial for anonymous object types", () => {
+      const node: NodeType = {
+        type: "object",
+        properties: {
+          value: { required: true, node: { type: "string" } },
+        },
+      };
+      const result = transformer.transformType(node, false);
+      expect(result).toContain(
+        "| FluentPartial<{ value: string }, BaseBuildContext>",
+      );
+    });
+
+    test("includes FluentPartial for ref types", () => {
+      const node: NodeType = { type: "ref", ref: "CustomType" };
+      const result = transformer.transformType(node, false);
+      expect(result).toBe(
+        "CustomType | FluentBuilder<CustomType, BaseBuildContext> | FluentPartial<CustomType, BaseBuildContext>",
+      );
+    });
+
+    test("includes FluentPartial for ref types with generic arguments", () => {
+      const node: NodeType = {
+        type: "ref",
+        ref: "Container",
+        genericArguments: [{ type: "string" }],
+      };
+      const result = transformer.transformType(node, true);
+      expect(result).toContain(
+        "| FluentPartial<Container<string | TaggedTemplateValue<string>>, BaseBuildContext>",
+      );
+    });
+
+    test("includes FluentPartial for ref types with embedded generics", () => {
+      const node: NodeType = { type: "ref", ref: "SimpleModifier<'format'>" };
+      const result = transformer.transformType(node, false);
+      expect(result).toBe(
+        "SimpleModifier<'format'> | FluentBuilder<SimpleModifier<'format'>, BaseBuildContext> | FluentPartial<SimpleModifier<'format'>, BaseBuildContext>",
+      );
+    });
+
+    test("does not include FluentPartial for AssetWrapper (unwrapped to Asset)", () => {
+      const node: NodeType = { type: "ref", ref: "AssetWrapper" };
+      const result = transformer.transformType(node, false);
+      // AssetWrapper is unwrapped to Asset | FluentBuilder<Asset>, no FluentPartial
+      expect(result).toBe("Asset | FluentBuilder<Asset, BaseBuildContext>");
+      expect(result).not.toContain("FluentPartial");
+    });
+  });
+
   describe("Namespace Type Resolution", () => {
     test("resolves namespaced type member to full qualified name", () => {
       context.addNamespaceMapping(
@@ -488,9 +548,9 @@ describe("TypeTransformer", () => {
       };
       const result = transformer.transformTypeForConstraint(node);
 
-      // Record falls through to transformType which adds FluentBuilder union for ref types
+      // Record falls through to transformType which adds FluentBuilder and FluentPartial union for ref types
       expect(result).toBe(
-        "Record<string, U | FluentBuilder<U, BaseBuildContext>>",
+        "Record<string, U | FluentBuilder<U, BaseBuildContext> | FluentPartial<U, BaseBuildContext>>",
       );
     });
 
@@ -638,7 +698,7 @@ describe("TypeTransformer", () => {
       };
       const result = transformer.transformType(node, false);
       expect(result).toBe(
-        "[Asset, CustomType | FluentBuilder<CustomType, BaseBuildContext>]",
+        "[Asset, CustomType | FluentBuilder<CustomType, BaseBuildContext> | FluentPartial<CustomType, BaseBuildContext>]",
       );
       expect(context.getNeedsAssetImport()).toBe(true);
     });

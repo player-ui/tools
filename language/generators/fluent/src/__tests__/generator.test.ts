@@ -1255,9 +1255,9 @@ describe("Nested Objects Accept Raw or Builder", () => {
     ) as NamedType<ObjectType>;
     const code = generateFluentBuilder(actionAsset);
 
-    // Named complex types should accept both the type OR FluentBuilder
+    // Named complex types should accept the type, FluentBuilder, or FluentPartial
     expect(code).toContain(
-      "withMetaData(value: Metadata | FluentBuilder<Metadata, BaseBuildContext>)",
+      "withMetaData(value: Metadata | FluentBuilder<Metadata, BaseBuildContext> | FluentPartial<Metadata, BaseBuildContext>)",
     );
   });
 });
@@ -2057,6 +2057,146 @@ describe("Namespaced Types", () => {
     expect(code).toContain('import type { Types } from "@custom/types"');
     // Should use the full qualified name in the code
     expect(code).toContain("Types.Data");
+  });
+});
+
+describe("FluentPartial Support for Nested Builder Objects", () => {
+  test("generates FluentPartial union for nested object properties with AssetWrapper", () => {
+    const source = `
+      interface Asset<T extends string = string> {
+        id: string;
+        type: T;
+      }
+      type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+      export interface Foo {
+        bar: AssetWrapper<Asset>;
+        buz: AssetWrapper<Asset>;
+        lol: string;
+        ok: boolean;
+      }
+
+      export interface ContainerAsset extends Asset<"container"> {
+        foo: Foo;
+      }
+    `;
+
+    const types = convertTsToXLR(source);
+    const containerAsset = types.find(
+      (t) => t.name === "ContainerAsset",
+    ) as NamedType<ObjectType>;
+    expect(containerAsset).toBeDefined();
+
+    const code = generateFluentBuilder(containerAsset);
+
+    // The foo property should accept Foo, FluentBuilder<Foo>, or FluentPartial<Foo>
+    expect(code).toContain("FluentPartial<Foo, BaseBuildContext>");
+    // Verify the full signature
+    expect(code).toContain(
+      "withFoo(value: Foo | FluentBuilder<Foo, BaseBuildContext> | FluentPartial<Foo, BaseBuildContext>)",
+    );
+  });
+
+  test("generates FluentPartial for deeply nested object structures", () => {
+    const source = `
+      interface Asset<T extends string = string> {
+        id: string;
+        type: T;
+      }
+      type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+      export interface DeepNested {
+        level1: {
+          level2: {
+            content: AssetWrapper<Asset>;
+            value: string;
+          };
+        };
+      }
+
+      export interface DeepAsset extends Asset<"deep"> {
+        nested: DeepNested;
+      }
+    `;
+
+    const types = convertTsToXLR(source);
+    const deepAsset = types.find(
+      (t) => t.name === "DeepAsset",
+    ) as NamedType<ObjectType>;
+    expect(deepAsset).toBeDefined();
+
+    const code = generateFluentBuilder(deepAsset);
+
+    // The nested property should accept DeepNested, FluentBuilder<DeepNested>, or FluentPartial<DeepNested>
+    expect(code).toContain("FluentPartial<DeepNested, BaseBuildContext>");
+  });
+
+  test("generates FluentPartial for array element types", () => {
+    const source = `
+      interface Asset<T extends string = string> {
+        id: string;
+        type: T;
+      }
+      type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+      export interface ListItem {
+        label: AssetWrapper<Asset>;
+        value: string;
+      }
+
+      export interface ListAsset extends Asset<"list"> {
+        items: Array<ListItem>;
+      }
+    `;
+
+    const types = convertTsToXLR(source);
+    const listAsset = types.find(
+      (t) => t.name === "ListAsset",
+    ) as NamedType<ObjectType>;
+    expect(listAsset).toBeDefined();
+
+    const code = generateFluentBuilder(listAsset);
+
+    // Array elements should also support FluentPartial
+    expect(code).toContain(
+      "Array<ListItem | FluentBuilder<ListItem, BaseBuildContext> | FluentPartial<ListItem, BaseBuildContext>>",
+    );
+  });
+
+  test("generates FluentPartial for union types containing objects", () => {
+    const source = `
+      interface Asset<T extends string = string> {
+        id: string;
+        type: T;
+      }
+      type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+      export interface TypeA {
+        slot: AssetWrapper<Asset>;
+        kind: "a";
+      }
+
+      export interface TypeB {
+        slot: AssetWrapper<Asset>;
+        kind: "b";
+      }
+
+      export interface UnionAsset extends Asset<"union"> {
+        content: TypeA | TypeB;
+      }
+    `;
+
+    const types = convertTsToXLR(source);
+    const unionAsset = types.find(
+      (t) => t.name === "UnionAsset",
+    ) as NamedType<ObjectType>;
+    expect(unionAsset).toBeDefined();
+
+    const code = generateFluentBuilder(unionAsset);
+
+    // Both TypeA and TypeB should support FluentPartial in the union
+    expect(code).toContain("FluentPartial<TypeA, BaseBuildContext>");
+    expect(code).toContain("FluentPartial<TypeB, BaseBuildContext>");
   });
 });
 
