@@ -46,6 +46,19 @@ export class TypeTransformer {
   }
 
   /**
+   * Determines if a type name should be tracked for import.
+   * A type should be tracked if it's not Asset, not a generic parameter,
+   * and not a builtin type.
+   */
+  private shouldTrackTypeForImport(typeName: string): boolean {
+    return (
+      typeName !== "Asset" &&
+      !this.context.getGenericParamSymbols().has(typeName) &&
+      !isBuiltinType(typeName)
+    );
+  }
+
+  /**
    * Transform an XLR type to a TypeScript type string.
    * This is the core recursive transformation that adds TaggedTemplateValue support.
    */
@@ -170,11 +183,7 @@ export class TypeTransformer {
       } else if (baseName === "Asset" || node.ref.startsWith("Asset<")) {
         // Track Asset import when used in generic constraints
         this.context.setNeedsAssetImport(true);
-      } else if (
-        !isBuiltinType(baseName) &&
-        !this.context.getGenericParamSymbols().has(baseName)
-      ) {
-        // Track non-builtin, non-generic-param types for import
+      } else if (this.shouldTrackTypeForImport(baseName)) {
         this.context.trackReferencedType(baseName);
       }
 
@@ -205,11 +214,7 @@ export class TypeTransformer {
       // Track Asset import if used in constraint
       if (node.name === "Asset") {
         this.context.setNeedsAssetImport(true);
-      } else if (
-        !isBuiltinType(node.name) &&
-        !this.context.getGenericParamSymbols().has(node.name)
-      ) {
-        // Track non-builtin, non-generic-param types for import
+      } else if (this.shouldTrackTypeForImport(node.name)) {
         this.context.trackReferencedType(node.name);
       }
       // Just the type name, no FluentBuilder union
@@ -266,32 +271,53 @@ export class TypeTransformer {
 
       let innerType = "Asset";
 
+      // Track whether we handled an intersection type (parts tracked separately)
+      let isIntersectionType = false;
+
       // Check for structured generic arguments first
       if (node.genericArguments && node.genericArguments.length > 0) {
-        const argType = this.transformTypeForConstraint(
-          node.genericArguments[0],
-        );
+        const genericArg = node.genericArguments[0];
+        // transformTypeForConstraint recursively tracks each part of intersection types
+        const argType = this.transformTypeForConstraint(genericArg);
+
         // If it's a generic param (like AnyAsset), fall back to Asset
         innerType = this.context.getGenericParamSymbols().has(argType)
           ? "Asset"
           : argType;
+
+        // Mark intersection types so we don't double-track the combined string
+        isIntersectionType = isAndType(genericArg);
       } else if (ref.includes("<")) {
-        // Handle embedded generics like "AssetWrapper<ImageAsset>"
+        // Handle embedded generics like "AssetWrapper<ImageAsset>" or "AssetWrapper<ImageAsset & Trackable>"
         const match = ref.match(/AssetWrapper<(.+)>/);
         if (match) {
-          const extractedType = extractBaseName(match[1]);
-          innerType = this.context.getGenericParamSymbols().has(extractedType)
-            ? "Asset"
-            : extractedType;
+          const extractedType = match[1].trim();
+
+          // Check if the extracted type is an intersection (contains " & ")
+          if (extractedType.includes(" & ")) {
+            // Parse intersection parts and track each separately
+            isIntersectionType = true;
+            innerType = extractedType;
+
+            const parts = extractedType.split(" & ").map((p) => p.trim());
+            for (const part of parts) {
+              const partName = extractBaseName(part);
+              if (this.shouldTrackTypeForImport(partName)) {
+                this.context.trackReferencedType(partName);
+              }
+            }
+          } else {
+            const baseName = extractBaseName(extractedType);
+            innerType = this.context.getGenericParamSymbols().has(baseName)
+              ? "Asset"
+              : baseName;
+          }
         }
       }
 
       // Track inner type for import if it's concrete and not Asset
-      if (
-        innerType !== "Asset" &&
-        !this.context.getGenericParamSymbols().has(innerType) &&
-        !isBuiltinType(innerType)
-      ) {
+      // Skip if it was an intersection type (parts already tracked above)
+      if (!isIntersectionType && this.shouldTrackTypeForImport(innerType)) {
         this.context.trackReferencedType(innerType);
       }
 

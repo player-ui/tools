@@ -165,6 +165,23 @@ describe("TypeTransformer", () => {
       expect(context.trackedTypes).toContain("TextAsset");
     });
 
+    test("transforms AssetWrapper with embedded intersection in ref string", () => {
+      const node: NodeType = {
+        type: "ref",
+        ref: "AssetWrapper<ImageAsset & Trackable>",
+      };
+      const result = transformer.transformType(node, false);
+      expect(result).toBe(
+        "ImageAsset & Trackable | FluentBuilder<ImageAsset & Trackable, BaseBuildContext>",
+      );
+      expect(context.getNeedsAssetImport()).toBe(true);
+      // Each part of the intersection should be tracked separately for imports
+      expect(context.trackedTypes).toContain("ImageAsset");
+      expect(context.trackedTypes).toContain("Trackable");
+      // The combined string should NOT be tracked
+      expect(context.trackedTypes).not.toContain("ImageAsset & Trackable");
+    });
+
     test("transforms AssetWrapper with generic param falls back to Asset", () => {
       context.addGenericParam("AnyAsset");
       const node: NodeType = {
@@ -178,6 +195,141 @@ describe("TypeTransformer", () => {
       expect(context.getNeedsAssetImport()).toBe(true);
       // Should NOT track AnyAsset as a type to import
       expect(context.trackedTypes).not.toContain("AnyAsset");
+    });
+
+    test("transforms AssetWrapper with intersection generic argument and tracks parts separately", () => {
+      const node: NodeType = {
+        type: "ref",
+        ref: "AssetWrapper",
+        genericArguments: [
+          {
+            type: "and",
+            and: [
+              { type: "ref", ref: "ImageAsset" },
+              { type: "ref", ref: "Trackable" },
+            ],
+          },
+        ],
+      };
+      const result = transformer.transformType(node, false);
+      expect(result).toBe(
+        "ImageAsset & Trackable | FluentBuilder<ImageAsset & Trackable, BaseBuildContext>",
+      );
+      expect(context.getNeedsAssetImport()).toBe(true);
+      // Each part of the intersection should be tracked separately
+      expect(context.trackedTypes).toContain("ImageAsset");
+      expect(context.trackedTypes).toContain("Trackable");
+      // The intersection string itself should NOT be tracked
+      expect(context.trackedTypes).not.toContain("ImageAsset & Trackable");
+    });
+
+    test("does not double-track intersection type parts", () => {
+      const node: NodeType = {
+        type: "ref",
+        ref: "AssetWrapper",
+        genericArguments: [
+          {
+            type: "and",
+            and: [
+              { type: "ref", ref: "ImageAsset" },
+              { type: "ref", ref: "Trackable" },
+            ],
+          },
+        ],
+      };
+      transformer.transformType(node, false);
+      // Each type should be tracked exactly once, not twice
+      const imageAssetCount = context.trackedTypes.filter(
+        (t) => t === "ImageAsset",
+      ).length;
+      const trackableCount = context.trackedTypes.filter(
+        (t) => t === "Trackable",
+      ).length;
+      expect(imageAssetCount).toBe(1);
+      expect(trackableCount).toBe(1);
+    });
+
+    test("handles intersection with Asset type (skips Asset in tracking)", () => {
+      const node: NodeType = {
+        type: "ref",
+        ref: "AssetWrapper",
+        genericArguments: [
+          {
+            type: "and",
+            and: [
+              { type: "ref", ref: "AnyAsset" },
+              { type: "ref", ref: "Asset" },
+            ],
+          },
+        ],
+      };
+      context.addGenericParam("AnyAsset");
+      transformer.transformType(node, false);
+      // Asset should not be tracked (it's special-cased)
+      // AnyAsset should not be tracked (it's a generic param)
+      expect(context.trackedTypes).not.toContain("Asset");
+      expect(context.trackedTypes).not.toContain("AnyAsset");
+    });
+
+    test("handles intersection with generic param (skips generic params in tracking)", () => {
+      context.addGenericParam("T");
+      const node: NodeType = {
+        type: "ref",
+        ref: "AssetWrapper",
+        genericArguments: [
+          {
+            type: "and",
+            and: [
+              { type: "ref", ref: "T" },
+              { type: "ref", ref: "Mixin" },
+            ],
+          },
+        ],
+      };
+      transformer.transformType(node, false);
+      // T should not be tracked (it's a generic param)
+      expect(context.trackedTypes).not.toContain("T");
+      // Mixin should be tracked
+      expect(context.trackedTypes).toContain("Mixin");
+    });
+
+    test("handles three-way intersection in genericArguments", () => {
+      const node: NodeType = {
+        type: "ref",
+        ref: "AssetWrapper",
+        genericArguments: [
+          {
+            type: "and",
+            and: [
+              { type: "ref", ref: "TypeA" },
+              { type: "ref", ref: "TypeB" },
+              { type: "ref", ref: "TypeC" },
+            ],
+          },
+        ],
+      };
+      const result = transformer.transformType(node, false);
+      expect(result).toBe(
+        "TypeA & TypeB & TypeC | FluentBuilder<TypeA & TypeB & TypeC, BaseBuildContext>",
+      );
+      expect(context.trackedTypes).toContain("TypeA");
+      expect(context.trackedTypes).toContain("TypeB");
+      expect(context.trackedTypes).toContain("TypeC");
+    });
+
+    test("handles three-way intersection in embedded ref string", () => {
+      const node: NodeType = {
+        type: "ref",
+        ref: "AssetWrapper<TypeA & TypeB & TypeC>",
+      };
+      const result = transformer.transformType(node, false);
+      expect(result).toBe(
+        "TypeA & TypeB & TypeC | FluentBuilder<TypeA & TypeB & TypeC, BaseBuildContext>",
+      );
+      expect(context.trackedTypes).toContain("TypeA");
+      expect(context.trackedTypes).toContain("TypeB");
+      expect(context.trackedTypes).toContain("TypeC");
+      expect(context.trackedTypes).not.toContain("TypeA & TypeB & TypeC");
     });
 
     test("transforms Expression ref to string with TaggedTemplateValue", () => {
