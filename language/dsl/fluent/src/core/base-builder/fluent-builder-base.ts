@@ -89,12 +89,14 @@ export abstract class FluentBuilderBase<
    */
   protected buildWithDefaults(defaults?: Partial<T>, context?: C): T {
     const arrayProperties = this.getArrayPropertiesMetadata();
+    const assetWrapperPaths = this.getAssetWrapperPathsMetadata();
     return executeBuildPipeline(
       this.valueStorage,
       this.auxiliaryStorage,
       defaults,
       context,
       arrayProperties,
+      assetWrapperPaths,
     );
   }
 
@@ -108,6 +110,21 @@ export abstract class FluentBuilderBase<
     };
 
     return constructor.__arrayProperties__ ?? new Set();
+  }
+
+  /**
+   * Gets asset wrapper paths metadata from the builder class.
+   * Generated builders include a static __assetWrapperPaths__ array of paths.
+   * Each path is an array of property names leading to an AssetWrapper.
+   */
+  protected getAssetWrapperPathsMetadata(): ReadonlyArray<
+    ReadonlyArray<string>
+  > {
+    const constructor = this.constructor as typeof FluentBuilderBase & {
+      __assetWrapperPaths__?: ReadonlyArray<ReadonlyArray<string>>;
+    };
+
+    return constructor.__assetWrapperPaths__ ?? [];
   }
 
   /**

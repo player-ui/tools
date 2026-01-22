@@ -8,6 +8,7 @@ import { resolveMixedArrays } from "./steps/mixed-arrays";
 import { resolveBuilders } from "./steps/builders";
 import { resolveSwitches } from "./steps/switches";
 import { resolveTemplates } from "./steps/templates";
+import { resolveNestedAssetWrappers } from "./steps/nested-asset-wrappers";
 
 /**
  * Creates a nested context for child assets
@@ -37,21 +38,23 @@ function createNestedParentContext<C extends BaseBuildContext>(
 /**
  * Executes the complete build pipeline
  *
- * The pipeline consists of 8 steps that transform builder state into a final object:
+ * The pipeline consists of 9 steps that transform builder state into a final object:
  * 1. Resolve static values (extract TaggedTemplateValue, resolve simple builders)
  * 2. Generate asset ID if needed
  * 3. Create nested context for child assets
  * 4. Resolve AssetWrapper values
  * 5. Resolve mixed arrays
  * 6. Resolve builders
- * 7. Resolve switches
- * 8. Resolve templates
+ * 7. Resolve nested AssetWrapper paths
+ * 8. Resolve switches
+ * 9. Resolve templates
  *
  * @param valueStorage - Storage containing property values
  * @param auxiliaryStorage - Storage containing metadata (templates, switches)
  * @param defaults - Optional default values to merge into result
  * @param context - Optional build context
  * @param arrayProperties - Set of property names that are array types
+ * @param assetWrapperPaths - Paths to nested AssetWrapper properties
  * @returns The fully built object
  */
 export function executeBuildPipeline<T, C extends BaseBuildContext>(
@@ -60,6 +63,7 @@ export function executeBuildPipeline<T, C extends BaseBuildContext>(
   defaults: Partial<T> | undefined,
   context: C | undefined,
   arrayProperties: ReadonlySet<string>,
+  assetWrapperPaths: ReadonlyArray<ReadonlyArray<string>> = [],
 ): T {
   const result: Record<string, unknown> = defaults ? { ...defaults } : {};
 
@@ -81,7 +85,10 @@ export function executeBuildPipeline<T, C extends BaseBuildContext>(
   // Step 6: Resolve builders
   resolveBuilders(valueStorage, result, nestedParentContext);
 
-  // Step 7: Resolve switches
+  // Step 7: Resolve nested AssetWrapper paths
+  resolveNestedAssetWrappers(result, nestedParentContext, assetWrapperPaths);
+
+  // Step 8: Resolve switches
   resolveSwitches(
     auxiliaryStorage,
     result,
@@ -89,7 +96,7 @@ export function executeBuildPipeline<T, C extends BaseBuildContext>(
     arrayProperties,
   );
 
-  // Step 8: Resolve templates
+  // Step 9: Resolve templates
   resolveTemplates(auxiliaryStorage, result, context);
 
   return result as T;

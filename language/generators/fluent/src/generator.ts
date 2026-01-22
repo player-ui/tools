@@ -4,6 +4,7 @@ import {
   toFactoryName,
   toBuilderClassName,
   getAssetTypeFromExtends,
+  type TypeRegistry,
 } from "./utils";
 import {
   type TypeScriptContext,
@@ -52,6 +53,12 @@ export interface GeneratorConfig {
    * This takes precedence over typeImportPathGenerator for the specified types.
    */
   externalTypes?: Map<string, string>;
+  /**
+   * Type registry for resolving nested interface references.
+   * Maps type names to their XLR ObjectType definitions.
+   * Used to find AssetWrapper paths in nested interfaces.
+   */
+  typeRegistry?: TypeRegistry;
 }
 
 /**
@@ -115,9 +122,10 @@ export class FluentBuilderGenerator {
       this.importGenerator.getNamespaceMemberMap(),
     );
 
-    // Initialize the builder class generator with the type transformer
+    // Initialize the builder class generator with the type transformer and type registry
     this.builderClassGenerator = new BuilderClassGenerator(
       this.typeTransformer,
+      config.typeRegistry,
     );
   }
 

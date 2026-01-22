@@ -549,8 +549,9 @@ describe("Integration with Complex Type Patterns", () => {
     expect(code).toContain("TextAssetBuilder");
     expect(code).toContain("withValue");
     expect(code).toContain("string | TaggedTemplateValue<string>");
+    // Smart defaults now include required primitive fields
     expect(code).toContain(
-      'defaults: Record<string, unknown> = {"type":"text","id":""}',
+      'defaults: Record<string, unknown> = {"type":"text","id":"","value":""}',
     );
   });
 
@@ -822,9 +823,9 @@ describe("End-to-end: TypeScript → XLR → Builder → Built Object", () => {
     const code = generateFluentBuilder(textAsset);
 
     // Step 4: Verify the generated code structure
-    // The generated builder should have defaults for id and type
+    // The generated builder should have defaults for id, type, and required primitive fields
     expect(code).toContain(
-      'defaults: Record<string, unknown> = {"type":"text","id":""}',
+      'defaults: Record<string, unknown> = {"type":"text","id":"","value":""}',
     );
     // Should have withValue method that accepts TaggedTemplateValue
     expect(code).toContain(
@@ -840,7 +841,8 @@ describe("End-to-end: TypeScript → XLR → Builder → Built Object", () => {
     );
     expect(defaultsMatch).toBeTruthy();
     const defaults = JSON.parse(defaultsMatch![1]);
-    expect(defaults).toEqual({ type: "text", id: "" });
+    // Smart defaults now include required primitive fields
+    expect(defaults).toEqual({ type: "text", id: "", value: "" });
   });
 
   test("generates working builder for asset with slots", () => {

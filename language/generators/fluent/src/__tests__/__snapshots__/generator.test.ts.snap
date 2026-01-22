@@ -17,7 +17,7 @@ export interface ChoiceAssetBuilderMethods {
  * A builder for ChoiceAsset
  */
 export class ChoiceAssetBuilder extends FluentBuilderBase<ChoiceAsset> implements ChoiceAssetBuilderMethods, FluentBuilder<ChoiceAsset, BaseBuildContext> {
-  private static readonly defaults: Record<string, unknown> = {"type":"choice","id":""};
+  private static readonly defaults: Record<string, unknown> = {"type":"choice","id":"","binding":""};
   private static readonly __arrayProperties__: ReadonlySet<string> = new Set(["choices"]);
 
   /** A unique identifier for this asset */
@@ -128,6 +128,7 @@ export interface ChoiceItemBuilderMethods {
  */
 export class ChoiceItemBuilder extends FluentBuilderBase<ChoiceItem> implements ChoiceItemBuilderMethods, FluentBuilder<ChoiceItem, BaseBuildContext> {
   private static readonly defaults: Record<string, unknown> = {"id":""};
+  private static readonly __assetWrapperPaths__: ReadonlyArray<ReadonlyArray<string>> = [["label"]];
 
   /** Sets the id property */
   withId(value: string | TaggedTemplateValue<string>): ChoiceItemBuilder {
@@ -187,8 +188,9 @@ export interface InfoAssetBuilderMethods {
  * A builder for InfoAsset
  */
 export class InfoAssetBuilder extends FluentBuilderBase<InfoAsset> implements InfoAssetBuilderMethods, FluentBuilder<InfoAsset, BaseBuildContext> {
-  private static readonly defaults: Record<string, unknown> = {"type":"info","id":""};
+  private static readonly defaults: Record<string, unknown> = {"type":"info","id":"","primaryInfo":[]};
   private static readonly __arrayProperties__: ReadonlySet<string> = new Set(["primaryInfo"]);
+  private static readonly __assetWrapperPaths__: ReadonlyArray<ReadonlyArray<string>> = [["title"],["subtitle"],["primaryInfo"]];
 
   /** A unique identifier for this asset */
   withId(value: string | TaggedTemplateValue<string>): InfoAssetBuilder {
@@ -253,6 +255,7 @@ export interface CollectionAssetBuilderMethods {
 export class CollectionAssetBuilder extends FluentBuilderBase<CollectionAsset> implements CollectionAssetBuilderMethods, FluentBuilder<CollectionAsset, BaseBuildContext> {
   private static readonly defaults: Record<string, unknown> = {"type":"collection","id":""};
   private static readonly __arrayProperties__: ReadonlySet<string> = new Set(["values"]);
+  private static readonly __assetWrapperPaths__: ReadonlyArray<ReadonlyArray<string>> = [["label"],["values"]];
 
   /** A unique identifier for this asset */
   withId(value: string | TaggedTemplateValue<string>): CollectionAssetBuilder {
@@ -313,7 +316,7 @@ export interface CounterAssetBuilderMethods {
  * A builder for CounterAsset
  */
 export class CounterAssetBuilder extends FluentBuilderBase<CounterAsset> implements CounterAssetBuilderMethods, FluentBuilder<CounterAsset, BaseBuildContext> {
-  private static readonly defaults: Record<string, unknown> = {"type":"counter","id":""};
+  private static readonly defaults: Record<string, unknown> = {"type":"counter","id":"","value":0};
 
   /** A unique identifier for this asset */
   withId(value: string | TaggedTemplateValue<string>): CounterAssetBuilder {
@@ -382,7 +385,7 @@ export interface InputAssetBuilderMethods {
  * A builder for InputAsset
  */
 export class InputAssetBuilder extends FluentBuilderBase<InputAsset> implements InputAssetBuilderMethods, FluentBuilder<InputAsset, BaseBuildContext> {
-  private static readonly defaults: Record<string, unknown> = {"type":"input","id":""};
+  private static readonly defaults: Record<string, unknown> = {"type":"input","id":"","binding":""};
 
   /** A unique identifier for this asset */
   withId(value: string | TaggedTemplateValue<string>): InputAssetBuilder {
@@ -442,7 +445,7 @@ export interface TextAssetBuilderMethods {
  * A builder for TextAsset
  */
 export class TextAssetBuilder extends FluentBuilderBase<TextAsset> implements TextAssetBuilderMethods, FluentBuilder<TextAsset, BaseBuildContext> {
-  private static readonly defaults: Record<string, unknown> = {"type":"text","id":""};
+  private static readonly defaults: Record<string, unknown> = {"type":"text","id":"","value":""};
 
   /** A unique identifier for this asset */
   withId(value: string | TaggedTemplateValue<string>): TextAssetBuilder {
@@ -494,7 +497,7 @@ export interface InputAssetBuilderMethods {
  * A builder for InputAsset
  */
 export class InputAssetBuilder extends FluentBuilderBase<InputAsset> implements InputAssetBuilderMethods, FluentBuilder<InputAsset, BaseBuildContext> {
-  private static readonly defaults: Record<string, unknown> = {"type":"input","id":""};
+  private static readonly defaults: Record<string, unknown> = {"type":"input","id":"","binding":""};
 
   /** A unique identifier for this asset */
   withId(value: string | TaggedTemplateValue<string>): InputAssetBuilder {
@@ -611,7 +614,8 @@ export interface InputAssetBuilderMethods<AnyTextAsset extends Asset = Asset> {
  * A builder for InputAsset
  */
 export class InputAssetBuilder<AnyTextAsset extends Asset = Asset> extends FluentBuilderBase<InputAsset<AnyTextAsset>> implements InputAssetBuilderMethods<AnyTextAsset>, FluentBuilder<InputAsset<AnyTextAsset>, BaseBuildContext> {
-  private static readonly defaults: Record<string, unknown> = {"type":"input","id":""};
+  private static readonly defaults: Record<string, unknown> = {"type":"input","id":"","binding":""};
+  private static readonly __assetWrapperPaths__: ReadonlyArray<ReadonlyArray<string>> = [["label"],["note"]];
 
   /** A unique identifier for this asset */
   withId(value: string | TaggedTemplateValue<string>): InputAssetBuilder<AnyTextAsset> {
@@ -677,6 +681,7 @@ export interface ActionAssetBuilderMethods {
  */
 export class ActionAssetBuilder extends FluentBuilderBase<ActionAsset> implements ActionAssetBuilderMethods, FluentBuilder<ActionAsset, BaseBuildContext> {
   private static readonly defaults: Record<string, unknown> = {"type":"action","id":""};
+  private static readonly __assetWrapperPaths__: ReadonlyArray<ReadonlyArray<string>> = [["label"]];
 
   /** A unique identifier for this asset */
   withId(value: string | TaggedTemplateValue<string>): ActionAssetBuilder {

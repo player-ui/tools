@@ -260,9 +260,42 @@ export class TypeTransformer {
     const ref = node.ref;
 
     // AssetWrapper - transform to accept Asset or FluentBuilder
+    // Preserves the generic type argument when present for better type safety
     if (ref.startsWith("AssetWrapper")) {
       this.context.setNeedsAssetImport(true);
-      return "Asset | FluentBuilder<Asset, BaseBuildContext>";
+
+      let innerType = "Asset";
+
+      // Check for structured generic arguments first
+      if (node.genericArguments && node.genericArguments.length > 0) {
+        const argType = this.transformTypeForConstraint(
+          node.genericArguments[0],
+        );
+        // If it's a generic param (like AnyAsset), fall back to Asset
+        innerType = this.context.getGenericParamSymbols().has(argType)
+          ? "Asset"
+          : argType;
+      } else if (ref.includes("<")) {
+        // Handle embedded generics like "AssetWrapper<ImageAsset>"
+        const match = ref.match(/AssetWrapper<(.+)>/);
+        if (match) {
+          const extractedType = extractBaseName(match[1]);
+          innerType = this.context.getGenericParamSymbols().has(extractedType)
+            ? "Asset"
+            : extractedType;
+        }
+      }
+
+      // Track inner type for import if it's concrete and not Asset
+      if (
+        innerType !== "Asset" &&
+        !this.context.getGenericParamSymbols().has(innerType) &&
+        !isBuiltinType(innerType)
+      ) {
+        this.context.trackReferencedType(innerType);
+      }
+
+      return `${innerType} | FluentBuilder<${innerType}, BaseBuildContext>`;
     }
 
     // Expression - allow TaggedTemplateValue

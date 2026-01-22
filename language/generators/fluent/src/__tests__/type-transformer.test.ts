@@ -141,6 +141,45 @@ describe("TypeTransformer", () => {
       expect(context.getNeedsAssetImport()).toBe(true);
     });
 
+    test("transforms AssetWrapper with generic arguments preserving the type", () => {
+      const node: NodeType = {
+        type: "ref",
+        ref: "AssetWrapper",
+        genericArguments: [{ type: "ref", ref: "ImageAsset" }],
+      };
+      const result = transformer.transformType(node, false);
+      expect(result).toBe(
+        "ImageAsset | FluentBuilder<ImageAsset, BaseBuildContext>",
+      );
+      expect(context.getNeedsAssetImport()).toBe(true);
+      expect(context.trackedTypes).toContain("ImageAsset");
+    });
+
+    test("transforms AssetWrapper with embedded generic in ref string", () => {
+      const node: NodeType = { type: "ref", ref: "AssetWrapper<TextAsset>" };
+      const result = transformer.transformType(node, false);
+      expect(result).toBe(
+        "TextAsset | FluentBuilder<TextAsset, BaseBuildContext>",
+      );
+      expect(context.getNeedsAssetImport()).toBe(true);
+      expect(context.trackedTypes).toContain("TextAsset");
+    });
+
+    test("transforms AssetWrapper with generic param falls back to Asset", () => {
+      context.addGenericParam("AnyAsset");
+      const node: NodeType = {
+        type: "ref",
+        ref: "AssetWrapper",
+        genericArguments: [{ type: "ref", ref: "AnyAsset" }],
+      };
+      const result = transformer.transformType(node, false);
+      // Should fall back to Asset because AnyAsset is a generic param
+      expect(result).toBe("Asset | FluentBuilder<Asset, BaseBuildContext>");
+      expect(context.getNeedsAssetImport()).toBe(true);
+      // Should NOT track AnyAsset as a type to import
+      expect(context.trackedTypes).not.toContain("AnyAsset");
+    });
+
     test("transforms Expression ref to string with TaggedTemplateValue", () => {
       const node: NodeType = { type: "ref", ref: "Expression" };
       expect(transformer.transformType(node, false)).toBe("string");

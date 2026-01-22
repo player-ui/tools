@@ -404,3 +404,200 @@ export function parseNamespacedType(
     member: typeName.substring(dotIndex + 1),
   };
 }
+
+/**
+ * Type registry for resolving named type references.
+ *
+ * This map stores XLR ObjectType definitions keyed by their type name.
+ * It's used by `findAssetWrapperPaths` to resolve references to named
+ * interface types when searching for nested AssetWrapper properties.
+ *
+ * Example usage:
+ * ```typescript
+ * const registry: TypeRegistry = new Map([
+ *   ["ContentCardHeader", headerObjectType],
+ *   ["SlotConfig", slotConfigObjectType],
+ * ]);
+ *
+ * // Now findAssetWrapperPaths can resolve ContentCardHeader references
+ * const paths = findAssetWrapperPaths(contentCardType, registry);
+ * ```
+ *
+ * Types should be registered when:
+ * - They are referenced by other types in the codebase
+ * - They contain AssetWrapper properties that need to be discovered
+ * - They are part of a nested type hierarchy
+ */
+export type TypeRegistry = Map<string, ObjectType>;
+
+/**
+ * Context for AssetWrapper path finding
+ */
+interface PathFindingContext {
+  typeRegistry: TypeRegistry;
+  visited: Set<string>;
+  currentPath: string[];
+}
+
+/**
+ * Finds all paths to AssetWrapper properties within a type, including nested interfaces.
+ *
+ * This function recursively traverses the type tree to find all property paths
+ * that lead to AssetWrapper fields. It supports:
+ * - Direct AssetWrapper properties
+ * - Named interface references resolved via type registry
+ * - Arbitrary nesting depth
+ * - Cycle detection for recursive types
+ *
+ * @param node - The type node to search
+ * @param typeRegistry - Map of type names to their ObjectType definitions
+ * @returns Array of paths, where each path is an array of property names
+ *
+ * @example
+ * // For a type like:
+ * // interface ContentCard { header: ContentCardHeader }
+ * // interface ContentCardHeader { left: AssetWrapper }
+ * // Returns: [["header", "left"]]
+ */
+export function findAssetWrapperPaths(
+  node: NodeType,
+  typeRegistry: TypeRegistry,
+): string[][] {
+  const context: PathFindingContext = {
+    typeRegistry,
+    visited: new Set(),
+    currentPath: [],
+  };
+
+  return findPathsRecursive(node, context);
+}
+
+/**
+ * Recursively finds AssetWrapper paths within a node
+ */
+function findPathsRecursive(
+  node: NodeType,
+  context: PathFindingContext,
+): string[][] {
+  const paths: string[][] = [];
+
+  // Handle object types with properties
+  if (isObjectType(node)) {
+    // Check if this is a named type we need to track for cycle detection
+    if (isNamedType(node)) {
+      if (context.visited.has(node.name)) {
+        return [];
+      }
+      context.visited.add(node.name);
+    }
+
+    // Process each property
+    for (const [propName, prop] of Object.entries(node.properties)) {
+      const propPaths = findPathsForProperty(propName, prop.node, context);
+      paths.push(...propPaths);
+    }
+
+    // Clean up visited for named types
+    if (isNamedType(node)) {
+      context.visited.delete(node.name);
+    }
+  }
+
+  return paths;
+}
+
+/**
+ * Finds AssetWrapper paths for a specific property.
+ *
+ * Design decision: The `visited` set is intentionally shared across recursive calls
+ * for cycle detection. When processing union/intersection types, we spread the context
+ * but keep the same `visited` reference. This ensures that if TypeA -> TypeB -> TypeA,
+ * the cycle is detected regardless of which branch we came from. This prevents
+ * infinite recursion in complex type hierarchies with circular references.
+ */
+function findPathsForProperty(
+  propName: string,
+  node: NodeType,
+  context: PathFindingContext,
+): string[][] {
+  const paths: string[][] = [];
+
+  // Direct AssetWrapper property
+  if (isAssetWrapperRef(node)) {
+    paths.push([...context.currentPath, propName]);
+    return paths;
+  }
+
+  // Array of AssetWrappers
+  if (isArrayType(node) && isAssetWrapperRef(node.elementType)) {
+    paths.push([...context.currentPath, propName]);
+    return paths;
+  }
+
+  // Named reference - look up in type registry
+  if (isRefType(node)) {
+    const typeName = extractBaseName(node.ref);
+    const resolvedType = context.typeRegistry.get(typeName);
+
+    if (resolvedType && !context.visited.has(typeName)) {
+      context.visited.add(typeName);
+      const newContext = {
+        ...context,
+        currentPath: [...context.currentPath, propName],
+      };
+      const nestedPaths = findPathsRecursive(resolvedType, newContext);
+      paths.push(...nestedPaths);
+      context.visited.delete(typeName);
+    }
+    return paths;
+  }
+
+  // Nested object type (inline)
+  if (isObjectType(node)) {
+    const newContext = {
+      ...context,
+      currentPath: [...context.currentPath, propName],
+    };
+    const nestedPaths = findPathsRecursive(node, newContext);
+    paths.push(...nestedPaths);
+    return paths;
+  }
+
+  // Union types - check all variants
+  if (isOrType(node)) {
+    for (const variant of node.or) {
+      const variantPaths = findPathsForProperty(propName, variant, {
+        ...context,
+        currentPath: context.currentPath,
+      });
+      // Only add unique paths
+      for (const path of variantPaths) {
+        const pathStr = path.join(".");
+        if (!paths.some((p) => p.join(".") === pathStr)) {
+          paths.push(path);
+        }
+      }
+    }
+    return paths;
+  }
+
+  // Intersection types - check all parts
+  if (isAndType(node)) {
+    for (const part of node.and) {
+      const partPaths = findPathsForProperty(propName, part, {
+        ...context,
+        currentPath: context.currentPath,
+      });
+      // Only add unique paths
+      for (const path of partPaths) {
+        const pathStr = path.join(".");
+        if (!paths.some((p) => p.join(".") === pathStr)) {
+          paths.push(path);
+        }
+      }
+    }
+    return paths;
+  }
+
+  return paths;
+}

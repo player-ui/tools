@@ -1,11 +1,13 @@
 import type { NodeType, ObjectType } from "@player-tools/xlr";
 import {
   toPascalCase,
-  isPrimitiveConst,
   containsArrayType,
   extractGenericUsage,
+  findAssetWrapperPaths,
+  type TypeRegistry,
 } from "./utils";
 import type { TypeTransformer } from "./type-transformer";
+import { DefaultValueGenerator } from "./default-value-generator";
 
 /**
  * Information about a builder class to generate.
@@ -41,12 +43,22 @@ interface PropertyInfo {
  */
 export class BuilderClassGenerator {
   private readonly typeTransformer: TypeTransformer;
+  private readonly defaultValueGenerator: DefaultValueGenerator;
+  private readonly typeRegistry: TypeRegistry;
 
   /** Track array properties for __arrayProperties__ */
   private arrayProperties = new Set<string>();
 
-  constructor(typeTransformer: TypeTransformer) {
+  /** Track asset wrapper paths for __assetWrapperPaths__ */
+  private assetWrapperPaths: string[][] = [];
+
+  constructor(typeTransformer: TypeTransformer, typeRegistry?: TypeRegistry) {
     this.typeTransformer = typeTransformer;
+    this.typeRegistry = typeRegistry ?? new Map();
+    this.defaultValueGenerator = new DefaultValueGenerator({
+      maxDepth: 3,
+      skipTypes: new Set(["Asset", "AssetWrapper"]),
+    });
   }
 
   /**
@@ -62,8 +74,9 @@ export class BuilderClassGenerator {
       genericParams,
     } = info;
 
-    // Reset array properties for this builder
+    // Reset tracking for this builder
     this.arrayProperties.clear();
+    this.assetWrapperPaths = [];
 
     const genericPart = genericParams ? `<${genericParams}>` : "";
     const genericUsage = extractGenericUsage(genericParams);
@@ -77,6 +90,12 @@ export class BuilderClassGenerator {
     // Generate defaults
     const defaults = this.generateDefaults(objectType, assetType);
 
+    // Find all nested AssetWrapper paths
+    this.assetWrapperPaths = findAssetWrapperPaths(
+      objectType,
+      this.typeRegistry,
+    );
+
     // Generate array properties metadata
     const arrayPropsCode =
       this.arrayProperties.size > 0
@@ -85,6 +104,12 @@ export class BuilderClassGenerator {
           )
             .map((p) => `"${p}"`)
             .join(", ")}]);\n`
+        : "";
+
+    // Generate asset wrapper paths metadata
+    const assetWrapperPathsCode =
+      this.assetWrapperPaths.length > 0
+        ? `  private static readonly __assetWrapperPaths__: ReadonlyArray<ReadonlyArray<string>> = ${JSON.stringify(this.assetWrapperPaths)};\n`
         : "";
 
     // Build the class
@@ -96,7 +121,7 @@ ${interfaceCode}
  */
 export class ${className}${genericPart} extends FluentBuilderBase<${name}${genericUsage}> implements ${className}Methods${genericUsage}, FluentBuilder<${name}${genericUsage}, BaseBuildContext> {
   private static readonly defaults: Record<string, unknown> = ${defaults};
-${arrayPropsCode}
+${arrayPropsCode}${assetWrapperPathsCode}
 ${classMethods}
 
   /**
@@ -217,33 +242,13 @@ ${methods}
   }
 
   /**
-   * Generate default values object.
+   * Generate default values object using DefaultValueGenerator.
    */
   private generateDefaults(objectType: ObjectType, assetType?: string): string {
-    const defaults: Record<string, unknown> = {};
-
-    // Add asset type default if this is an asset
-    if (assetType) {
-      defaults["type"] = assetType;
-    }
-
-    // Add default ID for assets (types that extend Asset)
-    if (objectType.extends?.ref.startsWith("Asset")) {
-      defaults["id"] = "";
-    }
-    // Also add default ID for non-Asset types that have an 'id' property
-    // This enables ID auto-generation for nested object types
-    else if ("id" in objectType.properties) {
-      defaults["id"] = "";
-    }
-
-    // Add const defaults from properties
-    for (const [propName, prop] of Object.entries(objectType.properties)) {
-      if (isPrimitiveConst(prop.node)) {
-        defaults[propName] = prop.node.const;
-      }
-    }
-
+    const defaults = this.defaultValueGenerator.generateDefaults(
+      objectType,
+      assetType,
+    );
     return JSON.stringify(defaults);
   }
 }
