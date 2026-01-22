@@ -160,6 +160,53 @@ describe("ImportGenerator", () => {
 
       expect(imports).not.toContain("import type { Asset }");
     });
+
+    test("trackReferencedType for PLAYER_BUILTINS is a no-op", () => {
+      // Calling trackReferencedType with PLAYER_BUILTINS should not add them to any imports
+      generator.trackReferencedType("Asset");
+      generator.trackReferencedType("AssetWrapper");
+      generator.trackReferencedType("Binding");
+      generator.trackReferencedType("Expression");
+
+      const imports = generator.generateImports("MainType");
+
+      // None of these should be imported (they have special handling)
+      expect(imports).not.toContain("import type { Asset }");
+      expect(imports).not.toMatch(/import type \{[^}]*\bAsset\b[^}]*\} from/);
+      expect(imports).not.toMatch(
+        /import type \{[^}]*\bAssetWrapper\b[^}]*\} from/,
+      );
+      expect(imports).not.toMatch(/import type \{[^}]*\bBinding\b[^}]*\} from/);
+      expect(imports).not.toMatch(
+        /import type \{[^}]*\bExpression\b[^}]*\} from/,
+      );
+    });
+
+    test("Asset only appears via needsAssetImport flag, not trackReferencedType", () => {
+      // Track Asset but don't set needsAssetImport
+      generator.trackReferencedType("Asset");
+
+      let imports = generator.generateImports("MainType");
+      expect(imports).not.toContain("import type { Asset }");
+
+      // Now set needsAssetImport - Asset should appear
+      generator.setNeedsAssetImport(true);
+      imports = generator.generateImports("MainType");
+      expect(imports).toContain(
+        'import type { Asset } from "@player-ui/types"',
+      );
+    });
+
+    test("Asset is not duplicated when both trackReferencedType and needsAssetImport are used", () => {
+      generator.trackReferencedType("Asset");
+      generator.setNeedsAssetImport(true);
+
+      const imports = generator.generateImports("MainType");
+
+      // Count Asset occurrences - should only appear once
+      const assetMatches = imports.match(/\bAsset\b/g);
+      expect(assetMatches?.length).toBe(1);
+    });
   });
 
   describe("Import Statement Structure", () => {

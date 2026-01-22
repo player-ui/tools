@@ -2232,3 +2232,61 @@ describe("Generic Type Arguments Preservation", () => {
     expect(code).toContain('SimpleModifier<"link">');
   });
 });
+
+describe("Import Handling for Asset", () => {
+  test("Asset is imported exactly once when used in AssetWrapper", () => {
+    const source = `
+      interface Asset<T extends string = string> {
+        id: string;
+        type: T;
+      }
+      type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+      export interface ActionAsset extends Asset<"action"> {
+        label?: AssetWrapper<Asset>;
+        icon?: AssetWrapper<Asset>;
+      }
+    `;
+
+    const types = convertTsToXLR(source);
+    const actionAsset = types.find(
+      (t) => t.name === "ActionAsset",
+    ) as NamedType<ObjectType>;
+    const code = generateFluentBuilder(actionAsset);
+
+    // Asset should be imported exactly once from @player-ui/types
+    const assetImportMatches = code.match(
+      /import type \{ Asset \} from "@player-ui\/types"/g,
+    );
+    expect(assetImportMatches?.length).toBe(1);
+
+    // Asset should NOT be in the main type import
+    expect(code).not.toMatch(
+      /import type \{[^}]*ActionAsset[^}]*Asset[^}]*\} from/,
+    );
+  });
+
+  test("generic parameters of the current type are not imported", () => {
+    const source = `
+      interface Asset<T extends string = string> {
+        id: string;
+        type: T;
+      }
+      type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+      export interface InputAsset<AnyTextAsset extends Asset = Asset> extends Asset<"input"> {
+        binding: string;
+        label?: AssetWrapper<AnyTextAsset>;
+      }
+    `;
+
+    const types = convertTsToXLR(source);
+    const inputAsset = types.find(
+      (t) => t.name === "InputAsset",
+    ) as NamedType<ObjectType>;
+    const code = generateFluentBuilder(inputAsset);
+
+    // AnyTextAsset should NOT be imported - it's a generic parameter of InputAsset
+    expect(code).not.toMatch(/import type \{[^}]*AnyTextAsset[^}]*\}/);
+  });
+});

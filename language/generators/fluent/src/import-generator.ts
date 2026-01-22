@@ -5,7 +5,7 @@ import type {
   UnexportedTypeInfo,
 } from "./type-resolver";
 import { createTypeScriptResolver } from "./type-resolver";
-import { extractBaseName, parseNamespacedType } from "./utils";
+import { extractBaseName, parseNamespacedType, PLAYER_BUILTINS } from "./utils";
 import type { TypeTracker } from "./type-collector";
 import type { TypeTransformContext } from "./type-transformer";
 
@@ -115,6 +115,14 @@ export class ImportGenerator implements TypeTracker, TypeTransformContext {
 
     // Strip generic arguments for import purposes (import { ListItem } not { ListItem<T> })
     const importName = extractBaseName(typeName);
+
+    // Never track PLAYER_BUILTINS (Asset, AssetWrapper, Binding, Expression)
+    // These have special handling and should not be imported as regular types.
+    // Note: This is intentionally redundant with isBuiltinType() filtering in
+    // TypeTransformer.shouldTrackTypeForImport() to provide defense in depth.
+    if (PLAYER_BUILTINS.has(importName)) {
+      return;
+    }
 
     // Check if it's a namespaced type (e.g., "Validation.CrossfieldReference")
     const namespaced = parseNamespacedType(importName);

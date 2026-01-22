@@ -47,12 +47,12 @@ export class TypeTransformer {
 
   /**
    * Determines if a type name should be tracked for import.
-   * A type should be tracked if it's not Asset, not a generic parameter,
-   * and not a builtin type.
+   * A type should be tracked if it's not a generic parameter and not a builtin type.
+   * Note: PLAYER_BUILTINS (Asset, AssetWrapper, Binding, Expression) are filtered
+   * by isBuiltinType(), so no explicit Asset check is needed here.
    */
   private shouldTrackTypeForImport(typeName: string): boolean {
     return (
-      typeName !== "Asset" &&
       !this.context.getGenericParamSymbols().has(typeName) &&
       !isBuiltinType(typeName)
     );
