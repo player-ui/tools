@@ -56,7 +56,9 @@ class Serializable():
         for attr in dir(self):
             value = getattr(self, attr)
             key = attr
-            if shouldIgnoreKey(key, value, getattr(self, "_ignored_json_keys", [])):
+            if key == "_ignored_json_keys":
+                continue
+            elif shouldIgnoreKey(key, value, getattr(self, "_ignored_json_keys", [])):
                 continue
             elif key in ["additional_props", "additional_nodes"] and isinstance(value, dict):
                 for subKey, subVal in value.items():
@@ -65,7 +67,7 @@ class Serializable():
                 if self._propMap.get(key, None) is not None:
                     key = self._propMap[key]
                 elif(isPrivateProperty(attr) and not isInternalMethod(attr)):
-                    key = attr.replace("_", "")
+                    key = attr.replace("_", "", 1)
 
                 _dict[key] = value
             else:
