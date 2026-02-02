@@ -10,6 +10,7 @@ import {
   isBuiltinType,
   extractBaseName,
   parseNamespacedType,
+  type TypeRegistry,
 } from "./utils";
 
 /**
@@ -29,30 +30,55 @@ export class TypeCollector {
   private readonly genericParamSymbols: Set<string>;
   private readonly mainTypeName: string;
   private readonly namespaceMemberMap: Map<string, string>;
+  private readonly typeRegistry?: TypeRegistry;
 
   constructor(
     typeTracker: TypeTracker,
     genericParamSymbols: Set<string>,
     mainTypeName: string,
     namespaceMemberMap: Map<string, string>,
+    typeRegistry?: TypeRegistry,
   ) {
     this.typeTracker = typeTracker;
     this.genericParamSymbols = genericParamSymbols;
     this.mainTypeName = mainTypeName;
     this.namespaceMemberMap = namespaceMemberMap;
+    this.typeRegistry = typeRegistry;
   }
 
   /**
    * Collect generic parameter symbols (e.g., T, U) from the type definition.
    * These should not be imported as they are type parameters, not concrete types.
+   *
+   * Also handles the case where a non-generic type extends a generic base without
+   * passing type arguments. In that scenario, XLR copies properties from the base
+   * (including references to the base's generic params like `AnyAsset`) but does
+   * NOT propagate `genericTokens` to the child type. We scan the type registry for
+   * generic parameter symbols that should be excluded from imports.
    */
   collectGenericParamSymbols(namedType: NamedType<ObjectType>): void {
-    if (!isGenericNamedType(namedType)) {
-      return;
+    if (isGenericNamedType(namedType)) {
+      for (const token of namedType.genericTokens) {
+        this.genericParamSymbols.add(token.symbol);
+      }
     }
 
-    for (const token of namedType.genericTokens) {
-      this.genericParamSymbols.add(token.symbol);
+    // Scan the type registry for generic parameter symbols from other types.
+    // When XLR copies properties from a generic base without resolving generics,
+    // the property types still reference the base's generic parameter names
+    // (e.g., `AnyAsset` from `FileInputAssetBase<AnyAsset>`). These names are
+    // not concrete types and should not be imported. We collect them from all
+    // registry types, excluding any that are themselves registered as concrete types.
+    if (this.typeRegistry) {
+      for (const registeredType of this.typeRegistry.values()) {
+        if (isGenericNamedType(registeredType)) {
+          for (const token of registeredType.genericTokens) {
+            if (!this.typeRegistry.has(token.symbol)) {
+              this.genericParamSymbols.add(token.symbol);
+            }
+          }
+        }
+      }
     }
   }
 

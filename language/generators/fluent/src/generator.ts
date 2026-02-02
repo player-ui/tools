@@ -106,6 +106,7 @@ export class FluentBuilderGenerator {
       typeImportPathGenerator: config.typeImportPathGenerator,
       sameFileTypes: config.sameFileTypes,
       externalTypes: config.externalTypes,
+      typeRegistry: config.typeRegistry,
     };
 
     // Initialize the import generator
@@ -120,6 +121,7 @@ export class FluentBuilderGenerator {
       this.importGenerator.getGenericParamSymbols(),
       namedType.name,
       this.importGenerator.getNamespaceMemberMap(),
+      config.typeRegistry,
     );
 
     // Initialize the builder class generator with the type transformer and type registry

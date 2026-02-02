@@ -3,6 +3,8 @@ import { setupTestEnv } from "@player-tools/test-utils";
 import { TsConverter } from "@player-tools/xlr-converters";
 import type { NamedType, ObjectType } from "@player-tools/xlr";
 import { generateFluentBuilder, type GeneratorConfig } from "../generator";
+import type { TypeRegistry } from "../utils";
+import { FluentBuilderBase } from "@player-tools/fluent";
 
 /** Custom primitives that should be treated as refs rather than resolved */
 const CUSTOM_PRIMITIVES = ["Asset", "AssetWrapper", "Binding", "Expression"];
@@ -2288,5 +2290,557 @@ describe("Import Handling for Asset", () => {
 
     // AnyTextAsset should NOT be imported - it's a generic parameter of InputAsset
     expect(code).not.toMatch(/import type \{[^}]*AnyTextAsset[^}]*\}/);
+  });
+});
+
+describe("Types Extending AssetWrapper", () => {
+  test("generates correct type signature and __assetWrapperPaths__ for type extending AssetWrapper", () => {
+    const source = `
+      interface Asset<T extends string = string> {
+        id: string;
+        type: T;
+      }
+      type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+      export interface Header extends AssetWrapper<Asset> {
+        title: string;
+      }
+
+      export interface TableAsset extends Asset<"table"> {
+        headers: Array<Header>;
+      }
+    `;
+
+    const types = convertTsToXLR(source);
+    const headerType = types.find(
+      (t) => t.name === "Header",
+    ) as NamedType<ObjectType>;
+    const tableAsset = types.find(
+      (t) => t.name === "TableAsset",
+    ) as NamedType<ObjectType>;
+    expect(headerType).toBeDefined();
+    expect(tableAsset).toBeDefined();
+
+    const typeRegistry: TypeRegistry = new Map([["Header", headerType]]);
+
+    const code = generateFluentBuilder(tableAsset, { typeRegistry });
+
+    // Should include Asset | FluentBuilder<Asset> for the inner asset type
+    expect(code).toContain("Asset | FluentBuilder<Asset, BaseBuildContext>");
+    // Should include Header type in the union
+    expect(code).toContain("Header");
+    // Should have __assetWrapperPaths__ that includes "headers"
+    expect(code).toContain("__assetWrapperPaths__");
+    expect(code).toContain('"headers"');
+  });
+
+  test("generates correct type for single property extending AssetWrapper", () => {
+    const source = `
+      interface Asset<T extends string = string> {
+        id: string;
+        type: T;
+      }
+      type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+      export interface Header extends AssetWrapper<Asset> {
+        title: string;
+      }
+
+      export interface CardAsset extends Asset<"card"> {
+        header?: Header;
+      }
+    `;
+
+    const types = convertTsToXLR(source);
+    const headerType = types.find(
+      (t) => t.name === "Header",
+    ) as NamedType<ObjectType>;
+    const cardAsset = types.find(
+      (t) => t.name === "CardAsset",
+    ) as NamedType<ObjectType>;
+    expect(headerType).toBeDefined();
+    expect(cardAsset).toBeDefined();
+
+    const typeRegistry: TypeRegistry = new Map([["Header", headerType]]);
+
+    const code = generateFluentBuilder(cardAsset, { typeRegistry });
+
+    // Should accept Asset, FluentBuilder<Asset>, Header, FluentBuilder<Header>, or FluentPartial<Header>
+    expect(code).toContain("Asset | FluentBuilder<Asset, BaseBuildContext>");
+    expect(code).toContain("Header | FluentBuilder<Header, BaseBuildContext>");
+    expect(code).toContain("FluentPartial<Header, BaseBuildContext>");
+    // Should have __assetWrapperPaths__
+    expect(code).toContain("__assetWrapperPaths__");
+    expect(code).toContain('"header"');
+  });
+
+  test("handles transitive AssetWrapper extension", () => {
+    const source = `
+      interface Asset<T extends string = string> {
+        id: string;
+        type: T;
+      }
+      type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+      export interface ListItemBase extends AssetWrapper<Asset> {}
+
+      export interface ListItem extends ListItemBase {
+        help?: string;
+      }
+
+      export interface ListAsset extends Asset<"list"> {
+        items: Array<ListItem>;
+      }
+    `;
+
+    const types = convertTsToXLR(source);
+    const listItemBaseType = types.find(
+      (t) => t.name === "ListItemBase",
+    ) as NamedType<ObjectType>;
+    const listItemType = types.find(
+      (t) => t.name === "ListItem",
+    ) as NamedType<ObjectType>;
+    const listAsset = types.find(
+      (t) => t.name === "ListAsset",
+    ) as NamedType<ObjectType>;
+    expect(listItemBaseType).toBeDefined();
+    expect(listItemType).toBeDefined();
+    expect(listAsset).toBeDefined();
+
+    const typeRegistry: TypeRegistry = new Map([
+      ["ListItemBase", listItemBaseType],
+      ["ListItem", listItemType],
+    ]);
+
+    const code = generateFluentBuilder(listAsset, { typeRegistry });
+
+    // Should detect ListItem as extending AssetWrapper (transitively)
+    expect(code).toContain("__assetWrapperPaths__");
+    expect(code).toContain('"items"');
+    // Should include Asset in the type signature
+    expect(code).toContain("Asset | FluentBuilder<Asset, BaseBuildContext>");
+  });
+
+  test("generates correct inner type from specific AssetWrapper generic argument", () => {
+    const source = `
+      interface Asset<T extends string = string> {
+        id: string;
+        type: T;
+      }
+      type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+      export interface ImageAsset extends Asset<"image"> {
+        src: string;
+      }
+
+      export interface ImageSlot extends AssetWrapper<ImageAsset> {
+        alt?: string;
+      }
+
+      export interface GalleryAsset extends Asset<"gallery"> {
+        images: Array<ImageSlot>;
+      }
+    `;
+
+    const types = convertTsToXLR(source);
+    const imageAssetType = types.find(
+      (t) => t.name === "ImageAsset",
+    ) as NamedType<ObjectType>;
+    const imageSlotType = types.find(
+      (t) => t.name === "ImageSlot",
+    ) as NamedType<ObjectType>;
+    const galleryAsset = types.find(
+      (t) => t.name === "GalleryAsset",
+    ) as NamedType<ObjectType>;
+    expect(imageSlotType).toBeDefined();
+    expect(galleryAsset).toBeDefined();
+
+    const typeRegistry: TypeRegistry = new Map([
+      ["ImageSlot", imageSlotType],
+      ["ImageAsset", imageAssetType],
+    ]);
+
+    const code = generateFluentBuilder(galleryAsset, { typeRegistry });
+
+    // Should use ImageAsset as the inner type (not generic Asset)
+    expect(code).toContain(
+      "ImageAsset | FluentBuilder<ImageAsset, BaseBuildContext>",
+    );
+    // Should also include ImageSlot in the union
+    expect(code).toContain("ImageSlot");
+    // Should have __assetWrapperPaths__
+    expect(code).toContain("__assetWrapperPaths__");
+    expect(code).toContain('"images"');
+  });
+});
+
+describe("Runtime: Table Composition with Nested Builders", () => {
+  // Inline builder classes matching generated patterns to validate
+  // that the fluent builder runtime correctly handles:
+  // 1. AssetWrapper auto-wrapping (search, filters, actions)
+  // 2. Types extending AssetWrapper (Header, TableColumn)
+  // 3. Nested builders (StaticFilter inside Header inside Table)
+  // 4. Array of extending types (Array<Header>, Array<TableColumn>)
+
+  class TextBuilder extends FluentBuilderBase<any> {
+    static defaults = { type: "text", id: "" };
+    withValue(v: any) {
+      return this.set("value", v);
+    }
+    build(ctx?: any) {
+      return this.buildWithDefaults(TextBuilder.defaults, ctx);
+    }
+  }
+  const text = (initial?: any) => new TextBuilder(initial);
+
+  class ActionBuilder extends FluentBuilderBase<any> {
+    static defaults = { type: "action", id: "" };
+    withLabel(v: any) {
+      return this.set("label", v);
+    }
+    build(ctx?: any) {
+      return this.buildWithDefaults(ActionBuilder.defaults, ctx);
+    }
+  }
+  const action = (initial?: any) => new ActionBuilder(initial);
+
+  class StaticFilterBuilder extends FluentBuilderBase<any> {
+    static defaults = {};
+    static __assetWrapperPaths__ = [["label"], ["value"]];
+    withLabel(v: any) {
+      return this.set("label", v);
+    }
+    withValue(v: any) {
+      return this.set("value", v);
+    }
+    withComparator(v: any) {
+      return this.set("comparator", v);
+    }
+    build(ctx?: any) {
+      return this.buildWithDefaults(StaticFilterBuilder.defaults, ctx);
+    }
+  }
+  const staticFilter = (initial?: any) => new StaticFilterBuilder(initial);
+
+  class TableColumnBuilder extends FluentBuilderBase<any> {
+    static defaults = { id: "" };
+    withComparator(v: any) {
+      return this.set("comparator", v);
+    }
+    build(ctx?: any) {
+      return this.buildWithDefaults(TableColumnBuilder.defaults, ctx);
+    }
+  }
+  const tableColumn = (initial?: any) => new TableColumnBuilder(initial);
+
+  class HeaderBuilder extends FluentBuilderBase<any> {
+    static defaults = { id: "", significance: "optional" };
+    static __assetWrapperPaths__: string[][] = [
+      ["staticFilters", "label"],
+      ["staticFilters", "value"],
+    ];
+    withStaticFilters(v: any) {
+      return this.set("staticFilters", v);
+    }
+    withSortable(v: any) {
+      return this.set("sortable", v);
+    }
+    withSignificance(v: any) {
+      return this.set("significance", v);
+    }
+    build(ctx?: any) {
+      return this.buildWithDefaults(HeaderBuilder.defaults, ctx);
+    }
+  }
+  const header = (initial?: any) => new HeaderBuilder(initial);
+
+  class RowBuilder extends FluentBuilderBase<any> {
+    static defaults = {};
+    static __assetWrapperPaths__ = [["values"], ["actions"]];
+    withContext(v: any) {
+      return this.set("context", v);
+    }
+    withValues(v: any) {
+      return this.set("values", v);
+    }
+    withActions(v: any) {
+      return this.set("actions", v);
+    }
+    build(ctx?: any) {
+      return this.buildWithDefaults(RowBuilder.defaults, ctx);
+    }
+  }
+  const row = (initial?: any) => new RowBuilder(initial);
+
+  class TableAssetBuilder extends FluentBuilderBase<any> {
+    static defaults = { type: "table", id: "" };
+    static __assetWrapperPaths__ = [
+      ["search"],
+      ["filters"],
+      ["headers", "values"],
+      ["headers", "values", "staticFilters", "label"],
+      ["headers", "values", "staticFilters", "value"],
+      ["actions"],
+      ["values", "values"],
+      ["values", "actions"],
+    ];
+    withSearch(v: any) {
+      return this.set("search", v);
+    }
+    withFilters(v: any) {
+      return this.set("filters", v);
+    }
+    withHeaders(v: any) {
+      return this.set("headers", v);
+    }
+    withValues(v: any) {
+      return this.set("values", v);
+    }
+    withActions(v: any) {
+      return this.set("actions", v);
+    }
+    withPlaceholder(v: any) {
+      return this.set("placeholder", v);
+    }
+    withAutomationId(v: any) {
+      return this.set("automationId", v);
+    }
+    build(ctx?: any) {
+      return this.buildWithDefaults(TableAssetBuilder.defaults, ctx);
+    }
+  }
+  const tableAsset = (initial?: any) => new TableAssetBuilder(initial);
+
+  test("composes table with nested builders and auto-wraps AssetWrapper properties", () => {
+    const result = tableAsset()
+      .withSearch(text().withValue("Search..."))
+      .withFilters([text().withValue("Filter 1")])
+      .withHeaders({
+        values: [
+          header()
+            .withStaticFilters([
+              staticFilter()
+                .withLabel(text().withValue("Active"))
+                .withValue(text().withValue("Yes"))
+                .withComparator("active"),
+            ])
+            .withSortable(true),
+          header().withSignificance("optional"),
+        ],
+      })
+      .withValues([
+        row()
+          .withContext({ state: "complete" })
+          .withValues([
+            tableColumn().withComparator("name"),
+            tableColumn().withComparator("status"),
+          ])
+          .withActions([action().withLabel("Edit")]),
+      ])
+      .withActions([action().withLabel("Add Row")])
+      .withPlaceholder("No data available")
+      .withAutomationId("main-table")
+      .build();
+
+    // Top-level structure
+    expect(result.type).toBe("table");
+    expect(result.placeholder).toBe("No data available");
+    expect(result.automationId).toBe("main-table");
+
+    // Direct AssetWrapper: search is auto-wrapped
+    expect(result.search.asset).toBeDefined();
+    expect(result.search.asset.type).toBe("text");
+    expect(result.search.asset.value).toBe("Search...");
+
+    // Array<AssetWrapper>: filters are auto-wrapped
+    expect(result.filters).toHaveLength(1);
+    expect(result.filters[0].asset.type).toBe("text");
+    expect(result.filters[0].asset.value).toBe("Filter 1");
+
+    // Table-level actions are auto-wrapped
+    expect(result.actions).toHaveLength(1);
+    expect(result.actions[0].asset.type).toBe("action");
+    expect(result.actions[0].asset.label).toBe("Add Row");
+
+    // Headers with nested Header builders
+    expect(result.headers.values).toHaveLength(2);
+    const header1 = result.headers.values[0];
+    expect(header1.sortable).toBe(true);
+    expect(header1.staticFilters).toHaveLength(1);
+
+    // StaticFilter.label/value auto-wrapped within the nested builder
+    const sf = header1.staticFilters[0];
+    expect(sf.comparator).toBe("active");
+    expect(sf.label.asset).toBeDefined();
+    expect(sf.label.asset.value).toBe("Active");
+    expect(sf.value.asset).toBeDefined();
+    expect(sf.value.asset.value).toBe("Yes");
+
+    // Rows with nested TableColumn builders
+    expect(result.values).toHaveLength(1);
+    const row1 = result.values[0];
+    expect(row1.context).toEqual({ state: "complete" });
+    expect(row1.values).toHaveLength(2);
+    expect(row1.values[0].comparator).toBe("name");
+    expect(row1.values[1].comparator).toBe("status");
+
+    // Row-level actions are auto-wrapped
+    expect(row1.actions).toHaveLength(1);
+    expect(row1.actions[0].asset.type).toBe("action");
+    expect(row1.actions[0].asset.label).toBe("Edit");
+  });
+
+  test("generated __assetWrapperPaths__ match for Table with extends-AssetWrapper types", () => {
+    const source = `
+      interface Asset<T extends string = string> {
+        id: string;
+        type: T;
+      }
+      type AssetWrapper<T extends Asset = Asset> = { asset: T };
+      type Binding = string;
+
+      export interface StaticFilter<AnyAsset extends Asset = Asset> {
+        label: AssetWrapper<AnyAsset>;
+        value: AssetWrapper<AnyAsset>;
+        comparator: string;
+      }
+
+      export interface Header<AnyAsset extends Asset = Asset>
+        extends AssetWrapper<AnyAsset> {
+        staticFilters?: Array<StaticFilter<AnyAsset>>;
+        sortable?: boolean;
+      }
+
+      export interface TableColumn<AnyAsset extends Asset = Asset>
+        extends AssetWrapper<AnyAsset> {
+        comparator?: string;
+      }
+
+      export interface Row<AnyAsset extends Asset = Asset> {
+        values: Array<TableColumn<AnyAsset>>;
+        actions?: Array<AssetWrapper<AnyAsset>>;
+      }
+
+      export interface TableAsset<AnyAsset extends Asset = Asset>
+        extends Asset<'table'> {
+        search?: AssetWrapper<AnyAsset>;
+        filters?: Array<AssetWrapper<AnyAsset>>;
+        headers?: { values?: Array<Header<AnyAsset>> };
+        values?: Array<Row<AnyAsset>>;
+        actions?: Array<AssetWrapper<AnyAsset>>;
+      }
+    `;
+
+    const types = convertTsToXLR(source);
+    const findType = (name: string) =>
+      types.find((t) => t.name === name) as NamedType<ObjectType>;
+
+    const headerType = findType("Header");
+    const tableColumnType = findType("TableColumn");
+    const rowType = findType("Row");
+    const staticFilterType = findType("StaticFilter");
+    const tableAssetType = findType("TableAsset");
+
+    const typeRegistry: TypeRegistry = new Map(
+      [headerType, tableColumnType, rowType, staticFilterType]
+        .filter(Boolean)
+        .map((t) => [t.name, t]),
+    );
+    const config: GeneratorConfig = { typeRegistry };
+
+    const tableCode = generateFluentBuilder(tableAssetType, config);
+
+    // Direct AssetWrapper paths
+    expect(tableCode).toContain('"search"');
+    expect(tableCode).toContain('"filters"');
+    expect(tableCode).toContain('"actions"');
+
+    // Nested paths through extends-AssetWrapper types
+    // headers.values -> Header extends AssetWrapper
+    expect(tableCode).toMatch(/"headers".*"values"/);
+    // headers.values -> staticFilters.label/value (via array recursion)
+    expect(tableCode).toMatch(/"headers".*"values".*"staticFilters".*"label"/);
+    expect(tableCode).toMatch(/"headers".*"values".*"staticFilters".*"value"/);
+
+    // values.values -> Row.values = Array<TableColumn extends AssetWrapper>
+    expect(tableCode).toMatch(/"values".*"values"/);
+    // values.actions -> Row.actions = Array<AssetWrapper>
+    expect(tableCode).toMatch(/"values".*"actions"/);
+
+    // Type signatures: Header accepted with Asset union
+    expect(tableCode).toContain(
+      "Asset | FluentBuilder<Asset, BaseBuildContext>",
+    );
+    expect(tableCode).toContain("Header");
+  });
+});
+
+describe("Issue #9: Generic Parameter Leak from Base Type", () => {
+  test("non-generic type extending generic base does not import generic params", () => {
+    const source = `
+      interface Asset<T extends string = string> {
+        id: string;
+        type: T;
+      }
+      type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+      export interface FileInputAssetBase<AnyAsset extends Asset = Asset> extends Asset<'fileInput'> {
+        label?: AssetWrapper<AnyAsset>;
+      }
+
+      export interface FileInputAsset extends FileInputAssetBase {
+        uploadTrigger: string;
+      }
+    `;
+
+    const types = convertTsToXLR(source);
+    const base = types.find(
+      (t) => t.name === "FileInputAssetBase",
+    ) as NamedType<ObjectType>;
+    const asset = types.find(
+      (t) => t.name === "FileInputAsset",
+    ) as NamedType<ObjectType>;
+
+    const typeRegistry: TypeRegistry = new Map([["FileInputAssetBase", base]]);
+    const code = generateFluentBuilder(asset, { typeRegistry });
+
+    // AnyAsset is a generic param of the base type, not a concrete type to import
+    expect(code).not.toContain("AnyAsset");
+    // The AssetWrapper<AnyAsset> property should resolve to Asset (the default)
+    expect(code).toContain("Asset | FluentBuilder<Asset, BaseBuildContext>");
+  });
+
+  test("non-generic type extending generic base with multiple params", () => {
+    const source = `
+      interface Asset<T extends string = string> {
+        id: string;
+        type: T;
+      }
+      type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+      export interface MultiGenericBase<AnyLabelAsset extends Asset = Asset, AnyIconAsset extends Asset = Asset> extends Asset<'multi'> {
+        label?: AssetWrapper<AnyLabelAsset>;
+        icon?: AssetWrapper<AnyIconAsset>;
+      }
+
+      export interface ConcreteMulti extends MultiGenericBase {
+        extra: string;
+      }
+    `;
+
+    const types = convertTsToXLR(source);
+    const base = types.find(
+      (t) => t.name === "MultiGenericBase",
+    ) as NamedType<ObjectType>;
+    const asset = types.find(
+      (t) => t.name === "ConcreteMulti",
+    ) as NamedType<ObjectType>;
+
+    const typeRegistry: TypeRegistry = new Map([["MultiGenericBase", base]]);
+    const code = generateFluentBuilder(asset, { typeRegistry });
+
+    // Neither generic param should be imported as a concrete type
+    expect(code).not.toContain("AnyLabelAsset");
+    expect(code).not.toContain("AnyIconAsset");
   });
 });

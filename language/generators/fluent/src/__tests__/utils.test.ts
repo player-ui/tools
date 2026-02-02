@@ -4,6 +4,7 @@ import {
   extractBaseName,
   parseNamespacedType,
   findAssetWrapperPaths,
+  extendsAssetWrapper,
   type TypeRegistry,
 } from "../utils";
 
@@ -319,5 +320,278 @@ describe("findAssetWrapperPaths", () => {
 
     const paths = findAssetWrapperPaths(node, typeRegistry);
     expect(paths).toContainEqual(["mixed", "slot"]);
+  });
+
+  test("finds direct ref extending AssetWrapper", () => {
+    const headerType: ObjectType = {
+      type: "object",
+      name: "Header",
+      properties: {
+        title: { required: true, node: { type: "string" } },
+      },
+      extends: { type: "ref", ref: "AssetWrapper<AnyAsset>" },
+      additionalProperties: false,
+    };
+
+    const tableType: ObjectType = {
+      type: "object",
+      properties: {
+        header: {
+          required: true,
+          node: { type: "ref", ref: "Header" },
+        },
+      },
+    };
+
+    const typeRegistry: TypeRegistry = new Map([["Header", headerType]]);
+
+    const paths = findAssetWrapperPaths(tableType, typeRegistry);
+    expect(paths).toContainEqual(["header"]);
+  });
+
+  test("finds array of refs extending AssetWrapper", () => {
+    const headerType: ObjectType = {
+      type: "object",
+      name: "Header",
+      properties: {
+        title: { required: true, node: { type: "string" } },
+      },
+      extends: { type: "ref", ref: "AssetWrapper<Asset>" },
+      additionalProperties: false,
+    };
+
+    const tableType: ObjectType = {
+      type: "object",
+      properties: {
+        headers: {
+          required: true,
+          node: {
+            type: "array",
+            elementType: { type: "ref", ref: "Header" },
+          },
+        },
+      },
+    };
+
+    const typeRegistry: TypeRegistry = new Map([["Header", headerType]]);
+
+    const paths = findAssetWrapperPaths(tableType, typeRegistry);
+    expect(paths).toContainEqual(["headers"]);
+  });
+
+  test("finds nested AssetWrapper paths within type extending AssetWrapper", () => {
+    const headerType: ObjectType = {
+      type: "object",
+      name: "Header",
+      properties: {
+        icon: {
+          required: false,
+          node: { type: "ref", ref: "AssetWrapper" },
+        },
+      },
+      extends: { type: "ref", ref: "AssetWrapper<Asset>" },
+      additionalProperties: false,
+    };
+
+    const tableType: ObjectType = {
+      type: "object",
+      properties: {
+        header: {
+          required: true,
+          node: { type: "ref", ref: "Header" },
+        },
+      },
+    };
+
+    const typeRegistry: TypeRegistry = new Map([["Header", headerType]]);
+
+    const paths = findAssetWrapperPaths(tableType, typeRegistry);
+    // Should find both the header itself (extends AssetWrapper) and header.icon
+    expect(paths).toContainEqual(["header"]);
+    expect(paths).toContainEqual(["header", "icon"]);
+  });
+
+  test("finds AssetWrapper paths through Array<ObjectType> element types", () => {
+    // StaticFilter has label/value as AssetWrapper (doesn't extend AssetWrapper)
+    const staticFilterType: ObjectType = {
+      type: "object",
+      name: "StaticFilter",
+      properties: {
+        label: {
+          required: true,
+          node: { type: "ref", ref: "AssetWrapper" },
+        },
+        value: {
+          required: true,
+          node: { type: "ref", ref: "AssetWrapper" },
+        },
+        comparator: {
+          required: true,
+          node: { type: "string" },
+        },
+      },
+      additionalProperties: false,
+    };
+
+    // Header has staticFilters: Array<StaticFilter> (inline element type)
+    const headerType: ObjectType = {
+      type: "object",
+      properties: {
+        staticFilters: {
+          required: false,
+          node: {
+            type: "array",
+            elementType: staticFilterType,
+          },
+        },
+      },
+    };
+
+    const typeRegistry: TypeRegistry = new Map([
+      ["StaticFilter", staticFilterType],
+    ]);
+
+    const paths = findAssetWrapperPaths(headerType, typeRegistry);
+    // Should recurse into Array<StaticFilter> and find the nested AssetWrapper paths
+    expect(paths).toContainEqual(["staticFilters", "label"]);
+    expect(paths).toContainEqual(["staticFilters", "value"]);
+  });
+
+  test("finds AssetWrapper paths through Array<RefType> element types", () => {
+    // Same test but with RefType element type instead of inline ObjectType
+    const staticFilterType: ObjectType = {
+      type: "object",
+      name: "StaticFilter",
+      properties: {
+        label: {
+          required: true,
+          node: { type: "ref", ref: "AssetWrapper" },
+        },
+        value: {
+          required: true,
+          node: { type: "ref", ref: "AssetWrapper" },
+        },
+      },
+      additionalProperties: false,
+    };
+
+    const headerType: ObjectType = {
+      type: "object",
+      properties: {
+        staticFilters: {
+          required: false,
+          node: {
+            type: "array",
+            elementType: { type: "ref", ref: "StaticFilter" },
+          },
+        },
+      },
+    };
+
+    const typeRegistry: TypeRegistry = new Map([
+      ["StaticFilter", staticFilterType],
+    ]);
+
+    const paths = findAssetWrapperPaths(headerType, typeRegistry);
+    expect(paths).toContainEqual(["staticFilters", "label"]);
+    expect(paths).toContainEqual(["staticFilters", "value"]);
+  });
+});
+
+describe("extendsAssetWrapper", () => {
+  test("returns true for direct AssetWrapper extension", () => {
+    const headerType: ObjectType = {
+      type: "object",
+      name: "Header",
+      properties: {},
+      extends: { type: "ref", ref: "AssetWrapper<Asset>" },
+      additionalProperties: false,
+    };
+
+    const registry: TypeRegistry = new Map([["Header", headerType]]);
+
+    expect(extendsAssetWrapper({ type: "ref", ref: "Header" }, registry)).toBe(
+      true,
+    );
+  });
+
+  test("returns true for transitive AssetWrapper extension", () => {
+    const baseType: ObjectType = {
+      type: "object",
+      name: "ListItemBase",
+      properties: {},
+      extends: { type: "ref", ref: "AssetWrapper<AnyAsset>" },
+      additionalProperties: false,
+    };
+
+    const derivedType: ObjectType = {
+      type: "object",
+      name: "ListItem",
+      properties: {
+        help: { required: false, node: { type: "string" } },
+      },
+      extends: { type: "ref", ref: "ListItemBase" },
+      additionalProperties: false,
+    };
+
+    const registry: TypeRegistry = new Map([
+      ["ListItemBase", baseType],
+      ["ListItem", derivedType],
+    ]);
+
+    expect(
+      extendsAssetWrapper({ type: "ref", ref: "ListItem" }, registry),
+    ).toBe(true);
+  });
+
+  test("returns false for non-extending types", () => {
+    const normalType: ObjectType = {
+      type: "object",
+      name: "Metadata",
+      properties: {
+        title: { required: true, node: { type: "string" } },
+      },
+      additionalProperties: false,
+    };
+
+    const registry: TypeRegistry = new Map([["Metadata", normalType]]);
+
+    expect(
+      extendsAssetWrapper({ type: "ref", ref: "Metadata" }, registry),
+    ).toBe(false);
+  });
+
+  test("handles circular references without infinite loop", () => {
+    const typeA: ObjectType = {
+      type: "object",
+      name: "TypeA",
+      properties: {},
+      extends: { type: "ref", ref: "TypeB" },
+      additionalProperties: false,
+    };
+
+    const typeB: ObjectType = {
+      type: "object",
+      name: "TypeB",
+      properties: {},
+      extends: { type: "ref", ref: "TypeA" },
+      additionalProperties: false,
+    };
+
+    const registry: TypeRegistry = new Map([
+      ["TypeA", typeA],
+      ["TypeB", typeB],
+    ]);
+
+    // Should not infinite loop - returns false since neither extends AssetWrapper
+    expect(extendsAssetWrapper({ type: "ref", ref: "TypeA" }, registry)).toBe(
+      false,
+    );
+  });
+
+  test("returns false for non-ref node types", () => {
+    const registry: TypeRegistry = new Map();
+
+    expect(extendsAssetWrapper({ type: "string" }, registry)).toBe(false);
   });
 });

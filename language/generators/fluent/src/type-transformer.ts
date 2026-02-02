@@ -33,6 +33,8 @@ export interface TypeTransformContext {
   getNamespaceMemberMap(): Map<string, string>;
   /** Get the generic parameter symbols */
   getGenericParamSymbols(): Set<string>;
+  /** Get the AssetWrapper ancestor's RefType for a type extending AssetWrapper (via registry) */
+  getAssetWrapperExtendsRef(typeName: string): RefType | undefined;
 }
 
 /**
@@ -122,9 +124,27 @@ export class TypeTransformer {
     // Any nested object can accept either a raw object OR a FluentBuilder that produces it
     if (isObjectType(node)) {
       if (isNamedType(node)) {
-        // Named type - accept raw type, a builder that produces it, or a partial with nested builders
         // Resolve to full qualified name if it's a namespace member
         const typeName = this.resolveTypeName(node.name);
+
+        // Check if this named type extends AssetWrapper:
+        // 1. Inline ObjectType with extends field directly pointing to AssetWrapper
+        // 2. Transitive extension via registry (e.g., ListItem → ListItemBase → AssetWrapper)
+        const inlineExtendsRef = node.extends?.ref.startsWith("AssetWrapper")
+          ? node.extends
+          : null;
+        const extendsRef =
+          inlineExtendsRef ?? this.context.getAssetWrapperExtendsRef(node.name);
+
+        if (extendsRef) {
+          return this.transformAssetWrapperExtension(
+            typeName,
+            node.name,
+            extendsRef,
+          );
+        }
+
+        // Named type - accept raw type, a builder that produces it, or a partial with nested builders
         return `${typeName} | FluentBuilder<${typeName}, BaseBuildContext> | FluentPartial<${typeName}, BaseBuildContext>`;
       }
 
@@ -340,6 +360,20 @@ export class TypeTransformer {
       return "Asset";
     }
 
+    // Type that extends AssetWrapper (e.g., Header extends AssetWrapper<ImageAsset>)
+    // Detected via registry-based transitive lookup
+    {
+      const refBaseName = extractBaseName(ref);
+      const extendsRef = this.context.getAssetWrapperExtendsRef(refBaseName);
+      if (extendsRef) {
+        return this.transformAssetWrapperExtension(
+          this.resolveTypeName(refBaseName),
+          refBaseName,
+          extendsRef,
+        );
+      }
+    }
+
     // Other references - user-defined types that may be objects
     // Accept both raw type or FluentBuilder that produces it
     const baseName = extractBaseName(ref);
@@ -367,6 +401,48 @@ export class TypeTransformer {
     }
 
     return `${resolvedName} | FluentBuilder<${resolvedName}, BaseBuildContext> | FluentPartial<${resolvedName}, BaseBuildContext>`;
+  }
+
+  /**
+   * Transform a type that extends AssetWrapper into a combined union.
+   * Produces: InnerType | FluentBuilder<InnerType> | TypeName | FluentBuilder<TypeName> | FluentPartial<TypeName>
+   */
+  private transformAssetWrapperExtension(
+    resolvedTypeName: string,
+    rawTypeName: string,
+    extendsRef: RefType,
+  ): string {
+    this.context.setNeedsAssetImport(true);
+
+    // Determine the inner asset type from the AssetWrapper ancestor
+    let innerType = "Asset";
+    if (extendsRef.genericArguments && extendsRef.genericArguments.length > 0) {
+      const genericArg = extendsRef.genericArguments[0];
+      const argType = this.transformTypeForConstraint(genericArg);
+      innerType = this.context.getGenericParamSymbols().has(argType)
+        ? "Asset"
+        : argType;
+    } else if (extendsRef.ref.includes("<")) {
+      const match = extendsRef.ref.match(/AssetWrapper<(.+)>/);
+      if (match) {
+        const extracted = extractBaseName(match[1].trim());
+        innerType = this.context.getGenericParamSymbols().has(extracted)
+          ? "Asset"
+          : extracted;
+      }
+    }
+
+    // Track inner type for import if it's concrete and not Asset
+    if (innerType !== "Asset" && this.shouldTrackTypeForImport(innerType)) {
+      this.context.trackReferencedType(innerType);
+    }
+
+    // Track the extending type itself for import
+    if (this.shouldTrackTypeForImport(rawTypeName)) {
+      this.context.trackReferencedType(rawTypeName);
+    }
+
+    return `${innerType} | FluentBuilder<${innerType}, BaseBuildContext> | ${resolvedTypeName} | FluentBuilder<${resolvedTypeName}, BaseBuildContext> | FluentPartial<${resolvedTypeName}, BaseBuildContext>`;
   }
 
   /**

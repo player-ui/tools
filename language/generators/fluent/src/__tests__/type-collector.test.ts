@@ -3,6 +3,7 @@ import { setupTestEnv } from "@player-tools/test-utils";
 import { TsConverter } from "@player-tools/xlr-converters";
 import type { NamedType, ObjectType } from "@player-tools/xlr";
 import { TypeCollector, type TypeTracker } from "../type-collector";
+import type { TypeRegistry } from "../utils";
 
 /** Custom primitives that should be treated as refs rather than resolved */
 const CUSTOM_PRIMITIVES = ["Asset", "AssetWrapper", "Binding", "Expression"];
@@ -46,12 +47,16 @@ describe("TypeCollector", () => {
     namespaceMemberMap = new Map<string, string>();
   });
 
-  function createCollector(mainTypeName: string): TypeCollector {
+  function createCollector(
+    mainTypeName: string,
+    typeRegistry?: TypeRegistry,
+  ): TypeCollector {
     return new TypeCollector(
       tracker,
       genericParamSymbols,
       mainTypeName,
       namespaceMemberMap,
+      typeRegistry,
     );
   }
 
@@ -102,6 +107,86 @@ describe("TypeCollector", () => {
       collector.collectGenericParamSymbols(asset);
 
       expect(genericParamSymbols.size).toBe(0);
+    });
+
+    test("collects inherited generic parameters from base type via typeRegistry", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+        type AssetWrapper<T extends Asset = Asset> = { asset: T };
+
+        export interface FileInputAssetBase<AnyAsset extends Asset = Asset> extends Asset<'fileInput'> {
+          label?: AssetWrapper<AnyAsset>;
+        }
+
+        export interface FileInputAsset extends FileInputAssetBase {
+          binding: { progressAmount: string };
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const fileInputBase = types.find(
+        (t) => t.name === "FileInputAssetBase",
+      ) as NamedType<ObjectType>;
+      const fileInputAsset = types.find(
+        (t) => t.name === "FileInputAsset",
+      ) as NamedType<ObjectType>;
+
+      const typeRegistry: TypeRegistry = new Map([
+        ["FileInputAssetBase", fileInputBase],
+      ]);
+      const collector = createCollector("FileInputAsset", typeRegistry);
+      collector.collectGenericParamSymbols(fileInputAsset);
+      collector.collectReferencedTypes(fileInputAsset);
+
+      // AnyAsset should be recognized as an inherited generic param, not a concrete type
+      expect(genericParamSymbols.has("AnyAsset")).toBe(true);
+      expect(tracker.trackedTypes).not.toContain("AnyAsset");
+    });
+
+    test("does not mark generic param as excluded when it collides with a concrete type in registry", () => {
+      const source = `
+        interface Asset<T extends string = string> {
+          id: string;
+          type: T;
+        }
+
+        export interface Metadata {
+          beacon?: string;
+        }
+
+        export interface GenericBase<Metadata extends Asset = Asset> extends Asset<'base'> {
+          slot?: Metadata;
+        }
+
+        export interface ConcreteChild extends GenericBase {
+          extra: string;
+        }
+      `;
+
+      const types = convertTsToXLR(source);
+      const metadataType = types.find(
+        (t) => t.name === "Metadata",
+      ) as NamedType<ObjectType>;
+      const genericBase = types.find(
+        (t) => t.name === "GenericBase",
+      ) as NamedType<ObjectType>;
+      const concreteChild = types.find(
+        (t) => t.name === "ConcreteChild",
+      ) as NamedType<ObjectType>;
+
+      // Registry has both GenericBase (with generic param "Metadata") and the concrete "Metadata" type
+      const typeRegistry: TypeRegistry = new Map([
+        ["GenericBase", genericBase],
+        ["Metadata", metadataType],
+      ]);
+      const collector = createCollector("ConcreteChild", typeRegistry);
+      collector.collectGenericParamSymbols(concreteChild);
+
+      // "Metadata" should NOT be in genericParamSymbols because it's also a concrete type
+      expect(genericParamSymbols.has("Metadata")).toBe(false);
     });
   });
 

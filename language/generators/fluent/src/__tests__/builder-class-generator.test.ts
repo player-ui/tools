@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeEach } from "vitest";
 import { setupTestEnv } from "@player-tools/test-utils";
 import { TsConverter } from "@player-tools/xlr-converters";
-import type { NamedType, ObjectType } from "@player-tools/xlr";
+import type { NamedType, ObjectType, RefType } from "@player-tools/xlr";
 import {
   BuilderClassGenerator,
   type BuilderInfo,
@@ -61,6 +61,10 @@ class MockTypeTransformContext implements TypeTransformContext {
 
   getGenericParamSymbols(): Set<string> {
     return this.genericParamSymbols;
+  }
+
+  getAssetWrapperExtendsRef(_typeName: string): RefType | undefined {
+    return undefined;
   }
 }
 

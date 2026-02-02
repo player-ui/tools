@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from "vitest";
-import type { NodeType } from "@player-tools/xlr";
+import type { NodeType, RefType } from "@player-tools/xlr";
 import {
   TypeTransformer,
   type TypeTransformContext,
@@ -37,6 +37,10 @@ class MockTypeTransformContext implements TypeTransformContext {
 
   getGenericParamSymbols(): Set<string> {
     return this.genericParamSymbols;
+  }
+
+  getAssetWrapperExtendsRef(_typeName: string): RefType | undefined {
+    return undefined;
   }
 
   addGenericParam(symbol: string): void {

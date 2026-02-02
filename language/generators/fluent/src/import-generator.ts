@@ -1,11 +1,18 @@
 import path from "node:path";
+import type { RefType } from "@player-tools/xlr";
 import type {
   TypeScriptContext,
   TypeResolutionResult,
   UnexportedTypeInfo,
 } from "./type-resolver";
 import { createTypeScriptResolver } from "./type-resolver";
-import { extractBaseName, parseNamespacedType, PLAYER_BUILTINS } from "./utils";
+import {
+  extractBaseName,
+  parseNamespacedType,
+  PLAYER_BUILTINS,
+  getAssetWrapperExtendsRefByName,
+  type TypeRegistry,
+} from "./utils";
 import type { TypeTracker } from "./type-collector";
 import type { TypeTransformContext } from "./type-transformer";
 
@@ -25,6 +32,8 @@ export interface ImportGeneratorConfig {
   sameFileTypes?: Set<string>;
   /** External type mappings (type name -> package name) */
   externalTypes?: Map<string, string>;
+  /** Type registry for resolving types that extend AssetWrapper */
+  typeRegistry?: TypeRegistry;
 }
 
 /**
@@ -91,6 +100,12 @@ export class ImportGenerator implements TypeTracker, TypeTransformContext {
 
   getGenericParamSymbols(): Set<string> {
     return this.genericParamSymbols;
+  }
+
+  getAssetWrapperExtendsRef(typeName: string): RefType | undefined {
+    const registry = this.config.typeRegistry;
+    if (!registry) return undefined;
+    return getAssetWrapperExtendsRefByName(typeName, registry);
   }
 
   /**

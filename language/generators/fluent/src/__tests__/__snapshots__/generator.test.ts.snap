@@ -19,6 +19,7 @@ export interface ChoiceAssetBuilderMethods {
 export class ChoiceAssetBuilder extends FluentBuilderBase<ChoiceAsset> implements ChoiceAssetBuilderMethods, FluentBuilder<ChoiceAsset, BaseBuildContext> {
   private static readonly defaults: Record<string, unknown> = {"type":"choice","id":"","binding":""};
   private static readonly __arrayProperties__: ReadonlySet<string> = new Set(["choices"]);
+  private static readonly __assetWrapperPaths__: ReadonlyArray<ReadonlyArray<string>> = [["choices","label"]];
 
   /** A unique identifier for this asset */
   withId(value: string | TaggedTemplateValue<string>): ChoiceAssetBuilder {

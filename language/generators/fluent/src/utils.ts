@@ -6,6 +6,7 @@ import type {
   NumberType,
   BooleanType,
   TupleType,
+  RefType,
 } from "@player-tools/xlr";
 
 import {
@@ -60,6 +61,98 @@ export function isPrimitiveConst(
  */
 export function isAssetWrapperRef(node: NodeType): boolean {
   return isRefType(node) && node.ref.startsWith("AssetWrapper");
+}
+
+/**
+ * Check if a NodeType resolves to a type that extends AssetWrapper.
+ * Handles:
+ * - RefType nodes resolved via type registry
+ * - Inline ObjectType nodes with an `extends` field
+ * - Transitive chains: e.g., ListItem → ListItemBase → AssetWrapper
+ * Uses cycle detection to prevent infinite recursion on circular type hierarchies.
+ *
+ * @param node - The node to check
+ * @param typeRegistry - Map of type names to their ObjectType definitions
+ * @param visited - Set of already-visited type names for cycle detection
+ * @returns true if the node resolves to a type extending AssetWrapper
+ */
+export function extendsAssetWrapper(
+  node: NodeType,
+  typeRegistry: TypeRegistry,
+  visited: Set<string> = new Set(),
+): boolean {
+  // Inline ObjectType with extends field (XLR inlines types in many positions)
+  if (isObjectType(node) && node.extends) {
+    if (node.extends.ref.startsWith("AssetWrapper")) return true;
+    return extendsAssetWrapper(node.extends, typeRegistry, visited);
+  }
+
+  // RefType - look up in registry
+  if (isRefType(node)) {
+    const typeName = extractBaseName(node.ref);
+    if (visited.has(typeName)) return false;
+    visited.add(typeName);
+
+    const resolved = typeRegistry.get(typeName);
+    if (!resolved?.extends) return false;
+
+    if (resolved.extends.ref.startsWith("AssetWrapper")) return true;
+    return extendsAssetWrapper(resolved.extends, typeRegistry, visited);
+  }
+
+  return false;
+}
+
+/**
+ * Get the AssetWrapper ancestor's RefType for a node that extends AssetWrapper.
+ * Handles both inline ObjectTypes and RefType lookups via registry.
+ * This allows extracting the generic argument (e.g., ImageAsset from AssetWrapper<ImageAsset>).
+ *
+ * @param node - The node to inspect
+ * @param typeRegistry - Map of type names to their ObjectType definitions
+ * @param visited - Set of already-visited type names for cycle detection
+ * @returns The RefType of the AssetWrapper ancestor, or undefined if not found
+ */
+export function getAssetWrapperExtendsRef(
+  node: NodeType,
+  typeRegistry: TypeRegistry,
+  visited: Set<string> = new Set(),
+): RefType | undefined {
+  // Inline ObjectType with extends field
+  if (isObjectType(node) && node.extends) {
+    if (node.extends.ref.startsWith("AssetWrapper")) return node.extends;
+    return getAssetWrapperExtendsRef(node.extends, typeRegistry, visited);
+  }
+
+  // RefType - look up in registry
+  if (isRefType(node)) {
+    const typeName = extractBaseName(node.ref);
+    if (visited.has(typeName)) return undefined;
+    visited.add(typeName);
+
+    const resolved = typeRegistry.get(typeName);
+    if (!resolved?.extends) return undefined;
+
+    if (resolved.extends.ref.startsWith("AssetWrapper"))
+      return resolved.extends;
+    return getAssetWrapperExtendsRef(resolved.extends, typeRegistry, visited);
+  }
+
+  return undefined;
+}
+
+/**
+ * Look up the AssetWrapper ancestor's RefType by type name via the registry.
+ * Convenience wrapper around getAssetWrapperExtendsRef for name-based lookups.
+ */
+export function getAssetWrapperExtendsRefByName(
+  typeName: string,
+  typeRegistry: TypeRegistry,
+): RefType | undefined {
+  return getAssetWrapperExtendsRef(
+    { type: "ref", ref: typeName } as RefType,
+    typeRegistry,
+  );
 }
 
 /**
@@ -507,6 +600,36 @@ function findPathsRecursive(
 }
 
 /**
+ * Recurse into a type node to find nested AssetWrapper paths.
+ * Handles both inline ObjectTypes (recurse directly) and RefTypes (resolve from registry).
+ * Used for AssetWrapper-extending types and array element types.
+ */
+function recurseIntoExtendingType(
+  targetNode: NodeType,
+  context: PathFindingContext,
+  propName: string,
+): string[][] {
+  const newContext = {
+    ...context,
+    currentPath: [...context.currentPath, propName],
+  };
+  if (isObjectType(targetNode)) {
+    return findPathsRecursive(targetNode, newContext);
+  }
+  if (isRefType(targetNode)) {
+    const typeName = extractBaseName(targetNode.ref);
+    const resolvedType = context.typeRegistry.get(typeName);
+    if (resolvedType && !context.visited.has(typeName)) {
+      context.visited.add(typeName);
+      const nestedPaths = findPathsRecursive(resolvedType, newContext);
+      context.visited.delete(typeName);
+      return nestedPaths;
+    }
+  }
+  return [];
+}
+
+/**
  * Finds AssetWrapper paths for a specific property.
  *
  * Design decision: The `visited` set is intentionally shared across recursive calls
@@ -531,6 +654,42 @@ function findPathsForProperty(
   // Array of AssetWrappers
   if (isArrayType(node) && isAssetWrapperRef(node.elementType)) {
     paths.push([...context.currentPath, propName]);
+    return paths;
+  }
+
+  // Type (ref or inline object) that extends AssetWrapper
+  // e.g., Header extends AssetWrapper<AnyAsset>
+  if (
+    extendsAssetWrapper(node, context.typeRegistry, new Set(context.visited))
+  ) {
+    paths.push([...context.currentPath, propName]);
+    paths.push(...recurseIntoExtendingType(node, context, propName));
+    return paths;
+  }
+
+  // Array where element type extends AssetWrapper
+  if (
+    isArrayType(node) &&
+    extendsAssetWrapper(
+      node.elementType,
+      context.typeRegistry,
+      new Set(context.visited),
+    )
+  ) {
+    paths.push([...context.currentPath, propName]);
+    paths.push(
+      ...recurseIntoExtendingType(node.elementType, context, propName),
+    );
+    return paths;
+  }
+
+  // Array with complex element type — recurse into element type to find nested
+  // AssetWrapper paths (e.g., Array<StaticFilter> where StaticFilter contains
+  // label: AssetWrapper and value: AssetWrapper)
+  if (isArrayType(node)) {
+    paths.push(
+      ...recurseIntoExtendingType(node.elementType, context, propName),
+    );
     return paths;
   }
 

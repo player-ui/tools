@@ -11,6 +11,7 @@
     "ts-morph": "^24.0.0"
   },
   "devDependencies": {
+    "@player-tools/fluent": "workspace:*",
     "@player-tools/test-utils": "workspace:*",
     "@player-tools/xlr-converters": "workspace:*"
   },

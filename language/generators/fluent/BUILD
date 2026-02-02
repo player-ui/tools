@@ -15,6 +15,7 @@ js_pipeline(
         "//:vitest_config",
         ":node_modules/@player-tools/test-utils",
         ":node_modules/@player-tools/xlr-converters",
+        ":node_modules/@player-tools/fluent",
     ],
     deps = [
         ":node_modules/@player-tools/xlr",
