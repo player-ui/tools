@@ -1,0 +1,886 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FluentBuilderGenerator > Array Types > generates builder for asset with array of complex objects 1`] = `
+"import type { ChoiceAsset, ChoiceItem } from "../types/choice-";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+
+export interface ChoiceAssetBuilderMethods {
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): ChoiceAssetBuilder;
+  /** Sets the binding property */
+  withBinding(value: string | TaggedTemplateValue<string>): ChoiceAssetBuilder;
+  /** Sets the choices property */
+  withChoices(value: Array<ChoiceItem | FluentBuilder<ChoiceItem, BaseBuildContext> | FluentPartial<ChoiceItem, BaseBuildContext>>): ChoiceAssetBuilder;
+}
+
+/**
+ * A builder for ChoiceAsset
+ */
+export class ChoiceAssetBuilder extends FluentBuilderBase<ChoiceAsset> implements ChoiceAssetBuilderMethods, FluentBuilder<ChoiceAsset, BaseBuildContext> {
+  private static readonly defaults: Record<string, unknown> = {"type":"choice","id":"","binding":""};
+  private static readonly __arrayProperties__: ReadonlySet<string> = new Set(["choices"]);
+  private static readonly __assetWrapperPaths__: ReadonlyArray<ReadonlyArray<string>> = [["choices","label"]];
+
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): ChoiceAssetBuilder {
+    return this.set("id", value);
+  }
+
+  /** Sets the binding property */
+  withBinding(value: string | TaggedTemplateValue<string>): ChoiceAssetBuilder {
+    return this.set("binding", value);
+  }
+
+  /** Sets the choices property */
+  withChoices(value: Array<ChoiceItem | FluentBuilder<ChoiceItem, BaseBuildContext> | FluentPartial<ChoiceItem, BaseBuildContext>>): ChoiceAssetBuilder {
+    return this.set("choices", value);
+  }
+
+  /**
+   * Builds the final ChoiceAsset object
+   * @param context - Optional build context for nested builders
+   */
+  build(context?: BaseBuildContext): ChoiceAsset {
+    return this.buildWithDefaults(ChoiceAssetBuilder.defaults, context);
+  }
+
+  [Symbol.for("nodejs.util.inspect.custom")](): string {
+    return createInspectMethod("ChoiceAssetBuilder", this.values);
+  }
+}
+
+/**
+ * Creates a new ChoiceAsset builder
+ * @param initial Optional initial values
+ * @returns A fluent builder for ChoiceAsset
+ */
+export function choice(initial?: FluentPartial<ChoiceAsset>): ChoiceAssetBuilder {
+  return new ChoiceAssetBuilder(initial);
+}"
+`;
+
+exports[`FluentBuilderGenerator > Array Types > generates builder for asset with array of primitives 1`] = `
+"import type { ActionAsset } from "../types/action-";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+
+export interface ActionAssetBuilderMethods {
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): ActionAssetBuilder;
+  /** Sets the validate property */
+  withValidate(value: Array<string | TaggedTemplateValue<string>> | string | TaggedTemplateValue<string>): ActionAssetBuilder;
+}
+
+/**
+ * A builder for ActionAsset
+ */
+export class ActionAssetBuilder extends FluentBuilderBase<ActionAsset> implements ActionAssetBuilderMethods, FluentBuilder<ActionAsset, BaseBuildContext> {
+  private static readonly defaults: Record<string, unknown> = {"type":"action","id":""};
+  private static readonly __arrayProperties__: ReadonlySet<string> = new Set(["validate"]);
+
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): ActionAssetBuilder {
+    return this.set("id", value);
+  }
+
+  /** Sets the validate property */
+  withValidate(value: Array<string | TaggedTemplateValue<string>> | string | TaggedTemplateValue<string>): ActionAssetBuilder {
+    return this.set("validate", value);
+  }
+
+  /**
+   * Builds the final ActionAsset object
+   * @param context - Optional build context for nested builders
+   */
+  build(context?: BaseBuildContext): ActionAsset {
+    return this.buildWithDefaults(ActionAssetBuilder.defaults, context);
+  }
+
+  [Symbol.for("nodejs.util.inspect.custom")](): string {
+    return createInspectMethod("ActionAssetBuilder", this.values);
+  }
+}
+
+/**
+ * Creates a new ActionAsset builder
+ * @param initial Optional initial values
+ * @returns A fluent builder for ActionAsset
+ */
+export function action(initial?: FluentPartial<ActionAsset>): ActionAssetBuilder {
+  return new ActionAssetBuilder(initial);
+}"
+`;
+
+exports[`FluentBuilderGenerator > Array Types > generates builder for non-Asset type with complex properties 1`] = `
+"import type { ChoiceItem } from "../types/choice-item";
+import type { Asset } from "@player-ui/types";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+
+export interface ChoiceItemBuilderMethods {
+  /** Sets the id property */
+  withId(value: string | TaggedTemplateValue<string>): ChoiceItemBuilder;
+  /** Sets the label property */
+  withLabel(value: Asset | FluentBuilder<Asset, BaseBuildContext>): ChoiceItemBuilder;
+  /** Sets the value property */
+  withValue(value: string | TaggedTemplateValue<string> | number | TaggedTemplateValue<number> | boolean | TaggedTemplateValue<boolean> | null): ChoiceItemBuilder;
+}
+
+/**
+ * A builder for ChoiceItem
+ */
+export class ChoiceItemBuilder extends FluentBuilderBase<ChoiceItem> implements ChoiceItemBuilderMethods, FluentBuilder<ChoiceItem, BaseBuildContext> {
+  private static readonly defaults: Record<string, unknown> = {"id":""};
+  private static readonly __assetWrapperPaths__: ReadonlyArray<ReadonlyArray<string>> = [["label"]];
+
+  /** Sets the id property */
+  withId(value: string | TaggedTemplateValue<string>): ChoiceItemBuilder {
+    return this.set("id", value);
+  }
+
+  /** Sets the label property */
+  withLabel(value: Asset | FluentBuilder<Asset, BaseBuildContext>): ChoiceItemBuilder {
+    return this.set("label", value);
+  }
+
+  /** Sets the value property */
+  withValue(value: string | TaggedTemplateValue<string> | number | TaggedTemplateValue<number> | boolean | TaggedTemplateValue<boolean> | null): ChoiceItemBuilder {
+    return this.set("value", value);
+  }
+
+  /**
+   * Builds the final ChoiceItem object
+   * @param context - Optional build context for nested builders
+   */
+  build(context?: BaseBuildContext): ChoiceItem {
+    return this.buildWithDefaults(ChoiceItemBuilder.defaults, context);
+  }
+
+  [Symbol.for("nodejs.util.inspect.custom")](): string {
+    return createInspectMethod("ChoiceItemBuilder", this.values);
+  }
+}
+
+/**
+ * Creates a new ChoiceItem builder
+ * @param initial Optional initial values
+ * @returns A fluent builder for ChoiceItem
+ */
+export function choiceItem(initial?: FluentPartial<ChoiceItem>): ChoiceItemBuilder {
+  return new ChoiceItemBuilder(initial);
+}"
+`;
+
+exports[`FluentBuilderGenerator > Asset Wrapper (Slot) Types > generates builder for asset with AssetWrapper slots 1`] = `
+"import type { InfoAsset } from "../types/info-";
+import type { Asset } from "@player-ui/types";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+
+export interface InfoAssetBuilderMethods {
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): InfoAssetBuilder;
+  /** Sets the title property */
+  withTitle(value: Asset | FluentBuilder<Asset, BaseBuildContext>): InfoAssetBuilder;
+  /** Sets the subtitle property */
+  withSubtitle(value: Asset | FluentBuilder<Asset, BaseBuildContext>): InfoAssetBuilder;
+  /** Sets the primaryInfo property */
+  withPrimaryInfo(value: Array<Asset | FluentBuilder<Asset, BaseBuildContext>>): InfoAssetBuilder;
+}
+
+/**
+ * A builder for InfoAsset
+ */
+export class InfoAssetBuilder extends FluentBuilderBase<InfoAsset> implements InfoAssetBuilderMethods, FluentBuilder<InfoAsset, BaseBuildContext> {
+  private static readonly defaults: Record<string, unknown> = {"type":"info","id":"","primaryInfo":[]};
+  private static readonly __arrayProperties__: ReadonlySet<string> = new Set(["primaryInfo"]);
+  private static readonly __assetWrapperPaths__: ReadonlyArray<ReadonlyArray<string>> = [["title"],["subtitle"],["primaryInfo"]];
+
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): InfoAssetBuilder {
+    return this.set("id", value);
+  }
+
+  /** Sets the title property */
+  withTitle(value: Asset | FluentBuilder<Asset, BaseBuildContext>): InfoAssetBuilder {
+    return this.set("title", value);
+  }
+
+  /** Sets the subtitle property */
+  withSubtitle(value: Asset | FluentBuilder<Asset, BaseBuildContext>): InfoAssetBuilder {
+    return this.set("subtitle", value);
+  }
+
+  /** Sets the primaryInfo property */
+  withPrimaryInfo(value: Array<Asset | FluentBuilder<Asset, BaseBuildContext>>): InfoAssetBuilder {
+    return this.set("primaryInfo", value);
+  }
+
+  /**
+   * Builds the final InfoAsset object
+   * @param context - Optional build context for nested builders
+   */
+  build(context?: BaseBuildContext): InfoAsset {
+    return this.buildWithDefaults(InfoAssetBuilder.defaults, context);
+  }
+
+  [Symbol.for("nodejs.util.inspect.custom")](): string {
+    return createInspectMethod("InfoAssetBuilder", this.values);
+  }
+}
+
+/**
+ * Creates a new InfoAsset builder
+ * @param initial Optional initial values
+ * @returns A fluent builder for InfoAsset
+ */
+export function info(initial?: FluentPartial<InfoAsset>): InfoAssetBuilder {
+  return new InfoAssetBuilder(initial);
+}"
+`;
+
+exports[`FluentBuilderGenerator > Asset Wrapper (Slot) Types > generates builder for asset with array of AssetWrapper slots 1`] = `
+"import type { CollectionAsset } from "../types/collection-";
+import type { Asset } from "@player-ui/types";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+
+export interface CollectionAssetBuilderMethods {
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): CollectionAssetBuilder;
+  /** Sets the label property */
+  withLabel(value: Asset | FluentBuilder<Asset, BaseBuildContext>): CollectionAssetBuilder;
+  /** Sets the values property */
+  withValues(value: Array<Asset | FluentBuilder<Asset, BaseBuildContext>>): CollectionAssetBuilder;
+}
+
+/**
+ * A builder for CollectionAsset
+ */
+export class CollectionAssetBuilder extends FluentBuilderBase<CollectionAsset> implements CollectionAssetBuilderMethods, FluentBuilder<CollectionAsset, BaseBuildContext> {
+  private static readonly defaults: Record<string, unknown> = {"type":"collection","id":""};
+  private static readonly __arrayProperties__: ReadonlySet<string> = new Set(["values"]);
+  private static readonly __assetWrapperPaths__: ReadonlyArray<ReadonlyArray<string>> = [["label"],["values"]];
+
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): CollectionAssetBuilder {
+    return this.set("id", value);
+  }
+
+  /** Sets the label property */
+  withLabel(value: Asset | FluentBuilder<Asset, BaseBuildContext>): CollectionAssetBuilder {
+    return this.set("label", value);
+  }
+
+  /** Sets the values property */
+  withValues(value: Array<Asset | FluentBuilder<Asset, BaseBuildContext>>): CollectionAssetBuilder {
+    return this.set("values", value);
+  }
+
+  /**
+   * Builds the final CollectionAsset object
+   * @param context - Optional build context for nested builders
+   */
+  build(context?: BaseBuildContext): CollectionAsset {
+    return this.buildWithDefaults(CollectionAssetBuilder.defaults, context);
+  }
+
+  [Symbol.for("nodejs.util.inspect.custom")](): string {
+    return createInspectMethod("CollectionAssetBuilder", this.values);
+  }
+}
+
+/**
+ * Creates a new CollectionAsset builder
+ * @param initial Optional initial values
+ * @returns A fluent builder for CollectionAsset
+ */
+export function collection(initial?: FluentPartial<CollectionAsset>): CollectionAssetBuilder {
+  return new CollectionAssetBuilder(initial);
+}"
+`;
+
+exports[`FluentBuilderGenerator > Basic Types > generates builder for asset with number and boolean properties 1`] = `
+"import type { CounterAsset } from "../types/counter-";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+
+export interface CounterAssetBuilderMethods {
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): CounterAssetBuilder;
+  /** Sets the value property */
+  withValue(value: number | TaggedTemplateValue<number>): CounterAssetBuilder;
+  /** Sets the min property */
+  withMin(value: number | TaggedTemplateValue<number>): CounterAssetBuilder;
+  /** Sets the max property */
+  withMax(value: number | TaggedTemplateValue<number>): CounterAssetBuilder;
+  /** Sets the enabled property */
+  withEnabled(value: boolean | TaggedTemplateValue<boolean>): CounterAssetBuilder;
+}
+
+/**
+ * A builder for CounterAsset
+ */
+export class CounterAssetBuilder extends FluentBuilderBase<CounterAsset> implements CounterAssetBuilderMethods, FluentBuilder<CounterAsset, BaseBuildContext> {
+  private static readonly defaults: Record<string, unknown> = {"type":"counter","id":"","value":0};
+
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): CounterAssetBuilder {
+    return this.set("id", value);
+  }
+
+  /** Sets the value property */
+  withValue(value: number | TaggedTemplateValue<number>): CounterAssetBuilder {
+    return this.set("value", value);
+  }
+
+  /** Sets the min property */
+  withMin(value: number | TaggedTemplateValue<number>): CounterAssetBuilder {
+    return this.set("min", value);
+  }
+
+  /** Sets the max property */
+  withMax(value: number | TaggedTemplateValue<number>): CounterAssetBuilder {
+    return this.set("max", value);
+  }
+
+  /** Sets the enabled property */
+  withEnabled(value: boolean | TaggedTemplateValue<boolean>): CounterAssetBuilder {
+    return this.set("enabled", value);
+  }
+
+  /**
+   * Builds the final CounterAsset object
+   * @param context - Optional build context for nested builders
+   */
+  build(context?: BaseBuildContext): CounterAsset {
+    return this.buildWithDefaults(CounterAssetBuilder.defaults, context);
+  }
+
+  [Symbol.for("nodejs.util.inspect.custom")](): string {
+    return createInspectMethod("CounterAssetBuilder", this.values);
+  }
+}
+
+/**
+ * Creates a new CounterAsset builder
+ * @param initial Optional initial values
+ * @returns A fluent builder for CounterAsset
+ */
+export function counter(initial?: FluentPartial<CounterAsset>): CounterAssetBuilder {
+  return new CounterAssetBuilder(initial);
+}"
+`;
+
+exports[`FluentBuilderGenerator > Basic Types > generates builder for asset with optional properties 1`] = `
+"import type { InputAsset } from "../types/input-";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+
+export interface InputAssetBuilderMethods {
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): InputAssetBuilder;
+  /** Sets the binding property */
+  withBinding(value: string | TaggedTemplateValue<string>): InputAssetBuilder;
+  /** Sets the label property */
+  withLabel(value: string | TaggedTemplateValue<string>): InputAssetBuilder;
+  /** Sets the placeholder property */
+  withPlaceholder(value: string | TaggedTemplateValue<string>): InputAssetBuilder;
+}
+
+/**
+ * A builder for InputAsset
+ */
+export class InputAssetBuilder extends FluentBuilderBase<InputAsset> implements InputAssetBuilderMethods, FluentBuilder<InputAsset, BaseBuildContext> {
+  private static readonly defaults: Record<string, unknown> = {"type":"input","id":"","binding":""};
+
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): InputAssetBuilder {
+    return this.set("id", value);
+  }
+
+  /** Sets the binding property */
+  withBinding(value: string | TaggedTemplateValue<string>): InputAssetBuilder {
+    return this.set("binding", value);
+  }
+
+  /** Sets the label property */
+  withLabel(value: string | TaggedTemplateValue<string>): InputAssetBuilder {
+    return this.set("label", value);
+  }
+
+  /** Sets the placeholder property */
+  withPlaceholder(value: string | TaggedTemplateValue<string>): InputAssetBuilder {
+    return this.set("placeholder", value);
+  }
+
+  /**
+   * Builds the final InputAsset object
+   * @param context - Optional build context for nested builders
+   */
+  build(context?: BaseBuildContext): InputAsset {
+    return this.buildWithDefaults(InputAssetBuilder.defaults, context);
+  }
+
+  [Symbol.for("nodejs.util.inspect.custom")](): string {
+    return createInspectMethod("InputAssetBuilder", this.values);
+  }
+}
+
+/**
+ * Creates a new InputAsset builder
+ * @param initial Optional initial values
+ * @returns A fluent builder for InputAsset
+ */
+export function input(initial?: FluentPartial<InputAsset>): InputAssetBuilder {
+  return new InputAssetBuilder(initial);
+}"
+`;
+
+exports[`FluentBuilderGenerator > Basic Types > generates builder for simple asset with string property 1`] = `
+"import type { TextAsset } from "../types/text-";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+
+export interface TextAssetBuilderMethods {
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): TextAssetBuilder;
+  /** Sets the value property */
+  withValue(value: string | TaggedTemplateValue<string>): TextAssetBuilder;
+}
+
+/**
+ * A builder for TextAsset
+ */
+export class TextAssetBuilder extends FluentBuilderBase<TextAsset> implements TextAssetBuilderMethods, FluentBuilder<TextAsset, BaseBuildContext> {
+  private static readonly defaults: Record<string, unknown> = {"type":"text","id":"","value":""};
+
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): TextAssetBuilder {
+    return this.set("id", value);
+  }
+
+  /** Sets the value property */
+  withValue(value: string | TaggedTemplateValue<string>): TextAssetBuilder {
+    return this.set("value", value);
+  }
+
+  /**
+   * Builds the final TextAsset object
+   * @param context - Optional build context for nested builders
+   */
+  build(context?: BaseBuildContext): TextAsset {
+    return this.buildWithDefaults(TextAssetBuilder.defaults, context);
+  }
+
+  [Symbol.for("nodejs.util.inspect.custom")](): string {
+    return createInspectMethod("TextAssetBuilder", this.values);
+  }
+}
+
+/**
+ * Creates a new TextAsset builder
+ * @param initial Optional initial values
+ * @returns A fluent builder for TextAsset
+ */
+export function text(initial?: FluentPartial<TextAsset>): TextAssetBuilder {
+  return new TextAssetBuilder(initial);
+}"
+`;
+
+exports[`FluentBuilderGenerator > Binding and Expression Types > generates builder for asset with Binding property 1`] = `
+"import type { InputAsset } from "../types/input-";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+
+export interface InputAssetBuilderMethods {
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): InputAssetBuilder;
+  /** Sets the binding property */
+  withBinding(value: string | TaggedTemplateValue<string>): InputAssetBuilder;
+  /** Sets the label property */
+  withLabel(value: string | TaggedTemplateValue<string>): InputAssetBuilder;
+}
+
+/**
+ * A builder for InputAsset
+ */
+export class InputAssetBuilder extends FluentBuilderBase<InputAsset> implements InputAssetBuilderMethods, FluentBuilder<InputAsset, BaseBuildContext> {
+  private static readonly defaults: Record<string, unknown> = {"type":"input","id":"","binding":""};
+
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): InputAssetBuilder {
+    return this.set("id", value);
+  }
+
+  /** Sets the binding property */
+  withBinding(value: string | TaggedTemplateValue<string>): InputAssetBuilder {
+    return this.set("binding", value);
+  }
+
+  /** Sets the label property */
+  withLabel(value: string | TaggedTemplateValue<string>): InputAssetBuilder {
+    return this.set("label", value);
+  }
+
+  /**
+   * Builds the final InputAsset object
+   * @param context - Optional build context for nested builders
+   */
+  build(context?: BaseBuildContext): InputAsset {
+    return this.buildWithDefaults(InputAssetBuilder.defaults, context);
+  }
+
+  [Symbol.for("nodejs.util.inspect.custom")](): string {
+    return createInspectMethod("InputAssetBuilder", this.values);
+  }
+}
+
+/**
+ * Creates a new InputAsset builder
+ * @param initial Optional initial values
+ * @returns A fluent builder for InputAsset
+ */
+export function input(initial?: FluentPartial<InputAsset>): InputAssetBuilder {
+  return new InputAssetBuilder(initial);
+}"
+`;
+
+exports[`FluentBuilderGenerator > Binding and Expression Types > generates builder for asset with Expression property 1`] = `
+"import type { ActionAsset } from "../types/action-";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+
+export interface ActionAssetBuilderMethods {
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): ActionAssetBuilder;
+  /** Sets the value property */
+  withValue(value: string | TaggedTemplateValue<string>): ActionAssetBuilder;
+  /** Sets the exp property */
+  withExp(value: string | TaggedTemplateValue<string>): ActionAssetBuilder;
+}
+
+/**
+ * A builder for ActionAsset
+ */
+export class ActionAssetBuilder extends FluentBuilderBase<ActionAsset> implements ActionAssetBuilderMethods, FluentBuilder<ActionAsset, BaseBuildContext> {
+  private static readonly defaults: Record<string, unknown> = {"type":"action","id":""};
+
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): ActionAssetBuilder {
+    return this.set("id", value);
+  }
+
+  /** Sets the value property */
+  withValue(value: string | TaggedTemplateValue<string>): ActionAssetBuilder {
+    return this.set("value", value);
+  }
+
+  /** Sets the exp property */
+  withExp(value: string | TaggedTemplateValue<string>): ActionAssetBuilder {
+    return this.set("exp", value);
+  }
+
+  /**
+   * Builds the final ActionAsset object
+   * @param context - Optional build context for nested builders
+   */
+  build(context?: BaseBuildContext): ActionAsset {
+    return this.buildWithDefaults(ActionAssetBuilder.defaults, context);
+  }
+
+  [Symbol.for("nodejs.util.inspect.custom")](): string {
+    return createInspectMethod("ActionAssetBuilder", this.values);
+  }
+}
+
+/**
+ * Creates a new ActionAsset builder
+ * @param initial Optional initial values
+ * @returns A fluent builder for ActionAsset
+ */
+export function action(initial?: FluentPartial<ActionAsset>): ActionAssetBuilder {
+  return new ActionAssetBuilder(initial);
+}"
+`;
+
+exports[`FluentBuilderGenerator > Generic Types > generates builder for asset with generic parameter 1`] = `
+"import type { InputAsset } from "../types/input-";
+import type { Asset } from "@player-ui/types";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+
+export interface InputAssetBuilderMethods<AnyTextAsset extends Asset = Asset> {
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): InputAssetBuilder<AnyTextAsset>;
+  /** Sets the binding property */
+  withBinding(value: string | TaggedTemplateValue<string>): InputAssetBuilder<AnyTextAsset>;
+  /** Sets the label property */
+  withLabel(value: Asset | FluentBuilder<Asset, BaseBuildContext>): InputAssetBuilder<AnyTextAsset>;
+  /** Sets the note property */
+  withNote(value: Asset | FluentBuilder<Asset, BaseBuildContext>): InputAssetBuilder<AnyTextAsset>;
+}
+
+/**
+ * A builder for InputAsset
+ */
+export class InputAssetBuilder<AnyTextAsset extends Asset = Asset> extends FluentBuilderBase<InputAsset<AnyTextAsset>> implements InputAssetBuilderMethods<AnyTextAsset>, FluentBuilder<InputAsset<AnyTextAsset>, BaseBuildContext> {
+  private static readonly defaults: Record<string, unknown> = {"type":"input","id":"","binding":""};
+  private static readonly __assetWrapperPaths__: ReadonlyArray<ReadonlyArray<string>> = [["label"],["note"]];
+
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): InputAssetBuilder<AnyTextAsset> {
+    return this.set("id", value);
+  }
+
+  /** Sets the binding property */
+  withBinding(value: string | TaggedTemplateValue<string>): InputAssetBuilder<AnyTextAsset> {
+    return this.set("binding", value);
+  }
+
+  /** Sets the label property */
+  withLabel(value: Asset | FluentBuilder<Asset, BaseBuildContext>): InputAssetBuilder<AnyTextAsset> {
+    return this.set("label", value);
+  }
+
+  /** Sets the note property */
+  withNote(value: Asset | FluentBuilder<Asset, BaseBuildContext>): InputAssetBuilder<AnyTextAsset> {
+    return this.set("note", value);
+  }
+
+  /**
+   * Builds the final InputAsset object
+   * @param context - Optional build context for nested builders
+   */
+  build(context?: BaseBuildContext): InputAsset<AnyTextAsset> {
+    return this.buildWithDefaults(InputAssetBuilder.defaults, context);
+  }
+
+  [Symbol.for("nodejs.util.inspect.custom")](): string {
+    return createInspectMethod("InputAssetBuilder", this.values);
+  }
+}
+
+/**
+ * Creates a new InputAsset builder
+ * @param initial Optional initial values
+ * @returns A fluent builder for InputAsset
+ */
+export function input<AnyTextAsset extends Asset = Asset>(initial?: FluentPartial<InputAsset<AnyTextAsset>>): InputAssetBuilder<AnyTextAsset> {
+  return new InputAssetBuilder<AnyTextAsset>(initial);
+}"
+`;
+
+exports[`FluentBuilderGenerator > Nested Object Types > generates builder for asset with named nested type 1`] = `
+"import type { ActionAsset, ActionMetaData } from "../types/action-";
+import type { Asset } from "@player-ui/types";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+
+export interface ActionAssetBuilderMethods {
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): ActionAssetBuilder;
+  /** Sets the value property */
+  withValue(value: string | TaggedTemplateValue<string>): ActionAssetBuilder;
+  /** Sets the label property */
+  withLabel(value: Asset | FluentBuilder<Asset, BaseBuildContext>): ActionAssetBuilder;
+  /** Sets the metaData property */
+  withMetaData(value: ActionMetaData | FluentBuilder<ActionMetaData, BaseBuildContext> | FluentPartial<ActionMetaData, BaseBuildContext>): ActionAssetBuilder;
+}
+
+/**
+ * A builder for ActionAsset
+ */
+export class ActionAssetBuilder extends FluentBuilderBase<ActionAsset> implements ActionAssetBuilderMethods, FluentBuilder<ActionAsset, BaseBuildContext> {
+  private static readonly defaults: Record<string, unknown> = {"type":"action","id":""};
+  private static readonly __assetWrapperPaths__: ReadonlyArray<ReadonlyArray<string>> = [["label"]];
+
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): ActionAssetBuilder {
+    return this.set("id", value);
+  }
+
+  /** Sets the value property */
+  withValue(value: string | TaggedTemplateValue<string>): ActionAssetBuilder {
+    return this.set("value", value);
+  }
+
+  /** Sets the label property */
+  withLabel(value: Asset | FluentBuilder<Asset, BaseBuildContext>): ActionAssetBuilder {
+    return this.set("label", value);
+  }
+
+  /** Sets the metaData property */
+  withMetaData(value: ActionMetaData | FluentBuilder<ActionMetaData, BaseBuildContext> | FluentPartial<ActionMetaData, BaseBuildContext>): ActionAssetBuilder {
+    return this.set("metaData", value);
+  }
+
+  /**
+   * Builds the final ActionAsset object
+   * @param context - Optional build context for nested builders
+   */
+  build(context?: BaseBuildContext): ActionAsset {
+    return this.buildWithDefaults(ActionAssetBuilder.defaults, context);
+  }
+
+  [Symbol.for("nodejs.util.inspect.custom")](): string {
+    return createInspectMethod("ActionAssetBuilder", this.values);
+  }
+}
+
+/**
+ * Creates a new ActionAsset builder
+ * @param initial Optional initial values
+ * @returns A fluent builder for ActionAsset
+ */
+export function action(initial?: FluentPartial<ActionAsset>): ActionAssetBuilder {
+  return new ActionAssetBuilder(initial);
+}"
+`;
+
+exports[`FluentBuilderGenerator > Nested Object Types > generates builder for asset with nested object property 1`] = `
+"import type { ActionAsset } from "../types/action-";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+
+export interface ActionAssetBuilderMethods {
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): ActionAssetBuilder;
+  /** Sets the value property */
+  withValue(value: string | TaggedTemplateValue<string>): ActionAssetBuilder;
+  /** Sets the confirmation property */
+  withConfirmation(value: { message: string | TaggedTemplateValue<string>; affirmativeLabel: string | TaggedTemplateValue<string>; negativeLabel?: string | TaggedTemplateValue<string> } | FluentBuilder<{ message: string | TaggedTemplateValue<string>; affirmativeLabel: string | TaggedTemplateValue<string>; negativeLabel?: string | TaggedTemplateValue<string> }, BaseBuildContext> | FluentPartial<{ message: string | TaggedTemplateValue<string>; affirmativeLabel: string | TaggedTemplateValue<string>; negativeLabel?: string | TaggedTemplateValue<string> }, BaseBuildContext>): ActionAssetBuilder;
+}
+
+/**
+ * A builder for ActionAsset
+ */
+export class ActionAssetBuilder extends FluentBuilderBase<ActionAsset> implements ActionAssetBuilderMethods, FluentBuilder<ActionAsset, BaseBuildContext> {
+  private static readonly defaults: Record<string, unknown> = {"type":"action","id":""};
+
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): ActionAssetBuilder {
+    return this.set("id", value);
+  }
+
+  /** Sets the value property */
+  withValue(value: string | TaggedTemplateValue<string>): ActionAssetBuilder {
+    return this.set("value", value);
+  }
+
+  /** Sets the confirmation property */
+  withConfirmation(value: { message: string | TaggedTemplateValue<string>; affirmativeLabel: string | TaggedTemplateValue<string>; negativeLabel?: string | TaggedTemplateValue<string> } | FluentBuilder<{ message: string | TaggedTemplateValue<string>; affirmativeLabel: string | TaggedTemplateValue<string>; negativeLabel?: string | TaggedTemplateValue<string> }, BaseBuildContext> | FluentPartial<{ message: string | TaggedTemplateValue<string>; affirmativeLabel: string | TaggedTemplateValue<string>; negativeLabel?: string | TaggedTemplateValue<string> }, BaseBuildContext>): ActionAssetBuilder {
+    return this.set("confirmation", value);
+  }
+
+  /**
+   * Builds the final ActionAsset object
+   * @param context - Optional build context for nested builders
+   */
+  build(context?: BaseBuildContext): ActionAsset {
+    return this.buildWithDefaults(ActionAssetBuilder.defaults, context);
+  }
+
+  [Symbol.for("nodejs.util.inspect.custom")](): string {
+    return createInspectMethod("ActionAssetBuilder", this.values);
+  }
+}
+
+/**
+ * Creates a new ActionAsset builder
+ * @param initial Optional initial values
+ * @returns A fluent builder for ActionAsset
+ */
+export function action(initial?: FluentPartial<ActionAsset>): ActionAssetBuilder {
+  return new ActionAssetBuilder(initial);
+}"
+`;
+
+exports[`FluentBuilderGenerator > Union Types > generates builder for asset with discriminated union modifiers 1`] = `
+"import type { CollectionAsset, CalloutModifier, TagModifier } from "../types/collection-";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+
+export interface CollectionAssetBuilderMethods {
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): CollectionAssetBuilder;
+  /** Sets the modifiers property */
+  withModifiers(value: Array<CalloutModifier | FluentBuilder<CalloutModifier, BaseBuildContext> | FluentPartial<CalloutModifier, BaseBuildContext> | TagModifier | FluentBuilder<TagModifier, BaseBuildContext> | FluentPartial<TagModifier, BaseBuildContext>>): CollectionAssetBuilder;
+}
+
+/**
+ * A builder for CollectionAsset
+ */
+export class CollectionAssetBuilder extends FluentBuilderBase<CollectionAsset> implements CollectionAssetBuilderMethods, FluentBuilder<CollectionAsset, BaseBuildContext> {
+  private static readonly defaults: Record<string, unknown> = {"type":"collection","id":""};
+  private static readonly __arrayProperties__: ReadonlySet<string> = new Set(["modifiers"]);
+
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): CollectionAssetBuilder {
+    return this.set("id", value);
+  }
+
+  /** Sets the modifiers property */
+  withModifiers(value: Array<CalloutModifier | FluentBuilder<CalloutModifier, BaseBuildContext> | FluentPartial<CalloutModifier, BaseBuildContext> | TagModifier | FluentBuilder<TagModifier, BaseBuildContext> | FluentPartial<TagModifier, BaseBuildContext>>): CollectionAssetBuilder {
+    return this.set("modifiers", value);
+  }
+
+  /**
+   * Builds the final CollectionAsset object
+   * @param context - Optional build context for nested builders
+   */
+  build(context?: BaseBuildContext): CollectionAsset {
+    return this.buildWithDefaults(CollectionAssetBuilder.defaults, context);
+  }
+
+  [Symbol.for("nodejs.util.inspect.custom")](): string {
+    return createInspectMethod("CollectionAssetBuilder", this.values);
+  }
+}
+
+/**
+ * Creates a new CollectionAsset builder
+ * @param initial Optional initial values
+ * @returns A fluent builder for CollectionAsset
+ */
+export function collection(initial?: FluentPartial<CollectionAsset>): CollectionAssetBuilder {
+  return new CollectionAssetBuilder(initial);
+}"
+`;
+
+exports[`FluentBuilderGenerator > Union Types > generates builder for asset with union property 1`] = `
+"import type { ActionAsset } from "../types/action-";
+import { type FluentBuilder, type BaseBuildContext, type FluentPartial, FluentBuilderBase, createInspectMethod, type TaggedTemplateValue } from "@player-tools/fluent";
+
+export interface ActionAssetBuilderMethods {
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): ActionAssetBuilder;
+  /** Sets the size property */
+  withSize(value: "small" | "medium" | "large"): ActionAssetBuilder;
+}
+
+/**
+ * A builder for ActionAsset
+ */
+export class ActionAssetBuilder extends FluentBuilderBase<ActionAsset> implements ActionAssetBuilderMethods, FluentBuilder<ActionAsset, BaseBuildContext> {
+  private static readonly defaults: Record<string, unknown> = {"type":"action","id":""};
+
+  /** A unique identifier for this asset */
+  withId(value: string | TaggedTemplateValue<string>): ActionAssetBuilder {
+    return this.set("id", value);
+  }
+
+  /** Sets the size property */
+  withSize(value: "small" | "medium" | "large"): ActionAssetBuilder {
+    return this.set("size", value);
+  }
+
+  /**
+   * Builds the final ActionAsset object
+   * @param context - Optional build context for nested builders
+   */
+  build(context?: BaseBuildContext): ActionAsset {
+    return this.buildWithDefaults(ActionAssetBuilder.defaults, context);
+  }
+
+  [Symbol.for("nodejs.util.inspect.custom")](): string {
+    return createInspectMethod("ActionAssetBuilder", this.values);
+  }
+}
+
+/**
+ * Creates a new ActionAsset builder
+ * @param initial Optional initial values
+ * @returns A fluent builder for ActionAsset
+ */
+export function action(initial?: FluentPartial<ActionAsset>): ActionAssetBuilder {
+  return new ActionAssetBuilder(initial);
+}"
+`;

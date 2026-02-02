@@ -533,7 +533,7 @@ exports[`Generic Declarations > Implementing Generic Type 1`] = `
             "symbol": "T",
           },
         ],
-        "name": "Foo",
+        "name": "Foo<number>",
         "or": [
           {
             "title": "Foo",
@@ -1648,7 +1648,7 @@ exports[`Variable Exports > named tuples in generics 1`] = `
     ],
     "genericTokens": undefined,
     "minItems": 2,
-    "name": "Foo",
+    "name": "Foo<[argName: string, argValue: string]>",
     "source": "filename.ts",
     "title": "Bar",
     "type": "tuple",

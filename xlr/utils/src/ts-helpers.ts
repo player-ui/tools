@@ -70,6 +70,44 @@ export function getReferencedType(
 }
 
 /**
+ * Checks if a type reference points to a TypeScript built-in type
+ * by examining whether its declaration comes from TypeScript's lib files.
+ *
+ * This is more robust than maintaining a hardcoded list of built-in types
+ * as it automatically handles all TypeScript lib types (Map, Set, WeakMap,
+ * Promise, Array, Date, Error, RegExp, etc.).
+ */
+export function isTypeScriptLibType(
+  node: ts.TypeReferenceNode,
+  typeChecker: ts.TypeChecker,
+): boolean {
+  let symbol = typeChecker.getSymbolAtLocation(node.typeName);
+
+  if (!symbol) return false;
+
+  // Follow alias if it is a symbol
+  if ((symbol.flags & ts.SymbolFlags.Alias) === ts.SymbolFlags.Alias) {
+    symbol = typeChecker.getAliasedSymbol(symbol);
+  }
+
+  const declarations = symbol.getDeclarations();
+  if (!declarations || declarations.length === 0) return false;
+
+  // Check if any declaration comes from TypeScript lib files
+  return declarations.some((decl) => {
+    const sourceFile = decl.getSourceFile();
+    if (!sourceFile) return false;
+
+    const filePath = sourceFile.fileName;
+    return (
+      filePath.includes("/typescript/lib/") ||
+      filePath.includes("\\typescript\\lib\\") ||
+      (filePath.endsWith(".d.ts") && filePath.includes("lib."))
+    );
+  });
+}
+
+/**
  * Returns list of string literals from potential union of strings
  */
 export function getStringLiteralsFromUnion(node: ts.Node): Set<string> {
