@@ -246,7 +246,7 @@ describe("Or Type Validation", () => {
     sdk.loadDefinitionsFromModule(Types);
     sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
 
-    const validator = new XLRValidator(sdk.getType);
+    const validator = new XLRValidator(sdk.getType.bind(sdk));
     let validationResult: ValidationMessage[];
 
     if (mockAsset.children && mockAsset.children.length > 0) {
@@ -262,6 +262,32 @@ describe("Or Type Validation", () => {
     );
     expect(validationResult[1].message).toBe(
       "Expected: apple | banana | carrot | deli-meat",
+    );
+  });
+
+  test("Uses primitive type names over titles", () => {
+    const sdk = new XLRSDK();
+    sdk.loadDefinitionsFromModule(Types);
+    sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
+    const validator = new XLRValidator(sdk.getType.bind(sdk));
+
+    const orType: OrType = {
+      type: "or",
+      or: [
+        { type: "string", title: "TextAsset.value" },
+        { type: "boolean" },
+      ],
+    };
+
+    const rootNode = parseTree(`1`);
+    if (!rootNode) {
+      throw new Error("Expected root node to be parsed");
+    }
+
+    const validationResult = validator.validateType(rootNode, orType);
+
+    expect(validationResult[0].message).toBe(
+      "Does not match any of the types: string | boolean",
     );
   });
 });
