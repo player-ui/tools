@@ -42,8 +42,6 @@ class TestGenerator:
                             "skipValidation": True,
                             "role": "test"
                         },
-                        "accessibility": None,
-                        "label": None,
                     }
                 , sort_keys=True, indent=4)
 

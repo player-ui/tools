@@ -19,22 +19,31 @@ class Slotable(Serializable):
 
     def _withSlot(self, name: str, obj: Any, wrapInAssetWrapper: bool = True, isArray = False):
         val = obj
+        if val is None:
+            return self
+
         if wrapInAssetWrapper:
             if isArray:
                 val = []
                 for index, asset in enumerate(obj):
                     wrapped = AssetWrapper(asset) if not isAssetWrapperOrSwitch(asset) else asset
                     # Set parent relationship and generate ID for the asset
-                    actual_asset = wrapped.asset if isinstance(wrapped, AssetWrapper) else None
+                    actual_asset = wrapped.asset if isinstance(wrapped, AssetWrapper) else asset
                     if actual_asset and isinstance(actual_asset, Asset):
                         actual_asset._setParent(self, name, index) #pylint: disable=protected-access
                     val.append(wrapped)
             else:
                 val = AssetWrapper(obj) if not isAssetWrapperOrSwitch(obj) else obj
                 # Set parent relationship and generate ID for the asset
-                actual_asset = val.asset if isinstance(val, AssetWrapper) else None
+                actual_asset = val.asset if isinstance(val, AssetWrapper) else obj
                 if actual_asset and isinstance(actual_asset, Asset):
                     actual_asset._setParent(self, name, None) #pylint: disable=protected-access
+        else:
+            if isArray:
+                for index, asset in enumerate(obj):
+                    asset._setParent(self, name, index) #pylint: disable=protected-access
+            else:
+                obj._setParent(self, name) #pylint: disable=protected-access
         self[name] = val
         return self
 
@@ -48,6 +57,7 @@ class Asset(Slotable):
     _parent: Optional[Slotable]
     _slot_name: Optional[str]
     _slot_index: Optional[int]
+    _static_id: bool = False
 
     def __init__(self, id: Optional[str], type: str) -> None:
         self.type = type
@@ -59,6 +69,7 @@ class Asset(Slotable):
             self.id = self._generateID()
         else:
             self.id = id
+            self._static_id = True
 
     def _setParent(self, parent: Slotable, slot_name: str, slot_index: Optional[int]):
         """
@@ -67,8 +78,9 @@ class Asset(Slotable):
         self._parent = parent
         self._slot_name = slot_name
         self._slot_index = slot_index
-        # Regenerate ID based on parent context
-        self.id = self._generateID()
+        if not self._static_id:
+            # Regenerate ID based on parent context
+            self.id = self._generateID()
 
     def _generateID(self) -> str:
         """

@@ -1,8 +1,6 @@
 """
 Common Serialization Utility
 """
-
-from types import NoneType
 from json import dumps
 
 def isPrivateProperty(string: str):
@@ -23,6 +21,18 @@ def _default_json_encoder(obj):
     else:
         return lambda o: o.__dict__
 
+def isEmptyDictionary(obj):
+    """
+    checks if object is an empty dictionary
+    """
+    return isinstance(obj, dict) and obj == {}
+
+def shouldIgnoreKey(key, obj, ignored_keys):
+    """
+    checks if a key should be ignored during serialization
+    """
+    return isInternalMethod(key) or key in ignored_keys or isEmptyDictionary(obj)
+
 class Serializable():
     """
     Base class to allow for custom JSON serialization
@@ -30,22 +40,34 @@ class Serializable():
     # Map of properties that aren't valid Python properties to their serialized value
     _propMap: dict[str, str] = {}
     # Types that should be handled by the base serialization logic
-    _jsonable = (int, list, str, dict, NoneType)
+    _jsonable = (int, list, str, dict)
     # Keys that should be ignored during serialization
-    _ignored_json_keys = ['_propMap', '_ignored_json_keys', '_parent', "_slot_name", "_slot_index"]
+    _ignored_json_keys = {
+        '_propMap', 
+        '_ignored_json_keys', 
+        '_parent', 
+        "_slot_name", 
+        "_slot_index", 
+        "_static_id"
+    }
 
     def _serialize(self):
         _dict = dict()
         for attr in dir(self):
             value = getattr(self, attr)
             key = attr
-            if isInternalMethod(attr) or key in getattr(self, "_ignored_json_keys", []):
+            if key == "_ignored_json_keys":
                 continue
+            elif shouldIgnoreKey(key, value, getattr(self, "_ignored_json_keys", [])):
+                continue
+            elif key in ["additional_props", "additional_nodes"] and isinstance(value, dict):
+                for subKey, subVal in value.items():
+                    _dict[subKey] = subVal
             elif isinstance(value, (self._jsonable, Serializable)) or hasattr(value, 'to_dict'):
                 if self._propMap.get(key, None) is not None:
                     key = self._propMap[key]
                 elif(isPrivateProperty(attr) and not isInternalMethod(attr)):
-                    key = attr.replace("_", "")
+                    key = attr.replace("_", "", 1)
 
                 _dict[key] = value
             else:
@@ -59,7 +81,7 @@ class Serializable():
         indent = kw.pop("indent", 4)  # use indent key if passed otherwise 4.
         _ignored_json_keys = kw.pop("ignored_keys", [])
         if _ignored_json_keys:
-            self._ignored_json_keys += _ignored_json_keys
+            self._ignored_json_keys.update(set(_ignored_json_keys)) # type: ignore
 
         return dumps(self, indent=indent, default=_default_json_encoder, **kw)
 

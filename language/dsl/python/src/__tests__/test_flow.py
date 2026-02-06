@@ -81,7 +81,7 @@ class TestFlow:
 
     def test_instantiation_minimal(self):
         """Test Flow can be instantiated with minimal required parameters"""
-        navigation = Navigation(begin="start")
+        navigation = Navigation(BEGIN="start")
         flow = Flow(id="test_flow", navigation=navigation)
         assert flow is not None
         assert flow.id == "test_flow"
@@ -92,7 +92,7 @@ class TestFlow:
 
     def test_instantiation_full(self):
         """Test Flow can be instantiated with all parameters"""
-        navigation = Navigation(begin="start")
+        navigation = Navigation(BEGIN="start")
         views = [View(id="view1", type="text")]
         schema = Schema(root=SchemaNode())
         data = {"initial": "data"}
@@ -116,27 +116,27 @@ class TestFlow:
 
     def test_id_property_getter(self):
         """Test id property getter"""
-        navigation = Navigation(begin="start")
+        navigation = Navigation(BEGIN="start")
         flow = Flow(id="test_id", navigation=navigation)
         assert flow.id == "test_id"
 
     def test_id_property_setter(self):
         """Test id property setter"""
-        navigation = Navigation(begin="start")
+        navigation = Navigation(BEGIN="start")
         flow = Flow(id="initial_id", navigation=navigation)
         flow.id = "new_id"
         assert flow.id == "new_id"
 
     def test_views_property_getter(self):
         """Test views property getter"""
-        navigation = Navigation(begin="start")
+        navigation = Navigation(BEGIN="start")
         views = [View(id="view1", type="text"), View(id="view2", type="input")]
         flow = Flow(id="test", navigation=navigation, views=views)
         assert flow.views == views
 
     def test_views_property_setter(self):
         """Test views property setter"""
-        navigation = Navigation(begin="start")
+        navigation = Navigation(BEGIN="start")
         flow = Flow(id="test", navigation=navigation)
         new_views = [View(id="new_view", type="button")]
         flow.views = new_views
@@ -144,14 +144,14 @@ class TestFlow:
 
     def test_schema_property_getter(self):
         """Test schema property getter"""
-        navigation = Navigation(begin="start")
+        navigation = Navigation(BEGIN="start")
         schema = Schema(root=SchemaNode())
         flow = Flow(id="test", navigation=navigation, schema=schema)
         assert flow.schema == schema
 
     def test_schema_property_setter(self):
         """Test schema property setter"""
-        navigation = Navigation(begin="start")
+        navigation = Navigation(BEGIN="start")
         flow = Flow(id="test", navigation=navigation)
         new_schema = Schema(root=SchemaNode())
         flow.schema = new_schema
@@ -159,14 +159,14 @@ class TestFlow:
 
     def test_data_property_getter(self):
         """Test data property getter"""
-        navigation = Navigation(begin="start")
+        navigation = Navigation(BEGIN="start")
         data = {"test": "data"}
         flow = Flow(id="test", navigation=navigation, data=data)
         assert flow.data == data
 
     def test_data_property_setter(self):
         """Test data property setter"""
-        navigation = Navigation(begin="start")
+        navigation = Navigation(BEGIN="start")
         flow = Flow(id="test", navigation=navigation)
         new_data = {"new": "data"}
         flow.data = new_data
@@ -174,21 +174,21 @@ class TestFlow:
 
     def test_navigation_property_getter(self):
         """Test navigation property getter"""
-        navigation = Navigation(begin="start")
+        navigation = Navigation(BEGIN="start")
         flow = Flow(id="test", navigation=navigation)
         assert flow.navigation == navigation
 
     def test_navigation_property_setter(self):
         """Test navigation property setter"""
-        initial_nav = Navigation(begin="start")
-        new_nav = Navigation(begin="end")
+        initial_nav = Navigation(BEGIN="start")
+        new_nav = Navigation(BEGIN="end")
         flow = Flow(id="test", navigation=initial_nav)
         flow.navigation = new_nav
         assert flow.navigation == new_nav
 
     def test_additional_props_methods(self):
         """Test additional properties methods"""
-        navigation = Navigation(begin="start")
+        navigation = Navigation(BEGIN="start")
         flow = Flow(id="test", navigation=navigation, custom="value", number=42)
         
         assert flow.get_additional_prop("custom") == "value"
@@ -205,7 +205,7 @@ class TestFlow:
 
     def test_json_serialization_minimal(self):
         """Test JSON serialization with minimal setup"""
-        navigation = Navigation(begin="start")
+        navigation = Navigation(BEGIN="start")
         flow = Flow(id="test_flow", navigation=navigation)
         
         json_str = json.dumps(flow.__dict__, default=lambda o: o.__dict__)
@@ -221,7 +221,7 @@ class TestFlow:
 
     def test_json_serialization_full(self):
         """Test JSON serialization with all properties"""
-        navigation = Navigation(begin="start")
+        navigation = Navigation(BEGIN="start")
         views = [View(id="view1", type="text")]
         schema = Schema(root=SchemaNode())
         data = {"test": "data"}
