@@ -21,6 +21,14 @@ executors:
       TZ: "/usr/share/zoneinfo/America/Los_Angeles"
 
 commands:
+
+  setup_auth:
+    description: Configure authentication for deployments
+    steps:
+      - run: mkdir -p ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+      - run: git config --global user.name "Intuit Service"
+      - run: git config --global user.email "opensource-svc@intuit.com"
+
   auto_shipit:
     description: Perform Auto shipit
     steps:
@@ -32,7 +40,7 @@ commands:
             - v1-bazel-cache-core-{{ .Branch }}-{{ .Revision }}
             - v1-bazel-cache-core-{{ .Branch }}
             - v1-bazel-cache-core-main
-
+      - setup_auth
       - run: echo "//registry.npmjs.com/:_authToken=$NPM_TOKEN" >> ~/.npmrc
       - run: echo -e $GPG_KEY | gpg --import --batch
       - run: |
