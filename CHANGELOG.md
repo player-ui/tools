@@ -1,3 +1,15 @@
+# 0.13.0-next.3 (Mon Feb 09 2026)
+
+#### 🐛 Bug Fix
+
+- Prefer primitive names in union errors [#236](https://github.com/player-ui/tools/pull/236) ([@shahabdsh](https://github.com/shahabdsh))
+
+#### Authors: 1
+
+- Shahab Deljoo ([@shahabdsh](https://github.com/shahabdsh))
+
+---
+
 # 0.13.0-next.2 (Mon Feb 09 2026)
 
 ### Release Notes
