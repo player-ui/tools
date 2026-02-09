@@ -246,7 +246,7 @@ describe("Or Type Validation", () => {
     sdk.loadDefinitionsFromModule(Types);
     sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
 
-    const validator = new XLRValidator(sdk.getType.bind(sdk));
+    const validator = new XLRValidator(sdk.getType);
     let validationResult: ValidationMessage[];
 
     if (mockAsset.children && mockAsset.children.length > 0) {
