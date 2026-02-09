@@ -273,10 +273,7 @@ describe("Or Type Validation", () => {
 
     const orType: OrType = {
       type: "or",
-      or: [
-        { type: "string", title: "TextAsset.value" },
-        { type: "boolean" },
-      ],
+      or: [{ type: "string", title: "TextAsset.value" }, { type: "boolean" }],
     };
 
     const rootNode = parseTree(`1`);
