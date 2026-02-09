@@ -1,3 +1,32 @@
+# 0.13.0-next.2 (Mon Feb 09 2026)
+
+### Release Notes
+
+#### Try and Fix Releases ([#237](https://github.com/player-ui/tools/pull/237))
+
+Internal release fixes
+
+#### Misc Python DSL Fixes ([#233](https://github.com/player-ui/tools/pull/233))
+
+- DSL: Update all base Player constructs to extend Serializable
+- DSL: Remove `None` and empty objects values from object during serialization
+- DSL: Fix serialization of additional properties dictionaries on supported objects
+- Generation: Fix issue where assets passed as an array to another asset during init wouldn't go through the `with` method, preventing the proper parent from being associated with it
+- DSL: Prefer explicitly set ID over generated ID
+
+---
+
+#### 🐛 Bug Fix
+
+- Try and Fix Releases [#237](https://github.com/player-ui/tools/pull/237) ([@KetanReddy](https://github.com/KetanReddy))
+- Misc Python DSL Fixes [#233](https://github.com/player-ui/tools/pull/233) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### Authors: 1
+
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
 # 0.13.0-next.1 (Tue Dec 16 2025)
 
 ### Release Notes
