@@ -40,6 +40,7 @@ import {
   resolveConditional,
   applyExcludeToNodeType,
   isPrimitiveTypeNode,
+  isTypeScriptLibType,
 } from "@player-tools/xlr-utils";
 import { ConversionError } from "./types";
 
@@ -50,6 +51,36 @@ export type MappedType = "Pick" | "Omit" | "Required" | "Partial" | "Exclude";
  */
 export function isMappedTypeNode(x: string): x is MappedType {
   return ["Pick", "Omit", "Required", "Partial", "Exclude"].includes(x);
+}
+
+/**
+ * Extract the property name from a PropertyName node, handling both
+ * identifier and string literal forms.
+ *
+ * TypeScript allows property names to be:
+ * - Identifiers: `propertyName`
+ * - String literals: `"property-name"` or `'property-name'`
+ * - Numeric literals: `123`
+ * - Computed: `[expression]`
+ *
+ * This function returns the unquoted string value for identifiers and string literals.
+ * For computed property names, falls back to getText().
+ */
+function getPropertyNameText(name: ts.PropertyName): string {
+  if (ts.isIdentifier(name)) {
+    return name.text;
+  }
+
+  if (ts.isStringLiteral(name)) {
+    return name.text; // .text already returns unquoted value
+  }
+
+  if (ts.isNumericLiteral(name)) {
+    return name.text;
+  }
+
+  // For computed property names, fall back to getText()
+  return name.getText();
 }
 
 export interface TSConverterContext {
@@ -476,6 +507,18 @@ export class TsConverter {
         };
       }
 
+      // Fallback: Use TypeChecker to resolve dynamic indexed access types
+      // This handles cases like T[keyof T], WeakKeyTypes[keyof WeakKeyTypes], etc.
+      const effectiveType = this.context.typeChecker.getTypeAtLocation(node);
+      const syntheticType = this.context.typeChecker.typeToTypeNode(
+        effectiveType,
+        node,
+        ts.NodeBuilderFlags.NoTruncation,
+      );
+      if (syntheticType) {
+        return this.tsNodeToType(syntheticType);
+      }
+
       this.context.throwError(
         `Error: could not solve IndexedAccessType: ${node.getFullText()}`,
       );
@@ -507,6 +550,11 @@ export class TsConverter {
   }
 
   private tsLiteralToType(node: ts.Expression): NodeType {
+    // Handle "as const" assertions by unwrapping to the inner expression
+    if (ts.isAsExpression(node)) {
+      return this.tsLiteralToType(node.expression);
+    }
+
     if (ts.isNumericLiteral(node)) {
       return {
         type: "number",
@@ -574,8 +622,8 @@ export class TsConverter {
       } as ObjectType;
 
       node.properties.forEach((property) => {
-        if (ts.isPropertyAssignment(property)) {
-          const propertyName = property.name?.getText() as string;
+        if (ts.isPropertyAssignment(property) && property.name) {
+          const propertyName = getPropertyNameText(property.name);
           ret.properties[propertyName] = {
             required: true,
             node: this.tsLiteralToType(property.initializer),
@@ -717,7 +765,7 @@ export class TsConverter {
 
     node.members.forEach((member) => {
       if (ts.isPropertySignature(member) && member.type) {
-        const name = member.name.getText();
+        const name = getPropertyNameText(member.name);
         ret.properties[name] = {
           required: !isOptionalProperty(member),
           node: {
@@ -953,9 +1001,11 @@ export class TsConverter {
 
   private resolveRefNode(node: ts.TypeReferenceNode): NodeType {
     let refName: string;
+    let namespace: string | undefined;
 
     if (node.typeName.kind === ts.SyntaxKind.QualifiedName) {
-      refName = `${node.typeName.left.getText()}.${node.typeName.right.getText()}`;
+      namespace = node.typeName.left.getText();
+      refName = node.typeName.right.getText();
     } else {
       refName = node.typeName.text;
     }
@@ -1012,23 +1062,49 @@ export class TsConverter {
       return this.makeMappedType(refName, node);
     }
 
+    // Skip TypeScript built-in lib types (Map, Set, WeakMap, Promise, etc.)
+    // These should be treated as primitives, not expanded
+    if (isTypeScriptLibType(node, this.context.typeChecker)) {
+      return this.makeBasicRefNode(node);
+    }
+
     // catch all for all other type references
     if (!this.context.customPrimitives.includes(refName)) {
       const typeInfo = getReferencedType(node, this.context.typeChecker);
       if (typeInfo) {
-        const genericType = this.convertTopLevelNode(typeInfo.declaration);
+        const convertedType = this.convertTopLevelNode(typeInfo.declaration);
         const genericParams = typeInfo.declaration.typeParameters;
         const genericArgs = node.typeArguments;
-        if (genericType && genericParams && genericArgs) {
-          return this.resolveGenerics(
-            genericType as NamedTypeWithGenerics,
+        if (convertedType && genericParams && genericArgs) {
+          const resolvedType = this.resolveGenerics(
+            convertedType as NamedTypeWithGenerics,
             genericParams,
             genericArgs,
           );
+
+          // Preserve full type name including generic arguments for instantiated generics
+          // e.g., SimpleModifier<"format"> should keep the name as "SimpleModifier<'format'>"
+          if ("name" in resolvedType && genericArgs.length > 0) {
+            const argsText = Array.from(genericArgs)
+              .map((arg) => arg.getText())
+              .join(", ");
+            const baseName = namespace ? `${namespace}.${refName}` : refName;
+            return { ...resolvedType, name: `${baseName}<${argsText}>` };
+          }
+
+          // Preserve full qualified name for namespaced types (e.g., Validation.CrossfieldReference)
+          if (namespace && "name" in resolvedType) {
+            return { ...resolvedType, name: `${namespace}.${refName}` };
+          }
+          return resolvedType;
         }
 
-        if (genericType) {
-          return genericType;
+        if (convertedType) {
+          // Preserve full qualified name for namespaced types (e.g., Validation.CrossfieldReference)
+          if (namespace && "name" in convertedType) {
+            return { ...convertedType, name: `${namespace}.${refName}` };
+          }
+          return convertedType;
         }
       }
 
@@ -1102,13 +1178,17 @@ export class TsConverter {
       });
     }
 
-    let ref;
-    if (
-      node.pos === -1 &&
-      ts.isTypeReferenceNode(node) &&
-      ts.isIdentifier(node.typeName)
-    ) {
-      ref = node.typeName.text;
+    let ref: string;
+
+    if (ts.isTypeReferenceNode(node)) {
+      // Handle qualified names (e.g., Validation.CrossfieldReference) - keep full path in ref
+      if (node.typeName.kind === ts.SyntaxKind.QualifiedName) {
+        ref = `${node.typeName.left.getText()}.${node.typeName.right.getText()}`;
+      } else if (node.pos === -1 && ts.isIdentifier(node.typeName)) {
+        ref = node.typeName.text;
+      } else {
+        ref = node.getText();
+      }
     } else {
       ref = node.getText();
     }

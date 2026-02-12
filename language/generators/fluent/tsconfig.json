@@ -1,0 +1,11 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "emitDeclarationOnly": false,
+    "isolatedDeclarations": false,
+    "baseUrl": ".",
+    "paths": {
+      "@player-tools/fluent-generator": ["./src/index.ts"]
+    }
+  }
+}

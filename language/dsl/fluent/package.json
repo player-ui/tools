@@ -1,0 +1,23 @@
+{
+  "name": "@player-tools/fluent",
+  "version": "0.0.0-PLACEHOLDER",
+  "main": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/cjs/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "typecheck": "pnpm tsc --noEmit",
+    "generate:mocks": "npx tsx scripts/generate-mocks.ts",
+    "lint": "eslint src --ext .ts,.tsx"
+  },
+  "devDependencies": {
+    "@player-tools/xlr": "workspace:*",
+    "@player-tools/xlr-converters": "workspace:*",
+    "@player-tools/fluent-generator": "workspace:*"
+  }
+}

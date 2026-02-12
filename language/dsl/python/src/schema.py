@@ -4,11 +4,10 @@ Python classes that represent Player Schema constructs
 
 from typing import Any, Dict, Generic, Optional, List, TypeVar, Union
 from .validation import Reference
-from .utils import Serializable
 
 T = TypeVar('T', bound=str)
 
-class SchemaNode(Serializable):
+class SchemaNode:
     """A Node describes a specific object in the tree"""
     def __init__(self, **properties: 'SchemaDataTypes'):
         self._properties: Dict[str, 'SchemaDataTypes'] = properties
@@ -24,7 +23,7 @@ class SchemaNode(Serializable):
         return self._properties.copy()
 
 
-class SchemaDataType(Generic[T], Serializable):
+class SchemaDataType(Generic[T]):
     """Each prop in the object can have a specific DataType"""
     def __init__(
         self,
@@ -78,7 +77,7 @@ class SchemaDataType(Generic[T], Serializable):
         self._default = value
 
 
-class SchemaRecordType(SchemaDataType[T], Serializable):
+class SchemaRecordType(SchemaDataType[T]):
     """Determines if the Datatype is a record object"""
     def __init__(
         self,
@@ -100,7 +99,7 @@ class SchemaRecordType(SchemaDataType[T], Serializable):
         self._is_record = value
 
 
-class SchemaArrayType(SchemaDataType[T], Serializable):
+class SchemaArrayType(SchemaDataType[T]):
     """Determines if the DataType is an Array Object"""
     def __init__(
         self,
@@ -126,7 +125,7 @@ class SchemaArrayType(SchemaDataType[T], Serializable):
 SchemaDataTypes = Union[SchemaDataType[Any], SchemaRecordType[Any], SchemaArrayType[Any]]
 
 
-class Schema(Serializable):
+class Schema:
     """The Schema organizes all content related to Data and it's types"""
     def __init__(self, root: SchemaNode, **additional_nodes: SchemaNode):
         self._root = root
@@ -149,7 +148,7 @@ class Schema(Serializable):
         """Get all additional nodes"""
         return self._additional_nodes.copy()
 
-class LanguageDataTypeRef(Serializable):
+class LanguageDataTypeRef:
     """
     Helper to compliment `Schema.DataType` to provide a way to 
     export a reference to a data type instead of the whole object
@@ -166,7 +165,7 @@ class LanguageDataTypeRef(Serializable):
 
 
 # Formatting namespace classes
-class FormattingReference(Serializable):
+class FormattingReference:
     """A reference to a specific formatter"""
     def __init__(self, type: str, **kwargs: Any):
         self._type = type
