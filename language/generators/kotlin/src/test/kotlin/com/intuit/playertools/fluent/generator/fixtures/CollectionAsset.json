@@ -1,0 +1,40 @@
+{
+    "source": "/home/circleci/.cache/bazel/_bazel_circleci/e8362d362e14c7d23506d1dfa3aea8b8/sandbox/processwrapper-sandbox/3907/execroot/_main/bazel-out/k8-fastbuild/bin/plugins/reference-assets/core/src/assets/collection/types.ts",
+    "name": "CollectionAsset",
+    "type": "object",
+    "properties": {
+        "label": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "AssetWrapper",
+                "title": "CollectionAsset.label",
+                "description": "An optional label to title the collection"
+            }
+        },
+        "values": {
+            "required": false,
+            "node": {
+                "type": "array",
+                "elementType": {
+                    "type": "ref",
+                    "ref": "AssetWrapper"
+                },
+                "title": "CollectionAsset.values",
+                "description": "The string value to show"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "title": "CollectionAsset",
+    "extends": {
+        "type": "ref",
+        "ref": "Asset<\"collection\">",
+        "genericArguments": [
+            {
+                "type": "string",
+                "const": "collection"
+            }
+        ]
+    }
+}

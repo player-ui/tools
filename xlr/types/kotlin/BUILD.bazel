@@ -1,0 +1,35 @@
+load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+load("@rules_kotlin//kotlin:lint.bzl", "ktlint_config", "ktlint_fix", "ktlint_test")
+
+package(default_visibility = ["//visibility:public"])
+
+ktlint_config(
+    name = "ktlint_config",
+    editorconfig = ".editorconfig",
+)
+
+kt_jvm_library(
+    name = "xlr-types",
+    srcs = glob(["src/main/kotlin/**/*.kt"]),
+    kotlinc_opts = "//:kt_opts",
+    deps = [
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
+        "@maven//:org_jetbrains_kotlinx_kotlinx_serialization_json",
+    ],
+)
+
+ktlint_test(
+    name = "ktlint",
+    srcs = glob([
+        "src/main/kotlin/**/*.kt",
+    ]),
+    config = ":ktlint_config",
+)
+
+ktlint_fix(
+    name = "ktlint_fix",
+    srcs = glob([
+        "src/main/kotlin/**/*.kt",
+    ]),
+    config = ":ktlint_config",
+)

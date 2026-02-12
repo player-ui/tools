@@ -1,0 +1,32 @@
+# EditorConfig for Kotlin code style
+# https://editorconfig.org/
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+max_line_length = 120
+trim_trailing_whitespace = true
+
+[*.kt]
+# ktlint specific rules
+ktlint_standard_no-wildcard-imports = disabled
+ktlint_standard_package-name = disabled
+
+# Allow trailing commas
+ktlint_standard_trailing-comma-on-call-site = disabled
+ktlint_standard_trailing-comma-on-declaration-site = disabled
+
+# Function signature - allow multi-line
+ktlint_standard_function-signature = disabled
+
+# Disable some strict rules for DSL-style code
+ktlint_standard_parameter-list-wrapping = disabled
+ktlint_standard_argument-list-wrapping = disabled
+
+[*.kts]
+ktlint_standard_no-wildcard-imports = disabled

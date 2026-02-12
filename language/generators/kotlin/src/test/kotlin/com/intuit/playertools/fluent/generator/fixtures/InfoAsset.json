@@ -1,0 +1,58 @@
+{
+    "source": "/home/circleci/.cache/bazel/_bazel_circleci/e8362d362e14c7d23506d1dfa3aea8b8/sandbox/processwrapper-sandbox/3907/execroot/_main/bazel-out/k8-fastbuild/bin/plugins/reference-assets/core/src/assets/info/types.ts",
+    "name": "InfoAsset",
+    "type": "object",
+    "properties": {
+        "title": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "AssetWrapper",
+                "title": "InfoAsset.title",
+                "description": "The string value to show"
+            }
+        },
+        "subTitle": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "AssetWrapper",
+                "title": "InfoAsset.subTitle",
+                "description": "subtitle"
+            }
+        },
+        "primaryInfo": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "AssetWrapper",
+                "title": "InfoAsset.primaryInfo",
+                "description": "Primary place for info"
+            }
+        },
+        "actions": {
+            "required": false,
+            "node": {
+                "type": "array",
+                "elementType": {
+                    "type": "ref",
+                    "ref": "AssetWrapper"
+                },
+                "title": "InfoAsset.actions",
+                "description": "List of actions to show at the bottom of the page"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "title": "InfoAsset",
+    "extends": {
+        "type": "ref",
+        "ref": "Asset<\"info\">",
+        "genericArguments": [
+            {
+                "type": "string",
+                "const": "info"
+            }
+        ]
+    }
+}

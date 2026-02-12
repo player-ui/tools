@@ -1,0 +1,125 @@
+{
+    "source": "/home/circleci/.cache/bazel/_bazel_circleci/e8362d362e14c7d23506d1dfa3aea8b8/sandbox/processwrapper-sandbox/3907/execroot/_main/bazel-out/k8-fastbuild/bin/plugins/reference-assets/core/src/assets/text/types.ts",
+    "name": "TextAsset",
+    "type": "object",
+    "properties": {
+        "value": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "title": "TextAsset.value",
+                "description": "The text to display"
+            }
+        },
+        "modifiers": {
+            "required": false,
+            "node": {
+                "type": "array",
+                "elementType": {
+                    "source": "/home/circleci/.cache/bazel/_bazel_circleci/e8362d362e14c7d23506d1dfa3aea8b8/sandbox/processwrapper-sandbox/3907/execroot/_main/bazel-out/k8-fastbuild/bin/plugins/reference-assets/core/src/assets/text/types.ts",
+                    "name": "TextModifier",
+                    "type": "or",
+                    "or": [
+                        {
+                            "source": "/home/circleci/.cache/bazel/_bazel_circleci/e8362d362e14c7d23506d1dfa3aea8b8/sandbox/processwrapper-sandbox/3907/execroot/_main/bazel-out/k8-fastbuild/bin/plugins/reference-assets/core/src/assets/text/types.ts",
+                            "name": "BasicTextModifier",
+                            "type": "object",
+                            "properties": {
+                                "type": {
+                                    "required": true,
+                                    "node": {
+                                        "type": "string",
+                                        "title": "BasicTextModifier.type",
+                                        "description": "The modifier type"
+                                    }
+                                },
+                                "name": {
+                                    "required": false,
+                                    "node": {
+                                        "type": "string",
+                                        "title": "BasicTextModifier.name",
+                                        "description": "Modifiers can be named when used in strings"
+                                    }
+                                }
+                            },
+                            "additionalProperties": {
+                                "type": "unknown"
+                            },
+                            "title": "BasicTextModifier"
+                        },
+                        {
+                            "source": "/home/circleci/.cache/bazel/_bazel_circleci/e8362d362e14c7d23506d1dfa3aea8b8/sandbox/processwrapper-sandbox/3907/execroot/_main/bazel-out/k8-fastbuild/bin/plugins/reference-assets/core/src/assets/text/types.ts",
+                            "name": "LinkModifier",
+                            "type": "object",
+                            "properties": {
+                                "type": {
+                                    "required": true,
+                                    "node": {
+                                        "type": "string",
+                                        "const": "link",
+                                        "title": "LinkModifier.type",
+                                        "description": "The link type denotes this as a link"
+                                    }
+                                },
+                                "exp": {
+                                    "required": false,
+                                    "node": {
+                                        "type": "ref",
+                                        "ref": "Expression",
+                                        "title": "LinkModifier.exp",
+                                        "description": "An optional expression to run before the link is opened"
+                                    }
+                                },
+                                "metaData": {
+                                    "required": true,
+                                    "node": {
+                                        "type": "object",
+                                        "properties": {
+                                            "ref": {
+                                                "required": true,
+                                                "node": {
+                                                    "type": "string",
+                                                    "title": "LinkModifier.metaData.ref",
+                                                    "description": "The location of the link to load"
+                                                }
+                                            },
+                                            "\"mime-type\"": {
+                                                "required": false,
+                                                "node": {
+                                                    "type": "string",
+                                                    "title": "LinkModifier.metaData.\"mime-type\"",
+                                                    "description": "Used to indicate an application specific resolver to use"
+                                                }
+                                            }
+                                        },
+                                        "additionalProperties": false,
+                                        "title": "LinkModifier.metaData",
+                                        "description": "metaData about the link's target"
+                                    }
+                                }
+                            },
+                            "additionalProperties": false,
+                            "title": "LinkModifier",
+                            "description": "A modifier to turn the text into a link"
+                        }
+                    ],
+                    "title": "TextModifier"
+                },
+                "title": "TextAsset.modifiers",
+                "description": "Any modifiers on the text"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "title": "TextAsset",
+    "extends": {
+        "type": "ref",
+        "ref": "Asset<\"text\">",
+        "genericArguments": [
+            {
+                "type": "string",
+                "const": "text"
+            }
+        ]
+    }
+}

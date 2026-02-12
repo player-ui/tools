@@ -1,0 +1,65 @@
+{
+    "source": "/home/circleci/.cache/bazel/_bazel_circleci/e8362d362e14c7d23506d1dfa3aea8b8/sandbox/processwrapper-sandbox/3907/execroot/_main/bazel-out/k8-fastbuild/bin/plugins/reference-assets/core/src/assets/image/types.ts",
+    "name": "ImageAsset",
+    "type": "object",
+    "properties": {
+        "metaData": {
+            "required": true,
+            "node": {
+                "source": "/home/circleci/.cache/bazel/_bazel_circleci/e8362d362e14c7d23506d1dfa3aea8b8/sandbox/processwrapper-sandbox/3907/execroot/_main/bazel-out/k8-fastbuild/bin/plugins/reference-assets/core/src/assets/image/types.ts",
+                "name": "ImageMetaData",
+                "type": "object",
+                "properties": {
+                    "ref": {
+                        "required": true,
+                        "node": {
+                            "type": "string",
+                            "title": "ImageMetaData.ref",
+                            "description": "The location of the image to load"
+                        }
+                    },
+                    "accessibility": {
+                        "required": false,
+                        "node": {
+                            "type": "string",
+                            "title": "ImageMetaData.accessibility",
+                            "description": "Used for accessibility support"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "title": "ImageAsset.metaData",
+                "description": "Reference to the image"
+            }
+        },
+        "placeholder": {
+            "required": false,
+            "node": {
+                "type": "string",
+                "title": "ImageAsset.placeholder",
+                "description": "Optional placeholder text"
+            }
+        },
+        "caption": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "AssetWrapper",
+                "title": "ImageAsset.caption",
+                "description": "Optional caption"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "title": "ImageAsset",
+    "extends": {
+        "type": "ref",
+        "ref": "Asset<\"image\">",
+        "genericArguments": [
+            {
+                "type": "string",
+                "const": "image"
+            }
+        ]
+    }
+}

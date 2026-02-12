@@ -78,3 +78,24 @@ build_constants(
     name = "build_constants",
     version_file = "//:VERSION",
 )
+
+####### Kotlin (for kotlin-dsl) #########
+bazel_dep(name = "rules_kotlin", version = "2.2.1")
+bazel_dep(name = "rules_jvm_external", version = "6.6")
+
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+maven.install(
+    artifacts = [
+        "org.jetbrains.kotlin:kotlin-stdlib:2.3.0",
+        "org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0",
+        "io.kotest:kotest-runner-junit5:6.0.7",
+        "io.kotest:kotest-assertions-core:6.0.7",
+        "io.kotest:kotest-assertions-json:6.0.7",
+        "org.junit.platform:junit-platform-console:1.11.4",
+    ],
+    repositories = [
+        "https://repo1.maven.org/maven2",
+    ],
+)
+use_repo(maven, "maven")
+###########################################
