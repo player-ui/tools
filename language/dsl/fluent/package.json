@@ -3,9 +3,7 @@
   "version": "0.0.0-PLACEHOLDER",
   "main": "src/index.ts",
   "scripts": {
-    "typecheck": "pnpm tsc --noEmit",
-    "generate:mocks": "npx tsx scripts/generate-mocks.ts",
-    "lint": "eslint src --ext .ts,.tsx"
+    "generate:mocks": "npx tsx scripts/generate-mocks.ts"
   },
   "devDependencies": {
     "@player-tools/xlr": "workspace:*",
