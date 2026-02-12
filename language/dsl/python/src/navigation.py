@@ -4,58 +4,55 @@ Python classes that represent Player Navigation constructs
 
 from typing import Any, Dict, Generic, List, Literal, Optional, TypeVar, Union
 from .data import Expression, ExpressionObject
-from .utils import Serializable
 
 T = TypeVar('T', bound=str)
 
-class Navigation(Serializable):
+class Navigation:
     """The navigation section of the flow describes a State Machine for the user."""
 
-    _ignored_json_keys = ["begin", "flows"]
-
-    def __init__(self, BEGIN: str, **flows: Union[str, 'NavigationFlow']):
-        self._BEGIN = BEGIN
-        self.additional_props: Dict[str, Union[str, 'NavigationFlow']] = flows
+    def __init__(self, begin: str, **flows: Union[str, 'NavigationFlow']):
+        self._begin = begin
+        self._flows: Dict[str, Union[str, 'NavigationFlow']] = flows
 
     @property
-    def BEGIN(self) -> str:
+    def begin(self) -> str:
         """The name of the Flow to begin on"""
-        return self._BEGIN
+        return self._begin
 
-    @BEGIN.setter
+    @begin.setter
     def begin(self, value: str) -> None:
-        self._BEGIN = value
+        self._begin = value
 
     def get_flow(self, name: str) -> Optional[Union[str, 'NavigationFlow']]:
         """Get a flow by name"""
-        return self.additional_props.get(name)
+        return self._flows.get(name)
 
     def set_flow(self, name: str, flow: Union[str, 'NavigationFlow']) -> None:
         """Set a flow"""
-        self.additional_props[name] = flow
+        self._flows[name] = flow
 
     @property
     def flows(self) -> Dict[str, Union[str, 'NavigationFlow']]:
         """Get all flows"""
-        return self.additional_props.copy()
+        return self._flows.copy()
 
 
 NavigationFlowTransition = Dict[str, str]
 
-class NavigationBaseState(Generic[T], Serializable):
+class NavigationBaseState(Generic[T]):
     """The base representation of a state within a Flow"""
 
     def __init__(
         self,
         state_type: T,
-        onStart: Optional[Union[str, List[str], ExpressionObject]] = None,
-        onEnd: Optional[Union[str, List[str], ExpressionObject]] = None,
+        on_start: Optional[Union[str, List[str], ExpressionObject]] = None,
+        on_end: Optional[Union[str, List[str], ExpressionObject]] = None,
         **kwargs: Any
     ):
         super().__init__()
         self._state_type = state_type
-        self._onStart = onStart
-        self._onEnd = onEnd
+        self._on_start = on_start
+        self._on_end = on_end
         self._additional_props: Dict[str, Any] = kwargs
 
     @property
@@ -68,22 +65,22 @@ class NavigationBaseState(Generic[T], Serializable):
         self._state_type = value
 
     @property
-    def onStart(self) -> Optional[Union[str, List[str], ExpressionObject]]:
+    def on_start(self) -> Optional[Union[str, List[str], ExpressionObject]]:
         """An optional expression to run when this view renders"""
-        return self._onStart
+        return self._on_start
 
-    @onStart.setter
-    def onStart(self, value: Optional[Union[str, List[str], ExpressionObject]]) -> None:
-        self._onStart = value
+    @on_start.setter
+    def on_start(self, value: Optional[Union[str, List[str], ExpressionObject]]) -> None:
+        self._on_start = value
 
     @property
-    def onEnd(self) -> Optional[Union[str, List[str], ExpressionObject]]:
+    def on_end(self) -> Optional[Union[str, List[str], ExpressionObject]]:
         """An optional expression to run before view transition"""
-        return self._onEnd
+        return self._on_end
 
-    @onEnd.setter
-    def onEnd(self, value: Optional[Union[str, List[str], ExpressionObject]]) -> None:
-        self._onEnd = value
+    @on_end.setter
+    def on_end(self, value: Optional[Union[str, List[str], ExpressionObject]]) -> None:
+        self._on_end = value
 
 
 class NavigationFlowTransitionableState(NavigationBaseState[T]):
@@ -93,11 +90,11 @@ class NavigationFlowTransitionableState(NavigationBaseState[T]):
         self,
         state_type: T,
         transitions: NavigationFlowTransition,
-        onStart: Optional[Union[str, List[str], ExpressionObject]] = None,
-        onEnd: Optional[Union[str, List[str], ExpressionObject]] = None,
+        on_start: Optional[Union[str, List[str], ExpressionObject]] = None,
+        on_end: Optional[Union[str, List[str], ExpressionObject]] = None,
         **kwargs: Any
     ):
-        super().__init__(state_type, onStart, onEnd, **kwargs)
+        super().__init__(state_type, on_start, on_end, **kwargs)
         self._transitions = transitions
 
     @property
@@ -118,11 +115,11 @@ class NavigationFlowViewState(NavigationFlowTransitionableState[Literal['VIEW']]
         ref: str,
         transitions: NavigationFlowTransition,
         attributes: Optional[Dict[str, Any]] = None,
-        onStart: Optional[Union[str, List[str], ExpressionObject]] = None,
-        onEnd: Optional[Union[str, List[str], ExpressionObject]] = None,
+        on_start: Optional[Union[str, List[str], ExpressionObject]] = None,
+        on_end: Optional[Union[str, List[str], ExpressionObject]] = None,
         **kwargs: Any
     ):
-        super().__init__('VIEW', transitions, onStart, onEnd, **kwargs)
+        super().__init__('VIEW', transitions, on_start, on_end, **kwargs)
         self._ref = ref
         self._attributes = attributes or {}
 
@@ -151,11 +148,11 @@ class NavigationFlowEndState(NavigationBaseState[Literal['END']]):
     def __init__(
         self,
         outcome: str,
-        onStart: Optional[Union[str, List[str], ExpressionObject]] = None,
-        onEnd: Optional[Union[str, List[str], ExpressionObject]] = None,
+        on_start: Optional[Union[str, List[str], ExpressionObject]] = None,
+        on_end: Optional[Union[str, List[str], ExpressionObject]] = None,
         **kwargs: Any
     ):
-        super().__init__('END', onStart, onEnd, **kwargs)
+        super().__init__('END', on_start, on_end, **kwargs)
         self._outcome = outcome
 
     @property
@@ -178,11 +175,11 @@ class NavigationFlowActionState(NavigationFlowTransitionableState[Literal['ACTIO
         self,
         exp: Expression,
         transitions: NavigationFlowTransition,
-        onStart: Optional[Union[str, List[str], ExpressionObject]] = None,
-        onEnd: Optional[Union[str, List[str], ExpressionObject]] = None,
+        on_start: Optional[Union[str, List[str], ExpressionObject]] = None,
+        on_end: Optional[Union[str, List[str], ExpressionObject]] = None,
         **kwargs: Any
     ):
-        super().__init__('ACTION', transitions, onStart, onEnd, **kwargs)
+        super().__init__('ACTION', transitions, on_start, on_end, **kwargs)
         self._exp = exp
 
     @property
@@ -206,11 +203,11 @@ class NavigationFlowAsyncActionState(NavigationFlowTransitionableState[Literal['
         exp: Expression,
         await_result: bool,
         transitions: NavigationFlowTransition,
-        onStart: Optional[Union[str, List[str], ExpressionObject]] = None,
-        onEnd: Optional[Union[str, List[str], ExpressionObject]] = None,
+        on_start: Optional[Union[str, List[str], ExpressionObject]] = None,
+        on_end: Optional[Union[str, List[str], ExpressionObject]] = None,
         **kwargs: Any
     ):
-        super().__init__('ASYNC_ACTION', transitions, onStart, onEnd, **kwargs)
+        super().__init__('ASYNC_ACTION', transitions, on_start, on_end, **kwargs)
         self._exp = exp
         self._await = await_result
 
@@ -247,11 +244,11 @@ class NavigationFlowExternalState(NavigationFlowTransitionableState[Literal['EXT
         self,
         ref: str,
         transitions: NavigationFlowTransition,
-        onStart: Optional[Union[str, List[str], ExpressionObject]] = None,
-        onEnd: Optional[Union[str, List[str], ExpressionObject]] = None,
+        on_start: Optional[Union[str, List[str], ExpressionObject]] = None,
+        on_end: Optional[Union[str, List[str], ExpressionObject]] = None,
         **kwargs: Any
     ):
-        super().__init__('EXTERNAL', transitions, onStart, onEnd, **kwargs)
+        super().__init__('EXTERNAL', transitions, on_start, on_end, **kwargs)
         self._ref = ref
 
     @property
@@ -271,11 +268,11 @@ class NavigationFlowFlowState(NavigationFlowTransitionableState[Literal['FLOW']]
         self,
         ref: str,
         transitions: NavigationFlowTransition,
-        onStart: Optional[Union[str, List[str], ExpressionObject]] = None,
-        onEnd: Optional[Union[str, List[str], ExpressionObject]] = None,
+        on_start: Optional[Union[str, List[str], ExpressionObject]] = None,
+        on_end: Optional[Union[str, List[str], ExpressionObject]] = None,
         **kwargs: Any
     ):
-        super().__init__('FLOW', transitions, onStart, onEnd, **kwargs)
+        super().__init__('FLOW', transitions, on_start, on_end, **kwargs)
         self._ref = ref
 
     @property
@@ -299,10 +296,8 @@ NavigationFlowState = Union[
 ]
 
 
-class NavigationFlow(Serializable):
+class NavigationFlow:
     """A state machine in the navigation"""
-
-    _ignored_json_keys = ["states"]
 
     def __init__(
         self,
@@ -311,47 +306,47 @@ class NavigationFlow(Serializable):
         on_end: Optional[Union[str, List[str], ExpressionObject]] = None,
         **states: NavigationFlowState
     ):
-        self._startState = start_state
-        self._onStart = on_start
-        self._onEnd = on_end
-        self.additional_props: Dict[str, NavigationFlowState] = states
+        self._start_state = start_state
+        self._on_start = on_start
+        self._on_end = on_end
+        self._states: Dict[str, NavigationFlowState] = states
 
     @property
-    def startState(self) -> str:
+    def start_state(self) -> str:
         """The first state to kick off the state machine"""
-        return self._startState
+        return self._start_state
 
-    @startState.setter
-    def startState(self, value: str) -> None:
-        self._startState = value
+    @start_state.setter
+    def start_state(self, value: str) -> None:
+        self._start_state = value
 
     @property
-    def onStart(self) -> Optional[Union[str, List[str], ExpressionObject]]:
+    def on_start(self) -> Optional[Union[str, List[str], ExpressionObject]]:
         """An optional expression to run when this Flow starts"""
-        return self._onStart
+        return self._on_start
 
-    @onStart.setter
-    def onStart(self, value: Optional[Union[str, List[str], ExpressionObject]]) -> None:
-        self._onStart = value
+    @on_start.setter
+    def on_start(self, value: Optional[Union[str, List[str], ExpressionObject]]) -> None:
+        self._on_start = value
 
     @property
-    def onEnd(self) -> Optional[Union[str, List[str], ExpressionObject]]:
+    def on_end(self) -> Optional[Union[str, List[str], ExpressionObject]]:
         """An optional expression to run when this Flow ends"""
-        return self._onEnd
+        return self._on_end
 
-    @onEnd.setter
-    def onEnd(self, value: Optional[Union[str, List[str], ExpressionObject]]) -> None:
-        self._onEnd = value
+    @on_end.setter
+    def on_end(self, value: Optional[Union[str, List[str], ExpressionObject]]) -> None:
+        self._on_end = value
 
     def get_state(self, name: str) -> Optional[NavigationFlowState]:
         """Get a state by name"""
-        return self.additional_props.get(name)
+        return self._states.get(name)
 
     def set_state(self, name: str, state: NavigationFlowState) -> None:
         """Set a state"""
-        self.additional_props[name] = state
+        self._states[name] = state
 
     @property
     def states(self) -> Dict[str, NavigationFlowState]:
         """Get all states"""
-        return self.additional_props.copy()
+        return self._states.copy()

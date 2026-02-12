@@ -5,13 +5,13 @@ import ReactEslintPlugin from "eslint-plugin-react";
 import PrettierEslint from "eslint-plugin-prettier/recommended";
 
 export default tseslint.config(
+  { ignores: ["**/node_modules/**", "**/dist/**", "**/__snapshots__/**", "**/generated/**"] },
   eslint.configs.recommended,
   tseslint.configs.recommended,
   PrettierEslint,
   ...[ReactEslintPlugin.configs.flat.recommended ?? []],
   ...[ReactEslintPlugin.configs.flat["jsx-runtime"] ?? []],
   {
-    ignores: ["node_modules", "dist", "__snapshots__"],
     settings: {
       react: {
         version: "detect",

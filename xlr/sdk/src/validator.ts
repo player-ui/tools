@@ -97,11 +97,7 @@ export class XLRValidator {
 
       let message: string;
       const expectedTypes = xlrNode.or
-        .map((node) =>
-          isPrimitiveTypeNode(node)
-            ? node.type
-            : (node.name ?? node.title ?? node.type ?? "<unnamed type>"),
-        )
+        .map((node) => node.name ?? node.title ?? node.type ?? "<unnamed type>")
         .join(" | ");
 
       if (xlrNode.name) {

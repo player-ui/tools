@@ -1,0 +1,13 @@
+{
+  "name": "@player-tools/fluent",
+  "version": "0.0.0-PLACEHOLDER",
+  "main": "src/index.ts",
+  "scripts": {
+    "generate:mocks": "npx tsx scripts/generate-mocks.ts"
+  },
+  "devDependencies": {
+    "@player-tools/xlr": "workspace:*",
+    "@player-tools/xlr-converters": "workspace:*",
+    "@player-tools/fluent-generator": "workspace:*"
+  }
+}

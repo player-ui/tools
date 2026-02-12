@@ -20,7 +20,7 @@ class TestNavigation:
 
     def test_instantiation_minimal(self):
         """Test Navigation can be instantiated with minimal parameters"""
-        nav = Navigation(BEGIN="start")
+        nav = Navigation(begin="start")
         assert nav is not None
         assert nav.begin == "start"
         assert nav.flows == {}
@@ -28,25 +28,25 @@ class TestNavigation:
     def test_instantiation_with_flows(self):
         """Test Navigation can be instantiated with flows"""
         flow1 = NavigationFlow(start_state="state1")
-        nav = Navigation(BEGIN="start", flow1=flow1, flow2="simple_flow")
+        nav = Navigation(begin="start", flow1=flow1, flow2="simple_flow")
         assert nav.begin == "start"
         assert nav.get_flow("flow1") == flow1
         assert nav.get_flow("flow2") == "simple_flow"
 
     def test_begin_property_getter(self):
         """Test begin property getter"""
-        nav = Navigation(BEGIN="initial_state")
+        nav = Navigation(begin="initial_state")
         assert nav.begin == "initial_state"
 
     def test_begin_property_setter(self):
         """Test begin property setter"""
-        nav = Navigation(BEGIN="start")
+        nav = Navigation(begin="start")
         nav.begin = "new_start"
         assert nav.begin == "new_start"
 
     def test_flow_methods(self):
         """Test flow getter and setter methods"""
-        nav = Navigation(BEGIN="start")
+        nav = Navigation(begin="start")
         flow = NavigationFlow(start_state="state1")
         
         # Test getting non-existent flow
@@ -64,12 +64,71 @@ class TestNavigation:
     def test_json_serialization(self):
         """Test JSON serialization"""
         flow = NavigationFlow(start_state="state1")
-        nav = Navigation(BEGIN="start", test_flow=flow)
+        nav = Navigation(begin="start", test_flow=flow)
         
-        json_str = nav.serialize()
+        json_str = json.dumps(nav.__dict__, default=lambda o: o.__dict__)
         assert json_str is not None
         data = json.loads(json_str)
-        assert data["BEGIN"] == "start"
+        assert data["_begin"] == "start"
+        assert "_flows" in data
+
+class TestNavigationBaseState:
+    """Test cases for NavigationBaseState class"""
+
+    def test_instantiation_minimal(self):
+        """Test NavigationBaseState can be instantiated with minimal parameters"""
+        state = NavigationBaseState(state_type="TEST")
+        assert state is not None
+        assert state.state_type == "TEST"
+        assert state.on_start is None
+        assert state.on_end is None
+
+    def test_instantiation_full(self):
+        """Test NavigationBaseState can be instantiated with all parameters"""
+        exp_obj = ExpressionObject(exp="test_expression")
+        state = NavigationBaseState(
+            state_type="FULL",
+            on_start="start_expr",
+            on_end=exp_obj,
+            custom_prop="custom_value"
+        )
+        
+        assert state.state_type == "FULL"
+        assert state.on_start == "start_expr"
+        assert state.on_end == exp_obj
+
+    def test_properties_getters_setters(self):
+        """Test all property getters and setters"""
+        state = NavigationBaseState(state_type="TEST")
+        
+        # Test state_type
+        new_type = "NEW_TYPE"
+        state.state_type = new_type
+        assert state.state_type == new_type
+        
+        # Test on_start
+        start_expr = ["expr1", "expr2"]
+        state.on_start = start_expr
+        assert state.on_start == start_expr
+        
+        # Test on_end
+        end_expr = ExpressionObject(exp="end_expression")
+        state.on_end = end_expr
+        assert state.on_end == end_expr
+
+    def test_json_serialization(self):
+        """Test JSON serialization"""
+        state = NavigationBaseState(
+            state_type="TEST",
+            on_start="start_expr",
+        )
+        
+        json_str = json.dumps(state.__dict__, default=lambda o: o.__dict__)
+        assert json_str is not None
+        data = json.loads(json_str)
+        assert data["_state_type"] == "TEST"
+        assert data["_on_start"] == "start_expr"
+
 
 class TestNavigationFlowTransitionableState:
     """Test cases for NavigationFlowTransitionableState class"""
@@ -401,9 +460,9 @@ class TestNavigationFlow:
         flow = NavigationFlow(start_state="initial")
         
         assert flow is not None
-        assert flow.startState == "initial"
-        assert flow.onStart is None
-        assert flow.onEnd is None
+        assert flow.start_state == "initial"
+        assert flow.on_start is None
+        assert flow.on_end is None
         assert flow.states == {}
 
     def test_instantiation_with_states(self):
@@ -421,8 +480,8 @@ class TestNavigationFlow:
             end=end_state
         )
         
-        assert flow.startState == "view"
-        assert flow.onStart == "initFlow()"
+        assert flow.start_state == "view"
+        assert flow.on_start == "initFlow()"
         assert flow.get_state("view") == view_state
         assert flow.get_state("end") == end_state
 
@@ -431,18 +490,18 @@ class TestNavigationFlow:
         flow = NavigationFlow(start_state="start")
         
         # Test start_state
-        flow.startState = "new_start"
-        assert flow.startState == "new_start"
+        flow.start_state = "new_start"
+        assert flow.start_state == "new_start"
         
         # Test on_start
         start_exp = ExpressionObject(exp="startExpression")
-        flow.onStart = start_exp
-        assert flow.onStart == start_exp
+        flow.on_start = start_exp
+        assert flow.on_start == start_exp
         
         # Test on_end
         end_exp = ["endExpr1", "endExpr2"]
-        flow.onEnd = end_exp
-        assert flow.onEnd == end_exp
+        flow.on_end = end_exp
+        assert flow.on_end == end_exp
 
     def test_state_methods(self):
         """Test state getter and setter methods"""
@@ -476,10 +535,12 @@ class TestNavigationFlow:
             end=end_state
         )
         
-        json_str = flow.serialize()
+        json_str = json.dumps(flow.__dict__, default=lambda o: o.__dict__)
         assert json_str is not None
         data = json.loads(json_str)
-        print(data)
-        assert data["startState"] == "view"
-        assert data["onStart"] == "init()"
+        
+        assert data["_start_state"] == "view"
+        assert data["_on_start"] == "init()"
+        assert "_states" in data
+        assert len(data["_states"]) == 2
 

@@ -6,11 +6,11 @@ from typing import Any, Dict, Optional, List
 from .navigation import Navigation, NavigationFlowEndState
 from .schema import Schema
 from .view import View
-from .utils import Serializable
+
 
 DataModel = Dict[Any, Any]
 
-class FlowResult(Serializable):
+class FlowResult:
     """The data at the end of a flow"""
 
     def __init__(
@@ -40,7 +40,7 @@ class FlowResult(Serializable):
         self._data = value
 
 
-class Flow(Serializable):
+class Flow():
     """
     The JSON payload for running Player
     """
