@@ -108,7 +108,6 @@
     "figures": "^3.0.0",
     "flipper-pkg": "^0.212.0",
     "flipper-plugin": "^0.212.0",
-    "fluent-gen-ts": "^0.1.27",
     "framer-motion": "^4",
     "fs-extra": "^10.0.0",
     "glob": "^10.3.10",

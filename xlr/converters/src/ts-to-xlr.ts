@@ -67,15 +67,11 @@ export function isMappedTypeNode(x: string): x is MappedType {
  * For computed property names, falls back to getText().
  */
 function getPropertyNameText(name: ts.PropertyName): string {
-  if (ts.isIdentifier(name)) {
-    return name.text;
-  }
-
-  if (ts.isStringLiteral(name)) {
-    return name.text; // .text already returns unquoted value
-  }
-
-  if (ts.isNumericLiteral(name)) {
+  if (
+    ts.isIdentifier(name) ||
+    ts.isStringLiteral(name) ||
+    ts.isNumericLiteral(name)
+  ) {
     return name.text;
   }
 

@@ -422,9 +422,7 @@ describe("FluentBuilderGenerator", () => {
       expect(code).toMatchSnapshot();
     });
   });
-});
 
-describe("Improvements over old fluent-gen-ts", () => {
   test("string properties accept TaggedTemplateValue for binding support", () => {
     const source = `
       interface Asset<T extends string = string> {
