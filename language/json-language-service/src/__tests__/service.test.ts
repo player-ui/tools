@@ -5,6 +5,7 @@ import {
   Types,
 } from "@player-tools/static-xlrs";
 import { PlayerLanguageService } from "..";
+import { JSON_PARSE_ERROR_SOURCE } from "../parser/jsonParseErrors";
 import { toTextDocument } from "../utils";
 
 describe("player language service", () => {
@@ -106,6 +107,55 @@ describe("player language service", () => {
       const validationErrors = await service.validateTextDocument(document);
 
       expect(validationErrors).toMatchSnapshot();
+    });
+
+    test("adds plugin source to validation diagnostics", async () => {
+      const document = toTextDocument(
+        JSON.stringify({
+          id: "foo",
+          views: [
+            {
+              id: "view-1",
+              type: "unknown-view-type",
+            },
+          ],
+          navigation: {
+            BEGIN: "FLOW_1",
+            FLOW_1: {
+              startState: "VIEW_1",
+              VIEW_1: {
+                state_type: "VIEW",
+                ref: "view-1",
+                transitions: {
+                  "*": "END_Done",
+                },
+              },
+              END_Done: {
+                state_type: "END",
+                outcome: "done",
+              },
+            },
+          },
+        }),
+      );
+      const validationErrors = await service.validateTextDocument(document);
+
+      expect(validationErrors?.length).toBeGreaterThan(0);
+      expect(validationErrors?.every((diag) => !!diag.source)).toBe(true);
+      expect(
+        validationErrors?.some((diag) => diag.source === "xlr-plugin"),
+      ).toBe(true);
+    });
+
+    test("adds parser source to parse diagnostics", async () => {
+      const document = toTextDocument(`{"id":"foo",}`);
+      const validationErrors = await service.validateTextDocument(document);
+
+      const parseDiagnostic = validationErrors?.find(
+        (diag) => diag.source === JSON_PARSE_ERROR_SOURCE,
+      );
+
+      expect(parseDiagnostic).toBeDefined();
     });
   });
 

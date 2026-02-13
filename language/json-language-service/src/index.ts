@@ -51,6 +51,47 @@ export * from "./types";
 export * from "./parser";
 export * from "./xlr/index";
 
+const FALLBACK_DIAGNOSTIC_SOURCE = "player-language-service";
+
+const getTapSource = (tapName: unknown): string => {
+  if (typeof tapName === "string" && tapName.length > 0) {
+    return tapName;
+  }
+
+  if (
+    typeof tapName === "object" &&
+    tapName !== null &&
+    "name" in tapName &&
+    typeof (tapName as { name?: unknown }).name === "string" &&
+    (tapName as { name: string }).name.length > 0
+  ) {
+    return (tapName as { name: string }).name;
+  }
+
+  return FALLBACK_DIAGNOSTIC_SOURCE;
+};
+
+const addSourceIfMissing = (
+  diagnostic: Diagnostic,
+  source: string,
+): Diagnostic => {
+  if (diagnostic.source) {
+    return diagnostic;
+  }
+
+  return {
+    ...diagnostic,
+    source,
+  };
+};
+
+const normalizeDiagnosticSources = (
+  diagnostics: Diagnostic[],
+  source: string,
+): Diagnostic[] => {
+  return diagnostics.map((diagnostic) => addSourceIfMissing(diagnostic, source));
+};
+
 export interface PlayerLanguageServicePlugin {
   /** The name of the plugin */
   name: string;
@@ -150,9 +191,112 @@ export class PlayerLanguageService {
   }) {
     // load base definitions?
     this.XLRService = new XLRService();
+    this.wrapValidationHooksWithSourceAttribution();
 
     PLUGINS.forEach((p) => p.apply(this));
     config?.plugins?.forEach((p) => p.apply(this));
+  }
+
+  private createPluginScopedValidationContext(
+    tapName: unknown,
+    validationContext: ValidationContext,
+  ): ValidationContext {
+    const source = getTapSource(tapName);
+
+    return {
+      useASTVisitor: (visitor) => validationContext.useASTVisitor(visitor),
+      addViolation: (violation) => {
+        validationContext.addViolation({
+          ...violation,
+          source: violation.source ?? source,
+        });
+      },
+      addDiagnostic: (diagnostic) => {
+        validationContext.addDiagnostic(addSourceIfMissing(diagnostic, source));
+      },
+    };
+  }
+
+  private wrapValidationHooksWithSourceAttribution(): void {
+    const validateHook = this.hooks.validate as any;
+    const originalValidateTap = validateHook.tap.bind(validateHook);
+    validateHook.tap = (tapName: unknown, callback: any) => {
+      return originalValidateTap(
+        tapName,
+        async (ctx: DocumentContext, validationContext: ValidationContext) => {
+          return callback(
+            ctx,
+            this.createPluginScopedValidationContext(tapName, validationContext),
+          );
+        },
+      );
+    };
+
+    if (typeof validateHook.tapPromise === "function") {
+      const originalValidateTapPromise =
+        validateHook.tapPromise.bind(validateHook);
+      validateHook.tapPromise = (tapName: unknown, callback: any) => {
+        return originalValidateTapPromise(
+          tapName,
+          (ctx: DocumentContext, validationContext: ValidationContext) => {
+            return callback(
+              ctx,
+              this.createPluginScopedValidationContext(
+                tapName,
+                validationContext,
+              ),
+            );
+          },
+        );
+      };
+    }
+
+    if (typeof validateHook.tapAsync === "function") {
+      const originalValidateTapAsync = validateHook.tapAsync.bind(validateHook);
+      validateHook.tapAsync = (tapName: unknown, callback: any) => {
+        return originalValidateTapAsync(
+          tapName,
+          (
+            ctx: DocumentContext,
+            validationContext: ValidationContext,
+            done: (...args: any[]) => void,
+          ) => {
+            callback(
+              ctx,
+              this.createPluginScopedValidationContext(
+                tapName,
+                validationContext,
+              ),
+              done,
+            );
+          },
+        );
+      };
+    }
+
+    const onValidateEndHook = this.hooks.onValidateEnd as any;
+    const originalOnValidateEndTap = onValidateEndHook.tap.bind(onValidateEndHook);
+    onValidateEndHook.tap = (tapName: unknown, callback: any) => {
+      const source = getTapSource(tapName);
+
+      return originalOnValidateEndTap(
+        tapName,
+        (
+          diagnostics: Diagnostic[],
+          onValidateEndContext: {
+            documentContext: DocumentContext;
+            addFixableViolation: (diag: Diagnostic, violation: Violation) => void;
+          },
+        ) => {
+          const updatedDiagnostics = callback(diagnostics, onValidateEndContext);
+          const diagnosticsToUse = Array.isArray(updatedDiagnostics)
+            ? updatedDiagnostics
+            : diagnostics;
+
+          return normalizeDiagnosticSources(diagnosticsToUse, source);
+        },
+      );
+    };
   }
 
   private parseTextDocument(document: TextDocument): PlayerContent {
@@ -277,7 +421,10 @@ export class PlayerLanguageService {
       return;
     }
 
-    const diagnostics = [...ctx.PlayerContent.syntaxErrors];
+    const diagnostics = normalizeDiagnosticSources(
+      [...ctx.PlayerContent.syntaxErrors],
+      FALLBACK_DIAGNOSTIC_SOURCE,
+    );
     const astVisitors: Array<ASTVisitor> = [];
 
     /** Add a matching violation fix to the original diagnostic */
@@ -297,7 +444,7 @@ export class PlayerLanguageService {
     if (ctx.PlayerContent.root) {
       const validationContext: ValidationContext = {
         addViolation: (violation) => {
-          const { message, node, severity, fix } = violation;
+          const { message, node, severity, source, fix } = violation;
 
           const range: Range = toRange(document, node);
 
@@ -305,6 +452,7 @@ export class PlayerLanguageService {
             message,
             severity,
             range,
+            source: source ?? FALLBACK_DIAGNOSTIC_SOURCE,
           };
 
           if (fix) {
@@ -317,7 +465,9 @@ export class PlayerLanguageService {
           astVisitors.push(visitor);
         },
         addDiagnostic(d) {
-          diagnostics.push(d);
+          diagnostics.push(
+            addSourceIfMissing(d, FALLBACK_DIAGNOSTIC_SOURCE),
+          );
         },
       };
 
@@ -343,10 +493,15 @@ export class PlayerLanguageService {
       });
     }
 
-    return this.hooks.onValidateEnd.call(diagnostics, {
+    const finalizedDiagnostics = this.hooks.onValidateEnd.call(diagnostics, {
       documentContext: ctx,
       addFixableViolation,
-    });
+    }) as Diagnostic[];
+
+    return normalizeDiagnosticSources(
+      finalizedDiagnostics,
+      FALLBACK_DIAGNOSTIC_SOURCE,
+    );
   }
 
   async getCompletionsAtPosition(

@@ -99,6 +99,9 @@ export interface Violation {
   /** how much do we care? */
   severity: DiagnosticSeverity;
 
+  /** Optional source label for the emitted diagnostic */
+  source?: string;
+
   /** A function that can make this good */
   fix?: () => {
     /** the edit to apply */

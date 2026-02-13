@@ -124,6 +124,7 @@ exports[`player language service > validation > throws AssetWrapper errors 1`] =
       },
     },
     "severity": 1,
+    "source": "xlr-plugin",
   },
   {
     "message": "Content Validation Error - missing: Property "BEGIN" missing from type "Navigation"",
@@ -138,6 +139,7 @@ exports[`player language service > validation > throws AssetWrapper errors 1`] =
       },
     },
     "severity": 1,
+    "source": "xlr-plugin",
   },
   {
     "message": "Navigation Validation Error - missing: Property "BEGIN" missing from type "Navigation"",
@@ -152,6 +154,7 @@ exports[`player language service > validation > throws AssetWrapper errors 1`] =
       },
     },
     "severity": 1,
+    "source": "xlr-plugin",
   },
   {
     "message": "View is not reachable",
@@ -166,6 +169,7 @@ exports[`player language service > validation > throws AssetWrapper errors 1`] =
       },
     },
     "severity": 2,
+    "source": "view-node",
   },
   {
     "message": "View Validation Error - value: Does not match any of the expected types for type: 'AssetWrapperOrSwitch'",
@@ -180,6 +184,7 @@ exports[`player language service > validation > throws AssetWrapper errors 1`] =
       },
     },
     "severity": 1,
+    "source": "xlr-plugin",
   },
   {
     "message": "Expected: AssetWrapper & object literal | StaticSwitch & object literal | DynamicSwitch & object literal",
@@ -194,6 +199,7 @@ exports[`player language service > validation > throws AssetWrapper errors 1`] =
       },
     },
     "severity": 3,
+    "source": "xlr-plugin",
   },
   {
     "message": "Implicit Array -> "collection" assets is not supported.",
@@ -208,6 +214,7 @@ exports[`player language service > validation > throws AssetWrapper errors 1`] =
       },
     },
     "severity": 1,
+    "source": "asset-wrapper-to-array",
   },
 ]
 `;
