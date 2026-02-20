@@ -228,12 +228,27 @@ export function fillInGenerics(
   }
 
   if (xlrNode.type === "object") {
+    // When an object has its own genericTokens, scope refs inside it to those
+    // tokens (e.g. DataType's T) so they don't incorrectly resolve to an outer
+    // type's generics (e.g. Flow's T = Asset).
+    let scopeGenerics = localGenerics;
+    if (isGenericNamedType(xlrNode) && xlrNode.genericTokens) {
+      scopeGenerics = new Map(localGenerics);
+      xlrNode.genericTokens.forEach((token) => {
+        const genericValue = (token.default ?? token.constraints) as NodeType;
+        scopeGenerics.set(
+          token.symbol,
+          fillInGenerics(genericValue, scopeGenerics),
+        );
+      });
+    }
+
     const newProperties: { [name: string]: ObjectProperty } = {};
     Object.getOwnPropertyNames(xlrNode.properties).forEach((propName) => {
       const prop = xlrNode.properties[propName];
       newProperties[propName] = {
         required: prop.required,
-        node: fillInGenerics(prop.node, localGenerics),
+        node: fillInGenerics(prop.node, scopeGenerics),
       };
     });
 
@@ -246,20 +261,20 @@ export function fillInGenerics(
               return {
                 ...token,
                 constraints: token.constraints
-                  ? fillInGenerics(token.constraints, localGenerics)
+                  ? fillInGenerics(token.constraints, scopeGenerics)
                   : undefined,
                 default: token.default
-                  ? fillInGenerics(token.default, localGenerics)
+                  ? fillInGenerics(token.default, scopeGenerics)
                   : undefined,
               };
             }),
           }
         : {}),
       extends: xlrNode.extends
-        ? (fillInGenerics(xlrNode.extends, localGenerics) as RefNode)
+        ? (fillInGenerics(xlrNode.extends, scopeGenerics) as RefNode)
         : undefined,
       additionalProperties: xlrNode.additionalProperties
-        ? fillInGenerics(xlrNode.additionalProperties, localGenerics)
+        ? fillInGenerics(xlrNode.additionalProperties, scopeGenerics)
         : false,
     };
   }
