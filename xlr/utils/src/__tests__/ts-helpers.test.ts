@@ -1,6 +1,6 @@
 import { test, expect, describe } from "vitest";
 import * as ts from "typescript";
-import { NodeType, ObjectType } from "@player-tools/xlr";
+import type { NodeType } from "@player-tools/xlr";
 
 import {
   tsStripOptionalType,
@@ -8,7 +8,6 @@ import {
   applyPickOrOmitToNodeType,
   getStringLiteralsFromUnion,
   applyPartialOrRequiredToNodeType,
-  fillInGenerics,
 } from "../ts-helpers";
 
 test("tsStripOptionalType", () => {
