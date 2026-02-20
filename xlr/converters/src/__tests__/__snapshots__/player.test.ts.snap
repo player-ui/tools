@@ -1831,7 +1831,9 @@ If the expression is a composite, the last expression executed is the return val
                     "name": "NavigationFlowState",
                     "or": [
                       {
-                        "additionalProperties": false,
+                        "additionalProperties": {
+                          "type": "unknown",
+                        },
                         "description": "A state representing a view",
                         "genericTokens": undefined,
                         "name": "NavigationFlowViewState",
@@ -1978,7 +1980,9 @@ If the expression is a composite, the last expression executed is the return val
                         "type": "object",
                       },
                       {
-                        "additionalProperties": false,
+                        "additionalProperties": {
+                          "type": "unknown",
+                        },
                         "description": "An END state of the flow.",
                         "genericTokens": undefined,
                         "name": "NavigationFlowEndState",
@@ -2347,7 +2351,9 @@ The return value determines the transition to take",
                         "type": "object",
                       },
                       {
-                        "additionalProperties": false,
+                        "additionalProperties": {
+                          "type": "unknown",
+                        },
                         "description": "External Flow states represent states in the FSM that can't be resolved internally in Player.
 The flow will wait for the embedded application to manage moving to the next state via a transition",
                         "genericTokens": undefined,
@@ -2643,7 +2649,9 @@ The flow will wait for the embedded application to manage moving to the next sta
           "name": "NavigationFlowState",
           "or": [
             {
-              "additionalProperties": false,
+              "additionalProperties": {
+                "type": "unknown",
+              },
               "description": "A state representing a view",
               "name": "NavigationFlowViewState",
               "properties": {
@@ -2781,7 +2789,9 @@ The flow will wait for the embedded application to manage moving to the next sta
               "type": "object",
             },
             {
-              "additionalProperties": false,
+              "additionalProperties": {
+                "type": "unknown",
+              },
               "description": "An END state of the flow.",
               "name": "NavigationFlowEndState",
               "properties": {
@@ -3138,7 +3148,9 @@ The return value determines the transition to take",
               "type": "object",
             },
             {
-              "additionalProperties": false,
+              "additionalProperties": {
+                "type": "unknown",
+              },
               "description": "External Flow states represent states in the FSM that can't be resolved internally in Player.
 The flow will wait for the embedded application to manage moving to the next state via a transition",
               "name": "NavigationFlowExternalState",
@@ -3657,7 +3669,9 @@ So this explicity says there should never be an exp prop on a state node that"s 
     "type": "object",
   },
   {
-    "additionalProperties": false,
+    "additionalProperties": {
+      "type": "unknown",
+    },
     "description": "A state representing a view",
     "genericTokens": undefined,
     "name": "NavigationFlowViewState",
@@ -3799,7 +3813,9 @@ So this explicity says there should never be an exp prop on a state node that"s 
     "type": "object",
   },
   {
-    "additionalProperties": false,
+    "additionalProperties": {
+      "type": "unknown",
+    },
     "description": "An END state of the flow.",
     "genericTokens": undefined,
     "name": "NavigationFlowEndState",
@@ -4038,7 +4054,9 @@ The return value determines the transition to take",
     "type": "object",
   },
   {
-    "additionalProperties": false,
+    "additionalProperties": {
+      "type": "unknown",
+    },
     "description": "External Flow states represent states in the FSM that can't be resolved internally in Player.
 The flow will wait for the embedded application to manage moving to the next state via a transition",
     "genericTokens": undefined,
@@ -4302,7 +4320,9 @@ The flow will wait for the embedded application to manage moving to the next sta
     "name": "NavigationFlowState",
     "or": [
       {
-        "additionalProperties": false,
+        "additionalProperties": {
+          "type": "unknown",
+        },
         "description": "A state representing a view",
         "name": "NavigationFlowViewState",
         "properties": {
@@ -4440,7 +4460,9 @@ The flow will wait for the embedded application to manage moving to the next sta
         "type": "object",
       },
       {
-        "additionalProperties": false,
+        "additionalProperties": {
+          "type": "unknown",
+        },
         "description": "An END state of the flow.",
         "name": "NavigationFlowEndState",
         "properties": {
@@ -4797,7 +4819,9 @@ The return value determines the transition to take",
         "type": "object",
       },
       {
-        "additionalProperties": false,
+        "additionalProperties": {
+          "type": "unknown",
+        },
         "description": "External Flow states represent states in the FSM that can't be resolved internally in Player.
 The flow will wait for the embedded application to manage moving to the next state via a transition",
         "name": "NavigationFlowExternalState",
@@ -4944,7 +4968,9 @@ The flow will wait for the embedded application to manage moving to the next sta
       },
       "endState": {
         "node": {
-          "additionalProperties": false,
+          "additionalProperties": {
+            "type": "unknown",
+          },
           "description": "The outcome describes _how_ the flow ended (forwards, backwards, etc)",
           "genericTokens": undefined,
           "name": "NavigationFlowEndState",
@@ -5507,7 +5533,9 @@ This will be used to lookup the proper handler",
                           "name": "NavigationFlowState",
                           "or": [
                             {
-                              "additionalProperties": false,
+                              "additionalProperties": {
+                                "type": "unknown",
+                              },
                               "description": "A state representing a view",
                               "name": "NavigationFlowViewState",
                               "properties": {
@@ -5645,7 +5673,9 @@ This will be used to lookup the proper handler",
                               "type": "object",
                             },
                             {
-                              "additionalProperties": false,
+                              "additionalProperties": {
+                                "type": "unknown",
+                              },
                               "description": "An END state of the flow.",
                               "name": "NavigationFlowEndState",
                               "properties": {
@@ -6002,7 +6032,9 @@ The return value determines the transition to take",
                               "type": "object",
                             },
                             {
-                              "additionalProperties": false,
+                              "additionalProperties": {
+                                "type": "unknown",
+                              },
                               "description": "External Flow states represent states in the FSM that can't be resolved internally in Player.
 The flow will wait for the embedded application to manage moving to the next state via a transition",
                               "name": "NavigationFlowExternalState",
