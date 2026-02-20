@@ -1,6 +1,6 @@
 import { test, expect, describe } from "vitest";
 import * as ts from "typescript";
-import { NodeType } from "@player-tools/xlr";
+import { NodeType, ObjectType } from "@player-tools/xlr";
 
 import {
   tsStripOptionalType,
@@ -8,6 +8,7 @@ import {
   applyPickOrOmitToNodeType,
   getStringLiteralsFromUnion,
   applyPartialOrRequiredToNodeType,
+  fillInGenerics,
 } from "../ts-helpers";
 
 test("tsStripOptionalType", () => {
@@ -176,5 +177,83 @@ describe("applyPartialOrRequiredToNodeType", () => {
     const result = applyPartialOrRequiredToNodeType(baseObject, true);
 
     expect(result).toStrictEqual(modifiedObject);
+  });
+});
+
+describe("fillInGenerics", () => {
+  test("scopes refs inside object with genericTokens to inner generic, not top-level", () => {
+    // Simulates Schema.DataType<T = unknown> nested under Flow<T = Asset>:
+    // inner object has T = unknown; we pass top-level map T → Asset.
+    // Refs inside the inner object (e.g. default: ref "T") must resolve to unknown.
+    const assetLikeType: NodeType = {
+      type: "object",
+      properties: {
+        id: { required: true, node: { type: "string" } },
+        type: { required: true, node: { type: "string" } },
+      },
+      additionalProperties: false,
+    };
+    const topLevelGenerics = new Map<string, NodeType>([["T", assetLikeType]]);
+
+    const dataTypeLike: NodeType = {
+      type: "object",
+      name: "DataType",
+      properties: {
+        type: {
+          required: true,
+          node: { type: "string" },
+        },
+        default: {
+          required: false,
+          node: { type: "ref", ref: "T" },
+        },
+      },
+      additionalProperties: false,
+      genericTokens: [
+        { symbol: "T", constraints: undefined, default: { type: "unknown" } },
+      ],
+    } as NodeType;
+
+    const result = fillInGenerics(dataTypeLike, topLevelGenerics);
+
+    expect(result.type).toBe("object");
+    const resultObj = result as ObjectType;
+    expect(resultObj.properties.default.node).toBeDefined();
+    // Resolved from inner scope (DataType's T = unknown), not top-level (Asset)
+    expect((resultObj.properties.default.node as { type?: string }).type).toBe(
+      "unknown",
+    );
+  });
+
+  test("uses passed-in generic map when object has no genericTokens", () => {
+    const assetLikeType: NodeType = {
+      type: "object",
+      properties: {
+        id: { required: true, node: { type: "string" } },
+      },
+      additionalProperties: false,
+    };
+    const generics = new Map<string, NodeType>([["T", assetLikeType]]);
+
+    // No genericTokens on this object (e.g. Flow level): passed-in map is used,
+    // so ref "T" resolves to Asset — Flow still works as T = Asset.
+    const nodeWithRefT: NodeType = {
+      type: "object",
+      properties: {
+        value: {
+          required: true,
+          node: { type: "ref", ref: "T" },
+        },
+      },
+      additionalProperties: false,
+    };
+
+    const result = fillInGenerics(nodeWithRefT, generics);
+
+    const resultObj = result as ObjectType;
+    expect(resultObj.properties.value.node).toBeDefined();
+    expect((resultObj.properties.value.node as { type?: string }).type).toBe(
+      "object",
+    );
   });
 });
