@@ -122,7 +122,13 @@ export class TsConverter {
   }
 
   /** Converts all exported objects to a XLR representation */
-  public convertSourceFile(sourceFile: ts.SourceFile) {
+  public convertSourceFile(sourceFile: ts.SourceFile): {
+    data: {
+      version: number;
+      types: NonNullable<NamedType>[];
+    };
+    convertedTypes: string[];
+  } {
     const declarations = sourceFile.statements.filter(isTopLevelNode);
 
     const types = declarations
