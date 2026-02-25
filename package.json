@@ -156,6 +156,7 @@
     "tiny-uid": "^1.1.2",
     "ts-deepmerge": "^7.0.2",
     "ts-loader": "^5.3.3",
+    "ts-morph": "^24.0.0",
     "ts-node": "^10.4.0",
     "tsconfig-to-swcconfig": "^2.7.0",
     "tslib": "^2.6.2",

@@ -11,8 +11,6 @@ vitest_config(name = "vitest_config")
 js_pipeline(
     package_name = "@player-tools/fluent-generator",
     test_deps = [
-        "//:node_modules",
-        "//:vitest_config",
         ":node_modules/@player-tools/test-utils",
         ":node_modules/@player-tools/xlr-converters",
         ":node_modules/@player-tools/fluent",
@@ -20,6 +18,10 @@ js_pipeline(
     deps = [
         ":node_modules/@player-tools/xlr",
         ":node_modules/@player-tools/xlr-utils",
-        ":node_modules/ts-morph",
+        "//:node_modules/ts-morph",
+        "//:node_modules/typescript"
     ],
+    peer_deps = [
+        "//:node_modules/@player-ui/types"
+    ]
 )
