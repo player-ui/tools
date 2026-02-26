@@ -178,12 +178,22 @@ export function buildTemplateRegex(
 export function fillInGenerics(
   xlrNode: NodeType,
   generics?: Map<string, NodeType>,
+  preferLocalGenerics = false,
 ): NodeType {
   // Need to make sure not to set generics in passed in map to avoid using generics outside of tree
   let localGenerics: Map<string, NodeType>;
 
   if (generics) {
     localGenerics = new Map(generics);
+    if (preferLocalGenerics && isGenericNodeType(xlrNode)) {
+      xlrNode.genericTokens?.forEach((token) => {
+        const genericValue = (token.default ?? token.constraints) as NodeType;
+        localGenerics.set(
+          token.symbol,
+          fillInGenerics(genericValue, localGenerics, preferLocalGenerics),
+        );
+      });
+    }
   } else {
     localGenerics = new Map();
     if (isGenericNodeType(xlrNode)) {
@@ -191,7 +201,7 @@ export function fillInGenerics(
         const genericValue = (token.default ?? token.constraints) as NodeType;
         localGenerics.set(
           token.symbol,
-          fillInGenerics(genericValue, localGenerics),
+          fillInGenerics(genericValue, localGenerics, preferLocalGenerics),
         );
       });
     }
@@ -204,7 +214,7 @@ export function fillInGenerics(
         ...(xlrNode.genericArguments
           ? {
               genericArguments: xlrNode.genericArguments.map((ga) =>
-                fillInGenerics(ga, localGenerics),
+                fillInGenerics(ga, localGenerics, preferLocalGenerics),
               ),
             }
           : {}),
@@ -220,7 +230,7 @@ export function fillInGenerics(
       ...(xlrNode.genericArguments
         ? {
             genericArguments: xlrNode.genericArguments.map((ga) =>
-              fillInGenerics(ga, localGenerics),
+              fillInGenerics(ga, localGenerics, preferLocalGenerics),
             ),
           }
         : {}),
@@ -233,7 +243,7 @@ export function fillInGenerics(
       const prop = xlrNode.properties[propName];
       newProperties[propName] = {
         required: prop.required,
-        node: fillInGenerics(prop.node, localGenerics),
+        node: fillInGenerics(prop.node, localGenerics, preferLocalGenerics),
       };
     });
 
@@ -246,20 +256,36 @@ export function fillInGenerics(
               return {
                 ...token,
                 constraints: token.constraints
-                  ? fillInGenerics(token.constraints, localGenerics)
+                  ? fillInGenerics(
+                      token.constraints,
+                      localGenerics,
+                      preferLocalGenerics,
+                    )
                   : undefined,
                 default: token.default
-                  ? fillInGenerics(token.default, localGenerics)
+                  ? fillInGenerics(
+                      token.default,
+                      localGenerics,
+                      preferLocalGenerics,
+                    )
                   : undefined,
               };
             }),
           }
         : {}),
       extends: xlrNode.extends
-        ? (fillInGenerics(xlrNode.extends, localGenerics) as RefNode)
+        ? (fillInGenerics(
+            xlrNode.extends,
+            localGenerics,
+            preferLocalGenerics,
+          ) as RefNode)
         : undefined,
       additionalProperties: xlrNode.additionalProperties
-        ? fillInGenerics(xlrNode.additionalProperties, localGenerics)
+        ? fillInGenerics(
+            xlrNode.additionalProperties,
+            localGenerics,
+            preferLocalGenerics,
+          )
         : false,
     };
   }
@@ -267,7 +293,11 @@ export function fillInGenerics(
   if (xlrNode.type === "array") {
     return {
       ...xlrNode,
-      elementType: fillInGenerics(xlrNode.elementType, localGenerics),
+      elementType: fillInGenerics(
+        xlrNode.elementType,
+        localGenerics,
+        preferLocalGenerics,
+      ),
     };
   } else if (xlrNode.type === "or" || xlrNode.type === "and") {
     let pointer;
@@ -280,25 +310,49 @@ export function fillInGenerics(
     return {
       ...xlrNode,
       [xlrNode.type]: pointer.map((prop) => {
-        return fillInGenerics(prop, localGenerics);
+        return fillInGenerics(prop, localGenerics, preferLocalGenerics);
       }),
     };
   } else if (xlrNode.type === "record") {
     return {
       ...xlrNode,
-      keyType: fillInGenerics(xlrNode.keyType, localGenerics),
-      valueType: fillInGenerics(xlrNode.valueType, localGenerics),
+      keyType: fillInGenerics(
+        xlrNode.keyType,
+        localGenerics,
+        preferLocalGenerics,
+      ),
+      valueType: fillInGenerics(
+        xlrNode.valueType,
+        localGenerics,
+        preferLocalGenerics,
+      ),
     };
   } else if (xlrNode.type === "conditional") {
     const filledInConditional = {
       ...xlrNode,
       check: {
-        left: fillInGenerics(xlrNode.check.left, localGenerics),
-        right: fillInGenerics(xlrNode.check.right, localGenerics),
+        left: fillInGenerics(
+          xlrNode.check.left,
+          localGenerics,
+          preferLocalGenerics,
+        ),
+        right: fillInGenerics(
+          xlrNode.check.right,
+          localGenerics,
+          preferLocalGenerics,
+        ),
       },
       value: {
-        true: fillInGenerics(xlrNode.value.true, localGenerics),
-        false: fillInGenerics(xlrNode.value.false, localGenerics),
+        true: fillInGenerics(
+          xlrNode.value.true,
+          localGenerics,
+          preferLocalGenerics,
+        ),
+        false: fillInGenerics(
+          xlrNode.value.false,
+          localGenerics,
+          preferLocalGenerics,
+        ),
       },
     };
 
