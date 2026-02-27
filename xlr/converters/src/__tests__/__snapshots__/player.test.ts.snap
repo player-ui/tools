@@ -5310,7 +5310,6 @@ Any reference to _index_ is replaced with the current iteration index.",
                       "displayTarget": {
                         "node": {
                           "description": "Where the error should be displayed",
-                          "genericTokens": undefined,
                           "name": "DisplayTarget",
                           "or": [
                             {
@@ -5326,7 +5325,6 @@ Any reference to _index_ is replaced with the current iteration index.",
                               "type": "string",
                             },
                           ],
-                          "source": undefined,
                           "title": "Reference.displayTarget",
                           "type": "or",
                         },
@@ -5343,7 +5341,6 @@ Any reference to _index_ is replaced with the current iteration index.",
                       "ref": {
                         "node": {
                           "description": "The binding to associate this validation with",
-                          "genericArguments": undefined,
                           "ref": "Binding",
                           "title": "CrossfieldReference.ref",
                           "type": "ref",
@@ -5353,7 +5350,6 @@ Any reference to _index_ is replaced with the current iteration index.",
                       "severity": {
                         "node": {
                           "description": "An optional means of overriding the default severity of the validation if triggered",
-                          "genericTokens": undefined,
                           "name": "Severity",
                           "or": [
                             {
@@ -5365,7 +5361,6 @@ Any reference to _index_ is replaced with the current iteration index.",
                               "type": "string",
                             },
                           ],
-                          "source": undefined,
                           "title": "Reference.severity",
                           "type": "or",
                         },
@@ -5374,7 +5369,6 @@ Any reference to _index_ is replaced with the current iteration index.",
                       "trigger": {
                         "node": {
                           "description": "When to run this particular validation",
-                          "genericTokens": undefined,
                           "name": "Trigger",
                           "or": [
                             {
@@ -5390,7 +5384,6 @@ Any reference to _index_ is replaced with the current iteration index.",
                               "type": "string",
                             },
                           ],
-                          "source": undefined,
                           "title": "Reference.trigger",
                           "type": "or",
                         },
@@ -6463,10 +6456,8 @@ This will be used to lookup the proper handler",
               "type": "object",
             },
             "description": "A Node describes a specific object in the tree",
-            "genericTokens": undefined,
             "name": "Node",
             "properties": {},
-            "source": undefined,
             "title": "Node",
             "type": "object",
           },
@@ -6512,7 +6503,6 @@ Any reads for this property will result in this default value being written to t
                         },
                         "description": "A reference to a specific data format to use.
 If none is specified, will fallback to that of the base type",
-                        "genericTokens": undefined,
                         "name": "Formatting.Reference",
                         "properties": {
                           "type": {
@@ -6524,7 +6514,6 @@ If none is specified, will fallback to that of the base type",
                             "required": true,
                           },
                         },
-                        "source": undefined,
                         "title": "DataType.format",
                         "type": "object",
                       },
@@ -6555,7 +6544,6 @@ These will add to any base validations associated with the "type"",
                             "type": "unknown",
                           },
                           "description": "A reference to a validation object",
-                          "genericTokens": undefined,
                           "name": "Validation.Reference",
                           "properties": {
                             "dataTarget": {
@@ -6661,7 +6649,6 @@ This will be used to lookup the proper handler",
                               "required": true,
                             },
                           },
-                          "source": undefined,
                           "title": "Reference",
                           "type": "object",
                         },
@@ -6671,15 +6658,12 @@ This will be used to lookup the proper handler",
                       "required": false,
                     },
                   },
-                  "source": undefined,
                   "title": "DataType",
                   "type": "object",
                 },
                 "description": "The ROOT object is the top level object to use",
-                "genericTokens": undefined,
                 "name": "Node",
                 "properties": {},
-                "source": undefined,
                 "title": "Schema.ROOT",
                 "type": "object",
               },
@@ -7070,14 +7054,16 @@ This will be used to lookup the proper handler",
         "type": "object",
       },
       "description": "A Node describes a specific object in the tree",
+      "genericTokens": undefined,
       "name": "Node",
       "properties": {},
+      "source": undefined,
       "title": "Node",
       "type": "object",
     },
     "description": "The authored schema object in the JSON payload",
     "genericTokens": undefined,
-    "name": "Schema",
+    "name": "Schema.Schema",
     "properties": {
       "ROOT": {
         "node": {
@@ -7116,6 +7102,7 @@ Any reads for this property will result in this default value being written to t
                   },
                   "description": "A reference to a specific data format to use.
 If none is specified, will fallback to that of the base type",
+                  "genericTokens": undefined,
                   "name": "Formatting.Reference",
                   "properties": {
                     "type": {
@@ -7127,6 +7114,7 @@ If none is specified, will fallback to that of the base type",
                       "required": true,
                     },
                   },
+                  "source": undefined,
                   "title": "DataType.format",
                   "type": "object",
                 },
@@ -7157,6 +7145,7 @@ These will add to any base validations associated with the "type"",
                       "type": "unknown",
                     },
                     "description": "A reference to a validation object",
+                    "genericTokens": undefined,
                     "name": "Validation.Reference",
                     "properties": {
                       "dataTarget": {
@@ -7182,6 +7171,7 @@ In the off chance you'd like this validator to run against the formatted value (
                       "displayTarget": {
                         "node": {
                           "description": "Where the error should be displayed",
+                          "genericTokens": undefined,
                           "name": "DisplayTarget",
                           "or": [
                             {
@@ -7197,6 +7187,7 @@ In the off chance you'd like this validator to run against the formatted value (
                               "type": "string",
                             },
                           ],
+                          "source": undefined,
                           "title": "Reference.displayTarget",
                           "type": "or",
                         },
@@ -7213,6 +7204,7 @@ In the off chance you'd like this validator to run against the formatted value (
                       "severity": {
                         "node": {
                           "description": "An optional means of overriding the default severity of the validation if triggered",
+                          "genericTokens": undefined,
                           "name": "Severity",
                           "or": [
                             {
@@ -7224,6 +7216,7 @@ In the off chance you'd like this validator to run against the formatted value (
                               "type": "string",
                             },
                           ],
+                          "source": undefined,
                           "title": "Reference.severity",
                           "type": "or",
                         },
@@ -7232,6 +7225,7 @@ In the off chance you'd like this validator to run against the formatted value (
                       "trigger": {
                         "node": {
                           "description": "When to run this particular validation",
+                          "genericTokens": undefined,
                           "name": "Trigger",
                           "or": [
                             {
@@ -7247,6 +7241,7 @@ In the off chance you'd like this validator to run against the formatted value (
                               "type": "string",
                             },
                           ],
+                          "source": undefined,
                           "title": "Reference.trigger",
                           "type": "or",
                         },
@@ -7262,6 +7257,7 @@ This will be used to lookup the proper handler",
                         "required": true,
                       },
                     },
+                    "source": undefined,
                     "title": "Reference",
                     "type": "object",
                   },
@@ -7271,12 +7267,15 @@ This will be used to lookup the proper handler",
                 "required": false,
               },
             },
+            "source": undefined,
             "title": "DataType",
             "type": "object",
           },
           "description": "The ROOT object is the top level object to use",
+          "genericTokens": undefined,
           "name": "Node",
           "properties": {},
+          "source": undefined,
           "title": "Schema.ROOT",
           "type": "object",
         },
@@ -7483,7 +7482,7 @@ This will be used to lookup the proper handler",
     },
     "description": "A Node describes a specific object in the tree",
     "genericTokens": undefined,
-    "name": "Node",
+    "name": "Schema.Node",
     "properties": {},
     "source": undefined,
     "title": "Node",
@@ -7505,7 +7504,7 @@ This will be used to lookup the proper handler",
         "symbol": "T",
       },
     ],
-    "name": "DataType",
+    "name": "Schema.DataType",
     "properties": {
       "default": {
         "node": {
@@ -7687,7 +7686,7 @@ This will be used to lookup the proper handler",
     "additionalProperties": false,
     "description": "Helper to compliment \`Schema.DataType\` to provide a way to export a reference to a data type instead of the whole object",
     "genericTokens": undefined,
-    "name": "DataTypeRef",
+    "name": "Language.DataTypeRef",
     "properties": {
       "type": {
         "node": {
@@ -7708,7 +7707,7 @@ This will be used to lookup the proper handler",
     },
     "description": "A reference to a specific formatter",
     "genericTokens": undefined,
-    "name": "Reference",
+    "name": "Formatting.Reference",
     "properties": {
       "type": {
         "node": {
@@ -7728,7 +7727,7 @@ This will be used to lookup the proper handler",
 Warning validations are reserved for errors that could be ignored by the user without consequence
 Errors must be fixed before proceeding",
     "genericTokens": undefined,
-    "name": "Severity",
+    "name": "Validation.Severity",
     "or": [
       {
         "const": "error",
@@ -7750,7 +7749,7 @@ load - only check once the first time the binding appears on screen
 change - check anytime the data changes
 navigation - check once the user attempts to navigate away from a view",
     "genericTokens": undefined,
-    "name": "Trigger",
+    "name": "Validation.Trigger",
     "or": [
       {
         "const": "navigation",
@@ -7775,7 +7774,7 @@ navigation - check once the user attempts to navigate away from a view",
 - \`section\` is used to display a message at a parent node that is designated as a "section"
 - \`page\` a special section used to display a message at the top of the page.",
     "genericTokens": undefined,
-    "name": "DisplayTarget",
+    "name": "Validation.DisplayTarget",
     "or": [
       {
         "const": "page",
@@ -7800,7 +7799,7 @@ navigation - check once the user attempts to navigate away from a view",
     },
     "description": "A reference to a validation object",
     "genericTokens": undefined,
-    "name": "Reference",
+    "name": "Validation.Reference",
     "properties": {
       "dataTarget": {
         "node": {
@@ -7914,7 +7913,7 @@ This will be used to lookup the proper handler",
       "type": "unknown",
     },
     "genericTokens": undefined,
-    "name": "CrossfieldReference",
+    "name": "Validation.CrossfieldReference",
     "properties": {
       "dataTarget": {
         "node": {
@@ -7958,6 +7957,7 @@ This will be used to lookup the proper handler",
       "ref": {
         "node": {
           "description": "The binding to associate this validation with",
+          "genericArguments": undefined,
           "ref": "Binding",
           "title": "CrossfieldReference.ref",
           "type": "ref",

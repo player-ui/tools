@@ -123,25 +123,40 @@ export class TsConverter {
   }
 
   /** Converts all exported objects to a XLR representation */
-  public convertSourceFile(sourceFile: ts.SourceFile) {
+  public convertSourceFile(sourceFile: ts.SourceFile): {
+    data: {
+      version: number;
+      types: NonNullable<NamedType>[];
+    };
+    convertedTypes: string[];
+  } {
     const declarations = sourceFile.statements.filter(isTopLevelNode);
-    const exportedModules = sourceFile.statements.filter((s) =>
-      isExportedModuleDeclaration(s),
-    );
 
-    declarations.push(
-      ...exportedModules.flatMap((module) => {
+    const namespacedTypes: NonNullable<NamedType>[] = sourceFile.statements
+      .filter((s) => isExportedModuleDeclaration(s))
+      .flatMap((module) => {
         if (module.body && ts.isModuleBlock(module.body)) {
-          return module.body.statements.filter(isTopLevelNode);
+          const nameSpaceName = module.name.text;
+          return module.body.statements
+            .filter(isExportedDeclaration)
+            .filter(isTopLevelNode)
+            .map((statement) => {
+              const convertedNode = this.convertTopLevelNode(statement);
+              return {
+                ...convertedNode,
+                name: `${nameSpaceName}.${convertedNode.name}`,
+              } as NamedType;
+            });
         }
         return [];
-      }),
-    );
+      });
 
     const types = declarations
       .filter((declaration) => isExportedDeclaration(declaration))
       .map((statement) => this.convertTopLevelNode(statement) as NamedType)
       .filter(<T>(v: T): v is NonNullable<T> => !!v);
+
+    types.push(...namespacedTypes);
 
     return {
       data: { version: 1, types },

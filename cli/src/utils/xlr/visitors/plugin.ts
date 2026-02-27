@@ -112,6 +112,7 @@ function runPlayerPostProcessing(
  */
 function generateXLR(
   node: ts.Node,
+  capabilityType: string,
   checker: ts.TypeChecker,
   converter: TsConverter,
   outputDirectory: string,
@@ -126,7 +127,7 @@ function generateXLR(
         capabilityDescription,
         checker,
       );
-      const capabilityName = capabilityDescription?.name ?? "error";
+      const capabilityName = `${capabilityType}.${capabilityDescription?.name ?? "error"}`;
       fs.writeFileSync(
         path.join(outputDirectory, `${capabilityName}.json`),
         JSON.stringify(capabilityDescription, undefined, 4),
@@ -194,7 +195,13 @@ export function pluginVisitor(args: VisitorProps): Manifest | undefined {
                 if (ts.isTupleTypeNode(exportedCapabilities)) {
                   const capabilityNames = exportedCapabilities.elements.map(
                     (element) =>
-                      generateXLR(element, checker, converter, outputDirectory),
+                      generateXLR(
+                        element,
+                        capabilityType,
+                        checker,
+                        converter,
+                        outputDirectory,
+                      ),
                   );
 
                   provides.set(capabilityType, capabilityNames);
@@ -204,6 +211,7 @@ export function pluginVisitor(args: VisitorProps): Manifest | undefined {
                 ) {
                   const capabilityName = generateXLR(
                     exportedCapabilities,
+                    capabilityType,
                     checker,
                     converter,
                     outputDirectory,
