@@ -32,6 +32,15 @@ export function isExportedDeclaration(node: ts.Statement): boolean {
 }
 
 /**
+ * Returns if the top level declaration is exported
+ */
+export function isExportedModuleDeclaration(
+  node: ts.Statement,
+): node is ts.ModuleDeclaration {
+  return isExportedDeclaration(node) && ts.isModuleDeclaration(node);
+}
+
+/**
  * Returns if the node is exported from the source file
  */
 export function isNodeExported(node: ts.Node): boolean {

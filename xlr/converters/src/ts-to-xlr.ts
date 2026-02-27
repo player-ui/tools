@@ -41,6 +41,7 @@ import {
   applyExcludeToNodeType,
   isPrimitiveTypeNode,
   isTypeScriptLibType,
+  isExportedModuleDeclaration,
 } from "@player-tools/xlr-utils";
 import { ConversionError } from "./types";
 
@@ -124,6 +125,18 @@ export class TsConverter {
   /** Converts all exported objects to a XLR representation */
   public convertSourceFile(sourceFile: ts.SourceFile) {
     const declarations = sourceFile.statements.filter(isTopLevelNode);
+    const exportedModules = sourceFile.statements.filter((s) =>
+      isExportedModuleDeclaration(s),
+    );
+
+    declarations.push(
+      ...exportedModules.flatMap((module) => {
+        if (module.body && ts.isModuleBlock(module.body)) {
+          return module.body.statements.filter(isTopLevelNode);
+        }
+        return [];
+      }),
+    );
 
     const types = declarations
       .filter((declaration) => isExportedDeclaration(declaration))
