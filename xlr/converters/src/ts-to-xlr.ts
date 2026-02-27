@@ -211,6 +211,13 @@ export class TsConverter {
       if (variable.initializer) {
         let resultingNode;
         if (
+          variable.type &&
+          ts.isTypeReferenceNode(variable.type) &&
+          ts.isIdentifier(variable.type.typeName) &&
+          this.context.customPrimitives.includes(variable.type.typeName.text)
+        ) {
+          resultingNode = this.makeBasicRefNode(variable.type);
+        } else if (
           ts.isCallExpression(variable.initializer) ||
           ts.isArrowFunction(variable.initializer)
         ) {
