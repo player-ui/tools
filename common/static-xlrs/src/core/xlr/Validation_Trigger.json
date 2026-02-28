@@ -1,0 +1,20 @@
+{
+    "name": "Validation.Trigger",
+    "type": "or",
+    "or": [
+        {
+            "type": "string",
+            "const": "navigation"
+        },
+        {
+            "type": "string",
+            "const": "change"
+        },
+        {
+            "type": "string",
+            "const": "load"
+        }
+    ],
+    "title": "Trigger",
+    "description": "When to _first_ start caring about a validation of a data-val.\n\nload - only check once the first time the binding appears on screen\nchange - check anytime the data changes\nnavigation - check once the user attempts to navigate away from a view"
+}

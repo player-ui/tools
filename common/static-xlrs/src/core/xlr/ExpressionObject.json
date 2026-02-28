@@ -1,7 +1,7 @@
 {
+    "source": "src/index.ts",
     "name": "ExpressionObject",
     "type": "object",
-    "source": "src/index.ts",
     "properties": {
         "exp": {
             "required": false,

@@ -1,6 +1,6 @@
 {
-    "name": "BindingRef",
     "source": "src/index.ts",
+    "name": "BindingRef",
     "type": "template",
     "format": "{{.*}}",
     "title": "BindingRef"

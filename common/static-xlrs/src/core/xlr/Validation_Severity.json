@@ -1,0 +1,16 @@
+{
+    "name": "Validation.Severity",
+    "type": "or",
+    "or": [
+        {
+            "type": "string",
+            "const": "error"
+        },
+        {
+            "type": "string",
+            "const": "warning"
+        }
+    ],
+    "title": "Severity",
+    "description": "How serious are you about this error?\nWarning validations are reserved for errors that could be ignored by the user without consequence\nErrors must be fixed before proceeding"
+}

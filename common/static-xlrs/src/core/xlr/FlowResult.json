@@ -1,14 +1,14 @@
 {
+    "source": "src/index.ts",
     "name": "FlowResult",
     "type": "object",
-    "source": "src/index.ts",
     "properties": {
         "endState": {
             "required": true,
             "node": {
+                "source": "src/index.ts",
                 "name": "NavigationFlowEndState",
                 "type": "object",
-                "source": "src/index.ts",
                 "properties": {
                     "_comment": {
                         "required": false,
@@ -38,9 +38,9 @@
                                     "title": "NavigationBaseState.onStart"
                                 },
                                 {
+                                    "source": "src/index.ts",
                                     "name": "ExpressionObject",
                                     "type": "object",
-                                    "source": "src/index.ts",
                                     "properties": {
                                         "exp": {
                                             "required": false,
@@ -72,9 +72,9 @@
                                     "title": "NavigationBaseState.onEnd"
                                 },
                                 {
+                                    "source": "src/index.ts",
                                     "name": "ExpressionObject",
                                     "type": "object",
-                                    "source": "src/index.ts",
                                     "properties": {
                                         "exp": {
                                             "required": false,
@@ -111,7 +111,9 @@
                         }
                     }
                 },
-                "additionalProperties": false,
+                "additionalProperties": {
+                    "type": "unknown"
+                },
                 "title": "FlowResult.endState",
                 "description": "The outcome describes _how_ the flow ended (forwards, backwards, etc)"
             }

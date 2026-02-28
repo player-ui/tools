@@ -1,0 +1,23 @@
+{
+    "source": "/some/path/types.ts",
+    "name": "expression",
+    "type": "ref",
+    "ref": "ValidatorFunction<{\n  /**\n   * The expression to evaluate.\n   * Falsy values indicate an invalid response\n   */\n  exp: Expression;\n}>",
+    "genericArguments": [
+        {
+            "type": "object",
+            "properties": {
+                "exp": {
+                    "required": true,
+                    "node": {
+                        "type": "ref",
+                        "ref": "Expression",
+                        "title": "exp",
+                        "description": "The expression to evaluate.\nFalsy values indicate an invalid response"
+                    }
+                }
+            },
+            "additionalProperties": false
+        }
+    ]
+}

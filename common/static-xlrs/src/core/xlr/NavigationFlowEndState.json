@@ -1,7 +1,7 @@
 {
+    "source": "src/index.ts",
     "name": "NavigationFlowEndState",
     "type": "object",
-    "source": "src/index.ts",
     "properties": {
         "_comment": {
             "required": false,
@@ -31,9 +31,9 @@
                         "title": "NavigationBaseState.onStart"
                     },
                     {
+                        "source": "src/index.ts",
                         "name": "ExpressionObject",
                         "type": "object",
-                        "source": "src/index.ts",
                         "properties": {
                             "exp": {
                                 "required": false,
@@ -65,9 +65,9 @@
                         "title": "NavigationBaseState.onEnd"
                     },
                     {
+                        "source": "src/index.ts",
                         "name": "ExpressionObject",
                         "type": "object",
-                        "source": "src/index.ts",
                         "properties": {
                             "exp": {
                                 "required": false,
@@ -104,7 +104,9 @@
             }
         }
     },
-    "additionalProperties": false,
+    "additionalProperties": {
+        "type": "unknown"
+    },
     "title": "NavigationFlowEndState",
     "description": "An END state of the flow."
 }

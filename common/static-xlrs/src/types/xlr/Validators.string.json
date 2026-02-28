@@ -1,0 +1,6 @@
+{
+    "source": "/some/path/types.ts",
+    "name": "string",
+    "type": "ref",
+    "ref": "ValidatorFunction"
+}

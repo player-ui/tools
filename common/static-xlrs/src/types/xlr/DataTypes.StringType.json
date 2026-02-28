@@ -1,0 +1,62 @@
+{
+    "source": "/some/path/types.ts",
+    "name": "StringType",
+    "type": "object",
+    "properties": {
+        "type": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "const": "StringType"
+            }
+        },
+        "default": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "const": ""
+            }
+        },
+        "validation": {
+            "required": true,
+            "node": {
+                "type": "array",
+                "elementType": {
+                    "type": "any"
+                },
+                "const": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "required": true,
+                                "node": {
+                                    "type": "string",
+                                    "const": "string"
+                                }
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                ]
+            }
+        },
+        "format": {
+            "required": true,
+            "node": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "required": true,
+                        "node": {
+                            "type": "string",
+                            "const": "string"
+                        }
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}

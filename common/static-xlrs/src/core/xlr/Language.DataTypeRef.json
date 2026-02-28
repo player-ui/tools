@@ -1,0 +1,17 @@
+{
+    "name": "Language.DataTypeRef",
+    "type": "object",
+    "properties": {
+        "type": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "title": "DataTypeRef.type",
+                "description": "Name of the type in Player Core"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "title": "DataTypeRef",
+    "description": "Helper to compliment `Schema.DataType` to provide a way to export a reference to a data type instead of the whole object"
+}

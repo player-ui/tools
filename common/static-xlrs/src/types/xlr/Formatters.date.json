@@ -1,0 +1,28 @@
+{
+    "source": "/some/path/types.ts",
+    "name": "date",
+    "type": "ref",
+    "ref": "FormatType<\n  string,\n  string,\n  {\n    /** The mask to use to format the date */\n    mask?: string;\n  }\n>",
+    "genericArguments": [
+        {
+            "type": "string"
+        },
+        {
+            "type": "string"
+        },
+        {
+            "type": "object",
+            "properties": {
+                "mask": {
+                    "required": false,
+                    "node": {
+                        "type": "string",
+                        "title": "mask",
+                        "description": "The mask to use to format the date"
+                    }
+                }
+            },
+            "additionalProperties": false
+        }
+    ]
+}

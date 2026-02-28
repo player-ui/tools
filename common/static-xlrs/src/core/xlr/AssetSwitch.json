@@ -1,23 +1,23 @@
 {
-    "name": "AssetSwitch",
     "source": "src/index.ts",
+    "name": "AssetSwitch",
     "type": "or",
     "or": [
         {
-            "name": "StaticSwitch",
-            "type": "object",
             "source": "src/index.ts",
+            "name": "StaticSwitch<T>",
+            "type": "object",
             "properties": {
                 "staticSwitch": {
                     "required": true,
                     "node": {
-                        "name": "Switch",
                         "source": "src/index.ts",
+                        "name": "Switch<T>",
                         "type": "array",
                         "elementType": {
-                            "name": "SwitchCase",
-                            "type": "object",
                             "source": "src/index.ts",
+                            "name": "SwitchCase<T>",
+                            "type": "object",
                             "properties": {
                                 "asset": {
                                     "required": true,
@@ -40,8 +40,7 @@
                                             },
                                             {
                                                 "type": "boolean",
-                                                "const": true,
-                                                "title": "SwitchCase.case"
+                                                "const": true
                                             }
                                         ],
                                         "title": "SwitchCase.case",
@@ -101,20 +100,20 @@
             ]
         },
         {
-            "name": "DynamicSwitch",
-            "type": "object",
             "source": "src/index.ts",
+            "name": "DynamicSwitch<T>",
+            "type": "object",
             "properties": {
                 "dynamicSwitch": {
                     "required": true,
                     "node": {
-                        "name": "Switch",
                         "source": "src/index.ts",
+                        "name": "Switch<T>",
                         "type": "array",
                         "elementType": {
-                            "name": "SwitchCase",
-                            "type": "object",
                             "source": "src/index.ts",
+                            "name": "SwitchCase<T>",
+                            "type": "object",
                             "properties": {
                                 "asset": {
                                     "required": true,
@@ -137,8 +136,7 @@
                                             },
                                             {
                                                 "type": "boolean",
-                                                "const": true,
-                                                "title": "SwitchCase.case"
+                                                "const": true
                                             }
                                         ],
                                         "title": "SwitchCase.case",

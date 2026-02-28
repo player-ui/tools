@@ -1,0 +1,51 @@
+{
+    "pluginName": "CommonTypes",
+    "capabilities": {
+        "Assets": [],
+        "Views": [],
+        "Expressions": [],
+        "DataTypes": [
+            "DataTypes.BooleanType",
+            "DataTypes.IntegerType",
+            "DataTypes.IntegerPosType",
+            "DataTypes.IntegerNNType",
+            "DataTypes.StringType",
+            "DataTypes.CollectionType",
+            "DataTypes.DateType",
+            "DataTypes.PhoneType"
+        ],
+        "Formatters": [
+            "Formatters.commaNumber",
+            "Formatters.currency",
+            "Formatters.date",
+            "Formatters.integer",
+            "Formatters.phone"
+        ],
+        "Validators": [
+            "Validators.collection",
+            "Validators.email",
+            "Validators.expression",
+            "Validators.integer",
+            "Validators.length",
+            "Validators.max",
+            "Validators.min",
+            "Validators.oneOf",
+            "Validators.phone",
+            "Validators.readonly",
+            "Validators.regex",
+            "Validators.required",
+            "Validators.string",
+            "Validators.zip"
+        ]
+    },
+    "customPrimitives": [
+        "Expression",
+        "Asset",
+        "Binding",
+        "AssetWrapper",
+        "Schema.DataType",
+        "ExpressionHandler",
+        "FormatType",
+        "ValidatorFunction"
+    ]
+}

@@ -1,0 +1,39 @@
+{
+    "source": "/some/path/types.ts",
+    "name": "CollectionType",
+    "type": "object",
+    "properties": {
+        "type": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "const": "CollectionType"
+            }
+        },
+        "validation": {
+            "required": true,
+            "node": {
+                "type": "array",
+                "elementType": {
+                    "type": "any"
+                },
+                "const": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "required": true,
+                                "node": {
+                                    "type": "string",
+                                    "const": "collection"
+                                }
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                ]
+            }
+        }
+    },
+    "additionalProperties": false
+}

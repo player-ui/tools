@@ -1,0 +1,19 @@
+{
+    "name": "Formatting.Reference",
+    "type": "object",
+    "properties": {
+        "type": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "title": "Reference.type",
+                "description": "The name of the formatter (and de-formatter) to use"
+            }
+        }
+    },
+    "additionalProperties": {
+        "type": "unknown"
+    },
+    "title": "Reference",
+    "description": "A reference to a specific formatter"
+}

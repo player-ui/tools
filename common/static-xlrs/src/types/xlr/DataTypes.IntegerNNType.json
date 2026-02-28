@@ -1,0 +1,75 @@
+{
+    "source": "/some/path/types.ts",
+    "name": "IntegerNNType",
+    "type": "object",
+    "properties": {
+        "type": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "const": "IntegerNNType"
+            }
+        },
+        "validation": {
+            "required": true,
+            "node": {
+                "type": "array",
+                "elementType": {
+                    "type": "any"
+                },
+                "const": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "required": true,
+                                "node": {
+                                    "type": "string",
+                                    "const": "integer"
+                                }
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "required": true,
+                                "node": {
+                                    "type": "string",
+                                    "const": "min"
+                                }
+                            },
+                            "value": {
+                                "required": true,
+                                "node": {
+                                    "type": "number",
+                                    "const": 0
+                                }
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                ]
+            }
+        },
+        "format": {
+            "required": true,
+            "node": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "required": true,
+                        "node": {
+                            "type": "string",
+                            "const": "integer"
+                        }
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}

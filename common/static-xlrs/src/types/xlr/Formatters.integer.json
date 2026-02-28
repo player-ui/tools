@@ -1,0 +1,14 @@
+{
+    "source": "/some/path/types.ts",
+    "name": "integer",
+    "type": "ref",
+    "ref": "FormatType<number, string>",
+    "genericArguments": [
+        {
+            "type": "number"
+        },
+        {
+            "type": "string"
+        }
+    ]
+}

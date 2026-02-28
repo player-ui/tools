@@ -1,0 +1,25 @@
+{
+    "source": "/some/path/types.ts",
+    "name": "oneOf",
+    "type": "ref",
+    "ref": "ValidatorFunction<{\n  /** The enum values that are acceptable  */\n  options: Array<unknown>;\n}>",
+    "genericArguments": [
+        {
+            "type": "object",
+            "properties": {
+                "options": {
+                    "required": true,
+                    "node": {
+                        "type": "array",
+                        "elementType": {
+                            "type": "unknown"
+                        },
+                        "title": "options",
+                        "description": "The enum values that are acceptable"
+                    }
+                }
+            },
+            "additionalProperties": false
+        }
+    ]
+}

@@ -1,6 +1,6 @@
 {
-    "name": "DataModel",
     "source": "src/index.ts",
+    "name": "DataModel",
     "type": "record",
     "keyType": {
         "type": "any"
