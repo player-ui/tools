@@ -7,6 +7,7 @@ import type {
   ObjectASTNode,
   PropertyASTNode,
 } from "./parser";
+import type { Node } from "jsonc-parser";
 import type { ASTVisitor } from "./types";
 
 export const typeToVisitorMap: Record<ASTNode["type"], keyof ASTVisitor> = {
@@ -141,3 +142,22 @@ export function mapFlowStateToType(
 
   return flowXLR;
 }
+
+/** BFS search to find a JSONC node in children of some AST Node */
+export const findErrorNode = (rootNode: ASTNode, nodeToFind: Node): ASTNode => {
+  const children: Array<ASTNode> = [rootNode];
+
+  while (children.length > 0) {
+    const child = children.pop() as ASTNode;
+    if (child.jsonNode === nodeToFind) {
+      return child;
+    }
+
+    if (child.children) {
+      children.push(...child.children);
+    }
+  }
+
+  // if the node can't be found return the original
+  return rootNode;
+};

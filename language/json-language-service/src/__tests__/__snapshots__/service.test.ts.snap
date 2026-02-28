@@ -116,20 +116,6 @@ exports[`player language service > hover > basic hover docs 3`] = `
 exports[`player language service > validation > throws AssetWrapper errors 1`] = `
 [
   {
-    "message": "Content Validation Error - value: Does not match any of the expected types for type: 'DataTypes'",
-    "range": {
-      "end": {
-        "character": 15,
-        "line": 21,
-      },
-      "start": {
-        "character": 29,
-        "line": 19,
-      },
-    },
-    "severity": 1,
-  },
-  {
     "message": "Content Validation Error - missing: Property "BEGIN" missing from type "Navigation"",
     "range": {
       "end": {
