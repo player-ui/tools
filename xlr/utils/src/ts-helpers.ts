@@ -58,7 +58,12 @@ export function isNodeExported(node: ts.Node): boolean {
 export function getReferencedType(
   node: ts.TypeReferenceNode,
   typeChecker: ts.TypeChecker,
-) {
+):
+  | {
+      declaration: ts.InterfaceDeclaration | ts.TypeAliasDeclaration;
+      exported: boolean;
+    }
+  | undefined {
   let symbol = typeChecker.getSymbolAtLocation(node.typeName);
 
   if (
