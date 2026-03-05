@@ -20,14 +20,8 @@ export interface PropertyNode {
  * Takes a property node and returns the underlying Key/Value Pairs
  */
 export function propertyToTuple(node: Node): PropertyNode {
-  let key = node.children?.[0].value as string;
-  if (key.includes("-")) {
-    // XLR outputs all escaped properties with single quotes
-    key = `'${key}'`;
-  }
-
   return {
-    key,
+    key: node.children?.[0].value as string,
     value: node.children?.[1] as Node,
   };
 }

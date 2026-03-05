@@ -135,7 +135,7 @@ describe("makePropertyMap tests", () => {
 
     const propertyMap = makePropertyMap(treeObject);
 
-    expect(propertyMap.get("'some-key'")?.value).toStrictEqual("value");
-    expect(propertyMap.get("'some-otherkey'")?.value).toStrictEqual("value");
+    expect(propertyMap.get("some-key")?.value).toStrictEqual("value");
+    expect(propertyMap.get("some-otherkey")?.value).toStrictEqual("value");
   });
 });
