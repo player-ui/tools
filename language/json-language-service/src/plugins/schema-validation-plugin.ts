@@ -218,7 +218,7 @@ function validateDataTypeStructure(
   }
 
   // Check if default value conforms to the expected value
-  const defaultNode = claimedDataType.properties["default"]?.node;
+  const defaultNode = claimedDataType.properties?.["default"]?.node;
   const defaultProp = getProperty(dataTypeNode, "default");
   if (
     defaultNode &&
