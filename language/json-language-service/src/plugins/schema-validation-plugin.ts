@@ -3,12 +3,27 @@ import type { PlayerLanguageService, PlayerLanguageServicePlugin } from "..";
 import type { ValidationContext, ASTVisitor } from "../types";
 import type { ContentASTNode, ObjectASTNode, StringASTNode } from "../parser";
 import { getProperty } from "../utils";
-import type { XLRSDK } from "@player-tools/xlr-sdk";
-import { NamedType, ObjectType, RefType } from "@player-tools/xlr";
+import type { ValidationMessage, XLRSDK } from "@player-tools/xlr-sdk";
+import { NamedType, ObjectType, OrType, RefType } from "@player-tools/xlr";
 import { translateSeverity } from "./xlr-plugin";
+import { isObjectType } from "@player-tools/xlr-utils";
 
 function formatErrorMessage(message: string): string {
   return `Schema Validation Error: ${message}`;
+}
+
+function makeValidationRefObject(
+  baseObject: ObjectType,
+  validationFunction: ObjectType,
+): ObjectType {
+  return {
+    ...baseObject,
+    properties: {
+      ...baseObject.properties,
+      ...validationFunction.properties,
+    },
+    additionalProperties: false,
+  } as ObjectType;
 }
 
 /**
@@ -49,29 +64,57 @@ function validateSchemaValidations(
         getRawType: true,
       }) as NamedType<ObjectType> | undefined;
       if (valRef) {
-        const validatorFunctionProps =
-          (validationXLR.genericArguments?.[0] as ObjectType)?.properties ?? {};
+        let validationIssues: ValidationMessage[];
+        const validatorFunctionProps = validationXLR.genericArguments?.[0] as
+          | ObjectType
+          | OrType;
 
-        const valRefInstance = {
-          ...valRef,
-          properties: {
-            ...valRef.properties,
-            ...validatorFunctionProps,
-          },
-          additionalProperties: false,
-        } as ObjectType;
-
-        const validationIssues = sdk.validateByType(
-          valRefInstance,
-          validationNode.jsonNode,
-        );
-        validationIssues.forEach((issue) => {
-          validationContext.addViolation({
-            node: validationNode,
-            message: formatErrorMessage(issue.message),
-            severity: translateSeverity(issue.severity),
+        if (isObjectType(validatorFunctionProps)) {
+          validationIssues = sdk.validateByType(
+            makeValidationRefObject(valRef, validatorFunctionProps),
+            validationNode.jsonNode,
+          );
+          validationIssues.forEach((issue) => {
+            validationContext.addViolation({
+              node: validationNode,
+              message: formatErrorMessage(issue.message),
+              severity: translateSeverity(issue.severity),
+            });
           });
-        });
+        } else {
+          // need to make sure that only one of the arg groups is right
+          const validationResults = validatorFunctionProps.or
+            .map((node) => {
+              if (isObjectType(node)) {
+                return sdk.validateByType(
+                  makeValidationRefObject(valRef, node),
+                  validationNode.jsonNode,
+                );
+              } else {
+                validationIssues.forEach((issue) => {
+                  validationContext.addViolation({
+                    node: validationNode,
+                    message: formatErrorMessage(
+                      `Internal Error - Validation function ${validationXLR.name} type argument is not an object`,
+                    ),
+                    severity: DiagnosticSeverity.Error,
+                  });
+                });
+                return null;
+              }
+            })
+            .filter((o) => o !== null && Array.isArray(o) && o.length === 0);
+
+          if (validationResults.length !== 1) {
+            validationContext.addViolation({
+              node: validationNode,
+              message: formatErrorMessage(
+                `Validation function invalid function parameters for type ${validationXLR.name}`,
+              ),
+              severity: DiagnosticSeverity.Error,
+            });
+          }
+        }
       } else {
         validationContext.addViolation({
           node: validationNode,

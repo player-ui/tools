@@ -1471,6 +1471,223 @@ describe("SchemaValidationPlugin", () => {
       );
       expect(schemaErrors).toHaveLength(0);
     });
+
+    describe("length validator (OrType / union params)", () => {
+      test("accepts length validator with min/max variant (valid props)", async () => {
+        const document = toTextDocument(
+          JSON.stringify(
+            {
+              id: "foo",
+              views: [],
+              navigation: { BEGIN: "FLOW1" },
+              schema: {
+                ROOT: {
+                  title: {
+                    type: "StringType",
+                    validation: [{ type: "length", min: 1, max: 100 }],
+                    format: { type: "string" },
+                  },
+                },
+              },
+            },
+            null,
+            2,
+          ),
+        );
+        const diagnostics = await service.validateTextDocument(document);
+        const schemaErrors = (diagnostics ?? []).filter((d) =>
+          d.message.includes("Schema Validation Error:"),
+        );
+        expect(schemaErrors).toHaveLength(0);
+      });
+
+      test("accepts length validator with min only (first Or variant)", async () => {
+        const document = toTextDocument(
+          JSON.stringify(
+            {
+              id: "foo",
+              views: [],
+              navigation: { BEGIN: "FLOW1" },
+              schema: {
+                ROOT: {
+                  title: {
+                    type: "StringType",
+                    validation: [{ type: "length", min: 0 }],
+                    format: { type: "string" },
+                  },
+                },
+              },
+            },
+            null,
+            2,
+          ),
+        );
+        const diagnostics = await service.validateTextDocument(document);
+        const schemaErrors = (diagnostics ?? []).filter((d) =>
+          d.message.includes("Schema Validation Error:"),
+        );
+        expect(schemaErrors).toHaveLength(0);
+      });
+
+      test("accepts length validator with max only (first Or variant)", async () => {
+        const document = toTextDocument(
+          JSON.stringify(
+            {
+              id: "foo",
+              views: [],
+              navigation: { BEGIN: "FLOW1" },
+              schema: {
+                ROOT: {
+                  code: {
+                    type: "StringType",
+                    validation: [{ type: "length", max: 10 }],
+                    format: { type: "string" },
+                  },
+                },
+              },
+            },
+            null,
+            2,
+          ),
+        );
+        const diagnostics = await service.validateTextDocument(document);
+        const schemaErrors = (diagnostics ?? []).filter((d) =>
+          d.message.includes("Schema Validation Error:"),
+        );
+        expect(schemaErrors).toHaveLength(0);
+      });
+
+      test("accepts length validator with exact variant (second Or variant)", async () => {
+        const document = toTextDocument(
+          JSON.stringify(
+            {
+              id: "foo",
+              views: [],
+              navigation: { BEGIN: "FLOW1" },
+              schema: {
+                ROOT: {
+                  pin: {
+                    type: "StringType",
+                    validation: [{ type: "length", exact: 6 }],
+                    format: { type: "string" },
+                  },
+                },
+              },
+            },
+            null,
+            2,
+          ),
+        );
+        const diagnostics = await service.validateTextDocument(document);
+        const schemaErrors = (diagnostics ?? []).filter((d) =>
+          d.message.includes("Schema Validation Error:"),
+        );
+        expect(schemaErrors).toHaveLength(0);
+      });
+
+      test("reports error when length validator has invalid prop type (min must be number)", async () => {
+        const document = toTextDocument(
+          JSON.stringify(
+            {
+              id: "foo",
+              views: [],
+              navigation: { BEGIN: "FLOW1" },
+              schema: {
+                ROOT: {
+                  title: {
+                    type: "StringType",
+                    validation: [{ type: "length", min: "five" }],
+                    format: { type: "string" },
+                  },
+                },
+              },
+            },
+            null,
+            2,
+          ),
+        );
+        const diagnostics = await service.validateTextDocument(document);
+        const schemaErrors = (diagnostics ?? []).filter((d) =>
+          d.message.includes("Schema Validation Error:"),
+        );
+        expect(schemaErrors.length).toBeGreaterThan(0);
+        expect(
+          schemaErrors.some(
+            (d) =>
+              d.message.includes("Expected type") ||
+              d.message.includes("invalid function parameters"),
+          ),
+        ).toBe(true);
+      });
+
+      test("reports error when length validator has invalid function parameters (no Or variant matches)", async () => {
+        const document = toTextDocument(
+          JSON.stringify(
+            {
+              id: "foo",
+              views: [],
+              navigation: { BEGIN: "FLOW1" },
+              schema: {
+                ROOT: {
+                  title: {
+                    type: "StringType",
+                    validation: [
+                      { type: "length", min: "not-a-number", max: "also-not" },
+                    ],
+                    format: { type: "string" },
+                  },
+                },
+              },
+            },
+            null,
+            2,
+          ),
+        );
+        const diagnostics = await service.validateTextDocument(document);
+        const schemaErrors = (diagnostics ?? []).filter((d) =>
+          d.message.includes("Schema Validation Error:"),
+        );
+        expect(schemaErrors.length).toBeGreaterThan(0);
+        expect(
+          schemaErrors.some(
+            (d) =>
+              d.message.includes("invalid function parameters") ||
+              d.message.includes("Expected type"),
+          ),
+        ).toBe(true);
+      });
+
+      test("reports error when length validator matches multiple Or variants (ambiguous params)", async () => {
+        const document = toTextDocument(
+          JSON.stringify(
+            {
+              id: "foo",
+              views: [],
+              navigation: { BEGIN: "FLOW1" },
+              schema: {
+                ROOT: {
+                  field: {
+                    type: "StringType",
+                    validation: [{ type: "length", min: 1, exact: 5 }],
+                    format: { type: "string" },
+                  },
+                },
+              },
+            },
+            null,
+            2,
+          ),
+        );
+        const diagnostics = await service.validateTextDocument(document);
+        const schemaErrors = (diagnostics ?? []).filter((d) =>
+          d.message.includes("Schema Validation Error:"),
+        );
+        expect(schemaErrors).toHaveLength(1);
+        expect(schemaErrors[0].message).toContain(
+          "Validation function invalid function parameters for type length",
+        );
+      });
+    });
   });
 
   describe("specific Formatters from CommonTypes", () => {
