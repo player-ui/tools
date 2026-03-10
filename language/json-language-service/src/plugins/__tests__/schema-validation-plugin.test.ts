@@ -566,6 +566,157 @@ describe("SchemaValidationPlugin", () => {
         ]
       `);
     });
+
+    describe("default property validation (CollectionType / Or type)", () => {
+      test("accepts CollectionType with valid default (number)", async () => {
+        const document = toTextDocument(
+          JSON.stringify(
+            {
+              id: "foo",
+              views: [],
+              navigation: { BEGIN: "FLOW1" },
+              schema: {
+                ROOT: {
+                  items: {
+                    type: "CollectionType",
+                    default: 0,
+                    validation: [{ type: "collection" }],
+                  },
+                },
+              },
+            },
+            null,
+            2,
+          ),
+        );
+        const diagnostics = await service.validateTextDocument(document);
+        const schemaErrors = (diagnostics ?? []).filter((d) =>
+          d.message.includes("Schema Validation Error:"),
+        );
+        expect(schemaErrors).toHaveLength(0);
+      });
+
+      test("accepts CollectionType with valid default (string)", async () => {
+        const document = toTextDocument(
+          JSON.stringify(
+            {
+              id: "foo",
+              views: [],
+              navigation: { BEGIN: "FLOW1" },
+              schema: {
+                ROOT: {
+                  items: {
+                    type: "CollectionType",
+                    default: "",
+                    validation: [{ type: "collection" }],
+                  },
+                },
+              },
+            },
+            null,
+            2,
+          ),
+        );
+        const diagnostics = await service.validateTextDocument(document);
+        const schemaErrors = (diagnostics ?? []).filter((d) =>
+          d.message.includes("Schema Validation Error:"),
+        );
+        expect(schemaErrors).toHaveLength(0);
+      });
+
+      test("reports error when CollectionType default is boolean (not in Or type)", async () => {
+        const document = toTextDocument(
+          JSON.stringify(
+            {
+              id: "foo",
+              views: [],
+              navigation: { BEGIN: "FLOW1" },
+              schema: {
+                ROOT: {
+                  items: {
+                    type: "CollectionType",
+                    default: true,
+                    validation: [{ type: "collection" }],
+                  },
+                },
+              },
+            },
+            null,
+            2,
+          ),
+        );
+        const diagnostics = await service.validateTextDocument(document);
+        const schemaErrors = (diagnostics ?? []).filter((d) =>
+          d.message.includes("Schema Validation Error:"),
+        );
+        expect(schemaErrors).toHaveLength(1);
+        expect(schemaErrors[0].message).toBe(
+          "Schema Validation Error: Default value doesn't match any of the expected types number, string for type CollectionType",
+        );
+      });
+
+      test("reports error when CollectionType default is array (not in Or type)", async () => {
+        const document = toTextDocument(
+          JSON.stringify(
+            {
+              id: "foo",
+              views: [],
+              navigation: { BEGIN: "FLOW1" },
+              schema: {
+                ROOT: {
+                  items: {
+                    type: "CollectionType",
+                    default: [],
+                    validation: [{ type: "collection" }],
+                  },
+                },
+              },
+            },
+            null,
+            2,
+          ),
+        );
+        const diagnostics = await service.validateTextDocument(document);
+        const schemaErrors = (diagnostics ?? []).filter((d) =>
+          d.message.includes("Schema Validation Error:"),
+        );
+        expect(schemaErrors).toHaveLength(1);
+        expect(schemaErrors[0].message).toBe(
+          "Schema Validation Error: Default value doesn't match any of the expected types number, string for type CollectionType",
+        );
+      });
+
+      test("reports error when CollectionType default is object (not in Or type)", async () => {
+        const document = toTextDocument(
+          JSON.stringify(
+            {
+              id: "foo",
+              views: [],
+              navigation: { BEGIN: "FLOW1" },
+              schema: {
+                ROOT: {
+                  items: {
+                    type: "CollectionType",
+                    default: {},
+                    validation: [{ type: "collection" }],
+                  },
+                },
+              },
+            },
+            null,
+            2,
+          ),
+        );
+        const diagnostics = await service.validateTextDocument(document);
+        const schemaErrors = (diagnostics ?? []).filter((d) =>
+          d.message.includes("Schema Validation Error:"),
+        );
+        expect(schemaErrors).toHaveLength(1);
+        expect(schemaErrors[0].message).toBe(
+          "Schema Validation Error: Default value doesn't match any of the expected types number, string for type CollectionType",
+        );
+      });
+    });
   });
 
   describe("flow without schema", () => {

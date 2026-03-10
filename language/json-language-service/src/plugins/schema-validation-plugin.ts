@@ -6,7 +6,7 @@ import { getProperty } from "../utils";
 import type { ValidationMessage, XLRSDK } from "@player-tools/xlr-sdk";
 import { NamedType, ObjectType, OrType, RefType } from "@player-tools/xlr";
 import { translateSeverity } from "./xlr-plugin";
-import { isObjectType } from "@player-tools/xlr-utils";
+import { isObjectType, isPrimitiveTypeNode } from "@player-tools/xlr-utils";
 
 function formatErrorMessage(message: string): string {
   return `Schema Validation Error: ${message}`;
@@ -67,11 +67,15 @@ function validateSchemaValidations(
         let validationIssues: ValidationMessage[];
         const validatorFunctionProps = validationXLR.genericArguments?.[0] as
           | ObjectType
-          | OrType;
+          | OrType
+          | undefined;
 
-        if (isObjectType(validatorFunctionProps)) {
+        if (!validatorFunctionProps || isObjectType(validatorFunctionProps)) {
           validationIssues = sdk.validateByType(
-            makeValidationRefObject(valRef, validatorFunctionProps),
+            makeValidationRefObject(
+              valRef,
+              validatorFunctionProps ?? ({} as ObjectType),
+            ),
             validationNode.jsonNode,
           );
           validationIssues.forEach((issue) => {
@@ -263,18 +267,36 @@ function validateDataTypeStructure(
   // Check if default value conforms to the expected value
   const defaultNode = claimedDataType.properties?.["default"]?.node;
   const defaultProp = getProperty(dataTypeNode, "default");
-  if (
-    defaultNode &&
-    defaultProp?.valueNode &&
-    defaultProp.valueNode.type !== defaultNode.type
-  ) {
-    validationContext.addViolation({
-      node: defaultProp.valueNode,
-      message: formatErrorMessage(
-        `Default value doesn't match the expected type of ${defaultNode.type} for type ${claimedDataType.name}`,
-      ),
-      severity: DiagnosticSeverity.Error,
-    });
+  if (defaultNode && defaultProp?.valueNode) {
+    if (isPrimitiveTypeNode(defaultNode)) {
+      if (defaultProp.valueNode.type !== defaultNode.type) {
+        validationContext.addViolation({
+          node: defaultProp.valueNode,
+          message: formatErrorMessage(
+            `Default value doesn't match the expected type of ${defaultNode.type} for type ${claimedDataType.name}`,
+          ),
+          severity: DiagnosticSeverity.Error,
+        });
+      }
+    } else if (defaultNode.type === "or") {
+      if (!defaultNode.or.some((n) => n.type === defaultProp.valueNode?.type)) {
+        validationContext.addViolation({
+          node: defaultProp.valueNode,
+          message: formatErrorMessage(
+            `Default value doesn't match any of the expected types ${defaultNode.or.map((t) => t.type).join(", ")} for type ${claimedDataType.name}`,
+          ),
+          severity: DiagnosticSeverity.Error,
+        });
+      }
+    } else {
+      validationContext.addViolation({
+        node: defaultProp.valueNode,
+        message: formatErrorMessage(
+          `Unknown default node type ${defaultNode.type}`,
+        ),
+        severity: DiagnosticSeverity.Error,
+      });
+    }
   }
 
   // RecordType/ArrayType Checks
@@ -369,7 +391,7 @@ function validateSchemaNode(
 
     const typeName = (typeValueNode as StringASTNode).value;
     const isSchemaType = schemaTypeNames.has(typeName);
-    const XLRType = sdk.getType(typeName);
+    const XLRType = sdk.getType(typeName, { getRawType: true });
 
     if (!isSchemaType && !XLRType) {
       validationContext.addViolation({
