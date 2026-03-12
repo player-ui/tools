@@ -7,15 +7,11 @@
   },
   "dependencies": {
     "@player-tools/xlr": "workspace:*",
-    "@player-tools/xlr-utils": "workspace:*",
-    "ts-morph": "^24.0.0"
+    "@player-tools/xlr-utils": "workspace:*"
   },
   "devDependencies": {
     "@player-tools/fluent": "workspace:*",
     "@player-tools/test-utils": "workspace:*",
     "@player-tools/xlr-converters": "workspace:*"
-  },
-  "peerDependencies": {
-    "@player-ui/types": ">=0.12.0"
   }
 }
