@@ -1,3 +1,30 @@
+# 0.13.0-next.4 (Thu Mar 12 2026)
+
+### Release Notes
+
+#### Backporting changes from new Repos & Fixing releases ([#243](https://github.com/player-ui/tools/pull/243))
+
+- Backporting BUILD file changes from new Language Repo to clean up fluent deps
+- Fix bad merge that removed changes from https://github.com/player-ui/tools/pull/236
+- Disable `StrictHostKeyChecking` to fix release instability
+
+---
+
+#### 🚀 Enhancement
+
+- feat: fluent dsl [#221](https://github.com/player-ui/tools/pull/221) ([@rafbcampos](https://github.com/rafbcampos))
+
+#### 🐛 Bug Fix
+
+- Backporting changes from new Repos & Fixing releases [#243](https://github.com/player-ui/tools/pull/243) ([@KetanReddy](https://github.com/KetanReddy))
+
+#### Authors: 2
+
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+- Rafael Campos ([@rafbcampos](https://github.com/rafbcampos))
+
+---
+
 # 0.13.0-next.1 (Tue Dec 16 2025)
 
 ### Release Notes
