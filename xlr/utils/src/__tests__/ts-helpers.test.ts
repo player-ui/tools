@@ -1,6 +1,6 @@
 import { test, expect, describe } from "vitest";
 import * as ts from "typescript";
-import { NodeType } from "@player-tools/xlr";
+import type { NodeType } from "@player-tools/xlr";
 
 import {
   tsStripOptionalType,

@@ -921,17 +921,29 @@ export class TsConverter {
         }
       });
     });
-    // Resolve Additional Properties
+    // Resolve Additional Properties: preserve index signature from current
+    // interface (baseObject) and merge with any from extended types.
     let additionalProperties: NodeType | false = false;
-    if (baseObject.additionalProperties === false) {
-      if (additionalPropertiesCollector.length === 1) {
-        additionalProperties = additionalPropertiesCollector[0];
-      } else if (additionalPropertiesCollector.length >= 1) {
-        additionalProperties = {
-          type: "or",
-          or: additionalPropertiesCollector,
-        };
+    if (baseObject.additionalProperties) {
+      if (additionalPropertiesCollector.length === 0) {
+        additionalProperties = baseObject.additionalProperties;
+      } else {
+        additionalPropertiesCollector.push(baseObject.additionalProperties);
+        additionalProperties =
+          additionalPropertiesCollector.length === 1
+            ? additionalPropertiesCollector[0]
+            : {
+                type: "or",
+                or: additionalPropertiesCollector,
+              };
       }
+    } else if (additionalPropertiesCollector.length === 1) {
+      additionalProperties = additionalPropertiesCollector[0];
+    } else if (additionalPropertiesCollector.length >= 1) {
+      additionalProperties = {
+        type: "or",
+        or: additionalPropertiesCollector,
+      };
     }
 
     return {
