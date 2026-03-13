@@ -1,0 +1,11 @@
+{
+    "source": "/some/path/types.ts",
+    "name": "phone",
+    "type": "ref",
+    "ref": "FormatType<string>",
+    "genericArguments": [
+        {
+            "type": "string"
+        }
+    ]
+}

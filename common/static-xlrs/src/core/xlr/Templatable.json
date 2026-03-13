@@ -1,16 +1,16 @@
 {
+    "source": "src/index.ts",
     "name": "Templatable",
     "type": "object",
-    "source": "src/index.ts",
     "properties": {
         "template": {
             "required": false,
             "node": {
                 "type": "array",
                 "elementType": {
+                    "source": "src/index.ts",
                     "name": "Template",
                     "type": "object",
-                    "source": "src/index.ts",
                     "properties": {
                         "data": {
                             "required": true,
@@ -45,6 +45,24 @@
                                 "ref": "Key",
                                 "title": "Template.output",
                                 "description": "A property on the parent object to store the new map under.\nIf it already exists, values are appended to the end."
+                            }
+                        },
+                        "placement": {
+                            "required": false,
+                            "node": {
+                                "type": "or",
+                                "or": [
+                                    {
+                                        "type": "string",
+                                        "const": "prepend"
+                                    },
+                                    {
+                                        "type": "string",
+                                        "const": "append"
+                                    }
+                                ],
+                                "title": "Template.placement",
+                                "description": "Specifies the template placement in relation to existing elements"
                             }
                         }
                     },

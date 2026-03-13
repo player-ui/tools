@@ -1,0 +1,55 @@
+{
+    "source": "/some/path/types.ts",
+    "name": "DateType",
+    "type": "object",
+    "properties": {
+        "type": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "const": "DateType"
+            }
+        },
+        "validation": {
+            "required": true,
+            "node": {
+                "type": "array",
+                "elementType": {
+                    "type": "any"
+                },
+                "const": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "required": true,
+                                "node": {
+                                    "type": "string",
+                                    "const": "string"
+                                }
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                ]
+            }
+        },
+        "format": {
+            "required": true,
+            "node": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "required": true,
+                        "node": {
+                            "type": "string",
+                            "const": "date"
+                        }
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}

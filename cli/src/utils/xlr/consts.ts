@@ -6,6 +6,8 @@ export const customPrimitives = [
   "AssetWrapper",
   "Schema.DataType",
   "ExpressionHandler",
+  "FormatType",
+  "ValidatorFunction",
 ];
 
 export enum Mode {

@@ -1,6 +1,6 @@
 {
-    "name": "Expression",
     "source": "src/index.ts",
+    "name": "Expression",
     "type": "or",
     "or": [
         {

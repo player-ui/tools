@@ -1,11 +1,11 @@
 {
-    "name": "Switch",
     "source": "src/index.ts",
+    "name": "Switch",
     "type": "array",
     "elementType": {
-        "name": "SwitchCase",
-        "type": "object",
         "source": "src/index.ts",
+        "name": "SwitchCase<T>",
+        "type": "object",
         "properties": {
             "asset": {
                 "required": true,
@@ -28,8 +28,7 @@
                         },
                         {
                             "type": "boolean",
-                            "const": true,
-                            "title": "SwitchCase.case"
+                            "const": true
                         }
                     ],
                     "title": "SwitchCase.case",

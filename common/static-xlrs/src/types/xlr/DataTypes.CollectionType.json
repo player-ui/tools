@@ -1,0 +1,55 @@
+{
+    "source": "/some/path/types.ts",
+    "name": "CollectionType",
+    "type": "object",
+    "properties": {
+        "type": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "const": "CollectionType"
+            }
+        },
+        "default": {
+            "required": false,
+            "node": {
+                "type": "or",
+                "or": [
+                    {
+                        "type": "number"
+                    },
+                    {
+                        "type": "string"
+                    }
+                ],
+                "title": "DataType.default",
+                "description": "A default value for this property.\nAny reads for this property will result in this default value being written to the model."
+            }
+        },
+        "validation": {
+            "required": true,
+            "node": {
+                "type": "array",
+                "elementType": {
+                    "type": "any"
+                },
+                "const": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "required": true,
+                                "node": {
+                                    "type": "string",
+                                    "const": "collection"
+                                }
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                ]
+            }
+        }
+    },
+    "additionalProperties": false
+}

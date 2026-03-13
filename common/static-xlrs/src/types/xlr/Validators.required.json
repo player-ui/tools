@@ -1,0 +1,32 @@
+{
+    "source": "/some/path/types.ts",
+    "name": "required",
+    "type": "ref",
+    "ref": "ValidatorFunction<{\n  /** An optional expression to limit the required check only if true */\n  if?: Expression;\n\n  /** An optional expression to limit the required check only if false */\n  ifNot?: Expression;\n}>",
+    "genericArguments": [
+        {
+            "type": "object",
+            "properties": {
+                "if": {
+                    "required": false,
+                    "node": {
+                        "type": "ref",
+                        "ref": "Expression",
+                        "title": "if",
+                        "description": "An optional expression to limit the required check only if true"
+                    }
+                },
+                "ifNot": {
+                    "required": false,
+                    "node": {
+                        "type": "ref",
+                        "ref": "Expression",
+                        "title": "ifNot",
+                        "description": "An optional expression to limit the required check only if false"
+                    }
+                }
+            },
+            "additionalProperties": false
+        }
+    ]
+}

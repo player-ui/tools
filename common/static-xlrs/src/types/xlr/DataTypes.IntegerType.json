@@ -1,0 +1,55 @@
+{
+    "source": "/some/path/types.ts",
+    "name": "IntegerType",
+    "type": "object",
+    "properties": {
+        "type": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "const": "IntegerType"
+            }
+        },
+        "validation": {
+            "required": true,
+            "node": {
+                "type": "array",
+                "elementType": {
+                    "type": "any"
+                },
+                "const": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "required": true,
+                                "node": {
+                                    "type": "string",
+                                    "const": "integer"
+                                }
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                ]
+            }
+        },
+        "format": {
+            "required": true,
+            "node": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "required": true,
+                        "node": {
+                            "type": "string",
+                            "const": "integer"
+                        }
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}

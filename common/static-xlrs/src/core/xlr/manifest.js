@@ -1,78 +1,55 @@
-const Asset = require("./Asset.json");
-const AssetBinding = require("./AssetBinding.json");
-const SwitchCase = require("./SwitchCase.json");
-const Switch = require("./Switch.json");
-const AssetWrapper = require("./AssetWrapper.json");
-const AssetWrapperOrSwitch = require("./AssetWrapperOrSwitch.json");
-const AssetSwitch = require("./AssetSwitch.json");
-const StaticSwitch = require("./StaticSwitch.json");
-const DynamicSwitch = require("./DynamicSwitch.json");
-const Expression = require("./Expression.json");
-const ExpressionRef = require("./ExpressionRef.json");
-const Binding = require("./Binding.json");
-const BindingRef = require("./BindingRef.json");
-const DataModel = require("./DataModel.json");
-const Navigation = require("./Navigation.json");
-const ExpressionObject = require("./ExpressionObject.json");
-const NavigationFlow = require("./NavigationFlow.json");
-const NavigationFlowTransition = require("./NavigationFlowTransition.json");
-const NavigationBaseState = require("./NavigationBaseState.json");
-const NavigationFlowTransitionableState = require("./NavigationFlowTransitionableState.json");
-const NavigationFlowViewState = require("./NavigationFlowViewState.json");
-const NavigationFlowEndState = require("./NavigationFlowEndState.json");
-const NavigationFlowActionState = require("./NavigationFlowActionState.json");
-const NavigationFlowExternalState = require("./NavigationFlowExternalState.json");
-const NavigationFlowFlowState = require("./NavigationFlowFlowState.json");
-const NavigationFlowState = require("./NavigationFlowState.json");
-const FlowResult = require("./FlowResult.json");
-const Templatable = require("./Templatable.json");
-const Template = require("./Template.json");
-const View = require("./View.json");
-const Flow = require("./Flow.json");
+const Asset = require("./Asset.json")
+const AssetBinding = require("./AssetBinding.json")
+const SwitchCase = require("./SwitchCase.json")
+const Switch = require("./Switch.json")
+const AssetWrapper = require("./AssetWrapper.json")
+const AssetWrapperOrSwitch = require("./AssetWrapperOrSwitch.json")
+const AssetSwitch = require("./AssetSwitch.json")
+const StaticSwitch = require("./StaticSwitch.json")
+const DynamicSwitch = require("./DynamicSwitch.json")
+const Expression = require("./Expression.json")
+const ExpressionRef = require("./ExpressionRef.json")
+const Binding = require("./Binding.json")
+const BindingRef = require("./BindingRef.json")
+const DataModel = require("./DataModel.json")
+const Navigation = require("./Navigation.json")
+const ExpressionObject = require("./ExpressionObject.json")
+const NavigationFlow = require("./NavigationFlow.json")
+const NavigationFlowTransition = require("./NavigationFlowTransition.json")
+const NavigationBaseState = require("./NavigationBaseState.json")
+const NavigationFlowTransitionableState = require("./NavigationFlowTransitionableState.json")
+const NavigationFlowViewState = require("./NavigationFlowViewState.json")
+const NavigationFlowEndState = require("./NavigationFlowEndState.json")
+const NavigationFlowActionState = require("./NavigationFlowActionState.json")
+const NavigationFlowAsyncActionState = require("./NavigationFlowAsyncActionState.json")
+const NavigationFlowExternalState = require("./NavigationFlowExternalState.json")
+const NavigationFlowFlowState = require("./NavigationFlowFlowState.json")
+const NavigationFlowState = require("./NavigationFlowState.json")
+const FlowResult = require("./FlowResult.json")
+const Templatable = require("./Templatable.json")
+const Template = require("./Template.json")
+const View = require("./View.json")
+const Flow = require("./Flow.json")
+const Schema_Schema = require("./Schema.Schema.json")
+const Schema_Node = require("./Schema.Node.json")
+const Schema_DataTypes = require("./Schema.DataTypes.json")
+const Schema_DataType = require("./Schema.DataType.json")
+const Schema_RecordType = require("./Schema.RecordType.json")
+const Schema_ArrayType = require("./Schema.ArrayType.json")
+const Language_DataTypeRef = require("./Language.DataTypeRef.json")
+const Formatting_Reference = require("./Formatting.Reference.json")
+const Validation_Severity = require("./Validation.Severity.json")
+const Validation_Trigger = require("./Validation.Trigger.json")
+const Validation_DisplayTarget = require("./Validation.DisplayTarget.json")
+const Validation_Reference = require("./Validation.Reference.json")
+const Validation_CrossfieldReference = require("./Validation.CrossfieldReference.json")
 
-module.exports = {
-  pluginName: "Types",
-  capabilities: {
-    Types: [
-      Asset,
-      AssetBinding,
-      SwitchCase,
-      Switch,
-      AssetWrapper,
-      AssetWrapperOrSwitch,
-      AssetSwitch,
-      StaticSwitch,
-      DynamicSwitch,
-      Expression,
-      ExpressionRef,
-      Binding,
-      BindingRef,
-      DataModel,
-      Navigation,
-      ExpressionObject,
-      NavigationFlow,
-      NavigationFlowTransition,
-      NavigationBaseState,
-      NavigationFlowTransitionableState,
-      NavigationFlowViewState,
-      NavigationFlowEndState,
-      NavigationFlowActionState,
-      NavigationFlowExternalState,
-      NavigationFlowFlowState,
-      NavigationFlowState,
-      FlowResult,
-      Templatable,
-      Template,
-      View,
-      Flow,
-    ],
-  },
-  customPrimitives: [
-    "Expression",
-    "Asset",
-    "Binding",
-    "AssetWrapper",
-    "Schema.DataType",
-    "ExpressionHandler",
-  ],
-};
+    module.exports = {
+      "pluginName": "Types",
+      "capabilities": {
+        "Types":[Asset,AssetBinding,SwitchCase,Switch,AssetWrapper,AssetWrapperOrSwitch,AssetSwitch,StaticSwitch,DynamicSwitch,Expression,ExpressionRef,Binding,BindingRef,DataModel,Navigation,ExpressionObject,NavigationFlow,NavigationFlowTransition,NavigationBaseState,NavigationFlowTransitionableState,NavigationFlowViewState,NavigationFlowEndState,NavigationFlowActionState,NavigationFlowAsyncActionState,NavigationFlowExternalState,NavigationFlowFlowState,NavigationFlowState,FlowResult,Templatable,Template,View,Flow,Schema_Schema,Schema_Node,Schema_DataTypes,Schema_DataType,Schema_RecordType,Schema_ArrayType,Language_DataTypeRef,Formatting_Reference,Validation_Severity,Validation_Trigger,Validation_DisplayTarget,Validation_Reference,Validation_CrossfieldReference],
+      },
+      "customPrimitives": [
+        "Expression","Asset","Binding","AssetWrapper","Schema.DataType","ExpressionHandler","FormatType","ValidatorFunction"
+      ]
+    }

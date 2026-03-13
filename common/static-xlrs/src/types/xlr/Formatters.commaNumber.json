@@ -1,0 +1,28 @@
+{
+    "source": "/some/path/types.ts",
+    "name": "commaNumber",
+    "type": "ref",
+    "ref": "FormatType<\n  number,\n  string,\n  {\n    /** The number of decimal places to show */\n    precision?: number;\n  }\n>",
+    "genericArguments": [
+        {
+            "type": "number"
+        },
+        {
+            "type": "string"
+        },
+        {
+            "type": "object",
+            "properties": {
+                "precision": {
+                    "required": false,
+                    "node": {
+                        "type": "number",
+                        "title": "precision",
+                        "description": "The number of decimal places to show"
+                    }
+                }
+            },
+            "additionalProperties": false
+        }
+    ]
+}

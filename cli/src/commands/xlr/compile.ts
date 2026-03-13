@@ -155,7 +155,7 @@ export default class XLRCompile extends BaseCommand {
     const tsManifestFile = `${[...(capabilities.capabilities?.values() ?? [])]
       .flat(2)
       .map((capability) => {
-        return `const ${capability} = require("./${capability}.json")`;
+        return `const ${capability.replace(".", "_")} = require("./${capability}.json")`;
       })
       .join("\n")}
 
@@ -164,7 +164,7 @@ export default class XLRCompile extends BaseCommand {
       "capabilities": {
         ${[...(capabilities.capabilities?.entries() ?? [])]
           .map(([capabilityName, provides]) => {
-            return `"${capabilityName}":[${provides.join(",")}],`;
+            return `"${capabilityName}":[${provides.join(",").replaceAll(".", "_")}],`;
           })
           .join("\n\t\t")}
       },

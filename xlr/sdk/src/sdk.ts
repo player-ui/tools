@@ -311,7 +311,7 @@ export class XLRSDK {
    *  - filing in any remaining generics with their default value
    */
   private resolveType(type: NamedType, optimize = true): NamedType {
-    const resolvedObject = fillInGenerics(type);
+    const resolvedObject = fillInGenerics(type, new Map(), true);
 
     let transformMap: TransformFunctionMap = {
       object: [(objectNode: ObjectType) => {

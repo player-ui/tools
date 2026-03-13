@@ -1,6 +1,6 @@
 {
-    "name": "AssetWrapper",
     "source": "src/index.ts",
+    "name": "AssetWrapper",
     "type": "object",
     "properties": {
         "asset": {

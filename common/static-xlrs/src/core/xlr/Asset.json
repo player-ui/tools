@@ -1,7 +1,7 @@
 {
+    "source": "src/index.ts",
     "name": "Asset",
     "type": "object",
-    "source": "src/index.ts",
     "properties": {
         "id": {
             "required": true,

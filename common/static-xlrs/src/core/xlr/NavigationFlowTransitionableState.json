@@ -1,7 +1,7 @@
 {
+    "source": "src/index.ts",
     "name": "NavigationFlowTransitionableState",
     "type": "object",
-    "source": "src/index.ts",
     "properties": {
         "_comment": {
             "required": false,
@@ -31,9 +31,9 @@
                         "title": "NavigationBaseState.onStart"
                     },
                     {
+                        "source": "src/index.ts",
                         "name": "ExpressionObject",
                         "type": "object",
-                        "source": "src/index.ts",
                         "properties": {
                             "exp": {
                                 "required": false,
@@ -65,9 +65,9 @@
                         "title": "NavigationBaseState.onEnd"
                     },
                     {
+                        "source": "src/index.ts",
                         "name": "ExpressionObject",
                         "type": "object",
-                        "source": "src/index.ts",
                         "properties": {
                             "exp": {
                                 "required": false,
@@ -98,8 +98,17 @@
                         "ref": "T"
                     },
                     "right": {
-                        "type": "string",
-                        "const": "ACTION"
+                        "type": "or",
+                        "or": [
+                            {
+                                "type": "string",
+                                "const": "ACTION"
+                            },
+                            {
+                                "type": "string",
+                                "const": "ASYNC_ACTION"
+                            }
+                        ]
                     }
                 },
                 "value": {
@@ -118,8 +127,8 @@
         "transitions": {
             "required": true,
             "node": {
-                "name": "NavigationFlowTransition",
                 "source": "src/index.ts",
+                "name": "NavigationFlowTransition",
                 "type": "record",
                 "keyType": {
                     "type": "string"

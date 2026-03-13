@@ -1,0 +1,20 @@
+{
+    "name": "Validation.DisplayTarget",
+    "type": "or",
+    "or": [
+        {
+            "type": "string",
+            "const": "page"
+        },
+        {
+            "type": "string",
+            "const": "section"
+        },
+        {
+            "type": "string",
+            "const": "field"
+        }
+    ],
+    "title": "DisplayTarget",
+    "description": "Where the error/warning should be displayed.\n- `field` is the default display target. This renders the error/warning directly underneath the field.\n- `section` is used to display a message at a parent node that is designated as a \"section\"\n- `page` a special section used to display a message at the top of the page."
+}

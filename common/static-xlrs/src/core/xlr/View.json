@@ -1,6 +1,6 @@
 {
-    "name": "View",
     "source": "src/index.ts",
+    "name": "View",
     "type": "conditional",
     "check": {
         "left": {
@@ -28,7 +28,7 @@
                             "node": {
                                 "type": "array",
                                 "elementType": {
-                                    "name": "CrossfieldReference",
+                                    "name": "Validation.CrossfieldReference",
                                     "type": "object",
                                     "properties": {
                                         "type": {
@@ -55,13 +55,11 @@
                                                 "or": [
                                                     {
                                                         "type": "string",
-                                                        "const": "error",
-                                                        "title": "Severity"
+                                                        "const": "error"
                                                     },
                                                     {
                                                         "type": "string",
-                                                        "const": "warning",
-                                                        "title": "Severity"
+                                                        "const": "warning"
                                                     }
                                                 ],
                                                 "title": "Reference.severity",
@@ -76,18 +74,15 @@
                                                 "or": [
                                                     {
                                                         "type": "string",
-                                                        "const": "navigation",
-                                                        "title": "Trigger"
+                                                        "const": "navigation"
                                                     },
                                                     {
                                                         "type": "string",
-                                                        "const": "change",
-                                                        "title": "Trigger"
+                                                        "const": "change"
                                                     },
                                                     {
                                                         "type": "string",
-                                                        "const": "load",
-                                                        "title": "Trigger"
+                                                        "const": "load"
                                                     }
                                                 ],
                                                 "title": "Reference.trigger",
@@ -110,22 +105,38 @@
                                                 "or": [
                                                     {
                                                         "type": "string",
-                                                        "const": "page",
-                                                        "title": "DisplayTarget"
+                                                        "const": "page"
                                                     },
                                                     {
                                                         "type": "string",
-                                                        "const": "section",
-                                                        "title": "DisplayTarget"
+                                                        "const": "section"
                                                     },
                                                     {
                                                         "type": "string",
-                                                        "const": "field",
-                                                        "title": "DisplayTarget"
+                                                        "const": "field"
                                                     }
                                                 ],
                                                 "title": "Reference.displayTarget",
                                                 "description": "Where the error should be displayed"
+                                            }
+                                        },
+                                        "blocking": {
+                                            "required": false,
+                                            "node": {
+                                                "type": "or",
+                                                "or": [
+                                                    {
+                                                        "type": "boolean",
+                                                        "title": "Reference.blocking"
+                                                    },
+                                                    {
+                                                        "type": "string",
+                                                        "const": "once"
+                                                    }
+                                                ],
+                                                "title": "Reference.blocking",
+                                                "description": "If the validation blocks navigation\ntrue/false - always/never block navigation\nonce - only block navigation if the validation has not been triggered before",
+                                                "default": "- true for errors, 'once' for warnings"
                                             }
                                         },
                                         "ref": {

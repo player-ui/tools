@@ -1,0 +1,22 @@
+{
+    "source": "/some/path/types.ts",
+    "name": "max",
+    "type": "ref",
+    "ref": "ValidatorFunction<{\n  /** The minimum value */\n  value: number;\n}>",
+    "genericArguments": [
+        {
+            "type": "object",
+            "properties": {
+                "value": {
+                    "required": true,
+                    "node": {
+                        "type": "number",
+                        "title": "value",
+                        "description": "The minimum value"
+                    }
+                }
+            },
+            "additionalProperties": false
+        }
+    ]
+}

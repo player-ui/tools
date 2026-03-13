@@ -1,0 +1,203 @@
+{
+    "name": "Schema.ArrayType",
+    "type": "object",
+    "properties": {
+        "type": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "title": "DataType.type",
+                "description": "The reference of the base type to use"
+            }
+        },
+        "validation": {
+            "required": false,
+            "node": {
+                "type": "array",
+                "elementType": {
+                    "name": "Validation.Reference",
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "required": true,
+                            "node": {
+                                "type": "string",
+                                "title": "Reference.type",
+                                "description": "The name of the referenced validation type\nThis will be used to lookup the proper handler"
+                            }
+                        },
+                        "message": {
+                            "required": false,
+                            "node": {
+                                "type": "string",
+                                "title": "Reference.message",
+                                "description": "An optional means of overriding the default message if the validation is triggered"
+                            }
+                        },
+                        "severity": {
+                            "required": false,
+                            "node": {
+                                "name": "Severity",
+                                "type": "or",
+                                "or": [
+                                    {
+                                        "type": "string",
+                                        "const": "error"
+                                    },
+                                    {
+                                        "type": "string",
+                                        "const": "warning"
+                                    }
+                                ],
+                                "title": "Reference.severity",
+                                "description": "An optional means of overriding the default severity of the validation if triggered"
+                            }
+                        },
+                        "trigger": {
+                            "required": false,
+                            "node": {
+                                "name": "Trigger",
+                                "type": "or",
+                                "or": [
+                                    {
+                                        "type": "string",
+                                        "const": "navigation"
+                                    },
+                                    {
+                                        "type": "string",
+                                        "const": "change"
+                                    },
+                                    {
+                                        "type": "string",
+                                        "const": "load"
+                                    }
+                                ],
+                                "title": "Reference.trigger",
+                                "description": "When to run this particular validation"
+                            }
+                        },
+                        "dataTarget": {
+                            "required": false,
+                            "node": {
+                                "type": "or",
+                                "or": [
+                                    {
+                                        "type": "string",
+                                        "const": "formatted"
+                                    },
+                                    {
+                                        "type": "string",
+                                        "const": "deformatted"
+                                    }
+                                ],
+                                "title": "Reference.dataTarget",
+                                "description": "Each validation is passed the value of the data to run it's validation against.\nBy default, this is the value stored in the data-model (deformatted).\nIn the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option"
+                            }
+                        },
+                        "displayTarget": {
+                            "required": false,
+                            "node": {
+                                "name": "DisplayTarget",
+                                "type": "or",
+                                "or": [
+                                    {
+                                        "type": "string",
+                                        "const": "page"
+                                    },
+                                    {
+                                        "type": "string",
+                                        "const": "section"
+                                    },
+                                    {
+                                        "type": "string",
+                                        "const": "field"
+                                    }
+                                ],
+                                "title": "Reference.displayTarget",
+                                "description": "Where the error should be displayed"
+                            }
+                        },
+                        "blocking": {
+                            "required": false,
+                            "node": {
+                                "type": "or",
+                                "or": [
+                                    {
+                                        "type": "boolean",
+                                        "title": "Reference.blocking"
+                                    },
+                                    {
+                                        "type": "string",
+                                        "const": "once"
+                                    }
+                                ],
+                                "title": "Reference.blocking",
+                                "description": "If the validation blocks navigation\ntrue/false - always/never block navigation\nonce - only block navigation if the validation has not been triggered before",
+                                "default": "- true for errors, 'once' for warnings"
+                            }
+                        }
+                    },
+                    "additionalProperties": {
+                        "type": "unknown"
+                    },
+                    "title": "Reference",
+                    "description": "A reference to a validation object"
+                },
+                "title": "DataType.validation",
+                "description": "Any additional validations that are associated with this property\nThese will add to any base validations associated with the \"type\""
+            }
+        },
+        "format": {
+            "required": false,
+            "node": {
+                "name": "Formatting.Reference",
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "required": true,
+                        "node": {
+                            "type": "string",
+                            "title": "Reference.type",
+                            "description": "The name of the formatter (and de-formatter) to use"
+                        }
+                    }
+                },
+                "additionalProperties": {
+                    "type": "unknown"
+                },
+                "title": "DataType.format",
+                "description": "A reference to a specific data format to use.\nIf none is specified, will fallback to that of the base type"
+            }
+        },
+        "default": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "T",
+                "title": "DataType.default",
+                "description": "A default value for this property.\nAny reads for this property will result in this default value being written to the model."
+            }
+        },
+        "isArray": {
+            "required": true,
+            "node": {
+                "type": "boolean",
+                "title": "ArrayType.isArray",
+                "description": "boolean to define if its an array"
+            }
+        },
+        "isRecord": {
+            "required": false,
+            "node": {
+                "type": "never",
+                "title": "ArrayType.isRecord",
+                "description": "This property is mutually exclusive with ArrayType and can not be used with RecordType"
+            }
+        }
+    },
+    "additionalProperties": {
+        "type": "unknown"
+    },
+    "title": "ArrayType",
+    "description": "Determines if the DataType is an Array Object"
+}

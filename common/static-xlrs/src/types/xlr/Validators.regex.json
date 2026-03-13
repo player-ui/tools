@@ -1,0 +1,22 @@
+{
+    "source": "/some/path/types.ts",
+    "name": "regex",
+    "type": "ref",
+    "ref": "ValidatorFunction<{\n  /**\n   * The regular expression to test: /pattern/\n   * Can optionally include flags after the pattern: /pattern/flags\n   */\n  regex: string;\n}>",
+    "genericArguments": [
+        {
+            "type": "object",
+            "properties": {
+                "regex": {
+                    "required": true,
+                    "node": {
+                        "type": "string",
+                        "title": "regex",
+                        "description": "The regular expression to test: /pattern/\nCan optionally include flags after the pattern: /pattern/flags"
+                    }
+                }
+            },
+            "additionalProperties": false
+        }
+    ]
+}

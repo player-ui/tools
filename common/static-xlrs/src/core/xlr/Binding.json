@@ -1,6 +1,6 @@
 {
-    "name": "Binding",
     "source": "src/index.ts",
+    "name": "Binding",
     "type": "string",
     "title": "Binding",
     "description": "Bindings describe locations in the data model."

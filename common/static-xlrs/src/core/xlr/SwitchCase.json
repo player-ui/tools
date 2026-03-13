@@ -1,7 +1,7 @@
 {
+    "source": "src/index.ts",
     "name": "SwitchCase",
     "type": "object",
-    "source": "src/index.ts",
     "properties": {
         "asset": {
             "required": true,
@@ -24,8 +24,7 @@
                     },
                     {
                         "type": "boolean",
-                        "const": true,
-                        "title": "SwitchCase.case"
+                        "const": true
                     }
                 ],
                 "title": "SwitchCase.case",

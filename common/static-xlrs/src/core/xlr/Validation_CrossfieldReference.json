@@ -1,0 +1,127 @@
+{
+    "name": "Validation.CrossfieldReference",
+    "type": "object",
+    "properties": {
+        "type": {
+            "required": true,
+            "node": {
+                "type": "string",
+                "title": "Reference.type",
+                "description": "The name of the referenced validation type\nThis will be used to lookup the proper handler"
+            }
+        },
+        "message": {
+            "required": false,
+            "node": {
+                "type": "string",
+                "title": "Reference.message",
+                "description": "An optional means of overriding the default message if the validation is triggered"
+            }
+        },
+        "severity": {
+            "required": false,
+            "node": {
+                "name": "Severity",
+                "type": "or",
+                "or": [
+                    {
+                        "type": "string",
+                        "const": "error"
+                    },
+                    {
+                        "type": "string",
+                        "const": "warning"
+                    }
+                ],
+                "title": "Reference.severity",
+                "description": "An optional means of overriding the default severity of the validation if triggered"
+            }
+        },
+        "trigger": {
+            "required": false,
+            "node": {
+                "name": "Trigger",
+                "type": "or",
+                "or": [
+                    {
+                        "type": "string",
+                        "const": "navigation"
+                    },
+                    {
+                        "type": "string",
+                        "const": "change"
+                    },
+                    {
+                        "type": "string",
+                        "const": "load"
+                    }
+                ],
+                "title": "Reference.trigger",
+                "description": "When to run this particular validation"
+            }
+        },
+        "dataTarget": {
+            "required": false,
+            "node": {
+                "type": "never",
+                "title": "CrossfieldReference.dataTarget",
+                "description": "Cross-field references and validation must run against the default (deformatted) value"
+            }
+        },
+        "displayTarget": {
+            "required": false,
+            "node": {
+                "name": "DisplayTarget",
+                "type": "or",
+                "or": [
+                    {
+                        "type": "string",
+                        "const": "page"
+                    },
+                    {
+                        "type": "string",
+                        "const": "section"
+                    },
+                    {
+                        "type": "string",
+                        "const": "field"
+                    }
+                ],
+                "title": "Reference.displayTarget",
+                "description": "Where the error should be displayed"
+            }
+        },
+        "blocking": {
+            "required": false,
+            "node": {
+                "type": "or",
+                "or": [
+                    {
+                        "type": "boolean",
+                        "title": "Reference.blocking"
+                    },
+                    {
+                        "type": "string",
+                        "const": "once"
+                    }
+                ],
+                "title": "Reference.blocking",
+                "description": "If the validation blocks navigation\ntrue/false - always/never block navigation\nonce - only block navigation if the validation has not been triggered before",
+                "default": "- true for errors, 'once' for warnings"
+            }
+        },
+        "ref": {
+            "required": false,
+            "node": {
+                "type": "ref",
+                "ref": "Binding",
+                "title": "CrossfieldReference.ref",
+                "description": "The binding to associate this validation with"
+            }
+        }
+    },
+    "additionalProperties": {
+        "type": "unknown"
+    },
+    "title": "CrossfieldReference"
+}

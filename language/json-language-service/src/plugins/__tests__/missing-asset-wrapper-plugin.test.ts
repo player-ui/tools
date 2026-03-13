@@ -60,7 +60,7 @@ describe("missing-asset-wrapper", () => {
     expect(validations?.map((v) => v.message)).toMatchInlineSnapshot(`
       [
         "View Validation Error - value: Does not match any of the expected types for type: 'AssetWrapperOrSwitch'",
-        "Expected: AssetWrapper & object literal | StaticSwitch & object literal | DynamicSwitch & object literal",
+        "Expected: AssetWrapper & object literal | StaticSwitch<T> & object literal | DynamicSwitch<T> & object literal",
       ]
     `);
   });
@@ -87,7 +87,7 @@ describe("missing-asset-wrapper", () => {
           "severity": 1,
         },
         {
-          "message": "Expected: AssetWrapper & object literal | StaticSwitch & object literal | DynamicSwitch & object literal",
+          "message": "Expected: AssetWrapper & object literal | StaticSwitch<T> & object literal | DynamicSwitch<T> & object literal",
           "range": {
             "end": {
               "character": 7,

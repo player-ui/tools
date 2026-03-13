@@ -1,7 +1,7 @@
 {
+    "source": "src/index.ts",
     "name": "NavigationFlowExternalState",
     "type": "object",
-    "source": "src/index.ts",
     "properties": {
         "_comment": {
             "required": false,
@@ -31,9 +31,9 @@
                         "title": "NavigationBaseState.onStart"
                     },
                     {
+                        "source": "src/index.ts",
                         "name": "ExpressionObject",
                         "type": "object",
-                        "source": "src/index.ts",
                         "properties": {
                             "exp": {
                                 "required": false,
@@ -65,9 +65,9 @@
                         "title": "NavigationBaseState.onEnd"
                     },
                     {
+                        "source": "src/index.ts",
                         "name": "ExpressionObject",
                         "type": "object",
-                        "source": "src/index.ts",
                         "properties": {
                             "exp": {
                                 "required": false,
@@ -98,8 +98,8 @@
         "transitions": {
             "required": true,
             "node": {
-                "name": "NavigationFlowTransition",
                 "source": "src/index.ts",
+                "name": "NavigationFlowTransition",
                 "type": "record",
                 "keyType": {
                     "type": "string"
@@ -120,7 +120,9 @@
             }
         }
     },
-    "additionalProperties": false,
+    "additionalProperties": {
+        "type": "unknown"
+    },
     "title": "NavigationFlowExternalState",
     "description": "External Flow states represent states in the FSM that can't be resolved internally in Player.\nThe flow will wait for the embedded application to manage moving to the next state via a transition"
 }

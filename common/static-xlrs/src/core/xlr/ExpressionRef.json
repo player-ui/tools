@@ -1,6 +1,6 @@
 {
-    "name": "ExpressionRef",
     "source": "src/index.ts",
+    "name": "ExpressionRef",
     "type": "template",
     "format": "@[.*]@",
     "title": "ExpressionRef"

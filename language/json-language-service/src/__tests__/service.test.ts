@@ -71,34 +71,7 @@ describe("player language service", () => {
           "data": {},
           "navigation": {},
           "schema": {
-            "ROOT": {
-              "application": {
-                "type": null
-              },
-              "foo": {
-                "type": "fooType"
-              }
-            },
-            "fooType": {
-              "bar": {
-                "type": "barType",
-                "validation": [
-                  {
-                    "type": "required",
-                    "severity": "error"
-                  }
-                ]
-              },
-              "baz": {
-                "type": "bazType",
-                "validation": [
-                  {
-                    "type": "required",
-                    "message": "this is my own message"
-                  }
-                ]
-              }
-            }
+            "ROOT": {}
           }
         }
         `,

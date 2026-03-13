@@ -1831,7 +1831,9 @@ If the expression is a composite, the last expression executed is the return val
                     "name": "NavigationFlowState",
                     "or": [
                       {
-                        "additionalProperties": false,
+                        "additionalProperties": {
+                          "type": "unknown",
+                        },
                         "description": "A state representing a view",
                         "genericTokens": undefined,
                         "name": "NavigationFlowViewState",
@@ -1978,7 +1980,9 @@ If the expression is a composite, the last expression executed is the return val
                         "type": "object",
                       },
                       {
-                        "additionalProperties": false,
+                        "additionalProperties": {
+                          "type": "unknown",
+                        },
                         "description": "An END state of the flow.",
                         "genericTokens": undefined,
                         "name": "NavigationFlowEndState",
@@ -2347,7 +2351,9 @@ The return value determines the transition to take",
                         "type": "object",
                       },
                       {
-                        "additionalProperties": false,
+                        "additionalProperties": {
+                          "type": "unknown",
+                        },
                         "description": "External Flow states represent states in the FSM that can't be resolved internally in Player.
 The flow will wait for the embedded application to manage moving to the next state via a transition",
                         "genericTokens": undefined,
@@ -2643,7 +2649,9 @@ The flow will wait for the embedded application to manage moving to the next sta
           "name": "NavigationFlowState",
           "or": [
             {
-              "additionalProperties": false,
+              "additionalProperties": {
+                "type": "unknown",
+              },
               "description": "A state representing a view",
               "name": "NavigationFlowViewState",
               "properties": {
@@ -2781,7 +2789,9 @@ The flow will wait for the embedded application to manage moving to the next sta
               "type": "object",
             },
             {
-              "additionalProperties": false,
+              "additionalProperties": {
+                "type": "unknown",
+              },
               "description": "An END state of the flow.",
               "name": "NavigationFlowEndState",
               "properties": {
@@ -3138,7 +3148,9 @@ The return value determines the transition to take",
               "type": "object",
             },
             {
-              "additionalProperties": false,
+              "additionalProperties": {
+                "type": "unknown",
+              },
               "description": "External Flow states represent states in the FSM that can't be resolved internally in Player.
 The flow will wait for the embedded application to manage moving to the next state via a transition",
               "name": "NavigationFlowExternalState",
@@ -3657,7 +3669,9 @@ So this explicity says there should never be an exp prop on a state node that"s 
     "type": "object",
   },
   {
-    "additionalProperties": false,
+    "additionalProperties": {
+      "type": "unknown",
+    },
     "description": "A state representing a view",
     "genericTokens": undefined,
     "name": "NavigationFlowViewState",
@@ -3799,7 +3813,9 @@ So this explicity says there should never be an exp prop on a state node that"s 
     "type": "object",
   },
   {
-    "additionalProperties": false,
+    "additionalProperties": {
+      "type": "unknown",
+    },
     "description": "An END state of the flow.",
     "genericTokens": undefined,
     "name": "NavigationFlowEndState",
@@ -4038,7 +4054,9 @@ The return value determines the transition to take",
     "type": "object",
   },
   {
-    "additionalProperties": false,
+    "additionalProperties": {
+      "type": "unknown",
+    },
     "description": "External Flow states represent states in the FSM that can't be resolved internally in Player.
 The flow will wait for the embedded application to manage moving to the next state via a transition",
     "genericTokens": undefined,
@@ -4302,7 +4320,9 @@ The flow will wait for the embedded application to manage moving to the next sta
     "name": "NavigationFlowState",
     "or": [
       {
-        "additionalProperties": false,
+        "additionalProperties": {
+          "type": "unknown",
+        },
         "description": "A state representing a view",
         "name": "NavigationFlowViewState",
         "properties": {
@@ -4440,7 +4460,9 @@ The flow will wait for the embedded application to manage moving to the next sta
         "type": "object",
       },
       {
-        "additionalProperties": false,
+        "additionalProperties": {
+          "type": "unknown",
+        },
         "description": "An END state of the flow.",
         "name": "NavigationFlowEndState",
         "properties": {
@@ -4797,7 +4819,9 @@ The return value determines the transition to take",
         "type": "object",
       },
       {
-        "additionalProperties": false,
+        "additionalProperties": {
+          "type": "unknown",
+        },
         "description": "External Flow states represent states in the FSM that can't be resolved internally in Player.
 The flow will wait for the embedded application to manage moving to the next state via a transition",
         "name": "NavigationFlowExternalState",
@@ -4944,7 +4968,9 @@ The flow will wait for the embedded application to manage moving to the next sta
       },
       "endState": {
         "node": {
-          "additionalProperties": false,
+          "additionalProperties": {
+            "type": "unknown",
+          },
           "description": "The outcome describes _how_ the flow ended (forwards, backwards, etc)",
           "genericTokens": undefined,
           "name": "NavigationFlowEndState",
@@ -5284,7 +5310,6 @@ Any reference to _index_ is replaced with the current iteration index.",
                       "displayTarget": {
                         "node": {
                           "description": "Where the error should be displayed",
-                          "genericTokens": undefined,
                           "name": "DisplayTarget",
                           "or": [
                             {
@@ -5300,7 +5325,6 @@ Any reference to _index_ is replaced with the current iteration index.",
                               "type": "string",
                             },
                           ],
-                          "source": undefined,
                           "title": "Reference.displayTarget",
                           "type": "or",
                         },
@@ -5317,7 +5341,6 @@ Any reference to _index_ is replaced with the current iteration index.",
                       "ref": {
                         "node": {
                           "description": "The binding to associate this validation with",
-                          "genericArguments": undefined,
                           "ref": "Binding",
                           "title": "CrossfieldReference.ref",
                           "type": "ref",
@@ -5327,7 +5350,6 @@ Any reference to _index_ is replaced with the current iteration index.",
                       "severity": {
                         "node": {
                           "description": "An optional means of overriding the default severity of the validation if triggered",
-                          "genericTokens": undefined,
                           "name": "Severity",
                           "or": [
                             {
@@ -5339,7 +5361,6 @@ Any reference to _index_ is replaced with the current iteration index.",
                               "type": "string",
                             },
                           ],
-                          "source": undefined,
                           "title": "Reference.severity",
                           "type": "or",
                         },
@@ -5348,7 +5369,6 @@ Any reference to _index_ is replaced with the current iteration index.",
                       "trigger": {
                         "node": {
                           "description": "When to run this particular validation",
-                          "genericTokens": undefined,
                           "name": "Trigger",
                           "or": [
                             {
@@ -5364,7 +5384,6 @@ Any reference to _index_ is replaced with the current iteration index.",
                               "type": "string",
                             },
                           ],
-                          "source": undefined,
                           "title": "Reference.trigger",
                           "type": "or",
                         },
@@ -5507,7 +5526,9 @@ This will be used to lookup the proper handler",
                           "name": "NavigationFlowState",
                           "or": [
                             {
-                              "additionalProperties": false,
+                              "additionalProperties": {
+                                "type": "unknown",
+                              },
                               "description": "A state representing a view",
                               "name": "NavigationFlowViewState",
                               "properties": {
@@ -5645,7 +5666,9 @@ This will be used to lookup the proper handler",
                               "type": "object",
                             },
                             {
-                              "additionalProperties": false,
+                              "additionalProperties": {
+                                "type": "unknown",
+                              },
                               "description": "An END state of the flow.",
                               "name": "NavigationFlowEndState",
                               "properties": {
@@ -6002,7 +6025,9 @@ The return value determines the transition to take",
                               "type": "object",
                             },
                             {
-                              "additionalProperties": false,
+                              "additionalProperties": {
+                                "type": "unknown",
+                              },
                               "description": "External Flow states represent states in the FSM that can't be resolved internally in Player.
 The flow will wait for the embedded application to manage moving to the next state via a transition",
                               "name": "NavigationFlowExternalState",
@@ -6431,10 +6456,8 @@ This will be used to lookup the proper handler",
               "type": "object",
             },
             "description": "A Node describes a specific object in the tree",
-            "genericTokens": undefined,
             "name": "Node",
             "properties": {},
-            "source": undefined,
             "title": "Node",
             "type": "object",
           },
@@ -6480,7 +6503,6 @@ Any reads for this property will result in this default value being written to t
                         },
                         "description": "A reference to a specific data format to use.
 If none is specified, will fallback to that of the base type",
-                        "genericTokens": undefined,
                         "name": "Formatting.Reference",
                         "properties": {
                           "type": {
@@ -6492,7 +6514,6 @@ If none is specified, will fallback to that of the base type",
                             "required": true,
                           },
                         },
-                        "source": undefined,
                         "title": "DataType.format",
                         "type": "object",
                       },
@@ -6523,7 +6544,6 @@ These will add to any base validations associated with the "type"",
                             "type": "unknown",
                           },
                           "description": "A reference to a validation object",
-                          "genericTokens": undefined,
                           "name": "Validation.Reference",
                           "properties": {
                             "dataTarget": {
@@ -6629,7 +6649,6 @@ This will be used to lookup the proper handler",
                               "required": true,
                             },
                           },
-                          "source": undefined,
                           "title": "Reference",
                           "type": "object",
                         },
@@ -6639,15 +6658,12 @@ This will be used to lookup the proper handler",
                       "required": false,
                     },
                   },
-                  "source": undefined,
                   "title": "DataType",
                   "type": "object",
                 },
                 "description": "The ROOT object is the top level object to use",
-                "genericTokens": undefined,
                 "name": "Node",
                 "properties": {},
-                "source": undefined,
                 "title": "Schema.ROOT",
                 "type": "object",
               },
@@ -6840,6 +6856,1168 @@ This will be used to lookup the proper handler",
     },
     "source": "filename.ts",
     "title": "Flow",
+    "type": "object",
+  },
+  {
+    "additionalProperties": {
+      "additionalProperties": {
+        "additionalProperties": {
+          "type": "unknown",
+        },
+        "description": "Each prop in the object can have a specific DataType",
+        "genericTokens": [
+          {
+            "constraints": {
+              "type": "any",
+            },
+            "default": {
+              "type": "unknown",
+            },
+            "symbol": "T",
+          },
+        ],
+        "name": "DataType",
+        "properties": {
+          "default": {
+            "node": {
+              "description": "A default value for this property.
+Any reads for this property will result in this default value being written to the model.",
+              "ref": "T",
+              "title": "DataType.default",
+              "type": "ref",
+            },
+            "required": false,
+          },
+          "format": {
+            "node": {
+              "additionalProperties": {
+                "type": "unknown",
+              },
+              "description": "A reference to a specific data format to use.
+If none is specified, will fallback to that of the base type",
+              "name": "Formatting.Reference",
+              "properties": {
+                "type": {
+                  "node": {
+                    "description": "The name of the formatter (and de-formatter) to use",
+                    "title": "Reference.type",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+              },
+              "title": "DataType.format",
+              "type": "object",
+            },
+            "required": false,
+          },
+          "isArray": {
+            "node": {
+              "description": "The referenced object represents an array rather than an object",
+              "title": "DataType.isArray",
+              "type": "boolean",
+            },
+            "required": false,
+          },
+          "type": {
+            "node": {
+              "description": "The reference of the base type to use",
+              "title": "DataType.type",
+              "type": "string",
+            },
+            "required": true,
+          },
+          "validation": {
+            "node": {
+              "description": "Any additional validations that are associated with this property
+These will add to any base validations associated with the "type"",
+              "elementType": {
+                "additionalProperties": {
+                  "type": "unknown",
+                },
+                "description": "A reference to a validation object",
+                "name": "Validation.Reference",
+                "properties": {
+                  "dataTarget": {
+                    "node": {
+                      "description": "Each validation is passed the value of the data to run it's validation against.
+By default, this is the value stored in the data-model (deformatted).
+In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option",
+                      "or": [
+                        {
+                          "const": "formatted",
+                          "type": "string",
+                        },
+                        {
+                          "const": "deformatted",
+                          "type": "string",
+                        },
+                      ],
+                      "title": "Reference.dataTarget",
+                      "type": "or",
+                    },
+                    "required": false,
+                  },
+                  "displayTarget": {
+                    "node": {
+                      "description": "Where the error should be displayed",
+                      "name": "DisplayTarget",
+                      "or": [
+                        {
+                          "const": "page",
+                          "type": "string",
+                        },
+                        {
+                          "const": "section",
+                          "type": "string",
+                        },
+                        {
+                          "const": "field",
+                          "type": "string",
+                        },
+                      ],
+                      "title": "Reference.displayTarget",
+                      "type": "or",
+                    },
+                    "required": false,
+                  },
+                  "message": {
+                    "node": {
+                      "description": "An optional means of overriding the default message if the validation is triggered",
+                      "title": "Reference.message",
+                      "type": "string",
+                    },
+                    "required": false,
+                  },
+                  "severity": {
+                    "node": {
+                      "description": "An optional means of overriding the default severity of the validation if triggered",
+                      "name": "Severity",
+                      "or": [
+                        {
+                          "const": "error",
+                          "type": "string",
+                        },
+                        {
+                          "const": "warning",
+                          "type": "string",
+                        },
+                      ],
+                      "title": "Reference.severity",
+                      "type": "or",
+                    },
+                    "required": false,
+                  },
+                  "trigger": {
+                    "node": {
+                      "description": "When to run this particular validation",
+                      "name": "Trigger",
+                      "or": [
+                        {
+                          "const": "navigation",
+                          "type": "string",
+                        },
+                        {
+                          "const": "change",
+                          "type": "string",
+                        },
+                        {
+                          "const": "load",
+                          "type": "string",
+                        },
+                      ],
+                      "title": "Reference.trigger",
+                      "type": "or",
+                    },
+                    "required": false,
+                  },
+                  "type": {
+                    "node": {
+                      "description": "The name of the referenced validation type
+This will be used to lookup the proper handler",
+                      "title": "Reference.type",
+                      "type": "string",
+                    },
+                    "required": true,
+                  },
+                },
+                "title": "Reference",
+                "type": "object",
+              },
+              "title": "DataType.validation",
+              "type": "array",
+            },
+            "required": false,
+          },
+        },
+        "title": "DataType",
+        "type": "object",
+      },
+      "description": "A Node describes a specific object in the tree",
+      "genericTokens": undefined,
+      "name": "Node",
+      "properties": {},
+      "source": undefined,
+      "title": "Node",
+      "type": "object",
+    },
+    "description": "The authored schema object in the JSON payload",
+    "genericTokens": undefined,
+    "name": "Schema.Schema",
+    "properties": {
+      "ROOT": {
+        "node": {
+          "additionalProperties": {
+            "additionalProperties": {
+              "type": "unknown",
+            },
+            "description": "Each prop in the object can have a specific DataType",
+            "genericTokens": [
+              {
+                "constraints": {
+                  "type": "any",
+                },
+                "default": {
+                  "type": "unknown",
+                },
+                "symbol": "T",
+              },
+            ],
+            "name": "DataType",
+            "properties": {
+              "default": {
+                "node": {
+                  "description": "A default value for this property.
+Any reads for this property will result in this default value being written to the model.",
+                  "ref": "T",
+                  "title": "DataType.default",
+                  "type": "ref",
+                },
+                "required": false,
+              },
+              "format": {
+                "node": {
+                  "additionalProperties": {
+                    "type": "unknown",
+                  },
+                  "description": "A reference to a specific data format to use.
+If none is specified, will fallback to that of the base type",
+                  "genericTokens": undefined,
+                  "name": "Formatting.Reference",
+                  "properties": {
+                    "type": {
+                      "node": {
+                        "description": "The name of the formatter (and de-formatter) to use",
+                        "title": "Reference.type",
+                        "type": "string",
+                      },
+                      "required": true,
+                    },
+                  },
+                  "source": undefined,
+                  "title": "DataType.format",
+                  "type": "object",
+                },
+                "required": false,
+              },
+              "isArray": {
+                "node": {
+                  "description": "The referenced object represents an array rather than an object",
+                  "title": "DataType.isArray",
+                  "type": "boolean",
+                },
+                "required": false,
+              },
+              "type": {
+                "node": {
+                  "description": "The reference of the base type to use",
+                  "title": "DataType.type",
+                  "type": "string",
+                },
+                "required": true,
+              },
+              "validation": {
+                "node": {
+                  "description": "Any additional validations that are associated with this property
+These will add to any base validations associated with the "type"",
+                  "elementType": {
+                    "additionalProperties": {
+                      "type": "unknown",
+                    },
+                    "description": "A reference to a validation object",
+                    "genericTokens": undefined,
+                    "name": "Validation.Reference",
+                    "properties": {
+                      "dataTarget": {
+                        "node": {
+                          "description": "Each validation is passed the value of the data to run it's validation against.
+By default, this is the value stored in the data-model (deformatted).
+In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option",
+                          "or": [
+                            {
+                              "const": "formatted",
+                              "type": "string",
+                            },
+                            {
+                              "const": "deformatted",
+                              "type": "string",
+                            },
+                          ],
+                          "title": "Reference.dataTarget",
+                          "type": "or",
+                        },
+                        "required": false,
+                      },
+                      "displayTarget": {
+                        "node": {
+                          "description": "Where the error should be displayed",
+                          "genericTokens": undefined,
+                          "name": "DisplayTarget",
+                          "or": [
+                            {
+                              "const": "page",
+                              "type": "string",
+                            },
+                            {
+                              "const": "section",
+                              "type": "string",
+                            },
+                            {
+                              "const": "field",
+                              "type": "string",
+                            },
+                          ],
+                          "source": undefined,
+                          "title": "Reference.displayTarget",
+                          "type": "or",
+                        },
+                        "required": false,
+                      },
+                      "message": {
+                        "node": {
+                          "description": "An optional means of overriding the default message if the validation is triggered",
+                          "title": "Reference.message",
+                          "type": "string",
+                        },
+                        "required": false,
+                      },
+                      "severity": {
+                        "node": {
+                          "description": "An optional means of overriding the default severity of the validation if triggered",
+                          "genericTokens": undefined,
+                          "name": "Severity",
+                          "or": [
+                            {
+                              "const": "error",
+                              "type": "string",
+                            },
+                            {
+                              "const": "warning",
+                              "type": "string",
+                            },
+                          ],
+                          "source": undefined,
+                          "title": "Reference.severity",
+                          "type": "or",
+                        },
+                        "required": false,
+                      },
+                      "trigger": {
+                        "node": {
+                          "description": "When to run this particular validation",
+                          "genericTokens": undefined,
+                          "name": "Trigger",
+                          "or": [
+                            {
+                              "const": "navigation",
+                              "type": "string",
+                            },
+                            {
+                              "const": "change",
+                              "type": "string",
+                            },
+                            {
+                              "const": "load",
+                              "type": "string",
+                            },
+                          ],
+                          "source": undefined,
+                          "title": "Reference.trigger",
+                          "type": "or",
+                        },
+                        "required": false,
+                      },
+                      "type": {
+                        "node": {
+                          "description": "The name of the referenced validation type
+This will be used to lookup the proper handler",
+                          "title": "Reference.type",
+                          "type": "string",
+                        },
+                        "required": true,
+                      },
+                    },
+                    "source": undefined,
+                    "title": "Reference",
+                    "type": "object",
+                  },
+                  "title": "DataType.validation",
+                  "type": "array",
+                },
+                "required": false,
+              },
+            },
+            "source": undefined,
+            "title": "DataType",
+            "type": "object",
+          },
+          "description": "The ROOT object is the top level object to use",
+          "genericTokens": undefined,
+          "name": "Node",
+          "properties": {},
+          "source": undefined,
+          "title": "Schema.ROOT",
+          "type": "object",
+        },
+        "required": true,
+      },
+    },
+    "source": undefined,
+    "title": "Schema",
+    "type": "object",
+  },
+  {
+    "additionalProperties": {
+      "additionalProperties": {
+        "type": "unknown",
+      },
+      "description": "Each prop in the object can have a specific DataType",
+      "genericTokens": [
+        {
+          "constraints": {
+            "type": "any",
+          },
+          "default": {
+            "type": "unknown",
+          },
+          "symbol": "T",
+        },
+      ],
+      "name": "DataType",
+      "properties": {
+        "default": {
+          "node": {
+            "description": "A default value for this property.
+Any reads for this property will result in this default value being written to the model.",
+            "ref": "T",
+            "title": "DataType.default",
+            "type": "ref",
+          },
+          "required": false,
+        },
+        "format": {
+          "node": {
+            "additionalProperties": {
+              "type": "unknown",
+            },
+            "description": "A reference to a specific data format to use.
+If none is specified, will fallback to that of the base type",
+            "name": "Formatting.Reference",
+            "properties": {
+              "type": {
+                "node": {
+                  "description": "The name of the formatter (and de-formatter) to use",
+                  "title": "Reference.type",
+                  "type": "string",
+                },
+                "required": true,
+              },
+            },
+            "title": "DataType.format",
+            "type": "object",
+          },
+          "required": false,
+        },
+        "isArray": {
+          "node": {
+            "description": "The referenced object represents an array rather than an object",
+            "title": "DataType.isArray",
+            "type": "boolean",
+          },
+          "required": false,
+        },
+        "type": {
+          "node": {
+            "description": "The reference of the base type to use",
+            "title": "DataType.type",
+            "type": "string",
+          },
+          "required": true,
+        },
+        "validation": {
+          "node": {
+            "description": "Any additional validations that are associated with this property
+These will add to any base validations associated with the "type"",
+            "elementType": {
+              "additionalProperties": {
+                "type": "unknown",
+              },
+              "description": "A reference to a validation object",
+              "name": "Validation.Reference",
+              "properties": {
+                "dataTarget": {
+                  "node": {
+                    "description": "Each validation is passed the value of the data to run it's validation against.
+By default, this is the value stored in the data-model (deformatted).
+In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option",
+                    "or": [
+                      {
+                        "const": "formatted",
+                        "type": "string",
+                      },
+                      {
+                        "const": "deformatted",
+                        "type": "string",
+                      },
+                    ],
+                    "title": "Reference.dataTarget",
+                    "type": "or",
+                  },
+                  "required": false,
+                },
+                "displayTarget": {
+                  "node": {
+                    "description": "Where the error should be displayed",
+                    "name": "DisplayTarget",
+                    "or": [
+                      {
+                        "const": "page",
+                        "type": "string",
+                      },
+                      {
+                        "const": "section",
+                        "type": "string",
+                      },
+                      {
+                        "const": "field",
+                        "type": "string",
+                      },
+                    ],
+                    "title": "Reference.displayTarget",
+                    "type": "or",
+                  },
+                  "required": false,
+                },
+                "message": {
+                  "node": {
+                    "description": "An optional means of overriding the default message if the validation is triggered",
+                    "title": "Reference.message",
+                    "type": "string",
+                  },
+                  "required": false,
+                },
+                "severity": {
+                  "node": {
+                    "description": "An optional means of overriding the default severity of the validation if triggered",
+                    "name": "Severity",
+                    "or": [
+                      {
+                        "const": "error",
+                        "type": "string",
+                      },
+                      {
+                        "const": "warning",
+                        "type": "string",
+                      },
+                    ],
+                    "title": "Reference.severity",
+                    "type": "or",
+                  },
+                  "required": false,
+                },
+                "trigger": {
+                  "node": {
+                    "description": "When to run this particular validation",
+                    "name": "Trigger",
+                    "or": [
+                      {
+                        "const": "navigation",
+                        "type": "string",
+                      },
+                      {
+                        "const": "change",
+                        "type": "string",
+                      },
+                      {
+                        "const": "load",
+                        "type": "string",
+                      },
+                    ],
+                    "title": "Reference.trigger",
+                    "type": "or",
+                  },
+                  "required": false,
+                },
+                "type": {
+                  "node": {
+                    "description": "The name of the referenced validation type
+This will be used to lookup the proper handler",
+                    "title": "Reference.type",
+                    "type": "string",
+                  },
+                  "required": true,
+                },
+              },
+              "title": "Reference",
+              "type": "object",
+            },
+            "title": "DataType.validation",
+            "type": "array",
+          },
+          "required": false,
+        },
+      },
+      "title": "DataType",
+      "type": "object",
+    },
+    "description": "A Node describes a specific object in the tree",
+    "genericTokens": undefined,
+    "name": "Schema.Node",
+    "properties": {},
+    "source": undefined,
+    "title": "Node",
+    "type": "object",
+  },
+  {
+    "additionalProperties": {
+      "type": "unknown",
+    },
+    "description": "Each prop in the object can have a specific DataType",
+    "genericTokens": [
+      {
+        "constraints": {
+          "type": "any",
+        },
+        "default": {
+          "type": "unknown",
+        },
+        "symbol": "T",
+      },
+    ],
+    "name": "Schema.DataType",
+    "properties": {
+      "default": {
+        "node": {
+          "description": "A default value for this property.
+Any reads for this property will result in this default value being written to the model.",
+          "ref": "T",
+          "title": "DataType.default",
+          "type": "ref",
+        },
+        "required": false,
+      },
+      "format": {
+        "node": {
+          "additionalProperties": {
+            "type": "unknown",
+          },
+          "description": "A reference to a specific data format to use.
+If none is specified, will fallback to that of the base type",
+          "name": "Formatting.Reference",
+          "properties": {
+            "type": {
+              "node": {
+                "description": "The name of the formatter (and de-formatter) to use",
+                "title": "Reference.type",
+                "type": "string",
+              },
+              "required": true,
+            },
+          },
+          "title": "DataType.format",
+          "type": "object",
+        },
+        "required": false,
+      },
+      "isArray": {
+        "node": {
+          "description": "The referenced object represents an array rather than an object",
+          "title": "DataType.isArray",
+          "type": "boolean",
+        },
+        "required": false,
+      },
+      "type": {
+        "node": {
+          "description": "The reference of the base type to use",
+          "title": "DataType.type",
+          "type": "string",
+        },
+        "required": true,
+      },
+      "validation": {
+        "node": {
+          "description": "Any additional validations that are associated with this property
+These will add to any base validations associated with the "type"",
+          "elementType": {
+            "additionalProperties": {
+              "type": "unknown",
+            },
+            "description": "A reference to a validation object",
+            "name": "Validation.Reference",
+            "properties": {
+              "dataTarget": {
+                "node": {
+                  "description": "Each validation is passed the value of the data to run it's validation against.
+By default, this is the value stored in the data-model (deformatted).
+In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option",
+                  "or": [
+                    {
+                      "const": "formatted",
+                      "type": "string",
+                    },
+                    {
+                      "const": "deformatted",
+                      "type": "string",
+                    },
+                  ],
+                  "title": "Reference.dataTarget",
+                  "type": "or",
+                },
+                "required": false,
+              },
+              "displayTarget": {
+                "node": {
+                  "description": "Where the error should be displayed",
+                  "name": "DisplayTarget",
+                  "or": [
+                    {
+                      "const": "page",
+                      "type": "string",
+                    },
+                    {
+                      "const": "section",
+                      "type": "string",
+                    },
+                    {
+                      "const": "field",
+                      "type": "string",
+                    },
+                  ],
+                  "title": "Reference.displayTarget",
+                  "type": "or",
+                },
+                "required": false,
+              },
+              "message": {
+                "node": {
+                  "description": "An optional means of overriding the default message if the validation is triggered",
+                  "title": "Reference.message",
+                  "type": "string",
+                },
+                "required": false,
+              },
+              "severity": {
+                "node": {
+                  "description": "An optional means of overriding the default severity of the validation if triggered",
+                  "name": "Severity",
+                  "or": [
+                    {
+                      "const": "error",
+                      "type": "string",
+                    },
+                    {
+                      "const": "warning",
+                      "type": "string",
+                    },
+                  ],
+                  "title": "Reference.severity",
+                  "type": "or",
+                },
+                "required": false,
+              },
+              "trigger": {
+                "node": {
+                  "description": "When to run this particular validation",
+                  "name": "Trigger",
+                  "or": [
+                    {
+                      "const": "navigation",
+                      "type": "string",
+                    },
+                    {
+                      "const": "change",
+                      "type": "string",
+                    },
+                    {
+                      "const": "load",
+                      "type": "string",
+                    },
+                  ],
+                  "title": "Reference.trigger",
+                  "type": "or",
+                },
+                "required": false,
+              },
+              "type": {
+                "node": {
+                  "description": "The name of the referenced validation type
+This will be used to lookup the proper handler",
+                  "title": "Reference.type",
+                  "type": "string",
+                },
+                "required": true,
+              },
+            },
+            "title": "Reference",
+            "type": "object",
+          },
+          "title": "DataType.validation",
+          "type": "array",
+        },
+        "required": false,
+      },
+    },
+    "source": undefined,
+    "title": "DataType",
+    "type": "object",
+  },
+  {
+    "additionalProperties": false,
+    "description": "Helper to compliment \`Schema.DataType\` to provide a way to export a reference to a data type instead of the whole object",
+    "genericTokens": undefined,
+    "name": "Language.DataTypeRef",
+    "properties": {
+      "type": {
+        "node": {
+          "description": "Name of the type in Player Core",
+          "title": "DataTypeRef.type",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": undefined,
+    "title": "DataTypeRef",
+    "type": "object",
+  },
+  {
+    "additionalProperties": {
+      "type": "unknown",
+    },
+    "description": "A reference to a specific formatter",
+    "genericTokens": undefined,
+    "name": "Formatting.Reference",
+    "properties": {
+      "type": {
+        "node": {
+          "description": "The name of the formatter (and de-formatter) to use",
+          "title": "Reference.type",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": undefined,
+    "title": "Reference",
+    "type": "object",
+  },
+  {
+    "description": "How serious are you about this error?
+Warning validations are reserved for errors that could be ignored by the user without consequence
+Errors must be fixed before proceeding",
+    "genericTokens": undefined,
+    "name": "Validation.Severity",
+    "or": [
+      {
+        "const": "error",
+        "type": "string",
+      },
+      {
+        "const": "warning",
+        "type": "string",
+      },
+    ],
+    "source": undefined,
+    "title": "Severity",
+    "type": "or",
+  },
+  {
+    "description": "When to _first_ start caring about a validation of a data-val.
+
+load - only check once the first time the binding appears on screen
+change - check anytime the data changes
+navigation - check once the user attempts to navigate away from a view",
+    "genericTokens": undefined,
+    "name": "Validation.Trigger",
+    "or": [
+      {
+        "const": "navigation",
+        "type": "string",
+      },
+      {
+        "const": "change",
+        "type": "string",
+      },
+      {
+        "const": "load",
+        "type": "string",
+      },
+    ],
+    "source": undefined,
+    "title": "Trigger",
+    "type": "or",
+  },
+  {
+    "description": "Where the error/warning should be displayed.
+- \`field\` is the default display target. This renders the error/warning directly underneath the field.
+- \`section\` is used to display a message at a parent node that is designated as a "section"
+- \`page\` a special section used to display a message at the top of the page.",
+    "genericTokens": undefined,
+    "name": "Validation.DisplayTarget",
+    "or": [
+      {
+        "const": "page",
+        "type": "string",
+      },
+      {
+        "const": "section",
+        "type": "string",
+      },
+      {
+        "const": "field",
+        "type": "string",
+      },
+    ],
+    "source": undefined,
+    "title": "DisplayTarget",
+    "type": "or",
+  },
+  {
+    "additionalProperties": {
+      "type": "unknown",
+    },
+    "description": "A reference to a validation object",
+    "genericTokens": undefined,
+    "name": "Validation.Reference",
+    "properties": {
+      "dataTarget": {
+        "node": {
+          "description": "Each validation is passed the value of the data to run it's validation against.
+By default, this is the value stored in the data-model (deformatted).
+In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option",
+          "or": [
+            {
+              "const": "formatted",
+              "type": "string",
+            },
+            {
+              "const": "deformatted",
+              "type": "string",
+            },
+          ],
+          "title": "Reference.dataTarget",
+          "type": "or",
+        },
+        "required": false,
+      },
+      "displayTarget": {
+        "node": {
+          "description": "Where the error should be displayed",
+          "name": "DisplayTarget",
+          "or": [
+            {
+              "const": "page",
+              "type": "string",
+            },
+            {
+              "const": "section",
+              "type": "string",
+            },
+            {
+              "const": "field",
+              "type": "string",
+            },
+          ],
+          "title": "Reference.displayTarget",
+          "type": "or",
+        },
+        "required": false,
+      },
+      "message": {
+        "node": {
+          "description": "An optional means of overriding the default message if the validation is triggered",
+          "title": "Reference.message",
+          "type": "string",
+        },
+        "required": false,
+      },
+      "severity": {
+        "node": {
+          "description": "An optional means of overriding the default severity of the validation if triggered",
+          "name": "Severity",
+          "or": [
+            {
+              "const": "error",
+              "type": "string",
+            },
+            {
+              "const": "warning",
+              "type": "string",
+            },
+          ],
+          "title": "Reference.severity",
+          "type": "or",
+        },
+        "required": false,
+      },
+      "trigger": {
+        "node": {
+          "description": "When to run this particular validation",
+          "name": "Trigger",
+          "or": [
+            {
+              "const": "navigation",
+              "type": "string",
+            },
+            {
+              "const": "change",
+              "type": "string",
+            },
+            {
+              "const": "load",
+              "type": "string",
+            },
+          ],
+          "title": "Reference.trigger",
+          "type": "or",
+        },
+        "required": false,
+      },
+      "type": {
+        "node": {
+          "description": "The name of the referenced validation type
+This will be used to lookup the proper handler",
+          "title": "Reference.type",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": undefined,
+    "title": "Reference",
+    "type": "object",
+  },
+  {
+    "additionalProperties": {
+      "type": "unknown",
+    },
+    "genericTokens": undefined,
+    "name": "Validation.CrossfieldReference",
+    "properties": {
+      "dataTarget": {
+        "node": {
+          "description": "Cross-field references and validation must run against the default (deformatted) value",
+          "title": "CrossfieldReference.dataTarget",
+          "type": "never",
+        },
+        "required": false,
+      },
+      "displayTarget": {
+        "node": {
+          "description": "Where the error should be displayed",
+          "name": "DisplayTarget",
+          "or": [
+            {
+              "const": "page",
+              "type": "string",
+            },
+            {
+              "const": "section",
+              "type": "string",
+            },
+            {
+              "const": "field",
+              "type": "string",
+            },
+          ],
+          "title": "Reference.displayTarget",
+          "type": "or",
+        },
+        "required": false,
+      },
+      "message": {
+        "node": {
+          "description": "An optional means of overriding the default message if the validation is triggered",
+          "title": "Reference.message",
+          "type": "string",
+        },
+        "required": false,
+      },
+      "ref": {
+        "node": {
+          "description": "The binding to associate this validation with",
+          "genericArguments": undefined,
+          "ref": "Binding",
+          "title": "CrossfieldReference.ref",
+          "type": "ref",
+        },
+        "required": false,
+      },
+      "severity": {
+        "node": {
+          "description": "An optional means of overriding the default severity of the validation if triggered",
+          "name": "Severity",
+          "or": [
+            {
+              "const": "error",
+              "type": "string",
+            },
+            {
+              "const": "warning",
+              "type": "string",
+            },
+          ],
+          "title": "Reference.severity",
+          "type": "or",
+        },
+        "required": false,
+      },
+      "trigger": {
+        "node": {
+          "description": "When to run this particular validation",
+          "name": "Trigger",
+          "or": [
+            {
+              "const": "navigation",
+              "type": "string",
+            },
+            {
+              "const": "change",
+              "type": "string",
+            },
+            {
+              "const": "load",
+              "type": "string",
+            },
+          ],
+          "title": "Reference.trigger",
+          "type": "or",
+        },
+        "required": false,
+      },
+      "type": {
+        "node": {
+          "description": "The name of the referenced validation type
+This will be used to lookup the proper handler",
+          "title": "Reference.type",
+          "type": "string",
+        },
+        "required": true,
+      },
+    },
+    "source": undefined,
+    "title": "CrossfieldReference",
     "type": "object",
   },
 ]

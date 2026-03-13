@@ -25,6 +25,7 @@
             "NavigationFlowViewState",
             "NavigationFlowEndState",
             "NavigationFlowActionState",
+            "NavigationFlowAsyncActionState",
             "NavigationFlowExternalState",
             "NavigationFlowFlowState",
             "NavigationFlowState",
@@ -32,7 +33,30 @@
             "Templatable",
             "Template",
             "View",
-            "Flow"
+            "Flow",
+            "Schema.Schema",
+            "Schema.Node",
+            "Schema.DataTypes",
+            "Schema.DataType",
+            "Schema.RecordType",
+            "Schema.ArrayType",
+            "Language.DataTypeRef",
+            "Formatting.Reference",
+            "Validation.Severity",
+            "Validation.Trigger",
+            "Validation.DisplayTarget",
+            "Validation.Reference",
+            "Validation.CrossfieldReference"
         ]
-    }
+    },
+    "customPrimitives": [
+        "Expression",
+        "Asset",
+        "Binding",
+        "AssetWrapper",
+        "Schema.DataType",
+        "ExpressionHandler",
+        "FormatType",
+        "ValidatorFunction"
+    ]
 }

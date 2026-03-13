@@ -5,6 +5,7 @@ import type { PlayerLanguageServicePlugin } from ".";
 import { AssetWrapperArrayPlugin } from "./plugins/asset-wrapper-array-plugin";
 import { SchemaInfoPlugin } from "./plugins/binding-schema-plugin";
 import { XLRPlugin } from "./plugins/xlr-plugin";
+import { SchemaValidationPlugin } from "./plugins/schema-validation-plugin";
 import { DuplicateIDPlugin } from "./plugins/duplicate-id-plugin";
 import { MissingAssetWrapperPlugin } from "./plugins/missing-asset-wrapper-plugin";
 import { NavStatePlugin } from "./plugins/nav-state-plugin";
@@ -20,6 +21,7 @@ export const PLUGINS: Array<PlayerLanguageServicePlugin> = [
   new DuplicateIDPlugin(),
   new ViewNodePlugin(),
   new SchemaInfoPlugin(),
+  new SchemaValidationPlugin(),
   new AssetWrapperArrayPlugin(),
   new NavStatePlugin(),
   new MissingAssetWrapperPlugin(),

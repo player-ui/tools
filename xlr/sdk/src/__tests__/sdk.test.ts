@@ -1,5 +1,10 @@
 import { test, expect, describe } from "vitest";
-import type { NamedType, TransformFunction, OrType } from "@player-tools/xlr";
+import type {
+  NamedType,
+  TransformFunction,
+  OrType,
+  ObjectType,
+} from "@player-tools/xlr";
 import { parseTree } from "jsonc-parser";
 import {
   Types,
@@ -70,8 +75,20 @@ describe("Object Recall", () => {
     const sdk = new XLRSDK();
     sdk.loadDefinitionsFromModule(Types);
     sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
-
     expect(sdk.getType("InputAsset")).toMatchSnapshot();
+  });
+
+  test("Test Correct Generic Cascading", () => {
+    const sdk = new XLRSDK();
+    sdk.loadDefinitionsFromModule(Types);
+    sdk.loadDefinitionsFromModule(ReferenceAssetsWebPluginManifest);
+    const Flow = sdk.getType("Flow") as ObjectType;
+    const Schema = Flow.properties["schema"].node as ObjectType;
+    const Node = Schema.additionalProperties as ObjectType;
+    const DataTypes = Node.additionalProperties as OrType;
+    const DataType = DataTypes.or[0] as ObjectType;
+    const df = DataType.properties["default"].node;
+    expect(df.type).toBe("unknown");
   });
 });
 

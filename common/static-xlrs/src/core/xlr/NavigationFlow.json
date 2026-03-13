@@ -1,7 +1,7 @@
 {
+    "source": "src/index.ts",
     "name": "NavigationFlow",
     "type": "object",
-    "source": "src/index.ts",
     "properties": {
         "startState": {
             "required": true,
@@ -22,9 +22,9 @@
                         "title": "NavigationFlow.onStart"
                     },
                     {
+                        "source": "src/index.ts",
                         "name": "ExpressionObject",
                         "type": "object",
-                        "source": "src/index.ts",
                         "properties": {
                             "exp": {
                                 "required": false,
@@ -56,9 +56,9 @@
                         "title": "NavigationFlow.onEnd"
                     },
                     {
+                        "source": "src/index.ts",
                         "name": "ExpressionObject",
                         "type": "object",
-                        "source": "src/index.ts",
                         "properties": {
                             "exp": {
                                 "required": false,
@@ -94,9 +94,9 @@
                 "ref": "Expression"
             },
             {
+                "source": "src/index.ts",
                 "name": "ExpressionObject",
                 "type": "object",
-                "source": "src/index.ts",
                 "properties": {
                     "exp": {
                         "required": false,
@@ -113,14 +113,14 @@
                 "description": "An object with an expression in it"
             },
             {
-                "name": "NavigationFlowState",
                 "source": "src/index.ts",
+                "name": "NavigationFlowState",
                 "type": "or",
                 "or": [
                     {
+                        "source": "src/index.ts",
                         "name": "NavigationFlowViewState",
                         "type": "object",
-                        "source": "src/index.ts",
                         "properties": {
                             "_comment": {
                                 "required": false,
@@ -150,9 +150,9 @@
                                             "title": "NavigationBaseState.onStart"
                                         },
                                         {
+                                            "source": "src/index.ts",
                                             "name": "ExpressionObject",
                                             "type": "object",
-                                            "source": "src/index.ts",
                                             "properties": {
                                                 "exp": {
                                                     "required": false,
@@ -184,9 +184,9 @@
                                             "title": "NavigationBaseState.onEnd"
                                         },
                                         {
+                                            "source": "src/index.ts",
                                             "name": "ExpressionObject",
                                             "type": "object",
-                                            "source": "src/index.ts",
                                             "properties": {
                                                 "exp": {
                                                     "required": false,
@@ -217,8 +217,8 @@
                             "transitions": {
                                 "required": true,
                                 "node": {
-                                    "name": "NavigationFlowTransition",
                                     "source": "src/index.ts",
+                                    "name": "NavigationFlowTransition",
                                     "type": "record",
                                     "keyType": {
                                         "type": "string"
@@ -251,14 +251,16 @@
                                 }
                             }
                         },
-                        "additionalProperties": false,
+                        "additionalProperties": {
+                            "type": "unknown"
+                        },
                         "title": "NavigationFlowViewState",
                         "description": "A state representing a view"
                     },
                     {
+                        "source": "src/index.ts",
                         "name": "NavigationFlowEndState",
                         "type": "object",
-                        "source": "src/index.ts",
                         "properties": {
                             "_comment": {
                                 "required": false,
@@ -288,9 +290,9 @@
                                             "title": "NavigationBaseState.onStart"
                                         },
                                         {
+                                            "source": "src/index.ts",
                                             "name": "ExpressionObject",
                                             "type": "object",
-                                            "source": "src/index.ts",
                                             "properties": {
                                                 "exp": {
                                                     "required": false,
@@ -322,9 +324,9 @@
                                             "title": "NavigationBaseState.onEnd"
                                         },
                                         {
+                                            "source": "src/index.ts",
                                             "name": "ExpressionObject",
                                             "type": "object",
-                                            "source": "src/index.ts",
                                             "properties": {
                                                 "exp": {
                                                     "required": false,
@@ -361,14 +363,16 @@
                                 }
                             }
                         },
-                        "additionalProperties": false,
+                        "additionalProperties": {
+                            "type": "unknown"
+                        },
                         "title": "NavigationFlowEndState",
                         "description": "An END state of the flow."
                     },
                     {
+                        "source": "src/index.ts",
                         "name": "NavigationFlowFlowState",
                         "type": "object",
-                        "source": "src/index.ts",
                         "properties": {
                             "_comment": {
                                 "required": false,
@@ -398,9 +402,9 @@
                                             "title": "NavigationBaseState.onStart"
                                         },
                                         {
+                                            "source": "src/index.ts",
                                             "name": "ExpressionObject",
                                             "type": "object",
-                                            "source": "src/index.ts",
                                             "properties": {
                                                 "exp": {
                                                     "required": false,
@@ -432,9 +436,9 @@
                                             "title": "NavigationBaseState.onEnd"
                                         },
                                         {
+                                            "source": "src/index.ts",
                                             "name": "ExpressionObject",
                                             "type": "object",
-                                            "source": "src/index.ts",
                                             "properties": {
                                                 "exp": {
                                                     "required": false,
@@ -465,8 +469,8 @@
                             "transitions": {
                                 "required": true,
                                 "node": {
-                                    "name": "NavigationFlowTransition",
                                     "source": "src/index.ts",
+                                    "name": "NavigationFlowTransition",
                                     "type": "record",
                                     "keyType": {
                                         "type": "string"
@@ -491,9 +495,9 @@
                         "title": "NavigationFlowFlowState"
                     },
                     {
+                        "source": "src/index.ts",
                         "name": "NavigationFlowActionState",
                         "type": "object",
-                        "source": "src/index.ts",
                         "properties": {
                             "_comment": {
                                 "required": false,
@@ -523,9 +527,9 @@
                                             "title": "NavigationBaseState.onStart"
                                         },
                                         {
+                                            "source": "src/index.ts",
                                             "name": "ExpressionObject",
                                             "type": "object",
-                                            "source": "src/index.ts",
                                             "properties": {
                                                 "exp": {
                                                     "required": false,
@@ -557,9 +561,9 @@
                                             "title": "NavigationBaseState.onEnd"
                                         },
                                         {
+                                            "source": "src/index.ts",
                                             "name": "ExpressionObject",
                                             "type": "object",
-                                            "source": "src/index.ts",
                                             "properties": {
                                                 "exp": {
                                                     "required": false,
@@ -592,8 +596,8 @@
                             "transitions": {
                                 "required": true,
                                 "node": {
-                                    "name": "NavigationFlowTransition",
                                     "source": "src/index.ts",
+                                    "name": "NavigationFlowTransition",
                                     "type": "record",
                                     "keyType": {
                                         "type": "string"
@@ -611,9 +615,9 @@
                         "description": "Action states execute an expression to determine the next state to transition to"
                     },
                     {
-                        "name": "NavigationFlowExternalState",
-                        "type": "object",
                         "source": "src/index.ts",
+                        "name": "NavigationFlowAsyncActionState",
+                        "type": "object",
                         "properties": {
                             "_comment": {
                                 "required": false,
@@ -627,7 +631,7 @@
                                 "required": true,
                                 "node": {
                                     "type": "string",
-                                    "const": "EXTERNAL",
+                                    "const": "ASYNC_ACTION",
                                     "title": "NavigationBaseState.state_type",
                                     "description": "A property to determine the type of state this is"
                                 }
@@ -643,9 +647,9 @@
                                             "title": "NavigationBaseState.onStart"
                                         },
                                         {
+                                            "source": "src/index.ts",
                                             "name": "ExpressionObject",
                                             "type": "object",
-                                            "source": "src/index.ts",
                                             "properties": {
                                                 "exp": {
                                                     "required": false,
@@ -677,9 +681,137 @@
                                             "title": "NavigationBaseState.onEnd"
                                         },
                                         {
+                                            "source": "src/index.ts",
                                             "name": "ExpressionObject",
                                             "type": "object",
+                                            "properties": {
+                                                "exp": {
+                                                    "required": false,
+                                                    "node": {
+                                                        "type": "ref",
+                                                        "ref": "Expression",
+                                                        "title": "ExpressionObject.exp",
+                                                        "description": "The expression to run"
+                                                    }
+                                                }
+                                            },
+                                            "additionalProperties": false,
+                                            "title": "ExpressionObject",
+                                            "description": "An object with an expression in it"
+                                        }
+                                    ],
+                                    "title": "NavigationBaseState.onEnd",
+                                    "description": "An optional expression to run before view transition"
+                                }
+                            },
+                            "exp": {
+                                "required": true,
+                                "node": {
+                                    "type": "ref",
+                                    "ref": "Expression",
+                                    "title": "NavigationFlowAsyncActionState.exp",
+                                    "description": "An expression to execute.\nThe return value determines the transition to take"
+                                }
+                            },
+                            "transitions": {
+                                "required": true,
+                                "node": {
+                                    "source": "src/index.ts",
+                                    "name": "NavigationFlowTransition",
+                                    "type": "record",
+                                    "keyType": {
+                                        "type": "string"
+                                    },
+                                    "valueType": {
+                                        "type": "string"
+                                    },
+                                    "title": "NavigationFlowTransitionableState.transitions",
+                                    "description": "A mapping of transition-name to FlowState name"
+                                }
+                            },
+                            "await": {
+                                "required": true,
+                                "node": {
+                                    "type": "boolean",
+                                    "title": "NavigationFlowAsyncActionState.await",
+                                    "description": "Whether the expression(s) should be awaited before transitioning"
+                                }
+                            }
+                        },
+                        "additionalProperties": false,
+                        "title": "NavigationFlowAsyncActionState",
+                        "description": "Action states execute an expression to determine the next state to transition to"
+                    },
+                    {
+                        "source": "src/index.ts",
+                        "name": "NavigationFlowExternalState",
+                        "type": "object",
+                        "properties": {
+                            "_comment": {
+                                "required": false,
+                                "node": {
+                                    "type": "string",
+                                    "title": "CommentBase._comment",
+                                    "description": "Add comments that will not be processing, but are useful for code explanation"
+                                }
+                            },
+                            "state_type": {
+                                "required": true,
+                                "node": {
+                                    "type": "string",
+                                    "const": "EXTERNAL",
+                                    "title": "NavigationBaseState.state_type",
+                                    "description": "A property to determine the type of state this is"
+                                }
+                            },
+                            "onStart": {
+                                "required": false,
+                                "node": {
+                                    "type": "or",
+                                    "or": [
+                                        {
+                                            "type": "ref",
+                                            "ref": "Expression",
+                                            "title": "NavigationBaseState.onStart"
+                                        },
+                                        {
                                             "source": "src/index.ts",
+                                            "name": "ExpressionObject",
+                                            "type": "object",
+                                            "properties": {
+                                                "exp": {
+                                                    "required": false,
+                                                    "node": {
+                                                        "type": "ref",
+                                                        "ref": "Expression",
+                                                        "title": "ExpressionObject.exp",
+                                                        "description": "The expression to run"
+                                                    }
+                                                }
+                                            },
+                                            "additionalProperties": false,
+                                            "title": "ExpressionObject",
+                                            "description": "An object with an expression in it"
+                                        }
+                                    ],
+                                    "title": "NavigationBaseState.onStart",
+                                    "description": "An optional expression to run when this view renders"
+                                }
+                            },
+                            "onEnd": {
+                                "required": false,
+                                "node": {
+                                    "type": "or",
+                                    "or": [
+                                        {
+                                            "type": "ref",
+                                            "ref": "Expression",
+                                            "title": "NavigationBaseState.onEnd"
+                                        },
+                                        {
+                                            "source": "src/index.ts",
+                                            "name": "ExpressionObject",
+                                            "type": "object",
                                             "properties": {
                                                 "exp": {
                                                     "required": false,
@@ -710,8 +842,8 @@
                             "transitions": {
                                 "required": true,
                                 "node": {
-                                    "name": "NavigationFlowTransition",
                                     "source": "src/index.ts",
+                                    "name": "NavigationFlowTransition",
                                     "type": "record",
                                     "keyType": {
                                         "type": "string"
@@ -732,7 +864,9 @@
                                 }
                             }
                         },
-                        "additionalProperties": false,
+                        "additionalProperties": {
+                            "type": "unknown"
+                        },
                         "title": "NavigationFlowExternalState",
                         "description": "External Flow states represent states in the FSM that can't be resolved internally in Player.\nThe flow will wait for the embedded application to manage moving to the next state via a transition"
                     }

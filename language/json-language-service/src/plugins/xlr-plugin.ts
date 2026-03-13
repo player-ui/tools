@@ -14,7 +14,7 @@ import type {
   PlayerLanguageServicePlugin,
   ValidationContext,
 } from "..";
-import { mapFlowStateToType } from "../utils";
+import { findErrorNode, mapFlowStateToType } from "../utils";
 import type { ASTNode, ObjectASTNode } from "../parser";
 import type { EnhancedDocumentContextWithPosition } from "../types";
 
@@ -22,30 +22,11 @@ function isError(issue: ValidationMessage): boolean {
   return issue.severity === DiagnosticSeverity.Error;
 }
 
-/** BFS search to find a JSONC node in children of some AST Node */
-const findErrorNode = (rootNode: ASTNode, nodeToFind: Node): ASTNode => {
-  const children: Array<ASTNode> = [rootNode];
-
-  while (children.length > 0) {
-    const child = children.pop() as ASTNode;
-    if (child.jsonNode === nodeToFind) {
-      return child;
-    }
-
-    if (child.children) {
-      children.push(...child.children);
-    }
-  }
-
-  // if the node can't be found return the original
-  return rootNode;
-};
-
 /**
  * Translates an SDK severity level to an LSP severity level
  * Relies on both levels having the values associated to the underlying levels
  */
-const translateSeverity = (
+export const translateSeverity = (
   severity: ValidationSeverity,
 ): DiagnosticSeverity => {
   return severity as DiagnosticSeverity;

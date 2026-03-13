@@ -1,7 +1,7 @@
 {
+    "source": "src/index.ts",
     "name": "Flow",
     "type": "object",
-    "source": "src/index.ts",
     "properties": {
         "id": {
             "required": true,
@@ -16,8 +16,8 @@
             "node": {
                 "type": "array",
                 "elementType": {
-                    "name": "View",
                     "source": "src/index.ts",
+                    "name": "View<T>",
                     "type": "conditional",
                     "check": {
                         "left": {
@@ -45,7 +45,7 @@
                                             "node": {
                                                 "type": "array",
                                                 "elementType": {
-                                                    "name": "CrossfieldReference",
+                                                    "name": "Validation.CrossfieldReference",
                                                     "type": "object",
                                                     "properties": {
                                                         "type": {
@@ -72,13 +72,11 @@
                                                                 "or": [
                                                                     {
                                                                         "type": "string",
-                                                                        "const": "error",
-                                                                        "title": "Severity"
+                                                                        "const": "error"
                                                                     },
                                                                     {
                                                                         "type": "string",
-                                                                        "const": "warning",
-                                                                        "title": "Severity"
+                                                                        "const": "warning"
                                                                     }
                                                                 ],
                                                                 "title": "Reference.severity",
@@ -93,18 +91,15 @@
                                                                 "or": [
                                                                     {
                                                                         "type": "string",
-                                                                        "const": "navigation",
-                                                                        "title": "Trigger"
+                                                                        "const": "navigation"
                                                                     },
                                                                     {
                                                                         "type": "string",
-                                                                        "const": "change",
-                                                                        "title": "Trigger"
+                                                                        "const": "change"
                                                                     },
                                                                     {
                                                                         "type": "string",
-                                                                        "const": "load",
-                                                                        "title": "Trigger"
+                                                                        "const": "load"
                                                                     }
                                                                 ],
                                                                 "title": "Reference.trigger",
@@ -127,22 +122,38 @@
                                                                 "or": [
                                                                     {
                                                                         "type": "string",
-                                                                        "const": "page",
-                                                                        "title": "DisplayTarget"
+                                                                        "const": "page"
                                                                     },
                                                                     {
                                                                         "type": "string",
-                                                                        "const": "section",
-                                                                        "title": "DisplayTarget"
+                                                                        "const": "section"
                                                                     },
                                                                     {
                                                                         "type": "string",
-                                                                        "const": "field",
-                                                                        "title": "DisplayTarget"
+                                                                        "const": "field"
                                                                     }
                                                                 ],
                                                                 "title": "Reference.displayTarget",
                                                                 "description": "Where the error should be displayed"
+                                                            }
+                                                        },
+                                                        "blocking": {
+                                                            "required": false,
+                                                            "node": {
+                                                                "type": "or",
+                                                                "or": [
+                                                                    {
+                                                                        "type": "boolean",
+                                                                        "title": "Reference.blocking"
+                                                                    },
+                                                                    {
+                                                                        "type": "string",
+                                                                        "const": "once"
+                                                                    }
+                                                                ],
+                                                                "title": "Reference.blocking",
+                                                                "description": "If the validation blocks navigation\ntrue/false - always/never block navigation\nonce - only block navigation if the validation has not been triggered before",
+                                                                "default": "- true for errors, 'once' for warnings"
                                                             }
                                                         },
                                                         "ref": {
@@ -196,7 +207,7 @@
         "schema": {
             "required": false,
             "node": {
-                "name": "Schema",
+                "name": "Schema.Schema",
                 "type": "object",
                 "properties": {
                     "ROOT": {
@@ -206,6 +217,630 @@
                             "type": "object",
                             "properties": {},
                             "additionalProperties": {
+                                "name": "DataTypes",
+                                "type": "or",
+                                "or": [
+                                    {
+                                        "name": "DataType",
+                                        "type": "object",
+                                        "properties": {
+                                            "type": {
+                                                "required": true,
+                                                "node": {
+                                                    "type": "string",
+                                                    "title": "DataType.type",
+                                                    "description": "The reference of the base type to use"
+                                                }
+                                            },
+                                            "validation": {
+                                                "required": false,
+                                                "node": {
+                                                    "type": "array",
+                                                    "elementType": {
+                                                        "name": "Validation.Reference",
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "type": {
+                                                                "required": true,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "title": "Reference.type",
+                                                                    "description": "The name of the referenced validation type\nThis will be used to lookup the proper handler"
+                                                                }
+                                                            },
+                                                            "message": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "title": "Reference.message",
+                                                                    "description": "An optional means of overriding the default message if the validation is triggered"
+                                                                }
+                                                            },
+                                                            "severity": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "name": "Severity",
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "error"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "warning"
+                                                                        }
+                                                                    ],
+                                                                    "title": "Reference.severity",
+                                                                    "description": "An optional means of overriding the default severity of the validation if triggered"
+                                                                }
+                                                            },
+                                                            "trigger": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "name": "Trigger",
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "navigation"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "change"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "load"
+                                                                        }
+                                                                    ],
+                                                                    "title": "Reference.trigger",
+                                                                    "description": "When to run this particular validation"
+                                                                }
+                                                            },
+                                                            "dataTarget": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "formatted"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "deformatted"
+                                                                        }
+                                                                    ],
+                                                                    "title": "Reference.dataTarget",
+                                                                    "description": "Each validation is passed the value of the data to run it's validation against.\nBy default, this is the value stored in the data-model (deformatted).\nIn the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option"
+                                                                }
+                                                            },
+                                                            "displayTarget": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "name": "DisplayTarget",
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "page"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "section"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "field"
+                                                                        }
+                                                                    ],
+                                                                    "title": "Reference.displayTarget",
+                                                                    "description": "Where the error should be displayed"
+                                                                }
+                                                            },
+                                                            "blocking": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "boolean",
+                                                                            "title": "Reference.blocking"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "once"
+                                                                        }
+                                                                    ],
+                                                                    "title": "Reference.blocking",
+                                                                    "description": "If the validation blocks navigation\ntrue/false - always/never block navigation\nonce - only block navigation if the validation has not been triggered before",
+                                                                    "default": "- true for errors, 'once' for warnings"
+                                                                }
+                                                            }
+                                                        },
+                                                        "additionalProperties": {
+                                                            "type": "unknown"
+                                                        },
+                                                        "title": "Reference",
+                                                        "description": "A reference to a validation object"
+                                                    },
+                                                    "title": "DataType.validation",
+                                                    "description": "Any additional validations that are associated with this property\nThese will add to any base validations associated with the \"type\""
+                                                }
+                                            },
+                                            "format": {
+                                                "required": false,
+                                                "node": {
+                                                    "name": "Formatting.Reference",
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "type": {
+                                                            "required": true,
+                                                            "node": {
+                                                                "type": "string",
+                                                                "title": "Reference.type",
+                                                                "description": "The name of the formatter (and de-formatter) to use"
+                                                            }
+                                                        }
+                                                    },
+                                                    "additionalProperties": {
+                                                        "type": "unknown"
+                                                    },
+                                                    "title": "DataType.format",
+                                                    "description": "A reference to a specific data format to use.\nIf none is specified, will fallback to that of the base type"
+                                                }
+                                            },
+                                            "default": {
+                                                "required": false,
+                                                "node": {
+                                                    "type": "ref",
+                                                    "ref": "T",
+                                                    "title": "DataType.default",
+                                                    "description": "A default value for this property.\nAny reads for this property will result in this default value being written to the model."
+                                                }
+                                            }
+                                        },
+                                        "additionalProperties": {
+                                            "type": "unknown"
+                                        },
+                                        "title": "DataType",
+                                        "description": "Each prop in the object can have a specific DataType",
+                                        "genericTokens": [
+                                            {
+                                                "symbol": "T",
+                                                "constraints": {
+                                                    "type": "any"
+                                                },
+                                                "default": {
+                                                    "type": "unknown"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "RecordType",
+                                        "type": "object",
+                                        "properties": {
+                                            "type": {
+                                                "required": true,
+                                                "node": {
+                                                    "type": "string",
+                                                    "title": "DataType.type",
+                                                    "description": "The reference of the base type to use"
+                                                }
+                                            },
+                                            "validation": {
+                                                "required": false,
+                                                "node": {
+                                                    "type": "array",
+                                                    "elementType": {
+                                                        "name": "Validation.Reference",
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "type": {
+                                                                "required": true,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "title": "Reference.type",
+                                                                    "description": "The name of the referenced validation type\nThis will be used to lookup the proper handler"
+                                                                }
+                                                            },
+                                                            "message": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "title": "Reference.message",
+                                                                    "description": "An optional means of overriding the default message if the validation is triggered"
+                                                                }
+                                                            },
+                                                            "severity": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "name": "Severity",
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "error"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "warning"
+                                                                        }
+                                                                    ],
+                                                                    "title": "Reference.severity",
+                                                                    "description": "An optional means of overriding the default severity of the validation if triggered"
+                                                                }
+                                                            },
+                                                            "trigger": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "name": "Trigger",
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "navigation"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "change"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "load"
+                                                                        }
+                                                                    ],
+                                                                    "title": "Reference.trigger",
+                                                                    "description": "When to run this particular validation"
+                                                                }
+                                                            },
+                                                            "dataTarget": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "formatted"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "deformatted"
+                                                                        }
+                                                                    ],
+                                                                    "title": "Reference.dataTarget",
+                                                                    "description": "Each validation is passed the value of the data to run it's validation against.\nBy default, this is the value stored in the data-model (deformatted).\nIn the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option"
+                                                                }
+                                                            },
+                                                            "displayTarget": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "name": "DisplayTarget",
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "page"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "section"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "field"
+                                                                        }
+                                                                    ],
+                                                                    "title": "Reference.displayTarget",
+                                                                    "description": "Where the error should be displayed"
+                                                                }
+                                                            },
+                                                            "blocking": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "boolean",
+                                                                            "title": "Reference.blocking"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "once"
+                                                                        }
+                                                                    ],
+                                                                    "title": "Reference.blocking",
+                                                                    "description": "If the validation blocks navigation\ntrue/false - always/never block navigation\nonce - only block navigation if the validation has not been triggered before",
+                                                                    "default": "- true for errors, 'once' for warnings"
+                                                                }
+                                                            }
+                                                        },
+                                                        "additionalProperties": {
+                                                            "type": "unknown"
+                                                        },
+                                                        "title": "Reference",
+                                                        "description": "A reference to a validation object"
+                                                    },
+                                                    "title": "DataType.validation",
+                                                    "description": "Any additional validations that are associated with this property\nThese will add to any base validations associated with the \"type\""
+                                                }
+                                            },
+                                            "format": {
+                                                "required": false,
+                                                "node": {
+                                                    "name": "Formatting.Reference",
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "type": {
+                                                            "required": true,
+                                                            "node": {
+                                                                "type": "string",
+                                                                "title": "Reference.type",
+                                                                "description": "The name of the formatter (and de-formatter) to use"
+                                                            }
+                                                        }
+                                                    },
+                                                    "additionalProperties": {
+                                                        "type": "unknown"
+                                                    },
+                                                    "title": "DataType.format",
+                                                    "description": "A reference to a specific data format to use.\nIf none is specified, will fallback to that of the base type"
+                                                }
+                                            },
+                                            "default": {
+                                                "required": false,
+                                                "node": {
+                                                    "type": "ref",
+                                                    "ref": "T",
+                                                    "title": "DataType.default",
+                                                    "description": "A default value for this property.\nAny reads for this property will result in this default value being written to the model."
+                                                }
+                                            },
+                                            "isRecord": {
+                                                "required": true,
+                                                "node": {
+                                                    "type": "boolean",
+                                                    "title": "RecordType.isRecord",
+                                                    "description": "boolean to define if its a record"
+                                                }
+                                            },
+                                            "isArray": {
+                                                "required": false,
+                                                "node": {
+                                                    "type": "never",
+                                                    "title": "RecordType.isArray",
+                                                    "description": "This property is mutually exclusive with RecordType and can not be used with ArrayType"
+                                                }
+                                            }
+                                        },
+                                        "additionalProperties": {
+                                            "type": "unknown"
+                                        },
+                                        "title": "RecordType",
+                                        "description": "Determines if the Datatype is a record object"
+                                    },
+                                    {
+                                        "name": "ArrayType",
+                                        "type": "object",
+                                        "properties": {
+                                            "type": {
+                                                "required": true,
+                                                "node": {
+                                                    "type": "string",
+                                                    "title": "DataType.type",
+                                                    "description": "The reference of the base type to use"
+                                                }
+                                            },
+                                            "validation": {
+                                                "required": false,
+                                                "node": {
+                                                    "type": "array",
+                                                    "elementType": {
+                                                        "name": "Validation.Reference",
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "type": {
+                                                                "required": true,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "title": "Reference.type",
+                                                                    "description": "The name of the referenced validation type\nThis will be used to lookup the proper handler"
+                                                                }
+                                                            },
+                                                            "message": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "title": "Reference.message",
+                                                                    "description": "An optional means of overriding the default message if the validation is triggered"
+                                                                }
+                                                            },
+                                                            "severity": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "name": "Severity",
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "error"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "warning"
+                                                                        }
+                                                                    ],
+                                                                    "title": "Reference.severity",
+                                                                    "description": "An optional means of overriding the default severity of the validation if triggered"
+                                                                }
+                                                            },
+                                                            "trigger": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "name": "Trigger",
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "navigation"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "change"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "load"
+                                                                        }
+                                                                    ],
+                                                                    "title": "Reference.trigger",
+                                                                    "description": "When to run this particular validation"
+                                                                }
+                                                            },
+                                                            "dataTarget": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "formatted"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "deformatted"
+                                                                        }
+                                                                    ],
+                                                                    "title": "Reference.dataTarget",
+                                                                    "description": "Each validation is passed the value of the data to run it's validation against.\nBy default, this is the value stored in the data-model (deformatted).\nIn the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option"
+                                                                }
+                                                            },
+                                                            "displayTarget": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "name": "DisplayTarget",
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "page"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "section"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "field"
+                                                                        }
+                                                                    ],
+                                                                    "title": "Reference.displayTarget",
+                                                                    "description": "Where the error should be displayed"
+                                                                }
+                                                            },
+                                                            "blocking": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "boolean",
+                                                                            "title": "Reference.blocking"
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "const": "once"
+                                                                        }
+                                                                    ],
+                                                                    "title": "Reference.blocking",
+                                                                    "description": "If the validation blocks navigation\ntrue/false - always/never block navigation\nonce - only block navigation if the validation has not been triggered before",
+                                                                    "default": "- true for errors, 'once' for warnings"
+                                                                }
+                                                            }
+                                                        },
+                                                        "additionalProperties": {
+                                                            "type": "unknown"
+                                                        },
+                                                        "title": "Reference",
+                                                        "description": "A reference to a validation object"
+                                                    },
+                                                    "title": "DataType.validation",
+                                                    "description": "Any additional validations that are associated with this property\nThese will add to any base validations associated with the \"type\""
+                                                }
+                                            },
+                                            "format": {
+                                                "required": false,
+                                                "node": {
+                                                    "name": "Formatting.Reference",
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "type": {
+                                                            "required": true,
+                                                            "node": {
+                                                                "type": "string",
+                                                                "title": "Reference.type",
+                                                                "description": "The name of the formatter (and de-formatter) to use"
+                                                            }
+                                                        }
+                                                    },
+                                                    "additionalProperties": {
+                                                        "type": "unknown"
+                                                    },
+                                                    "title": "DataType.format",
+                                                    "description": "A reference to a specific data format to use.\nIf none is specified, will fallback to that of the base type"
+                                                }
+                                            },
+                                            "default": {
+                                                "required": false,
+                                                "node": {
+                                                    "type": "ref",
+                                                    "ref": "T",
+                                                    "title": "DataType.default",
+                                                    "description": "A default value for this property.\nAny reads for this property will result in this default value being written to the model."
+                                                }
+                                            },
+                                            "isArray": {
+                                                "required": true,
+                                                "node": {
+                                                    "type": "boolean",
+                                                    "title": "ArrayType.isArray",
+                                                    "description": "boolean to define if its an array"
+                                                }
+                                            },
+                                            "isRecord": {
+                                                "required": false,
+                                                "node": {
+                                                    "type": "never",
+                                                    "title": "ArrayType.isRecord",
+                                                    "description": "This property is mutually exclusive with ArrayType and can not be used with RecordType"
+                                                }
+                                            }
+                                        },
+                                        "additionalProperties": {
+                                            "type": "unknown"
+                                        },
+                                        "title": "ArrayType",
+                                        "description": "Determines if the DataType is an Array Object"
+                                    }
+                                ],
+                                "title": "DataTypes"
+                            },
+                            "title": "Schema.ROOT",
+                            "description": "The ROOT object is the top level object to use"
+                        }
+                    }
+                },
+                "additionalProperties": {
+                    "name": "Node",
+                    "type": "object",
+                    "properties": {},
+                    "additionalProperties": {
+                        "name": "DataTypes",
+                        "type": "or",
+                        "or": [
+                            {
                                 "name": "DataType",
                                 "type": "object",
                                 "properties": {
@@ -217,20 +852,12 @@
                                             "description": "The reference of the base type to use"
                                         }
                                     },
-                                    "isArray": {
-                                        "required": false,
-                                        "node": {
-                                            "type": "boolean",
-                                            "title": "DataType.isArray",
-                                            "description": "The referenced object represents an array rather than an object"
-                                        }
-                                    },
                                     "validation": {
                                         "required": false,
                                         "node": {
                                             "type": "array",
                                             "elementType": {
-                                                "name": "Reference",
+                                                "name": "Validation.Reference",
                                                 "type": "object",
                                                 "properties": {
                                                     "type": {
@@ -257,13 +884,11 @@
                                                             "or": [
                                                                 {
                                                                     "type": "string",
-                                                                    "const": "error",
-                                                                    "title": "Severity"
+                                                                    "const": "error"
                                                                 },
                                                                 {
                                                                     "type": "string",
-                                                                    "const": "warning",
-                                                                    "title": "Severity"
+                                                                    "const": "warning"
                                                                 }
                                                             ],
                                                             "title": "Reference.severity",
@@ -278,18 +903,15 @@
                                                             "or": [
                                                                 {
                                                                     "type": "string",
-                                                                    "const": "navigation",
-                                                                    "title": "Trigger"
+                                                                    "const": "navigation"
                                                                 },
                                                                 {
                                                                     "type": "string",
-                                                                    "const": "change",
-                                                                    "title": "Trigger"
+                                                                    "const": "change"
                                                                 },
                                                                 {
                                                                     "type": "string",
-                                                                    "const": "load",
-                                                                    "title": "Trigger"
+                                                                    "const": "load"
                                                                 }
                                                             ],
                                                             "title": "Reference.trigger",
@@ -303,13 +925,11 @@
                                                             "or": [
                                                                 {
                                                                     "type": "string",
-                                                                    "const": "formatted",
-                                                                    "title": "Reference.dataTarget"
+                                                                    "const": "formatted"
                                                                 },
                                                                 {
                                                                     "type": "string",
-                                                                    "const": "deformatted",
-                                                                    "title": "Reference.dataTarget"
+                                                                    "const": "deformatted"
                                                                 }
                                                             ],
                                                             "title": "Reference.dataTarget",
@@ -324,22 +944,38 @@
                                                             "or": [
                                                                 {
                                                                     "type": "string",
-                                                                    "const": "page",
-                                                                    "title": "DisplayTarget"
+                                                                    "const": "page"
                                                                 },
                                                                 {
                                                                     "type": "string",
-                                                                    "const": "section",
-                                                                    "title": "DisplayTarget"
+                                                                    "const": "section"
                                                                 },
                                                                 {
                                                                     "type": "string",
-                                                                    "const": "field",
-                                                                    "title": "DisplayTarget"
+                                                                    "const": "field"
                                                                 }
                                                             ],
                                                             "title": "Reference.displayTarget",
                                                             "description": "Where the error should be displayed"
+                                                        }
+                                                    },
+                                                    "blocking": {
+                                                        "required": false,
+                                                        "node": {
+                                                            "type": "or",
+                                                            "or": [
+                                                                {
+                                                                    "type": "boolean",
+                                                                    "title": "Reference.blocking"
+                                                                },
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "once"
+                                                                }
+                                                            ],
+                                                            "title": "Reference.blocking",
+                                                            "description": "If the validation blocks navigation\ntrue/false - always/never block navigation\nonce - only block navigation if the validation has not been triggered before",
+                                                            "default": "- true for errors, 'once' for warnings"
                                                         }
                                                     }
                                                 },
@@ -356,7 +992,7 @@
                                     "format": {
                                         "required": false,
                                         "node": {
-                                            "name": "Reference",
+                                            "name": "Formatting.Reference",
                                             "type": "object",
                                             "properties": {
                                                 "type": {
@@ -402,211 +1038,414 @@
                                     }
                                 ]
                             },
-                            "title": "Schema.ROOT",
-                            "description": "The ROOT object is the top level object to use"
-                        }
-                    }
-                },
-                "additionalProperties": {
-                    "name": "Node",
-                    "type": "object",
-                    "properties": {},
-                    "additionalProperties": {
-                        "name": "DataType",
-                        "type": "object",
-                        "properties": {
-                            "type": {
-                                "required": true,
-                                "node": {
-                                    "type": "string",
-                                    "title": "DataType.type",
-                                    "description": "The reference of the base type to use"
-                                }
-                            },
-                            "isArray": {
-                                "required": false,
-                                "node": {
-                                    "type": "boolean",
-                                    "title": "DataType.isArray",
-                                    "description": "The referenced object represents an array rather than an object"
-                                }
-                            },
-                            "validation": {
-                                "required": false,
-                                "node": {
-                                    "type": "array",
-                                    "elementType": {
-                                        "name": "Reference",
-                                        "type": "object",
-                                        "properties": {
-                                            "type": {
-                                                "required": true,
-                                                "node": {
-                                                    "type": "string",
-                                                    "title": "Reference.type",
-                                                    "description": "The name of the referenced validation type\nThis will be used to lookup the proper handler"
-                                                }
-                                            },
-                                            "message": {
-                                                "required": false,
-                                                "node": {
-                                                    "type": "string",
-                                                    "title": "Reference.message",
-                                                    "description": "An optional means of overriding the default message if the validation is triggered"
-                                                }
-                                            },
-                                            "severity": {
-                                                "required": false,
-                                                "node": {
-                                                    "name": "Severity",
-                                                    "type": "or",
-                                                    "or": [
-                                                        {
-                                                            "type": "string",
-                                                            "const": "error",
-                                                            "title": "Severity"
-                                                        },
-                                                        {
-                                                            "type": "string",
-                                                            "const": "warning",
-                                                            "title": "Severity"
-                                                        }
-                                                    ],
-                                                    "title": "Reference.severity",
-                                                    "description": "An optional means of overriding the default severity of the validation if triggered"
-                                                }
-                                            },
-                                            "trigger": {
-                                                "required": false,
-                                                "node": {
-                                                    "name": "Trigger",
-                                                    "type": "or",
-                                                    "or": [
-                                                        {
-                                                            "type": "string",
-                                                            "const": "navigation",
-                                                            "title": "Trigger"
-                                                        },
-                                                        {
-                                                            "type": "string",
-                                                            "const": "change",
-                                                            "title": "Trigger"
-                                                        },
-                                                        {
-                                                            "type": "string",
-                                                            "const": "load",
-                                                            "title": "Trigger"
-                                                        }
-                                                    ],
-                                                    "title": "Reference.trigger",
-                                                    "description": "When to run this particular validation"
-                                                }
-                                            },
-                                            "dataTarget": {
-                                                "required": false,
-                                                "node": {
-                                                    "type": "or",
-                                                    "or": [
-                                                        {
-                                                            "type": "string",
-                                                            "const": "formatted",
-                                                            "title": "Reference.dataTarget"
-                                                        },
-                                                        {
-                                                            "type": "string",
-                                                            "const": "deformatted",
-                                                            "title": "Reference.dataTarget"
-                                                        }
-                                                    ],
-                                                    "title": "Reference.dataTarget",
-                                                    "description": "Each validation is passed the value of the data to run it's validation against.\nBy default, this is the value stored in the data-model (deformatted).\nIn the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option"
-                                                }
-                                            },
-                                            "displayTarget": {
-                                                "required": false,
-                                                "node": {
-                                                    "name": "DisplayTarget",
-                                                    "type": "or",
-                                                    "or": [
-                                                        {
-                                                            "type": "string",
-                                                            "const": "page",
-                                                            "title": "DisplayTarget"
-                                                        },
-                                                        {
-                                                            "type": "string",
-                                                            "const": "section",
-                                                            "title": "DisplayTarget"
-                                                        },
-                                                        {
-                                                            "type": "string",
-                                                            "const": "field",
-                                                            "title": "DisplayTarget"
-                                                        }
-                                                    ],
-                                                    "title": "Reference.displayTarget",
-                                                    "description": "Where the error should be displayed"
-                                                }
-                                            }
-                                        },
-                                        "additionalProperties": {
-                                            "type": "unknown"
-                                        },
-                                        "title": "Reference",
-                                        "description": "A reference to a validation object"
-                                    },
-                                    "title": "DataType.validation",
-                                    "description": "Any additional validations that are associated with this property\nThese will add to any base validations associated with the \"type\""
-                                }
-                            },
-                            "format": {
-                                "required": false,
-                                "node": {
-                                    "name": "Reference",
-                                    "type": "object",
-                                    "properties": {
-                                        "type": {
-                                            "required": true,
-                                            "node": {
-                                                "type": "string",
-                                                "title": "Reference.type",
-                                                "description": "The name of the formatter (and de-formatter) to use"
-                                            }
+                            {
+                                "name": "RecordType",
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "required": true,
+                                        "node": {
+                                            "type": "string",
+                                            "title": "DataType.type",
+                                            "description": "The reference of the base type to use"
                                         }
                                     },
-                                    "additionalProperties": {
-                                        "type": "unknown"
+                                    "validation": {
+                                        "required": false,
+                                        "node": {
+                                            "type": "array",
+                                            "elementType": {
+                                                "name": "Validation.Reference",
+                                                "type": "object",
+                                                "properties": {
+                                                    "type": {
+                                                        "required": true,
+                                                        "node": {
+                                                            "type": "string",
+                                                            "title": "Reference.type",
+                                                            "description": "The name of the referenced validation type\nThis will be used to lookup the proper handler"
+                                                        }
+                                                    },
+                                                    "message": {
+                                                        "required": false,
+                                                        "node": {
+                                                            "type": "string",
+                                                            "title": "Reference.message",
+                                                            "description": "An optional means of overriding the default message if the validation is triggered"
+                                                        }
+                                                    },
+                                                    "severity": {
+                                                        "required": false,
+                                                        "node": {
+                                                            "name": "Severity",
+                                                            "type": "or",
+                                                            "or": [
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "error"
+                                                                },
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "warning"
+                                                                }
+                                                            ],
+                                                            "title": "Reference.severity",
+                                                            "description": "An optional means of overriding the default severity of the validation if triggered"
+                                                        }
+                                                    },
+                                                    "trigger": {
+                                                        "required": false,
+                                                        "node": {
+                                                            "name": "Trigger",
+                                                            "type": "or",
+                                                            "or": [
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "navigation"
+                                                                },
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "change"
+                                                                },
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "load"
+                                                                }
+                                                            ],
+                                                            "title": "Reference.trigger",
+                                                            "description": "When to run this particular validation"
+                                                        }
+                                                    },
+                                                    "dataTarget": {
+                                                        "required": false,
+                                                        "node": {
+                                                            "type": "or",
+                                                            "or": [
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "formatted"
+                                                                },
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "deformatted"
+                                                                }
+                                                            ],
+                                                            "title": "Reference.dataTarget",
+                                                            "description": "Each validation is passed the value of the data to run it's validation against.\nBy default, this is the value stored in the data-model (deformatted).\nIn the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option"
+                                                        }
+                                                    },
+                                                    "displayTarget": {
+                                                        "required": false,
+                                                        "node": {
+                                                            "name": "DisplayTarget",
+                                                            "type": "or",
+                                                            "or": [
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "page"
+                                                                },
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "section"
+                                                                },
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "field"
+                                                                }
+                                                            ],
+                                                            "title": "Reference.displayTarget",
+                                                            "description": "Where the error should be displayed"
+                                                        }
+                                                    },
+                                                    "blocking": {
+                                                        "required": false,
+                                                        "node": {
+                                                            "type": "or",
+                                                            "or": [
+                                                                {
+                                                                    "type": "boolean",
+                                                                    "title": "Reference.blocking"
+                                                                },
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "once"
+                                                                }
+                                                            ],
+                                                            "title": "Reference.blocking",
+                                                            "description": "If the validation blocks navigation\ntrue/false - always/never block navigation\nonce - only block navigation if the validation has not been triggered before",
+                                                            "default": "- true for errors, 'once' for warnings"
+                                                        }
+                                                    }
+                                                },
+                                                "additionalProperties": {
+                                                    "type": "unknown"
+                                                },
+                                                "title": "Reference",
+                                                "description": "A reference to a validation object"
+                                            },
+                                            "title": "DataType.validation",
+                                            "description": "Any additional validations that are associated with this property\nThese will add to any base validations associated with the \"type\""
+                                        }
                                     },
-                                    "title": "DataType.format",
-                                    "description": "A reference to a specific data format to use.\nIf none is specified, will fallback to that of the base type"
-                                }
-                            },
-                            "default": {
-                                "required": false,
-                                "node": {
-                                    "type": "ref",
-                                    "ref": "T",
-                                    "title": "DataType.default",
-                                    "description": "A default value for this property.\nAny reads for this property will result in this default value being written to the model."
-                                }
-                            }
-                        },
-                        "additionalProperties": {
-                            "type": "unknown"
-                        },
-                        "title": "DataType",
-                        "description": "Each prop in the object can have a specific DataType",
-                        "genericTokens": [
-                            {
-                                "symbol": "T",
-                                "constraints": {
-                                    "type": "any"
+                                    "format": {
+                                        "required": false,
+                                        "node": {
+                                            "name": "Formatting.Reference",
+                                            "type": "object",
+                                            "properties": {
+                                                "type": {
+                                                    "required": true,
+                                                    "node": {
+                                                        "type": "string",
+                                                        "title": "Reference.type",
+                                                        "description": "The name of the formatter (and de-formatter) to use"
+                                                    }
+                                                }
+                                            },
+                                            "additionalProperties": {
+                                                "type": "unknown"
+                                            },
+                                            "title": "DataType.format",
+                                            "description": "A reference to a specific data format to use.\nIf none is specified, will fallback to that of the base type"
+                                        }
+                                    },
+                                    "default": {
+                                        "required": false,
+                                        "node": {
+                                            "type": "ref",
+                                            "ref": "T",
+                                            "title": "DataType.default",
+                                            "description": "A default value for this property.\nAny reads for this property will result in this default value being written to the model."
+                                        }
+                                    },
+                                    "isRecord": {
+                                        "required": true,
+                                        "node": {
+                                            "type": "boolean",
+                                            "title": "RecordType.isRecord",
+                                            "description": "boolean to define if its a record"
+                                        }
+                                    },
+                                    "isArray": {
+                                        "required": false,
+                                        "node": {
+                                            "type": "never",
+                                            "title": "RecordType.isArray",
+                                            "description": "This property is mutually exclusive with RecordType and can not be used with ArrayType"
+                                        }
+                                    }
                                 },
-                                "default": {
+                                "additionalProperties": {
                                     "type": "unknown"
-                                }
+                                },
+                                "title": "RecordType",
+                                "description": "Determines if the Datatype is a record object"
+                            },
+                            {
+                                "name": "ArrayType",
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "required": true,
+                                        "node": {
+                                            "type": "string",
+                                            "title": "DataType.type",
+                                            "description": "The reference of the base type to use"
+                                        }
+                                    },
+                                    "validation": {
+                                        "required": false,
+                                        "node": {
+                                            "type": "array",
+                                            "elementType": {
+                                                "name": "Validation.Reference",
+                                                "type": "object",
+                                                "properties": {
+                                                    "type": {
+                                                        "required": true,
+                                                        "node": {
+                                                            "type": "string",
+                                                            "title": "Reference.type",
+                                                            "description": "The name of the referenced validation type\nThis will be used to lookup the proper handler"
+                                                        }
+                                                    },
+                                                    "message": {
+                                                        "required": false,
+                                                        "node": {
+                                                            "type": "string",
+                                                            "title": "Reference.message",
+                                                            "description": "An optional means of overriding the default message if the validation is triggered"
+                                                        }
+                                                    },
+                                                    "severity": {
+                                                        "required": false,
+                                                        "node": {
+                                                            "name": "Severity",
+                                                            "type": "or",
+                                                            "or": [
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "error"
+                                                                },
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "warning"
+                                                                }
+                                                            ],
+                                                            "title": "Reference.severity",
+                                                            "description": "An optional means of overriding the default severity of the validation if triggered"
+                                                        }
+                                                    },
+                                                    "trigger": {
+                                                        "required": false,
+                                                        "node": {
+                                                            "name": "Trigger",
+                                                            "type": "or",
+                                                            "or": [
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "navigation"
+                                                                },
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "change"
+                                                                },
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "load"
+                                                                }
+                                                            ],
+                                                            "title": "Reference.trigger",
+                                                            "description": "When to run this particular validation"
+                                                        }
+                                                    },
+                                                    "dataTarget": {
+                                                        "required": false,
+                                                        "node": {
+                                                            "type": "or",
+                                                            "or": [
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "formatted"
+                                                                },
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "deformatted"
+                                                                }
+                                                            ],
+                                                            "title": "Reference.dataTarget",
+                                                            "description": "Each validation is passed the value of the data to run it's validation against.\nBy default, this is the value stored in the data-model (deformatted).\nIn the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option"
+                                                        }
+                                                    },
+                                                    "displayTarget": {
+                                                        "required": false,
+                                                        "node": {
+                                                            "name": "DisplayTarget",
+                                                            "type": "or",
+                                                            "or": [
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "page"
+                                                                },
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "section"
+                                                                },
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "field"
+                                                                }
+                                                            ],
+                                                            "title": "Reference.displayTarget",
+                                                            "description": "Where the error should be displayed"
+                                                        }
+                                                    },
+                                                    "blocking": {
+                                                        "required": false,
+                                                        "node": {
+                                                            "type": "or",
+                                                            "or": [
+                                                                {
+                                                                    "type": "boolean",
+                                                                    "title": "Reference.blocking"
+                                                                },
+                                                                {
+                                                                    "type": "string",
+                                                                    "const": "once"
+                                                                }
+                                                            ],
+                                                            "title": "Reference.blocking",
+                                                            "description": "If the validation blocks navigation\ntrue/false - always/never block navigation\nonce - only block navigation if the validation has not been triggered before",
+                                                            "default": "- true for errors, 'once' for warnings"
+                                                        }
+                                                    }
+                                                },
+                                                "additionalProperties": {
+                                                    "type": "unknown"
+                                                },
+                                                "title": "Reference",
+                                                "description": "A reference to a validation object"
+                                            },
+                                            "title": "DataType.validation",
+                                            "description": "Any additional validations that are associated with this property\nThese will add to any base validations associated with the \"type\""
+                                        }
+                                    },
+                                    "format": {
+                                        "required": false,
+                                        "node": {
+                                            "name": "Formatting.Reference",
+                                            "type": "object",
+                                            "properties": {
+                                                "type": {
+                                                    "required": true,
+                                                    "node": {
+                                                        "type": "string",
+                                                        "title": "Reference.type",
+                                                        "description": "The name of the formatter (and de-formatter) to use"
+                                                    }
+                                                }
+                                            },
+                                            "additionalProperties": {
+                                                "type": "unknown"
+                                            },
+                                            "title": "DataType.format",
+                                            "description": "A reference to a specific data format to use.\nIf none is specified, will fallback to that of the base type"
+                                        }
+                                    },
+                                    "default": {
+                                        "required": false,
+                                        "node": {
+                                            "type": "ref",
+                                            "ref": "T",
+                                            "title": "DataType.default",
+                                            "description": "A default value for this property.\nAny reads for this property will result in this default value being written to the model."
+                                        }
+                                    },
+                                    "isArray": {
+                                        "required": true,
+                                        "node": {
+                                            "type": "boolean",
+                                            "title": "ArrayType.isArray",
+                                            "description": "boolean to define if its an array"
+                                        }
+                                    },
+                                    "isRecord": {
+                                        "required": false,
+                                        "node": {
+                                            "type": "never",
+                                            "title": "ArrayType.isRecord",
+                                            "description": "This property is mutually exclusive with ArrayType and can not be used with RecordType"
+                                        }
+                                    }
+                                },
+                                "additionalProperties": {
+                                    "type": "unknown"
+                                },
+                                "title": "ArrayType",
+                                "description": "Determines if the DataType is an Array Object"
                             }
-                        ]
+                        ],
+                        "title": "DataTypes"
                     },
                     "title": "Node",
                     "description": "A Node describes a specific object in the tree"
@@ -618,8 +1457,8 @@
         "data": {
             "required": false,
             "node": {
-                "name": "DataModel",
                 "source": "src/index.ts",
+                "name": "DataModel",
                 "type": "record",
                 "keyType": {
                     "type": "any"
@@ -634,8 +1473,8 @@
         "navigation": {
             "required": true,
             "node": {
-                "name": "Navigation",
                 "source": "src/index.ts",
+                "name": "Navigation",
                 "type": "and",
                 "and": [
                     {
@@ -664,9 +1503,9 @@
                                     "type": "string"
                                 },
                                 {
+                                    "source": "src/index.ts",
                                     "name": "NavigationFlow",
                                     "type": "object",
-                                    "source": "src/index.ts",
                                     "properties": {
                                         "startState": {
                                             "required": true,
@@ -687,9 +1526,9 @@
                                                         "title": "NavigationFlow.onStart"
                                                     },
                                                     {
+                                                        "source": "src/index.ts",
                                                         "name": "ExpressionObject",
                                                         "type": "object",
-                                                        "source": "src/index.ts",
                                                         "properties": {
                                                             "exp": {
                                                                 "required": false,
@@ -721,9 +1560,9 @@
                                                         "title": "NavigationFlow.onEnd"
                                                     },
                                                     {
+                                                        "source": "src/index.ts",
                                                         "name": "ExpressionObject",
                                                         "type": "object",
-                                                        "source": "src/index.ts",
                                                         "properties": {
                                                             "exp": {
                                                                 "required": false,
@@ -759,9 +1598,9 @@
                                                 "ref": "Expression"
                                             },
                                             {
+                                                "source": "src/index.ts",
                                                 "name": "ExpressionObject",
                                                 "type": "object",
-                                                "source": "src/index.ts",
                                                 "properties": {
                                                     "exp": {
                                                         "required": false,
@@ -778,14 +1617,14 @@
                                                 "description": "An object with an expression in it"
                                             },
                                             {
-                                                "name": "NavigationFlowState",
                                                 "source": "src/index.ts",
+                                                "name": "NavigationFlowState",
                                                 "type": "or",
                                                 "or": [
                                                     {
+                                                        "source": "src/index.ts",
                                                         "name": "NavigationFlowViewState",
                                                         "type": "object",
-                                                        "source": "src/index.ts",
                                                         "properties": {
                                                             "_comment": {
                                                                 "required": false,
@@ -815,9 +1654,9 @@
                                                                             "title": "NavigationBaseState.onStart"
                                                                         },
                                                                         {
+                                                                            "source": "src/index.ts",
                                                                             "name": "ExpressionObject",
                                                                             "type": "object",
-                                                                            "source": "src/index.ts",
                                                                             "properties": {
                                                                                 "exp": {
                                                                                     "required": false,
@@ -849,9 +1688,9 @@
                                                                             "title": "NavigationBaseState.onEnd"
                                                                         },
                                                                         {
+                                                                            "source": "src/index.ts",
                                                                             "name": "ExpressionObject",
                                                                             "type": "object",
-                                                                            "source": "src/index.ts",
                                                                             "properties": {
                                                                                 "exp": {
                                                                                     "required": false,
@@ -882,8 +1721,8 @@
                                                             "transitions": {
                                                                 "required": true,
                                                                 "node": {
-                                                                    "name": "NavigationFlowTransition",
                                                                     "source": "src/index.ts",
+                                                                    "name": "NavigationFlowTransition",
                                                                     "type": "record",
                                                                     "keyType": {
                                                                         "type": "string"
@@ -916,14 +1755,16 @@
                                                                 }
                                                             }
                                                         },
-                                                        "additionalProperties": false,
+                                                        "additionalProperties": {
+                                                            "type": "unknown"
+                                                        },
                                                         "title": "NavigationFlowViewState",
                                                         "description": "A state representing a view"
                                                     },
                                                     {
+                                                        "source": "src/index.ts",
                                                         "name": "NavigationFlowEndState",
                                                         "type": "object",
-                                                        "source": "src/index.ts",
                                                         "properties": {
                                                             "_comment": {
                                                                 "required": false,
@@ -953,9 +1794,9 @@
                                                                             "title": "NavigationBaseState.onStart"
                                                                         },
                                                                         {
+                                                                            "source": "src/index.ts",
                                                                             "name": "ExpressionObject",
                                                                             "type": "object",
-                                                                            "source": "src/index.ts",
                                                                             "properties": {
                                                                                 "exp": {
                                                                                     "required": false,
@@ -987,9 +1828,9 @@
                                                                             "title": "NavigationBaseState.onEnd"
                                                                         },
                                                                         {
+                                                                            "source": "src/index.ts",
                                                                             "name": "ExpressionObject",
                                                                             "type": "object",
-                                                                            "source": "src/index.ts",
                                                                             "properties": {
                                                                                 "exp": {
                                                                                     "required": false,
@@ -1026,14 +1867,16 @@
                                                                 }
                                                             }
                                                         },
-                                                        "additionalProperties": false,
+                                                        "additionalProperties": {
+                                                            "type": "unknown"
+                                                        },
                                                         "title": "NavigationFlowEndState",
                                                         "description": "An END state of the flow."
                                                     },
                                                     {
+                                                        "source": "src/index.ts",
                                                         "name": "NavigationFlowFlowState",
                                                         "type": "object",
-                                                        "source": "src/index.ts",
                                                         "properties": {
                                                             "_comment": {
                                                                 "required": false,
@@ -1063,9 +1906,9 @@
                                                                             "title": "NavigationBaseState.onStart"
                                                                         },
                                                                         {
+                                                                            "source": "src/index.ts",
                                                                             "name": "ExpressionObject",
                                                                             "type": "object",
-                                                                            "source": "src/index.ts",
                                                                             "properties": {
                                                                                 "exp": {
                                                                                     "required": false,
@@ -1097,9 +1940,9 @@
                                                                             "title": "NavigationBaseState.onEnd"
                                                                         },
                                                                         {
+                                                                            "source": "src/index.ts",
                                                                             "name": "ExpressionObject",
                                                                             "type": "object",
-                                                                            "source": "src/index.ts",
                                                                             "properties": {
                                                                                 "exp": {
                                                                                     "required": false,
@@ -1130,8 +1973,8 @@
                                                             "transitions": {
                                                                 "required": true,
                                                                 "node": {
-                                                                    "name": "NavigationFlowTransition",
                                                                     "source": "src/index.ts",
+                                                                    "name": "NavigationFlowTransition",
                                                                     "type": "record",
                                                                     "keyType": {
                                                                         "type": "string"
@@ -1156,9 +1999,9 @@
                                                         "title": "NavigationFlowFlowState"
                                                     },
                                                     {
+                                                        "source": "src/index.ts",
                                                         "name": "NavigationFlowActionState",
                                                         "type": "object",
-                                                        "source": "src/index.ts",
                                                         "properties": {
                                                             "_comment": {
                                                                 "required": false,
@@ -1188,9 +2031,9 @@
                                                                             "title": "NavigationBaseState.onStart"
                                                                         },
                                                                         {
+                                                                            "source": "src/index.ts",
                                                                             "name": "ExpressionObject",
                                                                             "type": "object",
-                                                                            "source": "src/index.ts",
                                                                             "properties": {
                                                                                 "exp": {
                                                                                     "required": false,
@@ -1222,9 +2065,9 @@
                                                                             "title": "NavigationBaseState.onEnd"
                                                                         },
                                                                         {
+                                                                            "source": "src/index.ts",
                                                                             "name": "ExpressionObject",
                                                                             "type": "object",
-                                                                            "source": "src/index.ts",
                                                                             "properties": {
                                                                                 "exp": {
                                                                                     "required": false,
@@ -1257,8 +2100,8 @@
                                                             "transitions": {
                                                                 "required": true,
                                                                 "node": {
-                                                                    "name": "NavigationFlowTransition",
                                                                     "source": "src/index.ts",
+                                                                    "name": "NavigationFlowTransition",
                                                                     "type": "record",
                                                                     "keyType": {
                                                                         "type": "string"
@@ -1276,9 +2119,9 @@
                                                         "description": "Action states execute an expression to determine the next state to transition to"
                                                     },
                                                     {
-                                                        "name": "NavigationFlowExternalState",
-                                                        "type": "object",
                                                         "source": "src/index.ts",
+                                                        "name": "NavigationFlowAsyncActionState",
+                                                        "type": "object",
                                                         "properties": {
                                                             "_comment": {
                                                                 "required": false,
@@ -1292,7 +2135,7 @@
                                                                 "required": true,
                                                                 "node": {
                                                                     "type": "string",
-                                                                    "const": "EXTERNAL",
+                                                                    "const": "ASYNC_ACTION",
                                                                     "title": "NavigationBaseState.state_type",
                                                                     "description": "A property to determine the type of state this is"
                                                                 }
@@ -1308,9 +2151,9 @@
                                                                             "title": "NavigationBaseState.onStart"
                                                                         },
                                                                         {
+                                                                            "source": "src/index.ts",
                                                                             "name": "ExpressionObject",
                                                                             "type": "object",
-                                                                            "source": "src/index.ts",
                                                                             "properties": {
                                                                                 "exp": {
                                                                                     "required": false,
@@ -1342,9 +2185,137 @@
                                                                             "title": "NavigationBaseState.onEnd"
                                                                         },
                                                                         {
+                                                                            "source": "src/index.ts",
                                                                             "name": "ExpressionObject",
                                                                             "type": "object",
+                                                                            "properties": {
+                                                                                "exp": {
+                                                                                    "required": false,
+                                                                                    "node": {
+                                                                                        "type": "ref",
+                                                                                        "ref": "Expression",
+                                                                                        "title": "ExpressionObject.exp",
+                                                                                        "description": "The expression to run"
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            "additionalProperties": false,
+                                                                            "title": "ExpressionObject",
+                                                                            "description": "An object with an expression in it"
+                                                                        }
+                                                                    ],
+                                                                    "title": "NavigationBaseState.onEnd",
+                                                                    "description": "An optional expression to run before view transition"
+                                                                }
+                                                            },
+                                                            "exp": {
+                                                                "required": true,
+                                                                "node": {
+                                                                    "type": "ref",
+                                                                    "ref": "Expression",
+                                                                    "title": "NavigationFlowAsyncActionState.exp",
+                                                                    "description": "An expression to execute.\nThe return value determines the transition to take"
+                                                                }
+                                                            },
+                                                            "transitions": {
+                                                                "required": true,
+                                                                "node": {
+                                                                    "source": "src/index.ts",
+                                                                    "name": "NavigationFlowTransition",
+                                                                    "type": "record",
+                                                                    "keyType": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "valueType": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "title": "NavigationFlowTransitionableState.transitions",
+                                                                    "description": "A mapping of transition-name to FlowState name"
+                                                                }
+                                                            },
+                                                            "await": {
+                                                                "required": true,
+                                                                "node": {
+                                                                    "type": "boolean",
+                                                                    "title": "NavigationFlowAsyncActionState.await",
+                                                                    "description": "Whether the expression(s) should be awaited before transitioning"
+                                                                }
+                                                            }
+                                                        },
+                                                        "additionalProperties": false,
+                                                        "title": "NavigationFlowAsyncActionState",
+                                                        "description": "Action states execute an expression to determine the next state to transition to"
+                                                    },
+                                                    {
+                                                        "source": "src/index.ts",
+                                                        "name": "NavigationFlowExternalState",
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "_comment": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "title": "CommentBase._comment",
+                                                                    "description": "Add comments that will not be processing, but are useful for code explanation"
+                                                                }
+                                                            },
+                                                            "state_type": {
+                                                                "required": true,
+                                                                "node": {
+                                                                    "type": "string",
+                                                                    "const": "EXTERNAL",
+                                                                    "title": "NavigationBaseState.state_type",
+                                                                    "description": "A property to determine the type of state this is"
+                                                                }
+                                                            },
+                                                            "onStart": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "ref",
+                                                                            "ref": "Expression",
+                                                                            "title": "NavigationBaseState.onStart"
+                                                                        },
+                                                                        {
                                                                             "source": "src/index.ts",
+                                                                            "name": "ExpressionObject",
+                                                                            "type": "object",
+                                                                            "properties": {
+                                                                                "exp": {
+                                                                                    "required": false,
+                                                                                    "node": {
+                                                                                        "type": "ref",
+                                                                                        "ref": "Expression",
+                                                                                        "title": "ExpressionObject.exp",
+                                                                                        "description": "The expression to run"
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            "additionalProperties": false,
+                                                                            "title": "ExpressionObject",
+                                                                            "description": "An object with an expression in it"
+                                                                        }
+                                                                    ],
+                                                                    "title": "NavigationBaseState.onStart",
+                                                                    "description": "An optional expression to run when this view renders"
+                                                                }
+                                                            },
+                                                            "onEnd": {
+                                                                "required": false,
+                                                                "node": {
+                                                                    "type": "or",
+                                                                    "or": [
+                                                                        {
+                                                                            "type": "ref",
+                                                                            "ref": "Expression",
+                                                                            "title": "NavigationBaseState.onEnd"
+                                                                        },
+                                                                        {
+                                                                            "source": "src/index.ts",
+                                                                            "name": "ExpressionObject",
+                                                                            "type": "object",
                                                                             "properties": {
                                                                                 "exp": {
                                                                                     "required": false,
@@ -1375,8 +2346,8 @@
                                                             "transitions": {
                                                                 "required": true,
                                                                 "node": {
-                                                                    "name": "NavigationFlowTransition",
                                                                     "source": "src/index.ts",
+                                                                    "name": "NavigationFlowTransition",
                                                                     "type": "record",
                                                                     "keyType": {
                                                                         "type": "string"
@@ -1397,7 +2368,9 @@
                                                                 }
                                                             }
                                                         },
-                                                        "additionalProperties": false,
+                                                        "additionalProperties": {
+                                                            "type": "unknown"
+                                                        },
                                                         "title": "NavigationFlowExternalState",
                                                         "description": "External Flow states represent states in the FSM that can't be resolved internally in Player.\nThe flow will wait for the embedded application to manage moving to the next state via a transition"
                                                     }

@@ -1,7 +1,7 @@
 {
+    "source": "src/index.ts",
     "name": "AssetBinding",
     "type": "object",
-    "source": "src/index.ts",
     "properties": {
         "binding": {
             "required": true,

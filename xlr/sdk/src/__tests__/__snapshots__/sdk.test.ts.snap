@@ -331,6 +331,7 @@ export type Navigation = {
         attributes?: {
             [key: string]: any;
         };
+        [key: string]: unknown;
     } | {
         /** Add comments that will not be processing, but are useful for code explanation */
         _comment?: string;
@@ -352,6 +353,7 @@ export type Navigation = {
          * If this is a flow started from another flow, the outcome determines the flow transition
         */
         outcome: string;
+        [key: string]: unknown;
     } | {
         /** Add comments that will not be processing, but are useful for code explanation */
         _comment?: string;
@@ -398,6 +400,30 @@ export type Navigation = {
         /** Add comments that will not be processing, but are useful for code explanation */
         _comment?: string;
         /** A property to determine the type of state this is */
+        state_type: 'ASYNC_ACTION';
+        /** An optional expression to run when this view renders */
+        onStart?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        /** An optional expression to run before view transition */
+        onEnd?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        /**
+         * An expression to execute.
+         * The return value determines the transition to take
+        */
+        exp: Expression;
+        /** A mapping of transition-name to FlowState name */
+        transitions: Record<string, string>;
+        /** Whether the expression(s) should be awaited before transitioning */
+        await: boolean;
+    } | {
+        /** Add comments that will not be processing, but are useful for code explanation */
+        _comment?: string;
+        /** A property to determine the type of state this is */
         state_type: 'EXTERNAL';
         /** An optional expression to run when this view renders */
         onStart?: Expression | {
@@ -414,6 +440,7 @@ export type Navigation = {
         transitions: Record<string, string>;
         /** A reference for this external state */
         ref: string;
+        [key: string]: unknown;
     });
 }>;
 /** An object with an expression in it */
@@ -462,6 +489,7 @@ export interface NavigationFlow {
         attributes?: {
             [key: string]: any;
         };
+        [key: string]: unknown;
     } | {
         /** Add comments that will not be processing, but are useful for code explanation */
         _comment?: string;
@@ -483,6 +511,7 @@ export interface NavigationFlow {
          * If this is a flow started from another flow, the outcome determines the flow transition
         */
         outcome: string;
+        [key: string]: unknown;
     } | {
         /** Add comments that will not be processing, but are useful for code explanation */
         _comment?: string;
@@ -529,6 +558,30 @@ export interface NavigationFlow {
         /** Add comments that will not be processing, but are useful for code explanation */
         _comment?: string;
         /** A property to determine the type of state this is */
+        state_type: 'ASYNC_ACTION';
+        /** An optional expression to run when this view renders */
+        onStart?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        /** An optional expression to run before view transition */
+        onEnd?: Expression | {
+            /** The expression to run */
+            exp?: Expression;
+        };
+        /**
+         * An expression to execute.
+         * The return value determines the transition to take
+        */
+        exp: Expression;
+        /** A mapping of transition-name to FlowState name */
+        transitions: Record<string, string>;
+        /** Whether the expression(s) should be awaited before transitioning */
+        await: boolean;
+    } | {
+        /** Add comments that will not be processing, but are useful for code explanation */
+        _comment?: string;
+        /** A property to determine the type of state this is */
         state_type: 'EXTERNAL';
         /** An optional expression to run when this view renders */
         onStart?: Expression | {
@@ -545,6 +598,7 @@ export interface NavigationFlow {
         transitions: Record<string, string>;
         /** A reference for this external state */
         ref: string;
+        [key: string]: unknown;
     });
 }
 export type NavigationFlowTransition = Record<string, string>;
@@ -568,7 +622,7 @@ export interface NavigationBaseState<T extends string = any> {
      * TS gets really confused with both the ActionState and the onStart state both declaring the \`exp\` property
      * So this explicity says there should never be an exp prop on a state node that's not of type 'ACTION'
     */
-    exp?: T extends 'ACTION' ? Expression : never;
+    exp?: T extends 'ACTION' | 'ASYNC_ACTION' ? Expression : never;
 }
 /** A generic state that can transition to another state */
 export interface NavigationFlowTransitionableState<T extends string = any> {
@@ -590,7 +644,7 @@ export interface NavigationFlowTransitionableState<T extends string = any> {
      * TS gets really confused with both the ActionState and the onStart state both declaring the \`exp\` property
      * So this explicity says there should never be an exp prop on a state node that's not of type 'ACTION'
     */
-    exp?: T extends 'ACTION' ? Expression : never;
+    exp?: T extends 'ACTION' | 'ASYNC_ACTION' ? Expression : never;
     /** A mapping of transition-name to FlowState name */
     transitions: Record<string, string>;
 }
@@ -619,6 +673,7 @@ export interface NavigationFlowViewState {
     attributes?: {
         [key: string]: any;
     };
+    [key: string]: unknown;
 }
 /** An END state of the flow. */
 export interface NavigationFlowEndState {
@@ -642,6 +697,7 @@ export interface NavigationFlowEndState {
      * If this is a flow started from another flow, the outcome determines the flow transition
     */
     outcome: string;
+    [key: string]: unknown;
 }
 /** Action states execute an expression to determine the next state to transition to */
 export interface NavigationFlowActionState {
@@ -667,6 +723,32 @@ export interface NavigationFlowActionState {
     /** A mapping of transition-name to FlowState name */
     transitions: Record<string, string>;
 }
+/** Action states execute an expression to determine the next state to transition to */
+export interface NavigationFlowAsyncActionState {
+    /** Add comments that will not be processing, but are useful for code explanation */
+    _comment?: string;
+    /** A property to determine the type of state this is */
+    state_type: 'ASYNC_ACTION';
+    /** An optional expression to run when this view renders */
+    onStart?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /** An optional expression to run before view transition */
+    onEnd?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /**
+     * An expression to execute.
+     * The return value determines the transition to take
+    */
+    exp: Expression;
+    /** A mapping of transition-name to FlowState name */
+    transitions: Record<string, string>;
+    /** Whether the expression(s) should be awaited before transitioning */
+    await: boolean;
+}
 /**
  * External Flow states represent states in the FSM that can't be resolved internally in Player.
  * The flow will wait for the embedded application to manage moving to the next state via a transition
@@ -691,6 +773,7 @@ export interface NavigationFlowExternalState {
     transitions: Record<string, string>;
     /** A reference for this external state */
     ref: string;
+    [key: string]: unknown;
 }
 export interface NavigationFlowFlowState {
     /** Add comments that will not be processing, but are useful for code explanation */
@@ -737,6 +820,7 @@ export type NavigationFlowState = {
     attributes?: {
         [key: string]: any;
     };
+    [key: string]: unknown;
 } | {
     /** Add comments that will not be processing, but are useful for code explanation */
     _comment?: string;
@@ -758,6 +842,7 @@ export type NavigationFlowState = {
      * If this is a flow started from another flow, the outcome determines the flow transition
     */
     outcome: string;
+    [key: string]: unknown;
 } | {
     /** Add comments that will not be processing, but are useful for code explanation */
     _comment?: string;
@@ -804,6 +889,30 @@ export type NavigationFlowState = {
     /** Add comments that will not be processing, but are useful for code explanation */
     _comment?: string;
     /** A property to determine the type of state this is */
+    state_type: 'ASYNC_ACTION';
+    /** An optional expression to run when this view renders */
+    onStart?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /** An optional expression to run before view transition */
+    onEnd?: Expression | {
+        /** The expression to run */
+        exp?: Expression;
+    };
+    /**
+     * An expression to execute.
+     * The return value determines the transition to take
+    */
+    exp: Expression;
+    /** A mapping of transition-name to FlowState name */
+    transitions: Record<string, string>;
+    /** Whether the expression(s) should be awaited before transitioning */
+    await: boolean;
+} | {
+    /** Add comments that will not be processing, but are useful for code explanation */
+    _comment?: string;
+    /** A property to determine the type of state this is */
     state_type: 'EXTERNAL';
     /** An optional expression to run when this view renders */
     onStart?: Expression | {
@@ -820,6 +929,7 @@ export type NavigationFlowState = {
     transitions: Record<string, string>;
     /** A reference for this external state */
     ref: string;
+    [key: string]: unknown;
 };
 /** The data at the end of a flow */
 export interface FlowResult {
@@ -845,6 +955,7 @@ export interface FlowResult {
          * If this is a flow started from another flow, the outcome determines the flow transition
         */
         outcome: string;
+        [key: string]: unknown;
     };
     /** The serialized data-model */
     data?: any;
@@ -867,6 +978,8 @@ export interface Templatable {
          * If it already exists, values are appended to the end.
         */
         output: Key;
+        /** Specifies the template placement in relation to existing elements */
+        placement?: 'prepend' | 'append';
     }>;
 }
 /** A template describes a mapping from a data array -> array of objects */
@@ -885,6 +998,8 @@ export interface Template<ValueType extends any = unknown, Key extends string = 
      * If it already exists, values are appended to the end.
     */
     output: Key;
+    /** Specifies the template placement in relation to existing elements */
+    placement?: 'prepend' | 'append';
 }
 export type View<T extends Asset = Asset> = unknown extends Asset ? T & {
     /** Each view can optionally supply a list of validations to run against a particular view */
@@ -904,6 +1019,12 @@ export type View<T extends Asset = Asset> = unknown extends Asset ? T & {
         dataTarget?: never;
         /** Where the error should be displayed */
         displayTarget?: 'page' | 'section' | 'field';
+        /**
+         * If the validation blocks navigation
+         * true/false - always/never block navigation
+         * once - only block navigation if the validation has not been triggered before
+        */
+        blocking?: boolean | 'once';
         /** The binding to associate this validation with */
         ref?: Binding;
         [key: string]: unknown;
@@ -932,6 +1053,12 @@ export interface Flow<T extends Asset = Asset> {
             dataTarget?: never;
             /** Where the error should be displayed */
             displayTarget?: 'page' | 'section' | 'field';
+            /**
+             * If the validation blocks navigation
+             * true/false - always/never block navigation
+             * once - only block navigation if the validation has not been triggered before
+            */
+            blocking?: boolean | 'once';
             /** The binding to associate this validation with */
             ref?: Binding;
             [key: string]: unknown;
@@ -947,8 +1074,6 @@ export interface Flow<T extends Asset = Asset> {
             [key: string]: {
                 /** The reference of the base type to use */
                 type: string;
-                /** The referenced object represents an array rather than an object */
-                isArray?: boolean;
                 /**
                  * Any additional validations that are associated with this property
                  * These will add to any base validations associated with the "type"
@@ -973,6 +1098,12 @@ export interface Flow<T extends Asset = Asset> {
                     dataTarget?: 'formatted' | 'deformatted';
                     /** Where the error should be displayed */
                     displayTarget?: 'page' | 'section' | 'field';
+                    /**
+                     * If the validation blocks navigation
+                     * true/false - always/never block navigation
+                     * once - only block navigation if the validation has not been triggered before
+                    */
+                    blocking?: boolean | 'once';
                     [key: string]: unknown;
                 }>;
                 /**
@@ -990,14 +1121,9 @@ export interface Flow<T extends Asset = Asset> {
                 */
                 default?: T;
                 [key: string]: unknown;
-            };
-        };
-        [key: string]: {
-            [key: string]: {
+            } | {
                 /** The reference of the base type to use */
                 type: string;
-                /** The referenced object represents an array rather than an object */
-                isArray?: boolean;
                 /**
                  * Any additional validations that are associated with this property
                  * These will add to any base validations associated with the "type"
@@ -1022,6 +1148,12 @@ export interface Flow<T extends Asset = Asset> {
                     dataTarget?: 'formatted' | 'deformatted';
                     /** Where the error should be displayed */
                     displayTarget?: 'page' | 'section' | 'field';
+                    /**
+                     * If the validation blocks navigation
+                     * true/false - always/never block navigation
+                     * once - only block navigation if the validation has not been triggered before
+                    */
+                    blocking?: boolean | 'once';
                     [key: string]: unknown;
                 }>;
                 /**
@@ -1038,6 +1170,225 @@ export interface Flow<T extends Asset = Asset> {
                  * Any reads for this property will result in this default value being written to the model.
                 */
                 default?: T;
+                /** boolean to define if its a record */
+                isRecord: boolean;
+                /** This property is mutually exclusive with RecordType and can not be used with ArrayType */
+                isArray?: never;
+                [key: string]: unknown;
+            } | {
+                /** The reference of the base type to use */
+                type: string;
+                /**
+                 * Any additional validations that are associated with this property
+                 * These will add to any base validations associated with the "type"
+                */
+                validation?: Array<{
+                    /**
+                     * The name of the referenced validation type
+                     * This will be used to lookup the proper handler
+                    */
+                    type: string;
+                    /** An optional means of overriding the default message if the validation is triggered */
+                    message?: string;
+                    /** An optional means of overriding the default severity of the validation if triggered */
+                    severity?: 'error' | 'warning';
+                    /** When to run this particular validation */
+                    trigger?: 'navigation' | 'change' | 'load';
+                    /**
+                     * Each validation is passed the value of the data to run it's validation against.
+                     * By default, this is the value stored in the data-model (deformatted).
+                     * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+                    */
+                    dataTarget?: 'formatted' | 'deformatted';
+                    /** Where the error should be displayed */
+                    displayTarget?: 'page' | 'section' | 'field';
+                    /**
+                     * If the validation blocks navigation
+                     * true/false - always/never block navigation
+                     * once - only block navigation if the validation has not been triggered before
+                    */
+                    blocking?: boolean | 'once';
+                    [key: string]: unknown;
+                }>;
+                /**
+                 * A reference to a specific data format to use.
+                 * If none is specified, will fallback to that of the base type
+                */
+                format?: {
+                    /** The name of the formatter (and de-formatter) to use */
+                    type: string;
+                    [key: string]: unknown;
+                };
+                /**
+                 * A default value for this property.
+                 * Any reads for this property will result in this default value being written to the model.
+                */
+                default?: T;
+                /** boolean to define if its an array */
+                isArray: boolean;
+                /** This property is mutually exclusive with ArrayType and can not be used with RecordType */
+                isRecord?: never;
+                [key: string]: unknown;
+            };
+        };
+        [key: string]: {
+            [key: string]: {
+                /** The reference of the base type to use */
+                type: string;
+                /**
+                 * Any additional validations that are associated with this property
+                 * These will add to any base validations associated with the "type"
+                */
+                validation?: Array<{
+                    /**
+                     * The name of the referenced validation type
+                     * This will be used to lookup the proper handler
+                    */
+                    type: string;
+                    /** An optional means of overriding the default message if the validation is triggered */
+                    message?: string;
+                    /** An optional means of overriding the default severity of the validation if triggered */
+                    severity?: 'error' | 'warning';
+                    /** When to run this particular validation */
+                    trigger?: 'navigation' | 'change' | 'load';
+                    /**
+                     * Each validation is passed the value of the data to run it's validation against.
+                     * By default, this is the value stored in the data-model (deformatted).
+                     * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+                    */
+                    dataTarget?: 'formatted' | 'deformatted';
+                    /** Where the error should be displayed */
+                    displayTarget?: 'page' | 'section' | 'field';
+                    /**
+                     * If the validation blocks navigation
+                     * true/false - always/never block navigation
+                     * once - only block navigation if the validation has not been triggered before
+                    */
+                    blocking?: boolean | 'once';
+                    [key: string]: unknown;
+                }>;
+                /**
+                 * A reference to a specific data format to use.
+                 * If none is specified, will fallback to that of the base type
+                */
+                format?: {
+                    /** The name of the formatter (and de-formatter) to use */
+                    type: string;
+                    [key: string]: unknown;
+                };
+                /**
+                 * A default value for this property.
+                 * Any reads for this property will result in this default value being written to the model.
+                */
+                default?: T;
+                [key: string]: unknown;
+            } | {
+                /** The reference of the base type to use */
+                type: string;
+                /**
+                 * Any additional validations that are associated with this property
+                 * These will add to any base validations associated with the "type"
+                */
+                validation?: Array<{
+                    /**
+                     * The name of the referenced validation type
+                     * This will be used to lookup the proper handler
+                    */
+                    type: string;
+                    /** An optional means of overriding the default message if the validation is triggered */
+                    message?: string;
+                    /** An optional means of overriding the default severity of the validation if triggered */
+                    severity?: 'error' | 'warning';
+                    /** When to run this particular validation */
+                    trigger?: 'navigation' | 'change' | 'load';
+                    /**
+                     * Each validation is passed the value of the data to run it's validation against.
+                     * By default, this is the value stored in the data-model (deformatted).
+                     * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+                    */
+                    dataTarget?: 'formatted' | 'deformatted';
+                    /** Where the error should be displayed */
+                    displayTarget?: 'page' | 'section' | 'field';
+                    /**
+                     * If the validation blocks navigation
+                     * true/false - always/never block navigation
+                     * once - only block navigation if the validation has not been triggered before
+                    */
+                    blocking?: boolean | 'once';
+                    [key: string]: unknown;
+                }>;
+                /**
+                 * A reference to a specific data format to use.
+                 * If none is specified, will fallback to that of the base type
+                */
+                format?: {
+                    /** The name of the formatter (and de-formatter) to use */
+                    type: string;
+                    [key: string]: unknown;
+                };
+                /**
+                 * A default value for this property.
+                 * Any reads for this property will result in this default value being written to the model.
+                */
+                default?: T;
+                /** boolean to define if its a record */
+                isRecord: boolean;
+                /** This property is mutually exclusive with RecordType and can not be used with ArrayType */
+                isArray?: never;
+                [key: string]: unknown;
+            } | {
+                /** The reference of the base type to use */
+                type: string;
+                /**
+                 * Any additional validations that are associated with this property
+                 * These will add to any base validations associated with the "type"
+                */
+                validation?: Array<{
+                    /**
+                     * The name of the referenced validation type
+                     * This will be used to lookup the proper handler
+                    */
+                    type: string;
+                    /** An optional means of overriding the default message if the validation is triggered */
+                    message?: string;
+                    /** An optional means of overriding the default severity of the validation if triggered */
+                    severity?: 'error' | 'warning';
+                    /** When to run this particular validation */
+                    trigger?: 'navigation' | 'change' | 'load';
+                    /**
+                     * Each validation is passed the value of the data to run it's validation against.
+                     * By default, this is the value stored in the data-model (deformatted).
+                     * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+                    */
+                    dataTarget?: 'formatted' | 'deformatted';
+                    /** Where the error should be displayed */
+                    displayTarget?: 'page' | 'section' | 'field';
+                    /**
+                     * If the validation blocks navigation
+                     * true/false - always/never block navigation
+                     * once - only block navigation if the validation has not been triggered before
+                    */
+                    blocking?: boolean | 'once';
+                    [key: string]: unknown;
+                }>;
+                /**
+                 * A reference to a specific data format to use.
+                 * If none is specified, will fallback to that of the base type
+                */
+                format?: {
+                    /** The name of the formatter (and de-formatter) to use */
+                    type: string;
+                    [key: string]: unknown;
+                };
+                /**
+                 * A default value for this property.
+                 * Any reads for this property will result in this default value being written to the model.
+                */
+                default?: T;
+                /** boolean to define if its an array */
+                isArray: boolean;
+                /** This property is mutually exclusive with ArrayType and can not be used with RecordType */
+                isRecord?: never;
                 [key: string]: unknown;
             };
         };
@@ -1088,6 +1439,7 @@ export interface Flow<T extends Asset = Asset> {
             attributes?: {
                 [key: string]: any;
             };
+            [key: string]: unknown;
         } | {
             /** Add comments that will not be processing, but are useful for code explanation */
             _comment?: string;
@@ -1109,6 +1461,7 @@ export interface Flow<T extends Asset = Asset> {
              * If this is a flow started from another flow, the outcome determines the flow transition
             */
             outcome: string;
+            [key: string]: unknown;
         } | {
             /** Add comments that will not be processing, but are useful for code explanation */
             _comment?: string;
@@ -1155,6 +1508,30 @@ export interface Flow<T extends Asset = Asset> {
             /** Add comments that will not be processing, but are useful for code explanation */
             _comment?: string;
             /** A property to determine the type of state this is */
+            state_type: 'ASYNC_ACTION';
+            /** An optional expression to run when this view renders */
+            onStart?: Expression | {
+                /** The expression to run */
+                exp?: Expression;
+            };
+            /** An optional expression to run before view transition */
+            onEnd?: Expression | {
+                /** The expression to run */
+                exp?: Expression;
+            };
+            /**
+             * An expression to execute.
+             * The return value determines the transition to take
+            */
+            exp: Expression;
+            /** A mapping of transition-name to FlowState name */
+            transitions: Record<string, string>;
+            /** Whether the expression(s) should be awaited before transitioning */
+            await: boolean;
+        } | {
+            /** Add comments that will not be processing, but are useful for code explanation */
+            _comment?: string;
+            /** A property to determine the type of state this is */
             state_type: 'EXTERNAL';
             /** An optional expression to run when this view renders */
             onStart?: Expression | {
@@ -1171,8 +1548,907 @@ export interface Flow<T extends Asset = Asset> {
             transitions: Record<string, string>;
             /** A reference for this external state */
             ref: string;
+            [key: string]: unknown;
         });
     }>;
+    [key: string]: unknown;
+}
+/** The authored schema object in the JSON payload */
+export interface Schema.Schema {
+    /** The ROOT object is the top level object to use */
+    ROOT: {
+        [key: string]: {
+            /** The reference of the base type to use */
+            type: string;
+            /**
+             * Any additional validations that are associated with this property
+             * These will add to any base validations associated with the "type"
+            */
+            validation?: Array<{
+                /**
+                 * The name of the referenced validation type
+                 * This will be used to lookup the proper handler
+                */
+                type: string;
+                /** An optional means of overriding the default message if the validation is triggered */
+                message?: string;
+                /** An optional means of overriding the default severity of the validation if triggered */
+                severity?: 'error' | 'warning';
+                /** When to run this particular validation */
+                trigger?: 'navigation' | 'change' | 'load';
+                /**
+                 * Each validation is passed the value of the data to run it's validation against.
+                 * By default, this is the value stored in the data-model (deformatted).
+                 * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+                */
+                dataTarget?: 'formatted' | 'deformatted';
+                /** Where the error should be displayed */
+                displayTarget?: 'page' | 'section' | 'field';
+                /**
+                 * If the validation blocks navigation
+                 * true/false - always/never block navigation
+                 * once - only block navigation if the validation has not been triggered before
+                */
+                blocking?: boolean | 'once';
+                [key: string]: unknown;
+            }>;
+            /**
+             * A reference to a specific data format to use.
+             * If none is specified, will fallback to that of the base type
+            */
+            format?: {
+                /** The name of the formatter (and de-formatter) to use */
+                type: string;
+                [key: string]: unknown;
+            };
+            /**
+             * A default value for this property.
+             * Any reads for this property will result in this default value being written to the model.
+            */
+            default?: T;
+            [key: string]: unknown;
+        } | {
+            /** The reference of the base type to use */
+            type: string;
+            /**
+             * Any additional validations that are associated with this property
+             * These will add to any base validations associated with the "type"
+            */
+            validation?: Array<{
+                /**
+                 * The name of the referenced validation type
+                 * This will be used to lookup the proper handler
+                */
+                type: string;
+                /** An optional means of overriding the default message if the validation is triggered */
+                message?: string;
+                /** An optional means of overriding the default severity of the validation if triggered */
+                severity?: 'error' | 'warning';
+                /** When to run this particular validation */
+                trigger?: 'navigation' | 'change' | 'load';
+                /**
+                 * Each validation is passed the value of the data to run it's validation against.
+                 * By default, this is the value stored in the data-model (deformatted).
+                 * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+                */
+                dataTarget?: 'formatted' | 'deformatted';
+                /** Where the error should be displayed */
+                displayTarget?: 'page' | 'section' | 'field';
+                /**
+                 * If the validation blocks navigation
+                 * true/false - always/never block navigation
+                 * once - only block navigation if the validation has not been triggered before
+                */
+                blocking?: boolean | 'once';
+                [key: string]: unknown;
+            }>;
+            /**
+             * A reference to a specific data format to use.
+             * If none is specified, will fallback to that of the base type
+            */
+            format?: {
+                /** The name of the formatter (and de-formatter) to use */
+                type: string;
+                [key: string]: unknown;
+            };
+            /**
+             * A default value for this property.
+             * Any reads for this property will result in this default value being written to the model.
+            */
+            default?: T;
+            /** boolean to define if its a record */
+            isRecord: boolean;
+            /** This property is mutually exclusive with RecordType and can not be used with ArrayType */
+            isArray?: never;
+            [key: string]: unknown;
+        } | {
+            /** The reference of the base type to use */
+            type: string;
+            /**
+             * Any additional validations that are associated with this property
+             * These will add to any base validations associated with the "type"
+            */
+            validation?: Array<{
+                /**
+                 * The name of the referenced validation type
+                 * This will be used to lookup the proper handler
+                */
+                type: string;
+                /** An optional means of overriding the default message if the validation is triggered */
+                message?: string;
+                /** An optional means of overriding the default severity of the validation if triggered */
+                severity?: 'error' | 'warning';
+                /** When to run this particular validation */
+                trigger?: 'navigation' | 'change' | 'load';
+                /**
+                 * Each validation is passed the value of the data to run it's validation against.
+                 * By default, this is the value stored in the data-model (deformatted).
+                 * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+                */
+                dataTarget?: 'formatted' | 'deformatted';
+                /** Where the error should be displayed */
+                displayTarget?: 'page' | 'section' | 'field';
+                /**
+                 * If the validation blocks navigation
+                 * true/false - always/never block navigation
+                 * once - only block navigation if the validation has not been triggered before
+                */
+                blocking?: boolean | 'once';
+                [key: string]: unknown;
+            }>;
+            /**
+             * A reference to a specific data format to use.
+             * If none is specified, will fallback to that of the base type
+            */
+            format?: {
+                /** The name of the formatter (and de-formatter) to use */
+                type: string;
+                [key: string]: unknown;
+            };
+            /**
+             * A default value for this property.
+             * Any reads for this property will result in this default value being written to the model.
+            */
+            default?: T;
+            /** boolean to define if its an array */
+            isArray: boolean;
+            /** This property is mutually exclusive with ArrayType and can not be used with RecordType */
+            isRecord?: never;
+            [key: string]: unknown;
+        };
+    };
+    [key: string]: {
+        [key: string]: {
+            /** The reference of the base type to use */
+            type: string;
+            /**
+             * Any additional validations that are associated with this property
+             * These will add to any base validations associated with the "type"
+            */
+            validation?: Array<{
+                /**
+                 * The name of the referenced validation type
+                 * This will be used to lookup the proper handler
+                */
+                type: string;
+                /** An optional means of overriding the default message if the validation is triggered */
+                message?: string;
+                /** An optional means of overriding the default severity of the validation if triggered */
+                severity?: 'error' | 'warning';
+                /** When to run this particular validation */
+                trigger?: 'navigation' | 'change' | 'load';
+                /**
+                 * Each validation is passed the value of the data to run it's validation against.
+                 * By default, this is the value stored in the data-model (deformatted).
+                 * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+                */
+                dataTarget?: 'formatted' | 'deformatted';
+                /** Where the error should be displayed */
+                displayTarget?: 'page' | 'section' | 'field';
+                /**
+                 * If the validation blocks navigation
+                 * true/false - always/never block navigation
+                 * once - only block navigation if the validation has not been triggered before
+                */
+                blocking?: boolean | 'once';
+                [key: string]: unknown;
+            }>;
+            /**
+             * A reference to a specific data format to use.
+             * If none is specified, will fallback to that of the base type
+            */
+            format?: {
+                /** The name of the formatter (and de-formatter) to use */
+                type: string;
+                [key: string]: unknown;
+            };
+            /**
+             * A default value for this property.
+             * Any reads for this property will result in this default value being written to the model.
+            */
+            default?: T;
+            [key: string]: unknown;
+        } | {
+            /** The reference of the base type to use */
+            type: string;
+            /**
+             * Any additional validations that are associated with this property
+             * These will add to any base validations associated with the "type"
+            */
+            validation?: Array<{
+                /**
+                 * The name of the referenced validation type
+                 * This will be used to lookup the proper handler
+                */
+                type: string;
+                /** An optional means of overriding the default message if the validation is triggered */
+                message?: string;
+                /** An optional means of overriding the default severity of the validation if triggered */
+                severity?: 'error' | 'warning';
+                /** When to run this particular validation */
+                trigger?: 'navigation' | 'change' | 'load';
+                /**
+                 * Each validation is passed the value of the data to run it's validation against.
+                 * By default, this is the value stored in the data-model (deformatted).
+                 * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+                */
+                dataTarget?: 'formatted' | 'deformatted';
+                /** Where the error should be displayed */
+                displayTarget?: 'page' | 'section' | 'field';
+                /**
+                 * If the validation blocks navigation
+                 * true/false - always/never block navigation
+                 * once - only block navigation if the validation has not been triggered before
+                */
+                blocking?: boolean | 'once';
+                [key: string]: unknown;
+            }>;
+            /**
+             * A reference to a specific data format to use.
+             * If none is specified, will fallback to that of the base type
+            */
+            format?: {
+                /** The name of the formatter (and de-formatter) to use */
+                type: string;
+                [key: string]: unknown;
+            };
+            /**
+             * A default value for this property.
+             * Any reads for this property will result in this default value being written to the model.
+            */
+            default?: T;
+            /** boolean to define if its a record */
+            isRecord: boolean;
+            /** This property is mutually exclusive with RecordType and can not be used with ArrayType */
+            isArray?: never;
+            [key: string]: unknown;
+        } | {
+            /** The reference of the base type to use */
+            type: string;
+            /**
+             * Any additional validations that are associated with this property
+             * These will add to any base validations associated with the "type"
+            */
+            validation?: Array<{
+                /**
+                 * The name of the referenced validation type
+                 * This will be used to lookup the proper handler
+                */
+                type: string;
+                /** An optional means of overriding the default message if the validation is triggered */
+                message?: string;
+                /** An optional means of overriding the default severity of the validation if triggered */
+                severity?: 'error' | 'warning';
+                /** When to run this particular validation */
+                trigger?: 'navigation' | 'change' | 'load';
+                /**
+                 * Each validation is passed the value of the data to run it's validation against.
+                 * By default, this is the value stored in the data-model (deformatted).
+                 * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+                */
+                dataTarget?: 'formatted' | 'deformatted';
+                /** Where the error should be displayed */
+                displayTarget?: 'page' | 'section' | 'field';
+                /**
+                 * If the validation blocks navigation
+                 * true/false - always/never block navigation
+                 * once - only block navigation if the validation has not been triggered before
+                */
+                blocking?: boolean | 'once';
+                [key: string]: unknown;
+            }>;
+            /**
+             * A reference to a specific data format to use.
+             * If none is specified, will fallback to that of the base type
+            */
+            format?: {
+                /** The name of the formatter (and de-formatter) to use */
+                type: string;
+                [key: string]: unknown;
+            };
+            /**
+             * A default value for this property.
+             * Any reads for this property will result in this default value being written to the model.
+            */
+            default?: T;
+            /** boolean to define if its an array */
+            isArray: boolean;
+            /** This property is mutually exclusive with ArrayType and can not be used with RecordType */
+            isRecord?: never;
+            [key: string]: unknown;
+        };
+    };
+}
+/** A Node describes a specific object in the tree */
+export interface Schema.Node {
+    [key: string]: {
+        /** The reference of the base type to use */
+        type: string;
+        /**
+         * Any additional validations that are associated with this property
+         * These will add to any base validations associated with the "type"
+        */
+        validation?: Array<{
+            /**
+             * The name of the referenced validation type
+             * This will be used to lookup the proper handler
+            */
+            type: string;
+            /** An optional means of overriding the default message if the validation is triggered */
+            message?: string;
+            /** An optional means of overriding the default severity of the validation if triggered */
+            severity?: 'error' | 'warning';
+            /** When to run this particular validation */
+            trigger?: 'navigation' | 'change' | 'load';
+            /**
+             * Each validation is passed the value of the data to run it's validation against.
+             * By default, this is the value stored in the data-model (deformatted).
+             * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+            */
+            dataTarget?: 'formatted' | 'deformatted';
+            /** Where the error should be displayed */
+            displayTarget?: 'page' | 'section' | 'field';
+            /**
+             * If the validation blocks navigation
+             * true/false - always/never block navigation
+             * once - only block navigation if the validation has not been triggered before
+            */
+            blocking?: boolean | 'once';
+            [key: string]: unknown;
+        }>;
+        /**
+         * A reference to a specific data format to use.
+         * If none is specified, will fallback to that of the base type
+        */
+        format?: {
+            /** The name of the formatter (and de-formatter) to use */
+            type: string;
+            [key: string]: unknown;
+        };
+        /**
+         * A default value for this property.
+         * Any reads for this property will result in this default value being written to the model.
+        */
+        default?: T;
+        [key: string]: unknown;
+    } | {
+        /** The reference of the base type to use */
+        type: string;
+        /**
+         * Any additional validations that are associated with this property
+         * These will add to any base validations associated with the "type"
+        */
+        validation?: Array<{
+            /**
+             * The name of the referenced validation type
+             * This will be used to lookup the proper handler
+            */
+            type: string;
+            /** An optional means of overriding the default message if the validation is triggered */
+            message?: string;
+            /** An optional means of overriding the default severity of the validation if triggered */
+            severity?: 'error' | 'warning';
+            /** When to run this particular validation */
+            trigger?: 'navigation' | 'change' | 'load';
+            /**
+             * Each validation is passed the value of the data to run it's validation against.
+             * By default, this is the value stored in the data-model (deformatted).
+             * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+            */
+            dataTarget?: 'formatted' | 'deformatted';
+            /** Where the error should be displayed */
+            displayTarget?: 'page' | 'section' | 'field';
+            /**
+             * If the validation blocks navigation
+             * true/false - always/never block navigation
+             * once - only block navigation if the validation has not been triggered before
+            */
+            blocking?: boolean | 'once';
+            [key: string]: unknown;
+        }>;
+        /**
+         * A reference to a specific data format to use.
+         * If none is specified, will fallback to that of the base type
+        */
+        format?: {
+            /** The name of the formatter (and de-formatter) to use */
+            type: string;
+            [key: string]: unknown;
+        };
+        /**
+         * A default value for this property.
+         * Any reads for this property will result in this default value being written to the model.
+        */
+        default?: T;
+        /** boolean to define if its a record */
+        isRecord: boolean;
+        /** This property is mutually exclusive with RecordType and can not be used with ArrayType */
+        isArray?: never;
+        [key: string]: unknown;
+    } | {
+        /** The reference of the base type to use */
+        type: string;
+        /**
+         * Any additional validations that are associated with this property
+         * These will add to any base validations associated with the "type"
+        */
+        validation?: Array<{
+            /**
+             * The name of the referenced validation type
+             * This will be used to lookup the proper handler
+            */
+            type: string;
+            /** An optional means of overriding the default message if the validation is triggered */
+            message?: string;
+            /** An optional means of overriding the default severity of the validation if triggered */
+            severity?: 'error' | 'warning';
+            /** When to run this particular validation */
+            trigger?: 'navigation' | 'change' | 'load';
+            /**
+             * Each validation is passed the value of the data to run it's validation against.
+             * By default, this is the value stored in the data-model (deformatted).
+             * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+            */
+            dataTarget?: 'formatted' | 'deformatted';
+            /** Where the error should be displayed */
+            displayTarget?: 'page' | 'section' | 'field';
+            /**
+             * If the validation blocks navigation
+             * true/false - always/never block navigation
+             * once - only block navigation if the validation has not been triggered before
+            */
+            blocking?: boolean | 'once';
+            [key: string]: unknown;
+        }>;
+        /**
+         * A reference to a specific data format to use.
+         * If none is specified, will fallback to that of the base type
+        */
+        format?: {
+            /** The name of the formatter (and de-formatter) to use */
+            type: string;
+            [key: string]: unknown;
+        };
+        /**
+         * A default value for this property.
+         * Any reads for this property will result in this default value being written to the model.
+        */
+        default?: T;
+        /** boolean to define if its an array */
+        isArray: boolean;
+        /** This property is mutually exclusive with ArrayType and can not be used with RecordType */
+        isRecord?: never;
+        [key: string]: unknown;
+    };
+}
+export type Schema.DataTypes = {
+    /** The reference of the base type to use */
+    type: string;
+    /**
+     * Any additional validations that are associated with this property
+     * These will add to any base validations associated with the "type"
+    */
+    validation?: Array<{
+        /**
+         * The name of the referenced validation type
+         * This will be used to lookup the proper handler
+        */
+        type: string;
+        /** An optional means of overriding the default message if the validation is triggered */
+        message?: string;
+        /** An optional means of overriding the default severity of the validation if triggered */
+        severity?: 'error' | 'warning';
+        /** When to run this particular validation */
+        trigger?: 'navigation' | 'change' | 'load';
+        /**
+         * Each validation is passed the value of the data to run it's validation against.
+         * By default, this is the value stored in the data-model (deformatted).
+         * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+        */
+        dataTarget?: 'formatted' | 'deformatted';
+        /** Where the error should be displayed */
+        displayTarget?: 'page' | 'section' | 'field';
+        /**
+         * If the validation blocks navigation
+         * true/false - always/never block navigation
+         * once - only block navigation if the validation has not been triggered before
+        */
+        blocking?: boolean | 'once';
+        [key: string]: unknown;
+    }>;
+    /**
+     * A reference to a specific data format to use.
+     * If none is specified, will fallback to that of the base type
+    */
+    format?: {
+        /** The name of the formatter (and de-formatter) to use */
+        type: string;
+        [key: string]: unknown;
+    };
+    /**
+     * A default value for this property.
+     * Any reads for this property will result in this default value being written to the model.
+    */
+    default?: T;
+    [key: string]: unknown;
+} | {
+    /** The reference of the base type to use */
+    type: string;
+    /**
+     * Any additional validations that are associated with this property
+     * These will add to any base validations associated with the "type"
+    */
+    validation?: Array<{
+        /**
+         * The name of the referenced validation type
+         * This will be used to lookup the proper handler
+        */
+        type: string;
+        /** An optional means of overriding the default message if the validation is triggered */
+        message?: string;
+        /** An optional means of overriding the default severity of the validation if triggered */
+        severity?: 'error' | 'warning';
+        /** When to run this particular validation */
+        trigger?: 'navigation' | 'change' | 'load';
+        /**
+         * Each validation is passed the value of the data to run it's validation against.
+         * By default, this is the value stored in the data-model (deformatted).
+         * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+        */
+        dataTarget?: 'formatted' | 'deformatted';
+        /** Where the error should be displayed */
+        displayTarget?: 'page' | 'section' | 'field';
+        /**
+         * If the validation blocks navigation
+         * true/false - always/never block navigation
+         * once - only block navigation if the validation has not been triggered before
+        */
+        blocking?: boolean | 'once';
+        [key: string]: unknown;
+    }>;
+    /**
+     * A reference to a specific data format to use.
+     * If none is specified, will fallback to that of the base type
+    */
+    format?: {
+        /** The name of the formatter (and de-formatter) to use */
+        type: string;
+        [key: string]: unknown;
+    };
+    /**
+     * A default value for this property.
+     * Any reads for this property will result in this default value being written to the model.
+    */
+    default?: T;
+    /** boolean to define if its a record */
+    isRecord: boolean;
+    /** This property is mutually exclusive with RecordType and can not be used with ArrayType */
+    isArray?: never;
+    [key: string]: unknown;
+} | {
+    /** The reference of the base type to use */
+    type: string;
+    /**
+     * Any additional validations that are associated with this property
+     * These will add to any base validations associated with the "type"
+    */
+    validation?: Array<{
+        /**
+         * The name of the referenced validation type
+         * This will be used to lookup the proper handler
+        */
+        type: string;
+        /** An optional means of overriding the default message if the validation is triggered */
+        message?: string;
+        /** An optional means of overriding the default severity of the validation if triggered */
+        severity?: 'error' | 'warning';
+        /** When to run this particular validation */
+        trigger?: 'navigation' | 'change' | 'load';
+        /**
+         * Each validation is passed the value of the data to run it's validation against.
+         * By default, this is the value stored in the data-model (deformatted).
+         * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+        */
+        dataTarget?: 'formatted' | 'deformatted';
+        /** Where the error should be displayed */
+        displayTarget?: 'page' | 'section' | 'field';
+        /**
+         * If the validation blocks navigation
+         * true/false - always/never block navigation
+         * once - only block navigation if the validation has not been triggered before
+        */
+        blocking?: boolean | 'once';
+        [key: string]: unknown;
+    }>;
+    /**
+     * A reference to a specific data format to use.
+     * If none is specified, will fallback to that of the base type
+    */
+    format?: {
+        /** The name of the formatter (and de-formatter) to use */
+        type: string;
+        [key: string]: unknown;
+    };
+    /**
+     * A default value for this property.
+     * Any reads for this property will result in this default value being written to the model.
+    */
+    default?: T;
+    /** boolean to define if its an array */
+    isArray: boolean;
+    /** This property is mutually exclusive with ArrayType and can not be used with RecordType */
+    isRecord?: never;
+    [key: string]: unknown;
+};
+/** Each prop in the object can have a specific DataType */
+export interface Schema.DataType<T extends any = unknown> {
+    /** The reference of the base type to use */
+    type: string;
+    /**
+     * Any additional validations that are associated with this property
+     * These will add to any base validations associated with the "type"
+    */
+    validation?: Array<{
+        /**
+         * The name of the referenced validation type
+         * This will be used to lookup the proper handler
+        */
+        type: string;
+        /** An optional means of overriding the default message if the validation is triggered */
+        message?: string;
+        /** An optional means of overriding the default severity of the validation if triggered */
+        severity?: 'error' | 'warning';
+        /** When to run this particular validation */
+        trigger?: 'navigation' | 'change' | 'load';
+        /**
+         * Each validation is passed the value of the data to run it's validation against.
+         * By default, this is the value stored in the data-model (deformatted).
+         * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+        */
+        dataTarget?: 'formatted' | 'deformatted';
+        /** Where the error should be displayed */
+        displayTarget?: 'page' | 'section' | 'field';
+        /**
+         * If the validation blocks navigation
+         * true/false - always/never block navigation
+         * once - only block navigation if the validation has not been triggered before
+        */
+        blocking?: boolean | 'once';
+        [key: string]: unknown;
+    }>;
+    /**
+     * A reference to a specific data format to use.
+     * If none is specified, will fallback to that of the base type
+    */
+    format?: {
+        /** The name of the formatter (and de-formatter) to use */
+        type: string;
+        [key: string]: unknown;
+    };
+    /**
+     * A default value for this property.
+     * Any reads for this property will result in this default value being written to the model.
+    */
+    default?: T;
+    [key: string]: unknown;
+}
+/** Determines if the Datatype is a record object */
+export interface Schema.RecordType {
+    /** The reference of the base type to use */
+    type: string;
+    /**
+     * Any additional validations that are associated with this property
+     * These will add to any base validations associated with the "type"
+    */
+    validation?: Array<{
+        /**
+         * The name of the referenced validation type
+         * This will be used to lookup the proper handler
+        */
+        type: string;
+        /** An optional means of overriding the default message if the validation is triggered */
+        message?: string;
+        /** An optional means of overriding the default severity of the validation if triggered */
+        severity?: 'error' | 'warning';
+        /** When to run this particular validation */
+        trigger?: 'navigation' | 'change' | 'load';
+        /**
+         * Each validation is passed the value of the data to run it's validation against.
+         * By default, this is the value stored in the data-model (deformatted).
+         * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+        */
+        dataTarget?: 'formatted' | 'deformatted';
+        /** Where the error should be displayed */
+        displayTarget?: 'page' | 'section' | 'field';
+        /**
+         * If the validation blocks navigation
+         * true/false - always/never block navigation
+         * once - only block navigation if the validation has not been triggered before
+        */
+        blocking?: boolean | 'once';
+        [key: string]: unknown;
+    }>;
+    /**
+     * A reference to a specific data format to use.
+     * If none is specified, will fallback to that of the base type
+    */
+    format?: {
+        /** The name of the formatter (and de-formatter) to use */
+        type: string;
+        [key: string]: unknown;
+    };
+    /**
+     * A default value for this property.
+     * Any reads for this property will result in this default value being written to the model.
+    */
+    default?: T;
+    /** boolean to define if its a record */
+    isRecord: boolean;
+    /** This property is mutually exclusive with RecordType and can not be used with ArrayType */
+    isArray?: never;
+    [key: string]: unknown;
+}
+/** Determines if the DataType is an Array Object */
+export interface Schema.ArrayType {
+    /** The reference of the base type to use */
+    type: string;
+    /**
+     * Any additional validations that are associated with this property
+     * These will add to any base validations associated with the "type"
+    */
+    validation?: Array<{
+        /**
+         * The name of the referenced validation type
+         * This will be used to lookup the proper handler
+        */
+        type: string;
+        /** An optional means of overriding the default message if the validation is triggered */
+        message?: string;
+        /** An optional means of overriding the default severity of the validation if triggered */
+        severity?: 'error' | 'warning';
+        /** When to run this particular validation */
+        trigger?: 'navigation' | 'change' | 'load';
+        /**
+         * Each validation is passed the value of the data to run it's validation against.
+         * By default, this is the value stored in the data-model (deformatted).
+         * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+        */
+        dataTarget?: 'formatted' | 'deformatted';
+        /** Where the error should be displayed */
+        displayTarget?: 'page' | 'section' | 'field';
+        /**
+         * If the validation blocks navigation
+         * true/false - always/never block navigation
+         * once - only block navigation if the validation has not been triggered before
+        */
+        blocking?: boolean | 'once';
+        [key: string]: unknown;
+    }>;
+    /**
+     * A reference to a specific data format to use.
+     * If none is specified, will fallback to that of the base type
+    */
+    format?: {
+        /** The name of the formatter (and de-formatter) to use */
+        type: string;
+        [key: string]: unknown;
+    };
+    /**
+     * A default value for this property.
+     * Any reads for this property will result in this default value being written to the model.
+    */
+    default?: T;
+    /** boolean to define if its an array */
+    isArray: boolean;
+    /** This property is mutually exclusive with ArrayType and can not be used with RecordType */
+    isRecord?: never;
+    [key: string]: unknown;
+}
+/** Helper to compliment \`Schema.DataType\` to provide a way to export a reference to a data type instead of the whole object */
+export interface Language.DataTypeRef {
+    /** Name of the type in Player Core */
+    type: string;
+}
+/** A reference to a specific formatter */
+export interface Formatting.Reference {
+    /** The name of the formatter (and de-formatter) to use */
+    type: string;
+    [key: string]: unknown;
+}
+/**
+ * How serious are you about this error?
+ * Warning validations are reserved for errors that could be ignored by the user without consequence
+ * Errors must be fixed before proceeding
+*/
+export type Validation.Severity = 'error' | 'warning';
+/**
+ * When to _first_ start caring about a validation of a data-val.
+ *
+ * load - only check once the first time the binding appears on screen
+ * change - check anytime the data changes
+ * navigation - check once the user attempts to navigate away from a view
+*/
+export type Validation.Trigger = 'navigation' | 'change' | 'load';
+/**
+ * Where the error/warning should be displayed.
+ * - \`field\` is the default display target. This renders the error/warning directly underneath the field.
+ * - \`section\` is used to display a message at a parent node that is designated as a "section"
+ * - \`page\` a special section used to display a message at the top of the page.
+*/
+export type Validation.DisplayTarget = 'page' | 'section' | 'field';
+/** A reference to a validation object */
+export interface Validation.Reference {
+    /**
+     * The name of the referenced validation type
+     * This will be used to lookup the proper handler
+    */
+    type: string;
+    /** An optional means of overriding the default message if the validation is triggered */
+    message?: string;
+    /** An optional means of overriding the default severity of the validation if triggered */
+    severity?: 'error' | 'warning';
+    /** When to run this particular validation */
+    trigger?: 'navigation' | 'change' | 'load';
+    /**
+     * Each validation is passed the value of the data to run it's validation against.
+     * By default, this is the value stored in the data-model (deformatted).
+     * In the off chance you'd like this validator to run against the formatted value (the one the user sees), set this option
+    */
+    dataTarget?: 'formatted' | 'deformatted';
+    /** Where the error should be displayed */
+    displayTarget?: 'page' | 'section' | 'field';
+    /**
+     * If the validation blocks navigation
+     * true/false - always/never block navigation
+     * once - only block navigation if the validation has not been triggered before
+    */
+    blocking?: boolean | 'once';
+    [key: string]: unknown;
+}
+export interface Validation.CrossfieldReference {
+    /**
+     * The name of the referenced validation type
+     * This will be used to lookup the proper handler
+    */
+    type: string;
+    /** An optional means of overriding the default message if the validation is triggered */
+    message?: string;
+    /** An optional means of overriding the default severity of the validation if triggered */
+    severity?: 'error' | 'warning';
+    /** When to run this particular validation */
+    trigger?: 'navigation' | 'change' | 'load';
+    /** Cross-field references and validation must run against the default (deformatted) value */
+    dataTarget?: never;
+    /** Where the error should be displayed */
+    displayTarget?: 'page' | 'section' | 'field';
+    /**
+     * If the validation blocks navigation
+     * true/false - always/never block navigation
+     * once - only block navigation if the validation has not been triggered before
+    */
+    blocking?: boolean | 'once';
+    /** The binding to associate this validation with */
+    ref?: Binding;
     [key: string]: unknown;
 }
 /**

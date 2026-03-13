@@ -1,0 +1,49 @@
+{
+    "source": "/some/path/types.ts",
+    "name": "length",
+    "type": "ref",
+    "ref": "ValidatorFunction<\n  | {\n      /** The minimum length to check against  */\n      min?: number;\n\n      /** The maximum length to check against  */\n      max?: number;\n    }\n  | {\n      /** The exact length to match against */\n      exact: number;\n    }\n>",
+    "genericArguments": [
+        {
+            "type": "or",
+            "or": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "min": {
+                            "required": false,
+                            "node": {
+                                "type": "number",
+                                "title": "min",
+                                "description": "The minimum length to check against"
+                            }
+                        },
+                        "max": {
+                            "required": false,
+                            "node": {
+                                "type": "number",
+                                "title": "max",
+                                "description": "The maximum length to check against"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "exact": {
+                            "required": true,
+                            "node": {
+                                "type": "number",
+                                "title": "exact",
+                                "description": "The exact length to match against"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            ]
+        }
+    ]
+}

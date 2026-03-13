@@ -41,6 +41,7 @@ import {
   applyExcludeToNodeType,
   isPrimitiveTypeNode,
   isTypeScriptLibType,
+  isExportedModuleDeclaration,
 } from "@player-tools/xlr-utils";
 import { ConversionError } from "./types";
 
@@ -131,10 +132,31 @@ export class TsConverter {
   } {
     const declarations = sourceFile.statements.filter(isTopLevelNode);
 
+    const namespacedTypes: NonNullable<NamedType>[] = sourceFile.statements
+      .filter((s) => isExportedModuleDeclaration(s))
+      .flatMap((module) => {
+        if (module.body && ts.isModuleBlock(module.body)) {
+          const nameSpaceName = module.name.text;
+          return module.body.statements
+            .filter(isExportedDeclaration)
+            .filter(isTopLevelNode)
+            .map((statement) => {
+              const convertedNode = this.convertTopLevelNode(statement);
+              return {
+                ...convertedNode,
+                name: `${nameSpaceName}.${convertedNode.name}`,
+              } as NamedType;
+            });
+        }
+        return [];
+      });
+
     const types = declarations
       .filter((declaration) => isExportedDeclaration(declaration))
       .map((statement) => this.convertTopLevelNode(statement) as NamedType)
       .filter(<T>(v: T): v is NonNullable<T> => !!v);
+
+    types.push(...namespacedTypes);
 
     return {
       data: { version: 1, types },
@@ -217,6 +239,13 @@ export class TsConverter {
       if (variable.initializer) {
         let resultingNode;
         if (
+          variable.type &&
+          ts.isTypeReferenceNode(variable.type) &&
+          ts.isIdentifier(variable.type.typeName) &&
+          this.context.customPrimitives.includes(variable.type.typeName.text)
+        ) {
+          resultingNode = this.makeBasicRefNode(variable.type);
+        } else if (
           ts.isCallExpression(variable.initializer) ||
           ts.isArrowFunction(variable.initializer)
         ) {
@@ -921,17 +950,29 @@ export class TsConverter {
         }
       });
     });
-    // Resolve Additional Properties
+    // Resolve Additional Properties: preserve index signature from current
+    // interface (baseObject) and merge with any from extended types.
     let additionalProperties: NodeType | false = false;
-    if (baseObject.additionalProperties === false) {
-      if (additionalPropertiesCollector.length === 1) {
-        additionalProperties = additionalPropertiesCollector[0];
-      } else if (additionalPropertiesCollector.length >= 1) {
-        additionalProperties = {
-          type: "or",
-          or: additionalPropertiesCollector,
-        };
+    if (baseObject.additionalProperties) {
+      if (additionalPropertiesCollector.length === 0) {
+        additionalProperties = baseObject.additionalProperties;
+      } else {
+        additionalPropertiesCollector.push(baseObject.additionalProperties);
+        additionalProperties =
+          additionalPropertiesCollector.length === 1
+            ? additionalPropertiesCollector[0]
+            : {
+                type: "or",
+                or: additionalPropertiesCollector,
+              };
       }
+    } else if (additionalPropertiesCollector.length === 1) {
+      additionalProperties = additionalPropertiesCollector[0];
+    } else if (additionalPropertiesCollector.length >= 1) {
+      additionalProperties = {
+        type: "or",
+        or: additionalPropertiesCollector,
+      };
     }
 
     return {
