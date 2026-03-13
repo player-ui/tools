@@ -27,6 +27,8 @@ enum ParseErrorCode {
   InvalidCharacter = 16,
 }
 
+export const JSON_PARSE_ERROR_SOURCE = "json-parse";
+
 /** Just what the function says */
 export function prettyPrintParseErrorCode(code: ParseErrorCode): string {
   switch (code) {
@@ -47,7 +49,7 @@ export function prettyPrintParseErrorCode(code: ParseErrorCode): string {
     case ParseErrorCode.UnexpectedEndOfString:
       return `Expected "`;
     default:
-      return printParseErrorCode(code as any);
+      return printParseErrorCode(code as unknown as number);
   }
 }
 
@@ -62,8 +64,10 @@ export function convertErrorsToDiags(
         document.positionAt(parseError.offset),
         document.positionAt(parseError.offset + parseError.length),
       ),
-      prettyPrintParseErrorCode(parseError.error as any as ParseErrorCode),
+      prettyPrintParseErrorCode(parseError.error as unknown as ParseErrorCode),
       DiagnosticSeverity.Error,
+      undefined,
+      JSON_PARSE_ERROR_SOURCE,
     );
   });
 }

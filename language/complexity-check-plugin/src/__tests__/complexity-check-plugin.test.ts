@@ -94,6 +94,7 @@ describe("complexity plugin", () => {
     expect(validations?.map((v) => v.message)[0]).toMatchInlineSnapshot(`
         "Content complexity is 18"
     `);
+    expect(validations?.[0]?.source).toBe("complexity-check");
   });
 
   test("Measures complexity for evaluating nested bindings", async () => {
@@ -454,6 +455,7 @@ describe("complexity plugin", () => {
     expect(validations?.map((v) => v.severity)[0]).toBe(
       DiagnosticSeverity.Warning,
     );
+    expect(validations?.[0]?.source).toBe("complexity-check");
   });
 
   test("Calculates custom score criteria correctly", async () => {
