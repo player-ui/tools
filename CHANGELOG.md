@@ -1,3 +1,31 @@
+# 0.13.0-next.5 (Fri Mar 13 2026)
+
+### Release Notes
+
+#### Schema Validation and Related XLR Fixes ([#242](https://github.com/player-ui/tools/pull/242))
+
+- XLR: Pull in https://github.com/player-ui/tools/pull/240
+- XLR  Fix issue with local generics not being honored during SDK recall of type leading to improper generic resolution
+- XLR: Fix issue where top level variable exports that were in the custom primitives list were fully evaluated
+- XLR: Support types exported under namespaces as part of type export
+- XLR/CLI: Fix issue with cross namespace collisions for type exports and variable names with plugin exports
+- Language: Support validation of `schema` section of Player content
+- Validator: Don't escape properties containing dashes with quotes as that is no longer behavior that XLR has.
+
+---
+
+#### 🚀 Enhancement
+
+- Schema Validation and Related XLR Fixes [#242](https://github.com/player-ui/tools/pull/242) ([@justin-medeiros](https://github.com/justin-medeiros) [@KetanReddy](https://github.com/KetanReddy) [@intuit-svc](https://github.com/intuit-svc))
+
+#### Authors: 3
+
+- [@intuit-svc](https://github.com/intuit-svc)
+- Justin Medeiros ([@justin-medeiros](https://github.com/justin-medeiros))
+- Ketan Reddy ([@KetanReddy](https://github.com/KetanReddy))
+
+---
+
 # 0.13.0-next.4 (Thu Mar 12 2026)
 
 ### Release Notes
