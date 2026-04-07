@@ -19,8 +19,6 @@ js_pipeline(
         "//:vitest_config",
     ],
     deps = [
-        "//:node_modules/@player-ui/player",
-        "//:node_modules/@player-ui/types",
         "//:node_modules/@types/mkdirp",
         "//:node_modules/chalk",
         "//:node_modules/command-line-application",
@@ -35,4 +33,8 @@ js_pipeline(
         "//:node_modules/ts-node",
         "//:node_modules/typescript",
     ],
+    build_deps = [
+        "//:node_modules/@player-ui/player",
+        "//:node_modules/@player-ui/types",
+    ]
 )
